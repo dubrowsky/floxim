@@ -1,0 +1,12 @@
+table.fx_messages {width:100%; margin:10px 0; border-collapse: collapse}
+table.fx_messages tr.fx_msg a {text-decoration:none; display:block}
+table.fx_messages tr.fx_msg a:hover {text-decoration:underline}
+table.fx_messages .col_1 {width:5px}
+table.fx_messages .col_2, table.fx_messages .col_4 {width:1%}
+table.fx_messages th {background:#DFDFDF; border:1px solid #CCC; padding:7px}
+table.fx_messages tr.new td {background:#EEE; border:1px solid #CCC; padding:5px; font-weight:bold;}
+table.fx_messages td {border:1px solid #CCC; padding:5px}
+table.fx_messages tr.fx_msg_out td {background:#EEE}
+table.fx_messages tr.fx_msg_text td {background:#FFF}
+table.fx_messages td.fx_divider {border:0; padding: 4px; height:2px;	background:none}
+table.fx_messages tr.fx_msg_min td {padding:1px 5px 2px}

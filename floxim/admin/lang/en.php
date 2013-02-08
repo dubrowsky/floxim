@@ -1,0 +1,46 @@
+<?php
+
+define("NC_ADMINPANEL_PAGE", "Page");
+define("NC_ADMINPANEL_PAGE_VIEW", "View");
+define("NC_ADMINPANEL_PAGE_EDIT", "Edit");
+define("NC_ADMINPANEL_PAGE_DESIGNER", "Designer");
+define("NC_ADMINPANEL_PAGE_MORE_STAT", "Statistics");
+define("NC_ADMINPANEL_PAGE_MORE_SEO", "Page SEO-analysis");
+
+define("NC_ADMINPANEL_SITE", "Site");
+define("NC_ADMINPANEL_SITE_SITEMAP", "Sitemap");
+define("NC_ADMINPANEL_SITE_SYSTEM", "System");
+define("NC_ADMINPANEL_SITE_DESIGN", "Design");
+define("NC_ADMINPANEL_SITE_MORE_SETTINGS", "Settings");
+define("NC_ADMINPANEL_SITE_MORE_STAT", "Statistics");
+define("NC_ADMINPANEL_SITE_MORE_SEO", "Site SEO-analysis");
+define("NC_ADMINPANEL_SITE_BUTTON_ADD", "Add");
+define("NC_ADMINPANEL_SITE_BUTTON_EDIT", "Edit");
+define("NC_ADMINPANEL_SITE_BUTTON_ONOFF", "On/Off");
+define("NC_ADMINPANEL_SITE_BUTTON_SETTINGS", "Settings");
+define("NC_ADMINPANEL_SITE_BUTTON_DELETE", "Delete");
+
+define("NC_ADMINPANEL_MODERATING", "Moderating");
+define("NC_ADMINPANEL_MODERATING_ALL", "All");
+define("NC_ADMINPANEL_MODERATING_ON", "On");
+define("NC_ADMINPANEL_MODERATING_OFF", "Off");
+define("NC_ADMINPANEL_MODERATING_DELETED", "Deleted");
+define("NC_ADMINPANEL_MODERATING_BUTTON_CALENDAR", "Calendar");
+define("NC_ADMINPANEL_MODERATING_BUTTON_EDIT", "Edit");
+define("NC_ADMINPANEL_MODERATING_BUTTON_ONOFF", "On/Off");
+define("NC_ADMINPANEL_MODERATING_BUTTON_DELETE", "Delete");
+
+define("NC_ADMINPANEL_ADMIN", "Admin");
+define("NC_ADMINPANEL_ADMIN_USER", "User");
+define("NC_ADMINPANEL_ADMIN_TOOLS", "Tools");
+define("NC_ADMINPANEL_ADMIN_ADMIN", "Administrate");
+
+define("NC_ADMINPANEL_DEVELOP", "Development");
+define("NC_ADMINPANEL_DEVELOP_CLASS", "Classes");
+define("NC_ADMINPANEL_DEVELOP_TEMPLATE", "Templates");
+define("NC_ADMINPANEL_DEVELOP_WIDGET", "Widgets");
+define("NC_ADMINPANEL_DEVELOP_SQL", "SQL-terminal");
+
+define("NC_ADMINPANEL_EXIT", "Exit");
+
+?>

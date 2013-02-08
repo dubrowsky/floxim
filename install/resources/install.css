@@ -1,0 +1,60 @@
+/*
+ * jQuery UI CSS Framework 1.8.18
+ *
+ * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ * http://jquery.org/license
+ *
+ * http://docs.jquery.com/UI/Theming/API
+ */
+ 
+ /* Component containers */
+.ui-widget { font-family: Trebuchet MS, Tahoma, Verdana, Arial, sans-serif; font-size: 1.1em; }
+.ui-widget .ui-widget { font-size: 1em; }
+.ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button { font-family: Trebuchet MS, Tahoma, Verdana, Arial, sans-serif; font-size: 1em; }
+.ui-widget-content { border: 1px solid #dddddd; background-color: #eeeeee; color: #333333; }
+.ui-widget-content a { color: #333333; }
+.ui-widget-header { border: 1px solid #e78f08; background-color: #f6a828; color: #ffffff; font-weight: bold; }
+.ui-widget-header a { color: #ffffff; }
+
+.ui-progressbar { height:2em; text-align: left; overflow: hidden; width: 500px; }
+.ui-progressbar .ui-progressbar-value {margin: -1px; height:100%; }
+
+body { padding: 20px 0px 0px 25px; margin: 0px 8px 0px 0px; background-color: #E6E6E4}
+#header {margin-bottom: 20px;}
+h1 {  color: #7AB51D; font-family: Cambria,Times New Roman,serif; font-size: 30px; font-weight: bold; line-height: 30px; }
+h2 { margin: 3px 0px 5px;  color: #131516;    font-family: Cambria,Times New Roman,serif;    font-size: 18px;    font-weight: bold;}
+
+.col1 {float: left; width: 300px;}
+.col2 {width: 300px; margin-left: 400px; padding-top: 1px;}
+.cl { clear: both;}
+select, input {
+    border: 1px solid #D7D7D5;
+    display: block;
+    font-size: 15px;
+    margin: 0 0 4px;
+    width: 200px;
+}
+
+input.radio {
+    display: inline;
+    width: 15px;
+}
+
+label {
+    color: #7B7B78;
+    font-family: Cambria,Times New Roman,serif;
+    font-size: 13px;
+    font-style: italic;
+    margin: 0 0 2px 8px;
+}
+
+button#next {
+    background: url("send.jpg") no-repeat scroll 0 0 transparent;
+    border: medium none;
+    cursor: pointer;
+    height: 26px;
+    margin: 6px 0 0;
+    width: 49px;}
+
+.error {border-color:red;}

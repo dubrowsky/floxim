@@ -1,0 +1,43 @@
+.hi_pre {font:12px 'Courier New'; margin:10px 0; padding:3px; border:1px solid #EEF;}
+.hi_collapse {padding-left:40px; display:none;}
+.hi_collapser span, .hi_pre a {cursor:pointer; color:#33F;}
+.hi_collapser .pn {border-bottom:1px dotted #CCC;}
+.hi_recursion {color:#F33;}
+.hi_pre i.ln {color:#666; font-size:10px; font-style:normal; position:relative; top:-6px;}
+.hi_pre .pn .protected {color:#090;}
+.hi_pre .vs {color:#666; font-size:10px;}
+.hi_pre .hi_title {background:#EEE; color:#555; font:10px verdana;}
+.hi_pre .prettyXML * {font-family:times;}
+.hi_sep {border-top:1px dotted #CCC; margin:5px 0;}
+
+.hi_pre .data_found {
+	border:1px solid #F00;
+}
+
+.fencms_module_debug_anchor {cursor:pointer; background:#A00; color:#FF9; display:inline; font:bold 11px verdana; padding:1px; position:absolute;}
+.fencms_module_debug_data {border:1px solid #A00; position:absolute; display:none; background:#FFF; padding:3px; z-index:2; margin-top:14px;}
+
+/* обертка над модулем, которую дописывает moduleDebug вокруг вывода модуля */
+.fencms_debug_module_wrapper {padding:0px; border:none;}
+/*.fencms_debug_module_wrapper_active {padding:0; overflow:hidden;}*/
+
+.fencms_debug_anchor_full {display:none;}
+.fencms_module_debug_anchor_active .fencms_debug_anchor_full {display:inline;}
+
+.fencms_module_debug_anchor_active .fencms_debug_anchor_icon {display:none;}
+
+.fencms_module_debug_data .tab_container {margin:0;}
+
+.fencms_module_debug .tab_label a {
+	font-size:11px; color:#03C; cursor:pointer; text-decoration:underline; line-height:22px;
+	background:none;
+}
+
+.fencms_module_debug .tab_label_active a {color:#000; cursor:text; background:none; text-decoration:none;}
+
+.fencms_debug_table {background:#FFF; border-collapse:collapse; margin:5px;}
+.fencms_debug_table td {padding:3px; border:1px solid #666; font:10px verdana;}
+.fencms_debug_table tr.h td {font-weight:bold; background:#CCC;}
+
+.fencms_debug_table .expandable {height:14px; width:600px; overflow:hidden; cursor:pointer;}
+.fencms_debug_table .expanded {height:auto; width:auto; position:absolute; font-family:-moz-fixed; white-space:pre; background:#FFF; padding:1px;}
