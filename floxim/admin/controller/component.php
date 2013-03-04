@@ -205,6 +205,7 @@ class fx_controller_admin_component extends fx_controller_admin {
         if (($data['group'] == 'fx_new') && $input['fx_new_group']) {
             $data['group'] = $input['fx_new_group'];
         }
+        $data['has_page'] = $input['has_page'];
 
         $component = fx::data('component')->create($data);
 
@@ -231,6 +232,28 @@ class fx_controller_admin_component extends fx_controller_admin {
         }
 
         return $result;
+    }
+    
+    public function edit_save($input){
+        if (! ($component = fx::data('component', $input['id'])) ) {
+            dev_log('no cmp');
+            die("NO CMP");
+        }
+        if (!empty($input['name'])) {
+            $component['name'] = $input['name'];
+        }
+        if ($input['new_group']) {
+            $component['group'] = $input['new_group'];
+        } else {
+            $component['group'] = $input['group'];
+        }
+        $component['has_page'] = $input['has_page'];
+        $component['description'] = $input['description'];
+        $component->save();
+        return array('status' => 'ok');
+        dev_log($input);
+        echo "SAVVV";
+        die();
     }
 
     public function import_save($input) {
@@ -299,8 +322,14 @@ class fx_controller_admin_component extends fx_controller_admin {
         $fields[] = array('label' => 'Группа', 'type' => 'select', 'values' => $groups, 'name' => 'group', 'value' => $component['group'], 'extendable' => 'Другая группа');
 
         $fields[] = array('label' => 'Описание', 'name' => 'description', 'value' => $component['description'], 'type' => 'text');
+        $fields []= array(
+            'label' => 'Создает страницы?',
+            'name' => 'has_page',
+            'type' => 'checkbox',
+            'value' => $component['has_page']
+        );
 
-        $fields[] = array('label' => 'И еще можно сменить иконку', 'type' => 'label');
+        //$fields[] = array('label' => 'И еще можно сменить иконку', 'type' => 'label');
 
         $fields[] = array('type' => 'hidden', 'name' => 'phase', 'value' => 'settings');
         $fields[] = array('type' => 'hidden', 'name' => 'id', 'value' => $component['id']);

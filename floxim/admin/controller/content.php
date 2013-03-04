@@ -3,47 +3,94 @@
 class fx_controller_admin_content extends fx_controller_admin {
 
     public function add($input) {
-        $infoblock = fx::data('infoblock')->get_by_id($input['fx_infoblock']);
+        
+        $infoblock = fx::data('infoblock', $input['infoblock_id']);
         if (!$infoblock) {
             throw new fx_exception_controller_content("Infoblock not found");
         }
-        $component = fx::data('component')->get_by_id($infoblock['essence_id']);
-
-        $component_fields = $component->fields();
-
-
-        // ручной выбор объектов
-        if ($infoblock->is_manual_content_selection()) {
-            $infoblock_controller = new fx_controller_infoblock();
-            return $infoblock_controller->choose_content($input);
+        
+        $component = fx::data('component', $input['content_type']);
+        
+        $finder = fx::data('content_'.$input['content_type']);
+        
+        if ($input['content_id']) {
+            $content = $finder->get_by_id($input['content_id']);
         } else {
-            $fields[] = array('name' => 'fx_infoblock', 'type' => 'hidden', 'value' => $infoblock['id'], 'tab' => 'main');
-            $fields[] = array('name' => 'action', 'type' => 'hidden', 'value' => 'add', 'tab' => 'main');
-            $fields[] = array('name' => 'essence', 'type' => 'hidden', 'value' => 'content', 'tab' => 'main');
-            $fields[] = array('name' => 'posting', 'type' => 'hidden', 'value' => 1, 'tab' => 'main');
-            $fields[] = array('name' => 'parent_id', 'type' => 'hidden', 'value' => intval($input['parent_id']));
-            foreach ($component_fields as $field) {
-                $fields[] = $field->get_js_field(array());
+            $parent_page = fx::data('content_page', $input['parent_id']);
+            $content = $finder->create(array(
+                'parent_id' => $input['parent_id'],
+                'infoblock_id' => $input['infoblock_id'],
+                'checked' => 1
+            ));
+            if ($component['has_page']) {
+                $page = fx::data('content_page')->create(array(
+                    'parent_id' => $input['parent_id'],
+                    'content_type' => $input['content_type'],
+                    'site_id' => $parent_page['site_id'],
+                    'infoblock_id' => $input['infoblock_id']
+                ));
             }
-
-            if ($component['with_full']) {
-                $tabs['main'] = array('name' => 'Основные');
-                $tabs['seo'] = array('name' => 'SEO');
-                $fields[] = array('label' => 'H1', 'name' => 'seo_h1', 'value' => '', 'tab' => 'seo');
-                $fields[] = array('label' => 'Title', 'name' => 'seo_title', 'value' => '', 'tab' => 'seo');
-                $fields[] = array('label' => 'Keywords', 'name' => 'seo_keywords', 'value' => '', 'tab' => 'seo');
-                $fields[] = array('label' => 'Description', 'name' => 'seo_description', 'value' => '', 'tab' => 'seo');
-            }
-
-            if ($tabs) $result['tabs'] = $tabs;
-
-            $result['dialog_title'] = 'Добавление объекта в "'.$component['name'].'"';
         }
 
+        $fields = array(
+            $this->ui->hidden('infoblock_id', $input['infoblock_id']),
+            $this->ui->hidden('content_type',$input['content_type']),
+            $this->ui->hidden('parent_id', $input['parent_id']),
+            $this->ui->hidden('essence', 'content'),
+            $this->ui->hidden('action', 'add'),
+            $this->ui->hidden('data_sent', true),
+            $this->ui->hidden('fx_admin', true)
+        );
+        
+        $this->response->add_fields($fields);
 
-        $result['fields'] = $fields;
+        /*
+        $fields[] = array('name' => 'fx_infoblock', 'type' => 'hidden', 'value' => $infoblock['id'], 'tab' => 'main');
+        $fields[] = array('name' => 'action', 'type' => 'hidden', 'value' => 'add', 'tab' => 'main');
+        $fields[] = array('name' => 'essence', 'type' => 'hidden', 'value' => 'content', 'tab' => 'main');
+        $fields[] = array('name' => 'posting', 'type' => 'hidden', 'value' => 1, 'tab' => 'main');
+        $fields[] = array('name' => 'parent_id', 'type' => 'hidden', 'value' => intval($input['parent_id']));
+         * 
+         */
+        $c_fields = array();
+        $content_fields = $component->fields();
+        foreach ($content_fields as $field) {
+            $c_fields[] = $field->get_js_field(array());
+        }
+        
+        $this->response->add_tab('content', $component['name']);
+        $this->response->add_fields($c_fields, 'content', 'content');
 
-        return $result;
+        if ($component['has_page']) {
+            $this->response->add_tab('page', 'Страница');
+            $page_component = fx::data('component', 'page');
+            $p_fields = array();
+            $page_component_fields = $page_component->fields();
+            foreach ($page_component_fields as $p_field) {
+                $p_fields []= $p_field->get_js_field(array());
+            }
+            $this->response->add_fields($p_fields, 'page', 'page');
+            /*
+            $tabs['main'] = array('name' => 'Основные');
+            $tabs['seo'] = array('name' => 'SEO');
+            $fields[] = array('label' => 'H1', 'name' => 'seo_h1', 'value' => '', 'tab' => 'seo');
+            $fields[] = array('label' => 'Title', 'name' => 'seo_title', 'value' => '', 'tab' => 'seo');
+            $fields[] = array('label' => 'Keywords', 'name' => 'seo_keywords', 'value' => '', 'tab' => 'seo');
+            $fields[] = array('label' => 'Description', 'name' => 'seo_description', 'value' => '', 'tab' => 'seo');
+             * 
+             */
+        }
+        
+        if ($input['data_sent']) {
+            $content->set_field_values($content_fields, $input['content']);
+            $content->save();
+            if ($component['has_page']) {
+                $page->set_field_values($page_component_fields, $input['page']);
+                $page['content_id'] = $content['id'];
+                $page->save();
+            }
+        }
+        return array('status' => 'ok');
     }
 
     public function add_save($input) {

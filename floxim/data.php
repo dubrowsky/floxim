@@ -135,7 +135,7 @@ class fx_data {
             $essence = $this->essence($v);
             $objs[] = $essence;
         }
-        return $objs;
+        return new fx_collection($objs);
     }
 
     protected function make_query($argc, $argv) {
@@ -211,6 +211,11 @@ class fx_data {
      */
     public function essence($data = array()) {
         $classname = $this->get_class_name($data);
+        if (!$classname) {
+            echo "OOPS";
+            dev_log('no classname', $classname, debug_backtrace());
+            die();
+        }
         $obj = new $classname(array('data' => $data, 'finder' => $this));
         return $obj;
     }

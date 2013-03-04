@@ -20,6 +20,7 @@ class fx_data_content extends fx_data {
     public function set_component($component_id_or_code) {
         $component = fx::data('component', $component_id_or_code);
         if (!$component) {
+            dev_log($component_id_or_code, debug_backtrace());
             die("Component not found: ".$component_id_or_code);
         }
         $this->component_id = $component['id'];
@@ -36,7 +37,7 @@ class fx_data_content extends fx_data {
         $obj['created'] = date("Y-m-d H:i:s");
         $obj['user_id'] = +$user['id'];
         $obj['checked'] = 1;
-        $obj['priority'] = $this->next_priority($this->class_id);
+        $obj['priority'] = $this->next_priority($this->component_id);
         dev_log('created', $obj);
         return $obj;
     }
@@ -47,7 +48,7 @@ class fx_data_content extends fx_data {
     }
     
     protected function get_class_name() {
-        $component = fx::data('component')->get('id', $this->class_id);
+        $component = fx::data('component')->get('id', $this->component_id);
         $class_name = 'fx_content_'.$component['keyword'];
         try {
             if (class_exists($class_name)) {

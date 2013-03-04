@@ -95,7 +95,7 @@ fx_adminpanel = {
         var hash_to_parse = $fx.settings.hash != undefined ? $fx.settings.hash : window.location.hash.slice(1);
         
         if (hash_to_parse == '' && window.location.pathname == '/floxim/') {
-        	hash_to_parse = 'admin.administrate.site.all';
+            hash_to_parse = 'admin.administrate.site.all';
         }
         
         var s_pos = hash_to_parse.indexOf('(');
@@ -123,7 +123,9 @@ fx_adminpanel = {
     },
 
     handle_button: function(action, options, from_pulldown ) {
-        console.log('handle_button', arguments);
+        // К удалению!!!
+        return;
+        //console.log('handle_button', arguments);
         if ( options === undefined ) options = {};
         
         // чтоб можно было вызывать так:
@@ -180,10 +182,14 @@ fx_adminpanel = {
         else if ($fx.mode == 'page') {
             switch(action) {
                 case 'select_block' :
+                    $fx.front.select_level_up();
+                    return false;
+                    /*
                     selected.removeClass('fx_admin_selected');
                     $('.'+$fx.g_data.blocks[selected.data('key')].parent).addClass('fx_admin_selected');
                     $fx.front.update_view();
                     return false;
+                    */
                     break;
                 case 'add':
                     if ( !from_pulldown ) {
@@ -211,6 +217,7 @@ fx_adminpanel = {
 
                     break;
                 case 'settings':
+                    return;
                     if ( type == 'block') {
                         $.extend(true, options, $fx.g_data.blocks[key].post);
                     //options['infoblock_info'] = $fx.g_data.infoblock[options.infoblock];
@@ -479,7 +486,12 @@ fx_adminpanel = {
                 $fx_dialog.main.dialog("option", "buttons", [] );
                 $fx_form.draw_fields(data, $('#nc_dialog_form'));
             });
-	}
+        } else if (button.act_as && button.act_as == 'save') {
+            $('form', $fx_dialog.main).append(
+                '<input type="hidden" name="fx_dialog_button" value="'+button_key+'" />'
+            );
+            $fx_dialog.click_save();
+        }
     },
         
     show_store: function () {

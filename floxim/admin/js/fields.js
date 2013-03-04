@@ -708,6 +708,10 @@
 			*/
         },
         
+        link: function(json) {
+            return $t.jQuery('form_row', json);
+        },
+        
         list: function(json) {
         	
         	return $t.jQuery('form_row', json);

@@ -2,142 +2,30 @@
 class fx_controller_admin_infoblock extends fx_controller_admin {
 
     /**
-     * @todo Проверять права!
+     * Выбор контроллера-экшна
      */
-    public function index($input) {
-        $fx_core = fx_core::get_object();
-        $result = array();
-
-        if ($input['id']) {
-            $id = $input['id'];
-            $infoblock = fx::data('infoblock')->get_by_id($id);
-            if ($infoblock) {
-                if ( $infoblock['main_content'] ) {
-                    $func_param = array();
-                    if ( $input['page'] ) $func_param['page'] = intval($input['page']);
-                    $key = fx::config()->SEARCH_KEY;
-                    $search = $fx_core->input->fetch_get_post($key);
-                    if ( $search ) {
-                        $func_param[$key] = $search;
-                    }
-                }
-                echo $infoblock->show_index($func_param);
-            }
-            return false;
-        }
-
-        //if ($input['admin_mode'])
-        $fx_core->set_admin_mode();
-
-        $url = $input['url'];
-        $route = new fx_route($url);
-        $result = $route->resolve();
-
-        $current_sub = $result['sub_env'];
-
-        $fx_core->env->set_ibs($result['ibs_env']);
-        if ($result['content_id'])
-            $fx_core->env->set_content($result['content_id']);
-        $fx_core->env->set_action($result['action']);
-
-        if ($result['page'])
-            $fx_core->env->set_page($result['page']);
-        $fx_core->env->set_sub($current_sub);
-
-        $template = $current_sub->get_data_inherit('template_id');
-        $fx_core->env->set_template ( $template );
-
-        //$p = new fx_controller_page();
-
-
-
-        $infoblocks = $input['infoblocks'];
-
-        $fx_core->page->set_numbers($input['block_number']++, $input['field_number']++);
-
-        if ($infoblocks) {
-            foreach ($infoblocks as $keyword => $params) {
-                $ib = new fx_unit_infoblock ();
-                $result[$keyword] = $ib->show($keyword, $params, true);
-            }
-        }
-
-        $fl = $fx_core->page->get_edit_fields();
-        if ($fl) {
-            $result['nc_scripts'] = '$fx.set_data(' . json_encode(array('fields' => $fx_core->page->get_edit_fields())) . ');';
-        }
-
-        $blocks = $fx_core->page->get_blocks();
-        if ($blocks) {
-            $result['nc_scripts'] .= '$fx.set_data(' . json_encode(array('blocks' => $fx_core->page->get_blocks())) . ');';
-        }
-        $sortable = $fx_core->page->get_sortable();
-        if ( $sortable ) {
-            $result['nc_scripts'] .= '$fx.set_data(' . json_encode(array('sortable' => $fx_core->page->get_sortable())) . ');';
-        }
-
-        $result['nc_scripts'] .= '$fx.set_data(' . json_encode(array('addition_block' => $fx_core->page->get_addition_block())) . ');';
-        echo json_encode($result);
-    }
-
-    
-    public function add($input) {
-    	$step_map = array(
-            'type' => 'type_select',
-            'settings' => 'settings_select',
-            'save' => 'add_save'
-        );
-        $c_step = isset($input['step']) && isset($step_map[$input['step']]) ? $input['step'] : 'type';
-        $c_step_method = $step_map[$c_step];
-
-        if (method_exists($this, $c_step_method)) {
-            return call_user_func(array($this, $c_step_method), $input);
-        }
-    }
-    
-    public function add_save($input) {
-        dev_log($input);
-        
-        $ib_params = array(
-            'site_id' => fx::env('site_id'),
-            'page_id' => 0,
-            'checked' => 1,
-            'priority' => 0,
-            'name' => 'Olo',
-            'is_listing' => 1,
-            'controller' => $input['controller'],
-            'action' => 'listing',
-            'params' => $input['params']
-        );
-        
-        $ib = fx::data('infoblock')->create($ib_params);
-        $visual = fx::data('infoblock2layout')->create($input['visual']);
-        
-        $ib->save();
-        $visual->set('infoblock_id', $ib['id']);
-        $visual->set('layout_id', 1);
-        $visual->save();
-        
-        die("Saving");
-    }
-    
-    public function type_select($input) {
-    	
-        $controllers_data = self::get_all_controllers();
-    	
-    	$fields = array(
-            $this->ui->hidden('action', 'add'),
+    public function select_controller($input) {
+        $fields = array(
+            $this->ui->hidden('action', 'select_settings'),
             $this->ui->hidden('essence', 'infoblock'),
             $this->ui->hidden('fx_admin', true),
-            $this->ui->hidden('step', 'settings')
-            //$this->ui->hidden('infoblock_info', serialize($input['infoblock_info'])),
-            //$this->ui->hidden('subdivision_id', $input['subdivision_id'])
-	);
-		
-	$types = array(
-            'widget' => 'Виджет', 
-            'component' => 'Компонент'
-	);
+            $this->ui->hidden('area', $input['area']),
+            $this->ui->hidden('page_id', $input['page_id'])
+        );
+	
+        $types = array(
+                'widget' => 'Виджет', 
+                'component' => 'Компонент'
+        );
+        
+        $actions = array(
+            'listing' => 'Список',
+            'mirror' => 'Mirror',
+            //'item' => 'Отдельный объект',
+            //'show' => 'Показать',
+            //'add' => 'Добавление',
+            //'edit' => 'Редактирование'
+        );
     	
         /* Список контроллеров */
         $fields['controller']= array(
@@ -145,696 +33,357 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             'name' => 'controller',
             'labels' => array(
                 'name' => array('label' => 'Название', 'filter' => 'text'),
+                'action' => array('label' => 'Действие', 'filter' => 'select'),
                 'type' => array('label' => 'Тип', 'filter' => 'select'),
                 'group' => array('label' => 'Группа', 'filter' => 'select')
             ), 
             'values' => array()
     	);
-    	foreach ($controllers_data['controllers'] as $cn) {
-            $cn_type = $cn instanceof fx_component ? 'component' : 'widget';
-            $fields['controller']['values'] []= array(
-                'name' => array('name' => $cn['name'], 'url' => null), 
-                'type' => $types[$cn_type],
-                'group' => $cn['group'],
-                'id' => $cn_type.'_'.$cn['keyword']
+        foreach (fx::data('component')->get_all() as $c) {
+            if (!file_exists(fx::config()->DOCUMENT_ROOT.'/controllers/component/'.$c['keyword'])) {
+                continue;
+            }
+            foreach (array('item', 'mirror', 'listing', 'add', 'edit') as $c_action) {
+                if (isset($actions[$c_action])) {
+                    $fields['controller']['values'][]= array(
+                        'name' => array('name' => $c['name'], 'url' => null), 
+                        'action' => $actions[$c_action],
+                        'type' => $types['component'],
+                        'group' => $c['group'],
+                        'id' => 'component_'.$c['keyword'].'.'.$c_action
+                    );
+                }
+            }
+    	}
+        
+    	foreach (fx::data('widget')->get_all() as  $c){
+            $fields['controller']['values'][]= array(
+                'name' => array('name' => $c['name'], 'url' => null), 
+                'action' => $actions['show'],
+                'type' => $types['widget'],
+                'group' => $c['group'],
+                'id' => 'widget_'.$c['keyword'].'.show'
             );
     	}
-    	
-    	$result = array(
+        
+        $result = array(
             'fields' => $fields,
             'dialog_title' => 'Добавление инфоблока',
-            //'step' => 'type_select',
             'dialog_button' => array(
                 array('key' => 'store', 'text' => 'Установить с Store'),
                 array('key' => 'save', 'text' => 'Продолжить')
             )
     	);
-    	return $result;
+        return $result;
     }
     
-    public function settings_select($input) {
-    	// Текущий (редактируемый) инфоблок
-    	$current_infoblock = null;
+    
+    /**
+     * Выбор настроек для контроллера-экшна
+     * 
+     */
+    
+    public function select_settings($input) {
+        // Текущий (редактируемый) инфоблок
+    	$infoblock = null;
     	
-    	// Информация о блоках для форматирования
-    	$infoblock_info = is_string($input['infoblock_info']) ? unserialize($input['infoblock_info']) : $input['infoblock_info'];
-    	
-        if (isset($input['id']) && is_numeric($input['id'])) {
+    	if (isset($input['id']) && is_numeric($input['id'])) {
             // Редактируем существующий инфоблок
-            $current_infoblock = fx::data('infoblock')->get_by_id($input['id']);
-            //$controller_type = $current_infoblock['type'] == 'content' ? 'component' : 'widget';
-            $controller_name = $current_infoblock['controller'];
+            /* @var $infoblock fx_infoblock */
+            $infoblock = fx::data('infoblock', $input['id']);
+            $controller = $infoblock['controller'];
+            $action = $infoblock['action'];
+            $i2l = $infoblock->get_infoblock2layout();
     	} else {
+            // устанавливаем в окружение текущую страницу
+            // из нее можно получить лейаут
+            fx::env('page', $input['page_id']);
             // Создаем новый, тип и ID контроллера получаем с предыдущего шага
-            //$controller_type = $input['controller_type'];
-            $controller_name = $input['controller'];
+            list($controller, $action) = explode(".", $input['controller']);
+            $infoblock = fx::data("infoblock")->create(array(
+                'controller' => $controller,
+                'action' => $action,
+                'page_id' => $input['page_id'],
+                'site_id' => fx::data('content_page', $input['page_id'])->get('site_id')
+            ));
+            $i2l = fx::data('infoblock2layout')->create(array(
+                'area' => $input['area'],
+                'layout_id' => fx::env('layout')
+            ));
+            $infoblock->set_infoblock2layout($i2l);
     	}
-    	
-    	//dev_log($current_infoblock);
-    	
-    	// Запоминаем для после-отправки
-    	$fields = array(
-            $this->ui->hidden('controller', $controller_name),
-            $this->ui->hidden('infoblock_id', $current_infoblock ? $current_infoblock['id'] : null),
-            $this->ui->hidden('action', 'add'),
-            $this->ui->hidden('essence', 'infoblock'),
-            $this->ui->hidden('fx_admin', true),
-            $this->ui->hidden('step', 'save')
-    	);
-    	
-    	$this->response->add_fields($fields);
-    	
-    	$this->response->add_tab('settings', 'Что показывать');
-    	
-        $controller = fx::controller($controller_name);
-        $settings = $controller->get_action_settings('listing');
-        $this->response->add_fields($settings, 'settings', 'params');
+        if (!isset($infoblock['params']) || !is_array($infoblock['params'])) {
+            $infoblock['params'] = array();
+        }
         
-        dev_log($this->response);
-        
-        /*
-    	// Для компонента
-    	if ($controller_type == 'component') {
-            $c_controller = fx::data('component')->get_by_id($controller_id);
-            $main_fields []= array(
-                'type' => 'radio', 
-                'values' => array('block' =>'Свои данные', 'mirror' => 'Миррор'), 
-                'className' => 'inline',
-                'name' => 'component_type', 
-                'value' => $current_infoblock ? ($current_infoblock['subtype'] == 'block' ? 'block' : 'mirror') : 'block'
-            );
-            $main_fields []= array(
-                'name' => 'name', 
-                'label' => 'Название', 
-                'type' => 'input', 
-                'value' => $current_infoblock ? $current_infoblock['name'] : $c_controller['name'], 
-                'parent' => array('component_type', 'block')
-            );
-            // !!! напрашивается явное разделение компонентов 
-            // на те, у которых есть страницы 
-            // и те, которые отображаются только списком (тескст, картинка и т.д.)
-            $main_fields []= array(
-                'name' => 'url', 
-                'label' => 'Часть URL', 
-                'type' => 'input', 
-                'value' => $current_infoblock ? $current_infoblock['url'] : $c_controller['keyword'], 
-                'parent' => array('component_type', 'block')
-            );
-
-            // Нужно получить ID сайта, чтоб выбор разделов для миррора был только по нашему сайту
-            if ($current_infoblock) {
-                $site_id = $current_infoblock['site_id'];
-            } else {
-                $subdivision = fx::data('subdivision')->get_by_id($input['subdivision_id']);
-                $site_id = $subdivision['site_id'];
+        $controller = fx::controller($controller);
+        $settings = $controller->get_action_settings($action);
+        foreach ($infoblock['params'] as $ib_param => $ib_param_value) {
+            if (isset($settings[$ib_param])) {
+                $settings[$ib_param]['value'] = $ib_param_value;
             }
-
-            $mirror_fields = $this->_get_mirror_fields($controller_id, $current_infoblock, $site_id);
-            foreach ($mirror_fields as $mf) {
-                if (!isset($mf['parent'])) {
-                    $mf['parent'] = array();
-                }
-                $mf['parent']['component_type'] = 'mirror';
-                $main_fields[]= $mf;
-            }
-        // для виджета
-    	} elseif ($controller_type == 'widget') { 
-            $widget = fx::data('widget')->get_by_id($controller_id);
-	
-            $widget_form = $widget->load_tpl_object()->set_vars('widget', $widget)->set_vars('infoblock', $current_infoblock)->add_form();
-
-            if ($widget_form) {
-                foreach ($widget_form as $v) {
-                    if (strpos($v['name'], 'visual[') === false) {
-                        $v['name'] = 'visual['.$v['name'].']';
-                    }
-                    $main_fields[] = $v;
-                }
-            }
-    	}
-         * 
-         */
-        
-        /*
-    	// Настройки отображения для компонента
-    	if ($controller_type == 'component') {
-            $visual_fields = array();
-            $ctpls = fx::data('ctpl')->get_by_component($controller_id);
-            // Поле-селект для выбора шаблона компонента 
-            $ctpl_field = array(
-                'type' => 'select',
-                'name' => 'ctpl_id',
-                'values' => array(),
-                'label' => 'Шаблон компонента',
-                'value' => $current_infoblock ? $current_infoblock['list_ctpl_id'] : $ctpls[0]['id']
-            );
-            foreach ($ctpls as $ctpl) {
-                $ctpl_field['values'][$ctpl['id']] = $ctpl['name'];
-            }
-            $visual_fields []= $ctpl_field;
-
-            // Для каждого шаблона собираем поля визуальных настроек
-            foreach ($ctpls as $ctpl) {
-                foreach ($ctpl->fields() as $field) {
-                    $visual_field = $field->get_js_field($infoblock['visual'], 'visual['.$ctpl['id'].'][%name%]');
-                    $visual_field['parent'] = array('ctpl_id', $ctpl['id']);
-                    preg_match("~\[([^\]]+)\]$~", $visual_field['name'], $visual_field_name);
-                    if ($current_infoblock && isset($current_infoblock['visual'][$visual_field_name[1]])) {
-                        $visual_field['value'] = $current_infoblock['visual'][$visual_field_name[1]];
-                    }
-                    $visual_fields []= $visual_field;
-                }
-            }
-            // Только один шаблон и нету визуальных настроек
-            if (count($visual_fields) == 1 && count($ctpls) == 1) {
-                $this->response->add_fields( array($this->ui->hidden('ctpl_id', $ctpls[0]['id'])));
-            } else {
-                $this->response->add_tab('visual', 'Как показывать');
-                $this->response->add_fields($visual_fields, 'visual');
-            }
-    	}
-        */
+        }
+        if (count($settings) > 0) {
+            $this->response->add_tab('settings', 'Что показывать');
+            $this->response->add_fields($settings, 'settings', 'params');
+        }
         
         $this->response->add_tab('visual', 'Как показывать');
-        $format_fields = $this->_get_format_fields($infoblock_info, $current_infoblock);
+        $format_fields = $this->_get_format_fields($infoblock);
         $this->response->add_fields($format_fields, 'visual', 'visual');
-    	
-    	// Оформление блока - переезжает во вкладку "Как показывать"
-    	//$this->response->add_tab('format', 'Оформление блока');
-    	//$format_fields = $this->_get_format_fields($infoblock_info, $current_infoblock);
-    	//$this->response->add_fields($format_fields, 'format');
-    	
-    	$this->response->add_tab('area', 'Где показывать');
+        
+        $c_page = fx::data('content_page', $input['page_id']);
+        
+        $this->response->add_tab('scope', 'Где показывать');
     	$area_fields = array(
-            array('type' => 'select', 'name' => 'pages', 'values' => array('all' => 'На всех страницах', 'this' => 'Только на этой страницах', 'brothers' => 'На страницах этого уровня')),
+            array('type' => 'select', 'name' => 'pages', 
+                'values' => array(
+                    'all' => 'На всех страницах', 
+                    'this' => 'Только на этой странице', 
+                    'brothers' => 'На страницах этого уровня',
+                    'descendants' => 'Во всем разделе'
+                )
+            )/*,
             array('name' => 'but', 'label' => 'Кроме...', 'parent' => array('pages' => 'all')),
-            array('name' => 'area_type', 'label' => 'Имеющих тип', 'type' => 'select', 'values' => array("Любой", "Новость", "Раздел", "Вакансия"))
+            array('name' => 'area_type', 'label' => 'Имеющих тип', 'type' => 'select', 
+                'values' => array("Любой", "Новость", "Раздел", "Вакансия")
+            )*/
         );
-        $this->response->add_fields($area_fields, 'area', 'area');
+        if ($c_page['url'] == '/') {
+            unset($area_fields[0]['values']['brothers']);
+            unset($area_fields[0]['values']['descendants']);
+        }
+        $this->response->add_fields($area_fields, 'scope', 'scope');
+        
+        if ($input['settings_sent'] == 'true') {
+            $inherit_mode = $input['fx_dialog_button'] == 'inherit';
+            if ($inherit_mode) {
+                $source_ib = $infoblock;
+                $source_i2l = $i2l;
+                $infoblock = fx::data('infoblock')->create(array(
+                    'parent_infoblock_id' => $source_ib['id'],
+                    'site_id' => $source_ib['site_id'],
+                    'checked' => true
+                ));
+                $i2l = fx::data('infoblock2layout')->create(array(
+                    'layout_id' => $source_i2l['layout_id']
+                ));
+            }
+            $action_params = array();
+            foreach (array_keys($settings) as $setting_key) {
+                if (isset($input['params'][$setting_key])) {
+                    $action_params[$setting_key] = $input['params'][$setting_key];
+                } else {
+                    $action_params[$setting_key] = false;
+                }
+            }
+            $infoblock['params'] = $action_params;
+            
+            // SCOPE LOGIC
+            $ib_scope = array();
+            switch ( $input['scope']['pages']) {
+                case 'all':
+                    $infoblock['page_id'] = fx::env('home_id');
+                    $ib_scope['pages'] = 'all';
+                    break;
+                case 'this':
+                    $ib_scope['pages'] = 'this';
+                    $infoblock['page_id'] = $input['page_id'];
+                    break;
+                case 'brothers':
+                    $ib_scope['pages'] = 'children';
+                    $c_page = fx::data('content_page', $infoblock['page_id']);
+                    $infoblock['page_id'] = $c_page['parent_id'];
+                    break;
+                case 'descendants':
+                    $infoblock['page_id'] = $input['page_id'];
+                    $ib_scope['pages'] = 'descendants';
+                    break;
+            }
+            
+            $infoblock['scope'] = $ib_scope;
+            
+            list(
+                $i2l['wrapper_name'], 
+                $i2l['wrapper_variant']
+            ) = explode(".", fx::dig($input, 'visual.wrapper'));
+            list(
+                $i2l['template_name'],
+                $i2l['template_variant']
+            ) = explode(".", fx::dig($input, 'visual.template'));
+            $infoblock->save();
+            $i2l['infoblock_id'] = $infoblock['id'];
+            $i2l->save();
+            $this->response->set_status_ok();
+            return;
+        }
     	
     	$result = array(
             'dialog_title' => 'Настройка инфоблока',
             'step' => 'settings_select',
             'dialog_button' => array(
-                array('key' => 'save', 'text' => 'Закончить')
+                array('key' => 'save', 'text' => $input['id'] ? 'Обновить' : 'Создать')
             )
     	);
+        if ($input['id']) {
+            $result['dialog_button'] []= array(
+                'key' => 'inherit', 'text' => 'Наследоваться', 'act_as' => 'save'
+            );
+        }
+    	$fields = array(
+            $this->ui->hidden('essence', 'infoblock'),
+            $this->ui->hidden('action', 'select_settings'),
+            $this->ui->hidden('fx_admin', true),
+            $this->ui->hidden('settings_sent', 'true'),
+            $this->ui->hidden('controller', $input['controller']),
+            $this->ui->hidden('page_id', $input['page_id']),
+            $this->ui->hidden('area', $input['area']),
+            $this->ui->hidden('id', $input['id'])
+    	);
+    	
+    	$this->response->add_fields($fields);
     	return $result;
     }
-	
-    protected function _get_format_fields($infoblock_info, $current_infoblock) {
-        
+    
+    /*
+     * Получение полей формы для вкладки "Как показывать"
+     */
+    protected function _get_format_fields(fx_infoblock $infoblock) {
+        $i2l = $infoblock->get_infoblock2layout();
         $fields = array(
             array(
                 'label' => "Area",
-                'name' => 'area'
-            ), array(
-                'label' => 'Шаблон-обертка',
-                'name' => 'wrapper_name'
-            ), array(
-                'label' => 'Параметры обертки',
-                'name' => 'wrapper_visual',
-                'type' => 'textarea'
-            ), array(
-                'label' => 'Шаблон',
-                'name' => 'template_name'
-            ), array(
-               'label' => 'Вариант шаблона',
-                'name' => 'template_variant'
-            ), array(
-                'label' => 'Параметры шаблона',
-                'name' => 'template_visual',
-                'type' => 'textarea'
+                'name' => 'area',
+                'value' => $i2l['area'],
+                'type' => 'hidden'
             )
         );
-        return $fields;
-        dev_log('get formatters', $infoblock_info, $current_infoblock);
-        $fields_child = array();
-        foreach ($infoblock_info['blocks'] as $k => $block) {
-            $values[$k] = $block['name'] && $block['name'] != 'null' ? $block['name'] : 'Блок (' . $k . ')';
-            if ($block['params']) {
-                foreach ($block['params'] as $param_num => $param) {
-                    $label = $param['name'] ? $param['name'] : 'String ' . $param_num;
-                    $name = 'replace_value[' . $param_num . ']';
-                    $value = $current_infoblock ? $current_infoblock['replace_value'][$param_num] : $param['default'];
-                    $fields_child[] = array('name' => $name, 'value' => $value, 'label' => $label, 'parent' => array('use_format', $k), 'unactive' => true);
-                }
+        $wrappers = array('' => 'Без обертки');
+        $templates = array('auto.auto' => 'Автовыбор');
+        $layout_essence = fx::data('layout', $i2l['layout_id']);
+        $action_variants = array($infoblock['controller'].".".$infoblock['action']);
+        if ($infoblock['action'] == 'mirror') {
+            $action_variants []= $infoblock['controller'].".listing";
+        }
+        // варианты шаблона из лейаута
+        foreach ( fx::template('layout_'.$layout_essence['keyword'])->get_template_variants() as $tplv) {
+            $full_id = 'layout_'.$layout_essence['keyword'].'.'.$tplv['id'];
+            if ($tplv['for'] == 'wrap') {
+                $wrappers[$full_id] = $tplv['name'];
+            } elseif (in_array($tplv['for'], $action_variants)) {
+                $templates[$full_id] = $tplv['name'];
             }
         }
-        $fields[] = array(
-            'label' => 'Оформление', 'id' => 'use_format', 'name' => 'use_format', 'values' => $values, 'type' => 'select', 
-            'value' => $current_infoblock ? $current_infoblock['use_format'] : 0, 
-            'hidden_on_one_value' => true
-        );
-        foreach ($fields_child as $v) {
-            $fields[] = $v;
+        // варианты шаблонов из шаблона контроллера
+        foreach (fx::template($infoblock['controller'])->get_template_variants() as $tplv) {
+            $full_id = $infoblock['controller'].'.'.$tplv['id'];
+            if ($tplv['for'] == 'wrap') {
+                $wrappers[$full_id] = $tplv['name'];
+            } elseif (in_array($tplv['for'], $action_variants)) {
+                $templates[$full_id] = $tplv['name'];
+            }
         }
+        
+        $fields []= array(
+            'label' => 'Шаблон-обертка',
+            'name' => 'wrapper',
+            'type' => 'select',
+            'values' => $wrappers,
+            'value' => $i2l['wrapper_name'].'.'.$i2l['wrapper_variant']
+        );
+        
+        $fields []= array(
+            'label' => 'Шаблон',
+            'name' => 'template',
+            'type' => 'select',
+            'values' => $templates,
+            'value' => $i2l['template_name'].'.'.$i2l['template_variant']
+        );
         return $fields;
     }
 	
-    protected function _get_mirror_fields($component_id, $current_infoblock, $site_id) {
-        $component = fx::data('component')->get_by_id($component_id);
-        $fields = array();
-
-        $contents_infoblocks = fx::data('infoblock')->get_content_infoblocks($component_id);
-        foreach ($contents_infoblocks as $content_infoblock) {
-            $sub_id = $content_infoblock['subdivision_id'];
-            $subdivision = fx::data('subdivision')->get_by_id($sub_id);
-            if ($subdivision && $subdivision['site_id'] == $site_id) {
-                $sub_name = $subdivision->get('name');
-                $values[$content_infoblock['id']] = $content_infoblock['name']." (раздел $sub_name)";
-            }
-        }
-
-        $source_types = array('all' => 'все', 'select' => 'выбранные');
-        $fields[] = array(
-            'type' => 'radio', 'name' => 'source_type', 'id' => 'source_type', 'label' => 'Разделы, откуда брать данные', 
-            'value' => $current_infoblock ? $current_infoblock['source']['type'] : 'all', 
-            'values' => $source_types,
-            'className' => 'inline'
-        );
-        $fields[] = array(
-            'name' => 'source_infoblocks', 'label' => '', 'type' => 'checkbox', 
-            'values' => $values, 
-            'value' => $current_infoblock && isset($current_infoblock['source']['infoblocks']) ? $current_infoblock['source']['infoblocks'] : array(),
-            'parent' => array('source_type'=>'select')
-        );
-
-
-        $obj_select = array('auto' => 'автоматически', 'manual' => 'вручную');
-        $fields[] = array(
-            'type' => 'radio', 'id' => 'content_selection_type', 'name' => 'content_selection_type', 'label' => 'Выбриать объекты', 
-            'values' => $obj_select, 
-            'value' => $current_infoblock ? $current_infoblock['content_selection']['type'] : 'auto',
-            'className' => 'inline'
-        );
-
-        $fields[] = array(
-            'name' => 'rec_num', 'label' => 'Количество', 'parent' => array('content_selection_type' => 'auto'),
-            'value' => $current_infoblock ? $current_infoblock['rec_num'] : ''
-        );
-
-        $values = array(0 => 'наследовать от компонента');
-        foreach (array('manual', 'field', 'last', 'random') as $v) {
-            $values[$v] = constant('FX_ADMIN_SORT_'.strtoupper($v));
-        }
-        $fields[] = array(
-            'id' => 'sort', 'name' => 'sort_type', 'type' => 'radio', 'label' => FX_ADMIN_SORT, 
-            'value' => $current_infoblock ? $current_infoblock['sort']['type'] : 0, 
-            'values' => $values, 
-            'parent' => array('content_selection_type' => 'auto'),
-            'className' => 'inline'
-        );
-        // поля для сортировки
-        $sortable_fields = $component->get_sortable_fields();
-        $order = array('asc' => FX_ADMIN_SORT_ASC, 'desc' => FX_ADMIN_SORT_DESC);
-        $fields[] = array('name' => 'sort_fields', 'label' => '', 'type' => 'set', 'parent' => array('sort_type' => 'field'),
-            'unactive' => true,
-            'labels' => array(FX_ADMIN_SORT_BY, FX_ADMIN_SORT_ORDER),
-            'tpl' => array(
-                    array('name' => 'field', 'type' => 'select', 'values' => $sortable_fields),
-                    array('name' => 'order', 'type' => 'select', 'values' => $order)),
-            'values' => $sort_fields
-        );
-        return $fields;
-    }
-    
-    /* Возвращает все контроллеры - виджеты и компоненты */
-    public static function get_all_controllers() {
-    	$controllers = array();
-    	foreach (fx::data('component')->get_all() as $c) {
-    		$controllers['component-'.$c['id']] = $c;
-    	}
-    	foreach (fx::data('widget')->get_all() as  $w){
-    		$controllers['widget-'.$w['id']]= $w;
-    	}
-    	$groups = array();
-    	foreach ($controllers as $c) {
-    		$groups [md5($c['group'])]= $c['group'];
-    	}
-    	$groups = array_unique($groups);
-    	return array('groups' => $groups, 'controllers' => $controllers);
-    }
-    
-    
-    public function store($input) {
-        return $this->ui->store('infoblock', $input['filter']);
-    }
-
-    public function settings($input) {
-        if ( $input['simple'] ) {
-            return $this->settings_simple($input);
-        }
-        //return $this->add($input);
-        return $this->settings_select($input);
-    }
-
-    protected function _get_child_object($type, $subtype = '') {
-        $classname = get_class($this) . '_' . $type;
-        if ($subtype) {
-            $classname .= '_' . $subtype;
-        }
-        return new $classname();
-    }
-
-    protected function _form_store($input) {
-        $fields[] = $this->ui->store('infoblock');
-        $fields[] = $this->ui->hidden('phase', 2);
-        $result['fields'] = $fields;
-        $result['step'] = 10;
-        return $result;
-    }
-
-    public function store_save($input) {
-        $result['status'] = 'ok';
-        return $result;
-    }
-    
-    public function save_var($input) {
-        $ib = fx::data('infoblock', $input['infoblock']['id']);
-        $ib_visual = fx::data('infoblock2layout', $input['infoblock']['visual_id']);
-        $var_id = $input['var']['id'];
-        $var_tpl_parts = explode(".", $input['var']['template']);
-        //dev_log($ib_visual, $input);
-        if ($ib_visual) {
-            if ($ib_visual['wrapper_name'] == $var_tpl_parts[1]) {
-                $wrapper_visual = $ib_visual['wrapper_visual'];
-                if (!is_array($wrapper_visual)) {
-                    $wrapper_visual = array();
-                }
-                $wrapper_visual[$var_id] = $input['value'];
-                $ib_visual['wrapper_visual'] = $wrapper_visual;
-            } elseif ($ib_visual['template_name'] == $var_tpl_parts[0] && $ib_visual['template_variant'] == $var_tpl_parts[1]) {
-                $template_visual = $ib_visual['template_visual'];
-                if (!is_array($template_visual)) {
-                    $template_visual = array();
-                }
-                $template_visual[$var_id] = $input['value'];
-                $ib_visual['template_visual'] = $template_visual;
-            }
-            $ib_visual->save();
-        }
-    }
-
-    public function edit_save($input) {
-        
-        if ($input['edit_in_place']) {
-            return $this->edit_in_place($input);
-        }
-
-        $infoblock = fx::data('infoblock')->get_by_id($input['id']);
-        $component_id = $infoblock['essence_id'];
-
-        $content = fx::data('content')->get($component_id, 'infoblock_id', $infoblock['id']);
-
-        if ($content) {
-            $new_input = $input;
-            $new_input['essence'] = 'content';
-            $new_input['action'] = 'edit';
-            $new_input['fx_admin'] = 1;
-            $new_input['id'] = $component_id . '-' . $content['id'];
-            $m = new fx_controller_admin_content();
-            return $m->edit_save($new_input);
-        }
-    }
-
-    public function settings_save($input) {
-        
-        if ($input['edit_in_place']) {
-            return $this->edit_in_place($input);
-        }
-
-        $ib = fx::data('infoblock')->get_by_id($input['id']);
-        // конкретный тип инфоблока может сделать свои действия при сохранении
-        $this->_get_child_object($input['type'], $input['subtype'])->save($ib, $input);
-
-        // основные параметры инфоблока
-        $params = array('keyword', 'url', 'name', 'type', 'subtype', 'essence_id', 'list_ctpl_id', 'visual', 'use_format', 'replace_value', 'default_action', 'rec_num');
-        foreach ($params as $v) {
-            if (isset($input[$v]))
-                $ib->set($v, $input[$v]);
-        }
-
-        $result = array('status' => 'ok');
-        $ib->save();
-        return $result;
-    }
-
-    public function settings_simple ( $input ) {
-        $params = $input['params'];
-        $fields = array(
-        	$this->ui->hidden('essence', 'infoblock'),
-        	$this->ui->hidden('action', 'settings_simple_save'),
-        	$this->ui->hidden('fx_admin'),
-        	$this->ui->hidden('id', $input['id']),
-        	$this->ui->hidden('subdivision_id', $input['subdivision_id']),
-        	$this->ui->hidden('keyword', $input['keyword'])
-		);
-        if ( $params ) {
-            foreach ( $params as $k => $param ) {
-                $fields[] = $this->ui->input('replace_value['.$k.']', $param['name'].' ('.$param['type'].')', $param['value']);
-            }
-        }
-        $result['fields'] = $fields;
-        $result['step'] = 10;
-        return $result;
-    }
-
-    public function settings_simple_save($input) {
-    	$infoblock = null;
-        if ($input['id']) {
-            $infoblock = fx::data('infoblock')->get_by_id($input['id']);
-        }
-        if (!$infoblock) {
-        	$data = array('keyword' => $input['keyword'], 'checked' => 1);
-            $infoblock = fx::data('infoblock')->create($data);
-
-            $subdivision = fx::data('subdivision')->get_by_id($input['subdivision_id']);
-
-            if ($subdivision['own_design']) {
-                $infoblock['subdivision_id'] = $subdivision['id'];
-                $infoblock['individual'] = 1;
-            }
-
-            $infoblock['site_id'] = $subdivision['site_id'];
-            $site = fx::data('site')->get_by_id($subdivision['site_id']);
-            $infoblock['template_id'] = $site['template_id'];
-        }
-
-        $infoblock['replace_value'] = $input['replace_value'];
-
-        $infoblock->save();
-
-        return array('status' => 'ok');
-    }
-
-    public function edit_in_place($input) {
-        if ($input['id']) {
-            $infoblock = fx::data('infoblock')->get_by_id($input['id']);
-        } else {
-            $data = array('keyword' => $input['keyword'], 'checked' => 1);
-            $infoblock = fx::data('infoblock')->create($data);
-
-            $subdivision = fx::data('subdivision')->get_by_id($input['subdivision_id']);
-            if ($subdivision['own_design']) {
-                $infoblock['subdivision_id'] = $subdivision['id'];
-                $infoblock['individual'] = 1;
-            }
-        }
-
-        $infoblock['replace_value'] = array($input['replace_value']);
-        $infoblock->save();
-
-        return array('status' => 'ok');
-    }
-
-    public function _add_save($input) {
-        $fx_core = fx_core::get_object();
-
-        if ($input['id']) {
-            return $this->settings_save($input);
-        }
-
-        $ib = fx::data('infoblock')->create();
-        $site = $fx_core->env->get_site();
-        $ib['site_id'] = $site['id'];
-
-        $infoblock_info = unserialize($input['infoblock_info']);
-        $main_content = (bool) $infoblock_info['main'];
-
-        // конкретный тип инфоблока может сделать свои действия при сохранении
-        $this->_get_child_object($input['type'], $input['subtype'])->save($ib, $input);
-
-        // основные параметры инфоблока
-        $params = array('keyword', 'url', 'name', 'type', 'subtype', 'parent_id', 'field_id', 'essence_id', 'list_ctpl_id', 'visual', 'use_format', 'replace_value', 'default_action', 'rec_num');
-        foreach ($params as $v) {
-            if (isset($input[$v]))
-                $ib->set($v, $input[$v]);
-        }
-        $ib->set('priority', fx::data('infoblock')->next_priority($input['keyword']));
-        if ( $main_content ) {
-            $ib['main_content'] = 1;
-        }
-        else {
-            $ib['template_id'] = $site['template_id'];
-        }
-
-        // инфоблок привязывается к разделу, если раздел имеет индивидуальный дизайн
-        // или если это основной контент
-        $sub = fx::data('subdivision')->get_by_id($input['subdivision_id']);
-        if ($input['subtype'] == 'block' || $sub['own_design'] || $main_content) {
-            $ib->set('subdivision_id', $input['subdivision_id']);
-        }
-
-        if ($input['type'] == 'content' ) {
-            $component = fx_core::get_object()->component->get_by_id($input['essence_id']);
-            if ( $component->is_user_component() ) {
-                $ib->set('subtype', 'user');
-            }
-        }
-        // main content
-        if ($main_content || $sub['own_design']) {
-            $ib->set('individual', 1);
-        }
-
-        $result = array('status' => 'ok');
-
-        $ib->save();
-
-
-        // после добавления инфоблока сразу можно показать форму добавления объекта в него
-        if ($input['subtype'] == 'block' && $ib['default_action'] == 'index') {
-            $result = array();
-            $content_input = array('fx_infoblock' => $ib['id']);
-            $content_controller = new fx_controller_admin_content();
-            $result = $content_controller->add($content_input);
-            $result['clear_previous_steps'] = 1;
-            $result['step'] = 10;
-        }
-
-        return $result;
-    }
-
-    public function save($infoblock, $input) {
-        return false;
-    }
-
-    public function choose_content($input) {
-        $fx_core = fx_core::get_object();
-        $id = $input['fx_infoblock'] ? $input['fx_infoblock'] : $input['id'];
-        $infoblock = fx::data('infoblock')->get_by_id($id);
-        $component = fx::data('component')->get_by_id($infoblock['essence_id']);
-
-        $fields[] = array('type' => 'label', 'label' => 'Выберите объекты<br/>тут должен быть фильтр');
-        $fields[] = array('type' => 'hidden', 'name' => 'essence', 'value' => 'infoblock');
-        $fields[] = array('type' => 'hidden', 'name' => 'action', 'value' => 'choose_content');
-        $fields[] = array('type' => 'hidden', 'name' => 'id', 'value' => $infoblock['id']);
-        $fields[] = array('name' => 'posting', 'type' => 'hidden', 'value' => 1);
-
-        $values = fx_infoblock_content::objects_list('component' . $component['id'], 'output=array&ctpl=select');
-        $value = $infoblock['content_selection']['content'] ? $infoblock['content_selection']['content'] : array();
-        $value = array_values($value);
-
-        $fields[] = array('name' => 'selected_content_ids', 'label' => '<h2>Выберите объекты</h2>', 'type' => 'itemselect', 'values' => $values, 'value' => $value, 'multiple' => 1);
-
-        $result['dialog_title'] = 'Выбор объектов';
-        $result['fields'] = $fields;
-
-        return $result;
-    }
-
-    /**
-     * Сохранение ручного выбора объектов для вывода
+    /*
+     * Сохранить несколько полей из front-end
      */
-    public function choose_content_save($input) {
-        $infoblock = fx::data('infoblock')->get_by_id($input['id']);
-
-        $content_selection = array();
-        $content_selection['type'] = 'manual';
-        $content_selection['content'] = is_array($input['selected_content_ids']) ? array_map('intval', $input['selected_content_ids']) : array();
-
-        $infoblock->set('content_selection', $content_selection)->save();
-
-        return array('status' => 'ok');
-    }
-
-    public function file_edit($input) {
-        $site_name = fx::data('site')->get_by_host_name()->get('name');
-
-        $fields[] = $this->ui->hidden('essence', 'infoblock');
-        $fields[] = $this->ui->hidden('action', 'file_edit');
-        $fields[] = $this->ui->hidden('keyword', $input['keyword']);
-        $fields[] = $this->ui->hidden('subdivision_id', $input['subdivision_id']);
-        $fields[] = $this->ui->hidden('posting', 1);
-
-        $fields[] = array('name' => 'file', 'type' => 'file', 'label' => 'Загрузите изображение');
-
-        if ($input['id']) {
-            $infoblock = fx::data('infoblock')->get_by_id($input['id']);
-            $fields[] = $this->ui->hidden('id', $infoblock['id']);
-            $replace_values = $infoblock['replace_value'];
-            if ($replace_values['src']) {
-                $fields[] = $this->ui->label('<label>Текущее изображение:</label><img style="max-width:120px;" src="' . $replace_values['src'] . '" />');
-            }
-            $alt_text = $replace_values['alt'];
-            $title_text = $replace_values['title'];
+    public function save_var($input) {
+        /* @var $ib fx_infoblock */
+        $ib = fx::data('infoblock', $input['infoblock']['id']);
+        if ( ($visual_id = fx::dig($input, 'infoblock.visual_id')) ) {
+            $ib_visual = fx::data('infoblock2layout', $visual_id);
         } else {
-            $alt_text = $site_name;
-            $title_text = $site_name;
+            $ib_visual = $ib->get_infoblock2layout();
         }
-
-
-        $fields[] = $this->ui->input('alt', 'Альтернативный текст', $alt_text);
-        $fields[] = $this->ui->input('title', 'Всплывающий текст при наведении на изображение', $title_text);
-
-        $result['fields'] = $fields;
-        return $result;
-    }
-
-    public function file_edit_save($input) {
-        $fx_core = fx_core::get_object();
-
-        $src = false;
-        $file = $input['file'];
-
-        if ($file['error'] && $file['error'] != UPLOAD_ERR_NO_FILE) {
-            return array('status' => 'error', 'text' => $fx_core->files->get_file_error($file['error']));
-        } else if (!$file['error']) {
-            $filename = $file['name'];
-            $src = fx::config()->HTTP_FILES_PATH . 'infoblock/' . $filename;
-            $fx_core->files->move_uploaded_file($file['tmp_name'], $src);
-
-            $image = $fx_core->files->is_image($src);
-            if (!$image) {
-                $fx_core->files->rm($src);
-                return array('status' => 'error', 'text' => 'Загруженный файл не является изображением');
+        foreach ($input['vars'] as $c_var) {
+            $var = $c_var['var'];
+            $value = $c_var['value'];
+            if ($var['var_type'] == 'visual' && $ib_visual) {
+                $tpl_name = $ib_visual['template_name'].'.'.$ib_visual['template_variant'];
+                $wrapper_name = $ib_visual['wrapper_name'].'.'.$ib_visual['wrapper_variant'];
+                if ($var['template'] == $wrapper_name) {
+                    $wrapper_visual = $ib_visual['wrapper_visual'];
+                    if (!is_array($wrapper_visual)) {
+                        $wrapper_visual = array();
+                    }
+                    $wrapper_visual[$var['id']] = $value;
+                    $ib_visual['wrapper_visual'] = $wrapper_visual;
+                } else { //if ($var['template'] == $tpl_name) {
+                    $template_visual = $ib_visual['template_visual'];
+                    if (!is_array($template_visual)) {
+                        $template_visual = array();
+                    }
+                    $template_visual[$var['id']] = $value;
+                    $ib_visual['template_visual'] = $template_visual;
+                }
+                $ib_visual->save();
+            } elseif ($var['var_type'] == 'content') {
+                $content_id = $var['content_id'];
+                $content_type_id = $var['content_type_id'];
+                $content = fx::data(array('content',$content_type_id), $content_id);
+                $content[$var['name']] = $value;
+                $content->save();
             }
         }
-
-        if ($input['id']) {
-            $infoblock = fx::data('infoblock')->get_by_id($input['id']);
-        } else {
-            $infoblock = fx::data('infoblock')->create();
-            $infoblock['keyword'] = $input['keyword'];
-
-            $subdivision = fx::data('subdivision')->get_by_id($input['subdivision_id']);
-            if ($subdivision['own_design']) {
-                $infoblock['subdivision_id'] = $subdivision['id'];
-                $infoblock['individual'] = 1;
-            }
-        }
-
-        $replace_value = $infoblock['replace_value'];
-        $replace_value['alt'] = $input['alt'];
-        $replace_value['title'] = $input['title'];
-        if ($src) {
-            $replace_value['src'] = $src;
-        }
-        $infoblock->set('replace_value', $replace_value)->save();
-
-        return array('status' => 'ok');
     }
-
+    
+    public function delete_infoblock($input) {
+        /* @var $infoblock fx_infoblock */
+        $infoblock = fx::data('infoblock', $input['id']);
+        $fields = array(
+            array(
+                'label' => 'Будет удалено куча всего, я понимаю последствия',
+                'name' => 'delete_confirm',
+                'type' => 'checkbox'
+            ),
+            $this->ui->hidden('id', $input['id']),
+            $this->ui->hidden('essence', 'infoblock'),
+            $this->ui->hidden('action', 'delete_infoblock'),
+            $this->ui->hidden('fx_admin', true)
+        );
+        
+        $ib_content = $infoblock->get_owned_content();
+        if ($ib_content->length > 0) {
+            $fields[]= array(
+                'name' => 'content_handle',
+                'label' => 'Инфоблок содержит контент, <b>'.$ib_content->length.'</b> шт. Что с ним делать?',
+                'type' => 'select',
+                'values' => array('unbind' => 'Отвязать/скрыть', 'delete' => 'Удалить'),
+                'parent' => array('delete_confirm' => true)
+            );
+        }
+        if ($infoblock['controller'] == 'layout' && !$infoblock['parent_infoblock_id']) {
+            unset($fields[0]);
+            $fields []= array('type' => 'html', 'html' => 'Удалять лейауты нельзя!');
+        }
+        $this->response->add_fields($fields);
+        if ($input['delete_confirm']) {
+            $this->response->set_status_ok();
+            if ($input['content_handle'] == 'delete') {
+                foreach ($ib_content as $ci) {
+                    $ci->delete();
+                }
+            }
+            $infoblock->delete();
+        }
+    }
 }
-
 ?>

@@ -11,7 +11,7 @@
         steps: [],
         
             
-        open_dialog: function(data, main_cont) {
+        open_dialog: function(data, main_cont, submit_handler) {
             if ( !main_cont ) {
                 main_cont = '#fx_dialog';
             }
@@ -27,14 +27,26 @@
             
             $fx_dialog.main.dialog($fx_dialog.settings);
             
+            var save_handler = $fx_dialog.click_save;
+            if (submit_handler) {
+                save_handler = function(e) {
+                    submit_handler.apply($('form', $fx_dialog.main));
+                }
+            }
             
-            $fx_dialog.add_button("save", "Сохранить", $fx_dialog.click_save);
+            $fx_dialog.main.dialog("option", "buttons", []);
+            
+            $fx_dialog.add_button("save", "Сохранить", save_handler);
             $fx_dialog.add_button("cancel", "Отменить", $fx_dialog.click_cancel);
             
             $fx_dialog.main.fx_create_form(data);
             
-            $('form', $fx_dialog.main).submit( function() {
-            	$fx_dialog.click_save();
+            $('form', $fx_dialog.main).submit( function(e) {
+                if (submit_handler) {
+                    submit_handler.apply(this, [e]);
+                } else {
+                    $fx_dialog.click_save();
+                }
             	return false;
             });
             

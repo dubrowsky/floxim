@@ -33,7 +33,7 @@ class fx_controller_admin_adminpanel extends fx_controller_admin {
 
     static public function panel_html() {
         return '
-            <div id="fx_admin_panel">
+            <div id="fx_admin_panel" class="fx_overlay">
                 <div id="fx_admin_panel_logo"></div>
                 <div id="fx_admin_main_menu"></div>
                 <div id="fx_admin_page_modes"></div>
@@ -41,13 +41,13 @@ class fx_controller_admin_adminpanel extends fx_controller_admin {
                 <div id="fx_admin_additional_menu"></div>
                 <div id="fx_admin_clear"></div>
             </div>
-            <div id="fx_admin_control">
+            <div id="fx_admin_control" class="fx_overlay">
                 <div id="fx_admin_buttons"></div>
                 <div id="fx_admin_additionl_text"></div>
                 <div id="fx_admin_statustext"></div>
             </div>
-            <div id="fx_dialog"></div>
-            <div id="fx_dialog_file"></div>';
+            <div id="fx_dialog" class="fx_overlay"></div>
+            <div id="fx_dialog_file" class="fx_overlay"></div>';
     }
 
 

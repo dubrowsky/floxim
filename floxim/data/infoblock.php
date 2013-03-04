@@ -5,7 +5,7 @@ class fx_data_infoblock extends fx_data {
     public function __construct() {
         parent::__construct();
         $this->classname = 'fx_infoblock';
-        $this->serialized = array('params');
+        $this->serialized = array('params', 'scope');
         $this->order = 'priority';
     }
 

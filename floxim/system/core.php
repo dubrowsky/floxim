@@ -281,7 +281,13 @@ class fx_core extends fx_system {
      * @todo привести в номральный вид
      */
     static public function load_class($classname) {
+        if (substr($classname, 0, 3) != 'fx_') {
+            return false;
+        }
         $file = self::get_class_file($classname);
+        if (!$file) {
+            return false;
+        }
 
         if (!file_exists($file)) {
             $e = new fx_exteption_classload('Unable to load class '.$classname);
@@ -327,12 +333,20 @@ class fx_core extends fx_system {
         $classname = str_replace(array('nc_', 'fx_'), '', $classname);
         
         do {
-            if (preg_match("~^template(|_processor|_field)$~", $classname)) {
+            if ($classname == 'collection') {
+                $file = $root.'system/collection';
+                break;
+            }
+            if (preg_match("~^template(|_processor|_field|_html)$~", $classname)) {
                 $file = $root.'template/'.$classname;
                 break;
             }
             if ($classname == 'controller_component') {
                 $file = $root.'controller/component';
+                break;
+            }
+            if ($classname == 'controller_layout') {
+                $file = $root.'controller/layout';
                 break;
             }
             if (preg_match("~^template_(.+)$~", $classname, $tpl_name)) {

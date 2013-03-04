@@ -154,7 +154,7 @@ fx_buttons.prototype.show_pulldown = function ( button, data ) {
         }
         else {
         	var link_name = v.name || '[NoName]';
-            item = $('<span/>').text(link_name).click( function(){
+            item = $('<span/>').html(link_name).click( v.callback ? v.callback : function(){
                 $fx.handle_button(button, v.options, true);
                 $fx.panel.trigger('fx.click', 'button');
                 return false;

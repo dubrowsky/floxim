@@ -7,11 +7,10 @@ protected $_template_code = "layout_supernova";
 $tpl_to_call = fx::template("layout_supernova");
 ob_start();
 ?>
-        <div class="index_data">
-            <i>на морде нет сайдбара</i>
-            <?=$this->render_area("content")?>  
-        </div>
-    <?
+    <div class="index_data">
+        <?=$this->render_area("content")?>  
+    </div>
+<?
 $tpl_to_call->set_var(
                 'content', 
                 ob_get_clean());
@@ -25,15 +24,9 @@ echo $tpl_to_call->render("wrap", $this->data);?><?
 $tpl_to_call = fx::template("layout_supernova");
 ob_start();
 ?>
-    <div class="sidebar">
-        <?=$this->render_area("sidebar")?>
-        
-        
-        
-    </div>
-    <div class="content content_with_side">
-        <?=$this->render_area("content")?>
-    </div>
+	<div>
+	<?=$this->render_area("content")?>
+	</div>
 <?
 $tpl_to_call->set_var(
                 'content', 
@@ -43,109 +36,500 @@ $tpl_to_call->set_var_meta(
                 array('var_type' => 'param'));
 echo $tpl_to_call->render("wrap", $this->data);?><?
     }
-    public function tpl_wrap_simple() {
-        ?>
-            <div class="block">
-                <?
-if (isset($content)) {
-echo $content;
-}
-?><?=$this->show_var("content")?>
-            </div>
-        <?
-    }
-    public function tpl_wrap_titled() {
-        ?>
-            <div class="block titled_block" style="border-color:<?
-if (isset($color)) {
-echo $color;
-}
-?><?ob_start();?><?$this->set_var_default(
-                        "color", 
-                        ob_get_clean());?><?=$this->show_var("color")?>;">
-                 <div class="title" style="background:<?
-if (isset($color)) {
-echo $color;
-}
-?><?=$this->show_var("color")?>;">
-                    <?
-if (isset($title)) {
-echo $title;
-}
-?><?ob_start();?><?$this->set_var_default(
-                        "title", 
-                        ob_get_clean());?><?=$this->show_var("title")?>
-                 </div>
-                 <div class="data"><?
-if (isset($content)) {
-echo $content;
-}
-?><?=$this->show_var("content")?></div>
-            </div>
-        <?
-    }
     public function tpl_wrap() {
         ?><!DOCTYPE html>
 <html>
-    <head>
-        <title>My Super Template</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    </head>
-    <body>
-        <div class="main_wrap">
-            <div class="header">
-                <a class="home" href="/">
-                   <img src="<?
-if (isset($logo)) {
-echo $logo;
+<head>
+<title>
+My Super Template
+</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</meta>
+<body>
+<div id="main">
+<!--верхняя цветная полоса-->
+<div class='color_line'>
+<div>
+<div>
+<div>
+<div>
+<div>
+<div>
+<div>
+<div>
+<div>
+<div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!--//верхняя цветная полоса--><!--шапка сайта, логотип, поиск, меню, языковая версия-->
+<div id="header">
+<!--логотип, слоган-->
+<div id="logo">
+<a href="/">
+<img src="<?
+$replace_src_0_tmp = null;
+if (isset(${"replace_src_0"})) {
+	$replace_src_0_tmp = ${"replace_src_0"};
+} else {
+	$replace_src_0_tmp = fx::dig($this->data, "replace_src_0");
 }
-?><?ob_start();?><?$this->set_var_default(
-                        "logo", 
-                        ob_get_clean());?><?=$this->show_var("logo")?>" />
-                </a>
-                <?=$this->render_area("header")?>
-            </div>
-            <div class="content">
-                <?
-if (isset($content)) {
-echo $content;
+if (is_null($replace_src_0_tmp)) {
+	ob_start();
+	?>/controllers/layout/supernova/images/logo.gif<?
+	$replace_src_0_tmp = ob_get_clean();
+	fx::dig_set($this->data, "replace_src_0", $replace_src_0_tmp);
 }
-?><?=$this->show_var("content")?>
-            </div>
-            <div class="footer">
-                <div class="footer_left">
-                    <?
-if (isset($copy)) {
-echo $copy;
+if (!($replace_src_0_tmp instanceof fx_template_field)) {
+	$replace_src_0_tmp = new fx_template_field($replace_src_0_tmp, array("id" => "replace_src_0", "var_type" => "visual", "infoblock_id" => fx::dig($this->data, "infoblock.id"), "template" => $this->_get_template_sign(), "title" => "Картинка", "editable" => true));
 }
-?><?ob_start();?><?$this->set_var_default(
-                        "copy", 
-                        ob_get_clean());?><?=$this->show_var("copy")?><br />
-                    <div itemtype="fx_var" itemprop="company">My Company Name</div>
-                </div>
-                <div class="footer_right">
-                    <?=$this->render_area("footer")?>
-                </div>
-                
-                
-            </div>
-        </div>
-    </body>
-</html><?
+
+echo $replace_src_0_tmp;
+unset($replace_src_0_tmp);
+
+?>" fx_replace="src" />
+</a>
+<div>
+<?
+$slogan_tmp = null;
+if (isset(${"slogan"})) {
+	$slogan_tmp = ${"slogan"};
+} else {
+	$slogan_tmp = fx::dig($this->data, "slogan");
+}
+if (is_null($slogan_tmp)) {
+	ob_start();
+	?>название или слоган 
+<br />
+вашей компании<?
+	$slogan_tmp = ob_get_clean();
+	fx::dig_set($this->data, "slogan", $slogan_tmp);
+}
+if (!($slogan_tmp instanceof fx_template_field)) {
+	$slogan_tmp = new fx_template_field($slogan_tmp, array("id" => "slogan", "var_type" => "visual", "infoblock_id" => fx::dig($this->data, "infoblock.id"), "template" => $this->_get_template_sign(), "editable" => true));
+}
+
+echo $slogan_tmp;
+unset($slogan_tmp);
+
+?>
+</div>
+</div>
+<!--//логотип, слоган-->
+<div id="header_nav">
+<!--
+			
+<div id="lang">
+<a href="#" class="cms-lang-active">
+<img src="css/images/lang_rus.jpg" alt="" title="" />
+ Русский
+</a>
+<a href="#" class="cms-lang-unctive">
+<img src="css/images/lang_eng.jpg" alt="" title="" />
+ English
+</a>
+</div>
+
+			//языковая версия-->
+		
+			
+		<!--//поиск-->
+<div class="sep">
+</div>
+<!--горизонтальное меню-->
+			<?=$this->render_area("header")?>
+			
+
+<!--//горизонтальное меню-->
+</div>
+<div class="sep">
+</div>
+</div>
+<!--//шапка сайта, логотип, поиск, меню, языковая версия--><!--центральная часть, контентная область и правый вспомогательный блок-->
+<div id="center">
+<!--контент-->
+<div id="content">
+
+			<?
+$content_tmp = null;
+if (isset(${"content"})) {
+	$content_tmp = ${"content"};
+} else {
+	$content_tmp = fx::dig($this->data, "content");
+}
+echo $content_tmp;
+unset($content_tmp);
+
+?>
+			
+			
+			<!--//заголовок-->
+</div>
+<!--//контент--><!--правый блок-->
+<div id="right_content">
+<?=$this->render_area("sidebar")?>
+<!--вертикальное меню-->
+
+<!--//вертикальное меню-->
+</div>
+<!--//правый блок-->
+</div>
+<div class="sep">
+</div>
+<!--//центральная часть, контентная область и правый вспомогательный блок--><!--баннеры-->
+<div id="banners">
+<div class="sep">
+</div>
+</div>
+<!--//баннеры-->
+<div id="footer">
+<div class="left">
+<?
+$copy_tmp = null;
+if (isset(${"copy"})) {
+	$copy_tmp = ${"copy"};
+} else {
+	$copy_tmp = fx::dig($this->data, "copy");
+}
+if (is_null($copy_tmp)) {
+	ob_start();
+	?>
+© 2010 группа компаний «Netcat».
+<br />
+Все права защищены.
+<?
+	$copy_tmp = ob_get_clean();
+	fx::dig_set($this->data, "copy", $copy_tmp);
+}
+if (!($copy_tmp instanceof fx_template_field)) {
+	$copy_tmp = new fx_template_field($copy_tmp, array("id" => "copy", "var_type" => "visual", "infoblock_id" => fx::dig($this->data, "infoblock.id"), "template" => $this->_get_template_sign(), "editable" => true));
+}
+
+echo $copy_tmp;
+unset($copy_tmp);
+
+?>
+</div>
+<div class="middle">
+<?
+$contacts_tmp = null;
+if (isset(${"contacts"})) {
+	$contacts_tmp = ${"contacts"};
+} else {
+	$contacts_tmp = fx::dig($this->data, "contacts");
+}
+if (is_null($contacts_tmp)) {
+	ob_start();
+	?>
+Адрес: г. Москва, ул. Мануфактурная, д. 14
+<br />
+Телефон и факс: (831) 220-80-18
+<?
+	$contacts_tmp = ob_get_clean();
+	fx::dig_set($this->data, "contacts", $contacts_tmp);
+}
+if (!($contacts_tmp instanceof fx_template_field)) {
+	$contacts_tmp = new fx_template_field($contacts_tmp, array("id" => "contacts", "var_type" => "visual", "infoblock_id" => fx::dig($this->data, "infoblock.id"), "template" => $this->_get_template_sign(), "editable" => true));
+}
+
+echo $contacts_tmp;
+unset($contacts_tmp);
+
+?>
+</div>
+<div class="right">
+<?
+$developa_tmp = null;
+if (isset(${"developa"})) {
+	$developa_tmp = ${"developa"};
+} else {
+	$developa_tmp = fx::dig($this->data, "developa");
+}
+if (is_null($developa_tmp)) {
+	ob_start();
+	?>
+© 2010 Хороший пример 
+<br />
+сайтостроения — 
+<a href="#">
+WebSite.pu
+</a>
+<?
+	$developa_tmp = ob_get_clean();
+	fx::dig_set($this->data, "developa", $developa_tmp);
+}
+if (!($developa_tmp instanceof fx_template_field)) {
+	$developa_tmp = new fx_template_field($developa_tmp, array("id" => "developa", "var_type" => "visual", "infoblock_id" => fx::dig($this->data, "infoblock.id"), "template" => $this->_get_template_sign(), "editable" => true));
+}
+
+echo $developa_tmp;
+unset($developa_tmp);
+
+?>
+</div>
+<div class="sep">
+</div>
+</div>
+<!--нижняя цветная полоса-->
+<div class='color_line'>
+<div>
+<div>
+<div>
+<div>
+<div>
+<div>
+<div>
+<div>
+<div>
+<div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!--//нижняя цветная полоса-->
+</div>
+</body>
+</head>
+
+<?
+    }
+    public function tpl_demo_menu() {
+        ?>
+<div id="menu">
+<ul>
+<?
+if ($this->get_var("input.items") instanceof Traversable) {
+$item_index = 0;
+$item_total = count($this->get_var("input.items"));
+
+foreach ($this->get_var("input.items") as $item_key => $item) {
+$item_index++;
+$item_is_last = $item_total == $item_index;
+$item_is_odd = $item_index % 2 != 0;
+	if (is_array($item)) {
+		extract($item);
+	} elseif (is_object($item)) {
+		extract($item instanceof fx_content ? $item->get_fields_to_show() : get_object_vars($item));
+	}
+?>
+<li>
+<a href="<?
+$f_url_tmp = null;
+if (isset(${"f_url"})) {
+	$f_url_tmp = ${"f_url"};
+} else {
+	$f_url_tmp = fx::dig($this->data, "f_url");
+}
+echo $f_url_tmp;
+unset($f_url_tmp);
+
+?>">
+<span class="mw">
+<span class="mw">
+<?
+$f_name_tmp = null;
+if (isset(${"f_name"})) {
+	$f_name_tmp = ${"f_name"};
+} else {
+	$f_name_tmp = fx::dig($this->data, "f_name");
+}
+echo $f_name_tmp;
+unset($f_name_tmp);
+
+?>
+</span>
+</span>
+</a>
+</li>
+<?}
+}
+?>
+</ul>
+</div>
+<?
+    }
+    public function tpl_wrap_simple() {
+        ?>
+				
+<div class="block">
+
+					<?
+$content_tmp = null;
+if (isset(${"content"})) {
+	$content_tmp = ${"content"};
+} else {
+	$content_tmp = fx::dig($this->data, "content");
+}
+echo $content_tmp;
+unset($content_tmp);
+
+?>
+				
+</div>
+
+			<?
+    }
+    public function tpl_wrap_titled() {
+        ?>
+				
+<div class="block" >
+<div class="title" >
+<h1 style="color:<?
+$color_tmp = null;
+if (isset(${"color"})) {
+	$color_tmp = ${"color"};
+} else {
+	$color_tmp = fx::dig($this->data, "color");
+}
+if (is_null($color_tmp)) {
+	ob_start();
+	?>#000<?
+	$color_tmp = ob_get_clean();
+	fx::dig_set($this->data, "color", $color_tmp);
+}
+if (!($color_tmp instanceof fx_template_field)) {
+	$color_tmp = new fx_template_field($color_tmp, array("id" => "color", "var_type" => "visual", "infoblock_id" => fx::dig($this->data, "infoblock.id"), "template" => $this->_get_template_sign(), "editable" => true));
+}
+
+echo $color_tmp;
+unset($color_tmp);
+
+?>">
+<?
+$title_tmp = null;
+if (isset(${"title"})) {
+	$title_tmp = ${"title"};
+} else {
+	$title_tmp = fx::dig($this->data, "title");
+}
+if (is_null($title_tmp)) {
+	ob_start();
+	?>
+Заголовок
+<?
+	$title_tmp = ob_get_clean();
+	fx::dig_set($this->data, "title", $title_tmp);
+}
+if (!($title_tmp instanceof fx_template_field)) {
+	$title_tmp = new fx_template_field($title_tmp, array("id" => "title", "var_type" => "visual", "infoblock_id" => fx::dig($this->data, "infoblock.id"), "template" => $this->_get_template_sign(), "editable" => true));
+}
+
+echo $title_tmp;
+unset($title_tmp);
+
+?>
+</h1>
+</div>
+<div class="data">
+<?
+$content_tmp = null;
+if (isset(${"content"})) {
+	$content_tmp = ${"content"};
+} else {
+	$content_tmp = fx::dig($this->data, "content");
+}
+echo $content_tmp;
+unset($content_tmp);
+
+?>
+</div>
+</div>
+
+			<?
     }
     public function tpl_supermenu() {
         ?>
-                    <div class="supermenu">
-                        <span class="title"><?
-if (isset($title)) {
-echo $title;
+<div id="menu_vert">
+<h2>
+<?
+$menu_title_tmp = null;
+if (isset(${"menu_title"})) {
+	$menu_title_tmp = ${"menu_title"};
+} else {
+	$menu_title_tmp = fx::dig($this->data, "menu_title");
 }
-?><?ob_start();?><?$this->set_var_default(
-                        "title", 
-                        ob_get_clean());?><?=$this->show_var("title")?>&nbsp;</span>
-                        
-                    </div>
-                <?
+if (is_null($menu_title_tmp)) {
+	ob_start();
+	?>
+Заголовок меню
+<?
+	$menu_title_tmp = ob_get_clean();
+	fx::dig_set($this->data, "menu_title", $menu_title_tmp);
+}
+if (!($menu_title_tmp instanceof fx_template_field)) {
+	$menu_title_tmp = new fx_template_field($menu_title_tmp, array("id" => "menu_title", "var_type" => "visual", "infoblock_id" => fx::dig($this->data, "infoblock.id"), "template" => $this->_get_template_sign(), "editable" => true));
+}
+
+echo $menu_title_tmp;
+unset($menu_title_tmp);
+
+?>
+</h2>
+<ul>
+<?
+if ($this->get_var("input.items") instanceof Traversable) {
+$item_index = 0;
+$item_total = count($this->get_var("input.items"));
+
+foreach ($this->get_var("input.items") as $item_key => $item) {
+$item_index++;
+$item_is_last = $item_total == $item_index;
+$item_is_odd = $item_index % 2 != 0;
+	if (is_array($item)) {
+		extract($item);
+	} elseif (is_object($item)) {
+		extract($item instanceof fx_content ? $item->get_fields_to_show() : get_object_vars($item));
+	}
+?>
+<li>
+<a class="menu-active" href="<?
+$f_url_tmp = null;
+if (isset(${"f_url"})) {
+	$f_url_tmp = ${"f_url"};
+} else {
+	$f_url_tmp = fx::dig($this->data, "f_url");
+}
+echo $f_url_tmp;
+unset($f_url_tmp);
+
+?>">
+<?
+$f_name_tmp = null;
+if (isset(${"f_name"})) {
+	$f_name_tmp = ${"f_name"};
+} else {
+	$f_name_tmp = fx::dig($this->data, "f_name");
+}
+echo $f_name_tmp;
+unset($f_name_tmp);
+
+?>
+</a>
+</li>
+<?}
+}
+?>
+</ul>
+</div>
+<?
+    }
+    public function tpl_() {
+        ?><?
     }
 protected $_templates = array (
   0 => 
@@ -156,7 +540,7 @@ protected $_templates = array (
       0 => 'wrap',
     ),
     'name' => 'index',
-    'for' => 'layout.supernova.index',
+    'for' => 'layout_supernova.index',
   ),
   1 => 
   array (
@@ -166,52 +550,43 @@ protected $_templates = array (
       0 => 'wrap',
     ),
     'name' => 'inner',
-    'for' => 'layout.supernova.inner',
+    'for' => 'layout_supernova.inner',
   ),
   2 => 
   array (
-    'id' => 'wrap_simple',
-    'vars' => 
-    array (
-      0 => 'content',
-    ),
-    'name' => 'Простой блок',
-    'for' => 'wrap',
+    'id' => 'wrap',
+    'name' => 'wrap',
+    'for' => 'layout_supernova.wrap',
   ),
   3 => 
   array (
-    'id' => 'wrap_titled',
-    'vars' => 
-    array (
-      0 => 'color',
-      1 => 'color',
-      2 => 'title',
-      3 => 'content',
-    ),
-    'name' => 'Блок с заголовком',
-    'for' => 'wrap',
+    'id' => 'demo_menu',
+    'name' => 'demo_menu',
+    'for' => 'component_section.listing',
   ),
   4 => 
   array (
-    'id' => 'wrap',
-    'vars' => 
-    array (
-      0 => 'logo',
-      1 => 'content',
-      2 => 'copy',
-    ),
-    'name' => 'wrap',
-    'for' => 'layout.supernova.wrap',
+    'id' => 'wrap_simple',
+    'name' => 'Простой блок',
+    'for' => 'wrap',
   ),
   5 => 
   array (
+    'id' => 'wrap_titled',
+    'name' => 'Блок с заголовком',
+    'for' => 'wrap',
+  ),
+  6 => 
+  array (
     'id' => 'supermenu',
-    'vars' => 
-    array (
-      0 => 'title',
-    ),
     'name' => 'supermenu',
-    'for' => 'component.section.listing',
+    'for' => 'component_section.listing',
+  ),
+  7 => 
+  array (
+    'id' => NULL,
+    'name' => NULL,
+    'for' => 'layout_supernova.',
   ),
 );
 }

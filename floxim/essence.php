@@ -187,5 +187,4 @@ abstract class fx_essence implements ArrayAccess {
     }
 
 }
-
 ?>

@@ -163,6 +163,14 @@
                     	var check_parent_state = function() {
                             var do_show = true;
                             $.each(parent, function(pkey, pval) {
+                                var pexp = '==';
+                                if (/^!=/.test(pval)) {
+                                    pval = pval.replace(/^!=/, '');
+                                    pexp = '!=';
+                                } else if (/^\~/.test(pval)) {
+                                    pval = pval.replace(/^\~/, '');
+                                    pexp = 'regexp';
+                                }
 				var par_inp = $(':input[name="'+pkey+'"]');
 				if (par_inp.length == 0) {
                                     return;
@@ -177,8 +185,17 @@
 				if (par_inp.attr('type') == 'radio') {
                                     par_val = $(':input[name="'+pkey+'"]:checked').val();
                                 }
-                                if (par_val != pval) {
-                                    do_show = false;
+                                switch (pexp) {
+                                    case '==':
+                                        do_show = (par_val == pval);
+                                        break;
+                                    case '!=':
+                                        do_show = (par_val != pval);
+                                        break;
+                                    case 'regexp':
+                                        var prex = new RegExp(pval);
+                                        do_show = prex.test(par_val);
+                                        break;
                                 }
                             });
                             if (do_show) {

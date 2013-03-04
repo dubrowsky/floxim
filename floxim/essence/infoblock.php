@@ -5,14 +5,29 @@ defined("FLOXIM") || die("Unable to load file.");
 class fx_infoblock extends fx_essence {
 
     
-    protected $infoblock2layout = null;
+    protected $_infoblock2layout = null;
     
     public function set_infoblock2layout(fx_infoblock2layout $visual) {
-        $this->infoblock2layout = $visual;
+        $this->_infoblock2layout = $visual;
     }
     
     public function get_infoblock2layout() {
-        return $this->infoblock2layout;
+        if (!$this->_infoblock2layout) {
+            $stored = fx::data('infoblock2layout')->get(
+                    'infoblock_id', $this->get('id'), 
+                    'layout_id', fx::env('site')->get('layout_id')
+            );
+            if ($stored) {
+                $this->_infoblock2layout = $stored;
+            } else {
+                $i2l_params = array('layout_id' => fx::env('layout'));
+                if (($ib_id = $this->get('id'))) {
+                    $i2l_params['infoblock_id'] = $ib_id;
+                }
+                $this->_infoblock2layout = fx::data('infoblock2layout')->create($i2l_params);
+            }
+        }
+        return $this->_infoblock2layout;
     }
     
     public function get_type() {
@@ -20,37 +35,7 @@ class fx_infoblock extends fx_essence {
     }
     
     public function render() {
-        $params = $this->get('params');
-        if (!is_array($params)) {
-            $params = array();
-        }
-        if (!isset($params['infoblock_id'])) {
-            $params['infoblock_id'] = $this->get('id');
-        }
-        $controller = fx::controller($this->get('controller'), $params, $this->get('action'));
-        $result = $controller->process();
-        if ($vis = $this->get_infoblock2layout()) {
-            $tpl = fx::template($vis['template_name']);
-            $tpl_action = $vis['template_variant'] ? $vis['template_variant'] : $this->get('action');
-            //$tpl_params = $vis['template_visual'] ? $vis['template_visual'] : array();
-            //$tpl_params['input'] = $result;
-            if (is_array($vis['template_visual'])) {
-                foreach ($vis['template_visual'] as $vis_key => $vis_value) {
-                    $tpl->set_var($vis_key, $vis_value);
-                    $tpl->set_var_meta($vis_key, array(
-                        'var_type' => 'visual'
-                    ));
-                }
-            }
-            $output = $tpl->render($tpl_action, array('input' => $result));
-        } else {
-            ob_start();
-            echo "<pre>" . htmlspecialchars(print_r($result, 1)) . "</pre>";
-            $output = ob_get_clean();
-        }
-        $infoblock_sign = "infoblock[".$this["id"].'] '.$this->get('controller').'.'.$this->get('action');
-        $output = "\n<!--".$infoblock_sign."-->\n".$output."\n<!--//".$infoblock_sign."-->\n";
-        return $output;
+        return fx::controller('infoblock.render', array('infoblock' => $this))->process();
     }
 
     public function get_access($item = '', $consider_inheritance = true) {
@@ -85,5 +70,24 @@ class fx_infoblock extends fx_essence {
     public function check_rights($action) {
         return true;
     }
-
+    
+    protected function _after_delete() {
+        $visual = fx::data('infoblock2layout')->get_all('infoblock_id', $this->get('id'));
+        $killer = function($cv) {
+            $cv->delete();
+        };
+        $visual->apply($killer);
+        $inherit = fx::data('infoblock')->get_all('parent_infoblock_id', $this->get('id'));
+        $inherit->apply($killer);
+    }
+    
+    public function get_owned_content() {
+        if ($this['action'] != 'listing') {
+            return false;
+        }
+        $controller = fx::controller($this['controller']);
+        $content_type = $controller->get_content_type();
+        $content = fx::data('content_'.$content_type)->get_all(array('infoblock_id' => $this->get('id')));
+        return $content;
+    }
 }

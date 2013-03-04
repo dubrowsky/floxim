@@ -40,6 +40,9 @@ class fx {
      * @param mixed [$id] id или массив ids
     */
     public static function data($datatype, $id = null) {
+        if (is_array($datatype)) {
+            $datatype = join("_", $datatype);
+        }
     	if (!isset(self::$data_finders[$datatype])) {
             try {
                 $classname = 'fx_data_'.$datatype;
@@ -49,8 +52,7 @@ class fx {
             } catch (Exception $e) {
                 // Файндер для контента, класс не определен
                 if (preg_match("~^content_~", $datatype)) {
-                    $component = fx::data('component')->get_by_keyword(preg_replace("~^content_~", '', $datatype));
-                    //dev_log('compo lurk', $component, $datatype);
+                    $component = fx::data('component', preg_replace("~^content_~", '', $datatype));
                     if ($component) {
                         $data_finder = new fx_data_content();
                         $data_finder->set_component($component['id']);
@@ -65,24 +67,31 @@ class fx {
             die("NO DATATYPE: ".$datatype);
     	}
         $df = self::$data_finders[$datatype];
-        if (is_numeric($id) || is_string($id)) {
-            return $df->get_by_id($id);
-        }
-        if (is_array($id)) {
-            return $df->get_by_ids($id);
+        if (func_num_args() == 2) {
+            if (is_numeric($id) || is_string($id)) {
+                return $df->get_by_id($id);
+            }
+            if (is_array($id)) {
+                return $df->get_by_ids($id);
+            }
+            return null;
         }
     	return self::$data_finders[$datatype];
     }
     
     protected static $router = null;
     /**
-     * Получить основной роутинг-менеджер
+     * Получить основной роутинг-менеджер, либо роутер $router_name
+     * @param $router_name = null
      * @return fx_router_manager
      */
-    public static function router() {
+    public static function router($router_name = null) {
     	if (self::$router === null) {
             self::$router = new fx_router_manager();
     	}
+        if (func_num_args() == 1) {
+            return self::$router->get_router($router_name);
+        }
     	return self::$router;
     }
     
@@ -148,22 +157,30 @@ class fx {
                     dev_log('general controller loading failed also');
                 }
             }
-            die("Failed loading class ".$c_class);
+            dev_log("Failed loading controller class ".$c_class, debug_backtrace());
+            die("Failed loading controller class ".$c_class);
     	}
     }
     
-    public static function template($template) {
+    public static function template($template, $data = array()) {
         if (is_numeric($template)) {
             // ...
         }
-        $class_name = 'fx_template_'.preg_replace("~\.~", '_', $template);
+        $parts= explode(".", $template);
+        if (count($parts) == 2) {
+            $template = $parts[0];
+            $action = $parts[1];
+        } else {
+            $action = null;
+        }
+        
+        //$class_name = 'fx_template_'.preg_replace("~\.~", '_', $template);
+        $class_name = 'fx_template_'.$template;
         try {
-            return new $class_name();
+            return new $class_name($data, $action);
         } catch (Exception $e) {
-            
-            //dev_log('template class not found', $class_name);
-            //die('no tpl class: '.$class_name);
-            return new fx_template();
+            dev_log('template class not found', $class_name, func_get_args(), debug_backtrace());
+            return new fx_template($data, $action);
         }
     }
     
@@ -182,10 +199,15 @@ class fx {
         $var_path = explode(".", $var_path);
         $arr = $collection;
         foreach ($var_path as $pp) {
-            if (!isset($arr[$pp])) {
+            if (is_array($arr) || $arr instanceof ArrayAccess) {
+                if (!isset($arr[$pp])) {
+                    return null;
+                }
+                $arr = $arr[$pp];
+            } else {
+                //dev_log('dig not an arr', $collection, $arr, $pp, debug_backtrace());
                 return null;
             }
-            $arr = $arr[$pp];
         }
         return $arr;
     }

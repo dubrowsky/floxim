@@ -53,7 +53,7 @@ class fx_system_env extends fx_system {
    * @return fx_site
    */
   public function get_site ($item=null) {
-    return $item ? $this->current['site'][$item] : $this->current['site'];
+        return $item ? $this->current['site'][$item] : $this->current['site'];
   }
 
   public function set_action ( $action ) {
@@ -96,6 +96,15 @@ class fx_system_env extends fx_system {
       return $this->current['main_content'];
   }
   
+  public function get_home_id() {
+      if (!isset($this->current['home_id'])) {
+        $site = $this->get_site();
+        $home_page = fx::data('content_page')->get(array('parent_id' => 0, 'site_id' => $site['id']));
+        $this->current['home_id'] = $home_page['id'];
+      }
+      return $this->current['home_id'];
+  }
+  
   public function is_admin() {
       $user = $this->get_user();
       if (!$user) {
@@ -103,6 +112,22 @@ class fx_system_env extends fx_system {
       }
       return $user->perm()->is_supervisor();
   }
+  
+    public function get_layout() {
+        if (!$this->current['layout']) {
+            $page_id = $this->get_page();
+            if ($page_id) {
+                $page = fx::data('content_page', $page_id);
+                if ($page['layout_id']) {
+                    $this->current['layout'] = $page['layout_id'];
+                }
+            }
+            if (!$this->current['layout']) {
+                $this->current['layout'] = $this->get_site()->get('layout_id');
+            }
+        }
+        return $this->current['layout'];
+    }
 }
 
 ?>

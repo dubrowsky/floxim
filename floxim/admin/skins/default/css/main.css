@@ -1569,20 +1569,52 @@ li ul .fx_tree_label .fx_tree_title {
 
 .fx_infoblock_adder {
     display:none;
+    background: #3FB7DE;
+    color:#FFF;
+    cursor:pointer;
+    font-family: Tahoma;
+    font-size:12px;
+    font-weight:bold;
+    text-transform: lowercase;
+    padding:5px 8px;
 }
 
 .fx_mode_page_design .fx_infoblock_adder {
-    display: block;
+    display: inline-block;
 }
 
 .fx_mode_page_design .fx_infoblock {
-    border:2px dashed #0F0;
+    outline:2px dashed #0F0;
+    outline-offset:-2px;
 }
 
 .fx_mode_page_edit .fx_template_var {
-    outline:2px dashed #0F0;
+    outline:2px dashed rgba(0, 255, 0, 0.5);
+    outline-offset:-2px;
+}
+/*
+.fx_mode_page_edit .fx_var_editable:hover {
+    outline:2px dashed #FF0;
+    outline-offset: -2px;
+}
+*/
+
+.fx_mode_page_edit .fx_template_var_in_att:hover {
+    outline:2px dashed #00F;
+    outline-offset: -2px;
 }
 
-.fx_mode_page_edit .fx_var_editable {
-    outline:2px dashed #FF0;
+.fx_selected {
+    /*outline:4px solid #FF0 !important;*/
+    outline:4px solid rgba(255, 255, 0, 0.5)  !important;
+    outline-offset: -4px !important;
+}
+
+.fx_empty_infoblock {
+    display: inline-block;
+    color:#999;
+    background:#FFF;
+    font-size:12px;
+    font-family:Tahoma;
+    padding:5px 8px;
 }

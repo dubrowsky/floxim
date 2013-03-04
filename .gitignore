@@ -162,7 +162,13 @@ pip-log.txt
 # Mac crap
 .DS_Store
 
+#NetBeans
+/nbproject
+
 #floxim
 /_devlog/log/*
 /floxim_files/phpthumb
 /floxim_templates
+/nbproject/private/
+/_test/
+/floxim_files/compiled_templates

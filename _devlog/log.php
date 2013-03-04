@@ -23,20 +23,6 @@ function fen_debug() {
 	static $last_timer_value = 0;
 	$call_time_diff = $call_time - $last_timer_value;
 	$last_timer_value = $call_time;
-	if ($is_first_launch && false) {
-		// дублируем на случай, если работаем без аутпута
-		// подумать, как поймать этот случай
-		?>
-		<link type="text/css" href="/dcms/lib/debug/debug.css" rel="stylesheet" />
-		<script type="text/javascript" src="/js/jquery.js"></script>
-		<script type="text/javascript" src="/dcms/lib/debug/debug.js"></script>
-		<?
-		//moduleOutput::addToHead('/fenrir/lib/jquery/jquery.js');
-		//moduleOutput::addToHead('/fenrir/_modules_cms/debug/debug.js');
-		//moduleOutput::addToHead('/fenrir/_modules_cms/debug/debug.css');
-		$is_first_launch = false;
-	}
-	
 	$result = array();
 	foreach (func_get_args() as $print_item) {
 		if (is_object($print_item) && $print_item instanceof DOMNode) {

@@ -234,8 +234,17 @@ class fx_system_page extends fx_system {
 
 
         if ($this->_after_body) {
-            $buffer = str_replace('<body>', '<body>'.join("\r\n", $this->_after_body), $buffer);
+            //$buffer = str_replace('<body>', '<body>'.join("\r\n", $this->_after_body), $buffer);
+            $after_body = $this->_after_body;
+            $buffer = preg_replace_callback(
+                '~<body[^>]*?>~', 
+                function($body) use ($after_body) {
+                    return $body[0].join("\r\n", $after_body);
+                },
+                $buffer
+            );
         }
+        $buffer = str_replace("<body", "<body data-fx_page_id='".fx::env('page')."'", $buffer);
 
         $user = fx_core::get_object()->env->get_user();
         if ($user && $user->perm()->is_supervisor()) {

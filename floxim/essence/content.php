@@ -73,7 +73,7 @@ class fx_content extends fx_essence {
     public function set_field_values($fields = array(), $values = array()) {
         $result = array('status' => 'ok');
 
-        foreach ($fields as &$field) {
+        foreach ($fields as $field) {
             $name = $field->get_name();
 
             if ($this['id']) {
@@ -130,6 +130,7 @@ class fx_content extends fx_essence {
                         $this->_fields_to_show[fx_content::field_to_show_prefix.$k] = new fx_template_field($v, array(
                             'var_type' => 'content', 
                             'content_id' => $this['id'],
+                            'content_type_id' => $this->get_component_id(),
                             'id' => $cf['id'],
                             'name' => $cf['name'],
                             'title' => $cf['description'],
@@ -139,17 +140,33 @@ class fx_content extends fx_essence {
                     }
                 }
             }
+            if ( ($page = $this->get_page())) {
+                $this->_fields_to_show[fx_content::field_to_show_prefix."url"] = $page->get_field_to_show('url');
+            }
         }
         return $this->_fields_to_show;
-        dev_log($fields);
-        return $fields;
     }
     
     public function get_field_to_show($field) {
         $fields = $this->get_fields_to_show();
         $index = fx_content::field_to_show_prefix.$field;
-        dev_log('fields found', $fields, $index);
         return isset($fields[$index]) ? $fields[$index] : 'nu';
+    }
+    
+    protected function _after_delete() {
+        $component = fx::data('component', $this->component_id);
+        if ($component['has_page']) {
+            /* @var $page fx_content_page */
+            if ( !( $page = $this->get_page()) ) {
+                $page = fx::data('content_page')->get(array(
+                    'content_type' => $component['keyword'],
+                    'content_id' => $this['id']
+                ));
+            }
+            if ($page) {
+                $page->delete();
+            }
+        }
     }
 
 }

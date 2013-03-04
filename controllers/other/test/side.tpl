@@ -1,12 +1,8 @@
 <div class="side_test">
-    {php}
-    foreach ($this->get_var('input') as $i => $q){
-        ?>
+    {render}
         <div class="test_q">
-        {var id="q$i"}q#<?=$i?>{/var}:<br />
-        <b><?=$q?></b>
+            {%q$item_index}q#<?=$item_index?>{/var}:<br />
+            <b><?=$item?></b>
         </div>
-        <?
-    }
-    {/php}
+    {/render}
 </div>

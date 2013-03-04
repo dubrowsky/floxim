@@ -45,6 +45,12 @@ class fx_template_processor {
                         $file_data.
                     '{/template}';
             }
+            // Проверяем наличие fx-аттрибутов в разметке файла
+            if (fx_template_html::has_floxim_atts($file_data)) {
+                $T = new fx_template_html($file_data);
+                $file_data = $T->transform_to_floxim();
+                dev_log('transformed '.$file, htmlspecialchars($file_data));
+            }
             $source .= $file_data;
         }
         $source .= '{/templates}';
@@ -74,7 +80,7 @@ class fx_template_processor {
     protected static $_token_info = array(
         'template' => array(
             'type' => 'double',
-            'contains' => array('code', 'template', 'area', 'var', 'call', 'render')
+            'contains' => array('code', 'template', 'area', 'var', 'call', 'render','if')
         ),
         'code' => array(
             'type' => 'single'
@@ -85,11 +91,11 @@ class fx_template_processor {
         ),
         'var' => array(
             'type' => 'both',
-            'contains' => array('code', 'var', 'call', 'area', 'template')
+            'contains' => array('code', 'var', 'call', 'area', 'template', 'render','if')
         ),
         'call' => array(
             'type' => 'both',
-            'contains' => array('var')
+            'contains' => array('var', 'render', 'if')
         ),
         'templates'=> array(
             'type' => 'double',
@@ -97,7 +103,11 @@ class fx_template_processor {
         ),
         'render' => array(
             'type' => 'both',
-            'contains' => array('code', 'template', 'area', 'var', 'call', 'render')
+            'contains' => array('code', 'template', 'area', 'var', 'call', 'render', 'if')
+        ),
+        'if' => array(
+            'type' => 'double',
+            'contains' => array('code', 'template', 'area', 'var', 'call', 'render', 'elseif', 'else')
         )
     );
     
@@ -219,8 +229,32 @@ class fx_template_processor {
         }
         list($tpl_name, $tpl_variant) = explode('.', $tpl_id);
         $code .= '$tpl_to_call = fx::template("'.$tpl_name.'");'."\n";
-        $param_vars = $token->get_children();
-        foreach ($param_vars as $param_var_token) {
+        $call_children = $token->get_children();
+        /*
+         * Преобразуем:
+         *  {call id="wrap"}<div>Something</div>{/call}
+         * вот в такое:
+         *  {call id="wrap"}{var id="content"}<div>Something</div>{/var}{/call}
+         */
+        $has_content_param = false;
+        foreach ($call_children as $call_child) {
+            if ($call_child->name == 'var') {
+                break;
+            }
+            if ($call_child->name == 'code' && preg_match("~[^\s]+~", $call_child->get_prop('value'))) {
+                $has_content_param = true;
+                break;
+            }
+        }
+        if ($has_content_param) {
+            $token->clear_children();
+            $var_token = new fx_template_token('var', 'single', array('id' => 'content'));
+            foreach ($call_children as $call_child) { 
+                $var_token->add_child($call_child);
+            }
+            $token->add_child($var_token);
+        }
+        foreach ($token->get_children() as $param_var_token) {
             // внутри call обрабатываем только var
             if ($param_var_token->name != 'var') {
                 continue;
@@ -256,19 +290,62 @@ class fx_template_processor {
         $var_id = $token->get_prop('id');
         $var_type = $token->get_prop('var_type');
         $code .= "<?\n";
+        
+        /*
+         * 1. Проверить наличие в локальном scope
+         * 2. Проверить наличие в $this->data
+         * 3. Если нигде нет, использовать default и установить его в $this->data
+         * 4. Если есть мета-инфа о переменной, проверить instanceof fx_template_field
+         * 5. При необходимости конвертировать
+         * 6. Отобразить
+         * 
+         */
+        $var_tmp = preg_match("~^[a-z0-9_]+$~i", $var_id) ? '$'.$var_id.'_tmp' : '${"'.$var_id.'"."_tmp"}';
+        
         $var_parts = explode(".", $var_id, 2);
-        $code .= 'if (isset($'.$var_parts[0].')) {'."\n";
-        $code .= "echo ";
+        $code .= $var_tmp ." = null;\n";
+        $code .= 'if (isset(${"'.$var_parts[0].'"})) {'."\n";
+        $code .= "\t".$var_tmp.' = ';
         if (isset($var_parts[1])) {
-            $code .= 'fx::dig($'.$var_parts[0].', "'.$var_parts[1].'")';
+            $code .= 'fx::dig(${"'.$var_parts[0].'"}, "'.$var_parts[1].'")';
         } else {
-            $code .= '$'.$var_parts[0];
+            $code .= '${"'.$var_parts[0].'"}';
         }
         $code .= ";\n";
-        $code .= "}\n?>";
+        $code .= "} else {\n";
+        $code .= "\t".$var_tmp.' = fx::dig($this->data, "'.$var_id.'");'."\n";
+        $code .= "}";
+        if ($token->get_prop('default') || count($token->get_children()) > 0) {
+            $code .= "\nif (is_null(".$var_tmp.")) {\n";
+            if (!($default = $token->get_prop('default')) ) {
+                $code .= "\tob_start();\n";
+                $code .= "\t".$this->_token_to_code($token);
+                $default = "ob_get_clean()";
+            }
+            $code .= "\n\t".$var_tmp .' = '.$default.";\n";
+            $code .= "\tfx::dig_set(\$this->data, \"".$var_id."\", ".$var_tmp.");\n";
+            $code .= "}\n";
+        }
+        if ($token->get_prop('var_type') == 'visual' && !($token->get_prop('editable') == 'false')) {
+            $code .= 'if (!('.$var_tmp." instanceof fx_template_field)) {\n";
+            $code .= "\t".$var_tmp." = new fx_template_field(".$var_tmp.", ";
+            $code .= 'array("id" => "'.$var_id.'", ';
+            $code .= '"var_type" => "visual", ';
+            $code .= '"infoblock_id" => fx::dig($this->data, "infoblock.id"), ';
+            $code .= '"template" => $this->_get_template_sign(), ';
+            if ( ( $var_title = $token->get_prop('title')) ) {
+                $code .= '"title" => "'.$var_title.'", ';
+            }
+            $code .= '"editable" => true))'.";\n";
+            $code .= "}\n";
+        }
+        $code .= "\necho ".$var_tmp.";\n";
+        $code .= "unset(".$var_tmp.");\n";
+        $code .= "\n?>";
+        return $code;
         /** old **/
         
-        $default = $token->get_prop('default');
+        $default = $token->get_prop("default");
         if (!$default && count($token->get_children()) > 0) {
             $code .= "<?ob_start();";
             foreach ($token->get_children() as $c_child) {
@@ -291,12 +368,55 @@ class fx_template_processor {
         return $code;
     }
     
+    protected function _token_render_to_code(fx_template_token $token) {
+        $code = "<?\n";
+        if (! ($arr_id = $token->get_prop('select')) || $arr_id == '.') {
+            $arr_id = '$this->get_var("input.items")';
+        }
+        if (! ($item_alias = $token->get_prop('as') ) ) {
+            $item_alias = '$item';
+        }
+        if (! ($item_key = $token->get_prop('key'))) {
+            $item_key = '$item_key';
+        }
+        if (! ($extract = $token->get_prop('extract'))) {
+            $extract = true;
+        }
+        $counter_id = $item_alias."_index";
+        $code .= "if (".$arr_id." instanceof Traversable) {\n";
+        $code .= $counter_id." = 0;\n";
+        $code .= $item_alias."_total = count(".$arr_id.");\n";
+        $code .= "\nforeach (".$arr_id." as ".$item_key." => ".$item_alias.") {\n";
+        $code .= $counter_id."++;\n";
+        $code .= $item_alias."_is_last = ".$item_alias."_total == ".$counter_id.";\n";
+        $code .= $item_alias."_is_odd = ".$counter_id." % 2 != 0;\n";
+        if ($extract) {
+            $code .= "\tif (is_array(".$item_alias.")) {\n";
+            $code .= "\t\textract(".$item_alias.");\n";
+            $code .= "\t} elseif (is_object(".$item_alias.")) {\n";
+            $code .= "\t\textract(".$item_alias." instanceof fx_content ? ".$item_alias."->get_fields_to_show() : get_object_vars(".$item_alias."));\n";
+            $code .= "\t}\n";
+        }
+        $code .= $this->_token_to_code($token);
+        $code .= "}\n"; // close foreach
+        $code .= "}\n?>"; // close if
+        return $code;
+    }
+    
     protected function _token_template_to_code($token) {
         $this->add_template($token);
     }
     
     protected function _token_area_to_code($token) {
         return '<?=$this->render_area("'.$token->get_prop('id').'")?>';
+    }
+    
+    protected function _token_if_to_code($token) {
+        $code  = '<?';
+        $code .= 'if ('.$token->get_prop('test').") {\n";
+        $code .= $this->_token_to_code($token)."\n";
+        $code .= "}\n?>";
+        return $code;
     }
 
 
@@ -307,6 +427,8 @@ class fx_template_processor {
             if (method_exists($this, $method_name)) {
                 $code .= call_user_func(array($this, $method_name), $child, $token);
                 continue;
+            } else {
+                $code .= '/'."* no method for ".$method_name." *".'/';
             }
         }
         $code .= "<?";
@@ -323,7 +445,7 @@ class fx_template_processor {
             $name = $token->get_prop('id');
         }
         if (! ($for = $token->get_prop('for'))) {
-            $for = $this->_controller_type.".".$this->_controller_name.".".$token->get_prop('id');
+            $for = $this->_controller_type."_".$this->_controller_name.".".$token->get_prop('id');
         }
         $this->templates [$token->get_prop('id')] += array(
             'code' => $code,
@@ -372,7 +494,7 @@ class fx_template_processor {
     
     /**
      * создать токен из исходника
-     * @param type $source
+     * @param string $source
      * @return fx_template_token
      */
     public static function create_token($source) {
@@ -385,9 +507,6 @@ class fx_template_processor {
             $source = substr($source, strlen($name[0]));
             $name = $name[1];
             $type_info = self::get_token_info($name);
-            if (preg_match("~title~", $input_source)) {
-                dev_log('title var', $name, $source, $is_close);
-            }
             if (preg_match("~^[\\\$%]~", $name, $var_marker)) {
                 $props['id'] = preg_replace("~^[\\\$%]~", '', $name);
                 $props['var_type'] = $var_marker[0] == '%' ? 'visual' : 'data';
@@ -441,6 +560,10 @@ class fx_template_token {
             $this->children = array();
         }
         $this->children []= $token;
+    }
+    
+    public function clear_children() {
+        $this->children = array();
     }
     
     public function get_children() {

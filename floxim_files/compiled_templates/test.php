@@ -5,54 +5,86 @@ protected $_template_code = "test";
     public function tpl_show() {
         ?><div class="test_data">
 Test template says: <b><?
-if (isset($test_data)) {
-echo $test_data;
+${"test_data"."_tmp"} = null;
+if (isset(${"test_data"})) {
+	${"test_data"."_tmp"} = ${"test_data"};
+} else {
+	${"test_data"."_tmp"} = fx::dig($this->data, "test_data");
 }
-?><?ob_start();?><?$this->set_var_default(
-                        "test_data", 
-                        ob_get_clean());?><?=$this->show_var("test_data")?></b>
+if (is_null(${"test_data"."_tmp"})) {
+	ob_start();
+	?>default data<?
+	${"test_data"."_tmp"} = ob_get_clean();
+	fx::dig_set($this->data, "test_data", ${"test_data"."_tmp"});
+}
+if (!(${"test_data"."_tmp"} instanceof fx_template_field)) {
+	${"test_data"."_tmp"} = new fx_template_field(${"test_data"."_tmp"}, array("id" => "test_data", "var_type" => "visual", "infoblock_id" => fx::dig($this->data, "infoblock.id"), "template" => $this->_get_template_sign(),"editable" => true));
+}
+
+echo ${"test_data"."_tmp"};
+unset(${"test_data"."_tmp"});
+
+?></b>
 </div><?
     }
     public function tpl_side() {
         ?><div class="side_test">
     <?
-    foreach ($this->get_var('input') as $i => $q){
-        ?>
+if ($this->get_var("input") instanceof Traversable) {
+$item_index = 0;
+$item_total = count($this->get_var("input"));
+
+foreach ($this->get_var("input") as $item_key => $item) {
+$item_index++;
+$item_is_last = $item_total == $item_index;
+$item_is_odd = $item_index % 2 != 0;
+	if (is_array($item)) {
+		extract($item);
+	} elseif (is_object($item)) {
+		extract($item instanceof fx_content ? $item->get_fields_to_show() : get_object_vars($item));
+	}
+?>
         <div class="test_q">
-        <?
-if (isset($q$i)) {
-echo $q$i;
+            <?
+${"q$item_index"."_tmp"} = null;
+if (isset(${"q$item_index"})) {
+	${"q$item_index"."_tmp"} = ${"q$item_index"};
+} else {
+	${"q$item_index"."_tmp"} = fx::dig($this->data, "q$item_index");
 }
-?><?ob_start();?><?$this->set_var_default(
-                        "q$i", 
-                        ob_get_clean());?><?=$this->show_var("q$i")?>:<br />
-        <b><?=$q?></b>
+if (is_null(${"q$item_index"."_tmp"})) {
+	ob_start();
+	?>q#<?=$item_index?><?
+	${"q$item_index"."_tmp"} = ob_get_clean();
+	fx::dig_set($this->data, "q$item_index", ${"q$item_index"."_tmp"});
+}
+if (!(${"q$item_index"."_tmp"} instanceof fx_template_field)) {
+	${"q$item_index"."_tmp"} = new fx_template_field(${"q$item_index"."_tmp"}, array("id" => "q$item_index", "var_type" => "visual", "infoblock_id" => fx::dig($this->data, "infoblock.id"), "template" => $this->_get_template_sign(),"editable" => true));
+}
+
+echo ${"q$item_index"."_tmp"};
+unset(${"q$item_index"."_tmp"});
+
+?>:<br />
+            <b><?=$item?></b>
         </div>
-        <?
-    }
-    ?>
+    <?}
+}
+?>
 </div><?
     }
 protected $_templates = array (
   0 => 
   array (
     'id' => 'show',
-    'vars' => 
-    array (
-      0 => 'test_data',
-    ),
     'name' => 'show',
-    'for' => 'other.test.show',
+    'for' => 'other_test.show',
   ),
   1 => 
   array (
     'id' => 'side',
-    'vars' => 
-    array (
-      0 => 'q$i',
-    ),
     'name' => 'side',
-    'for' => 'other.test.side',
+    'for' => 'other_test.side',
   ),
 );
 }

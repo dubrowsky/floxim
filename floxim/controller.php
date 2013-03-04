@@ -43,13 +43,7 @@ class fx_controller {
             return $this;
         }
     	
-    	if (!is_callable(array($this, $action))) {
-            // default action should be here...
-            dev_log('no action for controller', $this, $action);
-            //die("Error! No action! Class: ".get_class($this).", action:".htmlspecialchars($action)) ;
-    	} else {
-            $this->action = $action;
-        }
+    	$this->action = $action;
     	return $this;
     }
 
@@ -65,9 +59,9 @@ class fx_controller {
             $this->set_input($input);
     	}
     	$this->set_action($action);
-    	$action = $this->action ? $this->action : 'default_action';
+    	$action = is_callable(array($this, $this->action)) ? $this->action : 'default_action';
         dev_log('call action '.get_class($this).'.'.$action);
-        return $this->$action($input);
+        return $this->$action($this->input);
     }
     
     public function find_template() {
@@ -77,6 +71,20 @@ class fx_controller {
     
     public function find_template_variant() {
         return $this->action;
+    }
+    
+    /*
+     * Пост-обработка, вызывается из fx_controller_infoblock->render()
+     */
+    public function postprocess($html) {
+        return $html;
+    }
+    
+    public function get_action_settings($action) {
+        if (method_exists($this, 'get_action_settings_'.$action)) {
+            return call_user_func(array($this, 'get_action_settings_'.$action));
+        }
+        return array();
     }
     /*
     public function render() {

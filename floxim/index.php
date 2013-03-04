@@ -9,13 +9,16 @@ fx_content_user::attempt_to_authorize();
 
 fx::router()->register_system();
 if ($controller = fx::router()->route()) {
-    //dev_log($controller);
+    dev_log('controller is', $controller);
     $result = $controller->process();
-    $template = $controller->find_template();
-    $template_var = $controller->find_template_variant();
-    $output = $template->render($template_var, array('input' => $result));
-    $output = fx::page()->post_proccess($output);
-    echo $output;
+    if (!is_string($result)) {
+        $template = $controller->find_template();
+        dev_log('found tpl is', $template, $result);
+        $template_var = $controller->find_template_variant();
+        $result = $template->render($template_var, array('input' => $result));
+        $result = fx::page()->post_proccess($result);
+    }
+    echo $result;
     die();
 }
 
@@ -30,8 +33,6 @@ if (!isset($essence)) {
 if (!isset($action)) {
     $action = $fx_core->input->fetch_get_post('action');
 }
-
-
 
 $fx_subdivision = $fx_core->input->fetch_get_post('fx_subdivision');
 $infoblock = $fx_core->input->fetch_get_post('infoblock');
@@ -54,7 +55,7 @@ if (!$essence && !$fx_subdivision) {
 
     // admin
     if ($fx_core->url->get_parsed_url('path') == fx::config()->HTTP_ROOT_PATH) {
-        $essence = 'page';
+        $essence = 'layout';
         $action = 'admin';
     } else { // обычный вывод страницы
         if (!$current_site) {
@@ -99,7 +100,7 @@ if (!$essence && !$fx_subdivision) {
 }
 
 if (!$essence) {
-    $essence = 'page';
+    $essence = 'layout';
 }
 
 if (!$action) {

@@ -4,8 +4,11 @@ class fx_template {
     protected $data = array();
     protected $meta = array();
     
-    public function __construct($data = array()) {
+    public function __construct($data = array(), $action = null) {
         $this->data = $data;
+        if ($action) {
+            $this->action = $action;
+        }
     }
     
     public function print_var($var) {
@@ -23,6 +26,7 @@ class fx_template {
     public function add_var($var_path, $var_value) {
         $this->_collection_set($this->data, $var_path, $var_value, true);
     }
+    
     
     public function set_var_meta($var_path, $meta_value) {
         $this->_collection_set($this->meta, $var_path, $meta_value);
@@ -83,6 +87,10 @@ class fx_template {
          }
          return $c_val;
     }
+    
+    protected function _get_template_sign() {
+        return $this->_template_code.'.'.$this->_current_action;
+    }
 
 
     public function show_var($var_path, $context = null) {
@@ -108,32 +116,13 @@ class fx_template {
         echo "<!-- area ".$area." -->\n";
         $area_blocks = $this->get_var('input.'.$area);
         if (!$area_blocks || !is_array($area_blocks)) {
-            return;
+            $area_blocks = array();
         }
         foreach ($area_blocks as $ib) {
             if (! $ib instanceof fx_infoblock) {
                 die();
             }
-            $ib_res = $ib->render();
-            if ( ($vis = $ib->get_infoblock2layout()) ) {
-                if ($vis['wrapper_name']) {
-                    $tpl_wrap = fx::template($this->_template_code);
-                    $wrap_name = $vis['wrapper_name'];
-                    $wrap_params = $vis['wrapper_visual'] ? $vis['wrapper_visual'] : array();
-                    foreach ( $wrap_params as $wrap_param_key => $wrap_param_val) {
-                        $tpl_wrap->set_var($wrap_param_key, $wrap_param_val);
-                        $tpl_wrap->set_var_meta($wrap_param_key, array('var_type' => 'visual'));
-                    }
-                    //$wrap_params['content'] = $ib_res;
-                    $tpl_wrap->set_var('content', $ib_res);
-                    $tpl_wrap->set_var_meta('content', array('var_type' => 'param'));
-                    $result = $tpl_wrap->render($wrap_name);//, $wrap_params);
-                }
-            }
-            if (!$result) {
-                $result = $ib_res;
-            }
-            $result = $this->_add_infoblock_meta($result, $ib);
+            $result = $ib->render();
             echo $result;
         }
         if (fx::env()->is_admin()) {
@@ -142,20 +131,12 @@ class fx_template {
         echo "<!-- // area ".$area." -->\n";
     }
     
-    protected function _add_infoblock_meta($html_result, $infoblock) {
-        $ib_info = array('id' => $infoblock['id']);
-        if (($vis = $infoblock->get_infoblock2layout())) {
-            $ib_info['visual_id'] = $vis['id'];
-        }
-        
-        $ib_info = htmlentities(json_encode($ib_info));
-        $html_result = '<div class="fx_infoblock" data-fx_infoblock="'.$ib_info.'">'.$html_result.'</div>';
-        return $html_result;
-    }
-    
     protected $_current_action = null;
 
-    public function render($action, $data = array()) {
+    public function render($action = null, $data = array()) {
+        if ($action == null && $this->action) {
+            $action = $this->action;
+        }
         $this->_current_action = $action;
         //dev_log('rendering', $action, $data, get_class($this));
         foreach ($data as $dk => $dv) {
@@ -174,12 +155,17 @@ class fx_template {
             echo "<pre>".get_class($this)." has no action (".$action.") for data\n" . htmlspecialchars(print_r($data, 1)) . "</pre>";
         }
         $result .= ob_get_clean();
-        if (fx::env()->is_admin()) {
-            //$result = '<div class="fx_template_block">'.$result."</div>";
-        }
         $result .= '<!-- // template'.$this->_template_code.".".$action." -->\n";
         $result = fx_template_field::replace_fields($result);
         return $result;
+    }
+    
+    // заполняется при компиляции
+    protected $_templates = array();
+
+
+    public function get_template_variants() {
+        return $this->_templates;
     }
 }
 ?>
