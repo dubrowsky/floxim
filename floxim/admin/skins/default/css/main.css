@@ -1581,6 +1581,7 @@ li ul .fx_tree_label .fx_tree_title {
 
 .fx_mode_page_design .fx_infoblock_adder {
     display: inline-block;
+    position:absolute;
 }
 
 .fx_mode_page_design .fx_infoblock {

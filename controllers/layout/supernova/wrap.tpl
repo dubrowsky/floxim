@@ -1,3 +1,4 @@
+{template id="wrap" for="false"}
 <!DOCTYPE html>
 <html>
     <head>
@@ -11,33 +12,26 @@
 	<!--//верхняя цветная полоса-->
 	<!--шапка сайта, логотип, поиск, меню, языковая версия-->
 	<div id="header">
-	<!--логотип, слоган-->
+        <!--логотип, слоган-->
 		<div id="logo">
 			<a href="/">
 				<img src="/controllers/layout/supernova/images/logo.gif" fx_replace="src" />
 			</a>
-			<div>{%slogan}название или слоган <br />вашей компании{/%slogan}</div>
+			<div fx_var="slogan">название или слоган <br />вашей компании</div>
 		</div>
-	<!--//логотип, слоган-->
+        <!--//логотип, слоган-->
 		<div id="header_nav">
-			<!--
-			<div id="lang">
-				<a href="#" class="cms-lang-active"><img src="css/images/lang_rus.jpg" alt="" title="" /> Русский</a>
-				<a href="#" class="cms-lang-unctive"><img src="css/images/lang_eng.jpg" alt="" title="" /> English</a>
-			</div>
-			//языковая версия-->
-		
 			
-		<!--//поиск-->
+            <!--//поиск-->
 			<div class="sep"></div>
-		<!--горизонтальное меню-->
+            <!--горизонтальное меню-->
 			{area id="header"}
 			<div id="menu" fx_template="demo_menu" fx_template_for="component_section.listing">
             	<ul>
                     <li fx_render="."><a href="{$f_url}"><span class="mw"><span class="mw">{$f_name}</span></span></a></li>
                 </ul>
 			</div>
-		<!--//горизонтальное меню-->
+            <!--//горизонтальное меню-->
 		</div>
 		<div class="sep"></div>
 	</div>
@@ -99,60 +93,4 @@
 
 </body>
 </html>
-{*
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>My Super Template</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    </head>
-    <body>
-        <div class="main_wrap">
-            <div class="header">
-                <a class="home" href="/">
-                   <img src="{%logo}/floxim_templates/demo1/css/images/logo.gif{/%logo}" />
-                </a>
-                {area id="header"}
-            </div>
-            <div class="content">
-                {$content}
-                {template id="wrap_simple" name="Простой блок" for="wrap"}
-                    <div class="block">
-                        {$content}
-                    </div>
-                {/template}
-                {template id="wrap_titled" name="Блок с заголовком" for="wrap"}
-                    <div class="block titled_block" style="border-color:{%color editable="false"}#900{/%color};">
-                         <div class="title" style="background:{%color};">
-                            {%title}Заголовок{/%title}
-                         </div>
-                         <div class="data">{$content}</div>
-                    </div>
-                {/template}
-            </div>
-            <div class="footer">
-                <div class="footer_left">
-                    <?
-                        $mytest = array('one' => array('x' => 'Olo', 'y' => 'trolo'));
-                    ?>
-                    {%copy}&copy; 2010-<?=date('Y')?>{/%copy}<br />
-                    <div fx_var="company">My Company Name</div>
-                    <div fx_var="$mytest.one.x">hm...</div>
-                </div>
-                <div class="footer_right" fx_area="footer">
-                    <div class="supermenu" fx_template="supermenu" fx_template_for="component_section.listing">
-                        <span class="title">{%title}Менюшечка:{/%title}&nbsp;</span>
-                        {render}
-                            <span class="menu_item">
-                                <a href="{$f_url}">{$f_name}</a>
-                            </span>
-                            <?if (!$item_is_last){?>
-                                <span class="sep">{%separator}&nbsp;&bull;&nbsp;{/%separator}</span>
-                            <?}?>
-                        {/render}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </body>
-</html>*}
+{/template}

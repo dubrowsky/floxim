@@ -91,8 +91,8 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             // Редактируем существующий инфоблок
             /* @var $infoblock fx_infoblock */
             $infoblock = fx::data('infoblock', $input['id']);
-            $controller = $infoblock['controller'];
-            $action = $infoblock['action'];
+            $controller = $infoblock->get_prop_inherited('controller');
+            $action = $infoblock->get_prop_inherited('action');
             $i2l = $infoblock->get_infoblock2layout();
     	} else {
             // устанавливаем в окружение текущую страницу
@@ -268,6 +268,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         // варианты шаблона из лейаута
         foreach ( fx::template('layout_'.$layout_essence['keyword'])->get_template_variants() as $tplv) {
             $full_id = 'layout_'.$layout_essence['keyword'].'.'.$tplv['id'];
+            dev_log('lay', $full_id, $tplv['for']);
             if ($tplv['for'] == 'wrap') {
                 $wrappers[$full_id] = $tplv['name'];
             } elseif (in_array($tplv['for'], $action_variants)) {
@@ -277,6 +278,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         // варианты шаблонов из шаблона контроллера
         foreach (fx::template($infoblock['controller'])->get_template_variants() as $tplv) {
             $full_id = $infoblock['controller'].'.'.$tplv['id'];
+            dev_log('ctr', $full_id, $tplv['for']);
             if ($tplv['for'] == 'wrap') {
                 $wrappers[$full_id] = $tplv['name'];
             } elseif (in_array($tplv['for'], $action_variants)) {
@@ -284,13 +286,15 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             }
         }
         
-        $fields []= array(
-            'label' => 'Шаблон-обертка',
-            'name' => 'wrapper',
-            'type' => 'select',
-            'values' => $wrappers,
-            'value' => $i2l['wrapper_name'].'.'.$i2l['wrapper_variant']
-        );
+        if ($infoblock->get_prop_inherited('controller') != 'layout') {
+            $fields []= array(
+                'label' => 'Шаблон-обертка',
+                'name' => 'wrapper',
+                'type' => 'select',
+                'values' => $wrappers,
+                'value' => $i2l['wrapper_name'].'.'.$i2l['wrapper_variant']
+            );
+        }
         
         $fields []= array(
             'label' => 'Шаблон',

@@ -90,4 +90,41 @@ class fx_infoblock extends fx_essence {
         $content = fx::data('content_'.$content_type)->get_all(array('infoblock_id' => $this->get('id')));
         return $content;
     }
+    
+    public function get_parent_infoblock() {
+        if ( !( $parent_ib_id = $this->get('parent_infoblock_id'))) {
+            return;
+        }
+        return fx::data('infoblock', $parent_ib_id);
+    }
+    
+    public function get_prop_inherited($path_str) {
+        $own_result = null;
+        $path = explode(".", $path_str);
+        if ($path[0] == 'visual') {
+            $c_i2l = $this->get_infoblock2layout();
+            $vis_path_str = join(".", array_slice($path, 1));
+            $own_result = fx::dig($c_i2l, $vis_path_str);
+        } else {
+            $own_result = fx::dig($this, $path_str);
+        }
+        if ($own_result && !is_array($own_result)) {
+            return $own_result;
+        }
+        if ( ($parent_ib = $this->get_parent_infoblock()) ) {
+            $parent_result = $parent_ib->get_prop_inherited($path_str);
+        }
+        if (is_array($own_result) && is_array($parent_result)) {
+            return array_merge($parent_result, $own_result);
+        }
+        return $own_result ? $own_result : $parent_result;
+    }
+    
+    public function get_root_infoblock() {
+        $cib = $this;
+        while ($cib['parent_infoblock_id']) {
+            $cib = $cib->get_parent_infoblock();
+        }
+        return $cib;
+    }
 }

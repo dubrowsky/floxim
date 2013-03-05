@@ -30,11 +30,9 @@ class fx_router_front extends fx_router {
         if (($cached = fx::dig($this->ib_cache, $cache_path) )) {
             return $cached;
         }
-        if (!$page_id) {
-            dev_log('no pg', debug_backtrace());
-        }
         $page = fx::data('content_page', $page_id);
         if (!$page) {
+            dev_log('no pg in router_front', debug_backtrace());
             return;
         }
         $site = fx::data('site', $page['site_id']);
@@ -50,15 +48,15 @@ class fx_router_front extends fx_router {
         $areas = array();
         // получаем все привязки "инфоблок-макет"
         $visual = fx::data('infoblock2layout')->get_for_infoblocks($infoblocks);
-        // коллекция наследованных блоков
-        $child_ibs = $infoblocks->find('parent_infoblock_id');
+        // id-шники наследованных блоков
+        $inherited_ids = $infoblocks->find('parent_infoblock_id')->get_values('parent_infoblock_id');
         
         foreach ($infoblocks as $ib) {
-            $descendant_ibs = $child_ibs->find(array('parent_infoblock_id' => $ib['id']));
-            if ($descendant_ibs->length > 0) {
-                dev_log('dibs', $descendant_ibs);
-            } else {
-                dev_log('dibs empty', $descendant_ibs);
+            // если инфоблок наследуется одним из привязанных к текущей странице инфоблоков,
+            // помечаем его как наследуемый
+            if (in_array($ib['id'], $inherited_ids)) {
+                $ib->is_inherited = true;
+                //continue;
             }
             
             if (fx::dig($ib, 'scope.pages') == 'this' && $ib['page_id'] != $page_id) {
@@ -82,7 +80,8 @@ class fx_router_front extends fx_router {
                 $c_area = 'layout';
             } elseif ($c_visual) {
                 $ib->set_infoblock2layout($c_visual);
-                $c_area = $c_visual['area'];
+                //$c_area = $c_visual['area'];
+                $c_area = $ib->get_prop_inherited('visual.area');
             } else {
                 $c_area = 'unknown';
             }

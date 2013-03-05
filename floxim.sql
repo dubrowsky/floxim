@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1
--- Время создания: Фев 08 2013 г., 17:09
+-- Время создания: Мар 05 2013 г., 14:53
 -- Версия сервера: 5.5.25
 -- Версия PHP: 5.3.13
 
@@ -196,6 +196,7 @@ CREATE TABLE IF NOT EXISTS `fx_component` (
   `group` varchar(64) NOT NULL DEFAULT 'Main',
   `icon` varchar(255) NOT NULL,
   `store_id` text,
+  `has_page` tinyint(4) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `Class_Group` (`group`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=25 ;
@@ -204,30 +205,30 @@ CREATE TABLE IF NOT EXISTS `fx_component` (
 -- Дамп данных таблицы `fx_component`
 --
 
-INSERT INTO `fx_component` (`id`, `keyword`, `name`, `description`, `group`, `icon`, `store_id`) VALUES
-(1, 'user', 'Пользователи', NULL, 'Пользователи', '', 'component.user'),
-(2, 'articles', 'Статьи', NULL, 'Публикации', '', 'component.articles'),
-(3, 'awards', 'Награды и дипломы', NULL, 'Публикации', '', 'component.awards'),
-(4, 'catalog', 'Каталог товаров', NULL, 'Товары и услуги', '', 'component.catalog'),
-(5, 'comments', 'Комментарии', NULL, 'Базовые', '', 'component.comments'),
-(6, 'companyshort', 'Компании, кратко', NULL, 'Корпоративные', '', 'component.companyshort'),
-(7, 'miniarticles', 'Министатьи', NULL, 'Публикации', '', 'component.miniarticles'),
-(8, 'newsblog', 'Новости/блог', 'Компонент для организации ленты новостей или блога компании', 'Публикации', '', 'component.newsblog'),
-(9, 'person', 'Персоны', NULL, 'Пользователи', '', 'component.person'),
-(10, 'photo', 'Фотогалерея', 'Простая фотогалерея с большими возможностями', 'Публикации', 'photo', 'component.photo'),
-(11, 'pm', 'Личные сообщения', NULL, 'Пользователи', '', 'component.pm'),
-(12, 'pricelist', 'Прайс-лист краткий', NULL, 'Товары и услуги', '', 'component.pricelist'),
-(13, 'quotes', 'Цитаты', NULL, 'Публикации', '', 'component.quotes'),
-(14, 'resume', 'Резюме', NULL, 'Пользователи', '', 'component.resume'),
-(15, 'resumecontacts', 'Резюме: контакты (Контакты персональные)', NULL, 'Пользователи', '', 'component.resumecontacts'),
-(16, 'resumeeducation', 'Резюме: образование', NULL, 'Базовые', '', 'component.resumeeducation'),
-(17, 'resumeexperience', 'Резюме: опыт работы', NULL, 'Базовые', '', 'component.resumeexperience'),
-(18, 'resumelinks', 'Резюме: список проектов (Ссылки)', NULL, 'Публикации', '', 'component.resumelinks'),
-(19, 'text', 'Текст', NULL, 'Базовые', '', 'component.text'),
-(20, 'vacancy', 'Вакансии', NULL, 'Корпоративные', '', 'component.vacancy'),
-(22, 'faq', 'Вопрос-ответ', NULL, 'Базовые', '', 'component.faq'),
-(23, 'page', 'Страницы', NULL, 'Базовые', '', NULL),
-(24, 'section', 'Разделы', NULL, 'Базовые', '', NULL);
+INSERT INTO `fx_component` (`id`, `keyword`, `name`, `description`, `group`, `icon`, `store_id`, `has_page`) VALUES
+(1, 'user', 'Пользователи', NULL, 'Пользователи', '', 'component.user', 0),
+(2, 'articles', 'Статьи', NULL, 'Публикации', '', 'component.articles', 0),
+(3, 'awards', 'Награды и дипломы', NULL, 'Публикации', '', 'component.awards', 0),
+(4, 'catalog', 'Каталог товаров', NULL, 'Товары и услуги', '', 'component.catalog', 0),
+(5, 'comments', 'Комментарии', NULL, 'Базовые', '', 'component.comments', 0),
+(6, 'companyshort', 'Компании, кратко', NULL, 'Корпоративные', '', 'component.companyshort', 0),
+(7, 'miniarticles', 'Министатьи', NULL, 'Публикации', '', 'component.miniarticles', 0),
+(8, 'newsblog', 'Новости/блог', 'Компонент для организации ленты новостей или блога компании', 'Публикации', '', 'component.newsblog', 0),
+(9, 'person', 'Персоны', NULL, 'Пользователи', '', 'component.person', 0),
+(10, 'photo', 'Фотогалерея', 'Простая фотогалерея с большими возможностями', 'Публикации', 'photo', 'component.photo', 0),
+(11, 'pm', 'Личные сообщения', NULL, 'Пользователи', '', 'component.pm', 0),
+(12, 'pricelist', 'Прайс-лист краткий', NULL, 'Товары и услуги', '', 'component.pricelist', 0),
+(13, 'quotes', 'Цитаты', NULL, 'Публикации', '', 'component.quotes', 0),
+(14, 'resume', 'Резюме', NULL, 'Пользователи', '', 'component.resume', 0),
+(15, 'resumecontacts', 'Резюме: контакты (Контакты персональные)', NULL, 'Пользователи', '', 'component.resumecontacts', 0),
+(16, 'resumeeducation', 'Резюме: образование', NULL, 'Базовые', '', 'component.resumeeducation', 0),
+(17, 'resumeexperience', 'Резюме: опыт работы', NULL, 'Базовые', '', 'component.resumeexperience', 0),
+(18, 'resumelinks', 'Резюме: список проектов (Ссылки)', NULL, 'Публикации', '', 'component.resumelinks', 0),
+(19, 'text', 'Текст', NULL, 'Базовые', '', 'component.text', 0),
+(20, 'vacancy', 'Вакансии', NULL, 'Корпоративные', '', 'component.vacancy', 0),
+(22, 'faq', 'Вопрос-ответ', NULL, 'Базовые', '', 'component.faq', 0),
+(23, 'page', 'Страницы', NULL, 'Базовые', '', NULL, 0),
+(24, 'section', 'Разделы', 'Для меню', 'Базовые', '', NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -483,29 +484,29 @@ CREATE TABLE IF NOT EXISTS `fx_content_page` (
   `url` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `url` (`url`,`site_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=76 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=83 ;
 
 --
 -- Дамп данных таблицы `fx_content_page`
 --
 
 INSERT INTO `fx_content_page` (`id`, `parent_id`, `site_id`, `keyword`, `user_id`, `infoblock_id`, `priority`, `checked`, `created`, `last_updated`, `seo_h1`, `seo_title`, `seo_keywords`, `seo_description`, `content_id`, `content_type`, `layout_id`, `url`) VALUES
-(1, 0, 1, NULL, 0, 0, 1, 1, '2012-05-24 12:42:50', '2013-02-07 08:42:31', '', '', '', '', 8, 'section', NULL, '/goods/'),
+(1, 2, 1, NULL, 0, 0, 1, 1, '2012-05-24 12:42:50', '2013-02-25 07:51:04', '', '', '', '', 8, 'section', NULL, '/goods/'),
 (2, 0, 1, NULL, 0, 0, 0, 0, '2012-05-24 12:42:50', '2013-02-07 08:42:31', '', 'Мой крутой сайт', '', '', 6, 'section', NULL, '/'),
-(3, 0, 1, NULL, 0, 0, 0, 0, '2012-05-24 12:42:50', '2013-02-07 08:42:31', '', '', '', '', 7, 'section', NULL, '/404/'),
+(3, 2, 1, NULL, 0, 0, 0, 0, '2012-05-24 12:42:50', '2013-02-25 07:51:04', '', '', '', '', 7, 'section', NULL, '/404/'),
 (4, 6, 1, NULL, 0, 0, 1, 1, '2012-08-29 15:00:48', '2013-02-07 08:42:31', 'Вакансии!', '', '', '', 14, 'section', NULL, '/about/vacancy/'),
-(5, 0, 1, NULL, 0, 0, 3, 1, '2012-05-24 12:42:50', '2013-02-07 08:42:31', '', '', '', '', 11, 'section', NULL, '/service/'),
-(6, 0, 1, NULL, 0, 0, 5, 1, '2012-05-24 12:42:50', '2013-02-07 08:42:31', '', '', '', '', 12, 'section', NULL, '/about/'),
-(7, 0, 1, NULL, 0, 0, -1, 0, '2012-05-24 12:42:50', '2013-02-07 08:42:31', 'Кабинет пользователя', '', '', '', 1, 'section', NULL, '/profile/'),
+(5, 2, 1, NULL, 0, 0, 3, 1, '2012-05-24 12:42:50', '2013-02-25 07:51:04', '', '', '', '', 11, 'section', NULL, '/service/'),
+(6, 2, 1, NULL, 0, 0, 5, 1, '2012-05-24 12:42:50', '2013-02-25 07:51:04', '', '', '', '', 12, 'section', NULL, '/about/'),
+(7, 2, 1, NULL, 0, 0, -1, 0, '2012-05-24 12:42:50', '2013-02-25 07:51:04', 'Кабинет пользователя', '', '', '', 1, 'section', NULL, '/profile/'),
 (8, 8, 1, NULL, 0, 0, 0, 1, '2012-05-24 12:42:50', '2013-02-07 08:42:31', '', '', '', '', 2, 'section', NULL, '/profile/registration/'),
-(10, 1, 1, NULL, 0, 0, 0, 1, '2012-08-29 15:01:34', '2013-02-07 08:42:31', '', '', '', '', 9, 'section', NULL, '/goods/irons/'),
+(10, 1, 1, NULL, 0, 0, 0, 1, '2012-08-29 15:01:34', '2013-02-13 16:06:49', '', '', '', '', 9, 'section', NULL, '/utugi'),
 (11, 8, 1, NULL, 0, 0, 3, 1, '2012-05-24 12:42:50', '2013-02-07 08:42:31', '', '', '', '', 3, 'section', NULL, '/profile/passwd/'),
 (12, 8, 1, NULL, 0, 0, 4, 1, '2012-05-24 12:42:50', '2013-02-07 08:42:31', '', '', '', '', 4, 'section', NULL, '/profile/recoverpasswd/'),
 (13, 8, 1, NULL, 0, 0, 5, 1, '2012-05-24 12:42:50', '2013-02-07 08:42:31', '', '', '', '', 5, 'section', NULL, '/profile/pm/'),
-(16, 0, 1, NULL, 0, 0, 6, 1, '2012-05-28 12:27:15', '2013-02-07 08:42:31', 'Адрес и контакты', '', '', '', 16, 'section', NULL, '/contacts/'),
-(17, 1, 1, NULL, 0, 0, 1, 1, '2012-08-29 15:01:51', '2013-02-07 08:42:31', '', '', '', '', 10, 'section', NULL, '/goods/fridges/'),
+(16, 2, 1, NULL, 0, 0, 6, 1, '2012-05-28 12:27:15', '2013-02-25 07:51:04', 'Адрес и контакты', '', '', '', 16, 'section', NULL, '/contacts/'),
+(17, 1, 1, NULL, 0, 0, 1, 1, '2012-08-29 15:01:51', '2013-02-13 16:06:59', '', '', '', '', 10, 'section', NULL, '/holodilniki'),
 (27, 6, 1, NULL, 0, 0, 2, 1, '2012-08-29 15:01:06', '2013-02-07 08:42:31', '', '', '', '', 15, 'section', NULL, '/about/managers/'),
-(37, 6, 1, NULL, 0, 0, 0, 1, '2012-08-29 15:00:32', '2013-02-07 08:42:31', 'Новости скачать бесплатно', '', '', '', 13, 'section', NULL, '/about/news/'),
+(37, 6, 1, NULL, 0, 0, 0, 1, '2012-08-29 15:00:32', '2013-02-13 16:05:36', 'Новости скачать бесплатно', '', '', '', 13, 'section', NULL, '/firmnews.html'),
 (45, 70, 1, NULL, 0, 0, 3, 1, '2012-08-30 16:50:07', '2013-02-07 08:42:31', '', '', '', '', 8, 'newsblog', NULL, '/about/news/news_8.html'),
 (46, 70, 1, NULL, 0, 0, 4, 1, '2012-08-30 16:51:07', '2013-02-07 08:42:31', '', '', '', '', 9, 'newsblog', NULL, '/about/news/news_9.html'),
 (47, 70, 1, NULL, 0, 0, 5, 1, '2012-08-30 16:51:50', '2013-02-07 08:42:31', '', '', '', '', 10, 'newsblog', NULL, '/about/news/news_10.html'),
@@ -522,7 +523,9 @@ INSERT INTO `fx_content_page` (`id`, `parent_id`, `site_id`, `keyword`, `user_id
 (72, 2, 1, NULL, 0, 0, 12, 1, '2012-08-31 12:53:42', '2013-02-07 08:42:31', '', '', '', '', 23, 'text', NULL, '/index/text1_23.html'),
 (73, 5, 1, NULL, 0, 0, 10, 1, '2012-08-22 17:02:59', '2013-02-07 08:42:31', '', '', '', '', 14, 'text', NULL, '/service/cond_14.html'),
 (74, 23, 1, NULL, 0, 0, 14, 1, '2012-08-31 15:32:09', '2013-02-07 08:42:31', '', '', '', '', 25, 'text', NULL, '/contacts/text_25.html'),
-(75, 71, 1, NULL, 0, 0, 0, 1, '2012-08-30 16:54:29', '2013-02-07 08:42:31', '', '', '', '', 1, 'vacancy', NULL, '/about/vacancy/vacancy_1.html');
+(75, 71, 1, NULL, 0, 0, 0, 1, '2012-08-30 16:54:29', '2013-02-07 08:42:31', '', '', '', '', 1, 'vacancy', NULL, '/about/vacancy/vacancy_1.html'),
+(78, 2, 1, NULL, 3, 3, 15, 1, '2013-02-25 15:07:21', '2013-02-25 11:07:21', NULL, NULL, NULL, NULL, 18, 'section', 0, '/myblog'),
+(82, 2, 1, NULL, 3, 22, 16, 1, '2013-02-27 18:41:13', '2013-02-27 14:41:13', NULL, NULL, NULL, NULL, 22, 'section', 0, '/privacy.php');
 
 -- --------------------------------------------------------
 
@@ -652,13 +655,13 @@ CREATE TABLE IF NOT EXISTS `fx_content_pricelist` (
 --
 
 INSERT INTO `fx_content_pricelist` (`id`, `parent_id`, `keyword`, `user_id`, `infoblock_id`, `priority`, `checked`, `created`, `last_updated`, `seo_h1`, `seo_title`, `seo_keywords`, `seo_description`, `name`, `price`, `image`, `description`, `review_id`) VALUES
-(1, 0, NULL, 1, 122, 0, 1, '2012-08-30 15:24:36', '2012-08-30 11:28:44', NULL, NULL, NULL, NULL, 'Модный утюг', 2100, 33, 'Шикарный утюг, мечта любой домохозяйки! Стильный дизайн - и очень удобный, ммм...  ', NULL),
-(2, 0, NULL, 1, 122, 1, 1, '2012-08-30 15:29:45', '2012-08-30 11:29:45', NULL, NULL, NULL, NULL, 'Утюг для пыток', 5300, 34, 'Этот утюг был разработан компанией Porsche по заказу сицилийской мафии, специально для пыток!   ', NULL),
-(3, 0, NULL, 1, 122, 2, 1, '2012-08-30 15:32:36', '2012-08-30 11:32:36', NULL, NULL, NULL, NULL, 'Утюг для холостяков', 1800, 35, 'Утюг оснащен антипригарным покрытием, благодаря чему утюг годится для приготовления яичницы. Идеально подходит холостым мужчинам!  ', NULL),
-(4, 0, NULL, 1, 122, 3, 1, '2012-08-30 16:06:03', '2012-08-30 12:08:42', NULL, NULL, NULL, NULL, 'Винтажный утюг!', 4200, 36, 'Такой утюг наверняка был у твоей бабушки!  ', NULL),
-(5, 0, NULL, 1, 123, 4, 1, '2012-08-30 16:14:48', '2012-08-30 12:14:48', NULL, NULL, NULL, NULL, 'Очень черный холодильник', 43000, 37, 'Кому нужен такой черный холодильник??? Кто вообще будет его покупать?  ', NULL),
-(6, 0, NULL, 1, 123, 6, 1, '2012-08-30 16:19:51', '2012-08-30 12:22:44', NULL, NULL, NULL, NULL, 'Довольно серый холодильник', 43500, 38, 'Хотя довольно серый холодильник и довольно сер, и, к тому же, стоит на 500 рублей дороже, чем черный, мы настоятельно рекомендуем купить именно его!  ', NULL),
-(7, 0, NULL, 1, 123, 5, 1, '2012-08-30 16:22:02', '2012-11-12 13:57:27', NULL, NULL, NULL, NULL, 'Холодильник с соса-солой', 12200, 39, 'Красный холодильник с лучшим напитком на свете!<br>Внимание! Цена кока-колы не входит в цену холодильника!  ', NULL);
+(1, 10, NULL, 1, 122, 0, 1, '2012-08-30 15:24:36', '2013-02-25 07:35:48', NULL, NULL, NULL, NULL, 'Модный утюг', 2100, 33, 'Шикарный утюг, мечта любой домохозяйки! Стильный дизайн - и очень удобный, ммм...  ', NULL),
+(2, 10, NULL, 1, 122, 1, 1, '2012-08-30 15:29:45', '2013-02-25 07:35:52', NULL, NULL, NULL, NULL, 'Утюг для пыток', 5300, 34, 'Этот утюг был разработан компанией Porsche по заказу сицилийской мафии, специально для пыток!   ', NULL),
+(3, 10, NULL, 1, 122, 2, 1, '2012-08-30 15:32:36', '2013-02-25 07:35:54', NULL, NULL, NULL, NULL, 'Утюг для холостяков', 1800, 35, 'Утюг оснащен антипригарным покрытием, благодаря чему утюг годится для приготовления яичницы. Идеально подходит холостым мужчинам!  ', NULL),
+(4, 10, NULL, 1, 122, 3, 1, '2012-08-30 16:06:03', '2013-02-25 07:35:57', NULL, NULL, NULL, NULL, 'Винтажный утюг!', 4200, 36, 'Такой утюг наверняка был у твоей бабушки!  ', NULL),
+(5, 17, NULL, 1, 123, 4, 1, '2012-08-30 16:14:48', '2013-02-25 07:36:18', NULL, NULL, NULL, NULL, 'Очень черный холодильник', 43000, 37, 'Кому нужен такой черный холодильник??? Кто вообще будет его покупать?  ', NULL),
+(6, 17, NULL, 1, 123, 6, 1, '2012-08-30 16:19:51', '2013-02-25 07:36:21', NULL, NULL, NULL, NULL, 'Довольно серый холодильник', 43500, 38, 'Хотя довольно серый холодильник и довольно сер, и, к тому же, стоит на 500 рублей дороже, чем черный, мы настоятельно рекомендуем купить именно его!  ', NULL),
+(7, 17, NULL, 1, 123, 5, 1, '2012-08-30 16:22:02', '2013-02-25 07:36:24', NULL, NULL, NULL, NULL, 'Холодильник с соса-солой', 12200, 39, 'Красный холодильник с лучшим напитком на свете!<br>Внимание! Цена кока-колы не входит в цену холодильника!  ', NULL);
 
 -- --------------------------------------------------------
 
@@ -860,29 +863,31 @@ CREATE TABLE IF NOT EXISTS `fx_content_section` (
   `seo_description` text,
   `name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=17 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=23 ;
 
 --
 -- Дамп данных таблицы `fx_content_section`
 --
 
 INSERT INTO `fx_content_section` (`id`, `parent_id`, `keyword`, `user_id`, `infoblock_id`, `priority`, `checked`, `created`, `last_updated`, `seo_h1`, `seo_title`, `seo_keywords`, `seo_description`, `name`) VALUES
-(1, 0, NULL, 0, 0, 0, 1, '2012-12-19 15:56:03', '2012-12-19 11:56:03', NULL, NULL, NULL, NULL, 'Кабинет'),
-(2, 1, NULL, 0, 0, 1, 1, '2012-12-19 15:56:03', '2012-12-19 11:56:03', NULL, NULL, NULL, NULL, 'Регистрация'),
-(3, 1, NULL, 0, 0, 2, 1, '2012-12-19 15:56:03', '2012-12-19 11:56:03', NULL, NULL, NULL, NULL, 'Смена пароля'),
-(4, 1, NULL, 0, 0, 3, 1, '2012-12-19 15:56:03', '2012-12-19 11:56:03', NULL, NULL, NULL, NULL, 'Восстановление пароля'),
-(5, 1, NULL, 0, 0, 4, 1, '2012-12-19 15:56:03', '2012-12-19 11:56:03', NULL, NULL, NULL, NULL, 'Личные сообщения'),
+(1, 2, NULL, 0, 0, 0, 1, '2012-12-19 15:56:03', '2013-02-25 07:29:34', NULL, NULL, NULL, NULL, 'Кабинет'),
+(2, 7, NULL, 0, 0, 1, 1, '2012-12-19 15:56:03', '2013-02-25 07:29:34', NULL, NULL, NULL, NULL, 'Регистрация'),
+(3, 7, NULL, 0, 0, 2, 1, '2012-12-19 15:56:03', '2013-02-25 07:29:34', NULL, NULL, NULL, NULL, 'Смена пароля'),
+(4, 7, NULL, 0, 0, 3, 1, '2012-12-19 15:56:03', '2013-02-25 07:29:34', NULL, NULL, NULL, NULL, 'Восстановление пароля'),
+(5, 7, NULL, 0, 0, 4, 1, '2012-12-19 15:56:03', '2013-02-25 07:29:34', NULL, NULL, NULL, NULL, 'Личные сообщения'),
 (6, 0, NULL, 0, 0, 5, 1, '2012-12-19 15:56:03', '2012-12-19 11:56:03', NULL, NULL, NULL, NULL, 'Титульная страница'),
-(7, 0, NULL, 0, 0, 6, 1, '2012-12-19 15:56:03', '2012-12-19 11:56:03', NULL, NULL, NULL, NULL, 'Страница не найдена'),
-(8, 0, NULL, 0, 3, 7, 1, '2012-12-19 15:56:04', '2013-01-05 04:02:24', NULL, NULL, NULL, NULL, 'Товары'),
-(9, 8, NULL, 0, 0, 8, 1, '2012-12-19 15:56:04', '2012-12-19 11:56:04', NULL, NULL, NULL, NULL, 'Утюги'),
-(10, 8, NULL, 0, 0, 9, 1, '2012-12-19 15:56:04', '2012-12-19 11:56:04', NULL, NULL, NULL, NULL, 'Холодильники'),
-(11, 0, NULL, 0, 3, 10, 1, '2012-12-19 15:56:04', '2013-01-05 04:03:19', NULL, NULL, NULL, NULL, 'Услуги'),
-(12, 0, NULL, 0, 3, 11, 1, '2012-12-19 15:56:04', '2013-01-05 04:03:22', NULL, NULL, NULL, NULL, 'О компании'),
-(13, 12, NULL, 0, 3, 12, 1, '2012-12-19 15:56:04', '2013-01-05 04:03:26', NULL, NULL, NULL, NULL, 'Новости'),
-(14, 12, NULL, 0, 0, 13, 1, '2012-12-19 15:56:04', '2012-12-19 11:56:04', NULL, NULL, NULL, NULL, 'Вакансии'),
-(15, 12, NULL, 0, 0, 14, 1, '2012-12-19 15:56:04', '2012-12-19 11:56:04', NULL, NULL, NULL, NULL, 'Менеджеры'),
-(16, 0, NULL, 0, 3, 15, 1, '2012-12-19 15:56:04', '2013-01-05 04:03:39', NULL, NULL, NULL, NULL, 'Контакты');
+(7, 2, NULL, 0, 0, 6, 1, '2012-12-19 15:56:03', '2013-02-25 07:29:34', NULL, NULL, NULL, NULL, 'Страница не найдена'),
+(8, 2, NULL, 0, 3, 7, 1, '2012-12-19 15:56:04', '2013-02-27 10:26:34', NULL, NULL, NULL, NULL, 'Продукция'),
+(9, 1, NULL, 0, 0, 8, 1, '2012-12-19 15:56:04', '2013-03-01 13:53:15', NULL, NULL, NULL, NULL, 'Утюги'),
+(10, 1, NULL, 0, 0, 9, 1, '2012-12-19 15:56:04', '2013-02-25 07:29:34', NULL, NULL, NULL, NULL, 'Холодильники'),
+(11, 2, NULL, 0, 3, 10, 1, '2012-12-19 15:56:04', '2013-02-25 07:29:34', NULL, NULL, NULL, NULL, 'Услуги'),
+(12, 2, NULL, 0, 3, 11, 1, '2012-12-19 15:56:04', '2013-02-25 07:29:34', NULL, NULL, NULL, NULL, 'О компании'),
+(13, 6, NULL, 0, 3, 12, 1, '2012-12-19 15:56:04', '2013-02-25 07:29:34', NULL, NULL, NULL, NULL, 'Новости'),
+(14, 6, NULL, 0, 0, 13, 1, '2012-12-19 15:56:04', '2013-02-25 07:29:34', NULL, NULL, NULL, NULL, 'Вакансии'),
+(15, 6, NULL, 0, 0, 14, 1, '2012-12-19 15:56:04', '2013-02-25 07:29:34', NULL, NULL, NULL, NULL, 'Менеджеры'),
+(16, 2, NULL, 0, 3, 15, 1, '2012-12-19 15:56:04', '2013-02-25 07:29:34', NULL, NULL, NULL, NULL, 'Контакты'),
+(18, 2, NULL, 3, 3, 16, 1, '2013-02-25 15:07:21', '2013-02-25 11:07:21', NULL, NULL, NULL, NULL, 'Блог'),
+(22, 2, NULL, 3, 22, 17, 1, '2013-02-27 18:41:13', '2013-02-27 14:41:13', NULL, NULL, NULL, NULL, 'Политика конфиденциальности');
 
 -- --------------------------------------------------------
 
@@ -906,16 +911,21 @@ CREATE TABLE IF NOT EXISTS `fx_content_text` (
   `seo_description` text,
   `text` text,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=26 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=34 ;
 
 --
 -- Дамп данных таблицы `fx_content_text`
 --
 
 INSERT INTO `fx_content_text` (`id`, `parent_id`, `keyword`, `user_id`, `infoblock_id`, `priority`, `checked`, `created`, `last_updated`, `seo_h1`, `seo_title`, `seo_keywords`, `seo_description`, `text`) VALUES
+(27, 78, NULL, 3, 15, 15, 1, '2013-02-25 15:39:27', '2013-03-01 11:59:17', NULL, NULL, NULL, NULL, 'В нашем блоге есть все!  '),
+(28, 2, NULL, 3, 15, 16, 1, '2013-02-25 15:46:09', '2013-03-02 15:56:53', NULL, NULL, NULL, NULL, 'Приветствуем на главной странице нашего утюга!&nbsp;<div>У нас Вы - найдете каталог утюгов и холодильников.<br>И еще много чего.</div>'),
+(29, 2, NULL, 3, 16, 17, 1, '2013-02-25 16:41:40', '2013-02-25 12:50:12', NULL, NULL, NULL, NULL, '<b>Внимание! АКЦИЯ!!!</b><div><br><div>Купите <i>что-нибудь</i> сегодня!</div><div><br></div><div>И получите великолепный подарок от нашей фирмы.</div>  </div>'),
+(30, 5, NULL, 3, 15, 18, 1, '2013-02-25 17:20:20', '2013-02-25 13:20:20', NULL, NULL, NULL, NULL, 'Это текст про услуги  '),
+(31, 2, NULL, 3, 19, 19, 1, '2013-02-25 18:17:19', '2013-03-01 11:26:04', NULL, NULL, NULL, NULL, 'Вчера на наш склад привезли новую партию уникальных японских утюгов.  <div><br></div><div>Спешите, количество ограничено!</div>'),
 (12, 0, NULL, 1, 80, 9, 1, '2012-08-22 16:36:40', '2012-08-29 12:16:17', NULL, NULL, NULL, NULL, 'Интернет-магазин <strong>FloxiShop</strong> предлагает большой ассортимент электроники, бытовой \nтехники и товаров для автомобилистов по доступным ценам. Мы делаем все \nвозможное, чтобы покупки в нашем интернет магазине доставляли вам только\n положительные эмоции, и вам захотелось вернуться сюда еще не один раз.<br> <br>Почему нужно покупать в интернет-магазине <strong>FloxiShop</strong>? Почему именно мы, ведь подобных магазинов довольно много?\n<ul><li>Во-первых; мы располагаемся непосредственно <strong>в Зеленограде</strong>. Мы, как говорится, местные, и этим сказано если не все, то многое;</li><li>Во–вторых, позвонив нам, Вы можете быть уверенными на все 100%, что Вам ответит <strong>реальный человек</strong>&nbsp;реального интернет-магазина;</li><li>В-третьих, мы <strong>работаем полностью легально</strong>,\n у нас есть зеленоградский адрес, директор, персонал, реальные телефоны,\n сайт, зарегистрированный в РФ и т.д., мы платим все налоги и полностью \nсдаем отчетность;</li><li>В четвертых мы работаем только с \nофициальным «белым» товаром, а это означает, что в случае возникновения \nнеисправности или выявления брака производителя, Вам товар обменяют или \nотремонтируют бесплатно в соответствии с требованиями Закона «О защите \nправ потребителей»;</li><li>&nbsp;В-пятых, для нас не проблема отправить любой предварительно оплаченный товар в любую точку России;</li><li>&nbsp;В-шестых, у нас низкие цены на \nтехнику. Цены на товары ниже, чем в обычных магазинах электроники в \nсвязи с экономией на затратах, связанных с арендой торговых и офисных \nпомещений;&nbsp;</li><li>В-седьмых, доставку по Зеленограду \nмы в настоящее время осуществляем бесплатно (для товаров весом не более \n10 кг.). А если доставка бесплатна, то и нет надобности в пункте \nсамовывоза. Доставка в близлежащие населенные пункты обойдется гораздо \nдешевле, чем у конкурентов;</li><li>В-восьмых, мы ввели такую услугу, \nкак сборка компьютера по вашему заказу. Вам нужно только указать \nвыбранную конфигурацию компьютера нашему менеджеру, который просчитав \nзаказ, согласует с Вами цены и сроки (обычно 2 рабочих дня) и, \nсобственно все;</li><li>В-девятых, мы можем предложить такую услугу, как установка купленной бытовой техники. Подключим, проверим, настроим*;</li><li>И, наконец, заключительное: ошибки \nсовершают все, главное их своевременно исправлять и не совершать вновь. У\n каждого курьера имеется журнал претензий и замечаний клиента, где Вы \nвсегда можете оставить свою запись о том, что не понравилось, что нужно \nисправить. Руководство своевременно отреагирует на оставленную запись и \nизвестит Вас о принятых мерах.<br></li></ul>'),
 (23, 0, NULL, 1, 30, 12, 1, '2012-08-31 12:53:42', '2012-10-26 10:56:28', NULL, NULL, NULL, NULL, 'Интернет-магазин <strong>FloxiShop</strong> предлагает большой ассортимент электроники, бытовой \nтехники и товаров для автомобилистов по доступным !ценам. Мы делаем все \nвозможное, чтобы покупки в нашем интернет магазине доставляли вам только\n положительные эмоции, и вам захотелось вернуться сюда еще не один раз. <br><br><a>Подробнее об интернет-магазине FloxiShop &gt;&gt;&gt;</a>'),
-(14, 0, NULL, 1, 6, 10, 1, '2012-08-22 17:02:59', '2013-01-29 13:40:41', NULL, NULL, NULL, NULL, 'Наши условия - самые лучшие. Иногда в них вносят небольшие изменения, за ними можно следить в этом разделе. Но они все равно остаются лучшими на российском и зарубежном рынке, даже не пытайтесь найти что-то лучшее, чем наши условия!  '),
+(14, 0, NULL, 1, 6, 10, 1, '2012-08-22 17:02:59', '2013-02-13 12:16:40', NULL, NULL, NULL, NULL, 'Наши условия - самые лучшие. Иногда в них вносят небольшие изменения, за ними можно следить в этом разделе. Но они все равно остаются лучшими на российском и зарубежном рынке. Даже не пытайтесь найти что-то лучшее, чем наши условия!  '),
 (25, 0, NULL, 1, 132, 14, 1, '2012-08-31 15:32:09', '2012-08-31 11:32:53', NULL, NULL, NULL, NULL, '<p class="adr">\n  <strong>Адрес</strong>: \n  <span class="country-name">Россия</span>,\n  <span class="locality">Москва</span>, \n  <span class="street-address">ул. Большая Почтовая, д. 38 стр. 6</span> (мансарда здания)\n</p>\n<p><strong>Адрес для отправки корреспонденции</strong>: 105082, г. Москва, ул. Большая Почтовая, д. 38 стр. 6, ООО "НетКэт".</p>\n<p><strong>Отдел по работе с партнерами/отдел продаж</strong>: <a>dealer@netcat.ru</a>\n <abbr class="value" title="+ 7 (495) 632-1529">+ 7 (495) 632-1529</abbr> </p>\n  <p class="tel"><strong>По общим вопросам:</strong> \n  <a class="email">info@netcat.ru</a>\n<abbr class="value" title="+ 7 (495) 632-1529">+ 7 (495) 632-1529</abbr>\n</p>\n<p><strong>Техническая поддержка:</strong> <a class="email">support@netcat.ru</a> \n  <abbr class="value" title="+ 7 (495) 632-1529">+ 7 (495) 632-1529</abbr>\n</p>\n<p><strong>Время работы:</strong> <span class="workhours">пн-пт 10:00-19:00</span></p>');
 
 -- --------------------------------------------------------
@@ -996,6 +1006,20 @@ CREATE TABLE IF NOT EXISTS `fx_content_vacancy` (
 
 INSERT INTO `fx_content_vacancy` (`id`, `parent_id`, `keyword`, `user_id`, `infoblock_id`, `priority`, `checked`, `created`, `last_updated`, `seo_h1`, `seo_title`, `seo_keywords`, `seo_description`, `job`, `requirement`, `respons`, `term`, `address`, `phone`, `email`, `contacts`, `pay_from`, `pay_to`) VALUES
 (1, 0, NULL, 1, 127, 0, 1, '2012-08-30 16:54:29', '2012-12-14 09:44:34', NULL, NULL, NULL, NULL, 'Старший менеджер', 'Образование - не ниже 5 классов.<br>Исполнительность, лояльность.  ', 'Руководить службой доставки утюгов.  ', 'Гибкий график, работенка не пыльная! =)  ', 'Москва', '225-50-22', '', 'Прохор Леонидович', '120110 р.', '15000 р.');
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `fx_controller`
+--
+
+CREATE TABLE IF NOT EXISTS `fx_controller` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `code` varchar(255) NOT NULL,
+  `type` enum('component','widget','layout','other') NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `code` (`code`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1310,7 +1334,7 @@ INSERT INTO `fx_field` (`id`, `parent`, `component_id`, `ctpl_id`, `system_table
 (138, NULL, 0, 0, 0, 5, 'url', 'URL или КОД', 1, '', 0, 2, 1, 'tGCP2MgU-bQ', 0, 1, 1),
 (165, NULL, 23, 0, 0, 0, 'url', 'Адрес', 1, '', 0, 150, 0, '', 0, 1, 1),
 (164, NULL, 23, 0, 0, 0, 'layout_id', 'Индивидуальный шаблон', 13, '', 0, 149, 0, '', 0, 1, 1),
-(163, NULL, 24, 0, 0, 0, 'name', 'Название', 1, '', 1, 148, 0, '', 0, 1, 1),
+(163, NULL, 24, 0, 0, 0, 'name', 'Название раздела', 1, '', 1, 148, 0, '', 0, 1, 1),
 (153, NULL, 1, 0, 0, 0, 'email', 'E-mail', 1, '', 0, 142, 1, NULL, 0, 1, 1),
 (154, NULL, 22, 0, 0, 0, 'name', 'Имя', 1, '', 0, 0, 1, NULL, 0, 1, 1),
 (155, NULL, 22, 0, 0, 0, 'question', 'Вопрос', 3, '', 1, 1, 1, NULL, 0, 1, 1),
@@ -1418,7 +1442,7 @@ CREATE TABLE IF NOT EXISTS `fx_history` (
   `name` text NOT NULL,
   `marker` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='История операций' AUTO_INCREMENT=33 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='История операций' AUTO_INCREMENT=37 ;
 
 --
 -- Дамп данных таблицы `fx_history`
@@ -1456,7 +1480,11 @@ INSERT INTO `fx_history` (`id`, `user_id`, `date`, `name`, `marker`) VALUES
 (29, 1, '2013-01-04 23:06:34', 'FX_HISTORY_ADMIN_FIELD_EDIT', 0),
 (30, 1, '2013-01-04 23:06:39', 'FX_HISTORY_ADMIN_FIELD_EDIT', 0),
 (31, 1, '2013-01-05 01:13:05', 'FX_HISTORY_ADMIN_FIELD_EDIT', 0),
-(32, 1, '2013-02-07 12:42:04', 'FX_HISTORY_ADMIN_FIELD_ADD', 0);
+(32, 1, '2013-02-07 12:42:04', 'FX_HISTORY_ADMIN_FIELD_ADD', 0),
+(33, 1, '2013-02-25 13:40:25', 'FX_HISTORY_ADMIN_FIELD_EDIT', 0),
+(34, 1, '2013-02-25 13:41:15', 'FX_HISTORY_ADMIN_COMPONENT_EDIT', 0),
+(35, 1, '2013-02-25 13:45:43', 'FX_HISTORY_ADMIN_COMPONENT_EDIT', 0),
+(36, 1, '2013-02-25 13:46:37', 'FX_HISTORY_ADMIN_COMPONENT_EDIT', 0);
 
 -- --------------------------------------------------------
 
@@ -1473,7 +1501,7 @@ CREATE TABLE IF NOT EXISTS `fx_history_item` (
   `prestate` longtext NOT NULL,
   `poststate` longtext NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=42 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=45 ;
 
 --
 -- Дамп данных таблицы `fx_history_item`
@@ -1520,7 +1548,10 @@ INSERT INTO `fx_history_item` (`id`, `history_id`, `essence`, `essence_id`, `act
 (38, 29, 'field', '164', 'update', 'a:8:{s:4:"name";s:9:"layout_id";s:11:"description";s:41:"Индивидуальный шаблон";s:6:"format";s:0:"";s:4:"type";s:2:"13";s:8:"not_null";s:1:"0";s:10:"searchable";s:1:"0";s:7:"default";s:0:"";s:12:"type_of_edit";s:1:"1";}', 'a:8:{s:4:"name";s:11:"template_id";s:11:"description";s:41:"Индивидуальный шаблон";s:6:"format";N;s:4:"type";s:2:"13";s:8:"not_null";N;s:10:"searchable";N;s:7:"default";N;s:12:"type_of_edit";s:1:"1";}'),
 (39, 30, 'field', '164', 'update', 'a:8:{s:4:"name";s:11:"template_id";s:11:"description";s:41:"Индивидуальный шаблон";s:6:"format";s:0:"";s:4:"type";s:2:"13";s:8:"not_null";s:1:"0";s:10:"searchable";s:1:"0";s:7:"default";s:0:"";s:12:"type_of_edit";s:1:"1";}', 'a:8:{s:4:"name";s:11:"template_id";s:11:"description";s:41:"Индивидуальный шаблон";s:6:"format";N;s:4:"type";s:2:"13";s:8:"not_null";N;s:10:"searchable";N;s:7:"default";N;s:12:"type_of_edit";s:1:"1";}'),
 (40, 31, 'field', '164', 'update', 'a:8:{s:4:"name";s:11:"template_id";s:11:"description";s:41:"Индивидуальный шаблон";s:6:"format";s:0:"";s:4:"type";s:2:"13";s:8:"not_null";s:1:"0";s:10:"searchable";s:1:"0";s:7:"default";s:0:"";s:12:"type_of_edit";s:1:"1";}', 'a:8:{s:4:"name";s:9:"layout_id";s:11:"description";s:41:"Индивидуальный шаблон";s:6:"format";N;s:4:"type";s:2:"13";s:8:"not_null";N;s:10:"searchable";N;s:7:"default";N;s:12:"type_of_edit";s:1:"1";}'),
-(41, 32, 'field', '165', 'add', 'a:3:{s:7:"checked";N;s:12:"component_id";N;s:8:"priority";N;}', 'a:12:{s:4:"name";s:3:"url";s:11:"description";s:10:"Адрес";s:6:"format";N;s:4:"type";s:1:"1";s:8:"not_null";N;s:10:"searchable";N;s:7:"default";s:0:"";s:12:"type_of_edit";s:1:"1";s:7:"checked";i:1;s:12:"component_id";s:2:"23";s:8:"priority";s:3:"150";s:2:"id";s:3:"165";}');
+(41, 32, 'field', '165', 'add', 'a:3:{s:7:"checked";N;s:12:"component_id";N;s:8:"priority";N;}', 'a:12:{s:4:"name";s:3:"url";s:11:"description";s:10:"Адрес";s:6:"format";N;s:4:"type";s:1:"1";s:8:"not_null";N;s:10:"searchable";N;s:7:"default";s:0:"";s:12:"type_of_edit";s:1:"1";s:7:"checked";i:1;s:12:"component_id";s:2:"23";s:8:"priority";s:3:"150";s:2:"id";s:3:"165";}'),
+(42, 33, 'field', '163', 'update', 'a:8:{s:4:"name";s:4:"name";s:11:"description";s:16:"Название";s:6:"format";s:0:"";s:4:"type";s:1:"1";s:8:"not_null";s:1:"1";s:10:"searchable";s:1:"0";s:7:"default";s:0:"";s:12:"type_of_edit";s:1:"1";}', 'a:8:{s:4:"name";s:4:"name";s:11:"description";s:31:"Название раздела";s:6:"format";N;s:4:"type";s:1:"1";s:8:"not_null";s:1:"1";s:10:"searchable";N;s:7:"default";s:0:"";s:12:"type_of_edit";s:1:"1";}'),
+(43, 35, 'component', '24', 'update', 'a:3:{s:4:"name";s:14:"Разделы";s:5:"group";s:14:"Базовые";s:8:"has_page";s:1:"0";}', 'a:3:{s:4:"name";s:14:"Разделы";s:5:"group";s:14:"Базовые";s:8:"has_page";s:1:"1";}'),
+(44, 36, 'component', '24', 'update', 'a:4:{s:4:"name";s:14:"Разделы";s:5:"group";s:14:"Базовые";s:8:"has_page";s:1:"1";s:11:"description";N;}', 'a:4:{s:4:"name";s:14:"Разделы";s:5:"group";s:14:"Базовые";s:8:"has_page";s:1:"1";s:11:"description";s:15:"Для меню";}');
 
 -- --------------------------------------------------------
 
@@ -1530,7 +1561,7 @@ INSERT INTO `fx_history_item` (`id`, `history_id`, `essence`, `essence_id`, `act
 
 CREATE TABLE IF NOT EXISTS `fx_infoblock` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `parent_id` int(11) NOT NULL DEFAULT '0',
+  `parent_infoblock_id` int(11) NOT NULL DEFAULT '0',
   `site_id` int(11) NOT NULL,
   `page_id` int(10) unsigned NOT NULL,
   `checked` tinyint(1) NOT NULL DEFAULT '1',
@@ -1540,21 +1571,24 @@ CREATE TABLE IF NOT EXISTS `fx_infoblock` (
   `controller` varchar(50) NOT NULL,
   `action` varchar(50) NOT NULL,
   `params` text NOT NULL,
+  `scope` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `page_id` (`page_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=24 ;
 
 --
 -- Дамп данных таблицы `fx_infoblock`
 --
 
-INSERT INTO `fx_infoblock` (`id`, `parent_id`, `site_id`, `page_id`, `checked`, `priority`, `name`, `is_listing`, `controller`, `action`, `params`) VALUES
-(1, 0, 1, 0, 1, 0, '', 0, 'test', 'show', ''),
-(3, 0, 1, 0, 1, 0, 'Главное меню', 1, 'component_section', 'listing', ''),
-(4, 0, 1, 6, 1, 0, '', 0, 'test', 'side', 'a:1:{s:5:"limit";i:4;}'),
-(5, 0, 1, 0, 1, 0, '', 0, 'component_section', 'listing', 'a:2:{s:9:"parent_id";i:8;s:12:"infoblock_id";i:0;}'),
-(6, 0, 1, 0, 1, 0, 'Olo', 1, 'component_text', 'listing', 'a:2:{s:3:"url";s:4:"text";s:8:"from_all";s:1:"1";}'),
-(7, 0, 1, 0, 1, 0, 'Layout', 0, 'page', 'show', '');
+INSERT INTO `fx_infoblock` (`id`, `parent_infoblock_id`, `site_id`, `page_id`, `checked`, `priority`, `name`, `is_listing`, `controller`, `action`, `params`, `scope`) VALUES
+(3, 0, 1, 2, 1, 0, 'Главное меню', 1, 'component_section', 'listing', 'a:5:{s:5:"limit";s:1:"0";s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";s:11:"parent_type";s:13:"mount_page_id";s:9:"parent_id";s:0:"";}', 'a:1:{s:5:"pages";s:3:"all";}'),
+(12, 0, 1, 0, 1, 0, 'Layout', 0, 'layout', 'show', '', ''),
+(15, 0, 1, 2, 1, 0, 'Основной текст', 0, 'component_text', 'listing', 'a:5:{s:5:"limit";s:2:"10";s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";s:11:"parent_type";s:15:"current_page_id";s:9:"parent_id";s:0:"";}', 'a:1:{s:5:"pages";s:3:"all";}'),
+(16, 0, 1, 2, 1, 0, 'Доп. текст для главной', 0, 'component_text', 'listing', 'a:5:{s:5:"limit";s:2:"10";s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";s:11:"parent_type";s:15:"current_page_id";s:9:"parent_id";s:0:"";}', 'a:1:{s:5:"pages";s:4:"this";}'),
+(17, 15, 1, 5, 1, 0, 'Текст наследованный', 0, '', '', 'a:5:{s:5:"limit";s:2:"10";s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";s:11:"parent_type";s:15:"current_page_id";s:9:"parent_id";s:0:"";}', 'a:1:{s:5:"pages";s:4:"this";}'),
+(18, 0, 1, 2, 1, 0, '', 0, 'component_section', 'mirror', 'a:5:{s:5:"limit";s:2:"10";s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";s:8:"from_all";b:0;s:9:"parent_id";s:1:"1";}', 'a:1:{s:5:"pages";s:3:"all";}'),
+(19, 0, 1, 2, 1, 0, 'Текст в сайдбар', 0, 'component_text', 'listing', 'a:5:{s:5:"limit";s:2:"10";s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";s:11:"parent_type";s:13:"mount_page_id";s:9:"parent_id";s:0:"";}', 'a:1:{s:5:"pages";s:3:"all";}'),
+(22, 0, 1, 2, 1, 0, '', 0, 'component_section', 'listing', 'a:5:{s:5:"limit";s:2:"10";s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";s:11:"parent_type";s:13:"mount_page_id";s:9:"parent_id";s:0:"";}', 'a:1:{s:5:"pages";s:3:"all";}');
 
 -- --------------------------------------------------------
 
@@ -1567,6 +1601,7 @@ CREATE TABLE IF NOT EXISTS `fx_infoblock2layout` (
   `infoblock_id` int(10) unsigned NOT NULL,
   `layout_id` int(10) unsigned NOT NULL,
   `wrapper_name` varchar(255) NOT NULL,
+  `wrapper_variant` varchar(50) NOT NULL,
   `wrapper_visual` text NOT NULL,
   `template_name` varchar(255) NOT NULL,
   `template_variant` varchar(50) NOT NULL,
@@ -1575,18 +1610,21 @@ CREATE TABLE IF NOT EXISTS `fx_infoblock2layout` (
   `priority` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `infoblock_id` (`infoblock_id`,`layout_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=26 ;
 
 --
 -- Дамп данных таблицы `fx_infoblock2layout`
 --
 
-INSERT INTO `fx_infoblock2layout` (`id`, `infoblock_id`, `layout_id`, `wrapper_name`, `wrapper_visual`, `template_name`, `template_variant`, `template_visual`, `area`, `priority`) VALUES
-(1, 1, 1, 'wrap_titled', 'a:1:{s:5:"title";s:16:"Фигуля<br>";}', 'test', 'show', 'a:1:{s:9:"test_data";s:20:"not default any more";}', 'content', 0),
-(2, 3, 1, '', 'a:1:{i:163;s:19:"Все услуги";}', 'component_section', 'listing', '', 'header', 0),
-(3, 4, 1, 'wrap_titled', 'a:1:{s:5:"color";s:4:"#090";}', 'test', 'side', 'a:1:{s:2:"q2";s:33:"второй, особенный!";}', 'sidebar', 0),
-(4, 5, 1, '', '', 'layout_supernova', 'supermenu', 'a:1:{s:5:"title";s:21:"Менюшенька:";}', 'footer', 0),
-(8, 6, 1, 'wrap_titled', 'a:1:{s:5:"title";s:21:"Заголовище!";}', 'component_text', 'listing', '', 'content', 0);
+INSERT INTO `fx_infoblock2layout` (`id`, `infoblock_id`, `layout_id`, `wrapper_name`, `wrapper_variant`, `wrapper_visual`, `template_name`, `template_variant`, `template_visual`, `area`, `priority`) VALUES
+(24, 22, 1, '', '', '', 'layout_supernova', 'supermenu', 'a:1:{s:5:"title";s:16:"Полезное";}', 'footer', 0),
+(2, 3, 1, '', '', 'a:2:{i:163;s:13:"Ус-луги";s:9:"separator";s:5:"• !";}', 'layout_supernova', 'demo_menu', 'a:3:{s:9:"separator";s:3:"•";s:6:"odd_bg";s:4:"#111";s:9:"odd_color";s:4:"#FF0";}', 'header', 0),
+(21, 19, 1, 'layout_supernova', 'wrap_titled', 'a:2:{s:5:"title";s:11:"Важно:";s:5:"color";s:4:"#666";}', 'component_text', 'listing', '', 'sidebar', 0),
+(14, 12, 1, '', '', '', 'layout_supernova', 'inner', 'a:6:{s:4:"copy";s:91:"© 2010 группа компаний «FloxiShop».<br>Все права защищены.";s:4:"logo";s:38:"/controllers/layout/supernova/logo.png";s:7:"company";s:14:"Floxim Company";s:6:"slogan";s:37:"лучшие утюги России!";s:13:"replace_src_0";s:38:"/controllers/layout/supernova/logo.png";s:8:"developa";s:103:"© 2010 Хороший пример \n<br>\nсайтостроения — \n<a href="#">\nWebSite.ru\n</a>\n";}', '', 0),
+(19, 17, 1, 'layout_supernova', 'wrap_titled', 'a:1:{s:5:"title";s:15:"Inherited title";}', 'component_text', 'listing', '', '', 0),
+(20, 18, 1, '', '', '', 'layout_supernova', 'supermenu', 'a:2:{s:5:"title";s:34:"Мы умеем продавать";s:10:"menu_title";s:27:"Наша продукция";}', 'sidebar', 0),
+(17, 15, 1, 'layout_supernova', 'wrap_titled', 'a:1:{s:5:"title";s:71:"Добро пожаловать, &nbsp;<i>ура, товарищи</i>!";}', 'component_text', 'listing', '', 'content', 0),
+(18, 16, 1, 'layout_supernova', 'wrap_titled', 'a:2:{s:5:"title";s:38:"Акция, не пропустите!";s:5:"color";s:4:"#C00";}', 'component_text', 'listing', '', 'content', 0);
 
 -- --------------------------------------------------------
 
@@ -1771,7 +1809,7 @@ CREATE TABLE IF NOT EXISTS `fx_layout` (
   `keyword` varchar(255) NOT NULL,
   `name` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 --
 -- Дамп данных таблицы `fx_layout`
@@ -1963,8 +2001,7 @@ CREATE TABLE IF NOT EXISTS `fx_session` (
 --
 
 INSERT INTO `fx_session` (`id`, `user_id`, `session_start`, `session_time`, `ip`, `login_save`, `site_id`, `auth_type`) VALUES
-('0ce518783b81ee72d7c1d814bd39e347', 3, 1360061922, 1360158808, 2130706433, 0, 0, 1),
-('8f7ab3512a53313eb601df08e2b10c89', 3, 1360148966, 1360411669, 2130706433, 0, 0, 1);
+('8c094d8fc0f2e29551ae2e6a2058a1e4', 3, 1362384968, 1362567135, 2130706433, 0, 0, 1);
 
 -- --------------------------------------------------------
 

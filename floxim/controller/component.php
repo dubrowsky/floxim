@@ -7,7 +7,8 @@ class fx_controller_component extends fx_controller {
         $component = fx::data('component', $content_type);
         if ($this->action == 'listing') {
             $c_ib = fx::data('infoblock', $this->param('infoblock_id'));
-            $adder_title = $component['name'].' &rarr; '.($c_ib['name'] ? $c_ib['name']:$c_ib['id']);
+            $c_ib_name = $c_ib->get_prop_inherited('name');
+            $adder_title = $component['name'].' &rarr; '.($c_ib_name ? $c_ib_name:$c_ib['id']);
             $result['_meta'] = array(
                 'accept_content' => array(array(
                     'title' => $adder_title,
@@ -105,8 +106,8 @@ class fx_controller_component extends fx_controller {
     public function listing() {
         $f = $this->_finder();
         $params = array();
-        $params['infoblock_id']= $this->param('infoblock_id');
-        $infoblock = fx::data('infoblock', $this->param('infoblock_id'));
+        $infoblock = fx::data('infoblock', $this->param('infoblock_id'))->get_root_infoblock();
+        $params['infoblock_id']= $infoblock['id'];
         $params['parent_id']= $this->_get_parent_id();
         $items = $f->get_all($params);
         fx::data('content_page')->attache_to_content($items);

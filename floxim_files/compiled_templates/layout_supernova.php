@@ -37,7 +37,8 @@ $tpl_to_call->set_var_meta(
 echo $tpl_to_call->render("wrap", $this->data);?><?
     }
     public function tpl_wrap() {
-        ?><!DOCTYPE html>
+        ?>
+<!DOCTYPE html>
 <html>
 <head>
 <title>
@@ -107,9 +108,11 @@ if (isset(${"slogan"})) {
 }
 if (is_null($slogan_tmp)) {
 	ob_start();
-	?>название или слоган 
+	?>
+название или слоган 
 <br />
-вашей компании<?
+вашей компании
+<?
 	$slogan_tmp = ob_get_clean();
 	fx::dig_set($this->data, "slogan", $slogan_tmp);
 }
@@ -125,23 +128,7 @@ unset($slogan_tmp);
 </div>
 <!--//логотип, слоган-->
 <div id="header_nav">
-<!--
-			
-<div id="lang">
-<a href="#" class="cms-lang-active">
-<img src="css/images/lang_rus.jpg" alt="" title="" />
- Русский
-</a>
-<a href="#" class="cms-lang-unctive">
-<img src="css/images/lang_eng.jpg" alt="" title="" />
- English
-</a>
-</div>
-
-			//языковая версия-->
-		
-			
-		<!--//поиск-->
+<!--//поиск-->
 <div class="sep">
 </div>
 <!--горизонтальное меню-->
@@ -540,7 +527,7 @@ protected $_templates = array (
       0 => 'wrap',
     ),
     'name' => 'index',
-    'for' => 'layout_supernova.index',
+    'for' => 'layout.show',
   ),
   1 => 
   array (
@@ -550,13 +537,13 @@ protected $_templates = array (
       0 => 'wrap',
     ),
     'name' => 'inner',
-    'for' => 'layout_supernova.inner',
+    'for' => 'layout.show',
   ),
   2 => 
   array (
     'id' => 'wrap',
     'name' => 'wrap',
-    'for' => 'layout_supernova.wrap',
+    'for' => 'false',
   ),
   3 => 
   array (
@@ -586,7 +573,7 @@ protected $_templates = array (
   array (
     'id' => NULL,
     'name' => NULL,
-    'for' => 'layout_supernova.',
+    'for' => 'layout.show',
   ),
 );
 }

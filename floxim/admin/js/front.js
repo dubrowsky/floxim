@@ -10,6 +10,16 @@ fx_front = function () {
     this.move_down_body();
     
     this.mode_selectable_selector = null;
+    $('html').on('keyup', '*', function(e) {
+        if (e.which == 113) {
+            var mode_map = {
+                view:'#page.edit',
+                edit:'#page.design',
+                design:'#page.view'
+            }
+            document.location.hash = mode_map[$fx.front.mode];
+        }
+    });
     
     $('html').on('click', '*', function(e) {
         if ($fx.front.mode_selectable_selector == null) {

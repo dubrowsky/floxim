@@ -2,6 +2,9 @@
 
 class fx_controller_infoblock extends fx_controller {
     
+    /*
+     * @return fx_infoblock
+     */
     protected function _get_infoblock() {
         if ( ($ib = $this->param('infoblock'))) {
             return $ib;
@@ -18,7 +21,7 @@ class fx_controller_infoblock extends fx_controller {
             dev_log('no ib to rnd', $this);
             die("IB NOT FOUND");
         }
-        $params = $infoblock['params'];
+        $params = $infoblock->get_prop_inherited('params');
         if (!is_array($params)) {
             $params = array();
         }
@@ -31,12 +34,17 @@ class fx_controller_infoblock extends fx_controller {
         if (!isset($params['infoblock_id'])) {
             $params['infoblock_id'] = $infoblock['id'];
         }
-        $controller = fx::controller($infoblock['controller'], $params, $infoblock['action']);
+        $controller = fx::controller(
+            $infoblock->get_prop_inherited('controller'), 
+            $params, 
+            $infoblock->get_prop_inherited('action')
+        );
         $result = $controller->process();
         $controller_meta = fx::dig($result, '_meta');
         $tpl_params = array();
         $tpl = null;
         $tpl_action = null;
+        /*
         if ( ($vis = $infoblock->get_infoblock2layout())) {
             if ($vis['template_name']) {
                 $tpl = fx::template($vis['template_name']);
@@ -46,6 +54,16 @@ class fx_controller_infoblock extends fx_controller {
                 $tpl_params = $vis['template_visual'];
             }
         }
+         * 
+         */
+        if ( ($tpl_name = $infoblock->get_prop_inherited('visual.template_name')) ) {
+            $tpl = fx::template($tpl_name);
+        }
+        if ( ! ($tpl_action = $infoblock->get_prop_inherited('visual.template_variant')) ) {
+            $tpl_action = $infoblock->get_prop_inherited('action');
+        }
+        
+        $tpl_params = $infoblock->get_prop_inherited('visual.template_visual');
         if (!$tpl) {
             $tpl = $controller->find_template();
         }
@@ -56,20 +74,23 @@ class fx_controller_infoblock extends fx_controller {
         $tpl_params['infoblock'] = $infoblock;
         $output = $tpl->render($tpl_action, $tpl_params);
         if (fx::env()->is_admin()) {
-            dev_log('cleared output', strip_tags($output));
             if (!preg_match("~[^\s+]~", strip_tags($output))) {
                 $output = '<span class="fx_empty_infoblock">[empty: '.self::_get_infoblock_sign($infoblock).']</span>';
             }
         }
-        if ($vis && $vis['wrapper_name'] && $vis['wrapper_variant']) {
-            $tpl_wrap = fx::template($vis['wrapper_name']);
-            $wrap_params = $vis['wrapper_visual'] ? $vis['wrapper_visual'] : array();
+        
+        $wrapper_name = $infoblock->get_prop_inherited('visual.wrapper_name');
+        $wrapper_variant = $infoblock->get_prop_inherited('visual.wrapper_variant');
+        
+        if ($wrapper_name && $wrapper_variant) {
+            $tpl_wrap = fx::template($wrapper_name);
+            $wrap_params = $infoblock->get_prop_inherited('visual.wrapper_visual');
             foreach ( $wrap_params as $wrap_param_key => $wrap_param_val) {
                 $tpl_wrap->set_var($wrap_param_key, $wrap_param_val);
             }
             $tpl_wrap->set_var('content', $output);
             $tpl_wrap->set_var('infoblock', $infoblock);
-            $output = $tpl_wrap->render($vis['wrapper_variant']);
+            $output = $tpl_wrap->render($wrapper_variant);
         }
         if (fx::env()->is_admin()) {
             $output = $this->_add_infoblock_meta($output, $infoblock, $controller_meta);

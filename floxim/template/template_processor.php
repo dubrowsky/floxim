@@ -49,7 +49,6 @@ class fx_template_processor {
             if (fx_template_html::has_floxim_atts($file_data)) {
                 $T = new fx_template_html($file_data);
                 $file_data = $T->transform_to_floxim();
-                dev_log('transformed '.$file, htmlspecialchars($file_data));
             }
             $source .= $file_data;
         }
@@ -445,7 +444,11 @@ class fx_template_processor {
             $name = $token->get_prop('id');
         }
         if (! ($for = $token->get_prop('for'))) {
-            $for = $this->_controller_type."_".$this->_controller_name.".".$token->get_prop('id');
+            if ($this->_controller_type == 'layout') {
+                $for = 'layout.show';
+            } else {
+                $for = $this->_controller_type."_".$this->_controller_name.".".$token->get_prop('id');
+            }
         }
         $this->templates [$token->get_prop('id')] += array(
             'code' => $code,
