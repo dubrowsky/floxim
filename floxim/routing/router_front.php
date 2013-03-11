@@ -1,6 +1,7 @@
 <?
 class fx_router_front extends fx_router {
-    public function route($url, $context) {
+
+    public function route($url = null, $context = null) {
         $site = fx::data('site', $context['site_id']);
         $page = fx::data('content_page')->get('url', $url, 'site_id', $site['id']);
         if (!$page) {
@@ -8,6 +9,7 @@ class fx_router_front extends fx_router {
         }
         fx::env('page', $page['id']);
         $layout_id = fx::env('layout');
+
         $infoblocks = $this->get_page_infoblocks($page['id'], $layout_id);
         
         $layout_ib = $infoblocks['layout'][0];

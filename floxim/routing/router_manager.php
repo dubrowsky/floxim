@@ -6,6 +6,23 @@ fx::routers()->register($callback, 1);
 
 class fx_router_manager {
 
+    public function __construct() {
+        foreach (array('admin', 'front', 'infoblock') as $r_name) {
+            try {
+                $classname = 'fx_router_'.$r_name;
+                if (class_exists($classname)) {
+                    
+                    $router = new $classname;
+                    $this->register($router);
+                }
+            } catch (Exception $e) {
+                // no file
+            }
+        }
+        
+        dev_log('routers registered', $this->routers);
+    }
+    
     protected $routers = array();
 
     public function register(fx_router $router, $name = null, $priority = null) {
@@ -24,11 +41,12 @@ class fx_router_manager {
         }
     }
 
-    public function register_system() {
+    /*public function register_system() {
         foreach (array('admin', 'front', 'infoblock') as $r_name) {
             try {
                 $classname = 'fx_router_'.$r_name;
                 if (class_exists($classname)) {
+                    
                     $router = new $classname;
                     $this->register($router);
                 }
@@ -36,7 +54,9 @@ class fx_router_manager {
                 // no file
             }
         }
-    }
+        
+        dev_log('router registered', $this->routers);
+    }*/
 
     protected function _reorder_routers() {
         uasort($this->routers, function($a, $b) {
