@@ -66,11 +66,15 @@ fx_front.prototype.select_item = function(node) {
     }
     this.deselect_item();
     $(node).addClass('fx_selected').trigger('fx_select');
+    // при удалении выбранного узла из дерева дергаем deselect_item()
+    $(node).bind('remove.deselect_removed', function(e) {
+        $fx.front.deselect_item();
+    });
     var selectable_up = this.get_selectable_up();
     if (selectable_up) {
-        $('.fx_admin_button_select_block').removeClass('fx_admin_notavailable').click($fx.front.select_level_up);
+        $fx.buttons.bind('select_block', $fx.front.select_level_up);
     } else {
-        $('.fx_admin_button_select_block').addClass('fx_admin_notavailable').unbind('click', $fx.front.select_level_up);
+        $fx.buttons.unbind('select_block', $fx.front.select_level_up);
     }
     $('body').on('click', this.click_out);
 }
@@ -82,9 +86,12 @@ fx_front.prototype.get_selected_item = function() {
 fx_front.prototype.deselect_item = function() {
     var selected_item = this.get_selected_item();
     if (selected_item) {
-        $(selected_item).removeClass('fx_selected').trigger('fx_deselect');
+        $(selected_item).
+                removeClass('fx_selected').
+                trigger('fx_deselect').
+                unbind('remove.deselect_removed');
     }
-    $('.fx_admin_button_select_block').addClass('fx_admin_notavailable');
+    $fx.buttons.unbind('select_block');
 }
 
 fx_front.prototype.select_level_up = function() {
@@ -192,6 +199,25 @@ fx_front.prototype.set_mode_edit = function () {
             .one('fx_deselect', save_var)
             .one('fx_deselect', edit_off)
             .focus();
+        var var_node = $($fx.front.get_selected_item());
+        var var_meta = var_node.data('fx_var');
+        var ib_node = var_node.closest('.fx_infoblock');
+        var infoblock_meta = ib_node.data('fx_infoblock');
+        if (var_meta.var_type == 'visual') {
+            $fx.buttons.bind('delete', function() {
+                $fx.post({
+                    essence:'infoblock',
+                    action:'save_var',
+                    infoblock:infoblock_meta,
+                    'vars': [
+                        {'var':var_meta,value:null}
+                    ],
+                    fx_admin:true
+                }, function(res) {
+                    $fx.front.reload_infoblock(ib_node.get(0));
+                });
+            });
+        }
         return false;
     };
     
@@ -234,17 +260,20 @@ fx_front.prototype.set_mode_edit = function () {
     }
     
     $('html').on('fx_select.fx_edit_mode', '.fx_template_var', var_select);
+    $('html').on('fx_deselect.fx_edit_mode', '.fx_template_var', function() {
+        $fx.buttons.unbind('delete');
+    });
     
     $('html').on('fx_select.fx_edit_mode', '.fx_template_var_in_att', function() {
-        $('.fx_admin_button_settings').removeClass('fx_admin_notavailable').click(edit_att_vars);
+        $fx.buttons.bind('settings', edit_att_vars);
         return false;
     });
     $('html').on('fx_deselect.fx_edit_mode', '.fx_template_var_in_att', function() {
-        $('.fx_admin_button_settings').addClass('fx_admin_notavailable').unbind('click', edit_att_vars);
+        $fx.buttons.unbind('settings', edit_att_vars);
         return false;
     })
     
-    $('.fx_admin_button_add').removeClass('fx_admin_notavailable').bind('click.fx_edit_mode', function() {
+    $fx.buttons.bind('add', function() {
         var buttons = [];
         $('.fx_infoblock').each(function() {
             var cm = $(this).data('fx_controller_meta');
@@ -271,7 +300,6 @@ fx_front.prototype.set_mode_edit = function () {
                 }
             }
         });
-        // [{name:'Olo',callback:function(){alert('clicked olo')}},{name:'troooolo'}]
         $fx.buttons.show_pulldown('add', buttons);
     });
     
@@ -356,24 +384,33 @@ fx_front.prototype.set_mode_design = function() {
     }
     
     $('html').on('fx_select.fx_design_mode', '.fx_infoblock', function() {
-        $('.fx_admin_button_settings').removeClass('fx_admin_notavailable').click(configure_infoblock);
-        $('.fx_admin_button_delete').removeClass('fx_admin_notavailable').click(delete_infoblock);
+        $fx.buttons.bind('settings', configure_infoblock);
+        $fx.buttons.bind('delete', delete_infoblock);
     });
     $('html').on('fx_deselect.fx_design_mode', '.fx_infoblock', function() {
-        $('.fx_admin_button_settings').addClass('fx_admin_notavailable').unbind('click');
-        $('.fx_admin_button_delete').addClass('fx_admin_notavailable').unbind('click');
+        $fx.buttons.unbind('settings');
+        $fx.buttons.unbind('delete');
     });
     $('html').on('click.fx_design_mode', '.fx_infoblock_adder', add_infoblock);
 }
 
 fx_front.prototype.reload_infoblock = function(infoblock_node) {
+    var ib_parent = $(infoblock_node).parent();
     var meta = $(infoblock_node).data('fx_infoblock');
     var page_id = $('body').data('fx_page_id');
+    var selected = $(infoblock_node).descendant_or_self('.fx_selected');
+    var selected_selector = null;
+    if(selected.length > 0) {
+        selected_selector = selected.first().generate_selector(ib_parent);
+    }
     $.ajax({
        url:'/~ib/'+meta.id+'@'+page_id,
        success:function(res) {
            $(infoblock_node).hide().before(res);
            $(infoblock_node).remove();
+           if (selected_selector) {
+               $fx.front.select_item(ib_parent.find(selected_selector).get(0));
+           }
        }
     });
 }

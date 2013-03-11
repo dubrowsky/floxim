@@ -19,7 +19,11 @@ fx_mode_menu = function ( ) {
 fx_mode_menu.prototype.load = function ( active ) {
     var cont = this.container.html('');
     $.each(this.data, function(key, value) {
-        item = $('<a/>').data('key', value.href).text(value.name).attr('href', '#page.'+value.href ).appendTo(cont);
+        $('<a/>').
+                data('key', value.href).
+                text(value.name).
+                attr('href', '#page.'+value.href ).
+                appendTo(cont);
     });
 }
 fx_mode_menu.prototype.set_active = function ( active ) {

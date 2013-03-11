@@ -1606,7 +1606,6 @@ li ul .fx_tree_label .fx_tree_title {
 }
 
 .fx_selected {
-    /*outline:4px solid #FF0 !important;*/
     outline:4px solid rgba(255, 255, 0, 0.5)  !important;
     outline-offset: -4px !important;
 }
