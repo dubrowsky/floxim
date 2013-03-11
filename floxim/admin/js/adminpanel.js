@@ -62,6 +62,23 @@ fx_adminpanel = {
         $('html').click(function(){
             $fx.panel.trigger('fx.click', 'main');
         });
+        $.fn.generate_selector = function(parent) {
+            if (typeof(parent) == 'undefined') {
+                parent = document;
+            } else if (parent instanceof $) {
+                parent = parent.get(0);
+            }
+            var selector = [];
+            var node = this.first();
+            while (node.length > 0 && node.get(0) !== parent) {
+                selector.unshift(':nth-child(' + (node.index() + 1)+ ')');
+                node = node.parent();
+            }
+            return selector.join(' '); 
+        };
+        $.fn.descendant_or_self = function(selector) {
+            return this.find(selector).add( this.filter(selector));
+        };
     },
 
     set_mode: function() {

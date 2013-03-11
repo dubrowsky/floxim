@@ -135,25 +135,8 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         $c_page = fx::data('content_page', $input['page_id']);
         
         $this->response->add_tab('scope', 'Где показывать');
-    	$area_fields = array(
-            array('type' => 'select', 'name' => 'pages', 
-                'values' => array(
-                    'all' => 'На всех страницах', 
-                    'this' => 'Только на этой странице', 
-                    'brothers' => 'На страницах этого уровня',
-                    'descendants' => 'Во всем разделе'
-                )
-            )/*,
-            array('name' => 'but', 'label' => 'Кроме...', 'parent' => array('pages' => 'all')),
-            array('name' => 'area_type', 'label' => 'Имеющих тип', 'type' => 'select', 
-                'values' => array("Любой", "Новость", "Раздел", "Вакансия")
-            )*/
-        );
-        if ($c_page['url'] == '/') {
-            unset($area_fields[0]['values']['brothers']);
-            unset($area_fields[0]['values']['descendants']);
-        }
-        $this->response->add_fields($area_fields, 'scope', 'scope');
+    	$scope_fields = $this->_get_scope_fields($infoblock, $c_page);
+        $this->response->add_fields($scope_fields, 'scope', 'scope');
         
         if ($input['settings_sent'] == 'true') {
             $inherit_mode = $input['fx_dialog_button'] == 'inherit';
@@ -246,6 +229,46 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
     }
     
     /*
+     * Получение полей формы для вкладки "Где показывать"
+     * @param fx_infoblock $infoblock - инфоблок, для которого подыскиваем место
+     * @param fx_content_page $c_page - страница, на которой открыли окошко настроек
+     */
+    
+    protected function _get_scope_fields(fx_infoblock $infoblock, fx_content_page $c_page) {
+        
+        $fields = array();
+        if ( ! ($c_page_val = fx::dig($infoblock, 'scope.pages')) ) {
+            $c_page_val = 'all';
+        }
+        $mnt_page = null;
+        if ( ($mnt_page_id = $infoblock['page_id']) && $mnt_page_id != $c_page['id']) {
+            $mnt_page = fx::data('content_page', $mnt_page_id);
+        }
+        
+        $page_vals = array(
+            'all' => 'На всех страницах'
+        );
+        $page_vals['this'] = 'Только на этой странице ('.$c_page['url'].')';
+        if ($mnt_page && $c_page_val == 'this') {
+            $page_vals['mnt'] = 'На странице '.$mnt_page['url'];
+        }
+        if ($c_page['url'] != '/') {
+            $page_vals['brothers'] = 'На страницах этого уровня';
+            $page_vals['descendants'] = 'Во всем разделе';
+        }
+        
+        $fields []= array(
+            'type' => 'select', 
+            'name' => 'pages', 
+            'values' => $page_vals,
+            'value' => $c_page_val
+        );
+        
+        dev_log('scope fields', $fields, $infoblock, $c_page, $mnt_page, $mnt_page_id);
+        return $fields;
+    }
+    
+    /*
      * Получение полей формы для вкладки "Как показывать"
      */
     protected function _get_format_fields(fx_infoblock $infoblock) {
@@ -317,6 +340,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         } else {
             $ib_visual = $ib->get_infoblock2layout();
         }
+        dev_log($input);
         foreach ($input['vars'] as $c_var) {
             $var = $c_var['var'];
             $value = $c_var['value'];
@@ -328,14 +352,22 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                     if (!is_array($wrapper_visual)) {
                         $wrapper_visual = array();
                     }
-                    $wrapper_visual[$var['id']] = $value;
+                    if ($value == 'null') {
+                        unset($wrapper_visual[$var['id']]);
+                    } else {
+                        $wrapper_visual[$var['id']] = $value;
+                    }
                     $ib_visual['wrapper_visual'] = $wrapper_visual;
-                } else { //if ($var['template'] == $tpl_name) {
+                } else {
                     $template_visual = $ib_visual['template_visual'];
                     if (!is_array($template_visual)) {
                         $template_visual = array();
                     }
-                    $template_visual[$var['id']] = $value;
+                    if ($value == 'null') {
+                        unset($template_visual[$var['id']]);
+                    } else {
+                        $template_visual[$var['id']] = $value;
+                    }
                     $ib_visual['template_visual'] = $template_visual;
                 }
                 $ib_visual->save();

@@ -41,7 +41,7 @@ if (is_null($odd_bg_tmp)) {
 	fx::dig_set($this->data, "odd_bg", $odd_bg_tmp);
 }
 if (!($odd_bg_tmp instanceof fx_template_field)) {
-	$odd_bg_tmp = new fx_template_field($odd_bg_tmp, array("id" => "odd_bg", "var_type" => "visual", "infoblock_id" => fx::dig($this->data, "infoblock.id"), "template" => $this->_get_template_sign(),"editable" => true));
+	$odd_bg_tmp = new fx_template_field($odd_bg_tmp, array("id" => "odd_bg", "var_type" => "visual", "infoblock_id" => fx::dig($this->data, "infoblock.id"), "template" => $this->_get_template_sign(), "editable" => true));
 }
 
 echo $odd_bg_tmp;
@@ -62,7 +62,7 @@ if (is_null($odd_color_tmp)) {
 	fx::dig_set($this->data, "odd_color", $odd_color_tmp);
 }
 if (!($odd_color_tmp instanceof fx_template_field)) {
-	$odd_color_tmp = new fx_template_field($odd_color_tmp, array("id" => "odd_color", "var_type" => "visual", "infoblock_id" => fx::dig($this->data, "infoblock.id"), "template" => $this->_get_template_sign(),"editable" => true));
+	$odd_color_tmp = new fx_template_field($odd_color_tmp, array("id" => "odd_color", "var_type" => "visual", "infoblock_id" => fx::dig($this->data, "infoblock.id"), "template" => $this->_get_template_sign(), "editable" => true));
 }
 
 echo $odd_color_tmp;
@@ -123,7 +123,7 @@ if (is_null($separator_tmp)) {
 	fx::dig_set($this->data, "separator", $separator_tmp);
 }
 if (!($separator_tmp instanceof fx_template_field)) {
-	$separator_tmp = new fx_template_field($separator_tmp, array("id" => "separator", "var_type" => "visual", "infoblock_id" => fx::dig($this->data, "infoblock.id"), "template" => $this->_get_template_sign(),"editable" => true));
+	$separator_tmp = new fx_template_field($separator_tmp, array("id" => "separator", "var_type" => "visual", "infoblock_id" => fx::dig($this->data, "infoblock.id"), "template" => $this->_get_template_sign(), "editable" => true));
 }
 
 echo $separator_tmp;

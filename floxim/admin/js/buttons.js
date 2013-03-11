@@ -26,6 +26,18 @@ fx_buttons = function ( source ) {
     
 }
 
+fx_buttons.prototype.bind = function(button_key, callback) {
+    var b = $('.fx_admin_button_'+button_key);
+    b.removeClass('fx_admin_notavailable');
+    b.click(callback);
+}
+
+fx_buttons.prototype.unbind = function(button_key, callback) {
+    var b = $('.fx_admin_button_'+button_key);
+    b.addClass('fx_admin_notavailable');
+    b.unbind('click', callback);
+}
+
 
 fx_buttons.prototype.draw_buttons = function ( buttons ) {
     var element,self = this;
