@@ -15,13 +15,136 @@ class fx_controller_admin extends fx_controller {
         $this->essence_type = str_replace('fx_controller_admin_', '', get_class($this));
         $this->ui = new fx_admin_ui();
     }
+    
+    /**
+     * Возвращает строку с базовой разметкой и
+     * собирает все сопутсвующие файлы в fx_core::get_object()->page'е
+     * 
+     * @param type $input
+     * @return string
+     */
+    function admin_office($input = null)
+    {
+        $fx_core = fx_core::get_object();
 
-    public function process($input, $action = null, $do_return = false) {
+        $fx_core->page->add_js_file('/floxim/lib/js/jquery-1.7.1.js');
+        $fx_core->page->add_js_file('/floxim/lib/js/jquery-ui-1.8.21.custom.js');
+        $fx_core->page->add_js_file('/floxim/lib/js/jquery.nestedSortable.js');
+        $fx_core->page->add_js_file('/floxim/lib/js/jquery.ba-hashchange.min.js');
+        $fx_core->page->add_js_file('/floxim/lib/js/jquery.json-2.3.js');
+        $fx_core->page->add_js_file('/floxim/admin/js-templates/jstx.js');
+        $fx_core->page->add_js_file('/floxim/admin/js-templates/compile.php');
+        $fx_core->page->add_js_file('/floxim/admin/js/lib.js');
+        $fx_core->page->add_js_file('/floxim/admin/js/adminpanel.js');
+        $fx_core->page->add_js_file('/floxim/admin/js/front.js');
+        $fx_core->page->add_js_file('/floxim/admin/js/buttons.js');
+        $fx_core->page->add_js_file('/floxim/admin/js/form.js');
+        $fx_core->page->add_js_file('/floxim/admin/js/dialog.js');
+        $fx_core->page->add_js_file('/floxim/admin/js/fields.js');
+        $fx_core->page->add_js_file('/floxim/admin/js/edit-in-place.js');
+        $fx_core->page->add_js_file('/floxim/admin/js/store.js');
+        $fx_core->page->add_js_file('/floxim/admin/js/dialog_file.js');
+        $fx_core->page->add_js_file('/floxim/admin/js/admin.js');
+        $fx_core->page->add_js_file('/floxim/admin/js/sort.js');
+        $fx_core->page->add_js_file('/floxim/admin/js/menu/main.js');
+        $fx_core->page->add_js_file('/floxim/admin/js/menu/mode.js');
+        $fx_core->page->add_js_file('/floxim/admin/js/menu/more.js');
+        $fx_core->page->add_js_file('/floxim/admin/js/menu/submenu.js');
+        $fx_core->page->add_js_file('/floxim/admin/js/menu/additional.js');
+        $fx_core->page->add_js_file('/floxim/admin/js/menu/breadcrumb.js');
+        $fx_core->page->add_js_file('/floxim/editors/elrte/elrte.full.js');
+        $fx_core->page->add_js_file('/floxim/editors/elrte/i18n/elrte.ru.js');
+        $fx_core->page->add_js_file('/floxim/lib/js/jquery.form.js');
+        $fx_core->page->add_js_file('/floxim/lib/js/jquery.jstree.js');
+        $fx_core->page->add_js_file('/floxim/lib/js/jquery-gp-gallery.js');
+        $fx_core->page->add_js_file('/floxim/lib/js/jquery.tipTip.minified.js');
+        $fx_core->page->add_js_file('/floxim/lib/js/jquery-ui-timepicker-addon.js');
+        
+        if ($fx_core->env->get_user() && $fx_core->env->get_user()->perm()->is_supervisor()) {
+            $fx_core->page->add_css_file('/floxim/lib/css/elrte/elrte.min.css');
+            $fx_core->page->add_css_file('/floxim/admin/skins/default/jquery-ui/main.css');
+            $fx_core->page->add_css_file('/floxim/admin/skins/default/css/main.css');
+
+            $panel = '
+            <div id="fx_admin_panel">
+                <div id="fx_admin_panel_logo"></div>
+                <div id="fx_admin_main_menu"></div>
+                <div id="fx_admin_additional_menu"></div>
+                <div id="fx_admin_clear"></div>
+            </div>
+            <div id="fx_admin_left">
+                <div id="fx_admin_submenu"></div>
+            </div>
+            <div id="fx_admin_right">
+                <div id="fx_admin_control" class="fx_admin_control_admin">
+                    <div id="fx_admin_buttons"></div>
+                    <div id="fx_admin_status_block"></div>
+                 </div>
+                 <div id="fx_admin_breadcrumb"></div>
+                 <div id="fx_admin_content">'.$auth_form.'</div>
+            </div>
+            <div id="fx_dialog"></div>
+            <div id="fx_dialog_file"></div>';
+            $fx_core->page->set_after_body($panel);
+        }
+
+        $auth_form = '';
+        if (!$fx_core->env->get_user()) {
+            $auth_form = '<div>
+                <form method="post" action="/floxim/">
+                <input type="hidden" name="action" value="admin_auth" />
+                <input type="hidden" name="essence" value="admin" />
+                <input name="AUTH_USER" />
+                <input type="password" name="AUTH_PW" />
+                <input type="submit" value="Вход" class="auth_submit">
+                </form></div>';
+        }
+
+        if ($fx_core->env->get_user() && $fx_core->env->get_user()->perm()->is_supervisor()) {
+            $js_config = new fx_admin_configjs();
+            $js_config->add_main_menu(fx_controller_admin_adminpanel::get_main_menu());
+            $js_config->add_more_menu(fx_controller_admin_adminpanel::get_more_menu());
+            $js_config->add_buttons(fx_controller_admin_adminpanel::get_buttons());
+            $fx_core->page->add_js_text("fx_adminpanel.init(".$js_config->get_config().");");
+        }
+        
+        $html = '<html class="fx_admin_html"><head><title>Floxim</title></head><body> '.$auth_form.'</body></html>';
+        $html = $fx_core->page->post_proccess($html);
+        return $html;
+    }
+    
+    function admin_auth($input = null) {
+        $fx_core = fx_core::get_object();
+        $db = $fx_core->db;
+        $AUTH_USER = $input['AUTH_USER'];
+        $AUTH_PW = $input['AUTH_PW'];
+
+        // попытка авторизации
+        $user = fx::data('content_user')->get("`".fx::config()->AUTHORIZE_BY."` = '".$db->escape($AUTH_USER)."'
+        AND `password` = ".fx::config()->DB_ENCRYPT."('".$db->escape($AUTH_PW)."')
+        AND `checked` = 1");
+        
+        if ($user) {
+            $user->authorize();
+        }
+        
+        return $this->admin_office();
+    }
+    
+    public function process($input = null, $action = 'admin_office', $do_return = false) {
         $fx_core = fx_core::get_object();
         $user = $fx_core->env->get_user();
-
+        
         if (!$user || !$user->perm()->is_supervisor()) {
-            die("Нет прав!");
+            
+            // Возвращается строка при рендеринге
+            // формы входа в бэкофис
+            $result = $this->admin_auth($input);
+            
+            if (is_string($result)) {
+                return $result;
+            }
+            #die("Нет прав!");
         }
 
         if (!$action || !is_callable(array($this, $action))) {
@@ -42,7 +165,12 @@ class fx_controller_admin extends fx_controller {
             fx_history::delete_old();
         }
 
+        // Возвращается строка при рендеринге бэкофиса 
+        // (стандартный $action == 'admin_office' )
         $result = $this->$action($input);
+        if (is_string($result)) {
+            return $result;
+        }
 
         if ($input['posting']) {
             if (!$result['text']) $result['text'] = $this->get_status_text();

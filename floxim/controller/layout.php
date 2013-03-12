@@ -364,6 +364,10 @@ class fx_controller_layout extends fx_controller {
         fx_core::get_object()->env->set_main_content($content);
     }
 
+    /**
+     * Скопировал в fx_controller_admin
+     * @param type $input
+     */
     public function admin_auth($input) {
         $fx_core = fx_core::get_object();
         $db = $fx_core->db;
@@ -380,6 +384,9 @@ class fx_controller_layout extends fx_controller {
         $this->admin();
     }
 
+    /**
+     * Скопировал в fx_controller_admin
+     */
     public function admin() {
         $fx_core = fx_core::get_object();
 
@@ -464,6 +471,7 @@ class fx_controller_layout extends fx_controller {
             $js_config->add_buttons(fx_controller_admin_adminpanel::get_buttons());
             $fx_core->page->add_js_text("fx_adminpanel.init(".$js_config->get_config().");");
         }
+         
     }
 
     public function blank() {

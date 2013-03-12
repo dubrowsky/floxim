@@ -14,8 +14,6 @@ class fx_router_infoblock extends fx_router {
             )
         );
         
-        dev_log('returning infoblock controller', $ib_info);
-        
         return $controller;
     }
 }
