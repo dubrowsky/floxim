@@ -60,7 +60,6 @@ class fx_controller {
     	}
     	$this->set_action($action);
     	$action = is_callable(array($this, $this->action)) ? $this->action : 'default_action';
-        dev_log('call action '.get_class($this).'.'.$action);
         return $this->$action($this->input);
     }
     

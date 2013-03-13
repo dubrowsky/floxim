@@ -203,21 +203,6 @@ class fx_template_processor {
     
     protected function _token_code_to_code($token) {
         return $token->get_prop('value');
-        /*
-        * это определение контеста (атрибут/html) на этапе сборки шаблона
-        * кажется, вместо него лучше использовать постпроцессинг
-       $check_code = preg_replace("~[\n\r]~", ' ', $code);
-       $check_code = preg_replace("~<\?.+?\?>~s", '', $check_code);
-       $check_code = preg_replace("~\s+~", ' ', $check_code);
-       preg_match("~</?[a-z0-9]+[^>]*?(>?)([^>]*?)$~s", $check_code, $last_tag);
-       if (count($last_tag) > 0) {
-           if ($last_tag[1] == '>' && !preg_match("~<~", $last_tag[2])) {
-               $this->_code_context = 'text';
-           } else {
-               $this->_code_context = 'attribute';
-           }
-       }*/
-
     }
     
     protected function _token_call_to_code(fx_template_token $token) {
@@ -396,7 +381,14 @@ class fx_template_processor {
             $code .= "\t\textract(".$item_alias." instanceof fx_content ? ".$item_alias."->get_fields_to_show() : get_object_vars(".$item_alias."));\n";
             $code .= "\t}\n";
         }
+        $meta_test = "\tif (fx::env()->is_admin() && (".$item_alias." instanceof fx_essence) ) {\n";
+        $code .= $meta_test;
+        $code .= "\t\tob_start();\n";
+        $code .= "\t}\n";
         $code .= $this->_token_to_code($token);
+        $code .= $meta_test;
+        $code .= "\t\techo ".$item_alias."->add_template_record_meta(ob_get_clean());\n";
+        $code .= "\t}\n";
         $code .= "}\n"; // close foreach
         $code .= "}\n?>"; // close if
         return $code;

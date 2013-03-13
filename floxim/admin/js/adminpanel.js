@@ -63,6 +63,9 @@ fx_adminpanel = {
             $fx.panel.trigger('fx.click', 'main');
         });
         $.fn.generate_selector = function(parent) {
+            if (this.length == 0) {
+                return false;
+            }
             if (typeof(parent) == 'undefined') {
                 parent = document;
             } else if (parent instanceof $) {
@@ -74,7 +77,7 @@ fx_adminpanel = {
                 selector.unshift(':nth-child(' + (node.index() + 1)+ ')');
                 node = node.parent();
             }
-            return selector.join(' '); 
+            return '>'+selector.join('>'); 
         };
         $.fn.descendant_or_self = function(selector) {
             return this.find(selector).add( this.filter(selector));

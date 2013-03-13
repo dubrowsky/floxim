@@ -13,11 +13,13 @@ class fx_router_admin extends fx_router {
         {
             return null;
         }
+        dev_log('request', $_REQUEST);
         
         if (empty($_REQUEST)) 
         {
             // параметров запроса нет, идем стандартной 
             // для всех контроллеров дорогой
+            dev_log('return empty ctrl');
             return new fx_controller_admin();
         }
         
@@ -124,15 +126,18 @@ class fx_router_admin extends fx_router {
 
         // дебри старой админки вынудили меня поставить костыль (ниже)...
         
+        dev_log('admin ctrl is', $controller);
         if ($controller instanceof fx_controller_admin)
         {
             // главный контроллер вызывает 
             // post_postprocess самостоятельно
             echo $controller->process($input, $action);
+            dev_log('let us die here');
             die();
         }
         else
         {
+            dev_log('let us buffer');
             // мутные контроллеры не умеют вызывать
             // post_postprocess самостоятельно
             ob_start("$this->fx_buffer");
