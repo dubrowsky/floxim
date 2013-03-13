@@ -171,4 +171,4 @@ pip-log.txt
 /floxim_templates
 /nbproject/private/
 /_test/
-/floxim_files/compiled_templates
+/floxim_files/compiled_templates/*

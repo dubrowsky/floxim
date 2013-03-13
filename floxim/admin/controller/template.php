@@ -7,8 +7,11 @@ class fx_controller_admin_template extends fx_controller_admin {
      */
     public function all($input) {
         $items = array();
-        foreach (fx::data('template')->get_all('parent_id', 0) as $template) {
-            $items[$template['id']] = $template;
+        
+        $templates = fx::data('template')->get_all('parent_id', 0);
+        foreach ($templates as $template) {
+            $template_id = $template->get_var('id');
+            $items[$template_id] = $template;
         }
 
         $template_use = array(); // [номер макет][номер сайта] => 'Имя сайта'
@@ -23,12 +26,12 @@ class fx_controller_admin_template extends fx_controller_admin {
         	$submenu = self::get_template_submenu($item);
         	$submenu_first = current($submenu);
             $name = array(
-            	'name' => $item['name'], 
+            	'name' => $item->get_var('name'), 
             	'url' => $submenu_first['url']
             );
-            $el = array('id' => $item['id'], 'name' => $name);
-            if ($template_use[$item['id']]) {
-                $el['use'] = join(', ', $template_use[$item['id']]);
+            $el = array('id' => $item->get_var('id'), 'name' => $name);
+            if ($template_use[$item->get_var('id')]) {
+                $el['use'] = join(', ', $template_use[$item->get_var('id')]);
                 $el['fx_not_available_buttons'] = array('delete');
             } else {
                 $el['use'] = ' - ';
@@ -264,12 +267,14 @@ class fx_controller_admin_template extends fx_controller_admin {
 			'settings' => 'Настройки'
 		);
 		
+        $template_id = $template->get_var('id');
+        
 		$items = array();
 		foreach ($titles as $key => $title) {
 			$items [$key]= array(
 				'title' => $title,
 				'code' => $key,
-				'url' => 'template.operating('.$template['id'].','.$key.')'
+				'url' => 'template.operating('.$template_id.','.$key.')'
 			);
 		}
 		return $items;
