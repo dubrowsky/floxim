@@ -203,6 +203,7 @@ fx_front.prototype.set_mode_edit = function () {
         var var_meta = var_node.data('fx_var');
         var ib_node = var_node.closest('.fx_infoblock');
         var infoblock_meta = ib_node.data('fx_infoblock');
+        console.log(var_meta);
         if (var_meta.var_type == 'visual') {
             $fx.buttons.bind('delete', function() {
                 $fx.post({

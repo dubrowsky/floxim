@@ -24,19 +24,34 @@ class fx_template_field  {
     
     public function __toString() {
         $val = $this->get_value();
-        if (!$this->get_meta('editable')) {
+        if (!$this->get_meta('editable') || !fx::env('is_admin')) {
             return $val;
         }
         $id = $this->get_meta('id');
         return "###fx_template_field|".$id."|".json_encode($this->_meta)."###".$val."###fx_template_field_end###";
     }
     
+    protected static $_field_regexp = "###fx_template_field\|([^\|]*?)\|(.+?)###(.+?)###fx_template_field_end###";
+    
     /**
      * Постпроцессинг полей
      * @param string $html
      */
     public static function replace_fields($html) {
-        $field_regexp = "~###fx_template_field\|([^\|]*?)\|(.+?)###(.+?)###fx_template_field_end###~s";
+        
+        $html = self::_replace_fields_in_atts($html);
+        $html = self::_replace_fields_wrapped_by_tag($html);
+        $html = self::_replace_fields_in_text($html);
+        return $html;
+    }
+    
+    /**
+     * Замена полей в атрибутах
+     * @param string $html
+     */
+    protected static function _replace_fields_in_atts($html) {
+        // Регулярка для атрибутов
+        $field_regexp = "~".self::$_field_regexp."~s";
         // заменяем подстановки в атрибутах
         $html = preg_replace_callback(
             "~<[^>]+###fx_template_field[^>]+?>~", 
@@ -53,26 +68,48 @@ class fx_template_field  {
                     }, 
                     $tag_matches[0]
                 );
-                $fx_atts = '';
+                $tag_meta = array('class' => 'fx_template_var_in_att');
                 foreach ($att_fields as $afk => $af) {
                     $af_meta = json_decode($af['meta']);
                     $af_meta->value = $af['value'];
-                    $af['meta'] = json_encode($af_meta);
-                    $fx_atts .= 'data-fx_template_var_'.$afk.'="'.htmlentities($af['meta']).'" ';
+                    $tag_meta['data-fx_template_var_'.$afk] = htmlentities(json_encode($af_meta));
                 }
-                $tag = preg_replace("~^<[^\s>]+~", '$0 '.$fx_atts, $tag);
-                if (preg_match("~class\s*=[\s\'\"]*[^\'\"\>]+~i", $tag, $class_att)) {
-                    $class_att_new = preg_replace("~class\s*=[\s\'\"]*~", '$0fx_template_var_in_att ', $class_att[0]);
-                    $tag = str_replace($class_att, $class_att_new, $tag);
-                } else {
-                    $tag = preg_replace("~^<[^\s>]+~", '$0 class="fx_template_var_in_att"', $tag);
-                }
+                $tag = fx_html_token::create_standalone($tag);
+                $tag->add_meta($tag_meta);
+                $tag = $tag->serialize();
+                dev_log($tag_meta, htmlspecialchars($tag));
                 return $tag;
             }, 
             $html
         );
-        // остались только в тексте
-        $html = preg_replace_callback($field_regexp, function($field_matches) {
+        return $html;
+    }
+    
+    /*
+     * Заменяет переменные, завернутые в единственный тег
+     * (чтоб не создавать лишнюю разметку)
+     */
+    protected static function _replace_fields_wrapped_by_tag($html) {
+        $html = preg_replace("~<!--.*?-->~s", '', $html);
+        $field_regexp = '~(<([a-z0-9]+)[^>]*?>)([\s]*?)'.self::$_field_regexp.'([\s]*?)(</\2>)~s';
+        $html = preg_replace_callback(
+            $field_regexp, 
+            function($matches) {
+                $tag = fx_html_token::create_standalone($matches[1]);
+                $tag->add_meta(array(
+                    'class' => 'fx_template_var',
+                    'data-fx_var' => htmlentities($matches[5])
+                ));
+                $tag = $tag->serialize();
+                return $tag.$matches[3].$matches[6].$matches[7].$matches[8];
+            },
+            $html
+        );
+        return $html;
+    }
+    
+    protected static function _replace_fields_in_text($html) {
+        $html = preg_replace_callback("~".self::$_field_regexp."~s", function($field_matches) {
             $field_content = $field_matches[3];
             $tag = preg_match("~<(?:div|ul|li|table|br)~i", $field_content) ? 'div' : 'span';
             return '<'.$tag.' class="fx_template_var" data-fx_var="'.htmlentities($field_matches[2]).'">'.

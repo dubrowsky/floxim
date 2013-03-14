@@ -168,6 +168,13 @@ class fx_content extends fx_essence {
             }
         }
     }
+    
+    public function add_template_record_meta($html) {
+        $proc = new fx_template_html($html);
+        $html = $proc->add_meta(array('olo' => 'trolo', 'class' => 'fx_content_essence'));
+        dev_log(htmlspecialchars($html));
+        return "<!--RCRD#".$this->get('id')."-->".$html."<!--//RCRD#".$this->get('id')."-->";
+    }
 
 }
 

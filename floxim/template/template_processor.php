@@ -10,7 +10,6 @@ class fx_template_processor {
     public function process($source, $code) {
         $source = str_replace("{php}", '<?', $source);
         $source = str_replace("{/php}", '?>', $source);
-        //$source = $this->process_microdata($source);
         
         $tokens = $this->tokenize($source);
         $tree = $this->make_tree($tokens);
@@ -203,21 +202,6 @@ class fx_template_processor {
     
     protected function _token_code_to_code($token) {
         return $token->get_prop('value');
-        /*
-        * это определение контеста (атрибут/html) на этапе сборки шаблона
-        * кажется, вместо него лучше использовать постпроцессинг
-       $check_code = preg_replace("~[\n\r]~", ' ', $code);
-       $check_code = preg_replace("~<\?.+?\?>~s", '', $check_code);
-       $check_code = preg_replace("~\s+~", ' ', $check_code);
-       preg_match("~</?[a-z0-9]+[^>]*?(>?)([^>]*?)$~s", $check_code, $last_tag);
-       if (count($last_tag) > 0) {
-           if ($last_tag[1] == '>' && !preg_match("~<~", $last_tag[2])) {
-               $this->_code_context = 'text';
-           } else {
-               $this->_code_context = 'attribute';
-           }
-       }*/
-
     }
     
     protected function _token_call_to_code(fx_template_token $token) {
@@ -272,9 +256,6 @@ class fx_template_processor {
             $code .= "\$tpl_to_call->set_var(
                 '".$param_var_token->get_prop('id')."', 
                 ".$value_to_set.");\n";
-            $code .= "\$tpl_to_call->set_var_meta(
-                '".$param_var_token->get_prop('id')."', 
-                array('var_type' => 'param'));\n";
         }
         $code .= 'echo $tpl_to_call->render("'.$token->get_prop('id').'", $this->data);?>';
         $current_template =& $this->templates[$this->_get_current_template_id()];
@@ -326,7 +307,7 @@ class fx_template_processor {
             $code .= "}\n";
         }
         if ($token->get_prop('var_type') == 'visual' && !($token->get_prop('editable') == 'false')) {
-            $code .= 'if (!('.$var_tmp." instanceof fx_template_field)) {\n";
+            $code .= 'if (!(fx::env("is_admin") && '.$var_tmp." instanceof fx_template_field)) {\n";
             $code .= "\t".$var_tmp." = new fx_template_field(".$var_tmp.", ";
             $code .= 'array("id" => "'.$var_id.'", ';
             $code .= '"var_type" => "visual", ';
@@ -341,29 +322,6 @@ class fx_template_processor {
         $code .= "\necho ".$var_tmp.";\n";
         $code .= "unset(".$var_tmp.");\n";
         $code .= "\n?>";
-        return $code;
-        /** old **/
-        
-        $default = $token->get_prop("default");
-        if (!$default && count($token->get_children()) > 0) {
-            $code .= "<?ob_start();";
-            foreach ($token->get_children() as $c_child) {
-                $code .= $this->_token_to_code($c_child);
-            }
-            $default = "ob_get_clean()";
-        }
-        if ($default) {
-            $code .= "\$this->set_var_default(
-                        \"".$token->get_prop('id')."\", 
-                        ".$default.");?>";
-        }
-
-        $code .= '<?=$this->show_var("'.$token->get_prop('id').'")?>';
-        $current_template =& $this->templates[$this->_get_current_template_id()];
-        if (!isset($current_template['vars'])) {
-            $current_template['vars'] = array();
-        }
-        $current_template['vars'] []= $token->get_prop('id');
         return $code;
     }
     
@@ -396,7 +354,14 @@ class fx_template_processor {
             $code .= "\t\textract(".$item_alias." instanceof fx_content ? ".$item_alias."->get_fields_to_show() : get_object_vars(".$item_alias."));\n";
             $code .= "\t}\n";
         }
+        $meta_test = "\tif (fx::env('is_admin') && (".$item_alias." instanceof fx_essence) ) {\n";
+        $code .= $meta_test;
+        $code .= "\t\tob_start();\n";
+        $code .= "\t}\n";
         $code .= $this->_token_to_code($token);
+        $code .= $meta_test;
+        $code .= "\t\techo ".$item_alias."->add_template_record_meta(ob_get_clean());\n";
+        $code .= "\t}\n";
         $code .= "}\n"; // close foreach
         $code .= "}\n?>"; // close if
         return $code;

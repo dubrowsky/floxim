@@ -185,6 +185,15 @@ abstract class fx_essence implements ArrayAccess {
     public function get_type() {
         return $this->essence_type;
     }
+    
+    /*
+     * Добавить мета-данные для редактирования с фронта
+     * @param string $html html-код рекорда
+     * @return string строка с добавленными мета-данными
+     */
+    public function add_template_record_meta($html) {
+        return $html;
+    }
 
 }
 ?>

@@ -1,6 +1,6 @@
 <?php
 require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . '_devlog' . DIRECTORY_SEPARATOR . 'log.php');
-dev_log('booting');
+//dev_log('booting');
 
 $config =  array(
     'DB_DSN' => 'mysql:dbname=floxim;host=localhost',
@@ -39,4 +39,4 @@ $fx_core->lang->load($lang);
 
 $current_site = fx::data('site')->get_by_host_name($_SERVER['HTTP_HOST'], 1);
 fx::env('site', $current_site);
-dev_log('booted');
+//dev_log('booted');

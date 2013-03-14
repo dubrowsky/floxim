@@ -341,12 +341,8 @@ class fx_core extends fx_system {
                 $file = $root.'template/'.$classname;
                 break;
             }
-            if ($classname == 'controller_component') {
-                $file = $root.'controller/component';
-                break;
-            }
-            if ($classname == 'controller_layout') {
-                $file = $root.'controller/layout';
+            if (preg_match('~controller_(component|widget|layout)$~', $classname, $ctr_type)) {
+                $file = $root.'controller/'.$ctr_type[1];
                 break;
             }
             if (preg_match("~^template_(.+)$~", $classname, $tpl_name)) {

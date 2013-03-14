@@ -169,6 +169,7 @@ pip-log.txt
 /_devlog/log/*
 /floxim_files/phpthumb
 /floxim_templates
+/floxim_widgets
 /nbproject/private/
-/_test/
+/_test/*
 /floxim_files/compiled_templates/*

@@ -1,5 +1,5 @@
-<div class="text">  
-    {render}
+{render}
+    <div class="text">
         {$f_text}
-    {/render}
-</div>
+    </div>
+{/render}
