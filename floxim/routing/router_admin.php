@@ -14,19 +14,20 @@ class fx_router_admin extends fx_router {
             return null;
         }
         
+        $fx_core = fx_core::get_object();
+        $fx_core->modules->load_env();
+        $input = $fx_core->input->make_input();
+        
         if (empty($_REQUEST)) 
         {
             // параметров запроса нет, идем стандартной 
             // для всех контроллеров дорогой
-            return new fx_controller_admin();
+            return new fx_controller_admin($input);
         }
         
         // НИЖЕ - остатки старой админки. Руины, загромождающие
         // площадку для понятного кода. Админка в плане задумывалась как набор
         // контроллеров, которые лежат в /floxim/admin/controllers/
-        
-        $fx_core = fx_core::get_object();
-        $fx_core->modules->load_env();
         
         $essence = $fx_core->input->fetch_post('essence');
         $action = $fx_core->input->fetch_post('action');
@@ -45,22 +46,20 @@ class fx_router_admin extends fx_router {
             // Если сущность, к которой идет post запрос
             // не указано, то просто возвращаем контроллер,
             // как и положено. Так то
-            return new fx_controller_admin();
+            return new fx_controller_admin($input);
         }
         
         $classname = 'fx_controller_' . $essence;
         try {    
-            $controller = new $classname;
+            $controller = new $classname($input, $action);
         } catch (Exception $e) {
             die("Error! Essence: " . htmlspecialchars($essence));
         }
 
         // мутные контроллеры не умеют вызывать
         // post_postprocess самостоятельно
-        $input = $fx_core->input->make_input();
-
         ob_start("$this->fx_buffer");
-        $controller->process($input, $action);
+        $controller->process();
         $str = ob_get_clean();
         echo $str;
         die();

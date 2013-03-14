@@ -4,11 +4,10 @@
  * Базовый класс для всех контроллеров
  * Конструктор принимает параметры и экшн
  * Отработка - через метод process()
- * @property fx_admin_ui $ui  
  */
 class fx_controller {
+    
     protected $input = array();
-
     protected $action = null;
     
     /**
@@ -48,19 +47,14 @@ class fx_controller {
     }
 
     /**
-     * 
-     * @param type $input
-     * @param type $action
-     * @param type $do_return временная штука, потом будет единственным возможным поведением
-     * @return array массив с результатами работы контроллера
+     * Возвращает результат выполнения действия контроллером
+     * @return array|string массив с результатами работы контроллера
+     * $input = null, $action = null, $do_return = false
      */
-    public function process($input = null, $action = null, $do_return = false) {
-    	if (!is_null($input)) {
-            $this->set_input($input);
-    	}
-    	$this->set_action($action);
+    public function process() {	
     	$action = is_callable(array($this, $this->action)) ? $this->action : 'default_action';
         dev_log('call action '.get_class($this).'.'.$action);
+        
         return $this->$action($this->input);
     }
     
@@ -86,6 +80,7 @@ class fx_controller {
         }
         return array();
     }
+    
     /*
     public function render() {
         $res = array('input' => $this->process());

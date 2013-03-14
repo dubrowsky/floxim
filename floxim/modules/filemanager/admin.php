@@ -17,8 +17,12 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
     protected $path = false; // текущий каталог
     protected $breadcrumb_target = false;
 
-    public function process($input, $action = null, $do_return = false) {
+    public function process() {
 
+        $input = $this->inout;
+        $action = $this->action;
+        $do_return = $this->process_do_return;
+        
     	$this->path = isset($input['path']) ? $input['path'] : $input['params'][0];
     	$this->path = trim($this->path, "/\\");
 

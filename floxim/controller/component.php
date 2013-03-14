@@ -1,8 +1,9 @@
 <?php
 class fx_controller_component extends fx_controller {
     
-    public function process($input = null, $action = null, $do_return = false) {
-        $result = parent::process($input, $action, $do_return);
+    // public function process($input = null, $action = null, $do_return = false)
+    public function process() {
+        $result = parent::process();
         $content_type = $this->get_content_type();
         $component = fx::data('component', $content_type);
         if ($this->action == 'listing') {
@@ -147,16 +148,32 @@ class fx_controller_component extends fx_controller {
         
     }
     
+    
+    /**
+     * $_content_type может быть одним из значений
+     * в таблице fx_component в поле keyword
+     * @var string 
+     */
     protected $_content_type = null;
     
+    /**
+     * @return string
+     */
     public function get_content_type() {
         return $this->_content_type;
     }
     
+    /**
+     * @param string $content_type
+     */
     public function set_content_type($content_type) {
         $this->_content_type = $content_type;
     }
     
+    /**
+     * Возвращает компонент по значение свойства _content_type
+     * @return fx_data_component
+     */
     public function get_component() {
         $ct = $this->get_content_type();
         $component = fx::data('component')->get('keyword', $ct);

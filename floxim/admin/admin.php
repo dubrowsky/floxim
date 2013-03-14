@@ -2,6 +2,12 @@
 
 class fx_controller_admin extends fx_controller {
 
+    /** @var string стандартное действие для контроллера - вернуть html верстку  */
+    protected $action = 'admin_office';
+    
+    /** @var bool метод process() должен возвращать результат? */
+    protected $process_do_return = false;
+    
     protected $essence_type;
     protected $save_history = true;
 
@@ -11,20 +17,116 @@ class fx_controller_admin extends fx_controller {
     /** @var fx_admin_ui */
     protected $ui;
 
-    public function __construct() {
+    public function __construct($input = array(), $action = null, $do_return = false) {
+        parent::__construct($input, $action);
+        
         $this->essence_type = str_replace('fx_controller_admin_', '', get_class($this));
         $this->ui = new fx_admin_ui();
+        
+        $this->process_do_return = $do_return;
+    }
+
+    public function process() {
+        
+        $fx_core = fx_core::get_object();
+        $user = $fx_core->env->get_user();
+        
+        $input = $this->input;
+        $action = $this->action;
+        
+        if (!$user || !$user->perm()->is_supervisor()) {
+            
+            $result = $this->admin_auth($input);
+            
+            if (is_string($result)) {
+                return $result;
+            }
+            #die("Нет прав!");
+        }
+
+        if (!$action || !is_callable(array($this, $action))) {
+            die("Error! Class:".get_class($this).", action:".htmlspecialchars($action));
+        }
+        
+        $this->response = new fx_admin_response($input);
+
+        //fx_admin_checkpatch::check();
+
+        if ($this->save_history && $input['posting']) {
+            $history = fx::data('history')->create(array('user_id' => 1));
+            $history['name'] = $this->get_history_name($action);
+            $history['date'] = date("Y-m-d H:i:s");
+            $history->save();
+            fx_history::set_history_obj($history);
+            fx_history::delete_old();
+        }
+
+        $result = $this->$action($input);
+        if (is_string($result)) {
+            return $result;
+        }
+
+        if ($input['posting']) {
+            if (!$result['text']) $result['text'] = $this->get_status_text();
+
+            $undo = fx_controller_admin_history::get_undo_obj();
+            $redo = fx_controller_admin_history::get_redo_obj();
+            if ($undo) $result['history']['undo'] = $undo['name'];
+            if ($redo) $result['history']['redo'] = $redo['name'];
+        }
+
+        if ($this->response) {
+            $result = $result ? $result : array();
+            $result = array_merge($result, $this->response->to_array());
+        }
+        
+        if ($this->process_do_return) {
+            return $result;
+        }
+
+        echo json_encode($result);
+    }
+
+    protected function get_history_name($action) {
+        $essence = str_replace('fx_controller_', '', get_class($this));
+        $action = str_replace('_save', '', $action);
+        $constant = "FX_HISTORY_".strtoupper($essence)."_".strtoupper($action);
+
+        return defined($constant) ? constant($constant) : $constant;
+    }
+
+    protected function get_status_text() {
+        return "Сохранено";
+    }
+
+    public function admin_tabs($tabs, $callback_param = null) {
+        $tabs_key = array_keys($tabs);
+        $active_tab = $this->get_active_tab();
+        if (!in_array($active_tab, $tabs_key)) {
+            $active_tab = $tabs_key[0];
+        }
+
+        foreach ($tabs as $tab_key => $tab_name) {
+            $this->response->add_tab($tab_key, $tab_name, ($active_tab == $tab_key));
+        }
+        $this->response->set_change_tab_url();
+
+        call_user_func(array($this, 'tab_'.$active_tab), $callback_param);
     }
     
+    protected function get_active_tab() {
+        return $this->input['params'][1];
+    }
+    
+    ///// ACTIONS ////
+            
     /**
      * Возвращает строку с базовой разметкой и
      * собирает все сопутсвующие файлы в fx_core::get_object()->page'е
-     * 
-     * @param type $input
      * @return string
      */
-    function admin_office($input = null)
-    {
+    public function admin_office($input)
+    {   
         $fx_core = fx_core::get_object();
 
         $fx_core->page->add_js_file('/floxim/lib/js/jquery-1.7.1.js');
@@ -113,7 +215,12 @@ class fx_controller_admin extends fx_controller {
         return $html;
     }
     
-    function admin_auth($input = null) {
+    /**
+     * Авторизовывает и делает admin_office()
+     * @return string
+     */
+    public function admin_auth($input) {
+        
         $fx_core = fx_core::get_object();
         $db = $fx_core->db;
         $AUTH_USER = $input['AUTH_USER'];
@@ -131,81 +238,8 @@ class fx_controller_admin extends fx_controller {
         return $this->admin_office();
     }
     
-    public function process($input = null, $action = 'admin_office', $do_return = false) {
-        $fx_core = fx_core::get_object();
-        $user = $fx_core->env->get_user();
-        
-        if (!$user || !$user->perm()->is_supervisor()) {
-            
-            // Возвращается строка при рендеринге
-            // формы входа в бэкофис
-            $result = $this->admin_auth($input);
-            
-            if (is_string($result)) {
-                return $result;
-            }
-            #die("Нет прав!");
-        }
-
-        if (!$action || !is_callable(array($this, $action))) {
-            die("Error! Class:".get_class($this).", action:".htmlspecialchars($action));
-        }
-
-        $this->input = $input;
-        $this->response = new fx_admin_response($input);
-
-        //fx_admin_checkpatch::check();
-
-        if ($this->save_history && $input['posting']) {
-            $history = fx::data('history')->create(array('user_id' => 1));
-            $history['name'] = $this->get_history_name($action);
-            $history['date'] = date("Y-m-d H:i:s");
-            $history->save();
-            fx_history::set_history_obj($history);
-            fx_history::delete_old();
-        }
-
-        // Возвращается строка при рендеринге бэкофиса 
-        // (стандартный $action == 'admin_office' )
-        $result = $this->$action($input);
-        if (is_string($result)) {
-            return $result;
-        }
-
-        if ($input['posting']) {
-            if (!$result['text']) $result['text'] = $this->get_status_text();
-
-            $undo = fx_controller_admin_history::get_undo_obj();
-            $redo = fx_controller_admin_history::get_redo_obj();
-            if ($undo) $result['history']['undo'] = $undo['name'];
-            if ($redo) $result['history']['redo'] = $redo['name'];
-        }
-
-        if ($this->response) {
-            $result = $result ? $result : array();
-            $result = array_merge($result, $this->response->to_array());
-        }
-        
-        if ($do_return) {
-        	return $result;
-        }
-
-        echo json_encode($result);
-    }
-
-    protected function get_history_name($action) {
-        $essence = str_replace('fx_controller_', '', get_class($this));
-        $action = str_replace('_save', '', $action);
-        $constant = "FX_HISTORY_".strtoupper($essence)."_".strtoupper($action);
-
-        return defined($constant) ? constant($constant) : $constant;
-    }
-
-    protected function get_status_text() {
-        return "Сохранено";
-    }
-
     public function move_save($input) {
+        
         $essence = $this->essence_type;
 
         $positions = $input['positions'] ? $input['positions'] : $input['pos'];
@@ -223,6 +257,7 @@ class fx_controller_admin extends fx_controller {
     }
 
     public function on_save($input) {
+
         $es = $this->essence_type;
         $result = array('status' => 'ok');
 
@@ -242,6 +277,7 @@ class fx_controller_admin extends fx_controller {
     }
 
     public function off_save($input) {
+        
         $es = $this->essence_type;
         $result = array('status' => 'ok');
 
@@ -261,6 +297,7 @@ class fx_controller_admin extends fx_controller {
     }
 
     public function delete_save($input) {
+        
         $es = $this->essence_type;
         $result = array('status' => 'ok');
 
@@ -279,28 +316,6 @@ class fx_controller_admin extends fx_controller {
         return $result;
     }
     
-    
-    public function admin_tabs($tabs, $callback_param = null) {
-        $tabs_key = array_keys($tabs);
-        $active_tab = $this->get_active_tab();
-        if (!in_array($active_tab, $tabs_key)) {
-            $active_tab = $tabs_key[0];
-        }
-
-        foreach ($tabs as $tab_key => $tab_name) {
-            $this->response->add_tab($tab_key, $tab_name, ($active_tab == $tab_key));
-        }
-        $this->response->set_change_tab_url();
-
-        call_user_func(array($this, 'tab_'.$active_tab), $callback_param);
-    }
-    
-    protected function get_active_tab() {
-        return $this->input['params'][1];
-    }
-    
-    
-
 }
 
 class fx_controller_admin_module extends fx_controller_admin {

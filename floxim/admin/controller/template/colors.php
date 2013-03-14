@@ -2,7 +2,6 @@
 
 class fx_controller_admin_template_colors extends fx_controller_admin_template {
 
-
 	public function all($input) {
 
 		$template_id = $input['params'][0];
@@ -56,7 +55,6 @@ class fx_controller_admin_template_colors extends fx_controller_admin_template {
         $buttons_action['delete']['options'] = array('template_id' => $template['id']);
         return array('fields' => $fields, 'buttons' => $buttons, 'buttons_action' => $buttons_action, 'essence' => 'template_colors');
     }
-
 
     public function add($input) {
         $color = array();

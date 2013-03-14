@@ -286,7 +286,7 @@ class fx_controller_admin_template extends fx_controller_admin {
     	$fm_action = isset($params[2]) ? $params[2] : 'ls';
     	$fm_path = isset($params[3]) ? $params[3] : '';
     	
-    	$filemanager = new fx_controller_admin_module_filemanager();
+    	$filemanager = new fx_controller_admin_module_filemanager($fm_input, $fm_action, true);
     	$path = $template->get_path();
     	$fm_input = array(
     		'base_path' => $path,
@@ -296,7 +296,7 @@ class fx_controller_admin_template extends fx_controller_admin {
     		'file_filters' => array('!~^\.~', '!~\.php$~'),
     		'breadcrumb_target' => $this->response->breadcrumb
 		);
-    	$result = $filemanager->process($fm_input, $fm_action, true);
+    	$result = $filemanager->process();
     	$result['buttons_essence'] = 'module_filemanager';
     	return $result;
     }
@@ -325,8 +325,8 @@ class fx_controller_admin_template extends fx_controller_admin {
     }
     
     public function colors($template) {
-    	$controller = new fx_controller_admin_template_colors();
-    	return $controller->process(array('params' => array($template['id'])), 'all', true);
+    	$controller = new fx_controller_admin_template_colors(array('params' => array($template['id'])), 'all', true);
+    	return $controller->process();
     }
 
     public function settings($template) {

@@ -21,6 +21,7 @@ class fx_controller_infoblock extends fx_controller {
             dev_log('no ib to rnd', $this);
             die("IB NOT FOUND");
         }
+        
         $params = $infoblock->get_prop_inherited('params');
         if (!is_array($params)) {
             $params = array();

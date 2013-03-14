@@ -383,8 +383,8 @@ class fx_controller_page extends fx_controller {
             $js_config = new fx_admin_configjs();
 
             if ($preview) {
-            	$tpl_controller = new fx_controller_admin_template();
-                $panel_data = $tpl_controller->process(array(), 'preview_panel', true);
+            	$tpl_controller = new fx_controller_admin_template(array(), 'preview_panel', true);
+                $panel_data = $tpl_controller->process();
                 $js_config->add_additional_panel($panel_data);
             }
 
