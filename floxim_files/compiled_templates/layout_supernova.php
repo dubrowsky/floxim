@@ -14,9 +14,6 @@ ob_start();
 $tpl_to_call->set_var(
                 'content', 
                 ob_get_clean());
-$tpl_to_call->set_var_meta(
-                'content', 
-                array('var_type' => 'param'));
 echo $tpl_to_call->render("wrap", $this->data);?><?
     }
     public function tpl_inner() {
@@ -31,9 +28,6 @@ ob_start();
 $tpl_to_call->set_var(
                 'content', 
                 ob_get_clean());
-$tpl_to_call->set_var_meta(
-                'content', 
-                array('var_type' => 'param'));
 echo $tpl_to_call->render("wrap", $this->data);?><?
     }
     public function tpl_wrap() {
@@ -89,7 +83,7 @@ if (is_null($replace_src_0_tmp)) {
 	$replace_src_0_tmp = ob_get_clean();
 	fx::dig_set($this->data, "replace_src_0", $replace_src_0_tmp);
 }
-if (!($replace_src_0_tmp instanceof fx_template_field)) {
+if (!(fx::env("is_admin") && $replace_src_0_tmp instanceof fx_template_field)) {
 	$replace_src_0_tmp = new fx_template_field($replace_src_0_tmp, array("id" => "replace_src_0", "var_type" => "visual", "infoblock_id" => fx::dig($this->data, "infoblock.id"), "template" => $this->_get_template_sign(), "title" => "Картинка", "editable" => true));
 }
 
@@ -116,7 +110,7 @@ if (is_null($slogan_tmp)) {
 	$slogan_tmp = ob_get_clean();
 	fx::dig_set($this->data, "slogan", $slogan_tmp);
 }
-if (!($slogan_tmp instanceof fx_template_field)) {
+if (!(fx::env("is_admin") && $slogan_tmp instanceof fx_template_field)) {
 	$slogan_tmp = new fx_template_field($slogan_tmp, array("id" => "slogan", "var_type" => "visual", "infoblock_id" => fx::dig($this->data, "infoblock.id"), "template" => $this->_get_template_sign(), "editable" => true));
 }
 
@@ -196,7 +190,7 @@ if (is_null($copy_tmp)) {
 	$copy_tmp = ob_get_clean();
 	fx::dig_set($this->data, "copy", $copy_tmp);
 }
-if (!($copy_tmp instanceof fx_template_field)) {
+if (!(fx::env("is_admin") && $copy_tmp instanceof fx_template_field)) {
 	$copy_tmp = new fx_template_field($copy_tmp, array("id" => "copy", "var_type" => "visual", "infoblock_id" => fx::dig($this->data, "infoblock.id"), "template" => $this->_get_template_sign(), "editable" => true));
 }
 
@@ -223,7 +217,7 @@ if (is_null($contacts_tmp)) {
 	$contacts_tmp = ob_get_clean();
 	fx::dig_set($this->data, "contacts", $contacts_tmp);
 }
-if (!($contacts_tmp instanceof fx_template_field)) {
+if (!(fx::env("is_admin") && $contacts_tmp instanceof fx_template_field)) {
 	$contacts_tmp = new fx_template_field($contacts_tmp, array("id" => "contacts", "var_type" => "visual", "infoblock_id" => fx::dig($this->data, "infoblock.id"), "template" => $this->_get_template_sign(), "editable" => true));
 }
 
@@ -253,7 +247,7 @@ WebSite.pu
 	$developa_tmp = ob_get_clean();
 	fx::dig_set($this->data, "developa", $developa_tmp);
 }
-if (!($developa_tmp instanceof fx_template_field)) {
+if (!(fx::env("is_admin") && $developa_tmp instanceof fx_template_field)) {
 	$developa_tmp = new fx_template_field($developa_tmp, array("id" => "developa", "var_type" => "visual", "infoblock_id" => fx::dig($this->data, "infoblock.id"), "template" => $this->_get_template_sign(), "editable" => true));
 }
 
@@ -313,7 +307,7 @@ $item_is_odd = $item_index % 2 != 0;
 	} elseif (is_object($item)) {
 		extract($item instanceof fx_content ? $item->get_fields_to_show() : get_object_vars($item));
 	}
-	if (fx::env()->is_admin() && ($item instanceof fx_essence) ) {
+	if (fx::env('is_admin') && ($item instanceof fx_essence) ) {
 		ob_start();
 	}
 ?>
@@ -346,7 +340,7 @@ unset($f_name_tmp);
 </span>
 </a>
 </li>
-<?	if (fx::env()->is_admin() && ($item instanceof fx_essence) ) {
+<?	if (fx::env('is_admin') && ($item instanceof fx_essence) ) {
 		echo $item->add_template_record_meta(ob_get_clean());
 	}
 }
@@ -395,7 +389,7 @@ if (is_null($color_tmp)) {
 	$color_tmp = ob_get_clean();
 	fx::dig_set($this->data, "color", $color_tmp);
 }
-if (!($color_tmp instanceof fx_template_field)) {
+if (!(fx::env("is_admin") && $color_tmp instanceof fx_template_field)) {
 	$color_tmp = new fx_template_field($color_tmp, array("id" => "color", "var_type" => "visual", "infoblock_id" => fx::dig($this->data, "infoblock.id"), "template" => $this->_get_template_sign(), "editable" => true));
 }
 
@@ -418,7 +412,7 @@ if (is_null($title_tmp)) {
 	$title_tmp = ob_get_clean();
 	fx::dig_set($this->data, "title", $title_tmp);
 }
-if (!($title_tmp instanceof fx_template_field)) {
+if (!(fx::env("is_admin") && $title_tmp instanceof fx_template_field)) {
 	$title_tmp = new fx_template_field($title_tmp, array("id" => "title", "var_type" => "visual", "infoblock_id" => fx::dig($this->data, "infoblock.id"), "template" => $this->_get_template_sign(), "editable" => true));
 }
 
@@ -464,7 +458,7 @@ if (is_null($menu_title_tmp)) {
 	$menu_title_tmp = ob_get_clean();
 	fx::dig_set($this->data, "menu_title", $menu_title_tmp);
 }
-if (!($menu_title_tmp instanceof fx_template_field)) {
+if (!(fx::env("is_admin") && $menu_title_tmp instanceof fx_template_field)) {
 	$menu_title_tmp = new fx_template_field($menu_title_tmp, array("id" => "menu_title", "var_type" => "visual", "infoblock_id" => fx::dig($this->data, "infoblock.id"), "template" => $this->_get_template_sign(), "editable" => true));
 }
 
@@ -488,7 +482,7 @@ $item_is_odd = $item_index % 2 != 0;
 	} elseif (is_object($item)) {
 		extract($item instanceof fx_content ? $item->get_fields_to_show() : get_object_vars($item));
 	}
-	if (fx::env()->is_admin() && ($item instanceof fx_essence) ) {
+	if (fx::env('is_admin') && ($item instanceof fx_essence) ) {
 		ob_start();
 	}
 ?>
@@ -517,7 +511,7 @@ unset($f_name_tmp);
 ?>
 </a>
 </li>
-<?	if (fx::env()->is_admin() && ($item instanceof fx_essence) ) {
+<?	if (fx::env('is_admin') && ($item instanceof fx_essence) ) {
 		echo $item->add_template_record_meta(ob_get_clean());
 	}
 }

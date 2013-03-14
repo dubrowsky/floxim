@@ -62,7 +62,7 @@ class fx_controller_infoblock extends fx_controller {
         $tpl_params['input'] = $result;
         $tpl_params['infoblock'] = $infoblock;
         $output = $tpl->render($tpl_action, $tpl_params);
-        if (fx::env()->is_admin()) {
+        if (fx::env('is_admin')) {
             if (!preg_match("~[^\s+]~", strip_tags($output))) {
                 $output = '<span class="fx_empty_infoblock">[empty: '.self::_get_infoblock_sign($infoblock).']</span>';
             }
@@ -74,14 +74,16 @@ class fx_controller_infoblock extends fx_controller {
         if ($wrapper_name && $wrapper_variant) {
             $tpl_wrap = fx::template($wrapper_name);
             $wrap_params = $infoblock->get_prop_inherited('visual.wrapper_visual');
-            foreach ( $wrap_params as $wrap_param_key => $wrap_param_val) {
-                $tpl_wrap->set_var($wrap_param_key, $wrap_param_val);
+            if (is_array($wrap_params)) {
+                foreach ( $wrap_params as $wrap_param_key => $wrap_param_val) {
+                    $tpl_wrap->set_var($wrap_param_key, $wrap_param_val);
+                }
             }
             $tpl_wrap->set_var('content', $output);
             $tpl_wrap->set_var('infoblock', $infoblock);
             $output = $tpl_wrap->render($wrapper_variant);
         }
-        if (fx::env()->is_admin()) {
+        if (fx::env('is_admin')) {
             $output = $this->_add_infoblock_meta($output, $infoblock, $controller_meta);
         }
         $output = $controller->postprocess($output);

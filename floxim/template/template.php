@@ -11,107 +11,18 @@ class fx_template {
         }
     }
     
-    public function print_var($var) {
-        echo "<pre>" . htmlspecialchars(print_r($var, 1)) . "</pre>";
-    }
-    
     public function get_var($var_path) {
-        return $this->_collection_get($this->data, $var_path);
+        return fx::dig($this->data, $var_path);
     }
     
     public function set_var($var_path, $var_value) {
-        $this->_collection_set($this->data, $var_path, $var_value);
-    }
-    
-    public function add_var($var_path, $var_value) {
-        $this->_collection_set($this->data, $var_path, $var_value, true);
-    }
-    
-    
-    public function set_var_meta($var_path, $meta_value) {
-        $this->_collection_set($this->meta, $var_path, $meta_value);
-    }
-    
-    public function add_var_meta($var_path, $meta_values) {
-        $this->_collection_set($this->meta, $var_path, $meta_values, true);
-    }
-    
-    public function get_var_meta($var_path, $meta_key = null) {
-        if ($meta_key !== null) {
-            $var_path .= '.'.$meta_key;
-        }
-        $var_match = $this->_collection_get($this->meta, $var_path);
-        if ($var_match) {
-            return $var_match;
-        }
-        // это костыль!!!
-        $var_path = explode(".", $var_path);
-        $root_path = $var_path[0].'.'.end($var_path);
-        $root_match = $this->_collection_get($this->meta, $root_path);
-        return $root_match;
-    }
-    
-    protected function _collection_get($collection, $var_path) {
-        $var_path = explode(".", $var_path);
-        $arr = $collection;
-        foreach ($var_path as $pp) {
-            if (!isset($arr[$pp])) {
-                return null;
-            }
-            $arr = $arr[$pp];
-        }
-        return $arr;
-    }
-    
-    protected function _collection_set(&$collection, $var_path, $var_value, $merge = false) {
-        $var_path = explode('.', $var_path);
-        $arr =& $collection;
-        foreach ($var_path as $pp) {
-            if (!isset($arr[$pp])) {
-                $arr[$pp]=array();
-            }
-            $arr =&  $arr[$pp];
-        }
-        if ($merge && is_array($arr) && is_array($var_value)) {
-            $arr = array_merge_recursive($arr, $var_value);
-        } else {
-            $arr = $var_value;
-        }
-    }
-    
-    public function set_var_default($var_path, $value) {
-         $c_val = $this->get_var($var_path);
-         if ($c_val === NULL) {
-             $this->set_var($var_path, $value);
-             $c_val = $value;
-         }
-         return $c_val;
+        fx::dig_set($this->data, $var_path, $var_value);
     }
     
     protected function _get_template_sign() {
         return $this->_template_code.'.'.$this->_current_action;
     }
 
-
-    public function show_var($var_path, $context = null) {
-        $val = $this->get_var($var_path);
-        if ($context == 'attribute' || true) {
-            return $val;
-        }
-        if ($this->get_var_meta($var_path, 'var_type') == 'param') {
-            $val = "<!-- @".$var_path."-->".$val."<!-- //@".$var_path.'-->';
-        } else {
-            if (! ($var_meta = $this->get_var_meta($var_path)) ) {
-                $var_meta = array();
-            }
-            $var_meta['id'] = $var_path;
-            $var_meta['template'] = $this->_template_code.'.'.$this->_current_action;
-            
-            $var_meta = htmlentities(json_encode($var_meta));
-            $val = '<span class="fx_template_var" data-fx_var="'.$var_meta.'">'.$val."</span>";
-        }
-        return $val;
-    }
     public function render_area($area) {
         echo "<!-- area ".$area." -->\n";
         $area_blocks = $this->get_var('input.'.$area);
@@ -125,7 +36,7 @@ class fx_template {
             $result = $ib->render();
             echo $result;
         }
-        if (fx::env()->is_admin()) {
+        if (fx::env('is_admin')) {
             echo "<a class='fx_infoblock_adder' data-fx_area='".$area."'>Добавить инфоблок</a>";
         }
         echo "<!-- // area ".$area." -->\n";
@@ -152,7 +63,7 @@ class fx_template {
         if (method_exists($this, $method)) {
             $this->$method();
         } else {
-            echo "<pre>".get_class($this)." has no action (".$action.") for data\n" . htmlspecialchars(print_r($data, 1)) . "</pre>";
+            echo 'No tpl action: <code>'.get_class($this).".".$action.'</code>';
         }
         $result .= ob_get_clean();
         $result .= '<!-- // template'.$this->_template_code.".".$action." -->\n";

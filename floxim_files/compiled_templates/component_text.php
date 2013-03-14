@@ -17,7 +17,7 @@ $item_is_odd = $item_index % 2 != 0;
 	} elseif (is_object($item)) {
 		extract($item instanceof fx_content ? $item->get_fields_to_show() : get_object_vars($item));
 	}
-	if (fx::env()->is_admin() && ($item instanceof fx_essence) ) {
+	if (fx::env('is_admin') && ($item instanceof fx_essence) ) {
 		ob_start();
 	}
 ?>
@@ -34,7 +34,7 @@ unset($f_text_tmp);
 
 ?>
     </div>
-<?	if (fx::env()->is_admin() && ($item instanceof fx_essence) ) {
+<?	if (fx::env('is_admin') && ($item instanceof fx_essence) ) {
 		echo $item->add_template_record_meta(ob_get_clean());
 	}
 }

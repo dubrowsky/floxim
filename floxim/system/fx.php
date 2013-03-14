@@ -108,7 +108,11 @@ class fx {
             return $env;
     	}
     	if (count($args) == 1) {
-            $method = array($env, 'get_'.$args[0]);
+            if ($args[0] == 'is_admin') {
+                $method = array($env, 'is_admin');
+            } else {
+                $method = array($env, 'get_'.$args[0]);
+            }
             if (is_callable($method)) {
                 return call_user_func($method);
             }
@@ -179,7 +183,7 @@ class fx {
         try {
             return new $class_name($data, $action);
         } catch (Exception $e) {
-            dev_log('template class not found', $class_name, func_get_args(), debug_backtrace());
+            //dev_log('template class not found', $class_name, func_get_args(), debug_backtrace());
             return new fx_template($data, $action);
         }
     }

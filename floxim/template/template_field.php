@@ -24,7 +24,7 @@ class fx_template_field  {
     
     public function __toString() {
         $val = $this->get_value();
-        if (!$this->get_meta('editable')) {
+        if (!$this->get_meta('editable') || !fx::env('is_admin')) {
             return $val;
         }
         $id = $this->get_meta('id');
