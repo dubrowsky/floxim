@@ -287,10 +287,20 @@ class fx_controller_admin_site extends fx_controller_admin {
         
         $site = fx::data('site')->get_by_id($site_id);
 
-        $sub_values = array();
+        
+        // используются subdivisions (запрещено)
+        /* $sub_values = array();
         $sub_all = fx::data('subdivision')->get_all('site_id', $site['id']);
         foreach ($sub_all as $sub) {
             $sub_values[$sub['id']] = $sub['name'];
+        } */
+        
+        // используются content_pages
+        $content_pages_list = array();
+        $content_pages = fx::data('content_page')->get_all('site_id', $site_id);
+        foreach ($content_pages as $page)
+        {
+            $content_pages_list[$page['id']] = $page['url'];
         }
 
         $this->response->add_tab('main', 'Основные');
@@ -312,8 +322,8 @@ class fx_controller_admin_site extends fx_controller_admin {
         $this->response->add_fields($seo_fields, 'seo');
 
         $system_fields = array();
-        $system_fields[] = array('name' => 'title_sub_id', 'type' => 'select', 'values' => $sub_values, 'value' => $site['title_sub_id'], 'label' => 'Титульная страница');
-        $system_fields[] = array('name' => 'e404_sub_id', 'type' => 'select', 'values' => $sub_values, 'value' => $site['e404_sub_id'], 'label' => 'Страница не найдена (ошибка 404)');
+        $system_fields[] = array('name' => 'title_sub_id', 'type' => 'select', 'values' => $content_pages_list, 'value' => $site['title_sub_id'], 'label' => 'Титульная страница');
+        $system_fields[] = array('name' => 'e404_sub_id', 'type' => 'select', 'values' => $content_pages_list, 'value' => $site['e404_sub_id'], 'label' => 'Страница не найдена (ошибка 404)');
         $system_fields[] = array('name' => 'offline_text', 'type' => 'textarea', 'value' => $site['offline_text'], 'label' => 'Показывать, когда сайт выключен');
         $this->response->add_fields($system_fields, 'system');
 
@@ -328,11 +338,9 @@ class fx_controller_admin_site extends fx_controller_admin {
     }
 
     public function settings_save($input) {
+        
         $site = fx::data('site')->get_by_id($input['id']);
-        
-        
         $result = array('status' => 'ok');
-
         $params = array('name', 'domain', 'mirrors', 'language', 'robots', 'language', 'robots', 'title_sub_id', 'e404_sub_id', 'offline_text');
 
         foreach ($params as $v) {
