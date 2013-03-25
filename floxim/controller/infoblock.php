@@ -42,14 +42,18 @@ class fx_controller_infoblock extends fx_controller {
         );
         $result = $controller->process();
         $controller_meta = fx::dig($result, '_meta');
+        if (fx::dig($controller_meta, 'disabled') && !fx::env('is_admin')) {
+            return;
+        }
         $tpl_params = array();
         $tpl = null;
         $tpl_action = null;
         
-        if ( ($tpl_name = $infoblock->get_prop_inherited('visual.template_name')) ) {
+        if ( ($tpl_name = $infoblock->get_prop_inherited('visual.template_name')) && $tpl_name != 'auto' ) {
             $tpl = fx::template($tpl_name);
         }
-        if ( ! ($tpl_action = $infoblock->get_prop_inherited('visual.template_variant')) ) {
+        $tpl_action = $infoblock->get_prop_inherited('visual.template_variant');
+        if ( ! $tpl_action || $tpl_action == 'auto' ) {
             $tpl_action = $infoblock->get_prop_inherited('action');
         }
         
@@ -65,7 +69,7 @@ class fx_controller_infoblock extends fx_controller {
         $output = $tpl->render($tpl_action, $tpl_params);
         if (fx::env('is_admin')) {
             if (!preg_match("~[^\s+]~", strip_tags($output))) {
-                $output = '<span class="fx_empty_infoblock">[empty: '.self::_get_infoblock_sign($infoblock).']</span>';
+                $output .= '<span class="fx_empty_infoblock">[empty: '.self::_get_infoblock_sign($infoblock).']</span>';
             }
         }
         
@@ -96,7 +100,8 @@ class fx_controller_infoblock extends fx_controller {
      * @param fx_infoblock $infoblock
      */
     protected static function _get_infoblock_sign($infoblock) {
-        return "infoblock[".$infoblock["id"].'] '.
+        return "infoblock#".$infoblock["id"].
+                ($infoblock['name'] ? " &laquo;".$infoblock['name'].'&raquo;' : '').' '.
                 $infoblock['controller'].'.'.
                 $infoblock['action'];
     }
@@ -107,7 +112,32 @@ class fx_controller_infoblock extends fx_controller {
             $ib_info['visual_id'] = $vis['id'];
         }
         
-        $ib_info = htmlentities(json_encode($ib_info));
+        $meta = array(
+            'data-fx_infoblock' => htmlentities(json_encode($ib_info)),
+            'class' => 'fx_infoblock'
+        );
+        if ($controller_meta) {
+            if (fx::dig($controller_meta, 'disabled')) {
+                $meta['class'] .= ' fx_infoblock_disabled';
+            }
+            $meta['data-fx_controller_meta'] = htmlentities(json_encode($controller_meta));
+        }
+        
+        if ($infoblock['controller'] == 'layout') {
+            $html_result = preg_replace_callback(
+                '~<body[^>]*?>~is', 
+                function($matches) use ($meta) {
+                    $body_tag = fx_html_token::create_standalone($matches[0]);
+                    $body_tag->add_meta($meta);
+                    return $body_tag->serialize();
+                }, 
+                $html_result
+            );
+        } else {
+            $html_proc = new fx_template_html($html_result);
+            $html_result = $html_proc->add_meta($meta);
+        }
+        return $html_result;
         
         
         $wrapper_div = '<div class="fx_infoblock" data-fx_infoblock="'.$ib_info.'"';

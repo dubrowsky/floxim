@@ -231,4 +231,16 @@ class fx {
             $arr = $var_value;
         }
     }
+    
+    protected static $http = null;
+    public static function http() {
+        if (!self::$http) {
+            self::$http = new fx_http();
+        }
+        return self::$http;
+    }
+    
+    public static function user() {
+        return fx::env()->get_user();
+    }
 }

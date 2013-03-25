@@ -19,8 +19,6 @@ class fx_router_manager {
                 // no file
             }
         }
-        
-        dev_log('routers registered', $this->routers);
     }
     
     protected $routers = array();

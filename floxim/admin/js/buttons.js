@@ -118,10 +118,6 @@ fx_buttons.prototype.hide_panel = function () {
  * сама обработка нажатия - в другом месте
  */
 fx_buttons.prototype.handle = function ( button ) {
-    if ( this.pulldown[button] && this.pulldown[button].length == 1 ) {
-        $fx.handle_button(button, this.pulldown[button][0].options, true);
-        return false;
-    }
     if ( this.pulldown[button] ) {
         if ( this.pulldown_is_hide ) {
             this.show_pulldown(button, this.pulldown[button]);
@@ -134,7 +130,6 @@ fx_buttons.prototype.handle = function ( button ) {
         return false;    
     }
     
-    var options = {};
     var button_action = this.buttons_action[button];
     if ( button_action ) {
         if ( button_action.url ) {
@@ -148,13 +143,7 @@ fx_buttons.prototype.handle = function ( button ) {
             window.location.hash = location;
             return false;
         }
-        if ( button_action.options ) {
-            options = button_action.options;
-        }
     }
-
-    $fx.handle_button(button, options);
- 
 }
 
 fx_buttons.prototype.show_pulldown = function ( button, data ) {
@@ -166,13 +155,8 @@ fx_buttons.prototype.show_pulldown = function ( button, data ) {
         }
         else {
         	var link_name = v.name || '[NoName]';
-            item = $('<span/>').html(link_name).click( v.callback ? v.callback : function(){
-                $fx.handle_button(button, v.options, true);
-                $fx.panel.trigger('fx.click', 'button');
-                return false;
-            });
+            item = $('<span/>').html(link_name).click(v.callback);
         }
- 
         container.append(item);
     });
     

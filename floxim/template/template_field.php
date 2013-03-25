@@ -77,7 +77,6 @@ class fx_template_field  {
                 $tag = fx_html_token::create_standalone($tag);
                 $tag->add_meta($tag_meta);
                 $tag = $tag->serialize();
-                dev_log($tag_meta, htmlspecialchars($tag));
                 return $tag;
             }, 
             $html

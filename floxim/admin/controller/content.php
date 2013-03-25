@@ -2,22 +2,21 @@
 
 class fx_controller_admin_content extends fx_controller_admin {
 
-    public function add($input) {
+    public function add_edit($input) {
         
-        $infoblock = fx::data('infoblock', $input['infoblock_id']);
-        if (!$infoblock) {
-            throw new fx_exception_controller_content("Infoblock not found");
-        }
-        
-        $component = fx::data('component', $input['content_type']);
-        
-        $finder = fx::data('content_'.$input['content_type']);
+        $content_type = $input['content_type'];
+        $component = fx::data('component', $content_type);
         
         if ($input['content_id']) {
-            $content = $finder->get_by_id($input['content_id']);
+            // редактирование
+            $content = fx::data('content_'.$content_type, $input['content_id']);
+            if ($component['has_page']) {
+                $page = $content->get_page();
+            }
         } else {
+            // создание
             $parent_page = fx::data('content_page', $input['parent_id']);
-            $content = $finder->create(array(
+            $content = fx::data('content_'.$content_type)->create(array(
                 'parent_id' => $input['parent_id'],
                 'infoblock_id' => $input['infoblock_id'],
                 'checked' => 1
@@ -25,37 +24,33 @@ class fx_controller_admin_content extends fx_controller_admin {
             if ($component['has_page']) {
                 $page = fx::data('content_page')->create(array(
                     'parent_id' => $input['parent_id'],
-                    'content_type' => $input['content_type'],
+                    'content_type' => $content_type,
                     'site_id' => $parent_page['site_id'],
                     'infoblock_id' => $input['infoblock_id']
                 ));
             }
         }
-
+                
         $fields = array(
-            $this->ui->hidden('infoblock_id', $input['infoblock_id']),
-            $this->ui->hidden('content_type',$input['content_type']),
-            $this->ui->hidden('parent_id', $input['parent_id']),
+            $this->ui->hidden('content_type',$content_type),
+            $this->ui->hidden('parent_id', $content['parent_id']),
             $this->ui->hidden('essence', 'content'),
-            $this->ui->hidden('action', 'add'),
+            $this->ui->hidden('action', 'add_edit'),
             $this->ui->hidden('data_sent', true),
             $this->ui->hidden('fx_admin', true)
         );
+        if (isset($input['content_id'])) {
+            $fields []= $this->ui->hidden('content_id', $input['content_id']);
+        } else {
+            $fields []= $this->ui->hidden('infoblock_id', $input['infoblock_id']);
+        }
         
         $this->response->add_fields($fields);
 
-        /*
-        $fields[] = array('name' => 'fx_infoblock', 'type' => 'hidden', 'value' => $infoblock['id'], 'tab' => 'main');
-        $fields[] = array('name' => 'action', 'type' => 'hidden', 'value' => 'add', 'tab' => 'main');
-        $fields[] = array('name' => 'essence', 'type' => 'hidden', 'value' => 'content', 'tab' => 'main');
-        $fields[] = array('name' => 'posting', 'type' => 'hidden', 'value' => 1, 'tab' => 'main');
-        $fields[] = array('name' => 'parent_id', 'type' => 'hidden', 'value' => intval($input['parent_id']));
-         * 
-         */
         $c_fields = array();
         $content_fields = $component->fields();
         foreach ($content_fields as $field) {
-            $c_fields[] = $field->get_js_field(array());
+            $c_fields[] = $field->get_js_field($content);
         }
         
         $this->response->add_tab('content', $component['name']);
@@ -67,18 +62,9 @@ class fx_controller_admin_content extends fx_controller_admin {
             $p_fields = array();
             $page_component_fields = $page_component->fields();
             foreach ($page_component_fields as $p_field) {
-                $p_fields []= $p_field->get_js_field(array());
+                $p_fields []= $p_field->get_js_field($page);
             }
             $this->response->add_fields($p_fields, 'page', 'page');
-            /*
-            $tabs['main'] = array('name' => 'Основные');
-            $tabs['seo'] = array('name' => 'SEO');
-            $fields[] = array('label' => 'H1', 'name' => 'seo_h1', 'value' => '', 'tab' => 'seo');
-            $fields[] = array('label' => 'Title', 'name' => 'seo_title', 'value' => '', 'tab' => 'seo');
-            $fields[] = array('label' => 'Keywords', 'name' => 'seo_keywords', 'value' => '', 'tab' => 'seo');
-            $fields[] = array('label' => 'Description', 'name' => 'seo_description', 'value' => '', 'tab' => 'seo');
-             * 
-             */
         }
         
         if ($input['data_sent']) {

@@ -344,6 +344,9 @@ class fx_html_token {
             if ($k == 'class') {
                 $this->add_class($v);
             } else {
+                if (is_array($v) || is_object($v)) {
+                    $v = htmlentities(json_encode($v));
+                }
                 $this->set_attribute($k, $v);
             }
         }

@@ -1618,3 +1618,7 @@ li ul .fx_tree_label .fx_tree_title {
     font-family:Tahoma;
     padding:5px 8px;
 }
+
+.fx_infoblock_disabled {
+    opacity:0.3;
+}

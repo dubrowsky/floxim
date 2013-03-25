@@ -385,6 +385,11 @@ class fx_core extends fx_system {
                 break;
             }
             
+            if (in_array($classname, array('http'))) {
+                $file = $root.'system/'.$classname;
+                break;
+            }
+            
             if (preg_match("~^controller_(.+)~", $classname, $controller_name)) {
                 $controller_name = $controller_name[1];
                 if (preg_match("~^(layout|component|widget)_(.+)$~", $controller_name, $name_parts)) {

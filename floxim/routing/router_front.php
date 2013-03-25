@@ -60,8 +60,12 @@ class fx_router_front extends fx_router {
                 $ib->is_inherited = true;
                 //continue;
             }
-            
+            // scope - "только эта страница"
             if (fx::dig($ib, 'scope.pages') == 'this' && $ib['page_id'] != $page_id) {
+                continue;
+            }
+            // scope - "этот уровень", а мы смотрим родителя
+            if (fx::dig($ib, 'scope.pages') == 'descendants' && $ib['page_id'] == $page_id) {
                 continue;
             }
             $ib_visuals = array();

@@ -13,6 +13,10 @@ class fx_content extends fx_essence {
         }
         return $this;
     }
+    
+    public function get_content_type() {
+        return fx::data('component', $this->component_id)->get('keyword');
+    }
 
     protected function _before_save() {
         $this->finder->set_component($this->component_id);
@@ -24,6 +28,17 @@ class fx_content extends fx_essence {
     }
     
     public function get_page() {
+        if (!$this->_page) {
+            $page = fx::data('content_page')->get(
+                array(
+                    'content_type' => $this->get_content_type(),
+                    'content_id' => $this->get('id')
+                )
+            );
+            if ($page) {
+                $this->set_page($page);
+            }
+        }
         return $this->_page;
     }
     
@@ -171,9 +186,14 @@ class fx_content extends fx_essence {
     
     public function add_template_record_meta($html) {
         $proc = new fx_template_html($html);
-        $html = $proc->add_meta(array('olo' => 'trolo', 'class' => 'fx_content_essence'));
-        dev_log(htmlspecialchars($html));
-        return "<!--RCRD#".$this->get('id')."-->".$html."<!--//RCRD#".$this->get('id')."-->";
+        $html = $proc->add_meta(array(
+            'data-fx_content_essence' => array(
+                'id' => $this->get('id'),
+                'type' => $this->get_content_type()
+            ), 
+            'class' => 'fx_content_essence'
+        ));
+        return $html;
     }
 
 }

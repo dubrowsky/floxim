@@ -11,10 +11,17 @@
         steps: [],
         
             
-        open_dialog: function(data, main_cont, submit_handler) {
-            if ( !main_cont ) {
-                main_cont = '#fx_dialog';
-            }
+        open_dialog: function(data, settings) {
+            settings = $.extend({
+                onsubmit:function(e) {
+                    $fx_dialog.click_save.apply($fx_dialog, e);
+                },
+                onfinish:function() {
+                     $fx_dialog.main.dialog('close');
+                }
+            }, settings);
+            $fx_dialog.settings = $.extend($fx_dialog.settings, settings);
+            main_cont = '#fx_dialog';
             $fx_dialog.main = $(main_cont);
             $fx_dialog.steps = [];
             
@@ -27,65 +34,35 @@
             
             $fx_dialog.main.dialog($fx_dialog.settings);
             
-            var save_handler = $fx_dialog.click_save;
-            if (submit_handler) {
-                save_handler = function(e) {
-                    submit_handler.apply($('form', $fx_dialog.main));
-                }
-            }
+            $fx_dialog.main.closest('.ui-dialog').addClass('fx_overlay');
             
             $fx_dialog.main.dialog("option", "buttons", []);
             
-            $fx_dialog.add_button("save", "Сохранить", save_handler);
-            $fx_dialog.add_button("cancel", "Отменить", $fx_dialog.click_cancel);
+            $fx_dialog.add_button("save", "Сохранить", $fx_dialog.settings.onsubmit);
+            $fx_dialog.add_button("cancel", "Отменить", $fx_dialog.close);
             
             $fx_dialog.main.fx_create_form(data);
             
-            $('form', $fx_dialog.main).submit( function(e) {
-                if (submit_handler) {
-                    submit_handler.apply(this, [e]);
-                } else {
-                    $fx_dialog.click_save();
-                }
-            	return false;
-            });
+            $('form', $fx_dialog.main).submit( $fx_dialog.settings.onsubmit );
             
             $("#nc_tabs", $fx_dialog.main).tabs();
-            
-            
-        /*
-            $fx.panel.bind('fx.fielddrawn', function () {
-                // hack
-                if ( $fx_dialog.steps.length == 2 && $('#fx_step_10').length > 0 ) {
-                    $fx_dialog.add_button('back', "Вернуться", function(){
-                        $fx_dialog.steps = [];
-                        $fx_form.show_step(1);
-                        // работает только для Store!
-                        $("input[name=phase]", $fx_dialog.main).val(2);
-                    });
-                }
-                else {
-                    $fx_dialog.hide_button('back');
-                }
-            });*/
         },
         
         close: function() {
-        	console.log('g_close');
-        	this.click_cancel.apply($fx_dialog.main);
+            // таймаут - чтобы события на кнопках срабатывали на .fx_overlay
+        	setTimeout( function() {
+                $fx_dialog.opened = false;
+                $fx_dialog.main.dialog('destroy');
+                $fx_dialog.close_listener();
+            },50);
         },
 
         click_save: function () {
             $("textarea.fx_wysiwyg", $fx_dialog.main).elrte("updateSource");
             $('.ui-state-error', $fx_dialog.main).removeClass("ui-state-error");
             $("#nc_dialog_error").html('');
-      
-            // for debug
-            //$('form', $fx_dialog.main).submit();
             $('form', $fx_dialog.main).trigger('fx_form_submit');
-            console.log('call ajax submit');
             $('form', $fx_dialog.main).ajaxSubmit( $fx_dialog.form_sent );
-      
             return false;
         },
         
@@ -101,22 +78,13 @@
 			}
 
 			if ( data.step ) {
-				/*
-				$('.fx_step_content').hide();
-				$fx_form.draw_fields(data, $('#nc_dialog_form'));
-				console.log('fields drawn');
-				$('form', $('#nc_dialog_form')).submit( function() {
-					$fx_dialog.click_save();
-					return false;
-				});
-				*/
 				console.log('it s a dialog - close and open');
 				$fx_dialog.close();
-				$fx_dialog.open_dialog(data);
+				$fx_dialog.open_dialog(data, $fx_dialog.settings);
 			}
 			else if ( data.status == 'ok') {
-				console.log('trigger ok');
-				$fx.panel.trigger('fx.dialog.ok', data);
+                $fx_dialog.settings.onfinish(data);
+				//$fx.panel.trigger('fx.dialog.ok', data);
 			}
 			else {
 				console.log('with errors');
@@ -137,13 +105,7 @@
 				}
 			}
         },
-                                
-        click_cancel: function() {
-            $fx_dialog.opened = false;
-            $(this).dialog('destroy'); 
-            $fx_dialog.close_listener();
-        },              
-
+        
         open_listener: function () {
             if ( !$fx_dialog.opened ) {
                 $fx_dialog.opened = true;
@@ -155,7 +117,6 @@
         close_listener: function () {
             $fx_dialog.opened = false;
             $fx.panel.trigger('fx.dialogclose');
-            console.log('closing dialog');
         },
         
         button_disable: function (button) {

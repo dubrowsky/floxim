@@ -125,6 +125,14 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         }
         if (count($settings) > 0) {
             $this->response->add_tab('settings', 'Что показывать');
+            $this->response->add_fields(
+                    array(array(
+                        'label' => 'Название блока', 
+                        'name' => 'name', 
+                        'value' => $infoblock['name']
+                    )),
+                    'settings'
+            );
             $this->response->add_fields($settings, 'settings', 'params');
         }
         
@@ -152,6 +160,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                     'layout_id' => $source_i2l['layout_id']
                 ));
             }
+            $infoblock['name'] = $input['name'];
             $action_params = array();
             foreach (array_keys($settings) as $setting_key) {
                 if (isset($input['params'][$setting_key])) {

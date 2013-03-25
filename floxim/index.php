@@ -6,7 +6,7 @@ if (!defined('FLOXIM')) {
 }
 
 fx_content_user::attempt_to_authorize();
-
+ob_start();
 if ($controller = fx::router()->route()) {
     $result = $controller->process();
     if (!is_string($result)) {
@@ -18,6 +18,7 @@ if ($controller = fx::router()->route()) {
     }
     
     echo $result;
+    echo ob_get_clean();
     die();
 }
 ?>

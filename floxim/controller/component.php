@@ -186,5 +186,9 @@ class fx_controller_component extends fx_controller {
     protected function _finder() {
         return fx::data('content_'.$this->get_content_type());
     }
+    
+    public function find_template() {
+        return fx::template('component_'.$this->get_content_type());
+    }
 }
 ?>
