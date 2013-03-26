@@ -100,7 +100,6 @@ class fx_controller_admin_component extends fx_controller_admin {
     }
 
     public function add($input) {
-        $fx_core = fx_core::get_object();
         $fields = array();
 
         switch ($input['source']) {
@@ -149,7 +148,6 @@ class fx_controller_admin_component extends fx_controller_admin {
     }
 
     public function edit($input) {
-        $fx_core = fx_core::get_object();
         
         $essence_code = $this->essence_type;
 

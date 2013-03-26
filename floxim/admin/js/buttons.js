@@ -178,6 +178,21 @@ fx_buttons.prototype.show_pulldown = function ( button, data ) {
             item = $('<span>').addClass('fx_admin_pull_down_divider');
         }
         else {
+            if (!v.callback) {
+                v.callback = function() {
+                    $fx.post(
+                        $.extend({
+                            essence:$fx.admin.essence,
+                            action:button
+                        }, v.options), 
+                        function(json) {
+                            $fx_dialog.open_dialog(json, {onfinish:function() {
+                                $(window).hashchange();
+                            }});
+                        }
+                    );
+                }
+            }
         	var link_name = v.name || '[NoName]';
             item = $('<span/>').html(link_name).click(v.callback);
         }

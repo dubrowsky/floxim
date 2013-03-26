@@ -24,7 +24,7 @@ if ( (_c.type == 'checkbox' || _c.type == 'bool') && typeof _c.values == 'undefi
 
 <!--[data_attr]-->
 <?
-print('data-', (_o && _o.key != undefined ? _o.key : 'inline'), '="', $t.clear($.toJSON(_c)), '"');
+print('data-', (_o && _o.key != undefined ? _o.key : 'inline'),	 '="', $t.clear($.toJSON(_c)), '"');
 ?>
 
 <!--[label]-->
