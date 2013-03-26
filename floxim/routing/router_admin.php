@@ -56,19 +56,21 @@ class fx_router_admin extends fx_router {
             die("Error! Essence: " . htmlspecialchars($essence));
         }
 
+        $fx_buffer = function($str) {
+            $fx_core = fx_core::get_object();
+            $str = $fx_core->page->post_proccess($str);
+            return $str;
+        };
+
         // мутные контроллеры не умеют вызывать
         // post_postprocess самостоятельно
-        ob_start("$this->fx_buffer");
+        ob_start($fx_buffer);
         $controller->process();
         $str = ob_get_clean();
         echo $str;
         die();
 
-        function fx_buffer($str) {
-            $fx_core = fx_core::get_object();
-            $str = $fx_core->page->post_proccess($str);
-            return $str;
-        }
+
     }
 
 }

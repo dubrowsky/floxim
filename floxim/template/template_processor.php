@@ -53,7 +53,8 @@ class fx_template_processor {
         }
         $source .= '{/templates}';
         $code = $this->process($source, $tpl_name);
-        $target = fx::config()->COMPILED_TEMPLATES_FOLDER.'/'.$tpl_name.'.php';
+        $target = fx::config()->COMPILED_TEMPLATES_FOLDER .'/'.$tpl_name.'.php';
+        if ( !is_writable(fx::config()->COMPILED_TEMPLATES_FOLDER) ) die ('Can not write to directory' . fx::config()->COMPILED_TEMPLATES_FOLDER);
         $fh = fopen($target, 'w');
         fputs($fh, $code);
         fclose($fh);
