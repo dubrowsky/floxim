@@ -16,9 +16,7 @@
                 onsubmit:function(e) {
                     $fx_dialog.click_save.apply($fx_dialog, e);
                 },
-                onfinish:function() {
-                     $fx_dialog.main.dialog('close');
-                }
+                onfinish:null
             }, settings);
             $fx_dialog.settings = $.extend($fx_dialog.settings, settings);
             main_cont = '#fx_dialog';
@@ -83,8 +81,10 @@
 				$fx_dialog.open_dialog(data, $fx_dialog.settings);
 			}
 			else if ( data.status == 'ok') {
-                $fx_dialog.settings.onfinish(data);
-				//$fx.panel.trigger('fx.dialog.ok', data);
+                if ($fx_dialog.settings.onfinish instanceof Function) {
+                    $fx_dialog.settings.onfinish(data);
+                }
+                $fx_dialog.main.dialog('close');
 			}
 			else {
 				console.log('with errors');

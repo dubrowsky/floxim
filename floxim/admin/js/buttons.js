@@ -133,16 +133,40 @@ fx_buttons.prototype.handle = function ( button ) {
     var button_action = this.buttons_action[button];
     if ( button_action ) {
         if ( button_action.url ) {
-            //var url = $fx.admin_buttons_action[action].url.replace('%id%', id);
             window.location = button_action.url;
             return false;
         }
         if ( button_action.location ) {
             var location = '#'+$fx.hash.slice(0,2).join('.')+'.'+button_action.location;
-            //location = location.replace('%id%', id);
             window.location.hash = location;
             return false;
         }
+        if (button_action.options) {
+            $fx.post(
+                button_action.options, 
+                function(json) {
+                    $fx_dialog.open_dialog(json, {onfinish:function() {
+                        $(window).hashchange();
+                    }});
+                }
+            );
+            return false;
+        }
+    }
+    if (button == 'delete'){
+        var opts = {
+            essence:$fx.admin.essence,
+            action:'delete',
+            id:$('.fx_admin_selected', '#fx_admin_content').data('id'),
+            posting:true
+        };
+        $fx.post(
+            opts, 
+            function(json) {
+                $(window).hashchange();
+            }
+        );
+        return false;
     }
 }
 

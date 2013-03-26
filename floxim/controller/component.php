@@ -106,11 +106,16 @@ class fx_controller_component extends fx_controller {
 
     public function listing() {
         $f = $this->_finder();
+        $conditions = array();
         $params = array();
         $infoblock = fx::data('infoblock', $this->param('infoblock_id'))->get_root_infoblock();
-        $params['infoblock_id']= $infoblock['id'];
-        $params['parent_id']= $this->_get_parent_id();
-        $items = $f->get_all($params);
+        $conditions['infoblock_id']= $infoblock['id'];
+        $conditions['parent_id']= $this->_get_parent_id();
+        dev_log('init listing', $this, $f);
+        if ($this->param('sorting') == 'manual') {
+            $params['order'] = 'priority';
+        }
+        $items = $f->get_all($conditions, $params);
         fx::data('content_page')->attache_to_content($items);
         return array('items' => $items);
     }

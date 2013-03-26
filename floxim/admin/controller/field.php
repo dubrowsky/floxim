@@ -26,9 +26,16 @@ class fx_controller_admin_field extends fx_controller_admin {
         
         $fields[] = $ar;
         $result['labels'] = array('name' => FX_ADMIN_NAME, 'label' => FX_ADMIN_LABEL, 'type' => FX_ADMIN_TYPE);
-        $result['buttons'] = array('add', 'delete'); //array('add', 'edit', 'delete');
-        $result['buttons_action']['add']['options']['to_essence'] = $essence_code;
-        $result['buttons_action']['add']['options']['to_id'] = $essence['id'];
+        $result['buttons'] = array('add', 'delete');
+        
+        $result['buttons_action']['add']['options'] = array(
+            'to_essence' => $essence_code,
+            'to_id' => $essence['id'],
+            'essence' => 'field',
+            'action' => 'add'
+        );
+        //$result['buttons_action']['add']['options']['to_essence'] = $essence_code;
+        //$result['buttons_action']['add']['options']['to_id'] = $essence['id'];
         $result['fields'] = $fields;
         $result['essence'] = 'field';
         

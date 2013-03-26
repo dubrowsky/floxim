@@ -383,34 +383,49 @@ class fx_controller_admin_content extends fx_controller_admin {
         $result['status'] = 'ok';
         return $result;
     }
-
-    public function move_save($input) {
-        $result = array('status' => 'ok');
-
-        if (!$input['pos']) {
-                return false;
+    
+    /*
+     * Переместить контент-запись среди соседей внутри одного родителя и одного инфоблока
+     * В инпуте должны быть content_type и content_id
+     * Если есть next_id - ставит перед ним
+     * Если нет - ставит в конец
+     */
+    public function move($input) {
+        $ctype = $input['content_type'];
+        $content = fx::data('content_'.$ctype, $input['content_id']);
+        $old_priority = $content['priority'];
+        if (!$content) {
+            return;
         }
-
-        $content = fx::data('content')->get_all($input['component_id'], '`id` IN ('.join(',', array_map('intval', $input['content'])).')');
-
-        $low_pr = false;
-        foreach ($content as $mes) {
-            if ($low_pr === false) $low_pr = $mes['priority'];
-            if ($mes['priority'] < $low_pr) $low_pr = 0;
+        $ib_id = $content['infoblock_id'];
+        $parent_id = $content['parent_id'];
+        $next_content = null;
+        if ($input['next_id']) {
+            $next_content = fx::data('content_'.$ctype, $input['next_id']);
         }
-
-        foreach (array_reverse($input['pos']) as $id) {
-            if (preg_match("/(\d+)-(\d+)/", $id, $match)) {
-                $component_id = $match[1];
-                $content_id = $match[2];
-            }
-            if ($component_id != $input['component_id']) continue;
-            fx::data('content')->get_by_id($input['component_id'], $content_id)->set('priority', $low_pr++)->save();
+        
+        if ($next_content) {
+            $new_priority = $next_content['priority']-1;
+        } else {
+            $last_priority = fx::db()->get_col(
+                'SELECT MAX(priority) FROM {{content_'.$ctype.'}} 
+                 WHERE parent_id = '.$parent_id.' AND infoblock_id = '.$ib_id
+            );
+            $new_priority = isset($last_priority[0]) ? $last_priority[0] : 1;
         }
-
-        return $result;
+        
+        $q = "UPDATE {{content_".$ctype.'}} 
+                SET priority = priority'.($new_priority > $old_priority ? '-1' : '+1').
+                ' WHERE 
+                    parent_id = '.$parent_id.' AND 
+                    infoblock_id = '.$ib_id.' AND 
+                    priority >= '.min($old_priority, $new_priority).  ' AND 
+                    priority <='.max($old_priority, $new_priority);
+        fx::db()->query($q);
+        fx::db()->query('UPDATE {{content_'.$ctype.'}} 
+                    SET priority = '.$new_priority.'
+                    WHERE id = '.$content['id']);
     }
-
 }
 
 class fx_exception_controller_content extends fx_exception {

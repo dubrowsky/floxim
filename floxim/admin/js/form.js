@@ -534,6 +534,7 @@
         update_available_buttons: function () {
             var btn, selected = $('.fx_admin_selected', '#fx_admin_content');
             var len = selected.length;
+            
 
             if ( !len ) {
                 btn = [];
