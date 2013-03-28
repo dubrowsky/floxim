@@ -41,7 +41,7 @@ class fx_template_processor {
                 preg_match("~/([^/]+)\.tpl~", $file, $file_tpl_name);
                 $file_data = 
                     '{template id="'.$file_tpl_name[1].'"}'.
-                        $file_data.
+                       trim($file_data).
                     '{/template}';
             }
             // Проверяем наличие fx-аттрибутов в разметке файла
@@ -49,9 +49,10 @@ class fx_template_processor {
                 $T = new fx_template_html($file_data);
                 $file_data = $T->transform_to_floxim();
             }
-            $source .= $file_data;
+            $source .= trim($file_data);
         }
         $source .= '{/templates}';
+        dev_log(htmlspecialchars($source));
         $code = $this->process($source, $tpl_name);
         $target = fx::config()->COMPILED_TEMPLATES_FOLDER .'/'.$tpl_name.'.php';
         if ( !is_writable(fx::config()->COMPILED_TEMPLATES_FOLDER) ) die ('Can not write to directory' . fx::config()->COMPILED_TEMPLATES_FOLDER);
@@ -166,6 +167,7 @@ class fx_template_processor {
 
 
     protected function make_tree($tokens) {
+        dev_log($tokens);
         $stack = array();
         $root = $tokens[0];
         while ($token = array_shift($tokens)) {
@@ -185,7 +187,6 @@ class fx_template_processor {
                 case 'single': default:
                     $stack_last = end($stack);
                     if (!$stack_last) {
-                        dev_log("tree on error", $root);
                         echo "Template error: stack empty, trying to add: ";
                         echo "<pre>" . htmlspecialchars(print_r($token, 1)) . "</pre>";
                         die();
@@ -194,6 +195,7 @@ class fx_template_processor {
                     break;
             }
         }
+        dev_log($stack);
         return $root;
     }
     

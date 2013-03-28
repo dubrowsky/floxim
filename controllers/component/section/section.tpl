@@ -1,5 +1,5 @@
 {template id="listing"}
-    <div class="menu">
+    <div class="menu" fx_template="listing">
         {render}
             <div class="menu_item" 
                  {if test="$item_is_odd"}
