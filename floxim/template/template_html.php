@@ -268,7 +268,6 @@ class fx_html_token {
             } else {
                 $res .= $this->source;
             }
-            $res .= "\n";
         }
         if (isset($this->children)) {
             foreach ($this->children as $child) {
@@ -276,7 +275,7 @@ class fx_html_token {
             }
         }
         if ($this->type == 'open' && $this->name != 'root') {
-            $res .= "</".$this->name.">\n";
+            $res .= "</".$this->name.">";
         }
         return $res;
     }

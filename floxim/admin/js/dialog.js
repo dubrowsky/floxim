@@ -19,6 +19,7 @@
                 onfinish:null
             }, settings);
             $fx_dialog.settings = $.extend($fx_dialog.settings, settings);
+            console.log('opening', data, settings);
             main_cont = '#fx_dialog';
             $fx_dialog.main = $(main_cont);
             $fx_dialog.steps = [];
@@ -76,9 +77,13 @@
 			}
 
 			if ( data.step ) {
-				console.log('it s a dialog - close and open');
+				console.log('it s a dialog - close and open', data, $fx_dialog.settings);
+                var prev_closer = $fx_dialog.settings.onclose;
+                $fx_dialog.settings.onclose = function() {
+                    $fx_dialog.settings.onclose = prev_closer;
+                    $fx_dialog.open_dialog(data, $fx_dialog.settings);
+                }
 				$fx_dialog.close();
-				$fx_dialog.open_dialog(data, $fx_dialog.settings);
 			}
 			else if ( data.status == 'ok') {
                 if ($fx_dialog.settings.onfinish instanceof Function) {
@@ -117,6 +122,9 @@
         close_listener: function () {
             $fx_dialog.opened = false;
             $fx.panel.trigger('fx.dialogclose');
+            if ($fx_dialog.settings.onclose instanceof Function) {
+                $fx_dialog.settings.onclose();
+            }
         },
         
         button_disable: function (button) {

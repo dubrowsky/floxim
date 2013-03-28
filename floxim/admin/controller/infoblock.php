@@ -93,7 +93,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             $infoblock = fx::data('infoblock', $input['id']);
             $controller = $infoblock->get_prop_inherited('controller');
             $action = $infoblock->get_prop_inherited('action');
-            $i2l = $infoblock->get_infoblock2layout();
+            $i2l = $infoblock->get_visual();
     	} else {
             // устанавливаем в окружение текущую страницу
             // из нее можно получить лейаут
@@ -106,11 +106,11 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                 'page_id' => $input['page_id'],
                 'site_id' => fx::data('content_page', $input['page_id'])->get('site_id')
             ));
-            $i2l = fx::data('infoblock2layout')->create(array(
+            $i2l = fx::data('infoblock_visual')->create(array(
                 'area' => $input['area'],
                 'layout_id' => fx::env('layout')
             ));
-            $infoblock->set_infoblock2layout($i2l);
+            $infoblock->set_visual($i2l);
     	}
         if (!isset($infoblock['params']) || !is_array($infoblock['params'])) {
             $infoblock['params'] = array();
@@ -156,7 +156,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                     'site_id' => $source_ib['site_id'],
                     'checked' => true
                 ));
-                $i2l = fx::data('infoblock2layout')->create(array(
+                $i2l = fx::data('infoblock_visual')->create(array(
                     'layout_id' => $source_i2l['layout_id']
                 ));
             }
@@ -194,15 +194,8 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             }
             
             $infoblock['scope'] = $ib_scope;
-            
-            list(
-                $i2l['wrapper_name'], 
-                $i2l['wrapper_variant']
-            ) = explode(".", fx::dig($input, 'visual.wrapper'));
-            list(
-                $i2l['template_name'],
-                $i2l['template_variant']
-            ) = explode(".", fx::dig($input, 'visual.template'));
+            $i2l['wrapper'] = fx::dig($input, 'visual.wrapper');
+            $i2l['template'] = fx::dig($input, 'visual.template');
             $infoblock->save();
             $i2l['infoblock_id'] = $infoblock['id'];
             $i2l->save();
@@ -281,7 +274,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
      * Получение полей формы для вкладки "Как показывать"
      */
     protected function _get_format_fields(fx_infoblock $infoblock) {
-        $i2l = $infoblock->get_infoblock2layout();
+        $i2l = $infoblock->get_visual();
         $fields = array(
             array(
                 'label' => "Area",
@@ -324,7 +317,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                 'name' => 'wrapper',
                 'type' => 'select',
                 'values' => $wrappers,
-                'value' => $i2l['wrapper_name'].'.'.$i2l['wrapper_variant']
+                'value' => $i2l['wrapper']
             );
         }
         
@@ -333,7 +326,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             'name' => 'template',
             'type' => 'select',
             'values' => $templates,
-            'value' => $i2l['template_name'].'.'.$i2l['template_variant']
+            'value' => $i2l['template']
         );
         return $fields;
     }
@@ -345,17 +338,15 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         /* @var $ib fx_infoblock */
         $ib = fx::data('infoblock', $input['infoblock']['id']);
         if ( ($visual_id = fx::dig($input, 'infoblock.visual_id')) ) {
-            $ib_visual = fx::data('infoblock2layout', $visual_id);
+            $ib_visual = fx::data('infoblock_visual', $visual_id);
         } else {
-            $ib_visual = $ib->get_infoblock2layout();
+            $ib_visual = $ib->get_visual();
         }
-        dev_log($input);
         foreach ($input['vars'] as $c_var) {
             $var = $c_var['var'];
             $value = $c_var['value'];
             if ($var['var_type'] == 'visual' && $ib_visual) {
-                $tpl_name = $ib_visual['template_name'].'.'.$ib_visual['template_variant'];
-                $wrapper_name = $ib_visual['wrapper_name'].'.'.$ib_visual['wrapper_variant'];
+                $wrapper_name = $ib_visual['wrapper'];
                 if ($var['template'] == $wrapper_name) {
                     $wrapper_visual = $ib_visual['wrapper_visual'];
                     if (!is_array($wrapper_visual)) {

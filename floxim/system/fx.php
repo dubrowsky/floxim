@@ -178,13 +178,13 @@ class fx {
             $action = null;
         }
         
-        //$class_name = 'fx_template_'.preg_replace("~\.~", '_', $template);
         $class_name = 'fx_template_'.$template;
         try {
-            return new $class_name($data, $action);
+            return new $class_name($action, $data);
         } catch (Exception $e) {
-            //dev_log('template class not found', $class_name, func_get_args(), debug_backtrace());
-            return new fx_template($data, $action);
+            dev_log('template class not found', $class_name, func_get_args(), debug_backtrace());
+            die();
+            return new fx_template($action, $data);
         }
     }
     
@@ -220,7 +220,10 @@ class fx {
         $var_path = explode('.', $var_path);
         $arr =& $collection;
         foreach ($var_path as $pp) {
-            if (!isset($arr[$pp])) {
+            if (!is_array($arr)) {
+                return null;
+            }
+            if (!array_key_exists($pp, $arr)) {
                 $arr[$pp]=array();
             }
             $arr =&  $arr[$pp];

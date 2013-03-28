@@ -209,11 +209,10 @@ class fx_template_processor {
     
     protected function _token_call_to_code(fx_template_token $token) {
         $code = "<?\n";
-        $tpl_id = $token->get_prop('id');
-        if (!preg_match("~\.~", $tpl_id)) {
-            $tpl_id = $this->_class_code.".".$tpl_id;
+        $tpl_name = $token->get_prop('id');
+        if (!preg_match("~\.~", $tpl_name)) {
+            $tpl_name = $this->_class_code.".".$tpl_name;
         }
-        list($tpl_name, $tpl_variant) = explode('.', $tpl_id);
         $code .= '$tpl_to_call = fx::template("'.$tpl_name.'");'."\n";
         $call_children = $token->get_children();
         /*
@@ -260,7 +259,7 @@ class fx_template_processor {
                 '".$param_var_token->get_prop('id')."', 
                 ".$value_to_set.");\n";
         }
-        $code .= 'echo $tpl_to_call->render("'.$token->get_prop('id').'", $this->data);?>';
+        $code .= 'echo $tpl_to_call->render($this->data);?>';
         $current_template =& $this->templates[$this->_get_current_template_id()];
         if (!isset($current_template['calls'])) {
             $current_template['calls'] = array();
@@ -271,7 +270,6 @@ class fx_template_processor {
     
     protected function _token_var_to_code(fx_template_token $token) {
         $var_id = $token->get_prop('id');
-        $var_type = $token->get_prop('var_type');
         $code .= "<?\n";
         
         /*
@@ -310,7 +308,7 @@ class fx_template_processor {
             $code .= "}\n";
         }
         if ($token->get_prop('var_type') == 'visual' && !($token->get_prop('editable') == 'false')) {
-            $code .= 'if (!(fx::env("is_admin") && '.$var_tmp." instanceof fx_template_field)) {\n";
+            $code .= 'if (fx::env("is_admin") && !('.$var_tmp." instanceof fx_template_field)) {\n";
             $code .= "\t".$var_tmp." = new fx_template_field(".$var_tmp.", ";
             $code .= 'array("id" => "'.$var_id.'", ';
             $code .= '"var_type" => "visual", ';
@@ -442,7 +440,6 @@ class fx_template_processor {
         if ( ($source_dir = $tree->get_prop('source') ) ) {
             echo 'protected $_source_dir = "'.$source_dir.'";'."\n";
         }
-        echo 'protected $_template_code = "'.$this->_class_code."\";\n";
         
         $tpl_var = array();
         foreach ( $this->templates as $tpl_name => $tpl) {

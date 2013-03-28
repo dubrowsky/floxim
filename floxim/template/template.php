@@ -2,13 +2,11 @@
 class fx_template {
     
     protected $data = array();
-    protected $meta = array();
+    protected $action = null;
     
-    public function __construct($data = array(), $action = null) {
+    public function __construct($action, $data = array()) {
         $this->data = $data;
-        if ($action) {
-            $this->action = $action;
-        }
+        $this->action = $action;
     }
     
     public function get_var($var_path) {
@@ -20,11 +18,12 @@ class fx_template {
     }
     
     protected function _get_template_sign() {
-        return $this->_template_code.'.'.$this->_current_action;
+        $template_name = preg_replace("~^fx_template_~", '', get_class($this));
+        return $template_name.'.'.$this->action;
     }
 
     public function render_area($area) {
-        echo "<!-- area ".$area." -->\n";
+        //echo "<!-- area ".$area." -->\n";
         $area_blocks = $this->get_var('input.'.$area);
         if (!$area_blocks || !is_array($area_blocks)) {
             $area_blocks = array();
@@ -39,17 +38,10 @@ class fx_template {
         if (fx::env('is_admin')) {
             echo "<a class='fx_infoblock_adder' data-fx_area='".$area."'>Добавить инфоблок</a>";
         }
-        echo "<!-- // area ".$area." -->\n";
+        //echo "<!-- // area ".$area." -->\n";
     }
-    
-    protected $_current_action = null;
 
-    public function render($action = null, $data = array()) {
-        if ($action == null && $this->action) {
-            $action = $this->action;
-        }
-        $this->_current_action = $action;
-        //dev_log('rendering', $action, $data, get_class($this));
+    public function render(array $data = array()) {
         foreach ($data as $dk => $dv) {
             $this->set_var($dk, $dv);
         }
@@ -57,16 +49,16 @@ class fx_template {
             $file_http = str_replace(fx::config()->DOCUMENT_ROOT, '', $f);
             fx::page()->add_file($file_http);
         }
-        $result = '<!-- template '.$this->_template_code.".".$action." -->\n";
+        $result = '<!-- template '.$this->_get_template_sign()." -->\n";
         ob_start();
-        $method = 'tpl_'.$action;
+        $method = 'tpl_'.$this->action;
         if (method_exists($this, $method)) {
             $this->$method();
         } else {
-            echo 'No tpl action: <code>'.get_class($this).".".$action.'</code>';
+            echo 'No tpl action: <code>'.get_class($this).".".$this->action.'</code>';
         }
         $result .= ob_get_clean();
-        $result .= '<!-- // template'.$this->_template_code.".".$action." -->\n";
+        $result .= '<!-- // template'.$this->_get_template_sign()." -->\n";
         $result = fx_template_field::replace_fields($result);
         return $result;
     }
