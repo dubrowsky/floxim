@@ -60,11 +60,7 @@ class fx_controller {
     
     public function find_template() {
         $tpl = str_replace('fx_controller_', '', get_class($this));
-        return fx::template($tpl);
-    }
-    
-    public function find_template_variant() {
-        return $this->action;
+        return fx::template($tpl.'.'.$this->action);
     }
     
     /*

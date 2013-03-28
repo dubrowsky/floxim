@@ -27,10 +27,6 @@ class fx_controller_layout extends fx_controller {
         }
         return $html;
     }
-            
-    public function find_template_variant() {
-        return getenv('REQUEST_URI') == '/' ? 'index' : 'inner';
-    }
     
     protected $_layout = null;
 

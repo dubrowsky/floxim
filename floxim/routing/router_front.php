@@ -50,7 +50,7 @@ class fx_router_front extends fx_router {
         
         $areas = array();
         // получаем все привязки "инфоблок-макет"
-        $visual = fx::data('infoblock2layout')->get_for_infoblocks($infoblocks);
+        $visual = fx::data('infoblock_visual')->get_for_infoblocks($infoblocks);
         // id-шники наследованных блоков
         $inherited_ids = $infoblocks->find('parent_infoblock_id')->get_values('parent_infoblock_id');
         
@@ -86,7 +86,7 @@ class fx_router_front extends fx_router {
             if ($ib['controller'] == 'layout'){
                 $c_area = 'layout';
             } elseif ($c_visual) {
-                $ib->set_infoblock2layout($c_visual);
+                $ib->set_visual($c_visual);
                 //$c_area = $c_visual['area'];
                 $c_area = $ib->get_prop_inherited('visual.area');
             } else {

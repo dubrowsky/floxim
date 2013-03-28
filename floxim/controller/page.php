@@ -24,7 +24,7 @@ class fx_controller_page extends fx_controller {
         
         $areas = array();
         // получаем все привязки "инфоблок-макет"
-        $visual = fx::data('infoblock2layout')->get_for_infoblocks($infoblocks);
+        $visual = fx::data('infoblock_visual')->get_for_infoblocks($infoblocks);
         
         foreach ($infoblocks as $ib) {
             $ib_visuals = array();
@@ -42,7 +42,7 @@ class fx_controller_page extends fx_controller {
                 // какой-то обход
             }
             if ($c_visual) {
-                $ib->set_infoblock2layout($c_visual);
+                $ib->set_visual($c_visual);
                 $c_area = $c_visual['area'];
             } else {
                 $c_area = 'unknown';
@@ -118,10 +118,6 @@ class fx_controller_page extends fx_controller {
         $p->add_css_file('/floxim/admin/skins/default/jquery-ui/main.css');
         $p->add_css_file('/floxim/admin/skins/default/css/main.css');
         $p->set_after_body(fx_controller_admin_adminpanel::panel_html());        
-    }
-    
-    public function find_template_variant() {
-        return getenv('REQUEST_URI') == '/' ? 'index' : 'inner';
     }
     
     /*

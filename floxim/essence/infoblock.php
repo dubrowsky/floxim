@@ -5,29 +5,29 @@ defined("FLOXIM") || die("Unable to load file.");
 class fx_infoblock extends fx_essence {
 
     
-    protected $_infoblock2layout = null;
+    protected $_visual = null;
     
-    public function set_infoblock2layout(fx_infoblock2layout $visual) {
-        $this->_infoblock2layout = $visual;
+    public function set_visual(fx_infoblock_visual $visual) {
+        $this->_visual = $visual;
     }
     
-    public function get_infoblock2layout() {
-        if (!$this->_infoblock2layout) {
-            $stored = fx::data('infoblock2layout')->get(
+    public function get_visual() {
+        if (!$this->_visual) {
+            $stored = fx::data('infoblock_visual')->get(
                     'infoblock_id', $this->get('id'), 
                     'layout_id', fx::env('site')->get('layout_id')
             );
             if ($stored) {
-                $this->_infoblock2layout = $stored;
+                $this->_visual = $stored;
             } else {
                 $i2l_params = array('layout_id' => fx::env('layout'));
                 if (($ib_id = $this->get('id'))) {
                     $i2l_params['infoblock_id'] = $ib_id;
                 }
-                $this->_infoblock2layout = fx::data('infoblock2layout')->create($i2l_params);
+                $this->_visual = fx::data('infoblock_visual')->create($i2l_params);
             }
         }
-        return $this->_infoblock2layout;
+        return $this->_visual;
     }
     
     public function get_type() {
@@ -72,7 +72,7 @@ class fx_infoblock extends fx_essence {
     }
     
     protected function _after_delete() {
-        $visual = fx::data('infoblock2layout')->get_all('infoblock_id', $this->get('id'));
+        $visual = fx::data('infoblock_visual')->get_all('infoblock_id', $this->get('id'));
         $killer = function($cv) {
             $cv->delete();
         };
@@ -102,7 +102,7 @@ class fx_infoblock extends fx_essence {
         $own_result = null;
         $path = explode(".", $path_str);
         if ($path[0] == 'visual') {
-            $c_i2l = $this->get_infoblock2layout();
+            $c_i2l = $this->get_visual();
             $vis_path_str = join(".", array_slice($path, 1));
             $own_result = fx::dig($c_i2l, $vis_path_str);
         } else {

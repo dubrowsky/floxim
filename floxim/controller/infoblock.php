@@ -49,35 +49,28 @@ class fx_controller_infoblock extends fx_controller {
         $tpl = null;
         $tpl_action = null;
         
-        if ( ($tpl_name = $infoblock->get_prop_inherited('visual.template_name')) && $tpl_name != 'auto' ) {
+        if ( ($tpl_name = $infoblock->get_prop_inherited('visual.template'))) {
             $tpl = fx::template($tpl_name);
-        }
-        $tpl_action = $infoblock->get_prop_inherited('visual.template_variant');
-        if ( ! $tpl_action || $tpl_action == 'auto' ) {
-            $tpl_action = $infoblock->get_prop_inherited('action');
+            dev_log('temmplate created', $tpl, $tpl_name);
         }
         
-        $tpl_params = $infoblock->get_prop_inherited('visual.template_visual');
         if (!$tpl) {
             $tpl = $controller->find_template();
         }
-        if (!$tpl_action) {
-            $tpl_action = $controller->find_template_variant();
-        }
+        $tpl_params = $infoblock->get_prop_inherited('visual.template_visual');
         $tpl_params['input'] = $result;
         $tpl_params['infoblock'] = $infoblock;
-        $output = $tpl->render($tpl_action, $tpl_params);
+        $output = $tpl->render($tpl_params);
         if (fx::env('is_admin')) {
             if (!preg_match("~[^\s+]~", strip_tags($output))) {
                 $output .= '<span class="fx_empty_infoblock">[empty: '.self::_get_infoblock_sign($infoblock).']</span>';
             }
         }
         
-        $wrapper_name = $infoblock->get_prop_inherited('visual.wrapper_name');
-        $wrapper_variant = $infoblock->get_prop_inherited('visual.wrapper_variant');
+        $wrapper = $infoblock->get_prop_inherited('visual.wrapper');
         
-        if ($wrapper_name && $wrapper_variant) {
-            $tpl_wrap = fx::template($wrapper_name);
+        if ($wrapper) {
+            $tpl_wrap = fx::template($wrapper);
             $wrap_params = $infoblock->get_prop_inherited('visual.wrapper_visual');
             if (is_array($wrap_params)) {
                 foreach ( $wrap_params as $wrap_param_key => $wrap_param_val) {
@@ -86,7 +79,7 @@ class fx_controller_infoblock extends fx_controller {
             }
             $tpl_wrap->set_var('content', $output);
             $tpl_wrap->set_var('infoblock', $infoblock);
-            $output = $tpl_wrap->render($wrapper_variant);
+            $output = $tpl_wrap->render();
         }
         if (fx::env('is_admin')) {
             $output = $this->_add_infoblock_meta($output, $infoblock, $controller_meta);
@@ -108,7 +101,7 @@ class fx_controller_infoblock extends fx_controller {
     
     protected function _add_infoblock_meta($html_result, $infoblock, $controller_meta = null) {
         $ib_info = array('id' => $infoblock['id']);
-        if (($vis = $infoblock->get_infoblock2layout()) && $vis['id']) {
+        if (($vis = $infoblock->get_visual()) && $vis['id']) {
             $ib_info['visual_id'] = $vis['id'];
         }
         

@@ -317,7 +317,7 @@ class fx_core extends fx_system {
             'history', 
             'history_item', 
             'infoblock', 
-            'infoblock2layout',
+            'infoblock_visual',
             'layout',
             'menubaze', 
             'content', 
@@ -371,7 +371,8 @@ class fx_core extends fx_system {
             }
             
             if (in_array($classname, $essences)) {
-                $file = $root."essence/".str_replace('_', '/', $classname);
+                //$file = $root."essence/".str_replace('_', '/', $classname);
+                $file = $root."essence/".$classname;
                 break;
             }
             
@@ -442,12 +443,12 @@ class fx_core extends fx_system {
                 break;
             }
             
-            if (preg_match("~^data_(content_.+)$~", $classname, $match)) {
+            if (preg_match("~^data_(.+)$~", $classname, $match)) {
                 $file = $root.'data/'.$match[1];
                 break;
             }
             
-            if (preg_match("/^(admin|controller|data|event|field|infoblock|layout|menu|tpl|system|unit)_([a-z0-9_]+)/", $classname, $match)) {
+            if (preg_match("/^(admin|controller|event|field|infoblock|layout|system)_([a-z0-9_]+)/", $classname, $match)) {
                 $file = $root.$match[1]."/".str_replace('_', '/', $match[2]);
                 break;
             }
