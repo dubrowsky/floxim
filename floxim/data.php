@@ -147,7 +147,7 @@ class fx_data {
         // передаем 2 аргумента - условия и параметры
         // array($conds), array('order' => 'priority', 'limit' => 10)
         $special_syntax = false;
-        if ($argc == 2 && is_array($argv[1])) {
+        if ($argc == 2 && is_array($argv[1]) && is_array($argv[0])) {
             $special_keys = array('order', 'group', 'limit');
             foreach ($special_keys as $spk) {
                 if (array_key_exists($spk, $argv[1])){
@@ -155,16 +155,14 @@ class fx_data {
                     break;
                 }
             }
-            if ($special_syntax) {
-                if (isset($argv[1]['order'])) {
-                    $order = $argv[1]['order'];
-                }
-                if (isset($argv[1]['limit'])) {
-                    $limit = $argv[1]['limit'];
-                }
-                // делаем вид, что у нас 1 аргумент
-                $argc = 1;
+            if (isset($argv[1]['order'])) {
+                $order = $argv[1]['order'];
             }
+            if (isset($argv[1]['limit'])) {
+                $limit = $argv[1]['limit'];
+            }
+            // делаем вид, что у нас 1 аргумент
+            $argc = 1;
         }
 
         if ($argc == 1 && is_string($argv[0])) {

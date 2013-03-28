@@ -111,7 +111,6 @@ class fx_controller_component extends fx_controller {
         $infoblock = fx::data('infoblock', $this->param('infoblock_id'))->get_root_infoblock();
         $conditions['infoblock_id']= $infoblock['id'];
         $conditions['parent_id']= $this->_get_parent_id();
-        dev_log('init listing', $this, $f);
         if ($this->param('sorting') == 'manual') {
             $params['order'] = 'priority';
         }
