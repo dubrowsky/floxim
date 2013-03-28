@@ -228,7 +228,10 @@ INSERT INTO `fx_component` (`id`, `keyword`, `name`, `description`, `group`, `ic
 (20, 'vacancy', 'Вакансии', NULL, 'Корпоративные', '', 'component.vacancy', 0),
 (22, 'faq', 'Вопрос-ответ', NULL, 'Базовые', '', 'component.faq', 0),
 (23, 'page', 'Страницы', NULL, 'Базовые', '', NULL, 0),
-(24, 'section', 'Разделы', 'Для меню', 'Базовые', '', NULL, 1);
+(24, 'section', 'Разделы', 'Для меню', 'Базовые', '', NULL, 1),
+(25,'blog','Блог','','Базовые','',NULL,1),
+(26,'tag','Тэг',NULL,'Базовые','',NULL,0),
+(27,'tagpost','Связь тэг-пост',NULL,'Базовые','',NULL,0);
 
 -- --------------------------------------------------------
 
@@ -2304,3 +2307,104 @@ INSERT INTO `fx_widget` (`id`, `name`, `keyword`, `description`, `group`, `check
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+CREATE TABLE `fx_content_blog` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `parent_id` int(11) NOT NULL DEFAULT '0',
+  `keyword` varchar(255) DEFAULT NULL,
+  `user_id` int(11) NOT NULL DEFAULT '0',
+  `infoblock_id` int(11) NOT NULL DEFAULT '0',
+  `priority` int(11) NOT NULL DEFAULT '0',
+  `checked` tinyint(4) NOT NULL DEFAULT '1',
+  `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `last_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `seo_h1` text,
+  `seo_title` varchar(255) DEFAULT NULL,
+  `seo_keywords` varchar(255) DEFAULT NULL,
+  `seo_description` text,
+  `header` varchar(255) DEFAULT NULL,
+  `anounce` varchar(255) DEFAULT NULL,
+  `full_text` text,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ;
+
+--
+-- Table structure for table `fx_content_blog`
+--
+
+DROP TABLE IF EXISTS `fx_content_blog`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `fx_content_blog` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `parent_id` int(11) NOT NULL DEFAULT '0',
+  `keyword` varchar(255) DEFAULT NULL,
+  `user_id` int(11) NOT NULL DEFAULT '0',
+  `infoblock_id` int(11) NOT NULL DEFAULT '0',
+  `priority` int(11) NOT NULL DEFAULT '0',
+  `checked` tinyint(4) NOT NULL DEFAULT '1',
+  `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `last_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `seo_h1` text,
+  `seo_title` varchar(255) DEFAULT NULL,
+  `seo_keywords` varchar(255) DEFAULT NULL,
+  `seo_description` text,
+  `header` varchar(255) DEFAULT NULL,
+  `anounce` varchar(255) DEFAULT NULL,
+  `full_text` text,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for table `fx_content_tag`
+--
+
+DROP TABLE IF EXISTS `fx_content_tag`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `fx_content_tag` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `parent_id` int(11) NOT NULL DEFAULT '0',
+  `keyword` varchar(255) DEFAULT NULL,
+  `user_id` int(11) NOT NULL DEFAULT '0',
+  `infoblock_id` int(11) NOT NULL DEFAULT '0',
+  `priority` int(11) NOT NULL DEFAULT '0',
+  `checked` tinyint(4) NOT NULL DEFAULT '1',
+  `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `last_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `seo_h1` text,
+  `seo_title` varchar(255) DEFAULT NULL,
+  `seo_keywords` varchar(255) DEFAULT NULL,
+  `seo_description` text,
+  `name` varchar(255) DEFAULT NULL,
+  `usages` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `fx_content_tagpost`
+--
+
+DROP TABLE IF EXISTS `fx_content_tagpost`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `fx_content_tagpost` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `parent_id` int(11) NOT NULL DEFAULT '0',
+  `keyword` varchar(255) DEFAULT NULL,
+  `user_id` int(11) NOT NULL DEFAULT '0',
+  `infoblock_id` int(11) NOT NULL DEFAULT '0',
+  `priority` int(11) NOT NULL DEFAULT '0',
+  `checked` tinyint(4) NOT NULL DEFAULT '1',
+  `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `last_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `seo_h1` text,
+  `seo_title` varchar(255) DEFAULT NULL,
+  `seo_keywords` varchar(255) DEFAULT NULL,
+  `seo_description` text,
+  `tag_id` int(11) DEFAULT NULL,
+  `post_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
