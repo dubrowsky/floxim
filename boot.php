@@ -8,7 +8,6 @@ $config =  array(
     'DB_USER' => 'floxim',
     'DB_PASSWORD' => 'floxim12345'
 );
-<<<<<<< HEAD
 */
 
 $config =  array(
@@ -17,15 +16,6 @@ $config =  array(
     'DB_PASSWORD' => 'floxim12345'
 );
 
-=======
-/* 
-$config = array(
-    'DB_DSN' => 'mysql:dbname=floxim;host=localhost',
-    'DB_USER' => 'root',
-    'DB_PASSWORD' => ''
-);
-*/
->>>>>>> 9ea96e1de5d8582a5a2ca50e51881bc0f67d3131
 $SYSTEM_FOLDER = dirname(__FILE__) . (isset($config['HTTP_ROOT_PATH']) ? $config['HTTP_ROOT_PATH'] : '/floxim/') . 'system/';
 
 require_once $SYSTEM_FOLDER.'config.php';
