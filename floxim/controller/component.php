@@ -115,7 +115,8 @@ class fx_controller_component extends fx_controller {
         $q_conditions = array();
         $q_params = array();
         
-        $component = fx::data('component', $this->get_content_type());
+        $content_type = $this->get_content_type();
+        $component = fx::data('component', $content_type);
         $c_ib = fx::data('infoblock', $this->param('infoblock_id'));
         $root_ib = $c_ib->get_root_infoblock();
         $q_conditions['infoblock_id']= $root_ib['id'];
