@@ -50,7 +50,9 @@ class fx_controller_admin_content extends fx_controller_admin {
         $c_fields = array();
         $content_fields = $component->fields();
         foreach ($content_fields as $field) {
-            $c_fields[] = $field->get_js_field($content);
+            if ($field['type_of_edit'] != 3) {
+                $c_fields[] = $field->get_js_field($content);
+            }
         }
         
         $this->response->add_tab('content', $component['name']);
@@ -61,8 +63,11 @@ class fx_controller_admin_content extends fx_controller_admin {
             $page_component = fx::data('component', 'page');
             $p_fields = array();
             $page_component_fields = $page_component->fields();
+            dev_log('pcf', $page_component_fields);
             foreach ($page_component_fields as $p_field) {
-                $p_fields []= $p_field->get_js_field($page);
+                if ($p_field['type_of_edit'] != 3) {
+                    $p_fields []= $p_field->get_js_field($page);
+                }
             }
             $this->response->add_fields($p_fields, 'page', 'page');
         }
