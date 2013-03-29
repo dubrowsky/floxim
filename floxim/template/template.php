@@ -55,6 +55,7 @@ class fx_template {
         if (method_exists($this, $method)) {
             $this->$method();
         } else {
+            dev_log('tpl with no action called', get_class($this), $this->action, debug_backtrace());
             echo 'No tpl action: <code>'.get_class($this).".".$this->action.'</code>';
         }
         $result .= ob_get_clean();

@@ -21,7 +21,7 @@ class fx_data_infoblock extends fx_data {
     }
 
     public function get_content_infoblocks($content_type = null) {
-        $params = array('is_listing' => '1');
+        $params = array();//'is_listing' => '1');
         if ($content_type) {
             $params ['controller'] = 'component_'.$content_type;
         }

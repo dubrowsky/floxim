@@ -64,6 +64,7 @@ class fx {
             }
     	}
     	if (!isset(self::$data_finders[$datatype])) {
+            dev_log("NO DATATYPE", func_get_args(), debug_backtrace());
             die("NO DATATYPE: ".$datatype);
     	}
         $df = self::$data_finders[$datatype];

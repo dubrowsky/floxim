@@ -1,24 +1,14 @@
 <?php
 class fx_controller_component extends fx_controller {
     
-    // public function process($input = null, $action = null, $do_return = false)
+    protected $_meta = array();
+    
     public function process() {
         $result = parent::process();
-        $content_type = $this->get_content_type();
-        $component = fx::data('component', $content_type);
-        if ($this->action == 'listing') {
-            $c_ib = fx::data('infoblock', $this->param('infoblock_id'));
-            $c_ib_name = $c_ib->get_prop_inherited('name');
-            $adder_title = $component['name'].' &rarr; '.($c_ib_name ? $c_ib_name:$c_ib['id']);
-            $result['_meta'] = array(
-                'accept_content' => array(array(
-                    'title' => $adder_title,
-                    'parent_id' => $this->_get_parent_id(),
-                    'type' => $content_type,
-                    'infoblock_id' => $this->param('infoblock_id')
-                ))
-            );
+        if (!isset($result['_meta'])) {
+            $result['_meta'] = array();
         }
+        $result['_meta'] = array_merge_recursive($result['_meta'], $this->_meta);
         return $result;
     }
     
@@ -102,20 +92,52 @@ class fx_controller_component extends fx_controller {
         );
         return $fields;
     }
+    
+    protected $_bound = array();
+    public function bind($event, $callback) {
+        if (!isset($this->_bound[$event])) {
+            $this->_bound[$event] = array();
+        }
+        $this->_bound[$event][]= $callback;
+    }
+    
+    public function fire($event, $data = null) {
+        if (isset($this->_bound[$event]) && is_array($this->_bound[$event])) {
+            foreach ( $this->_bound[$event] as $cb) {
+                call_user_func($cb, $data);
+            }
+        }
+    }
 
 
     public function listing() {
         $f = $this->_finder();
-        $conditions = array();
-        $params = array();
-        $infoblock = fx::data('infoblock', $this->param('infoblock_id'))->get_root_infoblock();
-        $conditions['infoblock_id']= $infoblock['id'];
-        $conditions['parent_id']= $this->_get_parent_id();
+        $q_conditions = array();
+        $q_params = array();
+        
+        $component = fx::data('component', $this->get_content_type());
+        $c_ib = fx::data('infoblock', $this->param('infoblock_id'));
+        $root_ib = $c_ib->get_root_infoblock();
+        $q_conditions['infoblock_id']= $root_ib['id'];
+        $q_conditions['parent_id']= $this->_get_parent_id();
         if ($this->param('sorting') == 'manual') {
-            $params['order'] = 'priority';
+            $q_params['order'] = 'priority';
         }
-        $items = $f->get_all($conditions, $params);
+        $items = $f->get_all($q_conditions, $q_params);
         fx::data('content_page')->attache_to_content($items);
+        
+        if (fx::env('is_admin')) {
+            $c_ib_name = $c_ib->get_prop_inherited('name');
+            $adder_title = $component['name'].' &rarr; '.($c_ib_name ? $c_ib_name:$c_ib['id']);
+            $this->_meta['accept_content'] = array(
+                array(
+                    'title' => $adder_title,
+                    'parent_id' => $this->_get_parent_id(),
+                    'type' => $content_type,
+                    'infoblock_id' => $this->param('infoblock_id')
+                )
+            );
+        }
         return array('items' => $items);
     }
     
@@ -164,6 +186,11 @@ class fx_controller_component extends fx_controller {
      * @return string
      */
     public function get_content_type() {
+        if (!$this->_content_type) {
+            if (preg_match("~fx_controller_component_(.+)$~", get_class($this), $cc)) {
+                $this->_content_type = $cc[1];
+            }
+        }
         return $this->_content_type;
     }
     
@@ -192,7 +219,9 @@ class fx_controller_component extends fx_controller {
     }
     
     public function find_template() {
-        return fx::template('component_'.$this->get_content_type());
+        $tpl_name = 'component_'.$this->get_content_type().".".$this->action;
+        dev_log('auto tpl name', $tpl_name);
+        return fx::template($tpl_name);
     }
 }
 ?>
