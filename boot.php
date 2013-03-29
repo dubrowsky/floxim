@@ -2,10 +2,18 @@
 require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . '_devlog' . DIRECTORY_SEPARATOR . 'log.php');
 //dev_log('booting');
 
+/*
 $config =  array(
     'DB_DSN' => 'mysql:dbname=gb_floxim;host=mysql59.1gb.ru',
     'DB_USER' => 'gb_floxim',
     'DB_PASSWORD' => 'ca0ebda6xvn'
+);
+*/
+
+$config =  array(
+    'DB_DSN' => 'mysql:dbname=floxim;host=81.177.142.25',
+    'DB_USER' => 'floxim',
+    'DB_PASSWORD' => 'floxim12345'
 );
 
 $SYSTEM_FOLDER = dirname(__FILE__) . (isset($config['HTTP_ROOT_PATH']) ? $config['HTTP_ROOT_PATH'] : '/floxim/') . 'system/';
