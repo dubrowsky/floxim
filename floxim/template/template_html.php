@@ -269,6 +269,15 @@ class fx_html_token {
                 $res .= $this->source;
             }
         }
+        if ( ($injections = $this->_injections)) {
+            $res = preg_replace_callback(
+                "~#inj(\d+)#~", 
+                function($matches) use ($injections) {
+                    return $injections[$matches[1]];
+                }, 
+                $res
+            );
+        }
         if (isset($this->children)) {
             foreach ($this->children as $child) {
                 $res .= $child->serialize();
@@ -287,9 +296,19 @@ class fx_html_token {
         return $this->children;
     }
     
+    protected $_injections = null;
     protected function _parse_attributes() {
         $source = preg_replace("~^<[a-z0-9_]+~", '', $this->source);
+        // Сохраняем в массив field-маркеры, восстановим при обратной сборке
+        $injections = array();
+        $source = preg_replace_callback("~###fx_template_field.*?fx_template_field_end###~", function($matches) use (&$injections) {
+            $injections []= $matches[0];
+            return "#inj".(count($injections)-1)."#";
+        }, $source);
+        $this->_injections = $injections;
+        
         $source  = preg_replace("~\s([a-z]+)\s*?=\s*?([^\'\\\"\s]+)~", ' $1="$2"', $source);
+        $atts = null;
         preg_match_all('~([a-z0-9_-]+)="([^\"]+)"~', $source, $atts);
         $this->attributes = array();
         foreach ($atts[1] as $att_num => $att_name) {
