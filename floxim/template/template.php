@@ -50,8 +50,10 @@ class fx_template {
             $this->set_var($dk, $dv);
         }
         foreach (glob($this->_source_dir.'/*.{js,css}', GLOB_BRACE) as $f) {
-            $file_http = str_replace(fx::config()->DOCUMENT_ROOT, '', $f);
-            fx::page()->add_file($file_http);
+            if (!preg_match("~_[^/]+$~", $f)) {
+                $file_http = str_replace(fx::config()->DOCUMENT_ROOT, '', $f);
+                fx::page()->add_file($file_http);
+            }
         }
         $result = '<!-- template '.$this->_get_template_sign()." -->\n";
         ob_start();
