@@ -132,26 +132,6 @@ class fx_controller_infoblock extends fx_controller {
             $html_result = $html_proc->add_meta($meta);
         }
         return $html_result;
-        
-        
-        $wrapper_div = '<div class="fx_infoblock" data-fx_infoblock="'.$ib_info.'"';
-        if ($controller_meta) {
-            $controller_meta = htmlentities(json_encode($controller_meta));
-            $wrapper_div .= ' data-fx_controller_meta="'.$controller_meta.'"';
-        }
-        $wrapper_div .='>';
-        
-        if ($infoblock['controller'] == 'layout') {
-            // для лейаутов - добавляем мета-данные сразу после body
-            $html_result = preg_replace("~<body[^>]*?>~is", '$0'.$wrapper_div, $html_result);
-            $html_result = str_replace('~</body>~', '</div></body>', $html_result);
-        } else {
-            // для прочих - оборачиваем в div
-            $html_result = 
-                $wrapper_div.
-                    $html_result.
-                '</div>';
-        }
         return $html_result;
     }
 }
