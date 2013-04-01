@@ -373,7 +373,7 @@ class fx_template_processor {
     }
     
     protected function _token_area_to_code($token) {
-        return '<?=$this->render_area("'.$token->get_prop('id').'")?>';
+        return '<?=$this->render_area('.var_export($token->get_all_props(),1).')?>';
     }
     
     protected function _token_if_to_code($token) {
@@ -544,6 +544,10 @@ class fx_template_token {
     
     public function get_prop($name) {
         return isset($this->props[$name]) ? $this->props[$name] : null;
+    }
+    
+    public function get_all_props() {
+        return $this->props;
     }
     
     public function show() {

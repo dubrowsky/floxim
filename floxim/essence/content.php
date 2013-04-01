@@ -171,14 +171,7 @@ class fx_content extends fx_essence {
     protected function _after_delete() {
         $component = fx::data('component', $this->component_id);
         if ($component['has_page']) {
-            /* @var $page fx_content_page */
-            if ( !( $page = $this->get_page()) ) {
-                $page = fx::data('content_page')->get(array(
-                    'content_type' => $component['keyword'],
-                    'content_id' => $this['id']
-                ));
-            }
-            if ($page) {
+            if (( $page = $this->get_page())) {
                 $page->delete();
             }
         }

@@ -107,7 +107,6 @@ fx_front.prototype.select_level_up = function() {
     
 fx_front.prototype.bind_actions = function () {
     $fx.panel.bind('fx.dialog.ok', function(event, data) {
-        //console.log(event, data);
         if ( $fx.mode == 'page' ) {
             //window.location.reload(true);
         }
@@ -134,9 +133,6 @@ fx_front.prototype.load = function ( mode ) {
         this.set_mode_edit();
     } else {
         this.set_mode_design();
-        //console.log('design???');
-        //this.reload();
-        //this.set_mode_edit();
     }
         
     $fx.update_history();
@@ -261,7 +257,6 @@ fx_front.prototype.set_mode_edit = function () {
                     'vars': fields_to_send,
                     fx_admin:true
                 }, function(res) {
-                    $fx_dialog.close();
                     $fx.front.reload_infoblock(var_node.closest('.fx_infoblock').get(0));
                 });
                 return false;
@@ -286,6 +281,7 @@ fx_front.prototype.set_mode_edit = function () {
     $('html').on('fx_select.fx_edit_mode', '.fx_content_essence', function() {
         var essence_node = $(this);
         var essence_meta = $(this).data('fx_content_essence');
+        var ib_node = essence_node.closest('.fx_infoblock').get(0);
         $fx.buttons.bind('edit', function() {
             $fx.post({
                 essence:'content',
@@ -295,16 +291,28 @@ fx_front.prototype.set_mode_edit = function () {
              }, function(res) {
                  $fx_dialog.open_dialog(res, {
                      onfinish:function() {
-                         $fx_dialog.close();
-                         $fx.front.reload_infoblock(essence_node.closest('.fx_infoblock').get(0));
+                         $fx.front.reload_infoblock(ib_node);
                      }
                  });
              });
-        })
+        });
+        $fx.buttons.bind('delete', function() {
+           if (confirm("ORLY???")) {
+               $fx.post({
+                   essence:'content',
+                   action:'delete_save',
+                   content_type:essence_meta.type,
+                   content_id:essence_meta.id
+               }, function () {
+                   $fx.front.reload_infoblock(ib_node);
+               });
+           }
+        });
     });
     
     $('html').on('fx_deselect.fx_edit_mode', '.fx_content_essence', function() {
         $fx.buttons.unbind('edit');
+        $fx.buttons.unbind('delete');
     });
     
     
@@ -312,10 +320,10 @@ fx_front.prototype.set_mode_edit = function () {
     $fx.buttons.bind('add', function() {
         var buttons = [];
         $('.fx_infoblock').each(function() {
+            var ib_node = this;
             var cm = $(this).data('fx_controller_meta');
             
             if ( cm && cm.accept_content) {
-                console.log(cm.accept_content);
                 for (var i = 0; i < cm.accept_content.length; i++) {
                     var c_cnt = cm.accept_content[i];
                     buttons.push({
@@ -328,7 +336,11 @@ fx_front.prototype.set_mode_edit = function () {
                                infoblock_id:c_cnt.infoblock_id,
                                parent_id:c_cnt.parent_id
                             }, function(res) {
-                                $fx_dialog.open_dialog(res);
+                                $fx_dialog.open_dialog(res, {
+                                    onfinish:function() {
+                                        $fx.front.reload_infoblock(ib_node);
+                                    }
+                                });
                             });
                         }
                     });
@@ -379,7 +391,7 @@ fx_front.prototype.set_mode_edit = function () {
                     content_type:ce_data.type,
                     next_id:next_id
                 }, function(res) {
-                    console.log(res);
+                    
                 });
             }
         });
@@ -413,7 +425,6 @@ fx_front.prototype.set_mode_design = function() {
         }, function(json) {
             $fx_dialog.open_dialog(json);
         });
-        console.log('configure ib', ib);
     }
     
     var add_infoblock = function() {
@@ -430,7 +441,6 @@ fx_front.prototype.set_mode_design = function() {
     }
     
     var delete_infoblock = function() {
-        console.log('kill ib called');
         var ib_node = $fx.front.get_selected_item();
         if (!ib_node) {
             return;
@@ -439,7 +449,6 @@ fx_front.prototype.set_mode_design = function() {
         if (!ib) {
             return;
         }
-        console.log('kill ib sent', ib.id);
         $fx.post({
            essence:'infoblock',
            action:'delete_infoblock',

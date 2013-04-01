@@ -50,10 +50,6 @@ class fx_template_field  {
      * @param string $html
      */
     protected static function _replace_fields_in_atts($html) {
-        $dm = preg_match("~menu_item~", $html);
-        if ($dm) {
-            dev_log('att problem', htmlspecialchars($html));
-        }
         // Регулярка для атрибутов
         $field_regexp = "~".self::$_field_regexp."~s";
         // заменяем подстановки в атрибутах

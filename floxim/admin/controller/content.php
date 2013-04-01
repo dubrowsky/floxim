@@ -360,7 +360,12 @@ class fx_controller_admin_content extends fx_controller_admin {
     }
 
     public function delete_save($input) {
-        
+        if (!isset($input['content_type']) || !isset($input['content_id'])) {
+            return;
+        }
+        $content = fx::data('content_'.$input['content_type'], $input['content_id']);
+        $content->delete();
+        return array('status' => 'ok');
         if ($input['infoblock_id']) {
             $infoblock = fx::data('infoblock')->get_by_id($input['infoblock_id']);
         }

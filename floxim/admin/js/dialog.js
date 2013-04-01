@@ -19,7 +19,6 @@
                 onfinish:null
             }, settings);
             $fx_dialog.settings = $.extend($fx_dialog.settings, settings);
-            console.log('opening', data, settings);
             main_cont = '#fx_dialog';
             $fx_dialog.main = $(main_cont);
             $fx_dialog.steps = [];
@@ -71,7 +70,6 @@
 					data = $.parseJSON( data );
 				} catch(e) {
 					$("#nc_dialog_error", $fx_dialog.main).writeError(data);
-					console.log('error parsing', data);
 					return false;
 				}
 			}
@@ -86,7 +84,7 @@
 				$fx_dialog.close();
 			}
 			else if ( data.status == 'ok') {
-                if ($fx_dialog.settings.onfinish instanceof Function) {
+                if (typeof $fx_dialog.settings.onfinish === 'function') {
                     $fx_dialog.settings.onfinish(data);
                 }
                 $fx_dialog.main.dialog('close');
@@ -122,7 +120,7 @@
         close_listener: function () {
             $fx_dialog.opened = false;
             $fx.panel.trigger('fx.dialogclose');
-            if ($fx_dialog.settings.onclose instanceof Function) {
+            if (typeof $fx_dialog.settings.onclose  === 'function') {
                 $fx_dialog.settings.onclose();
             }
         },
