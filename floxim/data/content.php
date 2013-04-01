@@ -38,7 +38,6 @@ class fx_data_content extends fx_data {
         $obj['user_id'] = +$user['id'];
         $obj['checked'] = 1;
         $obj['priority'] = $this->next_priority($this->component_id);
-        dev_log('created', $obj);
         return $obj;
     }
 

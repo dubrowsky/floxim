@@ -51,7 +51,6 @@ class fx_controller_infoblock extends fx_controller {
         if ( ($tpl_name = $infoblock->get_prop_inherited('visual.template'))) {
             if ($tpl_name != 'auto.auto') {
                 $tpl = fx::template($tpl_name);
-                dev_log('temmplate created', $tpl, $tpl_name);
             }
         }
         

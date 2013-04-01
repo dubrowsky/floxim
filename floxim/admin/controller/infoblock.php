@@ -421,5 +421,125 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             $infoblock->delete();
         }
     }
+    
+    protected function _get_area_visual($area, $layout_id, $site_id) {
+        return fx::db()->get_results(
+                "SELECT V.* 
+                    FROM {{infoblock}} as I 
+                    INNER JOIN {{infoblock_visual}} as V ON V.infoblock_id = I.id
+                    WHERE
+                        I.site_id = '".$site_id."' AND
+                        V.layout_id = '".$layout_id."' AND 
+                        V.area = '".$area."'
+                    ORDER BY V.priority"
+        );
+    }
+    
+    public function move($input) {
+        dev_log("MOVING IB", $input);
+        
+        if (!isset($input['visual_id']) || !isset($input['area'])) {
+            return;
+        }
+        
+        $vis = fx::data('infoblock_visual', $input['visual_id']);
+        if (!$vis) {
+            return;
+        }
+        
+        $infoblock = fx::data('infoblock', $input['infoblock_id']);
+        if (!$infoblock) {
+            return;
+        }
+        
+        // переносим из области в область
+        // нужно пересортировать блоки из старой area
+        // пока очень тупо, по порядку
+        if ($vis['area'] != $input['area']) {
+            $source_vis = $this->_get_area_visual(
+                $vis['area'], $vis['layout_id'], $infoblock['site_id']
+            );
+            $cpos = 1;
+            foreach ($source_vis as $csv) {
+                if ($csv['id'] == $vis['id']) {
+                    continue;
+                }
+                fx::db()->query(
+                    "UPDATE {{infoblock_visual}} 
+                    SET priority = '".$cpos."'
+                    WHERE id = '".$csv['id']."'"
+                );
+                $cpos++;
+            }
+        }
+        
+        $target_vis = $this->_get_area_visual($input['area'], $vis['layout_id'], $infoblock['site_id']);
+        
+        $next_visual_id = isset($input['next_visual_id']) ? $input['next_visual_id'] : null;
+        
+        $cpos = 1;
+        $new_priority = null;
+        foreach ( $target_vis as $ctv) {
+            if ($ctv['id'] == $vis['id']) {
+                continue;
+            }
+            if ($ctv['id'] == $next_visual_id) {
+                //$priorities [$vis['id']] = $cpos;
+                $new_priority = $cpos;
+                $cpos++;
+                dev_log('new prior', $new_priority);
+            }
+            if ($ctv['priority'] != $cpos) {
+                fx::db()->query(
+                    "UPDATE {{infoblock_visual}} 
+                    SET priority = '".$cpos."'
+                    WHERE id = '".$ctv['id']."'"
+                );
+                dev_log($ctv['id'].' -- '.$cpos);
+            }
+            $cpos++;
+        }
+        if (!$new_priority) {
+            $new_priority = $cpos;
+            dev_log('new prior last', $new_priority);
+        }
+        
+        fx::db()->query(
+            "UPDATE {{infoblock_visual}} 
+            SET priority = '".$new_priority."', area = '".$input['area']."'
+            WHERE id = '".$vis['id']."'"
+        );
+        
+        dev_log($target_vis);
+        
+        return array('status' => 'ok');
+        
+        $next_vis = null;
+        if ($input['next_visual_id']) {
+            $next_vis = fx::data('infoblock_visual', $input['next_visual_id']);
+        }
+        
+        if ($next_vis) {
+            $new_priority = $next_vis['priority']-1;
+        } else {
+            $last_priority = fx::db()->get_col(
+                'SELECT MAX(priority) FROM {{infoblock_visual}} 
+                 WHERE layout_id = '.$vis['layout_id'].' AND area = "'.$input['area'].'"'
+            );
+            $new_priority = isset($last_priority[0]) ? $last_priority[0] : 1;
+        }
+        
+        $q = "UPDATE {{content_".$ctype.'}} 
+                SET priority = priority'.($new_priority > $old_priority ? '-1' : '+1').
+                ' WHERE 
+                    parent_id = '.$parent_id.' AND 
+                    infoblock_id = '.$ib_id.' AND 
+                    priority >= '.min($old_priority, $new_priority).  ' AND 
+                    priority <='.max($old_priority, $new_priority);
+        fx::db()->query($q);
+        fx::db()->query('UPDATE {{content_'.$ctype.'}} 
+                    SET priority = '.$new_priority.'
+                    WHERE id = '.$content['id']);
+    }
 }
 ?>

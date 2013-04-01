@@ -406,6 +406,45 @@ fx_front.prototype.set_mode_design = function() {
         $('html').off('.fx_design_mode');
     });
     
+    $('html').on('mouseover.fx_design_mode', '.fx_infoblock', function() {
+        var cp = $(this).closest('.fx_area');
+        if (cp.hasClass('fx_area_sortable')) {
+            return;
+        }
+        if (cp.find('.fx_infoblock').length < 2) {
+            return;
+        }
+        cp.addClass('fx_area_sortable');
+        cp.sortable({
+            items:'>.fx_infoblock',
+            connectWith:'.fx_area',
+            stop:function(e, ui) {
+                var ce = ui.item;
+                var ce_data = ce.data('fx_infoblock');
+                
+                var params = {
+                    essence:'infoblock',
+                    action:'move',
+                    area:ce.closest('.fx_area').data('fx_area').id
+                }
+                
+                params.infoblock_id = ce_data.id;
+                params.visual_id = ce_data.visual_id;
+                
+                var next_e = ce.next('.fx_infoblock');
+                if (next_e.length > 0) {
+                    var next_data = next_e.data('fx_infoblock');
+                    params.next_infoblock_id = next_data.id;
+                    params.next_visual_id = next_data.visual_id;
+                }
+                
+                $fx.post(params, function(res) {
+                    console.log('posted');
+                });
+            }
+        });
+    });
+    
     var configure_infoblock = function() {
         var ib_node = $fx.front.get_selected_item();
         if (!ib_node) {

@@ -31,6 +31,11 @@ class fx_template {
         if (!$area_blocks || !is_array($area_blocks)) {
             $area_blocks = array();
         }
+        usort($area_blocks, function($a, $b) {
+            $a_pos = $a->get_prop_inherited('visual.priority');
+            $b_pos = $b->get_prop_inherited('visual.priority');
+            return $a_pos - $b_pos;
+        });
         foreach ($area_blocks as $ib) {
             if (! $ib instanceof fx_infoblock) {
                 die();
@@ -96,7 +101,6 @@ class fx_template {
         $html = preg_replace("~<!--.*?-->~s", '', $html);
         $area_regexp = '~(<([a-z0-9]+)[^>]*?>)([\s]*?)'.self::$_area_regexp.'([\s]*?)(</\2>)~s';
         preg_match_all($area_regexp, $html, $areas);
-        dev_log('FOUNDAREAS', $areas, htmlspecialchars($html), $area_regexp);
         $html = preg_replace_callback(
             $area_regexp, 
             function($matches) {

@@ -167,7 +167,6 @@ class fx_controller_component extends fx_controller {
         }
         $items = $f->get_all($params);
         fx::data('content_page')->attache_to_content($items);
-        dev_log('mirror component', $this, $items);
         return array('items' => $items);
     }
     
@@ -221,7 +220,6 @@ class fx_controller_component extends fx_controller {
     
     public function find_template() {
         $tpl_name = 'component_'.$this->get_content_type().".".$this->action;
-        dev_log('auto tpl name', $tpl_name);
         return fx::template($tpl_name);
     }
 }

@@ -13,7 +13,6 @@ class fx_controller_layout extends fx_controller {
                 $page_id, 
                 $layout_id
         );
-        dev_log('ibs found', $page_infoblocks);
         return $page_infoblocks;
     }
     
@@ -54,11 +53,9 @@ class fx_controller_layout extends fx_controller {
     
     protected function _show_admin_panel() {
         if (!$user = fx::env()->get_user()) {
-            //dev_log('no user');
             return;
         }
         if (!$user->perm()->is_supervisor()) {
-            //dev_log('no perm');
             return;
         }
         // инициализация админ панели

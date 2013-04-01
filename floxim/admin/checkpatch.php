@@ -41,7 +41,6 @@ class fx_admin_checkpatch extends fx_admin_floximsite {
         $post = $this->get_base_post();
         $post['action'] = 'get_next_patch';
         $res = $this->send($post);
-        dev_log($post);
         $res = json_decode($res, 1);
         if (is_array($res)) {
             $this->update($res);

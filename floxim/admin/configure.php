@@ -31,7 +31,6 @@ class fx_admin_configure {
             $layout = $this->get_layout_by_subdivision($subdivision);
             
             if (!$layout) {
-            	//dev_log('no layout for', $subdivision);
             	continue;
             }
             

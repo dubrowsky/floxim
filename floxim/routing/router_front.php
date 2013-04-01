@@ -3,7 +3,6 @@ class fx_router_front extends fx_router {
 
     public function route($url = null, $context = null) {
         $site = fx::data('site', $context['site_id']);
-        dev_log($site);
         $page = fx::data('content_page')->get('url', $url, 'site_id', $site['id']);
         if (!$page) {
             return null;
@@ -35,7 +34,6 @@ class fx_router_front extends fx_router {
         }
         $page = fx::data('content_page', $page_id);
         if (!$page) {
-            dev_log('no pg in router_front', debug_backtrace());
             return;
         }
         $site = fx::data('site', $page['site_id']);
@@ -98,9 +96,7 @@ class fx_router_front extends fx_router {
             }
             $areas[$c_area][]= $ib;
         }
-        dev_log('ibs after grouping', $areas);
         fx::dig_set($this->ib_cache, $cache_path, $areas);
-        //$this->_show_admin_panel();
         return $areas;
     }
 }

@@ -249,9 +249,6 @@ class fx_controller_admin_component extends fx_controller_admin {
         $component['description'] = $input['description'];
         $component->save();
         return array('status' => 'ok');
-        dev_log($input);
-        echo "SAVVV";
-        die();
     }
 
     public function import_save($input) {

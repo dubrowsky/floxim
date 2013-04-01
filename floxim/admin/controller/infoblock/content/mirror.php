@@ -23,8 +23,6 @@ class fx_controller_admin_infoblock_content_mirror extends fx_controller_admin_i
             if ($subdivision) {
 				$sub_name = $subdivision->get('name');
 				$values[$content_infoblock['id']] = $content_infoblock['name']." (раздел $sub_name)";
-            } else {
-            	dev_log('subdiv not found', $sub_id);
             }
         }
 

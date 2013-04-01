@@ -65,7 +65,6 @@
 			<h2 fx_var="menu_title">Заголовок меню</h2>
             <ul>
                 <li fx_render=".">
-                    <?=dev_log($item)?>
 					<a class="menu-active" href="{$f_url}">{$f_name}</a>
 				</li>
 			</ul>

@@ -178,9 +178,6 @@ class fx_content extends fx_essence {
     }
     
     public function add_template_record_meta($html) {
-        if (preg_match("~menu_item~", $html)) {
-            dev_log("content essence adder", htmlspecialchars($html));
-        }
         $proc = new fx_template_html($html);
         $html = $proc->add_meta(array(
             'data-fx_content_essence' => array(
