@@ -93,7 +93,7 @@ class fx_field extends fx_essence {
     protected function _after_insert() {
         if ($this['component_id']) {
             $type = $this->get_sql_type();
-            fx_core::get_object()->db->query("ALTER TABLE `{{".$this->get_table()."}}`
+            fx::db()->query("ALTER TABLE `{{".$this->get_table()."}}`
                 ADD COLUMN `".$this->name."` ".$type);
         }
     }

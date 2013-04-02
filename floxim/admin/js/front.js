@@ -467,12 +467,13 @@ fx_front.prototype.set_mode_design = function() {
     }
     
     var add_infoblock = function() {
-        var area = $(this).data('fx_area');
+        var area = $(this).closest('.fx_area').data('fx_area');
+        console.log(area);
         $fx.post({
             essence:'infoblock',
             action:'select_controller',
             page_id:$('body').data('fx_page_id'),
-            area:area,
+            area:area.id,
             fx_admin:true
         }, function(json) {
             $fx_dialog.open_dialog(json);

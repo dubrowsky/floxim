@@ -21,7 +21,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         $actions = array(
             'listing' => 'Список',
             'mirror' => 'Mirror',
-            //'item' => 'Отдельный объект',
+            'record' => 'Отдельный объект'
             //'show' => 'Показать',
             //'add' => 'Добавление',
             //'edit' => 'Редактирование'
@@ -43,7 +43,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             if (!file_exists(fx::config()->DOCUMENT_ROOT.'/controllers/component/'.$c['keyword'])) {
                 continue;
             }
-            foreach (array('item', 'mirror', 'listing', 'add', 'edit') as $c_action) {
+            foreach (array('record', 'mirror', 'listing', 'add', 'edit') as $c_action) {
                 if (isset($actions[$c_action])) {
                     $fields['controller']['values'][]= array(
                         'name' => array('name' => $c['name'], 'url' => null), 
@@ -199,6 +199,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             $infoblock->save();
             $i2l['infoblock_id'] = $infoblock['id'];
             $i2l->save();
+            dev_log('ib saving', $infoblock, $i2l);
             $this->response->set_status_ok();
             return;
         }

@@ -94,14 +94,14 @@ class fx_controller_component extends fx_controller {
     }
     
     protected $_bound = array();
-    public function bind($event, $callback) {
+    public function listen($event, $callback) {
         if (!isset($this->_bound[$event])) {
             $this->_bound[$event] = array();
         }
         $this->_bound[$event][]= $callback;
     }
     
-    public function fire($event, $data = null) {
+    public function trigger($event, $data = null) {
         if (isset($this->_bound[$event]) && is_array($this->_bound[$event])) {
             foreach ( $this->_bound[$event] as $cb) {
                 call_user_func($cb, $data);
@@ -124,8 +124,10 @@ class fx_controller_component extends fx_controller {
         if ($this->param('sorting') == 'manual') {
             $q_params['order'] = 'priority';
         }
+        dev_log('component_'.$this->get_content_type().'.listing', $q_params, $q_conditions);
         $items = $f->get_all($q_conditions, $q_params);
         fx::data('content_page')->attache_to_content($items);
+        $this->trigger('items_ready', $items);
         
         if (fx::env('is_admin')) {
             $c_ib_name = $c_ib->get_prop_inherited('name');
@@ -170,7 +172,7 @@ class fx_controller_component extends fx_controller {
         return array('items' => $items);
     }
     
-    public function item() {
+    public function record() {
         
     }
     
