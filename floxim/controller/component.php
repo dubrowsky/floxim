@@ -124,7 +124,6 @@ class fx_controller_component extends fx_controller {
         if ($this->param('sorting') == 'manual') {
             $q_params['order'] = 'priority';
         }
-        dev_log('component_'.$this->get_content_type().'.listing', $q_params, $q_conditions);
         $items = $f->get_all($q_conditions, $q_params);
         fx::data('content_page')->attache_to_content($items);
         $this->trigger('items_ready', $items);

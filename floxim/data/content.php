@@ -54,7 +54,7 @@ class fx_data_content extends fx_data {
                 return $class_name;
             }
         } catch (Exception $e) {
-            return parent::get_class_name();
+            return 'fx_content';
         }
     }
     
