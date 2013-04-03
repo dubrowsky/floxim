@@ -30,7 +30,7 @@ class fx_controller {
 
     public function set_input($input) {
         $this->input = $input;
-        return $this;
+        return $this;gbxf
     }
     
     public function default_action() {
