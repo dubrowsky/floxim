@@ -149,7 +149,10 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
     public function getIterator() {
         return new ArrayIterator($this->data);
     }
-    
+
+    public function set($offset, $value) {
+        $this->data[$offset]= $value;
+    }
     
     /* Array access */
 

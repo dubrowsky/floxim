@@ -17,6 +17,7 @@ class fx_data {
     /**
      * @return fx_data 
      */
+
     static public function optional($table) {
         return new self($table);
     }

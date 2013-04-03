@@ -33,7 +33,7 @@ abstract class fx_essence implements ArrayAccess {
         return $this;
     }
 
-    public function save($dont_log = false, $action = 'update') { 
+    public function save($dont_log = false, $action = 'update') {
         $this->_before_save();
         // update
         if ($this->data[$this->pk] && $action === 'update') {

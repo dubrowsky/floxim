@@ -13,3 +13,10 @@
         {/render}
     </div>
 {/template}
+
+{template id="breadcrumbs"}
+    {render}
+        <span fx_if="!$item_is_last"><a href="{$f_url}">{$f_name}</a>{%separator} -> {/%}</span>
+        <h1 fx_if="$item_is_last">{$f_name}</h1>
+    {/render}
+{/template}

@@ -37,6 +37,7 @@ class fx_template_processor {
                 continue;
             }
             $file_data = trim(file_get_contents($file));
+            $file_data = preg_replace("~\{\*.*?\*\}~s", '', $file_data);
             if (!preg_match("~^{template~", $file_data)) {
                 preg_match("~/([^/]+)\.tpl~", $file, $file_tpl_name);
                 $file_data = 
@@ -62,7 +63,6 @@ class fx_template_processor {
     }
     
     public function tokenize($source) {
-        $source = preg_replace("~\{\*.*?\*\}~s", '', $source);
         $parts = preg_split(
                 '~(\{[\$\%\/a-z0-9]+[^\{]*?\})~', 
                 $source, 
