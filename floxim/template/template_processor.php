@@ -45,11 +45,26 @@ class fx_template_processor {
                        trim($file_data).
                     '{/template}';
             }
-            // Проверяем наличие fx-аттрибутов в разметке файла
+            // удаляем пробелы в начале строки, 
+            // если она начинается с {...}
+            $file_data = preg_replace(
+                "~(?<=[\n\r])\s+(\{.+?\})~s", 
+                '\1', 
+                $file_data
+            );
+            // или заканчивается на {...}
+            $file_data = preg_replace(
+                "~(\{.+?\})\s+(?=[\n\r])~s",
+                '\1',
+                $file_data
+            );
+            
+            // Проверяем наличие fx-атрибутов в разметке файла
             if (fx_template_html::has_floxim_atts($file_data)) {
                 $T = new fx_template_html($file_data);
                 $file_data = $T->transform_to_floxim();
             }
+            
             $source .= trim($file_data);
         }
         $source .= '{/templates}';
@@ -323,28 +338,35 @@ class fx_template_processor {
         return $code;
     }
     
+    protected $_loop_depth = 0;
     protected function _token_render_to_code(fx_template_token $token) {
+        $this->_loop_depth++;
         $code = "<?\n";
         if (! ($arr_id = $token->get_prop('select')) || $arr_id == '.') {
             $arr_id = '$this->get_var("input.items")';
         }
-        if (preg_match("~\(~", $arr_id)) {
-            $arr_hash_name = '$arr_'.md5($arr_id);
-            $code .= $arr_hash_name .'= '.$arr_id.";\n";
-            $arr_id = $arr_hash_name;
-        }
+        //if (preg_match("~\(~", $arr_id)) {
+        $arr_hash_name = '$arr_'.md5($arr_id);
+        $code .= $arr_hash_name .'= '.$arr_id.";\n";
+        $arr_id = $arr_hash_name;
+        //}
         if (! ($item_alias = $token->get_prop('as') ) ) {
             $item_alias = '$item';
+            if ($this->_loop_depth > 1) {
+                $item_alias .= '_'.$this->_loop_depth;
+            }
         }
         if (! ($item_key = $token->get_prop('key'))) {
-            $item_key = '$item_key';
+            $item_key = $item_alias.'_key';
         }
         if (! ($extract = $token->get_prop('extract'))) {
             $extract = true;
         }
         $counter_id = $item_alias."_index";
-        $code .= "if( " . $arr_id . " instanceof fx_content ) {\n " . $arr_id . " = array(" . $arr_id . "); \n}";
-        $code .= "if (".$arr_id." instanceof Traversable) {\n";
+        $code .= "if( " . $arr_id . " instanceof fx_content ) {\n ";
+        $code .= $arr_id . " = array(" . $arr_id . ");\n";
+        $code .= "}\n";
+        $code .= "if (is_array(".$arr_id.") || ".$arr_id." instanceof Traversable) {\n";
         $code .= $counter_id." = 0;\n";
         $code .= $item_alias."_total = count(".$arr_id.");\n";
         $code .= "\nforeach (".$arr_id." as ".$item_key." => ".$item_alias.") {\n";
@@ -368,6 +390,7 @@ class fx_template_processor {
         $code .= "\t}\n";
         $code .= "}\n"; // close foreach
         $code .= "}\n?>"; // close if
+        $this->_loop_depth--;
         return $code;
     }
     

@@ -3,7 +3,7 @@ class fx_template_html {
     protected $_string = null;
     public function __construct($string) {
         $string = trim($string);
-        $string = preg_replace("~(<[^>]+>)\s+(?=<)~", '$1', $string);
+        //$string = preg_replace("~(<[^>]+>)\s+(?=<)~", '$1', $string);
         $this->_string = $string;
     }
     
@@ -102,6 +102,14 @@ class fx_template_html {
                 $render_macro_tag = '{render';
                 if (!empty($render_id)) {
                     $render_macro_tag .= ' select="'.$render_id.'"';
+                }
+                if ( ($render_as = $n->get_attribute('fx_render_as'))) {
+                    $render_macro_tag .= ' as="'.$render_as.'"';
+                    $n->remove_attribute('fx_render_as');
+                }
+                if (($render_key = $n->get_attribute('fx_render_key'))) {
+                    $render_macro_tag .= ' key="'.$render_key."'";
+                    $n->remove_attribute('fx_render_key');
                 }
                 $render_macro_tag .= '}';
                 $n->parent->add_child_before(fx_html_token::create($render_macro_tag), $n);
@@ -269,7 +277,8 @@ class fx_html_token {
                 $res .= $this->source;
             }
         }
-        if ( ($injections = $this->_injections)) {
+        if ( isset($this->_injections) ) {
+            $injections = $this->_injections;
             $res = preg_replace_callback(
                 "~#inj(\d+)#~", 
                 function($matches) use ($injections) {
@@ -296,7 +305,6 @@ class fx_html_token {
         return $this->children;
     }
     
-    protected $_injections = null;
     protected function _parse_attributes() {
         $source = preg_replace("~^<[a-z0-9_]+~", '', $this->source);
         // Сохраняем в массив field-маркеры, восстановим при обратной сборке

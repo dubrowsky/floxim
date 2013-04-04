@@ -138,21 +138,23 @@ class fx_content extends fx_essence {
                 dev_log('no component!', $this);
                 die();
             }
-            $content_fields = fx::data('component', $this->component_id)->fields();
+            $component = fx::data('component', $this->component_id);
+            $content_fields = $component->fields();
             foreach ($this->data as $k => $v) {
-                foreach ($content_fields as $cf) {
-                    if ($cf['name'] == $k) {
-                        $this->_fields_to_show[fx_content::field_to_show_prefix.$k] = new fx_template_field($v, array(
-                            'var_type' => 'content', 
-                            'content_id' => $this['id'],
-                            'content_type_id' => $this->get_component_id(),
-                            'id' => $cf['id'],
-                            'name' => $cf['name'],
-                            'title' => $cf['description'],
-                            'editable' => true
-                        ));
-                        continue;
-                    }
+                $cf = $content_fields->find_one(array('name' => $k));
+                $fkey = fx_content::field_to_show_prefix.$k;
+                if ($cf) {
+                    $this->_fields_to_show[$fkey] = new fx_template_field($v, array(
+                        'var_type' => 'content', 
+                        'content_id' => $this['id'],
+                        'content_type_id' => $this->get_component_id(),
+                        'id' => $cf['id'],
+                        'name' => $cf['name'],
+                        'title' => $cf['description'],
+                        'editable' => true
+                    ));
+                } else {
+                    $this->_fields_to_show[$fkey] = $v;
                 }
             }
             if ( ($page = $this->get_page())) {
