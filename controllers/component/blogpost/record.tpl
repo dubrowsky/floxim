@@ -1,5 +1,6 @@
 <div class="post" fx_render=".">
     <h1><a href="{$f_url}">{$f_header}</a></h1>
+    ololo trololo
     <p>{$f_full_text}</p>
     <div class="info">
         {*
