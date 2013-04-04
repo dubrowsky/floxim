@@ -328,6 +328,11 @@ class fx_template_processor {
         if (! ($arr_id = $token->get_prop('select')) || $arr_id == '.') {
             $arr_id = '$this->get_var("input.items")';
         }
+        if (preg_match("~\(~", $arr_id)) {
+            $arr_hash_name = '$arr_'.md5($arr_id);
+            $code .= $arr_hash_name .'= '.$arr_id.";\n";
+            $arr_id = $arr_hash_name;
+        }
         if (! ($item_alias = $token->get_prop('as') ) ) {
             $item_alias = '$item';
         }
@@ -338,6 +343,7 @@ class fx_template_processor {
             $extract = true;
         }
         $counter_id = $item_alias."_index";
+        $code .= "if( " . $arr_id . " instanceof fx_content ) {\n " . $arr_id . " = array(" . $arr_id . "); \n}";
         $code .= "if (".$arr_id." instanceof Traversable) {\n";
         $code .= $counter_id." = 0;\n";
         $code .= $item_alias."_total = count(".$arr_id.");\n";
