@@ -131,6 +131,5 @@ class fx_controller_infoblock extends fx_controller {
             $html_result = $html_proc->add_meta($meta);
         }
         return $html_result;
-        return $html_result;
     }
 }

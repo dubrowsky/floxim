@@ -159,6 +159,8 @@
                     	} else {
                             var parent = json.parent;  
                     	}
+                        
+                        console.log(parent);
                     	
                     	var check_parent_state = function() {
                             var do_show = true;

@@ -34,9 +34,11 @@ class fx_template_html {
         $tree = $this->make_tree($this->tokenize());
         $children = $tree->get_children();
         if (count($children) == 1) {
-            $root = $children[0];
-            $root->add_meta($meta);
-            return $tree->serialize();
+            if ($children[0]->name != 'text') {
+                $root = $children[0];
+                $root->add_meta($meta);
+                return $tree->serialize();
+            }
         }
         $wrapper = fx_html_token::create('<div>');
         $wrapper->add_meta($meta);
