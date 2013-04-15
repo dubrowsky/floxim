@@ -154,8 +154,8 @@ class fx_controller_admin extends fx_controller {
         $fx_core->page->add_js_file('/floxim/admin/js/menu/submenu.js');
         $fx_core->page->add_js_file('/floxim/admin/js/menu/additional.js');
         $fx_core->page->add_js_file('/floxim/admin/js/menu/breadcrumb.js');
-        $fx_core->page->add_js_file('/floxim/editors/elrte/elrte.full.js');
-        $fx_core->page->add_js_file('/floxim/editors/elrte/i18n/elrte.ru.js');
+        $fx_core->page->add_js_file('/floxim/lib/editors/elrte/elrte.full.js');
+        $fx_core->page->add_js_file('/floxim/lib/editors/elrte/i18n/elrte.ru.js');
         $fx_core->page->add_js_file('/floxim/lib/js/jquery.form.js');
         $fx_core->page->add_js_file('/floxim/lib/js/jquery.jstree.js');
         $fx_core->page->add_js_file('/floxim/lib/js/jquery-gp-gallery.js');

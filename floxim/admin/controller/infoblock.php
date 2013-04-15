@@ -1,6 +1,15 @@
 <?php
 class fx_controller_admin_infoblock extends fx_controller_admin {
 
+    protected $_component_actions = array(
+        'listing' => 'Список',
+        'mirror' => 'Mirror',
+        'record' => 'Отдельный объект'
+        //'add' => 'Добавление',
+        //'edit' => 'Редактирование'
+    );
+    
+    
     /**
      * Выбор контроллера-экшна
      */
@@ -18,15 +27,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                 'component' => 'Компонент'
         );
         
-        $actions = array(
-            'listing' => 'Список',
-            'mirror' => 'Mirror',
-            'record' => 'Отдельный объект'
-            //'show' => 'Показать',
-            //'add' => 'Добавление',
-            //'edit' => 'Редактирование'
-        );
-    	
+        	
         /* Список контроллеров */
         $fields['controller']= array(
             'type' => 'list', 
@@ -44,10 +45,10 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                 continue;
             }
             foreach (array('record', 'mirror', 'listing', 'add', 'edit') as $c_action) {
-                if (isset($actions[$c_action])) {
+                if (isset($this->_component_actions[$c_action])) {
                     $fields['controller']['values'][]= array(
                         'name' => array('name' => $c['name'], 'url' => null), 
-                        'action' => $actions[$c_action],
+                        'action' => $this->_component_actions[$c_action],
                         'type' => $types['component'],
                         'group' => $c['group'],
                         'id' => 'component_'.$c['keyword'].'.'.$c_action
@@ -59,7 +60,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
     	foreach (fx::data('widget')->get_all() as  $c){
             $fields['controller']['values'][]= array(
                 'name' => array('name' => $c['name'], 'url' => null), 
-                'action' => $actions['show'],
+                'action' => 'Показать',
                 'type' => $types['widget'],
                 'group' => $c['group'],
                 'id' => 'widget_'.$c['keyword'].'.show'
@@ -77,6 +78,17 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         return $result;
     }
     
+    protected function _get_controller_name($controller) {
+        list($controller, $action) = explode(".", $controller);
+        list($type, $controller) = explode("_", $controller);
+        $ctr = fx::data($type, $controller);
+        if ($type == 'component') {
+            $action_name = $this->_component_actions[$action];
+        } else {
+            $action_name = 'Виджет';
+        }
+        return $ctr['name'].' / '.$action_name;
+    }
     
     /**
      * Выбор настроек для контроллера-экшна
@@ -101,6 +113,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             // Создаем новый, тип и ID контроллера получаем с предыдущего шага
             list($controller, $action) = explode(".", $input['controller']);
             $infoblock = fx::data("infoblock")->create(array(
+                'name' => $this->_get_controller_name($input['controller']),
                 'controller' => $controller,
                 'action' => $action,
                 'page_id' => $input['page_id'],
@@ -117,24 +130,28 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         }
         
         $controller = fx::controller($controller);
+        dev_log($controller);
         $settings = $controller->get_action_settings($action);
         foreach ($infoblock['params'] as $ib_param => $ib_param_value) {
             if (isset($settings[$ib_param])) {
                 $settings[$ib_param]['value'] = $ib_param_value;
             }
         }
-        if (count($settings) > 0) {
-            $this->response->add_tab('settings', 'Что показывать');
-            $this->response->add_fields(
-                    array(array(
-                        'label' => 'Название блока', 
-                        'name' => 'name', 
-                        'value' => $infoblock['name']
-                    )),
-                    'settings'
-            );
-            $this->response->add_fields($settings, 'settings', 'params');
-        }
+        
+        //$controller_name = $controller
+        
+        //if (count($settings) > 0) {
+        $this->response->add_tab('settings', 'Что показывать');
+        $this->response->add_fields(
+                array(array(
+                    'label' => 'Название блока', 
+                    'name' => 'name', 
+                    'value' => $infoblock['name']
+                )),
+                'settings'
+        );
+        $this->response->add_fields($settings, 'settings', 'params');
+        //}
         
         $this->response->add_tab('visual', 'Как показывать');
         $format_fields = $this->_get_format_fields($infoblock);
@@ -170,9 +187,17 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                 }
             }
             $infoblock['params'] = $action_params;
+            if (!is_array($infoblock['scope'])) {
+                $infoblock['scope'] = array();
+            }
+            $ib_scope = array(
+                'pages' => $input['scope']['pages']
+            );
+            $infoblock['scope'] = $ib_scope;
+            $infoblock['page_id'] = $input['scope']['page_id'];
             
             // SCOPE LOGIC
-            $ib_scope = array();
+            /*
             switch ( $input['scope']['pages']) {
                 case 'all':
                     $infoblock['page_id'] = fx::env('home_id');
@@ -194,12 +219,14 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             }
             
             $infoblock['scope'] = $ib_scope;
+             * 
+             */
             $i2l['wrapper'] = fx::dig($input, 'visual.wrapper');
             $i2l['template'] = fx::dig($input, 'visual.template');
             $infoblock->save();
             $i2l['infoblock_id'] = $infoblock['id'];
             $i2l->save();
-            dev_log('ib saving', $infoblock, $i2l);
+            dev_log('ib saving', $infoblock, $i2l, $input);
             $this->response->set_status_ok();
             return;
         }
@@ -240,34 +267,44 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
     protected function _get_scope_fields(fx_infoblock $infoblock, fx_content_page $c_page) {
         
         $fields = array();
+        
+        $path_vals = array('0' => 'На всех страницах');
+        $path_ids = $c_page->get_parent_ids();
+        $path = fx::data('content_page', $path_ids);
+        $path []= $c_page;
+        foreach ($path as $level => $pp) {
+            $path_vals [$pp['id']]= str_repeat('&nbsp;&nbsp;&nbsp;', $level).$pp['name'];
+        }
+        dev_log($path_vals);
+        
+        $fields []= array(
+            'type' => 'select', 
+            'name' => 'page_id', 
+            'label' => 'Страница',
+            'values' => $path_vals,
+            'value' => $infoblock['page_id']
+        );
+        
         if ( ! ($c_page_val = fx::dig($infoblock, 'scope.pages')) ) {
             $c_page_val = 'all';
         }
-        $mnt_page = null;
-        if ( ($mnt_page_id = $infoblock['page_id']) && $mnt_page_id != $c_page['id']) {
-            $mnt_page = fx::data('content_page', $mnt_page_id);
-        }
         
         $page_vals = array(
-            'all' => 'На всех страницах'
+            'this' => 'Только на этой странице'
         );
-        $page_vals['this'] = 'Только на этой странице ('.$c_page['url'].')';
-        if ($mnt_page && $c_page_val == 'this') {
-            $page_vals['mnt'] = 'На странице '.$mnt_page['url'];
-        }
+        
         if ($c_page['url'] != '/') {
-            $page_vals['brothers'] = 'На страницах этого уровня';
-            $page_vals['descendants'] = 'Во всем разделе';
+            $page_vals['children'] = 'Только на вложеннных страницах';
+            $page_vals['descendants'] = 'На этой и на вложенных';
         }
         
         $fields []= array(
             'type' => 'select', 
             'name' => 'pages', 
             'values' => $page_vals,
-            'value' => $c_page_val
+            'value' => $c_page_val,
+            'parent' => array('page_id' => '!=0')
         );
-        
-        dev_log('scope fields', $fields, $infoblock, $c_page, $mnt_page, $mnt_page_id);
         return $fields;
     }
     
@@ -294,7 +331,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         // варианты шаблона из лейаута
         foreach ( fx::template('layout_'.$layout_essence['keyword'])->get_template_variants() as $tplv) {
             $full_id = 'layout_'.$layout_essence['keyword'].'.'.$tplv['id'];
-            dev_log('lay', $full_id, $tplv['for']);
+            //dev_log('lay', $full_id, $tplv['for']);
             if ($tplv['for'] == 'wrap') {
                 $wrappers[$full_id] = $tplv['name'];
             } elseif (in_array($tplv['for'], $action_variants)) {
@@ -304,7 +341,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         // варианты шаблонов из шаблона контроллера
         foreach (fx::template($infoblock['controller'])->get_template_variants() as $tplv) {
             $full_id = $infoblock['controller'].'.'.$tplv['id'];
-            dev_log('ctr', $full_id, $tplv['for']);
+            //dev_log('ctr', $full_id, $tplv['for']);
             if ($tplv['for'] == 'wrap') {
                 $wrappers[$full_id] = $tplv['name'];
             } elseif (in_array($tplv['for'], $action_variants)) {

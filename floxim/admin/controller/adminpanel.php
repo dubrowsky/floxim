@@ -15,8 +15,8 @@ class fx_controller_admin_adminpanel extends fx_controller_admin {
         $fx_core->page->add_js_file('/floxim/admin/js/dialog.js');
         $fx_core->page->add_js_file('/floxim/admin/js/fields.js');
         $fx_core->page->add_js_file('/floxim/admin/js/edit-in-place.js');
-        $fx_core->page->add_js_file('floxim/editors/elrte/elrte.full.js');
-        $fx_core->page->add_js_file('/floxim/editors/elrte/i18n/elrte.ru.js');
+        $fx_core->page->add_js_file('floxim/lib/editors/elrte/elrte.full.js');
+        $fx_core->page->add_js_file('/floxim/lib/editors/elrte/i18n/elrte.ru.js');
         $fx_core->page->add_js_file('/floxim/lib/js/jquery.form.js');
         $fx_core->page->add_js_file('/floxim/lib/js/jquery.jstree.js');
 

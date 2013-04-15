@@ -157,6 +157,14 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
     /* Array access */
 
     public function offsetSet($offset, $value) {
+        if (is_null($offset)) {
+            $last_key = end(array_keys($this->data));
+            if (!$last_key) {
+                $offset = 0;
+            } else {
+                $offset = $last_key+1;
+            }
+        }
         $this->set($offset, $value);
     }
 

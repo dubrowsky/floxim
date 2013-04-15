@@ -26,4 +26,4 @@ echo "</pre>";
     <a href="#"><div class="social" id="lj">&nbsp;</div></a>
     <a href="#"><div class="social" id="rss">&nbsp;</div></a>
 </div>
-eoooooo
+Hello, i am blog record!

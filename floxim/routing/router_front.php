@@ -64,7 +64,7 @@ class fx_router_front extends fx_router {
                 continue;
             }
             // scope - "этот уровень", а мы смотрим родителя
-            if (fx::dig($ib, 'scope.pages') == 'descendants' && $ib['page_id'] == $page_id) {
+            if (fx::dig($ib, 'scope.pages') == 'children' && $ib['page_id'] == $page_id) {
                 continue;
             }
             $ib_visuals = array();
