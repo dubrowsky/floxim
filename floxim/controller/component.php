@@ -53,10 +53,16 @@ class fx_controller_component extends fx_controller {
                 'custom' => 'Произвольный'
             )
         );
-        $fields['parent_id']= array(
+        /*$fields['parent_id']= array(
             'name' => 'parent_id',
             'label' => 'Выбрать родителя',
             'parent' => array('parent_type' => 'custom')
+        );*/
+        $fields['parent_id'] = array(
+            'type' => 'id_selector',
+            'label' => 'Родитель',
+            'hidden' => true,
+            'value' => []
         );
         return $fields;
     }
@@ -172,17 +178,7 @@ class fx_controller_component extends fx_controller {
     }
     
     public function record() {
-        $component = $this->get_component();
-        $datatype = $this->_content_type;
-        $content = fx::data('content_' . $datatype, $component['id']);
-        return $content;
-        // dev_log("this",$this);
-        // dev_log("component",$component);
-        // dev_log("content",$content);
-
-
-        // dev_log($component);
-        // exit;
+        return false;
     }
     
     

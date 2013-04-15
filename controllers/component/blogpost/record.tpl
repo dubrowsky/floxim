@@ -1,12 +1,9 @@
-тут по идее должен быть пост
 <?php
 echo "<pre>";
-echo "\n=======================\n";
-$arr = get_defined_vars();
-print_r($arr);
+echo "items:\n";
+print_r($items);
 echo "\n=======================\n";
 echo "</pre>";
-
 ?>
 
 <div class="post" fx_render=".">
@@ -26,4 +23,3 @@ echo "</pre>";
     <a href="#"><div class="social" id="lj">&nbsp;</div></a>
     <a href="#"><div class="social" id="rss">&nbsp;</div></a>
 </div>
-Hello, i am blog record!
