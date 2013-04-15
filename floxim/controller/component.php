@@ -172,7 +172,17 @@ class fx_controller_component extends fx_controller {
     }
     
     public function record() {
-        
+        $component = $this->get_component();
+        $datatype = $this->_content_type;
+        $content = fx::data('content_' . $datatype, $component['id']);
+        return $content;
+        // dev_log("this",$this);
+        // dev_log("component",$component);
+        // dev_log("content",$content);
+
+
+        // dev_log($component);
+        // exit;
     }
     
     

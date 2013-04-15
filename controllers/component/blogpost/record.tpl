@@ -1,6 +1,17 @@
+тут по идее должен быть пост
+<?php
+echo "<pre>";
+echo "\n=======================\n";
+$arr = get_defined_vars();
+print_r($arr);
+echo "\n=======================\n";
+echo "</pre>";
+
+?>
+
 <div class="post" fx_render=".">
+
     <h1><a href="{$f_url}">{$f_header}</a></h1>
-    ololo trololo
     <p>{$f_full_text}</p>
     <div class="info">
         {*
