@@ -115,6 +115,13 @@ class fx_controller_component extends fx_controller {
         }
     }
 
+    public function record() {
+        $page = fx::data('content_page', fx::env('page'));
+        $content = fx::data('content_' . $page['content_type'], $page['content_id']);
+        $content->set_page($page);
+        return array('items' => $content);
+    }
+
 
     public function listing() {
         $f = $this->_finder();
@@ -122,7 +129,6 @@ class fx_controller_component extends fx_controller {
         $q_params = array();
         
         $content_type = $this->get_content_type();
-        $component = fx::data('component', $content_type);
         $c_ib = fx::data('infoblock', $this->param('infoblock_id'));
         $root_ib = $c_ib->get_root_infoblock();
         $q_conditions['infoblock_id']= $root_ib['id'];
@@ -133,9 +139,10 @@ class fx_controller_component extends fx_controller {
         $items = $f->get_all($q_conditions, $q_params);
         fx::data('content_page')->attache_to_content($items);
         $this->trigger('items_ready', $items);
-        
+
         if (fx::env('is_admin')) {
             $c_ib_name = $c_ib->get_prop_inherited('name');
+            $component = fx::data('component', $content_type);
             $adder_title = $component['name'].' &rarr; '.($c_ib_name ? $c_ib_name:$c_ib['id']);
             $this->_meta['accept_content'] = array(
                 array(
@@ -177,12 +184,8 @@ class fx_controller_component extends fx_controller {
         return array('items' => $items);
     }
     
-    public function record() {
-        return false;
-    }
-    
-    
-    /**
+
+     /**
      * $_content_type может быть одним из значений
      * в таблице fx_component в поле keyword
      * @var string 

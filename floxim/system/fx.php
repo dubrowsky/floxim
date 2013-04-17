@@ -35,7 +35,7 @@ class fx {
     /* Data finder instances collection */
     protected static $data_finders = array();
     
-    /* Получить дата-файндер для указанного типа данных, либо объект(ы) по id
+    /* Получить дата-файндер для указанного типа content_id данных, либо объект(ы) по id
      * @param string $datatype название типа данных - 'component', 'content_news'
      * @param mixed [$id] id или массив ids
     */

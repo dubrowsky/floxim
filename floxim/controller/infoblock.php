@@ -24,7 +24,7 @@ class fx_controller_infoblock extends fx_controller {
     /**************************************
     * TODO Метод лдя получения параметров с которыми должен быть вызван контроллер, чтобы контроллер ничего не знал о том, где и кто его вызывает
     ***************************************/
-    private function prepare_controller_data() {
+    private function prepare_controller_params() {
         echo "<pre>";
         $infoblock = $this->_get_infoblock();
         $params = $infoblock->get_prop_inherited('params');
@@ -67,11 +67,17 @@ class fx_controller_infoblock extends fx_controller {
         if (!isset($params['infoblock_id'])) {
             $params['infoblock_id'] = $infoblock['id'];
         }
+
+
+        //
         $controller = fx::controller(
             $infoblock->get_prop_inherited('controller'), 
             $params, 
             $infoblock->get_prop_inherited('action')
         );
+
+
+
         $result = $controller->process();
         $controller_meta = fx::dig($result, '_meta');
         if (fx::dig($controller_meta, 'disabled') && !fx::env('is_admin')) {
@@ -91,6 +97,7 @@ class fx_controller_infoblock extends fx_controller {
         }
         $tpl_params = $infoblock->get_prop_inherited('visual.template_visual');
         $tpl_params['input'] = $result;
+
         $tpl_params['infoblock'] = $infoblock;
         $output = $tpl->render($tpl_params);
         if (fx::env('is_admin')) {
