@@ -1,7 +1,6 @@
 <?php
 
 /* $Id: fx_core.class.php 4714 2011-05-20 10:48:13Z denis $ */
-
 /**
  * For IDE autocomplete:
  * @property fx_data_site $site
