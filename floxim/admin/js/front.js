@@ -21,7 +21,7 @@ fx_front = function () {
         }
     });
     
-    $('html').on('click', '*', function(e) {
+    $('html').on('click', function(e) {
         if ($fx.front.mode_selectable_selector == null) {
             return;
         }
@@ -31,12 +31,14 @@ fx_front = function () {
         }
         var closest_selectable = target.closest($fx.front.mode_selectable_selector);
         if (closest_selectable.length > 0) {
+            // перемещение между страницами по ссылкам с зажатым контролом,
+            // и даже сохраняет текущий режим
+            if (e.target.nodeName == 'A' && e.ctrlKey) {
+                document.location.href = e.target.href+document.location.hash;
+                return false;
+            }
             $fx.front.select_item(closest_selectable.get(0));
             return false;
-        }
-        var tn = target.get(0), parents = [];
-        while ( tn = tn.parentNode ) {
-            parents.push(tn);
         }
         $fx.front.deselect_item();
     });

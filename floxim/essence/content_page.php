@@ -13,5 +13,9 @@ class fx_content_page extends fx_content {
         }
         return $ids;
     }
+    
+    public function get_path() {
+        
+    }
 }
 ?>

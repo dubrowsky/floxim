@@ -80,6 +80,7 @@
 		<div class="sep"></div>
 	</div>
 <!--//баннеры-->
+    <div fx_area="footer"></div>
 	<div id="footer">
 		<div class="left" fx_var="copy">© 2010 группа компаний «Netcat».<br />Все права защищены.</div>
 		<div class="middle" fx_var="contacts">Адрес: г. Москва, ул. Мануфактурная, д. 14<br />Телефон и факс: (831) 220-80-18</div>

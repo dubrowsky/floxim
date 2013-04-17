@@ -275,7 +275,6 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         foreach ($path as $level => $pp) {
             $path_vals [$pp['id']]= str_repeat('&nbsp;&nbsp;&nbsp;', $level).$pp['name'];
         }
-        dev_log($path_vals);
         
         $fields []= array(
             'type' => 'select', 
@@ -293,10 +292,10 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             'this' => 'Только на этой странице'
         );
         
-        if ($c_page['url'] != '/') {
+        //if ($c_page['url'] != '/') {
             $page_vals['children'] = 'Только на вложеннных страницах';
             $page_vals['descendants'] = 'На этой и на вложенных';
-        }
+        //}
         
         $fields []= array(
             'type' => 'select', 

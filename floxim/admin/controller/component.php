@@ -193,7 +193,6 @@ class fx_controller_admin_component extends fx_controller_admin {
     }
 
     public function add_save($input) {
-        $fx_core = fx_core::get_object();
         $result = array('status' => 'ok');
 
         $data['name'] = trim($input['name']);
@@ -214,13 +213,15 @@ class fx_controller_admin_component extends fx_controller_admin {
         }
 
         try {
-            $component->create_dir();
+            //$component->create_dir();
             $component->save();
-
+            /*
             $ctpl_data = array('component_id' => $component['id'], 'keyword' => 'main', 'name' => $component['name']);
             $ctpl = fx::data('ctpl')->create($ctpl_data);
             $ctpl->create_file();
             $ctpl->save();
+             * 
+             */
         } catch (Exception $e) {
             $result['status'] = 'error';
             $result['text'][] = $e->getMessage();
