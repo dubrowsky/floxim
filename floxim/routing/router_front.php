@@ -67,6 +67,11 @@ class fx_router_front extends fx_router {
             if (fx::dig($ib, 'scope.pages') == 'children' && $ib['page_id'] == $page_id) {
                 continue;
             }
+            // проверяем на соответствие фильтра по типу страницы
+            $scope_page_type = fx::dig($ib, 'scope.page_type');
+            if ( $scope_page_type && $scope_page_type != $page['content_type'] ) {
+                continue;
+            }
             $ib_visuals = array();
             $c_visual = null;
             foreach ($visual as $vis) {

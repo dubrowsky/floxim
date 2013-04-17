@@ -53,16 +53,10 @@ class fx_controller_component extends fx_controller {
                 'custom' => 'Произвольный'
             )
         );
-        /*$fields['parent_id']= array(
+        $fields['parent_id']= array(
             'name' => 'parent_id',
             'label' => 'Выбрать родителя',
             'parent' => array('parent_type' => 'custom')
-        );*/
-        $fields['parent_id'] = array(
-            'type' => 'id_selector',
-            'label' => 'Родитель',
-            'hidden' => true,
-            'value' => []
         );
         return $fields;
     }

@@ -191,7 +191,8 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                 $infoblock['scope'] = array();
             }
             $ib_scope = array(
-                'pages' => $input['scope']['pages']
+                'pages' => $input['scope']['pages'],
+                'page_type' => $input['scope']['page_type']
             );
             $infoblock['scope'] = $ib_scope;
             $infoblock['page_id'] = $input['scope']['page_id'];
@@ -303,6 +304,12 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             'values' => $page_vals,
             'value' => $c_page_val,
             'parent' => array('page_id' => '!=0')
+        );
+        
+        $fields []= array(
+            'name' => 'page_type',
+            'label' => 'Если тип страницы (пусто - любой)',
+            'value' => fx::dig($infoblock, 'scope.page_type')
         );
         return $fields;
     }

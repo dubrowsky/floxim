@@ -33,8 +33,9 @@ fx_front = function () {
         if (closest_selectable.length > 0) {
             // перемещение между страницами по ссылкам с зажатым контролом,
             // и даже сохраняет текущий режим
-            if (e.target.nodeName == 'A' && e.ctrlKey) {
-                document.location.href = e.target.href+document.location.hash;
+            var clicked_link = $(e.target).closest('a');
+            if (clicked_link.length > 0 && e.ctrlKey && clicked_link.attr('href')) {
+                document.location.href = clicked_link.attr('href')+document.location.hash;
                 return false;
             }
             $fx.front.select_item(closest_selectable.get(0));
