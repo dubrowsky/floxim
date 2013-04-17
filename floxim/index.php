@@ -14,7 +14,7 @@ if ( ($controller = fx::router()->route() ) ) {
         $result = $template->render(array('input' => $result));
         $result = fx::page()->post_proccess($result);
     }
-    
+
     echo $result;
     echo ob_get_clean();
     die();
