@@ -51,7 +51,7 @@ class fx_router_front extends fx_router {
         $visual = fx::data('infoblock_visual')->get_for_infoblocks($infoblocks);
         // id-шники наследованных блоков
         $inherited_ids = $infoblocks->find('parent_infoblock_id')->get_values('parent_infoblock_id');
-        
+        dev_log($inherited_ids);
         foreach ($infoblocks as $ib) {
             // если инфоблок наследуется одним из привязанных к текущей странице инфоблоков,
             // помечаем его как наследуемый

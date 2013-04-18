@@ -129,7 +129,7 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
         return $this;
     }
     
-    public function get_values($field, $key_field = null) {
+    public function get_values($field, $key_field = null, $as_collection = false) {
         $result = array();
         foreach ($this->data as $k => $v) {
             $res_key = $key_field ? $key_field : $k;
@@ -140,8 +140,65 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
             } else {
                 $result[$res_key] = null;
             }
+            // если понадобится автоопределение, создавать ли коллекцию или массив
+            /*
+            if ($as_collection == 'auto' && gettype($result[$res_key]) != 'object') {
+                $as_collection = false;
+            }
+             */
+        }
+        if ($as_collection) {
+            $result = new fx_collection($result);
         }
         return $result;
+    }
+    
+    /*
+     * $users = fx::data("user")->all();
+     * $posts = fx::data("post")->all();
+     * $user['posts'] = fx_collection(1,2,3);
+     * $users->attache_many($posts, 'author_id', 'posts');
+     * 
+     * $post['author'] = $user;
+     * $posts->attache($users, 'this.creator_id=author.user_id')
+     */
+    public function attache(fx_collection $what, $cond_field, $res_field = null, $check_field = 'id') {
+        if ($res_field === null) {
+            $res_field = preg_replace("~_id$~", '', $cond_field);
+        }
+        
+        foreach ($what as $what_item) {
+            // $what_item = тег
+            // $cond_field = 'tag_id'
+            // $target_item = тагпост[tag_id = what_item.id]
+            $target_items = $this->find($cond_field, $what_item[$check_field]);
+            foreach ($target_items as $target_item) {
+                $target_item[$res_field] = $what_item;
+            }
+        }
+        return $this;
+    }
+    
+    public function attache_many(
+            fx_collection $what, 
+            $cond_field, 
+            $res_field, 
+            $check_field = 'id',
+            $extract_field = null) {
+        // what = [post1,post2]
+        // this = [user1, user2]
+        // cond_field = 'author'
+        // res_field = 'posts'
+        foreach ($this as $our_item) {
+            $what_items = $what->find($cond_field, $our_item[$check_field]);
+            if (count($what_items) > 0) {
+                if (!is_null($extract_field)) {
+                    $what_items = $what_items->get_values($extract_field, null, true);
+                }
+                $our_item[$res_field]=$what_items;
+            }
+        }
+        return $this;
     }
     
     /* IteratorAggregate */
@@ -175,12 +232,5 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
     public function offsetGet($offset) {
         return isset($this->data[$offset]) ? $this->data[$offset] : null;
     }
-}
-
-if (preg_match("~collection~", $_SERVER['REQUEST_URI'])) {
-    require_once '../../boot.php';
-    $pages = fx::data('content_page')->get_all();
-    $page = $pages->find('parent_id', 6)->get_values('url');
-    echo "<pre>" . htmlspecialchars(print_r($page, 1)) . "</pre>";
 }
 ?>
