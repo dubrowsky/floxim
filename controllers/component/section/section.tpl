@@ -16,7 +16,6 @@
 
 {template id="breadcrumbs"}
     <div class="breadcrumbs">
-        <?=dev_log($this->get_var('input.items'))?>
         {render}
             <span fx_if="!$item_is_last"><a href="{$f_url}">{$f_name}</a>{%separator} -> {/%}</span>
             <h1 fx_if="$item_is_last">{$f_name}</h1>

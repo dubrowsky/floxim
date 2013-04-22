@@ -2,6 +2,16 @@
 
 class fx_data_content extends fx_data {
 
+    public function get_tables() {
+        $chain = fx::data('component', $this->component_id)->get_chain();
+        $tables = array();
+        foreach ($chain as $comp) {
+            $tables []= $comp['keyword'] == 'content' ? 'content' : 'content_'.$comp['keyword'];
+        }
+        return $tables;
+        //return $chain->get_values('keyword');
+    }
+    
     protected $component_id = null;
     
     public function __construct($table = null) {
@@ -11,12 +21,6 @@ class fx_data_content extends fx_data {
         }
     }
     
-    
-
-    public function get_by_id($id = '') {
-        return $this->get('id', $id);
-    }
-
     public function set_component($component_id_or_code) {
         $component = fx::data('component', $component_id_or_code);
         if (!$component) {
@@ -46,16 +50,33 @@ class fx_data_content extends fx_data {
         return fx_core::get_object()->db->get_var("SELECT MAX(`priority`)+1 FROM `{{".$this->table."}}`");
     }
     
-    protected function get_class_name() {
-        $component = fx::data('component')->get('id', $this->component_id);
-        $class_name = 'fx_content_'.$component['keyword'];
-        try {
-            if (class_exists($class_name)) {
-                return $class_name;
+    protected static $content_classes = array();
+    
+    protected function get_class_name($data = null) {
+        if ($data && isset($data['type'])) {
+            if (isset(fx_data_content::$content_classes[$data['type']])) {
+                return fx_data_content::$content_classes[$data['type']];
             }
-        } catch (Exception $e) {
-            return 'fx_content';
+            $c_type = $data['type'];
+            $component = fx::data('component', $c_type);
+        } else {
+            $component = fx::data('component', $this->component_id);
+            $c_type = $component['keyword'];
         }
+        
+        $chain = array_reverse($component->get_chain());
+        
+        $exists = false;
+        
+        while(!$exists && count($chain) > 0) {
+            $c_level = array_shift($chain);
+            $class_name = $c_level['keyword'] == 'content' ? 'fx_content' : 'fx_content_'.$c_level['keyword'];
+            try {
+                $exists = class_exists($class_name);
+            } catch (Exception $e) {}
+        }
+        fx_data_content::$content_classes[$data['type']] = $class_name;
+        return $class_name;
     }
     
     /**
@@ -64,13 +85,12 @@ class fx_data_content extends fx_data {
      * @return fx_content
      */
     public function essence($data = array()) {
-        $essence = parent::essence($data);
-        if (!$this->component_id) {
-            dev_log('no clid', $this);
-            die("NO CLID");
-        }
-        $essence->set_component_id($this->component_id);
-        return $essence;
+        $classname = $this->get_class_name($data);
+        $obj = new $classname(array(
+            'data' => $data,
+            'component_id' => $this->component_id
+        ));
+        return $obj;
     }
 }
 ?>

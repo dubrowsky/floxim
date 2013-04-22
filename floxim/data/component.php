@@ -27,10 +27,13 @@ class fx_data_component extends fx_data {
     
     public function get_by_id($id) {
         if (!is_numeric($id)) {
-            $component = $this->get_by_keyword($id);
+            $this->where('keyword', $id);
+            //$component = $this->get_by_keyword($id);
         } else {
-            $component = parent::get_by_id($id);
+            $this->where('id', $id);
+            //$component = parent::get_by_id($id);
         }
+        return $this->one();
         return $component;
     }
     

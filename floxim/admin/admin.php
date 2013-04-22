@@ -27,29 +27,23 @@ class fx_controller_admin extends fx_controller {
     }
 
     public function process() {
-        
-        $fx_core = fx_core::get_object();
-        $user = $fx_core->env->get_user();
-        
         $input = $this->input;
         $action = $this->action;
         
-        if (!$user || !$user->perm()->is_supervisor()) {
-            
+        if (!fx::env('is_admin')) {
             $result = $this->admin_auth($input);
             
             if (is_string($result)) {
                 return $result;
-            }
-            #die("Нет прав!");
+            }    
         }
-
+        
         if (!$action || !is_callable(array($this, $action))) {
             die("Error! Class:".get_class($this).", action:".htmlspecialchars($action));
         }
         
         $this->response = new fx_admin_response($input);
-
+        
         //fx_admin_checkpatch::check();
 
         if ($this->save_history && $input['posting']) {
@@ -125,7 +119,7 @@ class fx_controller_admin extends fx_controller {
      * собирает все сопутсвующие файлы в fx_core::get_object()->page'е
      * @return string
      */
-    public function admin_office($input)
+    public function admin_office()
     {   
         $fx_core = fx_core::get_object();
 
@@ -162,7 +156,8 @@ class fx_controller_admin extends fx_controller {
         $fx_core->page->add_js_file('/floxim/lib/js/jquery.tipTip.minified.js');
         $fx_core->page->add_js_file('/floxim/lib/js/jquery-ui-timepicker-addon.js');
         
-        if ($fx_core->env->get_user() && $fx_core->env->get_user()->perm()->is_supervisor()) {
+        $auth_form = '';
+        if (fx::env('is_admin')) {
             $fx_core->page->add_css_file('/floxim/lib/css/elrte/elrte.min.css');
             $fx_core->page->add_css_file('/floxim/admin/skins/default/jquery-ui/main.css');
             $fx_core->page->add_css_file('/floxim/admin/skins/default/css/main.css');
@@ -188,10 +183,7 @@ class fx_controller_admin extends fx_controller {
             <div id="fx_dialog"></div>
             <div id="fx_dialog_file"></div>';
             $fx_core->page->set_after_body($panel);
-        }
-
-        $auth_form = '';
-        if (!$fx_core->env->get_user()) {
+        } else {
             $auth_form = '<div>
                 <form method="post" action="/floxim/">
                 <input type="hidden" name="action" value="admin_auth" />
@@ -202,7 +194,7 @@ class fx_controller_admin extends fx_controller {
                 </form></div>';
         }
 
-        if ($fx_core->env->get_user() && $fx_core->env->get_user()->perm()->is_supervisor()) {
+        if (fx::env('is_admin')) {
             $js_config = new fx_admin_configjs();
             $js_config->add_main_menu(fx_controller_admin_adminpanel::get_main_menu());
             $js_config->add_more_menu(fx_controller_admin_adminpanel::get_more_menu());
@@ -227,14 +219,15 @@ class fx_controller_admin extends fx_controller {
         $AUTH_PW = $input['AUTH_PW'];
 
         // попытка авторизации
-        $user = fx::data('content_user')->get("`".fx::config()->AUTHORIZE_BY."` = '".$db->escape($AUTH_USER)."'
-        AND `password` = ".fx::config()->DB_ENCRYPT."('".$db->escape($AUTH_PW)."')
-        AND `checked` = 1");
+        $user = fx::data('content_user')->get(
+                "`".fx::config()->AUTHORIZE_BY."` = '".$db->escape($AUTH_USER)."'
+        AND `password` = ".fx::config()->DB_ENCRYPT."('".$db->escape($AUTH_PW)."')"
+        );
+        
         
         if ($user) {
             $user->authorize();
         }
-        
         return $this->admin_office();
     }
     

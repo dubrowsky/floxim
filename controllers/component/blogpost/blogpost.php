@@ -1,6 +1,7 @@
 <?php
 class fx_controller_component_blogpost extends fx_controller_component {
     public function listing() {
+        /*
         $this->listen('items_ready', function(fx_collection $items) {
             $pages = array();
             foreach ( $items as $item )
@@ -16,6 +17,8 @@ class fx_controller_component_blogpost extends fx_controller_component {
             dev_log($items);
         });
         return parent::listing();
+         * 
+         */
     }
 }
 ?>

@@ -30,37 +30,146 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
     
     /*
      * Создает новую коллекцию с результатами
-     * $collection->find( array('price', '10', '>'), array('visibililty', 'on'));
      * $collection->find('price', '10', '>');
      * $collection->find('visibility', 'on'); 
      * $collection->find(function($item){});
      * @return fx_collection
      */
-    public function find() {
-        $res = array();
-        $filters = func_get_args();
-        foreach ($this->data as $di) {
-            if ($this->_check_item($di, $filters)) {
+    public function find($field, $prop = null, $compare_type = self::FILTER_EQ) {
+        if (count($this->data) == 0) {
+            return new fx_collection();
+        }
+        if (is_null($prop)) {
+            $compare_type = is_callable($field) ? self::FILTER_CALLBACK : self::FILTER_EXISTS;
+        } else {
+            $compare_type = self::FILTER_EQ;
+        }
+        if ($compare_type == self::FILTER_EQ) {
+            foreach ($this->data as $item) {
+                if ($item[$field] == $prop) {
+                    $res []= $item;
+                }
+            }
+            return new fx_collection($res);
+        }
+        if ($compare_type == self::FILTER_CALLBACK) {
+            foreach ($this->data as $item) {
+                if (call_user_func($field, $item)) {
+                    $res []= $item;
+                }
+            }
+            return new fx_collection($res);
+        }
+        /*
+        $filters = $this->_make_filters(func_get_args());
+        foreach ($this->data as $item) {
+            if ($this->_check_item($item_index)) {
                 $res []= $di;
             }
-        }
+        }*/
         return new fx_collection($res);
     }
     
+    public function find_one($field, $prop = null, $compare_type = self::FILTER_EQ) {
+        if (count($this->data) == 0) {
+            return false;
+        }
+        if (is_null($prop)) {
+            $compare_type = is_callable($field) ? self::FILTER_CALLBACK : self::FILTER_EXISTS;
+        } else {
+            $compare_type = self::FILTER_EQ;
+        }
+        if ($compare_type == self::FILTER_EQ) {
+            foreach ($this->data as $item) {
+                if ($item[$field] == $prop) {
+                    return $item;
+                }
+            }
+            return false;
+        }
+        if ($compare_type == self::FILTER_CALLBACK) {
+            foreach ($this->data as $item) {
+                if (call_user_func($field, $item)) {
+                    return $item;
+                }
+            }
+            return false;
+        }
+        return false;
+    }
+    /*
     public function find_one() {
         $filters = func_get_args();
+        $filters = $this->_make_filters($filters);
         foreach ($this->data as $di) {
             if ($this->_check_item($di, $filters)) {
                 return $di;
             }
         }
         return null;
+    }*/
+    
+    const FILTER_EQ = 1;
+    const FILTER_EXISTS = 2;
+    const FILTER_CALLBACK = 3;
+    /**
+     * Превращает аргументы, переданные find или find_one в фильтры вида
+     * array('==', 'prop_name', 'prop_value'), array('callback')
+     * @param type $filters
+     */
+    protected function _make_filters($filters) {
+        // вызовы типа find('parent_id', 12)
+        //if (!is_array($filters[0])) {
+            $filters = array($filters);
+        //}
+        $res = array();
+        foreach ($filters as $f) {
+            // вызовы типа find( function($x) {} );
+            /*
+            if (is_callable($f)) {
+                $res []= array('callback', $f);
+                continue;
+            }*/
+            if (!isset($f[1])) {
+                $f[1] = '';
+                $f[2] = self::FILTER_EXISTS;
+            } elseif (!isset($f[2])) {
+                $f[2] = self::FILTER_EQ;
+            }
+            $res []= array(
+                $f[2], $f[0], $f[1]
+            );
+        }
+        return $res;
     }
     
-    protected function _check_item($item, $filters) {
+    protected function _check_item($item_index, $filters = false) {
+        return true;
+        foreach ($filters as $f) {
+            switch ($f[0]) {
+                case self::FILTER_EQ:
+                    if ($item[$f[1]] != $f[2]) {
+                        return false;
+                    }
+                    break;
+                case 'callback':
+                    if (!call_user_func($f[1], $item)) {
+                        return false;
+                    }
+                    break;
+                case 'exists':
+                    if (!isset($item[$f[0]]) || empty($item[$f[0]])) {
+                        return false;
+                    }
+                    break;
+            }
+        }
+        return true;
+        
         if (is_array($filters) && !is_array($filters[0]) && !is_callable($filters[0])) {
             $filters = array($filters);
         }
+        
         foreach ($filters as $f) {
             if (is_callable($f) && !call_user_func($f, $item)) {
                 return false;

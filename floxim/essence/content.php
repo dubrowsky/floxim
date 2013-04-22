@@ -9,46 +9,18 @@ class fx_content extends fx_essence {
         parent::__construct($input);
         if ($input['component_id']) {
             $this->component_id = $input['component_id'];
-            $this->finder->set_component($input['component_id']);
         }
         return $this;
     }
     
-    public function get_content_type() {
-        return fx::data('component', $this->component_id)->get('keyword');
-    }
-
-    protected function _before_save() {
-        $this->finder->set_component($this->component_id);
-    }
-    
-    protected $_page = null;
-    public function set_page(fx_content_page $page) {
-        $this->_page = $page;
+    /*
+     * Возвращает тип вида "content_page"
+     * А если $full = false - вида "page"
+     */
+    public function get_type($full = true) {
+        return ($full ? 'content_' : '').fx::data('component', $this->component_id)->get('keyword');
     }
     
-    public function get_page() {
-        if (!$this->_page) {
-            $page = fx::data('content_page')->get(
-                array(
-                    'content_type' => $this->get_content_type(),
-                    'content_id' => $this->get('id')
-                )
-            );
-            if ($page) {
-                $this->set_page($page);
-            }
-        }
-        return $this->_page;
-    }
-    
-    public function get_url() {
-        if (! ($page = $this->get_page())) {
-            return '/unknown/';
-        }
-        return $page['url'];
-    }
-
     public function set_component_id($component_id) {
         if ($this->component_id && $component_id != $this->component_id) {
             dev_log('was-is', $this->component_id, $component_id, debug_backtrace());
@@ -59,18 +31,6 @@ class fx_content extends fx_essence {
 
     public function get_component_id() {
         return $this->component_id;
-    }
-
-    public function get_link() {
-        $fx_core = fx_core::get_object();
-        $infoblock = fx::data('infoblock')->get_by_id($this['infoblock_id']);
-        $subdivision = fx::data('subdivision')->get_by_id($infoblock['subdivision_id']);
-
-        $url = $subdivision['hidden_url'];
-        $url .= $this['keyword'] ? $this['keyword'] : $infoblock['url'].'_'.$this['id'];
-        $url .= '.html';
-
-        return $url;
     }
 
     protected function _add_history_operation($type, $data = array()) {
@@ -126,13 +86,13 @@ class fx_content extends fx_essence {
         return $result;
     }
     
-    protected $_fields_to_show = null;
+    //protected $_fields_to_show = null;
     
     const field_to_show_prefix = 'f_';
 
 
     public function get_fields_to_show() {
-        if (!$this->_fields_to_show) {
+        if (!isset($this->_fields_to_show)) {
             $this->_fields_to_show = array();
             if (!$this->component_id) {
                 dev_log('no component!', $this);
@@ -141,7 +101,7 @@ class fx_content extends fx_essence {
             $component = fx::data('component', $this->component_id);
             $content_fields = $component->fields();
             foreach ($this->data as $k => $v) {
-                $cf = $content_fields->find_one(array('name' => $k));
+                $cf = $content_fields->find_one('name', $k);
                 $fkey = fx_content::field_to_show_prefix.$k;
                 if ($cf) {
                     $this->_fields_to_show[$fkey] = new fx_template_field($v, array(
@@ -157,9 +117,6 @@ class fx_content extends fx_essence {
                     $this->_fields_to_show[$fkey] = $v;
                 }
             }
-            if ( ($page = $this->get_page())) {
-                $this->_fields_to_show[fx_content::field_to_show_prefix."url"] = $page->get_field_to_show('url');
-            }
         }
         return $this->_fields_to_show;
     }
@@ -170,21 +127,12 @@ class fx_content extends fx_essence {
         return isset($fields[$index]) ? $fields[$index] : 'nu';
     }
     
-    protected function _after_delete() {
-        $component = fx::data('component', $this->component_id);
-        if ($component['has_page']) {
-            if (( $page = $this->get_page())) {
-                $page->delete();
-            }
-        }
-    }
-    
     public function add_template_record_meta($html) {
         $proc = new fx_template_html($html);
         $html = $proc->add_meta(array(
             'data-fx_content_essence' => array(
                 'id' => $this->get('id'),
-                'type' => $this->get_content_type()
+                'type' => $this->get_type()
             ), 
             'class' => 'fx_content_essence'
         ));

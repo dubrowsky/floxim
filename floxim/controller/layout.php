@@ -52,10 +52,14 @@ class fx_controller_layout extends fx_controller {
     }
     
     protected function _show_admin_panel() {
+        /*
         if (!$user = fx::env()->get_user()) {
             return;
         }
         if (!$user->perm()->is_supervisor()) {
+            return;
+        }*/
+        if (!fx::env('is_admin')) {
             return;
         }
         // инициализация админ панели
@@ -380,7 +384,7 @@ class fx_controller_layout extends fx_controller {
     /**
      * Скопировал в fx_controller_admin
      */
-    public function admin() {
+    public function _admin() {
         $fx_core = fx_core::get_object();
 
         $fx_core->page->add_js_file('/floxim/lib/js/jquery-1.7.1.js');

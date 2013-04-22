@@ -3,7 +3,10 @@ class fx_router_front extends fx_router {
 
     public function route($url = null, $context = null) {
         $site = fx::data('site', $context['site_id']);
-        $page = fx::data('content_page')->get('url', $url, 'site_id', $site['id']);
+        $page = fx::data('content_page')->
+                    where('url', $url)->
+                    where('site_id', $site['id'])->
+                    one();
         if (!$page) {
             return null;
         }
@@ -11,6 +14,7 @@ class fx_router_front extends fx_router {
         $layout_id = fx::env('layout');
 
         $infoblocks = $this->get_page_infoblocks($page['id'], $layout_id);
+        
         
         $layout_ib = $infoblocks['layout'][0];
         return fx::controller(
@@ -33,6 +37,7 @@ class fx_router_front extends fx_router {
             return $cached;
         }
         $page = fx::data('content_page', $page_id);
+        dev_log('lurk pg', $page);
         if (!$page) {
             return;
         }
@@ -50,8 +55,7 @@ class fx_router_front extends fx_router {
         // получаем все привязки "инфоблок-макет"
         $visual = fx::data('infoblock_visual')->get_for_infoblocks($infoblocks);
         // id-шники наследованных блоков
-        $inherited_ids = $infoblocks->find('parent_infoblock_id')->get_values('parent_infoblock_id');
-        dev_log($inherited_ids);
+        $inherited_ids = $infoblocks->find('parent_infoblock_id', 0, '!=')->get_values('parent_infoblock_id');
         foreach ($infoblocks as $ib) {
             // если инфоблок наследуется одним из привязанных к текущей странице инфоблоков,
             // помечаем его как наследуемый

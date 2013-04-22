@@ -246,7 +246,7 @@ class fx_controller_admin_component extends fx_controller_admin {
         } else {
             $component['group'] = $input['group'];
         }
-        $component['has_page'] = $input['has_page'];
+        $component['parent_id'] = $input['parent_id'];
         $component['description'] = $input['description'];
         $component->save();
         return array('status' => 'ok');
@@ -305,10 +305,28 @@ class fx_controller_admin_component extends fx_controller_admin {
         $this->response->submenu->set_subactive('fields');
         return $controller->items($component);
     }
+    
+    protected function _get_parent_component_field($component = null) {
+        $field = array(
+            'label' => 'Компонент-родитель',
+            'name' => 'parent_id',
+            'type' => 'select',
+            'values' => array('' => '--нет--')
+        );
+        if ($component) {
+            $field['value'] = $component['parent_id'] ? $component['parent_id'] : '';
+        }
+        $components = fx::data('component')->get_all();
+        foreach ($components as $cmp) {
+            if ($component && $component['id'] == $cmp['id']) {
+                continue;
+            }
+            $field['values'][$cmp['id']] = $cmp['name'];
+        }
+        return $field;
+    }
 
     public function settings($component) {
-        $fx_core = fx_core::get_object();
-
         $groups = fx::data('component')->get_all_groups();
 
         $fields[] = $this->ui->label("<a href='/floxim/?essence=admin_component&amp;action=export&amp;id=".$component['id']."'>Экспортировать в файл</a>");
@@ -318,12 +336,15 @@ class fx_controller_admin_component extends fx_controller_admin {
         $fields[] = array('label' => 'Группа', 'type' => 'select', 'values' => $groups, 'name' => 'group', 'value' => $component['group'], 'extendable' => 'Другая группа');
 
         $fields[] = array('label' => 'Описание', 'name' => 'description', 'value' => $component['description'], 'type' => 'text');
+        
+        /*
         $fields []= array(
             'label' => 'Создает страницы?',
             'name' => 'has_page',
             'type' => 'checkbox',
             'value' => $component['has_page']
-        );
+        );*/
+        $fields []= $this->_get_parent_component_field($component);
 
         //$fields[] = array('label' => 'И еще можно сменить иконку', 'type' => 'label');
 

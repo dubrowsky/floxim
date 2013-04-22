@@ -119,18 +119,16 @@ class fx_controller_component extends fx_controller {
 
     public function listing() {
         $f = $this->_finder();
-        $q_conditions = array();
-        $q_params = array();
         
         $content_type = $this->get_content_type();
         $c_ib = fx::data('infoblock', $this->param('infoblock_id'));
-        $q_conditions['infoblock_id']= $c_ib->get_root_infoblock()->get('id');
-        $q_conditions['parent_id']= $this->_get_parent_id();
+        $f->where('infoblock_id', $c_ib->get_root_infoblock()->get('id'));
+        $f->where('parent_id', $this->_get_parent_id());
         if ($this->param('sorting') == 'manual') {
-            $q_params['order'] = 'priority';
+            //$q_params['order'] = 'priority';
         }
-        $items = $f->get_all($q_conditions, $q_params);
-        fx::data('content_page')->attache_to_content($items);
+        $items = $f->all();
+        //fx::data('content_page')->attache_to_content($items);
         $this->trigger('items_ready', $items);
 
         if (fx::env('is_admin')) {
@@ -168,12 +166,13 @@ class fx_controller_component extends fx_controller {
     
     public function mirror() {
         $f = $this->_finder();
-        $params = array();
+        ///$params = array();
         if ( ($parent_id = $this->param('parent_id')) ) {
-            $params['parent_id'] = $parent_id;
+            //$params['parent_id'] = $parent_id;
+            $f->where('parent_id', $parent_id);
         }
-        $items = $f->get_all($params);
-        fx::data('content_page')->attache_to_content($items);
+        $items = $f->all();
+        //fx::data('content_page')->attache_to_content($items);
         return array('items' => $items);
     }
     

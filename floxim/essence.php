@@ -3,9 +3,7 @@
 abstract class fx_essence implements ArrayAccess {
 
     // ссылка на объект класса fx_data_
-    protected $finder;
-    // тип сущности
-    protected $essence_type;
+    //protected $finder;
     // значения полей
     protected $data;
     // набор полей, которые изменились
@@ -19,17 +17,14 @@ abstract class fx_essence implements ArrayAccess {
     
     protected $validate_errors = array();
     
+    protected function _get_finder() {
+        return fx::data($this->get_type());
+    }
 
     public function __construct($input = array()) {
-        if (isset($input['data']))
+        if (isset($input['data'])) {
             $this->data = $input['data'];
-        if (isset($input['finder']) && $input['finder'] instanceof fx_data ) {
-            $this->finder = $input['finder'];
-            $this->pk = $this->finder->get_pk();
         }
-        
-        $this->essence_type = str_replace("fx_", "", get_class($this));
-
         return $this;
     }
 
@@ -44,14 +39,14 @@ abstract class fx_essence implements ArrayAccess {
                 $data[$v] = $this->data[$v];
             }
                 
-            $this->finder->update($data, array($this->pk => $this->data[$this->pk]));
+            $this->_get_finder()->update($data, array($this->pk => $this->data[$this->pk]));
             $this->_after_update();
             if (!$dont_log)
                 $this->_add_history_operation('update', $data);
         } // insert
         else {
             $this->_before_insert();
-            $id = $this->finder->insert($this->data);
+            $id = $this->_get_finder()->insert($this->data);
             $this->data['id'] = $id;
             $this->_after_insert();
             if (!$dont_log)
@@ -104,7 +99,7 @@ abstract class fx_essence implements ArrayAccess {
 
     public function delete( $dont_log = false ) {
         $this->_before_delete();
-        $this->finder->delete($this->pk, $this->data[$this->pk]);
+        $this->_get_finder()->delete($this->pk, $this->data[$this->pk]);
         $this->modified_data = $this->data;
         $this->_after_delete();
         if (!$dont_log) $this->_add_history_operation('delete');
@@ -134,7 +129,7 @@ abstract class fx_essence implements ArrayAccess {
     }
 
     protected function _add_history_operation($type, $data = array()) {
-        fx_history::add_operation($type, str_replace('fx_data_', '', get_class($this->finder)), $this->data[$this->pk], $this->modified_data, $data);
+        //fx_history::add_operation($type, str_replace('fx_data_', '', get_class($this->_get_finder())), $this->data[$this->pk], $this->modified_data, $data);
     }
     
     protected function _before_insert () {
@@ -183,7 +178,7 @@ abstract class fx_essence implements ArrayAccess {
     }
     
     public function get_type() {
-        return $this->essence_type;
+        return str_replace("fx_", "", get_class($this));
     }
     
     /*

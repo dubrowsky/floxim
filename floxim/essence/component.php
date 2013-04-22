@@ -4,6 +4,17 @@
 defined("FLOXIM") || die("Unable to load file.");
 
 class fx_component extends fx_essence {
+    
+    public function get_chain() {
+        $chain = array($this);
+        $c_pid = $this->get('parent_id');
+        while ($c_pid != 0) {
+            $c_parent = fx::data('component', $c_pid);
+            $chain []= $c_parent;
+            $c_pid = $c_parent['parent_id'];
+        }
+        return array_reverse($chain);
+    }
 
     protected $_class_id;
 
@@ -45,8 +56,12 @@ class fx_component extends fx_essence {
         return $res;
     }
 
+    protected $_stored_fields = null;
     public function fields() {
-        return fx::data('field')->get_by_component($this->_class_id);
+        if (!$this->_stored_fields) {
+            $this->_stored_fields = fx::data('field')->get_by_component($this->_class_id);
+        }
+        return $this->_stored_fields;
     }
 
     public function get_sortable_fields() {

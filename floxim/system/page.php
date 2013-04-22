@@ -247,7 +247,7 @@ class fx_system_page extends fx_system {
         $buffer = str_replace("<body", "<body data-fx_page_id='".fx::env('page')."'", $buffer);
 
         $user = fx_core::get_object()->env->get_user();
-        if ($user && $user->perm()->is_supervisor()) {
+        if (fx::env('is_admin')) {
             $this->add_data_js('block_number', $this->block_number);
             $this->add_data_js('field_number', $this->field_number);
 

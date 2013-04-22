@@ -276,12 +276,18 @@ class fx_core extends fx_system {
         return isset($this->{$name});
     }
 
+    
+    protected static $classes_with_no_file = array();
+    
     /**
      * @todo привести в номральный вид
      */
     static public function load_class($classname) {
         if (substr($classname, 0, 3) != 'fx_') {
             return false;
+        }
+        if (in_array($classname, self::$classes_with_no_file)) {
+            throw new fx_exteption_classload('AGAIN: Unable to load class '.$classname);
         }
         $file = self::get_class_file($classname);
         if (!$file) {
@@ -291,6 +297,7 @@ class fx_core extends fx_system {
         if (!file_exists($file)) {
             $e = new fx_exteption_classload('Unable to load class '.$classname);
             $e->class_file = $file;
+            self::$classes_with_no_file[]= $classname;
             throw $e;
         }
         require_once $file;
@@ -362,9 +369,11 @@ class fx_core extends fx_system {
                 
                 $source_dir = $doc_root.'controllers/'.$ctr_type.'/'.$ctr_name;
                 if (is_dir($source_dir)) {
+                    dev_log('recompile '.$tpl_file);
                     $processor = new fx_template_processor();
                     $processor->process_dir($source_dir);
                     $file = $tpl_file;
+                    dev_log('endrec');
                     break;
                 }
             }

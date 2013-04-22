@@ -35,6 +35,7 @@ class fx {
     /* Data finder instances collection */
     protected static $data_finders = array();
     
+    protected static $data_cache = array();
     /* Получить дата-файндер для указанного типа content_id данных, либо объект(ы) по id
      * @param string $datatype название типа данных - 'component', 'content_news'
      * @param mixed [$id] id или массив ids
@@ -43,41 +44,53 @@ class fx {
         if (is_array($datatype)) {
             $datatype = join("_", $datatype);
         }
-    	if (!isset(self::$data_finders[$datatype])) {
+        if (false && !is_null($id) && !is_array($id)) {
+            if (isset(self::$data_cache[$datatype])) {
+                if (isset(self::$data_cache[$datatype][$id])) {
+                    return self::$data_cache[$datatype][$id];
+                }
+            }
+        }
+        
+        $data_finder = null;
+    	//if (!isset(self::$data_finders[$datatype])) {
             try {
                 $classname = 'fx_data_'.$datatype;
-                //dev_log('data lurk', $classname);
                 $data_finder = new $classname();
-                self::$data_finders[$datatype] = $data_finder;
+                //self::$data_finders[$datatype] = $data_finder;
             } catch (Exception $e) {
                 // Файндер для контента, класс не определен
                 if (preg_match("~^content_~", $datatype)) {
-                    $component = fx::data('component', preg_replace("~^content_~", '', $datatype));
+                    $component = fx::data(
+                        'component', 
+                        preg_replace("~^content_~", '', $datatype)
+                    );
                     if ($component) {
                         $data_finder = new fx_data_content();
                         $data_finder->set_component($component['id']);
-                        self::$data_finders[$datatype] = $data_finder;
+                        //self::$data_finders[$datatype] = $data_finder;
                     }
-                } else {
-                    //dev_log('class not found', $datatype);
                 }
             }
-    	}
-    	if (!isset(self::$data_finders[$datatype])) {
+    	//}
+    	//if (!isset(self::$data_finders[$datatype])) {
+        if (is_null($data_finder)) {
             dev_log("NO DATATYPE", func_get_args(), debug_backtrace());
             die("NO DATATYPE: ".$datatype);
     	}
-        $df = self::$data_finders[$datatype];
+        //$df = self::$data_finders[$datatype];
         if (func_num_args() == 2) {
             if (is_numeric($id) || is_string($id)) {
-                return $df->get_by_id($id);
+                $res = $data_finder->get_by_id($id);
+                self::$data_cache[$datatype][$id] = $res;
+                return $res;
             }
             if (is_array($id)) {
-                return $df->get_by_ids($id);
+                return $data_finder->get_by_ids($id);
             }
             return null;
         }
-    	return self::$data_finders[$datatype];
+    	return $data_finder;
     }
     
     protected static $router = null;

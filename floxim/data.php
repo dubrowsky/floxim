@@ -12,25 +12,102 @@ class fx_data {
     protected $serialized = array();
     protected $sql_function = array();
     
-    protected $cache = array();
+    protected $limit;
+    protected $where = array();
 
+    
+    public function all() {
+        $data = $this->_get_data();
+        return new fx_collection($data);
+    }
+    
+    protected function _get_data() {
+        $query = $this->build_query();
+        $res = fx::db()->get_results($query);
+
+        if (fx::db()->is_error()) {
+            throw new Exception("SQL ERROR ".fx::db()->debug());
+        }
+
+        $objs = array();
+        foreach ($res as $v) {
+            // не забыть serialized
+            $essence = $this->essence($v);
+            $objs[] = $essence;
+        }
+        return $objs;
+    }
+    
+    public function one() {
+        $this->limit = 1;
+        $data = $this->_get_data();
+        return isset($data[0]) ? $data[0] : false;
+    }
+    
+    public function where($field, $value, $type = '=') {
+        $this->where []= array($field, $value, $type);
+        return $this;
+    }
+    
+    public function build_query() {
+        // 1. Получить таблицы-родители
+        $tables = $this->get_tables();
+        $base_table = array_shift($tables);
+        $q = 'SELECT * FROM `{{'.$base_table."}}`\n";
+        foreach ($tables as $t) {
+            $q .= 'INNER JOIN `{{'.$t.'}}` ON `{{'.$t.'}}`.id = `{{'.$base_table."}}`.id\n";
+        }
+        if (count($this->where) > 0) {
+            $conds = array();
+            foreach ($this->where as $cond) {
+                list($field, $value, $type) = $cond;
+                if ($field == 'id') {
+                    $field = "`{{".$base_table."}}`.id";
+                } else {
+                    $field = '`'.$field.'`';
+                }
+                if (is_array($value) && $type = '=') {
+                    if (count($value) == 0) {
+                        $conds []= 'FALSE';
+                        continue;
+                    }
+                    $type = 'IN';
+                    $value = " ('".join("', '", $value)."') ";
+                } else {
+                    $value = "'".$value."'";
+                }
+                $conds []= $field.' '.$type.' '.$value;
+            }
+            $q .= "WHERE ".join(" AND ", $conds);
+        }
+        if ($this->limit){
+            $q .= ' LIMIT '.$this->limit;
+        }
+        return $q;
+        echo "<pre>" . htmlspecialchars(print_r($q, 1)) . "</pre>";
+        die();
+        // 2. Собрать запрос с INNER JOIN
+        // 3. Добавить сортировки / условия и т.д.
+    }
+    
     /**
      * @return fx_data 
      */
-
+///////////////////////////
+    
     static public function optional($table) {
         return new self($table);
     }
 
     public function __construct($table = null) {
-        if ($table) {
-            $this->table = $table;
+        if (!$table) {
+            $table = str_replace('fx_data_', '', get_class($this));
         }
-
-        $es = str_replace('fx_data_', '', get_class($this));
-        if (!$this->table) {
-            $this->table = $es;
-        }
+        $this->table = $table;
+    }
+    
+    public function get_tables() {
+        return array($this->table);
     }
 
     public function get_pk() {
@@ -43,13 +120,8 @@ class fx_data {
      * @return fx_essence
      */
     public function get_by_id($id) {
-    	if (isset($this->cache[$id])) {
-            return $this->cache[$id];
-    	}
-        if ( ($result = $this->get('id', $id)) ) {
-            $this->cache[$id] = $result;
-        }
-        return $result;
+        return $this->where('id', $id)->one();
+    	return $this->get('id', $id);
     }
     
     /**
@@ -58,21 +130,10 @@ class fx_data {
      * @return array
      */
     public function get_by_ids($ids) {
+        return $this->where('id', $ids)->all();
         return $this->get_all(array('id' => $ids));
     }
     
-    public function drop_cache($id = false) {
-    	// если не передан ID, сбрасываем кэш целиком
-    	if ($id === false) {
-            $this->cache = array();
-            return;
-    	}
-    	// если передан ID, сбрасываем только его
-    	if (isset($this->cache[$id])) {
-            unset($this->cache[$id]);
-        }
-    }
-
     public function get() {
         $argc = func_num_args();
         $argv = func_get_args();
@@ -232,12 +293,7 @@ class fx_data {
      */
     public function essence($data = array()) {
         $classname = $this->get_class_name($data);
-        if (!$classname) {
-            echo "OOPS";
-            dev_log('no classname', $classname, debug_backtrace());
-            die();
-        }
-        $obj = new $classname(array('data' => $data, 'finder' => $this));
+        $obj = new $classname(array('data' => $data));
         return $obj;
     }
 

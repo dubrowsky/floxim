@@ -35,10 +35,12 @@ class fx_db extends PDO {
         return $this->escape($str);
     }
 
-    //protected static $qtime = 0;
-
+    protected static $q_time = 0;
+    protected static $q_count = 0;
+    
     public function query($statement) {
-    	//$time = microtime();
+        self::$q_count++;
+    	$start_time = microtime();
 
         $statement = trim($this->replace_prefix($statement));
 
@@ -58,7 +60,15 @@ class fx_db extends PDO {
             echo "</div>\n";
             dev_log($statement, debug_backtrace());
         }
-        
+        $q_time = microtime() - $start_time;
+        self::$q_time += $q_time;
+        return $this->last_result;
+        dev_log(
+                '#'.self::$q_count, 
+                'q_time: '.$q_time, 
+                'q_total: '.self::$q_time,
+                $statement
+        );
         return $this->last_result;
     }
 

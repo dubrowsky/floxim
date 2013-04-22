@@ -1,19 +1,27 @@
 <?php
 require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . '_devlog' . DIRECTORY_SEPARATOR . 'log.php');
 
-/*
-$config =  array(
-    'DB_DSN' => 'mysql:dbname=floxim;host=81.177.142.25',
-    'DB_USER' => 'floxim',
-    'DB_PASSWORD' => 'floxim12345'
-);
-*/
+dev_log('start');
 
-$config =  array(
-    'DB_DSN' => 'mysql:dbname=floxim;host=81.177.142.25',
-    'DB_USER' => 'floxim',
-    'DB_PASSWORD' => 'floxim12345'
+$db_config = array(
+    'ilya_local' =>  array(
+        'DB_DSN' => 'mysql:dbname=floxim;host=localhost',
+        'DB_USER' => 'root',
+        'DB_PASSWORD' => ''
+    ),
+    'remote' =>  array(
+        'DB_DSN' => 'mysql:dbname=floxim;host=81.177.142.25',
+        'DB_USER' => 'floxim',
+        'DB_PASSWORD' => 'floxim12345'
+    ),
+    'remote_new' => array(
+        'DB_DSN' => 'mysql:dbname=fxm_new;host=81.177.142.25',
+        'DB_USER' => 'floxim',
+        'DB_PASSWORD' => 'floxim12345'
+    )
 );
+
+$config = $db_config['remote'];
 
 $SYSTEM_FOLDER = dirname(__FILE__) . (isset($config['HTTP_ROOT_PATH']) ? $config['HTTP_ROOT_PATH'] : '/floxim/') . 'system/';
 
@@ -46,3 +54,4 @@ $fx_core->lang->load($lang);
 
 $current_site = fx::data('site')->get_by_host_name($_SERVER['HTTP_HOST'], 1);
 fx::env('site', $current_site);
+dev_log('bootd');

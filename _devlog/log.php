@@ -24,16 +24,35 @@ function fen_debug() {
 	$call_time_diff = $call_time - $last_timer_value;
 	$last_timer_value = $call_time;
 	$result = array();
+    $backtrace = debug_backtrace();
 	foreach (func_get_args() as $print_item) {
 		if (is_object($print_item) && $print_item instanceof DOMNode) {
 			$result []= fen_pretty_xml($print_item);
 		} elseif ( is_object($print_item) || is_array($print_item) ) {
 			$result []= fen_print($print_item);
-		} else {
+		} elseif (is_string($print_item) && preg_match("~^bt(\d+)$~", $print_item, $bt_depth)) {
+            $trace_offset = 3;
+            foreach (range(0, $bt_depth[1]) as $trace_level) {
+                $real_level = $trace_level+$trace_offset;
+                if (!isset($backtrace[$real_level])) {
+                    break;
+                }
+                $trace = $backtrace[$real_level];
+                $trace_res = '';
+                $caller_trace_level = $real_level;
+                if (isset($backtrace[$caller_trace_level])) {
+                    $trace_res .= $backtrace[$caller_trace_level]['file'].'@'.$backtrace[$caller_trace_level]['line'];
+                }
+                if (isset($trace['function'])) {
+                    $method_name = isset($trace['class']) ? $trace['class'].'::'.$trace['function'] : $trace['function'];
+                    $result []= $trace_res.' called '.$method_name;
+                }
+            }
+        } else {
 			$result []= $print_item;
 		}
 	}
-	$backtrace = debug_backtrace();
+	
 	$call = $backtrace[2];
 	$print_title = " ".$call['file'];
 	if (isset($call['line'])) {
