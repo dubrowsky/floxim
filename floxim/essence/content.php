@@ -132,7 +132,7 @@ class fx_content extends fx_essence {
         $html = $proc->add_meta(array(
             'data-fx_content_essence' => array(
                 'id' => $this->get('id'),
-                'type' => $this->get_type()
+                'type' => $this->get_type(false)
             ), 
             'class' => 'fx_content_essence'
         ));
