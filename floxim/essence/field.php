@@ -87,7 +87,7 @@ class fx_field extends fx_essence {
     }
 
     protected function get_table() {
-        return fx::data('component')->get_by_id($this['component_id'])->get_table_name();
+        return fx::data('component')->get_by_id($this['component_id'])->get_content_table();
     }
 
     protected function _after_insert() {

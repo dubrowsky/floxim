@@ -221,7 +221,7 @@ class fx_controller_admin_user extends fx_controller_admin {
             if ($component->is_user_component()) {
                 continue;
             }
-            $table = $component->get_table_name();
+            $table = $component->get_content_table();
             $count = $fx_core->db->get_var("SELECT COUNT(`id`) FROM `{{".$table."}}` WHERE `user_id` = '".$user_id."' ");
             if ($count) {
                 $result[] = array('component_id' => $component['id'], 'name' => $component['name'], 'count' => $count);

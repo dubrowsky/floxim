@@ -110,10 +110,6 @@ class fx_component extends fx_essence {
         return fx_core::get_object()->get_settings('user_component_id', 'auth') == $this['id'];
     }
 
-    public function get_table_name() {
-        return $this->is_user_component() ? 'user' : 'content_'.$this['keyword'];
-    }
-
     protected function _after_insert() {
         $this->create_content_table();
     }
