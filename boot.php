@@ -1,7 +1,7 @@
 <?php
 require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . '_devlog' . DIRECTORY_SEPARATOR . 'log.php');
 
-dev_log('start');
+// dev_log('start');
 
 $db_config = array(
     'ilya_local' =>  array(
@@ -54,4 +54,4 @@ $fx_core->lang->load($lang);
 
 $current_site = fx::data('site')->get_by_host_name($_SERVER['HTTP_HOST'], 1);
 fx::env('site', $current_site);
-dev_log('bootd');
+// dev_log('bootd');

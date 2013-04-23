@@ -20,7 +20,7 @@ class fx_data {
         $data = $this->_get_data();
         return new fx_collection($data);
     }
-    
+
     protected function _get_data() {
         $query = $this->build_query();
         $res = fx::db()->get_results($query);
