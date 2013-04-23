@@ -17,30 +17,13 @@ class fx_data {
 
     
     public function all() {
-        $data = $this->_get_data();
+        $data = $this->_get_essences();
         return $data;
     }
 
-    protected function _get_data() {
-        $query = $this->build_query();
-        $res = fx::db()->get_results($query);
-
-        if (fx::db()->is_error()) {
-            throw new Exception("SQL ERROR ".fx::db()->debug());
-        }
-
-        $objs = array();
-        foreach ($res as $v) {
-            // не забыть serialized
-            $essence = $this->essence($v);
-            $objs[] = $essence;
-        }
-        return new fx_collection($objs);
-    }
-    
     public function one() {
         $this->limit = 1;
-        $data = $this->_get_data();
+        $data = $this->_get_essences();
         return isset($data[0]) ? $data[0] : false;
     }
     
@@ -86,8 +69,42 @@ class fx_data {
         return $q;
     }
     
+    
+     /*
+     * Метод собирает плоские данные
+     */
+    protected function _get_data() {
+        $query = $this->build_query();
+        $res = fx::db()->get_results($query);
+
+        if (fx::db()->is_error()) {
+            throw new Exception("SQL ERROR ".fx::db()->debug());
+        }
+
+        $objs = array();
+        foreach ($res as $v) {
+            // не забыть serialized
+            $objs[] = $v;
+        }
+        return new fx_collection($objs);
+    }
+    
+    /*
+     * Метод вызывает $this->_get_data(),
+     * и из коллекции плоских данных собирает эссенсы
+     */
+    protected function _get_essences() {
+        $data = $this->_get_data();
+        //echo fen_debug($data);
+        foreach ($data as $dk => $dv) {
+            // а вот тут будет разбор serialized etc.
+            $data[$dk] = $this->essence($dv);
+        }
+        return $data;
+    }
+
     /**
-     * @return fx_data 
+     * @todo ДАЛЕЕ: разобраться, что можно убить
      */
 ///////////////////////////
     

@@ -80,7 +80,7 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
             $compare_type = self::FILTER_EQ;
         }
         if ($compare_type == self::FILTER_EQ) {
-            foreach ($this->data as $item) {
+            foreach ($this->data as &$item) {
                 if ($item[$field] == $prop) {
                     return $item;
                 }

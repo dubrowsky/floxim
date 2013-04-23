@@ -1,8 +1,5 @@
 <?php
-
 class fx_data_content extends fx_data {
-
-    
     protected function _get_data() {
         $data = parent::_get_data();
         $types_by_id = $data->get_values('type', 'id');
@@ -33,10 +30,18 @@ class fx_data_content extends fx_data {
             }
             $q .= "WHERE `{{".$base_missed_table."}}`.id IN (".join(", ", $ids).")";
             $extensions = fx::db()->get_results($q);
-            echo fen_debug($extensions);
+            foreach ($extensions as $ext) {
+                foreach ($data as $data_index => $data_item) {
+                    if ($data_item['id'] == $ext['id']) {
+                        foreach ($ext as $ext_k => $ext_v) {
+                            $data_item[$ext_k] = $ext_v;
+                        }
+                        $data[$data_index] = $data_item;
+                    }
+                }
+            }
         }
-        echo fen_debug($types);
-        die();
+        return $data;
     }
     
     public function get_tables() {
@@ -100,7 +105,10 @@ class fx_data_content extends fx_data {
             $component = fx::data('component', $this->component_id);
             $c_type = $component['keyword'];
         }
-        
+        if (!$component) {
+            dev_log('No component', $data);
+            throw new Exception("No component: ".$c_type);
+        }
         $chain = array_reverse($component->get_chain());
         
         $exists = false;

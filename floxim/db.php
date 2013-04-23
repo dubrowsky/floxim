@@ -87,15 +87,15 @@ class fx_db extends PDO {
         return $res;
     }
 
-    public function get_results($query = null) {
+    public function get_results($query = null, $result_type = PDO::FETCH_ASSOC) {
         $res = array();
 
         if (!$query) {
             $res = $this->last_result_array;
         } else {
             if (($result = $this->query($query))) {
-                $res = $result->fetchAll(PDO::FETCH_ASSOC);
-                $this->last_result_array = $result->fetchAll(PDO::FETCH_ASSOC);
+                $res = $result->fetchAll($result_type);
+                $this->last_result_array = $result->fetchAll($result_type);
             }
         }
 
