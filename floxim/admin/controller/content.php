@@ -11,9 +11,6 @@ class fx_controller_admin_content extends fx_controller_admin {
         if ($input['content_id']) {
             // редактирование
             $content = fx::data('content_'.$content_type, $input['content_id']);
-            if ($component['has_page']) {
-                $page = $content->get_page();
-            }
         } else {
             // создание
             $parent_page = fx::data('content_page', $input['parent_id']);
@@ -48,55 +45,25 @@ class fx_controller_admin_content extends fx_controller_admin {
         
         $this->response->add_fields($fields);
 
-        //// Правим тут
         $c_fields = array();
-
-        $chains = $component->get_chain();
-        foreach ( $chains as $chain ) {
-            if ( $chain['keyword'] == 'content') continue;
-            $chain_content = fx::data('content_'.$chain['keyword'], $chain['id']);
-            $content_fields = $chain->fields();
+        $chain = $component->get_chain();
+        foreach ( $chain as $chain_level ) {
+            if ( $chain_level['keyword'] == 'content') continue;
+            $content_fields = $chain_level->fields();
             foreach ( $content_fields as $field )
             {
                 if ($field['type_of_edit'] != 3) {
-                    $c_fields[] = $field->get_js_field($chain_content);
+                    $c_fields[] = $field->get_js_field($content);
                 }
             }
         }
 
-        /*
-        $content_fields = $component->fields();
-        foreach ($content_fields as $field) {
-            if ($field['type_of_edit'] != 3) {
-                $c_fields[] = $field->get_js_field($content);
-            }
-        }*/
-        ///
-        
         $this->response->add_tab('content', $component['name']);
         $this->response->add_fields($c_fields, 'content', 'content');
 
-        if ($component['has_page']) {
-            $this->response->add_tab('page', 'Страница');
-            $page_component = fx::data('component', 'page');
-            $p_fields = array();
-            $page_component_fields = $page_component->fields();
-            foreach ($page_component_fields as $p_field) {
-                if ($p_field['type_of_edit'] != 3) {
-                    $p_fields []= $p_field->get_js_field($page);
-                }
-            }
-            $this->response->add_fields($p_fields, 'page', 'page');
-        }
-        
         if ($input['data_sent']) {
             $content->set_field_values($content_fields, $input['content']);
             $content->save();
-            if ($component['has_page']) {
-                $page->set_field_values($page_component_fields, $input['page']);
-                $page['content_id'] = $content['id'];
-                $page->save();
-            }
         }
         return array('status' => 'ok');
     }
