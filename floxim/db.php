@@ -95,7 +95,7 @@ class fx_db extends PDO {
         } else {
             if (($result = $this->query($query))) {
                 $res = $result->fetchAll($result_type);
-                $this->last_result_array = $result->fetchAll($result_type);
+                $this->last_result_array = $res; // ??? $result->fetchAll($result_type);
             }
         }
 
