@@ -44,7 +44,7 @@ class fx {
         if (is_array($datatype)) {
             $datatype = join("_", $datatype);
         }
-        if (false && !is_null($id) && !is_array($id)) {
+        if (!is_null($id) && !is_array($id)) {
             if (isset(self::$data_cache[$datatype])) {
                 if (isset(self::$data_cache[$datatype][$id])) {
                     return self::$data_cache[$datatype][$id];
@@ -57,6 +57,10 @@ class fx {
             try {
                 $classname = 'fx_data_'.$datatype;
                 $data_finder = new $classname();
+                if ($datatype == 'content') {
+                    $component = fx::data('component', 'content');
+                    $data_finder->set_component($component['id']);
+                }
                 //self::$data_finders[$datatype] = $data_finder;
             } catch (Exception $e) {
                 // Файндер для контента, класс не определен

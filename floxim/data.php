@@ -18,7 +18,7 @@ class fx_data {
     
     public function all() {
         $data = $this->_get_data();
-        return new fx_collection($data);
+        return $data;
     }
     
     protected function _get_data() {
@@ -35,7 +35,7 @@ class fx_data {
             $essence = $this->essence($v);
             $objs[] = $essence;
         }
-        return $objs;
+        return new fx_collection($objs);
     }
     
     public function one() {
@@ -84,10 +84,6 @@ class fx_data {
             $q .= ' LIMIT '.$this->limit;
         }
         return $q;
-        echo "<pre>" . htmlspecialchars(print_r($q, 1)) . "</pre>";
-        die();
-        // 2. Собрать запрос с INNER JOIN
-        // 3. Добавить сортировки / условия и т.д.
     }
     
     /**

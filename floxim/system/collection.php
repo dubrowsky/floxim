@@ -241,7 +241,7 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
     public function get_values($field, $key_field = null, $as_collection = false) {
         $result = array();
         foreach ($this->data as $k => $v) {
-            $res_key = $key_field ? $key_field : $k;
+            $res_key = $key_field ? $v[$key_field] : $k;
             if ( (is_array($v) || $v instanceof ArrayAccess) && isset($v[$field])) {
                 $result[$res_key] = $v[$field];
             } elseif (is_object($v) && isset($v->$field)) {

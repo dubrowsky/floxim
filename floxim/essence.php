@@ -9,11 +9,6 @@ abstract class fx_essence implements ArrayAccess {
     // набор полей, которые изменились
     protected $modified = array();
     protected $modified_data = array();
-    // первичный ключ
-    protected $pk = 'id';
-    protected $inherit = false;
-    protected $parent_field = 'parent_id';
-    protected $inherit_fields = array();
     
     protected $validate_errors = array();
     
@@ -30,16 +25,17 @@ abstract class fx_essence implements ArrayAccess {
 
     public function save($dont_log = false, $action = 'update') {
         $this->_before_save();
+        $pk = $this->_get_pk();
         // update
-        if ($this->data[$this->pk] && $action === 'update') {
+        if ($this->data[$pk] && $action === 'update') {
             $this->_before_update();
             // обновляем только изменившиеся поля
-                        $data = array();
+            $data = array();
             foreach ($this->modified as $v) {
                 $data[$v] = $this->data[$v];
             }
                 
-            $this->_get_finder()->update($data, array($this->pk => $this->data[$this->pk]));
+            $this->_get_finder()->update($data, array($pk => $this->data[$pk]));
             $this->_after_update();
             if (!$dont_log)
                 $this->_add_history_operation('update', $data);
@@ -67,12 +63,11 @@ abstract class fx_essence implements ArrayAccess {
      */
     public function get($prop_name = null) {
         if ($prop_name) {
-            if (isset($this->data[$prop_name])) {
+            if (array_key_exists($prop_name, $this->data)) {
                 return $this->data[$prop_name];
-            } else {
-                dev_log($this, $prop_name);
-                throw new Exception("Class: " . get_class($this) . ", undefined item: " . $prop_name);
             }
+            dev_log($this, $prop_name);
+            throw new Exception("Class: " . get_class($this) . ", undefined item: " . $prop_name);
         }
         return $this->data;
     }
@@ -94,12 +89,13 @@ abstract class fx_essence implements ArrayAccess {
     }
 
     public function get_id() {
-        return $this->data[$this->pk];
+        return $this->data[$this->_get_pk()];
     }
 
     public function delete( $dont_log = false ) {
+        $pk = $this->_get_pk();
         $this->_before_delete();
-        $this->_get_finder()->delete($this->pk, $this->data[$this->pk]);
+        $this->_get_finder()->delete($pk, $this->data[$pk]);
         $this->modified_data = $this->data;
         $this->_after_delete();
         if (!$dont_log) $this->_add_history_operation('delete');
@@ -119,6 +115,10 @@ abstract class fx_essence implements ArrayAccess {
     
     public function get_validate_error () {
         return $this->validate_errors;
+    }
+    
+    protected function _get_pk() {
+        return 'id';
     }
 
     public function __toString() {
