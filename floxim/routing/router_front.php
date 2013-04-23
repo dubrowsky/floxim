@@ -37,7 +37,7 @@ class fx_router_front extends fx_router {
             return $cached;
         }
         $page = fx::data('content_page', $page_id);
-        dev_log('lurk pg', $page);
+        // dev_log('lurk pg', $page);
         if (!$page) {
             return;
         }

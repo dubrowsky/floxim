@@ -42,7 +42,7 @@
                         <span class="title">{%title}Менюшечка:{/%title}&nbsp;</span>
                         {render}
                             <span class="menu_item">
-                                <a href="{$f_url}">{$f_name}</a>
+                                <a href="{$url}">{$name}</a>
                             </span>
                             <?if (!$item_is_last){?>
                                 <span class="sep">{%separator}&nbsp;&bull;&nbsp;{/%separator}</span>

@@ -28,7 +28,7 @@
 			{area id="header"}
 			<div id="menu" fx_template="demo_menu" fx_template_for="component_section.listing">
             	<ul>
-                    <li fx_render="."><a href="{$f_url}"><span class="mw"><span class="mw">{$f_name}</span></span></a></li>
+                    <li fx_render="."><a href="{$url}"><span class="mw"><span class="mw">{$name}</span></span></a></li>
                 </ul>
 			</div>
             <!--//горизонтальное меню-->
@@ -65,7 +65,7 @@
 			<h2 fx_var="menu_title">Заголовок меню</h2>
             <ul>
                 <li fx_render=".">
-					<a class="menu-active" href="{$f_url}">{$f_name}</a>
+					<a class="menu-active" href="{$url}">{$name}</a>
 				</li>
 			</ul>
 		</div>

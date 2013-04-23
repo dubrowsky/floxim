@@ -8,7 +8,7 @@ if (!defined('FLOXIM')) {
 fx_content_user::attempt_to_authorize();
 ob_start();
 if ( ($controller = fx::router()->route() ) ) {
-    dev_log('routed');
+    // dev_log('routed');
     $result = $controller->process();
     dev_log('processed');
     if (!is_string($result)) {

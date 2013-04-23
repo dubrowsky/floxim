@@ -88,9 +88,6 @@ class fx_content extends fx_essence {
     
     //protected $_fields_to_show = null;
     
-    const field_to_show_prefix = 'f_';
-
-
     public function get_fields_to_show() {
         if (!isset($this->_fields_to_show)) {
             $this->_fields_to_show = array();
@@ -99,10 +96,19 @@ class fx_content extends fx_essence {
                 die();
             }
             $component = fx::data('component', $this->component_id);
-            $content_fields = $component->fields();
+            $chain = $component->get_chain();
+            $content_fields = new fx_collection();
+
+            foreach ( $chain as $chain_level ) {
+                if ( $chain_level['keyword'] == 'content') {
+                    continue;
+                }
+                $content_fields->concat ( $chain_level->fields() );
+            }
+
             foreach ($this->data as $k => $v) {
                 $cf = $content_fields->find_one('name', $k);
-                $fkey = fx_content::field_to_show_prefix.$k;
+                $fkey = $k;
                 if ($cf) {
                     $this->_fields_to_show[$fkey] = new fx_template_field($v, array(
                         'var_type' => 'content', 
@@ -123,7 +129,7 @@ class fx_content extends fx_essence {
     
     public function get_field_to_show($field) {
         $fields = $this->get_fields_to_show();
-        $index = fx_content::field_to_show_prefix.$field;
+        $index = $field;
         return isset($fields[$index]) ? $fields[$index] : 'nu';
     }
     

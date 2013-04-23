@@ -1,18 +1,18 @@
 <div class="post" fx_render=".">
-    <h1><a href="{$f_url}">{$f_header}</a></h1>
-    <p>{$f_anounce}</p>
+    <h1><a href="{$url}">{$header}</a></h1>
+    <p>{$anounce}</p>
     <hr />
     <p>Тэги:</p>
     <?
-            dev_log($f_tags);
+            dev_log($tags);
     ?>
-    <span fx_render="$f_tags" fx_render_as="$tag">
-        <a href="{$f_url}">{$f_name}</a>{if test="!$tag_is_last"}, {/if}
+    <span fx_render="$tags" fx_render_as="$tag">
+        <a href="{$url}">{$name}</a>{if test="!$tag_is_last"}, {/if}
     </span>
     <div class="info">
         {*
-        Автор: {$f_author}<br />
-        Дата публикации: {$f_author}<br />
+        Автор: {$author}<br />
+        Дата публикации: {$author}<br />
         Комментариев: <?=count($post['comments'])?><br />
         Настроение: <?=$post['mood']?><br />
         Музыка: <?=$post['music']?><br />

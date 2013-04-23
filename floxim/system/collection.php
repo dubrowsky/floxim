@@ -309,6 +309,13 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
         }
         return $this;
     }
+
+    public function concat ( $collection ) {
+        foreach ($collection as $item) {
+            $this[]= $item;
+        }
+        return $this;
+    }
     
     /* IteratorAggregate */
     

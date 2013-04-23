@@ -7,7 +7,7 @@
                         background:{%odd_bg title="fon_nechetnogo_elementa"}#C00{/%odd_bg};
                         color:{%odd_color}#FF0{/%odd_color};"
                  {/if}>
-                <a href="{$f_url}" fx_var="$f_name">Раздел</a>
+                <a href="{$url}" fx_var="$name">Раздел</a>
                 <span fx_if="!$item_is_last" fx_var="separator">&bull;</span>
             </div>
         {/render}
@@ -17,8 +17,8 @@
 {template id="breadcrumbs"}
     <div class="breadcrumbs">
         {render}
-            <span fx_if="!$item_is_last"><a href="{$f_url}">{$f_name}</a>{%separator} -> {/%}</span>
-            <h1 fx_if="$item_is_last">{$f_name}</h1>
+            <span fx_if="!$item_is_last"><a href="{$url}">{$name}</a>{%separator} -> {/%}</span>
+            <h1 fx_if="$item_is_last">{$name}</h1>
         {/render}
     </div>
 {/template}

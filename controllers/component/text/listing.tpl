@@ -1,5 +1,5 @@
 {render}
     <div class="text">
-        {$f_text}
+        {$text}
     </div>
 {/render}

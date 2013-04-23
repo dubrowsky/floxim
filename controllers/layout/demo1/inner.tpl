@@ -38,7 +38,7 @@
 			<div id="menu" fx_template="main_menu" fx_template_for="component_section.listing">
                 <ul>
                 	<li fx_render="">
-                		<a class="menu-active" href="{$f_url}"><span><span>{$f_name}</span></span></a>
+                		<a class="menu-active" href="{$url}"><span><span>{$name}</span></span></a>
                 	</li>
                 </ul>
 			</div>

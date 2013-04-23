@@ -369,11 +369,11 @@ class fx_core extends fx_system {
                 
                 $source_dir = $doc_root.'controllers/'.$ctr_type.'/'.$ctr_name;
                 if (is_dir($source_dir)) {
-                    dev_log('recompile '.$tpl_file);
+                    // dev_log('recompile '.$tpl_file);
                     $processor = new fx_template_processor();
                     $processor->process_dir($source_dir);
                     $file = $tpl_file;
-                    dev_log('endrec');
+                    // dev_log('endrec');
                     break;
                 }
             }
