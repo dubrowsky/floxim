@@ -3,8 +3,9 @@ class fx_data_content extends fx_data {
     protected function _get_data() {
         $data = parent::_get_data();
         $types_by_id = $data->get_values('type', 'id');
-        $base_type = fx::data('component', $this->component_id)->get('keyword');
-        $base_table = $base_type == 'content' ? 'content' : 'content_'.$base_type;
+        $base_component = fx::data('component', $this->component_id);
+        $base_type = $base_component['keyword'];
+        $base_table = $base_component->get_content_table();
         $types = array();
         foreach ($types_by_id as $id => $type) {
             if ($type != $base_type) {
@@ -48,16 +49,16 @@ class fx_data_content extends fx_data {
         $chain = fx::data('component', $this->component_id)->get_chain();
         $tables = array();
         foreach ($chain as $comp) {
-            $tables []= $comp['keyword'] == 'content' ? 'content' : 'content_'.$comp['keyword'];
+            $tables []= $comp->get_content_table();
         }
         return $tables;
-        //return $chain->get_values('keyword');
     }
     
     protected $component_id = null;
     
     public function __construct($table = null) {
         parent::__construct($table);
+        $content_type = null;
         if (preg_match("~^fx_data_content_(.+)$~", get_class($this), $content_type)) {
             $this->set_component($content_type[1]);
         }
@@ -70,7 +71,7 @@ class fx_data_content extends fx_data {
             die("Component not found: ".$component_id_or_code);
         }
         $this->component_id = $component['id'];
-        $this->table = 'content_' . $component['keyword'];
+        $this->table = $component->get_content_table();
         return $this;
     }
 
@@ -83,13 +84,15 @@ class fx_data_content extends fx_data {
         $obj['created'] = date("Y-m-d H:i:s");
         $obj['user_id'] = +$user['id'];
         $obj['checked'] = 1;
-        $obj['priority'] = $this->next_priority($this->component_id);
+        $obj['type'] = fx::data('component', $this->component_id)->get('keyword');
+        //$obj['priority'] = $this->next_priority($this->component_id);
         return $obj;
     }
 
-    public function next_priority ( $class_id ) {
-        $this->set_component($class_id);
-        return fx_core::get_object()->db->get_var("SELECT MAX(`priority`)+1 FROM `{{".$this->table."}}`");
+    public function next_priority () {
+        return fx_core::get_object()->db->get_var(
+                "SELECT MAX(`priority`)+1 FROM `{{content}}`"
+        );
     }
     
     protected static $content_classes = array();
@@ -150,21 +153,62 @@ class fx_data_content extends fx_data {
             $wh[] = "`".fx::db()->escape($k)."` = '".fx::db()->escape($v)."' ";
         }
 
-        
-        
         $update = $this->_set_statement($data);
         foreach ($update as $table => $props) {
             $q = 'UPDATE `{{'.$table.'}}` SET '.join(', ', $props);
             if ($wh) {
                 $q .= " WHERE ".join(' AND ', $wh);
             }
-            echo $q."<br />";
+            fx::db()->query($q);
         }
-        die();
+    }
+    
+    public function delete($cond_field, $cond_val) {
+        if ($cond_field != 'id' || !is_numeric($cond_val)) {
+            throw new Exception("Content can be killed only by id!");
+        }
+        $where = " WHERE `id` = '".fx::db()->escape($cond_val)."'";
+        foreach ($this->get_tables() as $table) {
+            $q = "DELETE FROM `{{".$table."}}` ".$where;
+            fx::db()->query($q);
+            //echo $q."<br />";
+        }
+        //echo fen_debug(func_get_args());
+        //die();
+        /*
+        for ($i = 0; $i < $argc; $i = $i + 2) {
+            $where[] = "`".$argv[$i]."` = '".fx::db()->escape($argv[$i + 1])."'";
+        }
+        if ($where) $where = " WHERE ".join(" AND ", $where);
 
-        if ($update) {
-            fx::db()->query("UPDATE `{{".$this->table."}}` SET ".join(',', $update)." ".( $wh ? " WHERE ".join(' AND ', $wh) : "")." ");
+        $res = fx::db()->get_results("DELETE FROM `{{".$this->table."}}`".$where);
+         * 
+         */
+    }
+    
+    public function insert($data) {
+        if (!isset($data['type'])){
+            throw  new Exception('Can not save essence with no type specified');
         }
+        $set = $this->_set_statement($data);
+        
+        $tables = $this->get_tables();
+        
+        $root_set = $set['content'];
+        $q = "INSERT INTO `{{content}}` SET ".join(", ", $root_set);
+        fx::db()->query($q);
+        $id = fx::db()->insert_id();
+        
+        foreach ($tables as $table) {
+            if ($table == 'content') {
+                continue;
+            }
+            $table_set = isset($set[$table]) ? $set[$table] : array();
+            $table_set[]= "`id` = '".$id."'";
+            $q = "INSERT INTO `{{".$table."}}` SET ".join(", ", $table_set);
+            fx::db()->query($q);
+        }
+        return $id;
     }
     
     protected function _set_statement($data) {
@@ -193,7 +237,7 @@ class fx_data_content extends fx_data {
                 }
             }
             if (count($table_res) > 0) {
-                $res[$level_component['keyword']] = $table_res;
+                $res[$level_component->get_content_table()] = $table_res;
             }
         }
         return $res;

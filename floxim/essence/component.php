@@ -5,6 +5,10 @@ defined("FLOXIM") || die("Unable to load file.");
 
 class fx_component extends fx_essence {
     
+    public function get_content_table() {
+        return $this['keyword'] == 'content' ? $this['keyword'] : 'content_'.$this['keyword'];
+    }
+    
     public function get_chain() {
         $chain = array($this);
         $c_pid = $this->get('parent_id');
