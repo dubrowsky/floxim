@@ -84,6 +84,11 @@ class fx_data {
         $objs = array();
         foreach ($res as $v) {
             // не забыть serialized
+            foreach ($this->serialized as $serialized_field_name) {
+                if (isset($v[$serialized_field_name])) {
+                    $v[$serialized_field_name] = unserialize($v[$serialized_field_name]);
+                }
+            }
             $objs[] = $v;
         }
         return new fx_collection($objs);

@@ -128,7 +128,6 @@ class fx_controller_component extends fx_controller {
             //$q_params['order'] = 'priority';
         }
         $items = $f->all();
-        //fx::data('content_page')->attache_to_content($items);
         $this->trigger('items_ready', $items);
 
         if (fx::env('is_admin')) {
