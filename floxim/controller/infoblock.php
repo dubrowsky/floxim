@@ -55,6 +55,7 @@ class fx_controller_infoblock extends fx_controller {
         }
         
         $params = $infoblock->get_prop_inherited('params');
+        
         if (!is_array($params)) {
             $params = array();
         }
@@ -75,9 +76,7 @@ class fx_controller_infoblock extends fx_controller {
             $params, 
             $infoblock->get_prop_inherited('action')
         );
-
-
-
+        
         $result = $controller->process();
         $controller_meta = fx::dig($result, '_meta');
         if (fx::dig($controller_meta, 'disabled') && !fx::env('is_admin')) {

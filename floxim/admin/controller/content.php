@@ -17,16 +17,9 @@ class fx_controller_admin_content extends fx_controller_admin {
             $content = fx::data('content_'.$content_type)->create(array(
                 'parent_id' => $input['parent_id'],
                 'infoblock_id' => $input['infoblock_id'],
-                'checked' => 1
+                'checked' => 1,
+                'site_id' => $parent_page['site_id']
             ));
-            if ($component['has_page']) {
-                $page = fx::data('content_page')->create(array(
-                    'parent_id' => $input['parent_id'],
-                    'content_type' => $content_type,
-                    'site_id' => $parent_page['site_id'],
-                    'infoblock_id' => $input['infoblock_id']
-                ));
-            }
         }
                 
         $fields = array(
@@ -47,12 +40,15 @@ class fx_controller_admin_content extends fx_controller_admin {
 
         $c_fields = array();
         $chain = $component->get_chain();
+        $all_fields = array();
         foreach ( $chain as $chain_level ) {
-            if ( $chain_level['keyword'] == 'content') continue;
+            if ( $chain_level['keyword'] == 'content') {
+                continue;
+            }
             $content_fields = $chain_level->fields();
-            foreach ( $content_fields as $field )
-            {
+            foreach ( $content_fields as $field ) {
                 if ($field['type_of_edit'] != 3) {
+                    $all_fields[]= $field;
                     $c_fields[] = $field->get_js_field($content);
                 }
             }
@@ -62,7 +58,8 @@ class fx_controller_admin_content extends fx_controller_admin {
         $this->response->add_fields($c_fields, 'content', 'content');
 
         if ($input['data_sent']) {
-            $content->set_field_values($content_fields, $input['content']);
+            dev_log("Saving", $all_fields, $input['content'], $content);
+            $content->set_field_values($all_fields, $input['content']);
             $content->save();
         }
         return array('status' => 'ok');
