@@ -30,7 +30,6 @@ class fx_content_user extends fx_content {
                 s.`id` = '".$db->escape($session_id)."'
                 AND s.`user_id` = u.`id`
                 AND u.`id` = ug.`user_id`
-                #AND  u.`checked` = 1
                 AND s.`session_time` > ".time());
         }
 

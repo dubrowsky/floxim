@@ -106,7 +106,6 @@ class fx_system_env extends fx_system {
   }
   
   public function is_admin() {
-      return true;
       $user = $this->get_user();
       if (!$user) {
           return false;

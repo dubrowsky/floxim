@@ -9,8 +9,7 @@ class fx_controller_widget_authform extends fx_controller_widget {
             $password = $_POST['password'];
             $user = fx::data('content_user')->get(
                     "`".fx::config()->AUTHORIZE_BY."` = '".fx::db()->escape($login)."'
-                        AND `password` = ".fx::config()->DB_ENCRYPT."('".fx::db()->escape($password)."')
-                        AND `checked` = 1"
+                        AND `password` = ".fx::config()->DB_ENCRYPT."('".fx::db()->escape($password)."')"
             );
             if ($user) {
                 $user->authorize();
