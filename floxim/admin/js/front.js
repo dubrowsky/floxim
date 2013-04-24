@@ -29,8 +29,14 @@ fx_front = function () {
         if (target.closest('.fx_overlay').length > 0) {
             return;
         }
-        var closest_selectable = $fx.front.get_selectable_up(target);
-        //target.closest($fx.front.mode_selectable_selector);
+        
+        var closest_selectable = null;
+        if ($fx.front.is_selectable(target)) {
+            closest_selectable = target;
+        } else {
+            closest_selectable = $fx.front.get_selectable_up(target);
+        }
+        
         if (closest_selectable) {
             // перемещение между страницами по ссылкам с зажатым контролом,
             // и даже сохраняет текущий режим
