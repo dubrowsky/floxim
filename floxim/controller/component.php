@@ -111,9 +111,7 @@ class fx_controller_component extends fx_controller {
 
     public function record() {
         $page = fx::data('content_page', fx::env('page'));
-        $content = fx::data('content_' . $page['content_type'], $page['content_id']);
-        $content->set_page($page);
-        return array('items' => $content);
+        return array('items' => $page);
     }
 
 

@@ -63,17 +63,20 @@ class fx_router_front extends fx_router {
                 $ib->is_inherited = true;
                 //continue;
             }
-            // scope - "только эта страница"
-            if (fx::dig($ib, 'scope.pages') == 'this' && $ib['page_id'] != $page_id) {
-                continue;
-            }
-            // scope - "этот уровень", а мы смотрим родителя
-            if (fx::dig($ib, 'scope.pages') == 'children' && $ib['page_id'] == $page_id) {
-                continue;
+            // если page_id=0 - тупо все страницы, игнорируем фильтр scope.pages
+            if ($ib['page_id'] != 0) {
+                // scope - "только эта страница"
+                if (fx::dig($ib, 'scope.pages') == 'this' && $ib['page_id'] != $page_id) {
+                    continue;
+                }
+                // scope - "этот уровень", а мы смотрим родителя
+                if (fx::dig($ib, 'scope.pages') == 'children' && $ib['page_id'] == $page_id) {
+                    continue;
+                }
             }
             // проверяем на соответствие фильтра по типу страницы
             $scope_page_type = fx::dig($ib, 'scope.page_type');
-            if ( $scope_page_type && $scope_page_type != $page['content_type'] ) {
+            if ( $scope_page_type && $scope_page_type != $page['type'] ) {
                 continue;
             }
             $ib_visuals = array();

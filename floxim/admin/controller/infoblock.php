@@ -190,6 +190,9 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             if (!is_array($infoblock['scope'])) {
                 $infoblock['scope'] = array();
             }
+            if ($input['scope']['page_id'] == 0) {
+                $input['scope']['pages'] = 'all';
+            }
             $ib_scope = array(
                 'pages' => $input['scope']['pages'],
                 'page_type' => $input['scope']['page_type']
@@ -197,31 +200,6 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             $infoblock['scope'] = $ib_scope;
             $infoblock['page_id'] = $input['scope']['page_id'];
             
-            // SCOPE LOGIC
-            /*
-            switch ( $input['scope']['pages']) {
-                case 'all':
-                    $infoblock['page_id'] = fx::env('home_id');
-                    $ib_scope['pages'] = 'all';
-                    break;
-                case 'this':
-                    $ib_scope['pages'] = 'this';
-                    $infoblock['page_id'] = $input['page_id'];
-                    break;
-                case 'brothers':
-                    $ib_scope['pages'] = 'children';
-                    $c_page = fx::data('content_page', $infoblock['page_id']);
-                    $infoblock['page_id'] = $c_page['parent_id'];
-                    break;
-                case 'descendants':
-                    $infoblock['page_id'] = $input['page_id'];
-                    $ib_scope['pages'] = 'descendants';
-                    break;
-            }
-            
-            $infoblock['scope'] = $ib_scope;
-             * 
-             */
             $i2l['wrapper'] = fx::dig($input, 'visual.wrapper');
             $i2l['template'] = fx::dig($input, 'visual.template');
             $infoblock->save();
@@ -266,7 +244,6 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
      */
     
     protected function _get_scope_fields(fx_infoblock $infoblock, fx_content_page $c_page) {
-        
         $fields = array();
         
         $path_vals = array('0' => 'На всех страницах');
@@ -277,18 +254,25 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             $path_vals [$pp['id']]= str_repeat('&nbsp;&nbsp;&nbsp;', $level).$pp['name'];
         }
         
+        if ( ! ($c_pages_val = fx::dig($infoblock, 'scope.pages')) ) {
+            $c_pages_val = 'all';
+        }
+        
+        
+        if ($c_pages_val == 'all'){
+            $c_page_id_val = 0;
+        } else {
+            $c_page_id_val = $infoblock['page_id'];
+        }
+        
         $fields []= array(
             'type' => 'select', 
             'name' => 'page_id', 
             'label' => 'Страница',
             'values' => $path_vals,
-            'value' => $infoblock['page_id']
+            'value' => $c_page_id_val
         );
-        
-        if ( ! ($c_page_val = fx::dig($infoblock, 'scope.pages')) ) {
-            $c_page_val = 'all';
-        }
-        
+                
         $page_vals = array(
             'this' => 'Только на этой странице'
         );
@@ -302,7 +286,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             'type' => 'select', 
             'name' => 'pages', 
             'values' => $page_vals,
-            'value' => $c_page_val,
+            'value' => $c_pages_val,
             'parent' => array('page_id' => '!=0')
         );
         
@@ -311,6 +295,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             'label' => 'Если тип страницы (пусто - любой)',
             'value' => fx::dig($infoblock, 'scope.page_type')
         );
+        dev_log('scope fields', $fields, $infoblock, $c_page);
         return $fields;
     }
     

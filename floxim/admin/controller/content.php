@@ -58,98 +58,10 @@ class fx_controller_admin_content extends fx_controller_admin {
         $this->response->add_fields($c_fields, 'content', 'content');
 
         if ($input['data_sent']) {
-            dev_log("Saving", $all_fields, $input['content'], $content);
             $content->set_field_values($all_fields, $input['content']);
             $content->save();
         }
         return array('status' => 'ok');
-    }
-
-    public function add_save($input) {
-        $fx_core = fx_core::get_object();
-        $user = $fx_core->env->get_user();
-        $result = array('status' => 'ok');
-        $only_check = (bool) $input['fx_ajax_check'];
-
-        $infoblock_id = $input['fx_infoblock'];
-        $infoblock = fx::data('infoblock')->get_by_id($infoblock_id);
-        if ( !$infoblock ) {
-            die("Инфоблок не существует");
-        }
-
-        $subdivision = fx::data('subdivision')->get_by_id($infoblock['subdivision_id']);
-
-        $component_id = $infoblock->get('essence_id');
-        $component = fx::data('component')->get_by_id($component_id);
-        $fields = $component->fields();
-
-        $fx_content = fx::data('content')->create($component_id);
-        $fx_content['parent_id'] = intval($input['parent_id']);
-        $fx_content['infoblock_id'] = $infoblock_id;
-        
-        if ( $user && $user->perm()->is_supervisor() ) {
-            // todo: seo и спец поля
-        }
-
-        // условие добавления объекта
-        $tpl = $component->load_tpl_object( $infoblock['list_ctpl_id']);
-        $tpl->set_vars('input', $input);
-        $tpl->set_vars('fx_content', $fx_content);
-        $tpl->set_vars('fx_infoblock', $infoblock);
-        $tpl->set_vars('fx_subdivision', $subdivision);
-        $tpl->set_vars('fx_component', $component);
-        $tpl->set_vars('fx_fields', $fields);
-
-        $tpl->add_cond();
-
-        $err = $tpl->get_error();
-        // условие добавления объекта не прошло
-        if ($err) {
-            $result = $err;
-            $result['status'] = 'error';
-        }
-
-        // системные проверки
-        if ( $result['status'] == 'ok' ) { 
-            $result = $fx_content->set_field_values($fields, $input, $only_check);
-        }
-        
-        if ($only_check) {
-            return $result;
-        } 
-
-        if ($result['status'] == 'ok') {
-            $fx_content->save();
-            foreach ($fields as $v) {
-                $v->post_save($fx_content);
-            }
-        }
-
-        if ($input['fx_admin']) {
-            return $result;
-        }
-
-        ob_start();
-        if ($result['status'] == 'error') {
-            $tpl->set_vars('result', $result);
-            $tpl->begin_add_form();
-            $tpl->add_form();
-            $tpl->end_add_form();
-        } else {
-            $tpl->after_add();
-        }
-        
-        $content = ob_get_clean();
-
-        if ( $input['fx_naked'] ) {
-            echo $content;
-        }
-        else {
-            $page = new fx_controller_page();
-            $page->set_main_content($content);
-            $page->index();
-        }
-        
     }
 
     public function checked_save($input) {
@@ -209,32 +121,6 @@ class fx_controller_admin_content extends fx_controller_admin {
         $content = fx::data('content_'.$input['content_type'], $input['content_id']);
         $content->delete();
         return array('status' => 'ok');
-        if ($input['infoblock_id']) {
-            $infoblock = fx::data('infoblock')->get_by_id($input['infoblock_id']);
-        }
-        if ($infoblock && $infoblock->is_manual_content_selection()) {
-            $infoblock->delete_content($input['id']);
-        } else {
-            $ids = $input['id'];
-            if (!is_array($ids)) {
-                $ids = array($ids);
-            }
-
-            foreach ($ids as $id) {
-                if (preg_match("/(\d+)-(\d+)/", $id, $match)) {
-                    $class_id = $match[1];
-                    $content_id = $match[2];
-                }
-
-                $content = fx::data('content')->get_by_id($class_id, $content_id);
-                $content->delete();
-            }
-        }
-
-
-
-        $result['status'] = 'ok';
-        return $result;
     }
     
     /*
