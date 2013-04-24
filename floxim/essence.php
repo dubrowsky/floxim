@@ -34,7 +34,11 @@ abstract class fx_essence implements ArrayAccess {
             foreach ($this->modified as $v) {
                 $data[$v] = $this->data[$v];
             }
-                
+
+            dev_log('this',$this);
+            dev_log('now will get finder:');
+            dev_log('this_get_finder',$this->_get_finder());
+
             $this->_get_finder()->update($data, array($pk => $this->data[$pk]));
             $this->_after_update();
             if (!$dont_log)
@@ -42,6 +46,11 @@ abstract class fx_essence implements ArrayAccess {
         } // insert
         else {
             $this->_before_insert();
+
+            dev_log('this',$this);
+            dev_log('now will get finder:');
+            dev_log('this_get_finder',$this->_get_finder());
+
             $id = $this->_get_finder()->insert($this->data);
             $this->data['id'] = $id;
             $this->_after_insert();
