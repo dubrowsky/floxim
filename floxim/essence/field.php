@@ -66,6 +66,9 @@ class fx_field extends fx_essence {
         }
 
         $modified = $this->modified_data['name'] && $this->modified_data['name'] != $this->data['name'];
+
+        dev_log( 'зашли сюда' );
+
         if ($this['component_id'] && ( $modified || !$this['id'])) {
             if ($fx_core->util->is_mysql_keyword($this->data['name'])) {
                 $this->validate_errors[] = array('field' => 'name', 'text' => 'Данное поле зарезервированно');
@@ -73,7 +76,9 @@ class fx_field extends fx_essence {
             }
 
             /// Правим тут
-            dev_log( 'type', $this->get_type() );
+            $component = fx::data('component')->where('id',$this['component_id'])->one();
+            $chain = $component->get_chain();
+            dev_log('chain', $chain);
 
             if ($fx_core->db->column_exists($this->get_table(), $this->data['name'])) {
                 $this->validate_errors[] = array('field' => 'name', 'text' => 'Такое поле уже существует');
@@ -93,7 +98,7 @@ class fx_field extends fx_essence {
     }
 
     protected function get_table() {
-        return fx::data('component')->get_by_id($this['component_id'])->get_content_table();
+        return fx::data('component')->where('id',$this['component_id'])->one()->get_content_table();
     }
 
     protected function _after_insert() {

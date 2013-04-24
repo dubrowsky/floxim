@@ -122,6 +122,7 @@ class fx_controller_admin_component extends fx_controller_admin {
 
         $fields[] = $this->ui->hidden('source', $input['source']);
         $fields[] = $this->ui->hidden('posting');
+        $fields []= $this->_get_parent_component_field();
 
 
         return array('fields' => $fields);
@@ -202,7 +203,7 @@ class fx_controller_admin_component extends fx_controller_admin {
         if (($data['group'] == 'fx_new') && $input['fx_new_group']) {
             $data['group'] = $input['fx_new_group'];
         }
-        // $data['has_page'] = $input['has_page'];
+        $data['parent_id'] = $input['parent_id'];
 
         $component = fx::data('component')->create($data);
 
