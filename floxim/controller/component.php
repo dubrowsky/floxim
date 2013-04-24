@@ -124,8 +124,12 @@ class fx_controller_component extends fx_controller {
         $c_ib = fx::data('infoblock', $this->param('infoblock_id'));
         $f->where('infoblock_id', $c_ib->get_root_infoblock()->get('id'));
         $f->where('parent_id', $this->_get_parent_id());
-        if ($this->param('sorting') == 'manual') {
-            //$q_params['order'] = 'priority';
+        if ( ($sorting = $this->param('sorting')) ) {
+            if ($sorting == 'manual') {
+                $f->order('priority');
+            } else {
+                $f->order($sorting, $this->param('sorting_dir'));
+            }
         }
         $items = $f->all();
         $this->trigger('items_ready', $items);
