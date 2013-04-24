@@ -3,7 +3,9 @@
 class fx_controller_admin_field extends fx_controller_admin {
 
     public function items( $essence ) {
+        
         $items = $essence->fields();
+        dev_log('filds for', $essence, $items);
         
         $ar = array('type' => 'list', 'filter' => true, 'sortable' => true);
         
@@ -19,7 +21,7 @@ class fx_controller_admin_field extends fx_controller_admin {
                 	'url' =>  '#admin.'.$essence_code.'.edit('.$essence['id'].',edit_field,'.$field->get_id().')'
                 ),
                 'label' => $field->get_description(), 
-                'type' => constant("FX_ADMIN_FIELD_".strtoupper($field->get_type()))
+                'type' => constant("FX_ADMIN_FIELD_".strtoupper($field->get_type(false)))
 		   );
             $ar['values'][] = $r;
         }
@@ -38,7 +40,7 @@ class fx_controller_admin_field extends fx_controller_admin {
         //$result['buttons_action']['add']['options']['to_id'] = $essence['id'];
         $result['fields'] = $fields;
         $result['essence'] = 'field';
-        
+        dev_log($result);
         return $result;
     }
     
@@ -129,8 +131,6 @@ class fx_controller_admin_field extends fx_controller_admin {
     
     public function edit_save ( $input ) {
         $field = fx::data('field')->get_by_id( $input['id']);
-
-        dev_log('field',$field);
 
         $params = array('name', 'description', 'format', 'type', 'not_null', 'searchable', 'default', 'type_of_edit');
         $input['name'] = trim($input['name']);

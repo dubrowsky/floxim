@@ -44,7 +44,7 @@ class fx_template {
             echo $result;
         }
         if (fx::env('is_admin')) {
-            echo "<a class='fx_infoblock_adder' data-fx_area='".$area."'>Добавить инфоблок</a>";
+            echo "<a class='fx_infoblock_adder'>Добавить инфоблок</a>";
             echo "###fx_area_end###";
         }
         //echo "<!-- // area ".$area." -->\n";

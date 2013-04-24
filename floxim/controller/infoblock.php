@@ -155,6 +155,7 @@ class fx_controller_infoblock extends fx_controller {
         }
         
         if ($infoblock['controller'] == 'layout') {
+            $meta['class'] .= ' fx_unselectable';
             $html_result = preg_replace_callback(
                 '~<body[^>]*?>~is', 
                 function($matches) use ($meta) {

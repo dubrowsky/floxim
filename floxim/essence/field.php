@@ -32,8 +32,8 @@ class fx_field extends fx_essence {
         $this->_edit_jsdata = array('type' => 'input');
     }
 
-    public function get_type() {
-        return 'field_'.$this->type;
+    public function get_type($full = true) {
+        return ($full ? 'field_' : '').$this->type;
     }
 
     public function get_type_id() {
