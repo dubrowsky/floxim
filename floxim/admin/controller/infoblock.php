@@ -312,7 +312,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                 'type' => 'hidden'
             )
         );
-        $wrappers = array('' => 'Без обертки');
+        $wrappers = array('' => 'Без оформления');
         $templates = array('auto.auto' => 'Автовыбор');
         $layout_essence = fx::data('layout', $i2l['layout_id']);
         $action_variants = array($infoblock['controller'].".".$infoblock['action']);
@@ -340,16 +340,6 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             }
         }
         
-        if ($infoblock->get_prop_inherited('controller') != 'layout') {
-            $fields []= array(
-                'label' => 'Шаблон-обертка',
-                'name' => 'wrapper',
-                'type' => 'select',
-                'values' => $wrappers,
-                'value' => $i2l['wrapper']
-            );
-        }
-        
         $fields []= array(
             'label' => 'Шаблон',
             'name' => 'template',
@@ -357,6 +347,15 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             'values' => $templates,
             'value' => $i2l['template']
         );
+        if ($infoblock->get_prop_inherited('controller') != 'layout') {
+            $fields []= array(
+                'label' => 'Оформление блока',
+                'name' => 'wrapper',
+                'type' => 'select',
+                'values' => $wrappers,
+                'value' => $i2l['wrapper']
+            );
+        }
         return $fields;
     }
 	

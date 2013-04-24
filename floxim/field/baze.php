@@ -42,7 +42,7 @@ class fx_field_baze extends fx_field {
     public function get_js_field($content, $tname = 'f_%name%', $layer = '', $tab = '') {
 
         $name = $tname ? str_replace('%name%', $this->name, $tname) : $this->name;
-        $this->_js_field = array('id' => $name, 'name' => $name, 'label' => $this->description, 'type' => $this->get_type());
+        $this->_js_field = array('id' => $name, 'name' => $name, 'label' => $this->description, 'type' => $this->get_type(false));
         $this->_js_field['value'] = $this['default'];
         if ($content[$this->name]) {
             $this->_js_field['value'] = $content[$this->name];

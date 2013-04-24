@@ -29,8 +29,9 @@ fx_front = function () {
         if (target.closest('.fx_overlay').length > 0) {
             return;
         }
-        var closest_selectable = target.closest($fx.front.mode_selectable_selector);
-        if (closest_selectable.length > 0) {
+        var closest_selectable = $fx.front.get_selectable_up(target);
+        //target.closest($fx.front.mode_selectable_selector);
+        if (closest_selectable) {
             // перемещение между страницами по ссылкам с зажатым контролом,
             // и даже сохраняет текущий режим
             var clicked_link = $(e.target).closest('a');
@@ -38,7 +39,7 @@ fx_front = function () {
                 document.location.href = clicked_link.attr('href')+document.location.hash;
                 return false;
             }
-            $fx.front.select_item(closest_selectable.get(0));
+            $fx.front.select_item(closest_selectable);
             return false;
         }
         $fx.front.deselect_item();
@@ -46,16 +47,18 @@ fx_front = function () {
 }
 
 fx_front.prototype.is_selectable = function(node) {
-    return $(node).is(this.mode_selectable_selector);
+    return $(node).is(this.mode_selectable_selector) && !$(node).hasClass('fx_unselectable');
 }
 
-fx_front.prototype.get_selectable_up = function() {
-    var selected = this.get_selected_item();
-    if (!selected) {
+fx_front.prototype.get_selectable_up = function(rel_node) {
+    if (!rel_node) {
+        rel_node = this.get_selected_item();
+    }
+    if (!rel_node) {
         return null;
     }
     var selectable_up = null
-    var parents = $(selected).parents();
+    var parents = $(rel_node).parents();
     for (var i = 0; i < parents.length; i++) {
         var c_parent = parents.get(i);
         if (this.is_selectable(c_parent)) {
@@ -311,6 +314,7 @@ fx_front.prototype.set_mode_edit = function () {
                });
            }
         });
+        return false;
     });
     
     $('html').on('fx_deselect.fx_edit_mode', '.fx_content_essence', function() {
@@ -471,7 +475,6 @@ fx_front.prototype.set_mode_design = function() {
     
     var add_infoblock = function() {
         var area = $(this).closest('.fx_area').data('fx_area');
-        console.log(area);
         $fx.post({
             essence:'infoblock',
             action:'select_controller',
@@ -502,13 +505,21 @@ fx_front.prototype.set_mode_design = function() {
         });
     }
     
-    $('html').on('fx_select.fx_design_mode', '.fx_infoblock', function() {
+    $('html').on('fx_select.fx_design_mode', '.fx_infoblock', function(e) {
         $fx.buttons.bind('settings', configure_infoblock);
         $fx.buttons.bind('delete', delete_infoblock);
+        return false;
     });
+    
+    $('html').on('fx_select.fx_design_mode', '.fx_area', function() {
+        console.log('area selected');
+        return false;
+    });
+    
     $('html').on('fx_deselect.fx_design_mode', '.fx_infoblock', function() {
         $fx.buttons.unbind('settings');
         $fx.buttons.unbind('delete');
+        return false;
     });
     $('html').on('click.fx_design_mode', '.fx_infoblock_adder', add_infoblock);
 }

@@ -53,7 +53,7 @@ class fx_controller_admin_content extends fx_controller_admin {
                 }
             }
         }
-
+        
         $this->response->add_tab('content', $component['name']);
         $this->response->add_fields($c_fields, 'content', 'content');
 
@@ -61,7 +61,7 @@ class fx_controller_admin_content extends fx_controller_admin {
             $content->set_field_values($all_fields, $input['content']);
             $content->save();
         }
-        return array('status' => 'ok');
+        return array('status' => 'ok', 'dialog_title' => 'Редактирование контента');
     }
 
     public function checked_save($input) {

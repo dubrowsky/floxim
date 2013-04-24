@@ -1569,8 +1569,8 @@ li ul .fx_tree_label .fx_tree_title {
 
 .fx_infoblock_adder {
     display:none;
-    background: #3FB7DE;
-    color:#FFF;
+    background: #3FB7DE !important;
+    color:#FFF !important;
     cursor:pointer;
     font-family: Tahoma;
     font-size:12px;

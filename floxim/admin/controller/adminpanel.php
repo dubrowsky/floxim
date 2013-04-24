@@ -108,12 +108,15 @@ class fx_controller_admin_adminpanel extends fx_controller_admin {
                 'change_password' => array('title' => 'Сменить пароль'),
                 'undo' => array('title' => FX_ADMINPANEL_SITE_BUTTON_UNDO),
                 'redo' => array('title' => FX_ADMINPANEL_SITE_BUTTON_REDO),
-                'more' => array('title' => FX_ADMINPANEL_SITE_BUTTON_REDO)),
+                'more' => array('title' => FX_ADMINPANEL_SITE_BUTTON_REDO)
+            ),
             'map' => array(
                 'page' => array(
                     'edit' => array('add', 'divider', 'edit', 'on', 'off', 'delete','divider', 'select_block' , 'settings'),
-                    'design' => array('add','divider','on', 'off', 'settings', 'delete'))
-                ));
+                    'design' => array('add','divider','on', 'off', 'settings', 'delete', 'select_block')
+                )
+            )
+        );
 
         return $result;
     }
