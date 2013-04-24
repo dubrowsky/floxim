@@ -71,10 +71,16 @@ class fx_field extends fx_essence {
                 $this->validate_errors[] = array('field' => 'name', 'text' => 'Данное поле зарезервированно');
                 $res = false;
             }
+
+            /// Правим тут
+            dev_log( 'type', $this->get_type() );
+
             if ($fx_core->db->column_exists($this->get_table(), $this->data['name'])) {
                 $this->validate_errors[] = array('field' => 'name', 'text' => 'Такое поле уже существует');
                 $res = false;
             }
+
+
         }
 
 

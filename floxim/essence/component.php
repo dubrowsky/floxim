@@ -117,14 +117,7 @@ class fx_component extends fx_essence {
     protected function create_content_table() {
         $sql = "DROP TABLE IF  EXISTS `{{content_".$this['keyword']."}}`;
             CREATE TABLE IF NOT EXISTS `{{content_".$this['keyword']."}}` (
-            `id` int(11) NOT NULL AUTO_INCREMENT,
-            `parent_id` int(11) NOT NULL DEFAULT '0',
-            `user_id` int(11) NOT NULL DEFAULT '0',
-            `infoblock_id` int(11) NOT NULL DEFAULT '0',
-            `priority` int(11) NOT NULL DEFAULT '0',
-            `checked` tinyint(4) NOT NULL DEFAULT '1',
-            `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-            `last_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            `id` int(11) NOT NULL,
             PRIMARY KEY (`id`)
             ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;";
         fx_core::get_object()->db->query($sql);
