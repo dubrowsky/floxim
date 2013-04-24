@@ -32,9 +32,6 @@ class fx {
     	return self::$db;
     }
     
-    /* Data finder instances collection */
-    protected static $data_finders = array();
-    
     protected static $data_cache = array();
     /* Получить дата-файндер для указанного типа content_id данных, либо объект(ы) по id
      * @param string $datatype название типа данных - 'component', 'content_news'
@@ -53,38 +50,33 @@ class fx {
         }
         
         $data_finder = null;
-    	//if (!isset(self::$data_finders[$datatype])) {
-            try {
-                $classname = 'fx_data_'.$datatype;
-                $data_finder = new $classname();
-                if ($datatype == 'content') {
-                    $component = fx::data('component', 'content');
+        
+        try {
+            $classname = 'fx_data_'.$datatype;
+            $data_finder = new $classname();
+            if ($datatype == 'content') {
+                $component = fx::data('component', 'content');
+                $data_finder->set_component($component['id']);
+            }
+        } catch (Exception $e) {
+            // Файндер для контента, класс не определен
+            if (preg_match("~^content_~", $datatype)) {
+                $component = fx::data(
+                    'component', 
+                    preg_replace("~^content_~", '', $datatype)
+                );
+                if ($component) {
+                    $data_finder = new fx_data_content();
                     $data_finder->set_component($component['id']);
                 }
-                //self::$data_finders[$datatype] = $data_finder;
-            } catch (Exception $e) {
-                // Файндер для контента, класс не определен
-                if (preg_match("~^content_~", $datatype)) {
-                    $component = fx::data(
-                        'component', 
-                        preg_replace("~^content_~", '', $datatype)
-                    );
-                    if ($component) {
-                        $data_finder = new fx_data_content();
-                        $data_finder->set_component($component['id']);
-                        //self::$data_finders[$datatype] = $data_finder;
-                    }
-                } /*elseif (preg_match("~^field_~", $datatype)) {
-                    $data_finder = new fx_data_field();
-                }*/
+            } elseif (preg_match("~^field_~", $datatype)) {
+                $data_finder = new fx_data_field();
             }
-    	//}
-    	//if (!isset(self::$data_finders[$datatype])) {
+        }
         if (is_null($data_finder)) {
             dev_log("NO DATATYPE", func_get_args(), debug_backtrace());
-            die("NO DATATYPE: ".$datatype);
+            die("Unable to create Finder for datatype '".$datatype."'");
     	}
-        //$df = self::$data_finders[$datatype];
         if (func_num_args() == 2) {
             if (is_numeric($id) || is_string($id)) {
                 $res = $data_finder->get_by_id($id);
