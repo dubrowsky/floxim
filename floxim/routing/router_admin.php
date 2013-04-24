@@ -65,6 +65,7 @@ class fx_router_admin extends fx_router {
         // мутные контроллеры не умеют вызывать
         // post_postprocess самостоятельно
         ob_start($fx_buffer);
+        dev_log('controller',$controller);
         $controller->process();
         $str = ob_get_clean();
         echo $str;

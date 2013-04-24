@@ -128,7 +128,9 @@ class fx_controller_admin_field extends fx_controller_admin {
     }
     
     public function edit_save ( $input ) {
-        $field = fx::data('field')->get_by_id ( $input['id']);
+        $field = fx::data('field')->get_by_id( $input['id']);
+
+        dev_log('field',$field);
 
         $params = array('name', 'description', 'format', 'type', 'not_null', 'searchable', 'default', 'type_of_edit');
         $input['name'] = trim($input['name']);

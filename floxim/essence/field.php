@@ -33,7 +33,7 @@ class fx_field extends fx_essence {
     }
 
     public function get_type() {
-        return $this->type;
+        return 'field_'.$this->type;
     }
 
     public function get_type_id() {
