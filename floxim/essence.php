@@ -34,7 +34,6 @@ abstract class fx_essence implements ArrayAccess {
             foreach ($this->modified as $v) {
                 $data[$v] = $this->data[$v];
             }
-                
             $this->_get_finder()->update($data, array($pk => $this->data[$pk]));
             $this->_after_update();
             if (!$dont_log)

@@ -74,7 +74,9 @@ class fx {
                         $data_finder->set_component($component['id']);
                         //self::$data_finders[$datatype] = $data_finder;
                     }
-                }
+                } /*elseif (preg_match("~^field_~", $datatype)) {
+                    $data_finder = new fx_data_field();
+                }*/
             }
     	//}
     	//if (!isset(self::$data_finders[$datatype])) {
