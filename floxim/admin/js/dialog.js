@@ -41,6 +41,8 @@
             $fx_dialog.add_button("cancel", "Отменить", $fx_dialog.close);
 
             if ( data.dialog_title ) {
+
+
                 $fx_dialog.set_title(data.dialog_title);
             }
             
