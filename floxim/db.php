@@ -38,11 +38,15 @@ class fx_db extends PDO {
     protected static $q_time = 0;
     protected static $q_count = 0;
     
+    public function prepare_query($statement) {
+        return trim($this->replace_prefix($statement));
+    }
+    
     public function query($statement) {
         self::$q_count++;
     	$start_time = microtime();
 
-        $statement = trim($this->replace_prefix($statement));
+        $statement = $this->prepare_query($statement);
 
         // определение типа запроса
         preg_match("/^([a-z]+)\s+/i", $statement, $match);

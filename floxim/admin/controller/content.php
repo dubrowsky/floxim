@@ -244,40 +244,33 @@ class fx_controller_admin_content extends fx_controller_admin {
      * Если нет - ставит в конец
      */
     public function move($input) {
-        $ctype = $input['content_type'];
-        $content = fx::data('content_'.$ctype, $input['content_id']);
-        $old_priority = $content['priority'];
-        if (!$content) {
-            return;
-        }
-        $ib_id = $content['infoblock_id'];
-        $parent_id = $content['parent_id'];
-        $next_content = null;
-        if ($input['next_id']) {
-            $next_content = fx::data('content_'.$ctype, $input['next_id']);
-        }
+        $content_type = 'content_'.$input['content_type'];
+        $content = fx::data($content_type, $input['content_id']);
+        $next_id = isset($input['next_id']) ? $input['next_id'] : false;
         
-        if ($next_content) {
-            $new_priority = $next_content['priority']-1;
-        } else {
-            $last_priority = fx::db()->get_col(
-                'SELECT MAX(priority) FROM {{content_'.$ctype.'}} 
-                 WHERE parent_id = '.$parent_id.' AND infoblock_id = '.$ib_id
-            );
-            $new_priority = isset($last_priority[0]) ? $last_priority[0] : 1;
-        }
+        $neighbours = fx::data($content_type)->
+                        where('parent_id', $content['parent_id'])->
+                        where('infoblock_id', $content['infoblock_id'])->
+                        where('id', $content['id'], '!=')->
+                        order('priority')->all();
         
-        $q = "UPDATE {{content_".$ctype.'}} 
-                SET priority = priority'.($new_priority > $old_priority ? '-1' : '+1').
-                ' WHERE 
-                    parent_id = '.$parent_id.' AND 
-                    infoblock_id = '.$ib_id.' AND 
-                    priority >= '.min($old_priority, $new_priority).  ' AND 
-                    priority <='.max($old_priority, $new_priority);
-        fx::db()->query($q);
-        fx::db()->query('UPDATE {{content_'.$ctype.'}} 
-                    SET priority = '.$new_priority.'
-                    WHERE id = '.$content['id']);
+        $c_priority = 1;
+        $next_found = false;
+        foreach ($neighbours as $n) {
+            if ($n['id'] == $next_id) {
+                $content['priority'] = $c_priority;
+                $content->save();
+                $c_priority++;
+                $next_found = true;
+            }
+            $n['priority'] = $c_priority;
+            $n->save();
+            $c_priority++;
+        }
+        if (!$next_found) {
+            $content['priority'] = $c_priority;
+            $content->save();
+        }
     }
 }
 

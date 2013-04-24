@@ -7,7 +7,7 @@ class fx_data {
 
     protected $table;
     protected $pk = 'id';
-    protected $order = '';
+    protected $order = array();
     //protected $classname;
     protected $serialized = array();
     protected $sql_function = array();
@@ -29,6 +29,14 @@ class fx_data {
     
     public function where($field, $value, $type = '=') {
         $this->where []= array($field, $value, $type);
+        return $this;
+    }
+    
+    public function order($field, $direction = 'ASC') {
+        if (!preg_match("~asc|desc~i", $direction)) {
+            $direction = 'ASC';
+        }
+        $this->order []= "`".$field."` ".$direction;
         return $this;
     }
     
@@ -63,12 +71,18 @@ class fx_data {
             }
             $q .= "WHERE ".join(" AND ", $conds);
         }
+        if (is_array($this->order) && count($this->order) > 0) {
+            $q .= " ORDER BY ".join(", ", $this->order);
+        }
         if ($this->limit){
             $q .= ' LIMIT '.$this->limit;
         }
         return $q;
     }
     
+    public function show_query() {
+        return fx::db()->prepare_query($this->build_query());
+    }
     
      /*
      * Метод собирает плоские данные
@@ -287,6 +301,9 @@ class fx_data {
             $query .= " WHERE ".(is_array($where) ? join(" AND ", $where) : $where);
         }
         if ($order) {
+            if (is_array($order)) {
+                $order = join(", ", $order);
+            }
             $query .= " ORDER BY ".$order;
         }
         if ($limit) {
