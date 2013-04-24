@@ -12,6 +12,7 @@
         
             
         open_dialog: function(data, settings) {
+            console.log(data);
             settings = $.extend({
                 onsubmit:function(e) {
                     $fx_dialog.click_save.apply($fx_dialog, e);
@@ -38,6 +39,10 @@
             
             $fx_dialog.add_button("save", "Сохранить", $fx_dialog.settings.onsubmit);
             $fx_dialog.add_button("cancel", "Отменить", $fx_dialog.close);
+
+            if ( data.dialog_title ) {
+                $fx_dialog.set_title(data.dialog_title);
+            }
             
             $fx_dialog.main.fx_create_form(data);
             
@@ -180,6 +185,8 @@
         },
         
         set_title: function ( title ) {
+            console.log('set title');
+            console.log(title);
             $fx_dialog.main.dialog( "option", "title", title );
         },
         
