@@ -115,7 +115,8 @@ class fx_controller_admin_component extends fx_controller_admin {
                 $groups = fx::data('component')->get_all_groups();
 
                 $fields[] = $this->ui->hidden('action', 'add');
-                $fields[] = array('label' => 'Название', 'name' => 'name');
+                $fields[] = array('label' => 'Название компонента (по-русски)', 'name' => 'name');
+                $fields[] = array('label' => 'Название сущности создаваемой компонентом (по-русски)', 'name' => 'item_name');
                 $fields[] = array('label' => 'Ключевое слово', 'name' => 'keyword');
                 $fields[] = array('label' => 'Группа', 'type' => 'select', 'values' => $groups, 'name' => 'group', 'extendable' => 'Другая группа');
         }
