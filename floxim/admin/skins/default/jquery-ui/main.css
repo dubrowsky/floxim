@@ -407,7 +407,7 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 .ui-dialog * { color:#595959; }
 .ui-dialog { position: absolute; width: 300px; overflow: hidden; /*background:#e4e6e6;*/ background:#FFF; border:1px solid #4c5051;}
 .ui-dialog .ui-dialog-titlebar { padding: 0 1em; position: relative; height:30px; background:#272729;}
-.ui-dialog .ui-dialog-title { float: left; margin: 12px 0 0 0;} 
+.ui-dialog .ui-dialog-title { float: left; margin: 7px 0 0 0;}
 .ui-dialog .ui-dialog-titlebar-close { position: absolute; right: .3em; top: 50%; width: 19px; margin: -10px 0 0 0; padding: 1px; height: 18px; }
 .ui-dialog .ui-dialog-titlebar-close span { display: block; margin: 1px; }
 .ui-dialog .ui-dialog-content { border-top:1px solid #fff; position: relative; padding: .5em 1em; background: none; overflow: auto; zoom: 1; }

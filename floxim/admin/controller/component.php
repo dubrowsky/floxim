@@ -115,7 +115,8 @@ class fx_controller_admin_component extends fx_controller_admin {
                 $groups = fx::data('component')->get_all_groups();
 
                 $fields[] = $this->ui->hidden('action', 'add');
-                $fields[] = array('label' => 'Название', 'name' => 'name');
+                $fields[] = array('label' => 'Название компонента (по-русски)', 'name' => 'name');
+                $fields[] = array('label' => 'Название сущности создаваемой компонентом (по-русски)', 'name' => 'item_name');
                 $fields[] = array('label' => 'Ключевое слово', 'name' => 'keyword');
                 $fields[] = array('label' => 'Группа', 'type' => 'select', 'values' => $groups, 'name' => 'group', 'extendable' => 'Другая группа');
         }
@@ -332,7 +333,9 @@ class fx_controller_admin_component extends fx_controller_admin {
         $fields[] = $this->ui->label("<a href='/floxim/?essence=admin_component&amp;action=export&amp;id=".$component['id']."'>Экспортировать в файл</a>");
         $fields[] = array('label' => 'Ключевое слово: '.$component['keyword'], 'type' => 'label');
 
-        $fields[] = array('label' => 'Название', 'name' => 'name', 'value' => $component['name']);
+        $fields[] = array('label' => 'Название компонента (по-русски)', 'name' => 'name', 'value' => $component['name']);
+        $fields[] = array('label' => 'Название сущности создаваемой компонентом (по-русски)', 'name' => 'name', 'value' => $component['item_name']);
+
         $fields[] = array('label' => 'Группа', 'type' => 'select', 'values' => $groups, 'name' => 'group', 'value' => $component['group'], 'extendable' => 'Другая группа');
 
         $fields[] = array('label' => 'Описание', 'name' => 'description', 'value' => $component['description'], 'type' => 'text');

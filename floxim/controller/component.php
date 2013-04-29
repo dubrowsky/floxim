@@ -135,7 +135,7 @@ class fx_controller_component extends fx_controller {
         if (fx::env('is_admin')) {
             $c_ib_name = $c_ib->get_prop_inherited('name');
             $component = fx::data('component', $content_type);
-            $adder_title = $component['name'].' &rarr; '.($c_ib_name ? $c_ib_name:$c_ib['id']);
+            $adder_title = $component['item_name'].' &rarr; '.($c_ib_name ? $c_ib_name:$c_ib['id']);
             $this->_meta['accept_content'] = array(
                 array(
                     'title' => $adder_title,

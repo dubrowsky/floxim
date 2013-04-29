@@ -128,18 +128,16 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         if (!isset($infoblock['params']) || !is_array($infoblock['params'])) {
             $infoblock['params'] = array();
         }
-        
+
+        $controller_name = $controller;
         $controller = fx::controller($controller);
-        dev_log($controller);
         $settings = $controller->get_action_settings($action);
         foreach ($infoblock['params'] as $ib_param => $ib_param_value) {
             if (isset($settings[$ib_param])) {
                 $settings[$ib_param]['value'] = $ib_param_value;
             }
         }
-        
-        //$controller_name = $controller
-        
+
         //if (count($settings) > 0) {
         $this->response->add_tab('settings', 'Что показывать');
         $this->response->add_fields(
@@ -211,7 +209,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         }
     	
     	$result = array(
-            'dialog_title' => 'Настройка инфоблока',
+            'dialog_title' => 'Настройка инфоблока. ' . $controller_name . '.' . $action,
             'step' => 'settings_select',
             'dialog_button' => array(
                 array('key' => 'save', 'text' => $input['id'] ? 'Обновить' : 'Создать')

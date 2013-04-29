@@ -7,7 +7,6 @@ class fx_controller_admin_content extends fx_controller_admin {
         $content_type = $input['content_type'];
         $component = fx::data('component', $content_type);
 
-        
         if ($input['content_id']) {
             // редактирование
             $content = fx::data('content_'.$content_type, $input['content_id']);
@@ -54,8 +53,8 @@ class fx_controller_admin_content extends fx_controller_admin {
             }
         }
         
-        $this->response->add_tab('content', $component['name']);
-        $this->response->add_fields($c_fields, 'content', 'content');
+        //$this->response->add_tab('content', $component['name']);
+        $this->response->add_fields($c_fields, false, 'content');
 
         if ($input['data_sent']) {
             $content->set_field_values($all_fields, $input['content']);
