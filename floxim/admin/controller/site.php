@@ -359,10 +359,19 @@ class fx_controller_admin_site extends fx_controller_admin {
     }
     
     public function design($input) {
-    	
-    	$site_id = $input['params'][0]; //isset($input['id']) ? $input['id'] : isset($input['params'][0]) ? $input['params'][0] : null;
+
+       	$site_id = $input['params'][0]; //isset($input['id']) ? $input['id'] : isset($input['params'][0]) ? $input['params'][0] : null;
         $site = fx::data('site')->get_by_id($site_id);
-        
+
+        $layouts = fx::data('layout')->all();
+        $layouts_select = array();
+        foreach ( $layouts  as $layout )
+        {
+            $layouts_select[] = array('l_' . $layout['id'], $layout['name']);
+        }
+        dev_log($layouts_select);
+
+        /*
         $tpl_values = array();
         $tpl_all = fx::data('template')->get_all('type', 'parent');
         
@@ -371,14 +380,15 @@ class fx_controller_admin_site extends fx_controller_admin {
             $tpl_values[$tpl['id']] = $tpl['name'];
             $colors[$tpl['id']] = $tpl['colors'];
         }
+        */
 
         
         $fields = array(
         	array(
-				'name' => 'template_id', 
+				'name' => 'layout_id',
 				'type' => 'select', 
-				'values' => $tpl_values, 
-				'value' => $site['template_id'], 
+				'values' => $layouts_select,
+				'value' => $site['layout_id'],
 				'label' => 'Макет'
 			),
 			array(
@@ -387,25 +397,27 @@ class fx_controller_admin_site extends fx_controller_admin {
 				'value' => $site_id
 			)
 		);
-		
-		foreach ($colors as $tpl_id => $color) {
-            if ($color) {
-                $color_value = array();
-                $color_value[0] = "По умолчанию";
-                foreach ($color as $color_id => $v) {
-                    $color_value[$color_id] = $v['name'];
+
+		/*
+            foreach ($colors as $tpl_id => $color) {
+                if ($color) {
+                    $color_value = array();
+                    $color_value[0] = "По умолчанию";
+                    foreach ($color as $color_id => $v) {
+                        $color_value[$color_id] = $v['name'];
+                    }
+                    $fields[] = array(
+                        'label' => 'Расцветка',
+                        'name' => 'color',
+                        'type' => 'select',
+                        'value' => ($tpl_id == $site['template_id'] ? $site['color'] : 0 ),
+                        'values' => $color_value,
+                        'parent' => array('template_id', "$tpl_id"),
+                        'unactive' => true
+                    );
                 }
-                $fields[] = array(
-                	'label' => 'Расцветка', 
-                	'name' => 'color', 
-                	'type' => 'select', 
-                	'value' => ($tpl_id == $site['template_id'] ? $site['color'] : 0 ), 
-                	'values' => $color_value, 
-                	'parent' => array('template_id', "$tpl_id"), 
-                	'unactive' => true
-                );
             }
-        }
+        */
         
         $fields []= array(
         	'type' => 'button', 
@@ -417,6 +429,9 @@ class fx_controller_admin_site extends fx_controller_admin {
         		'posting' => false
         	)
         );
+
+
+        dev_log('fields',$fields);
         		
         
         $this->response->add_fields($fields);
@@ -436,6 +451,7 @@ class fx_controller_admin_site extends fx_controller_admin {
             $site['template_id'] = $input['template_id'];
         }
         $site->save();
+
     }
 
     public function download($input) {
