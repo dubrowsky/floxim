@@ -29,8 +29,24 @@ class fx_field_link extends fx_field_baze {
             'values' => $comp_values,
             'value' => $this['format']['target'] ? $this['format']['target'] : 'classificator'
         );
-        dev_log($fields);
+        $fields[] = array(
+            'id' => 'format[prop_name]',
+            'name' => 'format[prop_name]',
+            'label' => 'Ключ для свойства',
+            'value' => $this->get_prop_name()
+        );
+        
         return $fields;
+    }
+    
+    public function get_prop_name() {
+        if (isset($this['format']['prop_name'])) {
+            return $this['format']['prop_name'];
+        }
+        if ($this['name']) {
+            return preg_replace("~_id$~", '', $this['name']);
+        }
+        return '';
     }
 }
 

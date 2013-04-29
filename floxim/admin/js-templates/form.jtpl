@@ -169,7 +169,7 @@ if (_c.extendable) {
 		class="<?=_c.inline ? 'inline' : ''?> <?=_c.extendable ? ' extendable' : ''?>"
 		<?=_c.multiple ? ' multiple="multiple"' : ''?>>
 		<?for (var vk in _c.values) {
-            var val = _c.values[vk];
+            var val = _c.values[vk], opt_name = null;
             if (typeof val == 'string') {
                 var opt_val = vk;
                 var opt_name = val;
@@ -178,10 +178,10 @@ if (_c.extendable) {
                 var opt_name = val[1];
             }
             
-			if (typeof opt_name != 'undefined') {
-				var is_selected = opt_val == _c.value || ( _c.value instanceof Array  && $.inArray(opt_val, _c.value) > -1);?>
-				<option value="<?=opt_val?>"<?=is_selected ? ' selected="selected"':  ''?>><?=opt_name?></option>
-			<?}
+			if (opt_name !== null) {
+				var is_selected = opt_val == _c.value || ( _c.value instanceof Array  && $.inArray(opt_val, _c.value) > -1);
+				?><option value="<?=opt_val?>"<?=is_selected ? ' selected="selected"':  ''?>><?=opt_name?></option><?
+			}
 		}?>
 	</select>
 	<?if (_c.extendable){?>
