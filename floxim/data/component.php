@@ -34,11 +34,27 @@ class fx_data_component extends fx_data {
             //$component = parent::get_by_id($id);
         }
         return $this->one();
-        return $component;
     }
     
     public function get_by_keyword($keyword) {
     	return $this->get('keyword', $keyword);
+    }
+    
+    public function get_select_values() {
+        $items = $this->all();
+        $recursive_get = function($comp_coll, $result = array(), $level = 0) 
+                            use (&$recursive_get, $items) {
+            if (count($comp_coll) == 0) {
+                return $result;
+            }
+            foreach ($comp_coll as $comp) {
+                $result[] = array($comp['id'], str_repeat(" - ", $level).$comp['name']);
+                $result = $recursive_get($items->find('parent_id', $comp['id']), $result, $level+1);
+            }
+            return $result;
+        };
+        $res = $recursive_get($items->find('parent_id', 0));
+        return $res;
     }
 }
 ?>

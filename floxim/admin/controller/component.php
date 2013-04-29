@@ -314,16 +314,15 @@ class fx_controller_admin_component extends fx_controller_admin {
             'type' => 'select',
             'values' => array('' => '--нет--')
         );
+        $c_finder = fx::data('component');
         if ($component) {
-            $field['value'] = $component['parent_id'] ? $component['parent_id'] : '';
+            $c_finder->where('id', $component['id'], '!=');
+            $field['value'] = $component['parent_id'];
         }
-        $components = fx::data('component')->get_all();
-        foreach ($components as $cmp) {
-            if ($component && $component['id'] == $cmp['id']) {
-                continue;
-            }
-            $field['values'][$cmp['id']] = $cmp['name'];
-        }
+        $field['values'] = array_merge(
+                array(array('', '--нет--')), 
+                $c_finder->get_select_values()
+        );
         return $field;
     }
 

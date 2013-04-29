@@ -14,6 +14,8 @@ class fx_data {
     
     protected $limit;
     protected $where = array();
+    
+    protected $with = array();
 
     
     public function all() {
@@ -38,6 +40,10 @@ class fx_data {
         }
         $this->order []= "`".$field."` ".$direction;
         return $this;
+    }
+    
+    public function with($relation, $finder = null) {
+        
     }
     
     public function build_query() {
