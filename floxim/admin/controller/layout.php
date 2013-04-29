@@ -1,6 +1,6 @@
 <?php
 
-class fx_controller_admin_template extends fx_controller_admin {
+class fx_controller_admin_layout extends fx_controller_admin {
 
     /**
      * Вывод списка всех макетов дизайна "в разработке"

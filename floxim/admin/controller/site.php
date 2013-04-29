@@ -371,24 +371,13 @@ class fx_controller_admin_site extends fx_controller_admin {
         }
         dev_log($layouts_select);
 
-        /*
-        $tpl_values = array();
-        $tpl_all = fx::data('template')->get_all('type', 'parent');
-        
-        $colors = array();
-        foreach ($tpl_all as $tpl) {
-            $tpl_values[$tpl['id']] = $tpl['name'];
-            $colors[$tpl['id']] = $tpl['colors'];
-        }
-        */
 
-        
         $fields = array(
         	array(
 				'name' => 'layout_id',
 				'type' => 'select', 
 				'values' => $layouts_select,
-				'value' => $site['layout_id'],
+				'value' => 'l_' . $site['layout_id'],
 				'label' => 'Макет'
 			),
 			array(
@@ -424,10 +413,21 @@ class fx_controller_admin_site extends fx_controller_admin {
         	'label' => 'Превью',
         	'send_form' => true,
         	'post' => array(
-        		'essence' => 'template',
+        		'essence' => 'layout',
         		'action' => 'set_preview',
         		'posting' => false
         	)
+        );
+
+        $fields []= array(
+            'type' => 'button',
+            'label' => 'Создать',
+            'send_form' => true,
+            'post' => array(
+                'essence' => 'layout',
+                'action' => 'add',
+                'posting' => false
+            )
         );
 
 
