@@ -16,8 +16,16 @@ class fx_data {
     protected $where = array();
     
     protected $with = array();
-
     
+    const BELONGS_TO = 0;
+    const HAS_MANY = 1;
+    const HAS_ONE = 2;
+    const MANY_MANY = 3;
+
+    public function relations() {
+        return array();
+    }
+
     public function all() {
         $data = $this->_get_essences();
         return $data;
@@ -43,7 +51,8 @@ class fx_data {
     }
     
     public function with($relation, $finder = null) {
-        
+        $this->with []= array($relation, $finder);
+        return $this;
     }
     
     public function build_query() {
@@ -120,12 +129,52 @@ class fx_data {
      */
     protected function _get_essences() {
         $data = $this->_get_data();
-        //echo fen_debug($data);
         foreach ($data as $dk => $dv) {
-            // а вот тут будет разбор serialized etc.
             $data[$dk] = $this->essence($dv);
         }
+        $this->_add_relations($data);
         return $data;
+    }
+    
+    /*
+     * Метод добавляет релейтед-сущности к коллекции
+     * использует $this->with и $this->relations
+     */
+    protected function _add_relations(fx_collection $essences) {
+        if (count($this->with) == 0) {
+            return;
+        }
+        
+        //$ids = $essences->get_values('id');
+        //echo fen_debug($this->relations);
+        $relations = $this->relations();
+        foreach ($this->with as $with) {
+            list($rel_name, $rel_finder) = $with;
+            if (!isset($relations[$rel_name])) {
+                continue;
+            }
+            $rel = $relations[$rel_name];
+            list($rel_type, $rel_datatype, $rel_field) = $rel;
+            if (!$rel_finder){
+                $rel_finder = fx::data($rel_datatype);
+            }
+            // e.g. $rel = array(fx_data::HAS_MANY, 'field', 'component_id');
+            switch ($rel_type) {
+                case self::BELONGS_TO:
+                    $rel_items = $rel_finder->where('id', $essences->get_values($rel_field))->all();
+                    $essences->attache($rel_items, $rel_field, $rel_name);
+                    break;
+                case self::HAS_MANY:
+                    $rel_items = $rel_finder->where($rel_field, $essences->get_values('id'))->all();
+                    echo fen_debug('rel has many', $rel_items);
+                    $essences->attache_many($rel_items, $rel_field, $rel_name);
+                    break;
+                case self::HAS_ONE:
+                    break;
+                case self::MANY_MANY:
+                    break;
+            }
+        }
     }
 
     /**

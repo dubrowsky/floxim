@@ -1,5 +1,6 @@
 <?
-define("DEV_LOG_PATH", dirname(__FILE__).'/log');
+//define("DEV_LOG_PATH", dirname(__FILE__).'/log');
+require_once 'log.php';
 
 $mode = isset($_GET['mode']) ? $_GET['mode'] : 'list';
 
@@ -41,10 +42,8 @@ if ($mode == 'show') {
 	$file_content = file_get_contents($lf['path']);
 	list($file_header, $file_data) = preg_split("~[\n\r]~", $file_content, 2);
 	$file_header = unserialize(trim($file_header));
+    fen_debug_start();
 	?>
-	<link type="text/css" href="debug.css" rel="stylesheet" />
-	<script type="text/javascript" src="/floxim/lib/js/jquery-1.7.1.js"></script>
-	<script type="text/javascript" src="debug.js"></script>
 	<table><?show_log_file_header($file_header)?></table><?
 	echo $file_data;
 	die();

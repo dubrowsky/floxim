@@ -35,18 +35,30 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
      * $collection->find(function($item){});
      * @return fx_collection
      */
-    public function find($field, $prop = null, $compare_type = self::FILTER_EQ) {
+    public function find($field, $prop = null, $compare_type = null) {
         if (count($this->data) == 0) {
             return new fx_collection();
         }
         if (is_null($prop)) {
             $compare_type = is_callable($field) ? self::FILTER_CALLBACK : self::FILTER_EXISTS;
-        } else {
-            $compare_type = self::FILTER_EQ;
+        } elseif (is_null ($compare_type)) {
+            if (is_array($prop)) {
+                $compare_type = self::FILTER_IN;
+            } else {
+                $compare_type = self::FILTER_EQ;
+            }
         }
         if ($compare_type == self::FILTER_EQ) {
             foreach ($this->data as $item) {
                 if ($item[$field] == $prop) {
+                    $res []= $item;
+                }
+            }
+            return new fx_collection($res);
+        }
+        if ($compare_type == self::FILTER_IN) {
+            foreach ($this->data as $item) {
+                if (in_array($item[$field], $prop)) {
                     $res []= $item;
                 }
             }
@@ -60,28 +72,33 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
             }
             return new fx_collection($res);
         }
-        /*
-        $filters = $this->_make_filters(func_get_args());
-        foreach ($this->data as $item) {
-            if ($this->_check_item($item_index)) {
-                $res []= $di;
-            }
-        }*/
         return new fx_collection($res);
     }
     
-    public function find_one($field, $prop = null, $compare_type = self::FILTER_EQ) {
+    public function find_one($field, $prop = null, $compare_type = null) {
         if (count($this->data) == 0) {
             return false;
         }
         if (is_null($prop)) {
             $compare_type = is_callable($field) ? self::FILTER_CALLBACK : self::FILTER_EXISTS;
-        } else {
-            $compare_type = self::FILTER_EQ;
+        } elseif (is_null ($compare_type)) {
+            if (is_array($prop)) {
+                $compare_type = self::FILTER_IN;
+            } else {
+                $compare_type = self::FILTER_EQ;
+            }
         }
         if ($compare_type == self::FILTER_EQ) {
-            foreach ($this->data as &$item) {
+            foreach ($this->data as $item) {
                 if ($item[$field] == $prop) {
+                    return $item;
+                }
+            }
+            return false;
+        }
+        if ($compare_type == self::FILTER_IN) {
+            foreach ($this->data as $item) {
+                if (in_array($item[$field], $prop)) {
                     return $item;
                 }
             }
@@ -112,6 +129,8 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
     const FILTER_EQ = 1;
     const FILTER_EXISTS = 2;
     const FILTER_CALLBACK = 3;
+    const FILTER_IN = 4;
+
     /**
      * Превращает аргументы, переданные find или find_one в фильтры вида
      * array('==', 'prop_name', 'prop_value'), array('callback')

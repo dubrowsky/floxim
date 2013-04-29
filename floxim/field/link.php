@@ -40,7 +40,7 @@ class fx_field_link extends fx_field_baze {
     }
     
     public function get_prop_name() {
-        if (isset($this['format']['prop_name'])) {
+        if ($this['format']['prop_name']) {
             return $this['format']['prop_name'];
         }
         if ($this['name']) {

@@ -1,6 +1,14 @@
 <?
 define("DEV_LOG_PATH", dirname(__FILE__).'/log');
 
+function fen_debug_start() {
+?>
+	<link type="text/css" href="/_devlog/debug.css" rel="stylesheet" />
+	<script type="text/javascript" src="/floxim/lib/js/jquery-1.7.1.js"></script>
+	<script type="text/javascript" src="/_devlog/debug.js"></script>
+<?
+}
+
 function dev_log() {
 	static $fh = false;
 	if (!$fh) {
@@ -25,6 +33,17 @@ function fen_debug() {
 	$last_timer_value = $call_time;
 	$result = array();
     $backtrace = debug_backtrace();
+    $is_dev_log = false;
+    foreach ($backtrace as $bt) {
+        if (isset($bt['function']) && $bt['function'] == 'dev_log') {
+            $is_dev_log = true;
+            break;
+        }
+    }
+    if (! $is_dev_log && $is_first_launch) {
+        fen_debug_start();
+        $is_first_launch = false;
+    }
 	foreach (func_get_args() as $print_item) {
 		if (is_object($print_item) && $print_item instanceof DOMNode) {
 			$result []= fen_pretty_xml($print_item);

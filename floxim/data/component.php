@@ -1,6 +1,16 @@
 <?php
 
 class fx_data_component extends fx_data {
+    
+    public function relations() {
+        return array(
+            'fields' => array(
+                self::HAS_MANY,
+                'field',
+                'component_id'
+            )
+        );
+    }
 
     public function __construct() {
         $this->order = '`group`, `id`';

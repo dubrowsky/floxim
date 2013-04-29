@@ -1,5 +1,28 @@
 <?php
 class fx_data_content extends fx_data {
+    
+    public function relations() {
+        $relations = array();
+        $fields = fx::data('component', $this->component_id)->
+                    all_fields()->
+                    find('type', array(13, 14));
+        foreach ($fields as $f) {
+            switch ($f['type']) {
+                case 13:
+                    if (!isset($f['format']['target'])) {
+                        break;
+                    }
+                    $relations[$f->get_prop_name()] = array(
+                        self::BELONGS_TO,
+                        'content_'.fx::data('component', $f['format']['target'])->get('keyword'),
+                        $f['name']
+                    );
+                    break;
+            }
+        }
+        return $relations;
+    }
+    
     protected function _get_data() {
         $data = parent::_get_data();
         $types_by_id = $data->get_values('type', 'id');
@@ -171,19 +194,7 @@ class fx_data_content extends fx_data {
         foreach ($this->get_tables() as $table) {
             $q = "DELETE FROM `{{".$table."}}` ".$where;
             fx::db()->query($q);
-            //echo $q."<br />";
         }
-        //echo fen_debug(func_get_args());
-        //die();
-        /*
-        for ($i = 0; $i < $argc; $i = $i + 2) {
-            $where[] = "`".$argv[$i]."` = '".fx::db()->escape($argv[$i + 1])."'";
-        }
-        if ($where) $where = " WHERE ".join(" AND ", $where);
-
-        $res = fx::db()->get_results("DELETE FROM `{{".$this->table."}}`".$where);
-         * 
-         */
     }
     
     public function insert($data) {
