@@ -67,6 +67,14 @@ class fx_component extends fx_essence {
         }
         return $this->_stored_fields;
     }
+    
+    public function all_fields() {
+        $fields = new fx_collection();
+        foreach ($this->get_chain() as $component) {
+            $fields->concat($component->fields());
+        }
+        return $fields;
+    }
 
     public function get_sortable_fields() {
         //$this->_load_fields();

@@ -1,6 +1,16 @@
 <?php
 
 class fx_data_field extends fx_data {
+    
+    public function relations() {
+        return array(
+            'component' => array(
+                self::BELONGS_TO, 
+                'component', 
+                'component_id'
+            )
+        );
+    }
 
     public function __construct() {
         parent::__construct();

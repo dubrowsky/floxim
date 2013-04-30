@@ -216,6 +216,7 @@ define("FX_ADMIN_FIELD_INFOBLOCK","Инфоблок");
 define("FX_ADMIN_FIELD_IMAGE","Изображение");
 define("FX_ADMIN_FIELD_MULTISELECT","Мультисписок");
 define("FX_ADMIN_FIELD_LINK","Связь с другим объектом");
+define("FX_ADMIN_FIELD_MULTILINK","Множественная связь");
 
 
 define("FX_ADMIN_LAYER_MORE_SHOW", "показать дополнительные настройки");

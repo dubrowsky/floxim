@@ -161,6 +161,7 @@ class fx_controller_admin_field extends fx_controller_admin {
         
         if ( !$input['id'] || $field['type'] != $input['type'] ) {
             $field = fx::data('field')->create( array('type' => $input['type']));
+            $field[$input['to_essence'].'_id'] = $input['to_id'];
         }
         
         dev_log($field, $input);

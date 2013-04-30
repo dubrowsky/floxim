@@ -6,6 +6,7 @@ defined("FLOXIM") || die("Unable to load file.");
 class fx_field extends fx_essence {
 
     protected $name, $format, $type_id, $description;
+    
 
     public static function get_type_by_id($id) {
 
@@ -104,28 +105,33 @@ class fx_field extends fx_essence {
     protected function _after_insert() {
         if ($this['component_id']) {
             $type = $this->get_sql_type();
-            fx::db()->query("ALTER TABLE `{{".$this->get_table()."}}`
-                ADD COLUMN `".$this->name."` ".$type);
+            if ($type) {
+                fx::db()->query("ALTER TABLE `{{".$this->get_table()."}}`
+                    ADD COLUMN `".$this->name."` ".$type);
+            }
         }
     }
 
     protected function _after_update() {
         if ($this['component_id']) {
             $type = self::get_sql_type_by_type($this->data['type']);
-
-            if ($this->modified_data['name'] && $this->modified_data['name'] != $this->data['name']) {
-                fx_core::get_object()->db->query("ALTER TABLE `{{".$this->get_table()."}}` 
-                CHANGE `".$this->modified_data['name']."` `".$this->data['name']."` ".$type);
-            } else if ($this->modified_data['type'] && $this->modified_data['type'] != $this->data['type']) {
-                fx_core::get_object()->db->query("ALTER TABLE `{{".$this->get_table()."}}`
-                MODIFY `".$this->data['name']."` ".$type);
+            if ($type) {
+                if ($this->modified_data['name'] && $this->modified_data['name'] != $this->data['name']) {
+                    fx_core::get_object()->db->query("ALTER TABLE `{{".$this->get_table()."}}` 
+                    CHANGE `".$this->modified_data['name']."` `".$this->data['name']."` ".$type);
+                } else if ($this->modified_data['type'] && $this->modified_data['type'] != $this->data['type']) {
+                    fx_core::get_object()->db->query("ALTER TABLE `{{".$this->get_table()."}}`
+                    MODIFY `".$this->data['name']."` ".$type);
+                }
             }
         }
     }
 
     protected function _after_delete() {
         if ($this['component_id']) {
-            fx_core::get_object()->db->query("ALTER TABLE `{{".$this->get_table()."}}` DROP COLUMN `".$this->name."`");
+            if (self::get_sql_type_by_type($this->data['type'])) {
+                fx_core::get_object()->db->query("ALTER TABLE `{{".$this->get_table()."}}` DROP COLUMN `".$this->name."`");
+            }
         }
     }
 
