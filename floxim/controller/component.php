@@ -129,6 +129,7 @@ class fx_controller_component extends fx_controller {
                 $f->order($sorting, $this->param('sorting_dir'));
             }
         }
+        $this->trigger('query_ready', $f);
         $items = $f->all();
         $this->trigger('items_ready', $items);
 

@@ -47,10 +47,20 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
             } else {
                 $compare_type = self::FILTER_EQ;
             }
+        } elseif ($compare_type == '!=') {
+            $compare_type = self::FILTER_NEQ;
         }
         if ($compare_type == self::FILTER_EQ) {
             foreach ($this->data as $item) {
                 if ($item[$field] == $prop) {
+                    $res []= $item;
+                }
+            }
+            return new fx_collection($res);
+        }
+        if ($compare_type == self::FILTER_NEQ) {
+            foreach ($this->data as $item) {
+                if ($item[$field] != $prop) {
                     $res []= $item;
                 }
             }
@@ -96,6 +106,14 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
             }
             return false;
         }
+        if ($compare_type == self::FILTER_NEQ) {
+            foreach ($this->data as $item) {
+                if ($item[$field] != $prop) {
+                    return $item;
+                }
+            }
+            return false;
+        }
         if ($compare_type == self::FILTER_IN) {
             foreach ($this->data as $item) {
                 if (in_array($item[$field], $prop)) {
@@ -130,6 +148,7 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
     const FILTER_EXISTS = 2;
     const FILTER_CALLBACK = 3;
     const FILTER_IN = 4;
+    const FILTER_NEQ = 5;
 
     /**
      * Превращает аргументы, переданные find или find_one в фильтры вида
