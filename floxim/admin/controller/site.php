@@ -409,7 +409,7 @@ class fx_controller_admin_site extends fx_controller_admin {
         */
         
         $fields []= array(
-        	'type' => 'button', 
+        	'type' => 'button',
         	'label' => 'Превью',
         	'send_form' => true,
         	'post' => array(
@@ -419,6 +419,7 @@ class fx_controller_admin_site extends fx_controller_admin {
         	)
         );
 
+        /*
         $fields []= array(
             'type' => 'button',
             'label' => 'Создать',
@@ -429,6 +430,7 @@ class fx_controller_admin_site extends fx_controller_admin {
                 'posting' => false
             )
         );
+        */
 
 
         dev_log('fields',$fields);

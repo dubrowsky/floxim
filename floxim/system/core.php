@@ -250,8 +250,8 @@ class fx_core extends fx_system {
     }
     
     public function __get($name) {
-    	dev_log($name, debug_backtrace());
-    	die();
+    	// dev_log($name, debug_backtrace());
+    	// die();
         // объект загружен
         if (isset($this->data_classes[$name])) {
             return $this->data_classes[$name];
@@ -286,6 +286,7 @@ class fx_core extends fx_system {
         if (substr($classname, 0, 3) != 'fx_') {
             return false;
         }
+
         if (in_array($classname, self::$classes_with_no_file)) {
             throw new fx_exteption_classload('AGAIN: Unable to load class '.$classname);
         }
@@ -303,8 +304,10 @@ class fx_core extends fx_system {
         require_once $file;
     }
 
+
     public static function get_class_file($classname) {
-    	$root = fx::config()->ROOT_FOLDER;
+
+      	$root = fx::config()->ROOT_FOLDER;
         $doc_root = fx::config()->DOCUMENT_ROOT.'/';
 
         $libs = array();
@@ -337,9 +340,9 @@ class fx_core extends fx_system {
         ); //'user'
 
         $classname = str_replace(array('nc_', 'fx_'), '', $classname);
-        
+
         do {
-            if ($classname == 'collection') {
+            if ( $classname == 'collection') {
                 $file = $root.'system/collection';
                 break;
             }
@@ -369,7 +372,6 @@ class fx_core extends fx_system {
                 
                 $source_dir = $doc_root.'controllers/'.$ctr_type.'/'.$ctr_name;
                 if (is_dir($source_dir)) {
-                    // dev_log('recompile '.$tpl_file);
                     $processor = new fx_template_processor();
                     $processor->process_dir($source_dir);
                     $file = $tpl_file;
@@ -416,7 +418,8 @@ class fx_core extends fx_system {
             }
 
             if ($classname == 'controller_layout' || $classname == 'controller_admin_layout') {
-                $file = $root.'admin/controller/template/layout';
+                // $file = $root.'admin/controller/template/layout';
+                $file = $root.'admin/controller/layout';
                 break;
             }
 
@@ -431,11 +434,11 @@ class fx_core extends fx_system {
             }
 
             if (preg_match("/^controller_admin_([a-z_]+)/", $classname, $match)) {
-                $file = $root.'/admin/controller/'.str_replace('_', '/', $match[1]);
+                $file = $root.'admin/controller/'.str_replace('_', '/', $match[1]);
                 break;
             }
 
-            if (preg_match("/^controller_(administrate|site|template_files|template_colors|template|component|ctpl|field|devtools|menu|menu_item|settings|widget|patch|redirect|crontask)$/", $classname, $match)) {
+            if (preg_match("/^controller_(administrate|site|template_files|template_colors|template|layput|component|ctpl|field|devtools|menu|menu_item|settings|widget|patch|redirect|crontask)$/", $classname, $match)) {
                 $file = $root.'/admin/controller/'.str_replace('_', '/', $match[1]);
                 break;
             }
