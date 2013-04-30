@@ -2,6 +2,7 @@
 
 class fx_controller_admin_layout extends fx_controller_admin_template {
 
+    /*
     public function add($input) {
         $ar = array('inner' => 'Внутренная страница', 'index' => 'Титульная страница', 'map' => 'Карта сайта', 'e404' => 'Страница не найдена');
         $fields[] = $this->ui->select('type', 'Тип', $ar);
@@ -160,7 +161,6 @@ class fx_controller_admin_layout extends fx_controller_admin_template {
 
         $parent->set('files', $parent_files)->save();
     }
-
+*/
 }
-
 ?>

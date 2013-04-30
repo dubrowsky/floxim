@@ -8,15 +8,15 @@ class fx_controller_admin_layout extends fx_controller_admin {
     public function all($input) {
         $items = array();
         
-        $templates = fx::data('template')->get_all('parent_id', 0);
-        foreach ($templates as $template) {
-            $template_id = $template->get_var('id');
-            $items[$template_id] = $template;
+        $layouts = fx::data('layout')->all(); //('parent_id', 0);
+        foreach ($layouts as $layout) {
+            $layout_id = $layout['id'];
+            $items[$layout_id] = $layout;
         }
 
-        $template_use = array(); // [номер макет][номер сайта] => 'Имя сайта'
-        foreach (fx::data('site')->get_all() as $site) {
-            $template_use[$site['template_id']][$site['id']] = '<a href="#admin.site.map('.$site['id'].')">'.$site['name'].'</a>';
+        $layout_use = array(); // [номер макет][номер сайта] => 'Имя сайта'
+        foreach (fx::data('site')->all() as $site) {
+            $layout_use[$site['layout_id']][$site['id']] = '<a href="#admin.site.map('.$site['id'].')">'.$site['name'].'</a>';
         }
 
         $ar = array('type' => 'list', 'filter' => true);
@@ -26,12 +26,12 @@ class fx_controller_admin_layout extends fx_controller_admin {
         	$submenu = self::get_template_submenu($item);
         	$submenu_first = current($submenu);
             $name = array(
-            	'name' => $item->get_var('name'), 
+            	'name' => $item['name'],
             	'url' => $submenu_first['url']
             );
-            $el = array('id' => $item->get_var('id'), 'name' => $name);
-            if ($template_use[$item->get_var('id')]) {
-                $el['use'] = join(', ', $template_use[$item->get_var('id')]);
+            $el = array('id' => $item['id'], 'name' => $name);
+            if ($template_use[$item['id']]) {
+                $el['use'] = join(', ', $template_use[$item['id']]);
                 $el['fx_not_available_buttons'] = array('delete');
             } else {
                 $el['use'] = ' - ';
@@ -233,7 +233,7 @@ class fx_controller_admin_layout extends fx_controller_admin {
     	$tpl_submenu = self::get_template_submenu($template);
         $tpl_submenu_first = current($tpl_submenu);
         
-    	$breadcrumb->add_item('Макеты', '#admin.template.all');
+    	$breadcrumb->add_item('Макеты', '#admin.layout.all');
         $breadcrumb->add_item($template['name'], $tpl_submenu_first['url']);
 		$breadcrumb->add_item($tpl_submenu[$action]['title'], $tpl_submenu[$action]['url']);
     }
@@ -267,7 +267,7 @@ class fx_controller_admin_layout extends fx_controller_admin {
 			'settings' => 'Настройки'
 		);
 		
-        $template_id = $template->get_var('id');
+        $template_id = $template['id'];
         
 		$items = array();
 		foreach ($titles as $key => $title) {

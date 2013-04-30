@@ -1,6 +1,6 @@
 (function($){
     fx_dialog = {
-        
+
         settings: {
             height: 430, //'auto',
             width: '70%',

@@ -13,7 +13,7 @@ class fx_router_admin extends fx_router {
         if (!preg_match($regexp, $url)) {
             return null;
         }
-        
+
         $fx_core = fx_core::get_object();
         $fx_core->modules->load_env();
         $input = $fx_core->input->make_input();
@@ -50,7 +50,7 @@ class fx_router_admin extends fx_router {
         }
         
         $classname = 'fx_controller_' . $essence;
-        try {    
+        try {
             $controller = new $classname($input, $action);
         } catch (Exception $e) {
             die("Error! Essence: " . htmlspecialchars($essence));

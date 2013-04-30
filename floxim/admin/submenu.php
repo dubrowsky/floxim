@@ -122,7 +122,7 @@ class fx_admin_submenu {
 
     protected function init_develop() {
         $this->menu[] = $node_component = $this->add_node('component', 'Компоненты', 'component.group');
-        $this->menu[] = $node_template = $this->add_node('template', 'Макеты', 'template.all');
+        $this->menu[] = $node_template = $this->add_node('layout', 'Макеты', 'layout.all'); // template ->layout
         $this->menu[] = $node_widget = $this->add_node('widget', 'Виджеты', 'widget.group');
 
         foreach (fx::data('component')->get_all_groups() as $group) {
