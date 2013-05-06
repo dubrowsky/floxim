@@ -49,6 +49,7 @@ class fx_controller_infoblock extends fx_controller {
         echo "</pre>";*/
 
         $infoblock = $this->_get_infoblock();
+        
         if (!$infoblock) {
             dev_log('no ib to rnd', $this);
             die("IB NOT FOUND");
@@ -90,6 +91,7 @@ class fx_controller_infoblock extends fx_controller {
                 $tpl = fx::template($tpl_name);
             }
         }
+        dev_log($infoblock, $infoblock->get_prop_inherited('visual.template'));
         
         if (!$tpl) {
             $tpl = $controller->find_template();

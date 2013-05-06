@@ -132,17 +132,6 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
         }
         return false;
     }
-    /*
-    public function find_one() {
-        $filters = func_get_args();
-        $filters = $this->_make_filters($filters);
-        foreach ($this->data as $di) {
-            if ($this->_check_item($di, $filters)) {
-                return $di;
-            }
-        }
-        return null;
-    }*/
     
     const FILTER_EQ = 1;
     const FILTER_EXISTS = 2;
@@ -150,110 +139,10 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
     const FILTER_IN = 4;
     const FILTER_NEQ = 5;
 
-    /**
-     * Превращает аргументы, переданные find или find_one в фильтры вида
-     * array('==', 'prop_name', 'prop_value'), array('callback')
-     * @param type $filters
-     */
-    protected function _make_filters($filters) {
-        // вызовы типа find('parent_id', 12)
-        //if (!is_array($filters[0])) {
-            $filters = array($filters);
-        //}
-        $res = array();
-        foreach ($filters as $f) {
-            // вызовы типа find( function($x) {} );
-            /*
-            if (is_callable($f)) {
-                $res []= array('callback', $f);
-                continue;
-            }*/
-            if (!isset($f[1])) {
-                $f[1] = '';
-                $f[2] = self::FILTER_EXISTS;
-            } elseif (!isset($f[2])) {
-                $f[2] = self::FILTER_EQ;
-            }
-            $res []= array(
-                $f[2], $f[0], $f[1]
-            );
-        }
-        return $res;
-    }
-    
-    protected function _check_item($item_index, $filters = false) {
-        return true;
-        foreach ($filters as $f) {
-            switch ($f[0]) {
-                case self::FILTER_EQ:
-                    if ($item[$f[1]] != $f[2]) {
-                        return false;
-                    }
-                    break;
-                case 'callback':
-                    if (!call_user_func($f[1], $item)) {
-                        return false;
-                    }
-                    break;
-                case 'exists':
-                    if (!isset($item[$f[0]]) || empty($item[$f[0]])) {
-                        return false;
-                    }
-                    break;
-            }
-        }
-        return true;
-        
-        if (is_array($filters) && !is_array($filters[0]) && !is_callable($filters[0])) {
-            $filters = array($filters);
-        }
-        
-        foreach ($filters as $f) {
-            if (is_callable($f) && !call_user_func($f, $item)) {
-                return false;
-            } elseif (is_array($f)) {
-                $f_keys = array_keys($f);
-                if (count($f) == 1 && !is_numeric($f_keys[0])) {
-                    $f = array($f_keys['0'], $f[$f_keys['0']], '==');
-                } else {
-                    if (!isset($f[1])) {
-                        $f[1] = '';
-                        $f[2] = 'exists';
-                    } elseif (!isset($f[2])) {
-                        $f[2] = '==';
-                    }
-                }
-                list($test_field, $test_val, $test_cond) = $f;
-                switch ($test_cond) {
-                    case '==':
-                        if (! ($item[$test_field] == $test_val)) {
-                            return false;
-                        }
-                        break;
-                    case 'exists':
-                        if (!isset($item[$test_field]) || empty($item[$test_field])) {
-                            return false;
-                        }
-                        break;
-                    case '>': case '<': case '>=': case '<=':
-                        // реализовать!!!
-                        break;
-                }
-            }
-        }
-        return true;
-    }
-    
     /*
      * Фильтрует текущую коллекцию по условию (удаляет не совпадающие записи)
      */
     public function filter() {
-        $filters = func_get_args();
-        foreach ($this->data as $dk => $di) {
-            if (!$this->_check_item($di, $filters)) {
-                unset($this->data[$dk]);
-            }
-        }
         return $this;
     }
     
@@ -274,6 +163,18 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
             call_user_func($callback, $di);
         }
         return $this;
+    }
+    
+    /*
+     * Remove element from collection
+     */
+    public function remove($item) {
+        foreach ($this->data as $dk => $di) {
+            if ($item === $di) {
+                unset($this->data[$dk]);
+                return;
+            }
+        }
     }
     
     public function get_values($field, $key_field = null, $as_collection = false) {
