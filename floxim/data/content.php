@@ -18,6 +18,28 @@ class fx_data_content extends fx_data {
                         $f['name']
                     );
                     break;
+                case 14:
+                    if (!isset($f['format']['target'])) {
+                        break;
+                    }
+                    $target_fields = explode(".", $f['format']['target']);
+                    $direct_target_field = fx::data('field', array_shift($target_fields));
+                    $direct_target_component = fx::data('component', $direct_target_field['component_id']);
+                    if (count($target_fields) == 0) {
+                        $relations[$f['name']] = array(
+                            self::HAS_MANY,
+                            'content_'.$direct_target_component['keyword'],
+                            $direct_target_field['name']
+                        );
+                    } else {
+                        $next_target_field = fx::data('field', array_shift($target_fields));
+                        $relations[$f['name']] = array(
+                            self::MANY_MANY,
+                            'content_'.$direct_target_component['keyword'],
+                            $direct_target_field['name'],
+                            $next_target_field->get_prop_name()
+                        );
+                    }
             }
         }
         return $relations;
@@ -236,7 +258,6 @@ class fx_data_content extends fx_data {
                     'created',
                     'last_updated',
                     'user_id',
-                    'parent_id',
                     'type',
                     'infoblock_id',
                     'site_id'

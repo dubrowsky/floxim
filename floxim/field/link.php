@@ -35,7 +35,13 @@ class fx_field_link extends fx_field_baze {
             'label' => 'Ключ для свойства',
             'value' => $this->get_prop_name()
         );
-        
+        $fields[]= array(
+            'id' => 'format[is_parent]',
+            'name' => 'format[is_parent]',
+            'label' => 'Привязать значение к родителю',
+            'type' => 'checkbox',
+            'value' => $this['format']['is_parent']
+        );        
         return $fields;
     }
     
@@ -47,6 +53,16 @@ class fx_field_link extends fx_field_baze {
             return preg_replace("~_id$~", '', $this['name']);
         }
         return '';
+    }
+    
+    public function get_js_field($content, $tname = 'f_%name%', $layer = '', $tab = '') {
+        parent::get_js_field($content, $tname, $layer, $tab);
+        $this->_js_field['type'] = 'select';
+        $target_component = fx::data('component', $this['format']['target']);
+        $finder = fx::data('content_'.$target_component['keyword']);
+        $val_items = $finder->all();
+        $this->_js_field['values'] = $val_items->get_values('name', 'id');
+        return $this->_js_field;
     }
 }
 
