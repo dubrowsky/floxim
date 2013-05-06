@@ -27,6 +27,9 @@ fx_more_menu.prototype.load_items = function () {
         var element = $('<span>').text(item.name).appendTo(self.menu);
         element.click( function(){
             self.hide();
+            console.log('k',k);
+            console.log('item',item);
+            window.location.href='#' + item.button.essence + '.' + item.button.action;
             console.log('extra button clicked');
             return false;
         });

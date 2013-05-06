@@ -296,6 +296,8 @@ class fx_core extends fx_system {
         }
 
         if (!file_exists($file)) {
+            dev_log('backtrace',debug_backtrace());
+            dev_log('class - ', $classname);
             $e = new fx_exteption_classload('Unable to load class '.$classname);
             $e->class_file = $file;
             self::$classes_with_no_file[]= $classname;

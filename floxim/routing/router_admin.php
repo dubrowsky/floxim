@@ -17,14 +17,14 @@ class fx_router_admin extends fx_router {
         $fx_core = fx_core::get_object();
         $fx_core->modules->load_env();
         $input = $fx_core->input->make_input();
-        
-        if (empty($_REQUEST)) 
+
+        if (empty($_REQUEST))
         {
             // параметров запроса нет, идем стандартной 
             // для всех контроллеров дорогой
             return new fx_controller_admin($input);
         }
-        
+
         // НИЖЕ - остатки старой админки. Руины, загромождающие
         // площадку для понятного кода. Админка в плане задумывалась как набор
         // контроллеров, которые лежат в /floxim/admin/controllers/
@@ -33,7 +33,7 @@ class fx_router_admin extends fx_router {
         $action = $fx_core->input->fetch_post('action');
         $fx_admin = $fx_core->input->fetch_post('fx_admin');
         $posting = $fx_core->input->fetch_post('posting');
-        
+
         if ($fx_admin) {
             $essence = 'admin_'.$essence;
         }
@@ -48,7 +48,7 @@ class fx_router_admin extends fx_router {
             // как и положено. Так то
             return new fx_controller_admin($input);
         }
-        
+
         $classname = 'fx_controller_' . $essence;
         try {
             $controller = new $classname($input, $action);

@@ -17,6 +17,7 @@ class fx_admin_submenu {
     }
 
     public function set_menu($type) {
+
         $this->menu_id = $type;
         if ($this->menu_id == $this->old_menu_id) {
             $this->not_update = true;
@@ -43,6 +44,10 @@ class fx_admin_submenu {
             $this->init_develop();
             $this->active = 'template';
             $this->active_main_menu = 'develop';
+        }
+
+        if($match[1] == 'layout') {
+            $this->init_manage();
         }
 
         if ($match[1] == 'template' && is_numeric($match[3])) {
@@ -211,18 +216,21 @@ class fx_admin_submenu {
 
     protected function init_menu_template($id) {
         $this->type = 'full';
-        $template = fx::data('template')->get_by_id($id);
-        if (!$template) {
+        // $template = fx::data('template')->get_by_id($id);
+        $layout = fx::data('layout', $id);
+        if (!$layout) {
             $this->error = 'Макет не найден';
         } else {
-            $this->title = $template['name'];
+            $this->title = $layout['name'];
             $this->backlink = 'template.all';
-            
-            foreach ($template->get_layouts() as $layout) {
-                $this->menu[] = $this->add_node('layout-'.$layout['id'], $layout['name'], 'layout.edit('.$layout['id'].')', 'layouts');
+
+            /*
+            foreach ($layout->get_layouts() as $l) {
+                $this->menu[] = $this->add_node('layout-'.$l['id'], $l['name'], 'layout.edit('.$l['id'].')', 'layouts');
             }
+            */
             
-            $items = fx_controller_admin_template::get_template_submenu($template);
+            $items = fx_controller_admin_template::get_template_submenu($layout);
             foreach ($items as $item) {
             	$this->menu []= $this->add_node($item['code'], $item['title'], $item['url']);
             }
