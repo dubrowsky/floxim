@@ -52,10 +52,19 @@ class fx_controller {
      * $input = null, $action = null, $do_return = false
      */
     public function process() {	
-    	$action = is_callable(array($this, $this->action)) ? $this->action : 'default_action';
+    	$action = $this->get_action_method();
         return $this->$action($this->input);
     }
     
+    protected $_action_prefix = '';
+
+
+    public function get_action_method() {
+        $action = $this->_action_prefix.$this->action;
+        return is_callable(array($this, $action)) ? $action : 'default_action';
+    }
+
+
     public function find_template() {
         $tpl = str_replace('fx_controller_', '', get_class($this));
         return fx::template($tpl.'.'.$this->action);
