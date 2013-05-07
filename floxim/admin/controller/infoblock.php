@@ -345,6 +345,8 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                 'type' => 'hidden'
             )
         );
+
+        // TODO скопировать логику в fx_controller::get_available_templates()
         $wrappers = array('' => 'Без оформления');
         $templates = array('auto.auto' => ' - Автовыбор - ');
         $layout_name = fx::data('layout', $i2l['layout_id'])->get('keyword');
