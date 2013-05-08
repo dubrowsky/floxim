@@ -8,6 +8,7 @@
 class fx_router_error extends fx_router_front {
     
     public function route($url = null, $context = null) {
+        fx::http()->status('404');
         $site = fx::env('site');
         $page404_id = $site['e404_sub_id'];
         $page = fx::data('content_page', $page404_id);

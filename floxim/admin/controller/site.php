@@ -285,19 +285,11 @@ class fx_controller_admin_site extends fx_controller_admin {
     public function settings($input) {
         $site_id = isset($input['id']) ? $input['id'] : isset($input['params'][0]) ? $input['params'][0] : null;
         
-        $site = fx::data('site')->get_by_id($site_id);
+        $site = fx::data('site', $site_id);
 
-        
-        // используются subdivisions (запрещено)
-        /* $sub_values = array();
-        $sub_all = fx::data('subdivision')->get_all('site_id', $site['id']);
-        foreach ($sub_all as $sub) {
-            $sub_values[$sub['id']] = $sub['name'];
-        } */
-        
         // используются content_pages
         $content_pages_list = array();
-        $content_pages = fx::data('content_page')->get_all('site_id', $site_id);
+        $content_pages = fx::data('content_page')->where('site_id', $site_id)->all();
         foreach ($content_pages as $page)
         {
             $content_pages_list[$page['id']] = $page['url'];
