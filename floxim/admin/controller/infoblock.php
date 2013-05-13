@@ -103,7 +103,6 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
     	$infoblock = null;
         // special mode for layouts
         $is_layout = isset($input['mode']) && $input['mode'] == 'layout';
-        
         if (isset($input['page_id'])) {
             // устанавливаем в окружение текущую страницу
             // из нее можно получить лейаут
@@ -133,6 +132,8 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             ));
             $infoblock->set_visual($i2l);
     	}
+
+
         if (!isset($infoblock['params']) || !is_array($infoblock['params'])) {
             $infoblock['params'] = array();
         }
@@ -162,7 +163,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         }
         
         $format_fields = $this->_get_format_fields($infoblock);
-        
+
         if (!$is_layout) {
             $this->response->add_tab('visual', 'Как показывать');
         }
@@ -170,8 +171,8 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         
         
         $c_page = fx::data('content_page', $input['page_id']);
-        
         $scope_fields = $this->_get_scope_fields($infoblock, $c_page);
+
         if (!$is_layout) {
             $this->response->add_tab('scope', 'Где показывать');
         }
@@ -235,7 +236,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             $infoblock->save();
             $i2l['infoblock_id'] = $infoblock['id'];
             $i2l->save();
-            dev_log('ib saving', $infoblock, $i2l, $input);
+            // dev_log('ib saving', $infoblock, $i2l, $input);
             $this->response->set_status_ok();
             return;
         }
@@ -352,7 +353,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             'value' => fx::dig($infoblock, 'scope.page_type'),
             'parent' => array('pages' => '!=this')
         );
-        dev_log('scope fields', $fields, $infoblock, $c_page);
+        // dev_log('scope fields', $fields, $infoblock, $c_page);
         return $fields;
     }
     
@@ -370,7 +371,10 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             )
         );
 
-        // TODO скопировать логику в fx_controller::get_available_templates()
+        $wrappers = array('' => 'Без оформления');
+        $templates = array('auto.auto' => ' - Автовыбор - ');
+
+
         $wrappers = array('' => 'Без оформления');
         $templates = array('auto.auto' => ' - Автовыбор - ');
         $layout_name = fx::data('layout', $i2l['layout_id'])->get('keyword');
@@ -382,6 +386,14 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         if ($action_name == 'mirror') {
             $action_variants []= $controller_name.".listing";
         }
+
+        $tmps = self::get_available_templates($controller_name);
+        foreach ( $tmps as $template ) {
+            $full_id = 'layout_' . $layout_name . '.' . $template['id'];
+            $templates[$full_id] = $template['name'];
+        }
+
+        /*
         // варианты шаблона из лейаута
         foreach ( fx::template('layout_'.$layout_name)->get_template_variants() as $tplv) {
             $full_id = 'layout_'.$layout_name.'.'.$tplv['id'];
@@ -403,6 +415,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                 }
             }
         }
+        */
         
         $fields []= array(
             'label' => 'Шаблон',
@@ -528,7 +541,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
     }
     
     public function move($input) {
-        dev_log("MOVING IB", $input);
+        // dev_log("MOVING IB", $input);
         
         if (!isset($input['visual_id']) || !isset($input['area'])) {
             return;
@@ -602,7 +615,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             WHERE id = '".$vis['id']."'"
         );
         
-        dev_log($target_vis);
+        // dev_log($target_vis);
         
         return array('status' => 'ok');
         
