@@ -216,6 +216,17 @@ fx_adminpanel = {
             }, 10000);
         }
     },
+    
+    reload:function(new_location) {
+        $('html, body').html('').css({
+            background:'#EEE',
+            color:'#000', 
+            margin:'30px 0', 
+            font:'bold 22px arial',
+            textAlign:'center'
+        }).html('обновление страницы...');
+        document.location.href = typeof new_location == 'string' ? new_location : document.location.href.replace(/#.*$/, '');  
+    },
         
     post: function ( data, callback ) {
         data.fx_admin = true;
@@ -233,14 +244,7 @@ fx_adminpanel = {
             async: false,
             success: [function(json) {
 				if (json.reload) {
-					$('html, body').html('').css({
-						background:'#EEE',
-						color:'#000', 
-						margin:'30px 0', 
-						font:'bold 22px arial',
-						textAlign:'center'
-					}).html('обновление страницы...');
-					document.location.href = typeof json.reload == 'string' ? json.reload : document.location.href.replace(/#.*$/, '');
+					$fx.reload(json.reload);
 					return;
 				}
 				if ( json.history !==  undefined && json.history.undo  !==  undefined ) {

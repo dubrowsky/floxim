@@ -12,7 +12,7 @@ class fx_admin_response {
     protected $buttons = array(), $buttons_pulldown = array(), $fields = array(), $tabs = array(), $form_buttons = array();
     protected $essence;
     
-    protected $status, $status_text, $error_fields;
+    protected $status, $status_text, $error_fields, $reload;
     
     public function __construct($input) {
         $this->submenu = new fx_admin_submenu($input['menu_id']);
@@ -24,6 +24,12 @@ class fx_admin_response {
         $result = array();
 
         $submenu = $this->submenu->to_array();
+        
+        
+        if ($this->reload) {
+            $result['reload'] = $this->reload;
+        }
+        
         if ($submenu) {
             $result['submenu'] = $submenu;
         }
@@ -169,6 +175,10 @@ class fx_admin_response {
     public function set_status_ok ( $text = '' ) {
         $this->status = 'ok';
         $this->status_text = $text;
+    }
+    
+    public function set_reload($reload = true) {
+        $this->reload = $reload;
     }
     
 

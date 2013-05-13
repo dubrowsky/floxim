@@ -12,7 +12,6 @@
         
             
         open_dialog: function(data, settings) {
-            console.log(data);
             settings = $.extend({
                 onsubmit:function(e) {
                     $fx_dialog.click_save.apply($fx_dialog, e);
@@ -78,9 +77,13 @@
 					return false;
 				}
 			}
+           
+            if (data.reload) {
+                $fx.reload(data.reload);
+                return false;
+            }
 
 			if ( data.step ) {
-				console.log('it s a dialog - close and open', data, $fx_dialog.settings);
                 var prev_closer = $fx_dialog.settings.onclose;
                 $fx_dialog.settings.onclose = function() {
                     $fx_dialog.settings.onclose = prev_closer;
@@ -95,7 +98,6 @@
                 $fx_dialog.main.dialog('close');
 			}
 			else {
-				console.log('with errors');
 				$("#nc_dialog_error", $fx_dialog.main).writeError(data['text']);
 				if ( data.fields ) {
 					$.each( data.fields, function(k,v){
@@ -185,8 +187,6 @@
         },
         
         set_title: function ( title ) {
-            console.log('set title');
-            console.log(title);
             $fx_dialog.main.dialog( "option", "title", title );
         },
         

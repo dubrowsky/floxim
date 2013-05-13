@@ -156,7 +156,7 @@ class fx_controller_infoblock extends fx_controller {
             $meta['data-fx_controller_meta'] = htmlentities(json_encode($controller_meta));
         }
         
-        if ($infoblock['controller'] == 'layout') {
+        if ($infoblock->get_prop_inherited('controller') == 'layout') {
             $meta['class'] .= ' fx_unselectable';
             $html_result = preg_replace_callback(
                 '~<body[^>]*?>~is', 

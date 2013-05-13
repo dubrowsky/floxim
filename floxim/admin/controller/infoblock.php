@@ -178,7 +178,21 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         $this->response->add_fields($scope_fields, $is_layout ? false : 'scope', 'scope');
         
         if ($input['settings_sent'] == 'true') {
+            if ($is_layout) {
+                $this->response->set_reload(true);
+                dev_log('saving relod', $this);
+            }
+            if (
+                    $input['fx_dialog_button'] == 'inherit_delete' && 
+                    $infoblock['parent_infoblock_id'] != 0
+                ) {
+                $infoblock->delete();
+                $this->response->set_status_ok();
+                return;
+            }
             $inherit_mode = $input['fx_dialog_button'] == 'inherit';
+            
+            
             if ($inherit_mode) {
                 $source_ib = $infoblock;
                 $source_i2l = $i2l;
@@ -193,11 +207,13 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             }
             $infoblock['name'] = $input['name'];
             $action_params = array();
-            foreach (array_keys($settings) as $setting_key) {
-                if (isset($input['params'][$setting_key])) {
-                    $action_params[$setting_key] = $input['params'][$setting_key];
-                } else {
-                    $action_params[$setting_key] = false;
+            if (!$is_layout) {
+                foreach (array_keys($settings) as $setting_key) {
+                    if (isset($input['params'][$setting_key])) {
+                        $action_params[$setting_key] = $input['params'][$setting_key];
+                    } else {
+                        $action_params[$setting_key] = false;
+                    }
                 }
             }
             $infoblock['params'] = $action_params;
@@ -232,9 +248,16 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             )
     	);
         if ($input['id']) {
+            $is_inherited = $infoblock['parent_infoblock_id'] != 0;
             $result['dialog_button'] []= array(
-                'key' => 'inherit', 'text' => 'Наследоваться', 'act_as' => 'save'
+                'key' => 'inherit', 'text' => 'Создать новое правило', 'act_as' => 'save'
             );
+            if ($is_inherited) {
+                $result['dialog_button'] []= array(
+                    'key' => 'inherit_delete', 'text' => 'Удалить это правило', 'act_as' => 'save'
+                );
+            }
+            
         }
     	$fields = array(
             $this->ui->hidden('essence', 'infoblock'),
@@ -244,7 +267,8 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             $this->ui->hidden('controller', $input['controller']),
             $this->ui->hidden('page_id', $input['page_id']),
             $this->ui->hidden('area', $input['area']),
-            $this->ui->hidden('id', $input['id'])
+            $this->ui->hidden('id', $input['id']),
+            $this->ui->hidden('mode', $input['mode'])
     	);
     	
     	$this->response->add_fields($fields);
