@@ -30,6 +30,7 @@ class fx_config {
             'HTTP_FILES_PATH' => '/floxim_files/',
             'HTTP_DUMP_PATH' => '/floxim_dump/',
             'HTTP_TEMPLATE_PATH' => '/floxim_templates/',
+            'HTTP_LAYOUT_PATH' => '/controllers/layout/',
             'HTTP_COMPONENT_PATH' => '/floxim_components/',
             'HTTP_WIDGET_PATH' => '/floxim_widgets/',
 

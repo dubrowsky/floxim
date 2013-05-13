@@ -125,6 +125,9 @@ class fx_system_env extends fx_system {
             if (!$this->current['layout']) {
                 $this->current['layout'] = $this->get_site()->get('layout_id');
             }
+            if (!$this->current['layout']) {
+                $this->current['layout'] = fx::data('layout')->one()->get('id');
+            }
         }
         return $this->current['layout'];
     }

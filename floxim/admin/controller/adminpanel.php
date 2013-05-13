@@ -72,17 +72,22 @@ class fx_controller_admin_adminpanel extends fx_controller_admin {
 
     public static function get_more_menu() {
         $more_menu = array();
-        $more_menu[] = array('name' => 'Настройки страницы','button' => 'page_settings');
-        $more_menu[] = array('name' => 'Настройки дизайна', 'button' => 'design_settings');
-        $more_menu[] = array('name' => 'Настройки прав', 'button' => 'page_rights');
+        $more_menu[] = array(
+            'name' => 'Дизайн страницы',
+            'button' => array(
+                'essence' => 'infoblock',
+                'action' => 'layout_settings',
+                'page_id' => fx::env('page')
+            )
+        );
+        //$more_menu[] = array('name' => 'Настройки дизайна', 'button' => 'design_settings');
+        //$more_menu[] = array('name' => 'Настройки прав', 'button' => 'page_rights');
         $more_menu[] = array(
         	'name' => 'Сменить макет сайта',
         	'button' => array(
         		'essence' => 'template',
         		'action' => 'set_preview',
-        		'template_id' => $item['id'],
-        		'panel_mode' => true//,
-        		//'site_id' => 2
+        		'panel_mode' => true
         	)
 		);
         return $more_menu;

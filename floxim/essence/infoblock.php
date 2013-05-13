@@ -13,19 +13,21 @@ class fx_infoblock extends fx_essence {
     
     public function get_visual() {
         if (!$this->_visual) {
-            $stored = fx::data('infoblock_visual')->get(
-                    'infoblock_id', $this->get('id'), 
-                    'layout_id', fx::env('site')->get('layout_id')
-            );
+            $stored = fx::data('infoblock_visual')->
+                    where('infoblock_id', $this['id'])-> 
+                    where('layout_id', fx::env('layout'))->
+                    one();
             if ($stored) {
                 $this->_visual = $stored;
             } else {
+                dev_log(fx::db()->get_last_query());
                 $i2l_params = array('layout_id' => fx::env('layout'));
                 if (($ib_id = $this->get('id'))) {
                     $i2l_params['infoblock_id'] = $ib_id;
                 }
                 $this->_visual = fx::data('infoblock_visual')->create($i2l_params);
             }
+            dev_log('vis set', $this);
         }
         return $this->_visual;
     }
@@ -85,9 +87,10 @@ class fx_infoblock extends fx_essence {
         if ($this['action'] != 'listing') {
             return false;
         }
-        $controller = fx::controller($this['controller']);
-        $content_type = $controller->get_content_type();
-        $content = fx::data('content_'.$content_type)->get_all(array('infoblock_id' => $this->get('id')));
+        $content_type = fx::controller($this['controller'])->get_content_type();
+        $content = fx::data('content_'.$content_type)->
+                    where('infoblock_id',$this['id'])->
+                    all();
         return $content;
     }
     

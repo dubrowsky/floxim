@@ -235,6 +235,10 @@ class fx {
             if (!is_array($arr)) {
                 return null;
             }
+            if (empty($pp)) {
+                $arr[]= $var_value;
+                return;
+            }
             if (!array_key_exists($pp, $arr)) {
                 $arr[$pp]=array();
             }
