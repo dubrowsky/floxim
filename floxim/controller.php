@@ -62,7 +62,6 @@ class fx_controller {
     }
 
     public function get_available_templates( $controller_name = null ) {
-
         $cntr = fx::controller($controller_name);
         $component = $cntr->get_component();
         $chain = $component->get_chain();
@@ -70,7 +69,7 @@ class fx_controller {
 
         foreach ( $chain as $chain_item ) {
             $template = fx::template( 'component_' . $chain_item['keyword'] );
-            if ( $template ) {
+            if ( !empty($template) ) {
                 foreach ( $template->get_template_variants() as $tmp ) {
                     array_push ( $templates, $tmp );
                 }

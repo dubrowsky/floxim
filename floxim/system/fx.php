@@ -195,8 +195,9 @@ class fx {
             return new $class_name($action, $data);
         } catch (Exception $e) {
             dev_log('template class not found', $class_name, func_get_args(), debug_backtrace());
-            die();
-            return new fx_template($action, $data);
+            return false;
+            /*die();
+            return new fx_template($action, $data);*/
         }
     }
     
