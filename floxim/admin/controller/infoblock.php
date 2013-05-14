@@ -394,7 +394,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             if ($tplv['for'] == 'wrap') {
                 $wrappers[$full_id] = $tplv['name'];
             } elseif (in_array($tplv['for'], $action_variants)) {
-                $templates[$full_id] = $tplv['name'];
+                $templates[$full_id] = $tplv['name'] . ' (layout)';
             }
         }
         if ($controller_name != 'layout') {
@@ -402,12 +402,11 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             $controler = fx::controller($controller_name);
             $tmps = $controler->get_available_templates();
 
-            dev_log('tmps', $tmps);
-
             if ( !empty($tmps) ) {
                 foreach ( $tmps as $template ) {
-                    $full_id = $controller_name . '.' . $template['id'];
-                    $templates[$full_id] = $template['name'];
+                    // $full_id = $controller_name . '.' . $template['id'];
+                    $template_name = explode('.',$template['for']);
+                    $templates[$template['for']] = $template_name[1] . ' (' . $template_name[0] . ')';
                 }
             }
             dev_log('templates', $templates);
