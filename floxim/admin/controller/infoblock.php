@@ -103,6 +103,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
     	$infoblock = null;
         // special mode for layouts
         $is_layout = isset($input['mode']) && $input['mode'] == 'layout';
+
         if (isset($input['page_id'])) {
             // устанавливаем в окружение текущую страницу
             // из нее можно получить лейаут
@@ -351,8 +352,6 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         $templates = array('auto.auto' => ' - Автовыбор - ');
 
 
-        $wrappers = array('' => 'Без оформления');
-        $templates = array('auto.auto' => ' - Автовыбор - ');
         $layout_name = fx::data('layout', $i2l['layout_id'])->get('keyword');
         
         $controller_name = $infoblock->get_prop_inherited('controller');

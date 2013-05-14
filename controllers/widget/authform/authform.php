@@ -1,6 +1,6 @@
 <?
 class fx_controller_widget_authform extends fx_controller_widget {
-    public function do_show() {
+    public function show() {
         if (fx::user()) {
             return array('_meta' => array('disabled' => true));
         }

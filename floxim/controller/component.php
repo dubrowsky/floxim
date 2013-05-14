@@ -3,9 +3,6 @@ class fx_controller_component extends fx_controller {
     
     protected $_meta = array();
     
-    protected $_action_prefix = 'do_';
-
-
     public function process() {
         $result = parent::process();
         if (!isset($result['_meta'])) {
@@ -112,13 +109,13 @@ class fx_controller_component extends fx_controller {
         }
     }
 
-    public function do_record() {
+    public function record() {
         $page = fx::data('content_page', fx::env('page'));
         return array('items' => $page);
     }
 
 
-    public function do_listing() {
+    public function listing() {
         $f = $this->_finder();
         
         $content_type = $this->get_content_type();
@@ -132,7 +129,6 @@ class fx_controller_component extends fx_controller {
                 $f->order($sorting, $this->param('sorting_dir'));
             }
         }
-        $this->trigger('query_ready', $f);
         $items = $f->all();
         $this->trigger('items_ready', $items);
 
@@ -169,7 +165,7 @@ class fx_controller_component extends fx_controller {
         return $parent_id;
     }
     
-    public function do_mirror() {
+    public function mirror() {
         $f = $this->_finder();
         ///$params = array();
         if ( ($parent_id = $this->param('parent_id')) ) {

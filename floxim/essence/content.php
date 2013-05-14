@@ -109,7 +109,7 @@ class fx_content extends fx_essence {
             foreach ($this->data as $k => $v) {
                 $cf = $content_fields->find_one('name', $k);
                 $fkey = $k;
-                if ($cf && $cf->type != 'multilink') {
+                if ($cf) {
                     $this->_fields_to_show[$fkey] = new fx_template_field($v, array(
                         'var_type' => 'content', 
                         'content_id' => $this['id'],
@@ -143,18 +143,6 @@ class fx_content extends fx_essence {
             'class' => 'fx_content_essence'
         ));
         return $html;
-    }
-    
-    protected function _before_save() {
-        $component = fx::data('component', $this->component_id);
-        $link_fields = $component->fields()->find('type', 13);
-        foreach ($link_fields as $lf) {
-            if ($lf['format']['is_parent']) {
-                $this[$lf['name']] = $this['parent_id'];
-            }
-        }
-        dev_log($link_fields, $this);
-        parent::_before_save();
     }
 
 }

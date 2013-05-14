@@ -160,6 +160,8 @@
                             var parent = json.parent;  
                     	}
                         
+                        console.log(parent);
+                    	
                     	var check_parent_state = function() {
                             var do_show = true;
                             $.each(parent, function(pkey, pval) {
@@ -171,10 +173,10 @@
                                     pval = pval.replace(/^\~/, '');
                                     pexp = 'regexp';
                                 }
-                                var par_inp = $(':input[name="'+pkey+'"]');
-                                if (par_inp.length == 0) {
+				var par_inp = $(':input[name="'+pkey+'"]');
+				if (par_inp.length == 0) {
                                     return;
-                                }
+				}
                                 
                                 if (par_inp.attr('type') == 'checkbox') {
                                     var par_val = par_inp.get(0).checked * 1;
@@ -182,7 +184,7 @@
                                     var par_val = par_inp.val();
                                 }
 				
-                                if (par_inp.attr('type') == 'radio') {
+				if (par_inp.attr('type') == 'radio') {
                                     par_val = $(':input[name="'+pkey+'"]:checked').val();
                                 }
                                 switch (pexp) {
@@ -190,11 +192,7 @@
                                         do_show = (par_val == pval);
                                         break;
                                     case '!=':
-                                        if (!par_inp.is(':visible')) {
-                                            do_show = true;
-                                        } else {
-                                            do_show = (par_val != pval);
-                                        }
+                                        do_show = (par_val != pval);
                                         break;
                                     case 'regexp':
                                         var prex = new RegExp(pval);
@@ -207,7 +205,6 @@
                             } else {
                                 _el.hide();
                             }
-                            _el.find(':input').trigger('change');
                     	};
                     	
                     	_el.hide();

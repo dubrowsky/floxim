@@ -166,15 +166,12 @@ class fx_data {
                     break;
                 case self::HAS_MANY:
                     $rel_items = $rel_finder->where($rel_field, $essences->get_values('id'))->all();
+                    echo fen_debug('rel has many', $rel_items);
                     $essences->attache_many($rel_items, $rel_field, $rel_name);
                     break;
                 case self::HAS_ONE:
                     break;
                 case self::MANY_MANY:
-                    $end_rel = $rel[3];
-                    $rel_finder->with($end_rel)->where($rel_field, $essences->get_values('id'));
-                    $rel_items = $rel_finder->all();
-                    $essences->attache_many($rel_items, $rel_field, $rel_name, 'id', $end_rel);
                     break;
             }
         }
