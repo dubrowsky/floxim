@@ -26,10 +26,6 @@ class fx_infoblock extends fx_essence {
                 }
                 $this->_visual = fx::data('infoblock_visual')->create($i2l_params);
             }
-<<<<<<< HEAD
-            // dev_log('vis set', $this);
-=======
->>>>>>> parent of d51d0c0... Merge branch 'master' of https://github.com/dubrowsky/floxim
         }
         return $this->_visual;
     }
