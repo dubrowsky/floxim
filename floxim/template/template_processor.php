@@ -30,6 +30,7 @@ class fx_template_processor {
         } else {
             $tpl_name = $tpl_name_parts[1].'_'.$tpl_name_parts[2];
         }
+        dev_log('start proc', $source_dir);
         $source = '{templates source="'.$source_dir.'"}';
         foreach (glob($source_dir.'/*.tpl') as $file) {
             // Не включаем файлы шаблонов, начинающиеся на "_"
@@ -429,6 +430,9 @@ class fx_template_processor {
     protected $_template_stack = array();
     
     protected function add_template(fx_template_token $token) {
+        if ($token->name != 'template') {
+            return;
+        }
         $this->_template_stack []= $token->get_prop('id');
         $this->templates [$token->get_prop('id')]= array('id' => $token->get_prop('id'));
         $code = $this->_token_to_code($token);

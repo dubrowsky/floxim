@@ -20,14 +20,12 @@ class fx_infoblock extends fx_essence {
             if ($stored) {
                 $this->_visual = $stored;
             } else {
-                dev_log(fx::db()->get_last_query());
                 $i2l_params = array('layout_id' => fx::env('layout'));
                 if (($ib_id = $this->get('id'))) {
                     $i2l_params['infoblock_id'] = $ib_id;
                 }
                 $this->_visual = fx::data('infoblock_visual')->create($i2l_params);
             }
-            dev_log('vis set', $this);
         }
         return $this->_visual;
     }
