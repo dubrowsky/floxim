@@ -69,7 +69,30 @@ class fx_controller {
         $tpl = str_replace('fx_controller_', '', get_class($this));
         return fx::template($tpl.'.'.$this->action);
     }
-    
+
+    public function get_available_templates( $controller_name = null ) {
+
+        dev_log('here');
+        die ('good');
+
+        $cntr = fx::controller($controller_name);
+
+        $component = $cntr->get_component();
+        $chain = $component->get_chain();
+        $templates = array();
+
+        foreach ( $chain as $chain_item ) {
+            $template = fx::template( 'component_' . $chain_item['keyword'] );
+            if ( $template ) {
+                foreach ( $template->get_template_variants() as $tmp ) {
+                    array_push ( $templates, $tmp );
+                }
+            }
+        }
+        return $templates;
+        // return $result;
+    }
+
     /*
      * Пост-обработка, вызывается из fx_controller_infoblock->render()
      */
