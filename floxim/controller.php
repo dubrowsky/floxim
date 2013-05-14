@@ -69,6 +69,7 @@ class fx_controller {
 
         foreach ( $chain as $chain_item ) {
             $template = fx::template( 'component_' . $chain_item['keyword'] );
+            dev_log('template', $template);
             if ( !empty($template) ) {
                 foreach ( $template->get_template_variants() as $tmp ) {
                     array_push ( $templates, $tmp );
