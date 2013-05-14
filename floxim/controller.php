@@ -52,38 +52,25 @@ class fx_controller {
      * $input = null, $action = null, $do_return = false
      */
     public function process() {	
-    	$action = $this->get_action_method();
+    	$action = is_callable(array($this, $this->action)) ? $this->action : 'default_action';
         return $this->$action($this->input);
     }
     
-    protected $_action_prefix = '';
-
-
-    public function get_action_method() {
-        $action = $this->_action_prefix.$this->action;
-        return is_callable(array($this, $action)) ? $action : 'default_action';
-    }
-
-
     public function find_template() {
         $tpl = str_replace('fx_controller_', '', get_class($this));
         return fx::template($tpl.'.'.$this->action);
     }
 
     public function get_available_templates( $controller_name = null ) {
-
-        dev_log('here');
-        die ('good');
-
         $cntr = fx::controller($controller_name);
-
         $component = $cntr->get_component();
         $chain = $component->get_chain();
         $templates = array();
 
         foreach ( $chain as $chain_item ) {
             $template = fx::template( 'component_' . $chain_item['keyword'] );
-            if ( $template ) {
+            dev_log('template', $template);
+            if ( !empty($template) ) {
                 foreach ( $template->get_template_variants() as $tmp ) {
                     array_push ( $templates, $tmp );
                 }

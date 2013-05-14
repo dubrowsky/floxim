@@ -30,8 +30,8 @@ class fx_controller_admin_layout extends fx_controller_admin {
             	'url' => $submenu_first['url']
             );
             $el = array('id' => $item['id'], 'name' => $name);
-            if ($layout_use[$item['id']]) {
-                $el['use'] = join(', ', $layout_use[$item['id']]);
+            if ($template_use[$item['id']]) {
+                $el['use'] = join(', ', $template_use[$item['id']]);
                 $el['fx_not_available_buttons'] = array('delete');
             } else {
                 $el['use'] = ' - ';
@@ -150,54 +150,82 @@ class fx_controller_admin_layout extends fx_controller_admin {
         $name = trim($input['name']);
 
         $data = array('name' => $name, 'keyword' => $keyword);
-        $layout = fx::data('layout')->create($data);
-        $path = $layout->get_path();
+        $template = fx::data('template')->create($data);
+
+        if (!$template->validate()) {
+            $result['status'] = 'error';
+            $result['errors'] = $template->get_validate_error();
+            return $result;
+        }
+
+        $path = $template->get_path();
+        $parent = $index = $inner = false;
         try {
             $fx_core->files->mkdir($path);
-            $layout->save();
+            $tpl_finder = fx::data('template');
+            $parent = $tpl_finder->create(array('name' => $name, 'keyword' => $keyword, 'type' => 'parent'))->save();
+            $index = $tpl_finder->create(array('name' => 'Титульная страница', 'keyword' => $keyword, 'type' => 'index', 'keyword' => 'index', 'parent_id' => $parent['id']))->save();
+            $inner = $tpl_finder->create(array('name' => 'Внутренняя страница', 'keyword' => $keyword, 'type' => 'inner', 'keyword' => 'inner', 'parent_id' => $parent['id']))->save();
+
+            $index_html = $this->_get_index_tpl();
+            fx_controller_admin_layout::compile($index, $index_html);
+
+            $inner_html = $this->_get_inner_tpl();
+            fx_controller_admin_layout::compile($inner, $inner_html);
         } catch (Exception $e) {
             $result['status'] = 'error';
             $result['text'][] = "Не удалось создать каталог ".$path;
+
+            if ($inner) $inner->delete();
+            if ($index) $index->delete();
+            if ($parent) $parent->delete();
+            return $result;
         }
+
+
+
         return $result;
     }
 
     public function delete_save($input) {
         $result = array('status' => 'ok');
+
         $ids = $input['id'];
         if (!is_array($ids)) $ids = array($ids);
 
         foreach ($ids as $id) {
             try {
-                $layout = fx::data('layout')->get_by_id($id);
-                $layout->delete();
+                $template = fx::data('template')->get_by_id($id);
+                $template->delete();
             } catch (Exception $e) {
                 $result['status'] = 'ok';
                 $result['text'][] = $e->getMessage();
             }
         }
+
         return $result;
     }
     
     
     public function operating($input) {
-        $layout = fx::data('layout', $input['params'][0]); //->get_by_id($input['params'][0]);
+        $template = fx::data('template')->get_by_id($input['params'][0]);
         $action = isset($input['params'][1]) ? $input['params'][1] : 'layouts';
 
-        if (!$layout) {
+        if (!$template) {
             $fields[] = $this->ui->error('Макет не найден');
             return array('fields' => $fields);
         }
         
-        self::make_breadcrumb($layout, $action, $this->response->breadcrumb);
+        self::make_breadcrumb($template, $action, $this->response->breadcrumb);
         
         if (method_exists($this, $action)) {
-        	$result = call_user_func(array($this, $action), $layout);
+        	$result = call_user_func(array($this, $action), $template);
         }
-
-        // dev_log('response', $this->response);
-
-        $this->response->submenu->set_menu('layout-'.$layout['id'])->set_subactive($action);
+        
+        $this->response->submenu->set_menu('template-'.$template['id'])->set_subactive($action);
+        
+        
+        
         return $result;
     }
     
@@ -231,22 +259,22 @@ class fx_controller_admin_layout extends fx_controller_admin {
         return $result;
     }
     
-    public static function get_template_submenu($layout) {
+    public static function get_template_submenu($template) {
     	$titles = array(
-    		// 'layouts' => 'Лэйауты',
-			// 'files' => 'Файлы',
-			// 'colors' => 'Расцветки',
+    		'layouts' => 'Лэйауты',
+			'files' => 'Файлы',
+			'colors' => 'Расцветки',
 			'settings' => 'Настройки'
 		);
-
-        $layout_id = $layout['id'];
+		
+        $template_id = $template['id'];
         
 		$items = array();
 		foreach ($titles as $key => $title) {
 			$items [$key]= array(
 				'title' => $title,
 				'code' => $key,
-				'url' => 'layout.operating('.$layout_id.','.$key.')'
+				'url' => 'template.operating('.$template_id.','.$key.')'
 			);
 		}
 		return $items;

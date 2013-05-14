@@ -1,4 +1,5 @@
 <div class="post" fx_render=".">
+    <h1><a href="{$url}">{$header}</a></h1>
     <p>{$text}</p>
 
     <div class="info">

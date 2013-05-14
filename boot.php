@@ -1,8 +1,7 @@
 <?php
 require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . '_devlog' . DIRECTORY_SEPARATOR . 'log.php');
 
- //dev_log('start');
- //die();
+// dev_log('start');
 
 $db_config = array(
     'ilya_local' =>  array(

@@ -27,7 +27,6 @@ class fx_controller_admin extends fx_controller {
     }
 
     public function process() {
-
         $input = $this->input;
         $action = $this->action;
         
