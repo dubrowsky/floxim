@@ -177,7 +177,7 @@ class fx {
             die("Failed loading controller class ".$c_class);
     	}
     }
-    
+
     public static function template($template, $data = array()) {
         if (is_numeric($template)) {
             // ...
@@ -189,14 +189,15 @@ class fx {
         } else {
             $action = null;
         }
-        
+
         $class_name = 'fx_template_'.$template;
         try {
             return new $class_name($action, $data);
         } catch (Exception $e) {
             dev_log('template class not found', $class_name, func_get_args(), debug_backtrace());
-            die();
-            return new fx_template($action, $data);
+            return false;
+            /*die();
+            return new fx_template($action, $data);*/
         }
     }
     
