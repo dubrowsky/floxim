@@ -27,7 +27,7 @@ class fx_infoblock extends fx_essence {
                 }
                 $this->_visual = fx::data('infoblock_visual')->create($i2l_params);
             }
-            dev_log('vis set', $this);
+            // dev_log('vis set', $this);
         }
         return $this->_visual;
     }

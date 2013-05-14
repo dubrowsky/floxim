@@ -71,7 +71,7 @@ class fx_controller {
     }
 
     public function get_available_templates( $controller_name = null ) {
-        
+
         $cntr = fx::controller($controller_name);
         $component = $cntr->get_component();
         $chain = $component->get_chain();
