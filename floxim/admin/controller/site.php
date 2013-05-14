@@ -285,19 +285,11 @@ class fx_controller_admin_site extends fx_controller_admin {
     public function settings($input) {
         $site_id = isset($input['id']) ? $input['id'] : isset($input['params'][0]) ? $input['params'][0] : null;
         
-        $site = fx::data('site')->get_by_id($site_id);
+        $site = fx::data('site', $site_id);
 
-        
-        // используются subdivisions (запрещено)
-        /* $sub_values = array();
-        $sub_all = fx::data('subdivision')->get_all('site_id', $site['id']);
-        foreach ($sub_all as $sub) {
-            $sub_values[$sub['id']] = $sub['name'];
-        } */
-        
         // используются content_pages
         $content_pages_list = array();
-        $content_pages = fx::data('content_page')->get_all('site_id', $site_id);
+        $content_pages = fx::data('content_page')->where('site_id', $site_id)->all();
         foreach ($content_pages as $page)
         {
             $content_pages_list[$page['id']] = $page['url'];
@@ -359,25 +351,21 @@ class fx_controller_admin_site extends fx_controller_admin {
     }
     
     public function design($input) {
-
-       	$site_id = $input['params'][0]; //isset($input['id']) ? $input['id'] : isset($input['params'][0]) ? $input['params'][0] : null;
+      	$site_id = $input['params'][0]; //isset($input['id']) ? $input['id'] : isset($input['params'][0]) ? $input['params'][0] : null;
         $site = fx::data('site')->get_by_id($site_id);
-
         $layouts = fx::data('layout')->all();
         $layouts_select = array();
         foreach ( $layouts  as $layout )
         {
-            $layouts_select[] = array('l_' . $layout['id'], $layout['name']);
+            $layouts_select[] = array($layout['id'], $layout['name']);
         }
-        dev_log($layouts_select);
-
 
         $fields = array(
         	array(
 				'name' => 'layout_id',
 				'type' => 'select', 
 				'values' => $layouts_select,
-				'value' => 'l_' . $site['layout_id'],
+				'value' => $site['layout_id'],
 				'label' => 'Макет'
 			),
 			array(
@@ -431,11 +419,6 @@ class fx_controller_admin_site extends fx_controller_admin {
             )
         );
         */
-
-
-        dev_log('fields',$fields);
-        		
-        
         $this->response->add_fields($fields);
         
         $this->response->add_form_button('save');
@@ -443,17 +426,16 @@ class fx_controller_admin_site extends fx_controller_admin {
     }
     
     public function design_save($input) {
-    	$site_id = $input['site_id'];
-        $site = fx::data('site')->get_by_id($site_id);
-    	
-    	$old_template_id = $site['template_id'];
+        $site = fx::data('site', $input['site_id']);
+    	$old_template_id = $site['layout_id'];
+        $site['layout_id'] = $this->input['layout_id'];
+        $site->save();
+        /*
         if ($old_template_id != $input['template_id']) {
             $suitable = new fx_suitable();
             $suitable->apply_design($site, $input['template_id']);
             $site['template_id'] = $input['template_id'];
-        }
-        $site->save();
-
+        } */
     }
 
     public function download($input) {

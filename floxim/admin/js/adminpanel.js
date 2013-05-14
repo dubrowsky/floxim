@@ -231,6 +231,11 @@ fx_adminpanel = {
     post: function ( data, callback ) {
         data.fx_admin = true;
         data.fx_token = $fx.g_data.main.token;
+        if (!callback) {
+            callback = function(data) {
+                $fx_dialog.open_dialog(data);
+            }
+        }
         $.ajax({
             url: $fx.settings.action_link,
             type: "POST",

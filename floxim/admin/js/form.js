@@ -153,76 +153,7 @@
                     }
                     
                     if (json.parent) {
-<<<<<<< HEAD
                         $fx_form.add_parent_condition(json.parent, _el, container);
-=======
-                    	if (json.parent instanceof Array) {
-                            var parent = {};
-                            parent[json.parent[0]] = json.parent[1];
-                    	} else {
-                            var parent = json.parent;  
-                    	}
-                        
-                        console.log(parent);
-                    	
-                    	var check_parent_state = function() {
-                            var do_show = true;
-                            $.each(parent, function(pkey, pval) {
-                                var pexp = '==';
-                                if (/^!=/.test(pval)) {
-                                    pval = pval.replace(/^!=/, '');
-                                    pexp = '!=';
-                                } else if (/^\~/.test(pval)) {
-                                    pval = pval.replace(/^\~/, '');
-                                    pexp = 'regexp';
-                                }
-				var par_inp = $(':input[name="'+pkey+'"]');
-				if (par_inp.length == 0) {
-                                    return;
-				}
-                                
-                                if (par_inp.attr('type') == 'checkbox') {
-                                    var par_val = par_inp.get(0).checked * 1;
-                                } else {
-                                    var par_val = par_inp.val();
-                                }
-				
-				if (par_inp.attr('type') == 'radio') {
-                                    par_val = $(':input[name="'+pkey+'"]:checked').val();
-                                }
-                                switch (pexp) {
-                                    case '==':
-                                        do_show = (par_val == pval);
-                                        break;
-                                    case '!=':
-                                        do_show = (par_val != pval);
-                                        break;
-                                    case 'regexp':
-                                        var prex = new RegExp(pval);
-                                        do_show = prex.test(par_val);
-                                        break;
-                                }
-                            });
-                            if (do_show) {
-                                _el.show();
-                            } else {
-                                _el.hide();
-                            }
-                    	};
-                    	
-                    	_el.hide();
-                    	var parent_selector = [];
-                    	$.each(parent, function(pkey, pval) {
-                            parent_selector.push(':input[name="'+pkey+'"]');
-                    	});
-                    	parent_selector = parent_selector.join(', ', parent_selector);
-                    	
-                    	$(container).on('change', parent_selector, check_parent_state);
-                    	
-                    	setTimeout(function() {
-                            check_parent_state.apply($(parent_selector).get(0));		
-                    	}, 50);
->>>>>>> b9f018739da323c3d2e59d66d10e15177f0306a6
                     }
                 }
             });

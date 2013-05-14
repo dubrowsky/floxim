@@ -15,7 +15,6 @@ fx_additional_menu.prototype.load = function () {
     $('<span/>').addClass('fx_admin_additional_menu_divider').appendTo(menu);
     var logout = $('<a style="cursor:pointer;"/>').text('выход');
     logout.appendTo(menu);
-    //.attr('href', '/floxim/index.php?essence=module_auth&action=logout');
     logout.click(function() {
        $(this).append(
         '<form action="/floxim/" method="POST" style="width:1px; height:1px; overflow:hidden;">'+

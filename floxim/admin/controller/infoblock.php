@@ -103,7 +103,6 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
     	$infoblock = null;
         // special mode for layouts
         $is_layout = isset($input['mode']) && $input['mode'] == 'layout';
-
         if (isset($input['page_id'])) {
             // устанавливаем в окружение текущую страницу
             // из нее можно получить лейаут
@@ -376,6 +375,8 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         $templates = array('auto.auto' => ' - Автовыбор - ');
 
 
+        $wrappers = array('' => 'Без оформления');
+        $templates = array('auto.auto' => ' - Автовыбор - ');
         $layout_name = fx::data('layout', $i2l['layout_id'])->get('keyword');
         
         $controller_name = $infoblock->get_prop_inherited('controller');
@@ -386,14 +387,15 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             $action_variants []= $controller_name.".listing";
         }
 
-        /*$tmps = $this->get_available_templates($controller_name);
+        $tmps = $this->get_available_templates($controller_name);
         if ( !empty($tmps) ) {
             foreach ( $tmps as $template ) {
                 $full_id = 'layout_' . $layout_name . '.' . $template['id'];
                 $templates[$full_id] = $template['name'];
             }
-        }*/
+        }
 
+/*
         // варианты шаблона из лейаута
         foreach ( fx::template('layout_'.$layout_name)->get_template_variants() as $tplv) {
             $full_id = 'layout_'.$layout_name.'.'.$tplv['id'];
@@ -406,23 +408,16 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         }
         if ($controller_name != 'layout') {
             // варианты шаблонов из шаблона контроллера
-            $tmps = $this->get_available_templates($controller_name);
-            if ( !empty($tmps) ) {
-                foreach ( $tmps as $template ) {
-                    $full_id = $controller_name.'.'.$tplv['id'];
-                    $templates[$full_id] = $template['name'];
-                }
-            }
-            /*foreach (fx::template($controller_name)->get_template_variants() as $tplv) {
+            foreach (fx::template($controller_name)->get_template_variants() as $tplv) {
                 $full_id = $controller_name.'.'.$tplv['id'];
                 if ($tplv['for'] == 'wrap') {
                     $wrappers[$full_id] = $tplv['name'];
                 } elseif (in_array($tplv['for'], $action_variants)) {
                     $templates[$full_id] = $tplv['name'];
                 }
-            }*/
+            }
         }
-
+*/
         $fields []= array(
             'label' => 'Шаблон',
             'name' => 'template',

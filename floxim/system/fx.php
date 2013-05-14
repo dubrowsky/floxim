@@ -195,9 +195,8 @@ class fx {
             return new $class_name($action, $data);
         } catch (Exception $e) {
             dev_log('template class not found', $class_name, func_get_args(), debug_backtrace());
-            return false;
-            /*die();
-            return new fx_template($action, $data);*/
+            die();
+            return new fx_template($action, $data);
         }
     }
     
@@ -235,6 +234,10 @@ class fx {
         foreach ($var_path as $pp) {
             if (!is_array($arr)) {
                 return null;
+            }
+            if (empty($pp)) {
+                $arr[]= $var_value;
+                return;
             }
             if (!array_key_exists($pp, $arr)) {
                 $arr[$pp]=array();
