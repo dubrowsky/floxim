@@ -399,13 +399,18 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         }
         if ($controller_name != 'layout') {
             // варианты шаблонов из шаблона контроллера
-            $tmps = $this->get_available_templates($controller_name);
+            $controler = fx::controller($controller_name);
+            $tmps = $controler->get_available_templates();
+
+            dev_log('tmps', $tmps);
+
             if ( !empty($tmps) ) {
                 foreach ( $tmps as $template ) {
-                    $full_id = $controller_name.'.'.$tplv['id'];
+                    $full_id = $controller_name . '.' . $template['id'];
                     $templates[$full_id] = $template['name'];
                 }
             }
+            dev_log('templates', $templates);
             /*foreach (fx::template($controller_name)->get_template_variants() as $tplv) {
                 $full_id = $controller_name.'.'.$tplv['id'];
                 if ($tplv['for'] == 'wrap') {

@@ -70,9 +70,8 @@ class fx_controller {
         return fx::template($tpl.'.'.$this->action);
     }
 
-    public function get_available_templates( $controller_name = null ) {
-        $cntr = fx::controller($controller_name);
-        $component = $cntr->get_component();
+    public function get_available_templates( ) {
+        $component = $this->get_component();
         $chain = $component->get_chain();
         $templates = array();
 
@@ -80,7 +79,9 @@ class fx_controller {
             $template = fx::template( 'component_' . $chain_item['keyword'] );
             dev_log('template', $template);
             if ( !empty($template) ) {
-                foreach ( $template->get_template_variants() as $tmp ) {
+                $tmp_variants = $template->get_template_variants();
+                dev_log ( 'tmp_variants', $tmp_variants );
+                foreach ( $tmp_variants as $tmp ) {
                     array_push ( $templates, $tmp );
                 }
             }
