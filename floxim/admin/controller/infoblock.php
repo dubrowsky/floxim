@@ -408,7 +408,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         if ( !empty($tmps) ) {
             foreach ( $tmps as $template ) {
                 $template_name = explode('.',$template['for']);
-                $templates[$template['full_id']] = $template_name[1] . ' (ID: ' . $template['id'] . '; COMPONENT:' . $template_name[0] . ')';
+                $templates[$template['full_id']] = $template['name'] . ' (' . $template['full_id'] . ')';
             }
         }
 
