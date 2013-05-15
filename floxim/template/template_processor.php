@@ -478,6 +478,7 @@ class fx_template_processor {
             echo "\n".$this->pad()."}\n";
             $tpl_meta = $tpl;
             unset($tpl_meta['code']);
+            $tpl_meta['full_id'] = $this->_class_code.'.'.$tpl['id'];
             $tpl_var []= $tpl_meta;
         }
         echo 'protected $_templates = '.var_export($tpl_var,1).";\n";

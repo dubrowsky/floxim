@@ -95,6 +95,10 @@ class fx_template_html {
                     $tpl_macro_tag .= ' for="'.$tpl_for.'"';
                     $n->remove_attribute('fx_template_for');
                 }
+                if ( ($tpl_name = $n->get_attribute('fx_template_name'))) {
+                    $tpl_macro_tag .= ' name="'.$tpl_name.'"';
+                    $n->remove_attribute('fx_template_name');
+                }
                 $tpl_macro_tag .= '}';
                 $n->parent->add_child_before(fx_html_token::create($tpl_macro_tag), $n);
                 $n->parent->add_child_after(fx_html_token::create('{/template}'), $n);
