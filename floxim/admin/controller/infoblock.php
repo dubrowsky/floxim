@@ -405,10 +405,8 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         // Собираем доступные шаблоны
         $controler = fx::controller($controller_name,null,$action_name);
         $tmps = $controler->get_available_templates($layout_name);
-        // dev_log('tmps',$tmps);
         if ( !empty($tmps) ) {
             foreach ( $tmps as $template ) {
-                // dev_log('cur_template', $template);
                 $template_name = explode('.',$template['for']);
                 $templates[$template['full_id']] = $template_name[1] . ' (ID: ' . $template['id'] . '; COMPONENT:' . $template_name[0] . ')';
             }
