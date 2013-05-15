@@ -232,13 +232,12 @@ class fx_controller_component extends fx_controller {
 
     public function get_available_templates ( $layout_name = null ) {
         $templates = parent::get_available_templates( $layout_name );
-
         $component = $this->get_component();
         $chain = $component->get_chain();
-
+        $chain = array_reverse($chain);
+        array_shift( $chain );
         $action = $this->action == 'mirror' ? 'listing' : $this->action; // TODO: убрать  этот костыль для mirror
         $action = explode('_',$action);
-
         foreach ( $chain as $chain_item ) {
             $template = fx::template( 'component_' . $chain_item['keyword'] );
             if ( !empty($template) ) {
@@ -248,11 +247,12 @@ class fx_controller_component extends fx_controller {
                     $act = explode('.',$tmp['for']);
                     $act = explode('_',$act[1]);
                     $intersection = array_intersect_assoc($action,$act);
-                    if ( $intersection == $action ) array_push ( $templates, $tmp );
+                    if ( $intersection == $action ) {
+                        $templates[] = $tmp;
+                    }
                 }
             }
         }
-
         return $templates;
     }
 }

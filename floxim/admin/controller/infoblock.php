@@ -380,6 +380,8 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         $layout_name = fx::data('layout', $i2l['layout_id'])->get('keyword');
         
         $controller_name = $infoblock->get_prop_inherited('controller');
+        dev_log('OLOLO controller_name', $controller_name);
+
         $action_name = $infoblock->get_prop_inherited('action');
 
         // Собираем доступные wrappers
@@ -406,9 +408,9 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         // dev_log('tmps',$tmps);
         if ( !empty($tmps) ) {
             foreach ( $tmps as $template ) {
+                // dev_log('cur_template', $template);
                 $template_name = explode('.',$template['for']);
-                $full_id = $template_name[0] . '.' . $template['id'];
-                $templates[$full_id] = $template_name[1] . ' (ID: ' . $template['id'] . '; COMPONENT:' . $template_name[0] . ')';
+                $templates[$template['full_id']] = $template_name[1] . ' (ID: ' . $template['id'] . '; COMPONENT:' . $template_name[0] . ')';
             }
         }
 

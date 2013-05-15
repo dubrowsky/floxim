@@ -26,7 +26,7 @@
 			<div class="sep"></div>
             <!--горизонтальное меню-->
 			{area id="header"}
-			<div id="menu" fx_template="demo_menu" fx_template_for="component_section.listing">
+			<div id="menu" fx_template="demo_menu" fx_template_for="component_section.listing" fx_template_name="Горизонтальное меню (главное)">
             	<ul>
                     <li fx_render=".">
                             <a href="{$url}">
