@@ -70,24 +70,19 @@ class fx_controller {
         return fx::template($tpl.'.'.$this->action);
     }
 
-    public function get_available_templates( ) {
-        $component = $this->get_component();
-        $chain = $component->get_chain();
+    public function get_available_templates( $layout_name = null ) {
         $templates = array();
-
-        foreach ( $chain as $chain_item ) {
-            $template = fx::template( 'component_' . $chain_item['keyword'] );
-            dev_log('template', $template);
-            if ( !empty($template) ) {
-                $tmp_variants = $template->get_template_variants();
-                dev_log ( 'tmp_variants', $tmp_variants );
-                foreach ( $tmp_variants as $tmp ) {
-                    array_push ( $templates, $tmp );
-                }
-            }
+        $tmpls = fx::template('layout_' . $layout_name)->get_template_variants();
+        $action = $this->action == 'mirror' ? 'listing' : $this->action; // TODO: убрать  этот костыль для mirror
+        $action = explode('_',$action);
+        foreach ( $tmpls as $tmp ) {
+            if ( $tmp['for'] == 'wrap' ) continue;
+            $act = explode('.',$tmp['for']);
+            $act = explode('_',$act[1]);
+            $intersection = array_intersect_assoc($action,$act);
+            if ( $intersection == $action ) $templates[] = $tmp;
         }
         return $templates;
-        // return $result;
     }
 
     /*

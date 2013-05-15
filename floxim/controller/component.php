@@ -229,5 +229,31 @@ class fx_controller_component extends fx_controller {
         $tpl_name = 'component_'.$this->get_content_type().".".$this->action;
         return fx::template($tpl_name);
     }
+
+    public function get_available_templates ( $layout_name = null ) {
+        $templates = parent::get_available_templates( $layout_name );
+
+        $component = $this->get_component();
+        $chain = $component->get_chain();
+
+        $action = $this->action == 'mirror' ? 'listing' : $this->action; // TODO: убрать  этот костыль для mirror
+        $action = explode('_',$action);
+
+        foreach ( $chain as $chain_item ) {
+            $template = fx::template( 'component_' . $chain_item['keyword'] );
+            if ( !empty($template) ) {
+                $tmp_variants = $template->get_template_variants();
+                foreach ( $tmp_variants as $tmp ) {
+                    if ( $tmp['for'] == 'wrap' ) continue;
+                    $act = explode('.',$tmp['for']);
+                    $act = explode('_',$act[1]);
+                    $intersection = array_intersect_assoc($action,$act);
+                    if ( $intersection == $action ) array_push ( $templates, $tmp );
+                }
+            }
+        }
+
+        return $templates;
+    }
 }
 ?>
