@@ -105,6 +105,10 @@ class fx_template {
         $html = preg_replace_callback(
             $area_regexp, 
             function($matches) {
+                // если внутри есть еще маркер - значит, мы наловили лишнего
+                if (preg_match("~###fx_area~", $matches[6])) {
+                    return $matches[0];
+                }
                 $tag = fx_html_token::create_standalone($matches[1]);
                 $tag->add_meta(array(
                     'class' => 'fx_area',
@@ -120,7 +124,6 @@ class fx_template {
     
     protected static function _replace_areas_in_text($html) {
         $html = preg_replace_callback("~".self::$_area_regexp."~s", function($matches) {
-            dev_log('matches',$matches);
             $content = $matches[3];
             $tag = preg_match("~<(?:div|ul|li|table|br)~i", $content) ? 'div' : 'span';
             return '<'.$tag.' class="fx_area" data-fx_area="'.htmlentities($matches[2]).'">'.
