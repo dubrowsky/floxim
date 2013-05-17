@@ -1,0 +1,147 @@
+/* блоки списком без колонок */
+.fx_row {}
+.fx_row .fx_caption {font-size:14px; line-height:17px; margin:0; font-weight:bold;}
+
+/* блоки колонками */
+.fx_items {}
+.fx_items .fx_item {float:left; margin:0 0 18px 18px;}
+.fx_items .fx_caption {font-size:14px; line-height:17px; margin:0; font-weight:bold;}
+
+/* разделитель */
+.fx_divider {float:none; clear:both; height:1px;}
+
+/* группировка */
+.fx_group {font-size:14px; line-height:17px; margin:0; font-weight:bold;}
+
+/* пара ключ-значение */
+.fx_key {}
+.fx_value {}
+
+/* слайдер */
+#fx_slider {}
+
+/* цена обычная, скидка */
+.fx_price {}
+.fx_discount {}
+
+/* аяксовая ссылка */
+.fx_ajax {}
+.fx_box {display:none;}
+
+/* ссылки скачать, купить и тд. */
+.fx_download {}
+.fx_buy {}
+.fx_search {}
+.fx_more {}
+
+.fx_next {}
+.fx_prev {}
+
+/* выделенный элемент (например по важности) */
+.fx_marked {}
+
+/* новый элемент */
+.fx_new {}
+
+/* примечание */
+.fx_notice {}
+
+/* подпись к картинке */
+.fx_label {}
+
+body, html{margin:0; padding:0; height:100%; font-family:"Trebuchet MS", Arial, Helvetica, sans-serif; font-size:13px; line-height:17px;}
+form{margin:0; padding:0;}
+input, div, a, span{outline:none;}
+a:hover{text-decoration:none;}
+a img{cursor:pointer;}
+img{border:none;}
+
+.sep{float:none; clear:both; height:1px;}
+.rtc, .ltc, .rbc, .lbc, .sep{font-size:0; line-height:0;}
+.rel{position:relative;}
+
+#header, #middle, #footer .content{width:982px; margin:0 auto;}
+#header{margin-top:23px; margin-bottom:32px;}
+
+	#logo{float:left; width:226px; font-size:12px; line-height:14px; font-family:Cambria, "Trebuchet MS", Arial, Helvetica, sans-serif; text-transform:uppercase;}
+	#logo img{width:66px; margin:0 8px 0 0; float:left;}
+	#logo span{font-size:24px; line-height:26px; display:block;}
+	
+	#menu{float:left; width:494px; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:18px; text-transform:uppercase;}
+	#menu ul, #menu li{margin:0; padding:0;}
+	#menu li{list-style-type:none; margin:5px 0 0 26px; float:left; width:220px;}
+	#menu a{text-decoration:none;}
+	#menu a.menu-active, #menu a:hover{text-decoration:underline;}
+	
+	#header .search{width:243px; float:right; width:243px; text-align:right;}
+	.search input{font-size:11px; font-style:italic; width:170px;}
+	.search .submit{font-style:normal; width:60px;}
+
+#content{width:732px; padding:0 0 40px 0; float:left; margin:0 0 0 125px;}
+#content.inner{width:670px;}
+
+	#content h1, #content h2, #content h3, #content h4{text-transform:uppercase; font-weight:bold;}
+	#content h1{margin:0px 0 12px 0; font-size:20px; line-height:24px;}
+	#content h2{margin:30px 0 12px 0; font-size:18px; line-height:24px}
+	#content h3{margin:30px 0 12px 0; font-size:16px; line-height:20px;}
+	#content h4{margin:20px 0 12px 0; font-size:14px; line-height:17px;}
+
+	#content .block h2{font-size:20px; margin:0; line-height:24px;}
+	#content .block h3{font-size:16px; line-height:20px; margin:0;}
+	#content .block h4{font-size:14px; line-height:17px;}
+	.block .header{font-size:14px; line-height:17px; margin:0;}
+	.block img{max-width:100%;}
+	.block .header.article{font-weight:bold;}
+	.block ul{margin:10px 0; padding:0;}
+	.block li{list-style-type:none; padding:0 0 0 14px; background:url(images/li_marker.gif) left 8px no-repeat; margin:7px 0;}
+	.block p{margin:8px 0;}
+	
+	.article_2{margin:0 0 45px 0;}
+	.article_2 .block{float:left; width:357px; overflow:hidden;}
+	.article_2 .block.first{margin:0 18px 0 0;}
+	.article_2 .block img{margin:17px 0;}
+	
+	.inner .article_3 .block{width:210px;}
+	.article_3 .block{margin:0 0 45px 0; width:232px; float:left; margin:0 0 0 18px;}
+	.article_3 .block.first{margin:0;}
+	
+	.content_header{margin:0 0 20px 0; font-size:14px;}
+	
+	.tabs{margin:0 0 15px 0;}
+	.tabs ul, .tabs li, .tabs a, .tabs span{height:21px; font-size:13px; text-decoration:none; display:block; position:relative;}
+	.tabs ul, .tabs li{margin:0; padding:0;}
+	.tabs li{list-style-type:none; float:left; border:1px solid; border-bottom:none; margin:0 1px 0 0;}
+	.tabs a{background:url(images/tab_ltc.gif) left top no-repeat; left:-1px; top:-1px; border-bottom:1px solid;}
+	.tabs span{background:url(images/tab_rtc.gif) right top no-repeat; right:-2px; top:0; padding:2px 22px 0 20px; border-bottom:1px solid; height:19px;}
+	.tabs .menu-active span, .tabs .menu-active, .tabs a:hover, .tabs a:hover span{border-bottom:none;}
+	
+	.article_image img{margin:0 18px 0 0;}
+	
+	.form{width:480px; margin:0 0 40px;}
+	.form .left, .form .right{width:234px; margin:3px 0;}
+	.form select.right, .form select.left{width:238px;}
+	.form .submit{float:none; clear:both; width:auto; margin:0; height:auto;}
+	.form textarea, .form select, .form input, .form option{font-size:12px; font-family:"Trebuchet MS", Arial, Helvetica, sans-serif; line-height:14px; height:18px; padding:1px 0;}
+	.form textarea{width:477px; margin:3px 0; height:100px;}
+	.form select{height:24px;}
+	.form .submit{height:29px; width:95px; text-align:center; border:none; font-weight:bold; cursor:pointer; margin:5px 0 0 0;}
+	
+	.items .block{float:left; width:210px; margin:0 0 18px 18px;}
+	.items .block.first{margin:0 0 18px 0;}
+	.items .block img{width:73px; float:left; margin:0 8px 0 0;}
+	.items .block p{margin:0;}
+	
+#right_content{width:160px; float:right;}
+
+	#submenu{margin:60px 0;}
+	#submenu ul, #submenu li{margin:0; padding:0;}
+	#submenu li{list-style-type:none; font-size:14px; text-transform:uppercase; margin:7px 0;}
+	#submenu li ul{margin:7px 0 0 0;}
+	#submenu li li{margin:0 0 0 18px; text-transform:none;}	
+	
+#footer{font-size:12px; line-height:16px; padding:12px 0;}
+
+	#footer p{margin:0;}	
+	#footer .left{float:left; width:350px; margin:0 20px 0 0;}
+	#footer .middle{float:left; width:340px; background:url(images/footer_adres.gif) left top no-repeat; padding:0 0 0 24px;}
+	#footer .right{float:right; width:190px; text-align:right;}
