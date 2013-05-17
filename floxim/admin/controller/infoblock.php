@@ -380,7 +380,6 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         $layout_name = fx::data('layout', $i2l['layout_id'])->get('keyword');
         
         $controller_name = $infoblock->get_prop_inherited('controller');
-        dev_log('OLOLO controller_name', $controller_name);
 
         $action_name = $infoblock->get_prop_inherited('action');
 

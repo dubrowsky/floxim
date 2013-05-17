@@ -72,28 +72,36 @@ class fx_controller {
 
     public function get_available_templates( $layout_name = null ) {
         $templates = array();
-        $tmpls = fx::template('layout_' . $layout_name)->get_template_variants();
-        $action = $this->action == 'mirror' ? 'listing' : $this->action; // TODO: убрать  этот костыль для mirror
-        $action = explode('_',$action);
-        foreach ( $tmpls as $tmp ) {
-            if ( $tmp['for'] == 'wrap' ) continue;
-            $act = explode('.',$tmp['for']);
-            $act = explode('_',$act[1]);
-            $intersection = array_intersect_assoc($action,$act);
-            if ( $intersection == $action ) {
-                $templates[] = $tmp;
+        $fx_template = fx::template($controller_name);
+        if ( !empty($fx_template) ) {
+            $tmpls = $fx_template->get_template_variants();
+            $action = $this->action == 'mirror' ? 'listing' : $this->action; // TODO: убрать  этот костыль для mirror
+            $action = explode('_',$action);
+            foreach ( $tmpls as $tmp ) {
+                if ( $tmp['for'] == 'wrap' ) continue;
+                $act = explode('.',$tmp['for']);
+                $act = explode('_',$act[1]);
+                $intersection = array_intersect_assoc($action,$act);
+                if ( $intersection == $action ) {
+                    $templates[] = $tmp;
+                }
             }
         }
 
         $controller_name = str_replace('fx_controller_', '', get_class($this));
-        $tmpls = fx::template($controller_name)->get_template_variants();
-        foreach ( $tmpls as $tmp ) {
-            if ( $tmp['for'] == 'wrap' ) continue;
-            $act = explode('.',$tmp['for']);
-            $act = explode('_',$act[1]);
-            $intersection = array_intersect_assoc($action,$act);
-            if ( $intersection == $action ) {
-                $templates[] = $tmp;
+        $fx_template = fx::template($controller_name);
+        if ( !empty($fx_template) ) {
+            $tmpls = $fx_template->get_template_variants();
+            $action = $this->action == 'mirror' ? 'listing' : $this->action; // TODO: убрать  этот костыль для mirror
+            $action = explode('_',$action);
+            foreach ( $tmpls as $tmp ) {
+                if ( $tmp['for'] == 'wrap' ) continue;
+                $act = explode('.',$tmp['for']);
+                $act = explode('_',$act[1]);
+                $intersection = array_intersect_assoc($action,$act);
+                if ( $intersection == $action ) {
+                    $templates[] = $tmp;
+                }
             }
         }
         return $templates;

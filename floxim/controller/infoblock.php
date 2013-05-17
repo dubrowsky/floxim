@@ -91,7 +91,7 @@ class fx_controller_infoblock extends fx_controller {
                 $tpl = fx::template($tpl_name);
             }
         }
-        dev_log($infoblock, $infoblock->get_prop_inherited('visual.template'));
+        // dev_log($infoblock, $infoblock->get_prop_inherited('visual.template'));
         
         if (!$tpl) {
             $tpl = $controller->find_template();
