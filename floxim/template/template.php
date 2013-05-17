@@ -100,7 +100,14 @@ class fx_template {
             return $html;
         }
         $html = preg_replace("~<!--.*?-->~s", '', $html);
+
+        $log_file = fopen('/home/floxim/http/_test/logfile' . time(), "a+");
+        fwrite($log_file,$html);
+        fclose($log_file);
+        dev_log('html',$html);
+
         $area_regexp = '~(<([a-z0-9]+)[^>]*?>)([\s]*?)'.self::$_area_regexp.'([\s]*?)(</\2>)~s';
+        dev_log($area_regexp);
         preg_match_all($area_regexp, $html, $areas);
         $html = preg_replace_callback(
             $area_regexp, 
@@ -120,7 +127,6 @@ class fx_template {
     
     protected static function _replace_areas_in_text($html) {
         $html = preg_replace_callback("~".self::$_area_regexp."~s", function($matches) {
-            dev_log('matches',$matches);
             $content = $matches[3];
             $tag = preg_match("~<(?:div|ul|li|table|br)~i", $content) ? 'div' : 'span';
             return '<'.$tag.' class="fx_area" data-fx_area="'.htmlentities($matches[2]).'">'.

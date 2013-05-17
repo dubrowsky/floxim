@@ -50,7 +50,7 @@
 
             <div id="middle">
                 <!--content-->
-                <div id="content" class="inner" fx_area="center_block">
+                <div id="content" class="inner">
 
                     <h1>Ваш путь к успеху бизнеса</h1>
                     {$content}
