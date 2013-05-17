@@ -28,7 +28,7 @@
                 <div id="menu" fx_template="demo_menu" fx_template_for="component_section.listing" fx_template_name="Горизонтальное меню (главное)">
                     <ul>
                         <li fx_render=".">
-                            <a {if test="$active"} class="menu-active"{/if} href="/" fx_replace="href">
+                            <a {if test="$item['active']"} class="menu-active"{/if} href="/" fx_replace="href">
                                 {$name}
                             </a>
                         </li>
@@ -57,7 +57,7 @@
 
                     {template id="wrap_simple" name="Простой блок" for="wrap"}
                         <div class="block">
-                            {$text}
+                            {$content}
                         </div>
                     {/template}
 
@@ -67,7 +67,7 @@
                                 <h1 style="color:#000">{$header}</h1>
                             </div>
                             <div class="data">
-                                {$text}
+                                {$content}
                             </div>
                         </div>
                     {/template}
@@ -120,6 +120,7 @@
                 <!--//content-->
                 <!--подразделы, блок справа-->
                 <div id="right_content" fx_area="sidebar">
+                    <p>Тролололушки лоло</p>
                     <div id="submenu" fx_template_for="component_section.listing">
                         <ul>
                             <li fx_render=".">
@@ -135,7 +136,6 @@
                         </ul>
                     </div>
                 </div>
-
                 <!--//подразделы, блок справа-->
                 <div class="sep"></div>
             </div>
