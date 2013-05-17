@@ -44,6 +44,7 @@ class fx_template {
             echo $result;
         }
         if (fx::env('is_admin')) {
+
             echo "<a class='fx_infoblock_adder'>Добавить инфоблок</a>";
             echo "###fx_area_end###";
         }
@@ -119,6 +120,7 @@ class fx_template {
     
     protected static function _replace_areas_in_text($html) {
         $html = preg_replace_callback("~".self::$_area_regexp."~s", function($matches) {
+            dev_log('matches',$matches);
             $content = $matches[3];
             $tag = preg_match("~<(?:div|ul|li|table|br)~i", $content) ? 'div' : 'span';
             return '<'.$tag.' class="fx_area" data-fx_area="'.htmlentities($matches[2]).'">'.

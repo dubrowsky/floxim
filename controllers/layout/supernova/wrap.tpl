@@ -57,7 +57,7 @@
 
                     {template id="wrap_simple" name="Простой блок" for="wrap"}
                         <div class="block">
-                            {$content}
+                            {$text}
                         </div>
                     {/template}
 
@@ -67,7 +67,7 @@
                                 <h1 style="color:#000">{$header}</h1>
                             </div>
                             <div class="data">
-                                {$content}
+                                {$text}
                             </div>
                         </div>
                     {/template}
@@ -120,7 +120,6 @@
                 <!--//content-->
                 <!--подразделы, блок справа-->
                 <div id="right_content" fx_area="sidebar">
-                    <p>Тролололушки лоло</p>
                     <div id="submenu" fx_template_for="component_section.listing">
                         <ul>
                             <li fx_render=".">
