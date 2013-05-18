@@ -388,7 +388,7 @@ fx_front.prototype.set_mode_edit = function () {
         cp.sortable({
             items:'>.fx_content_essence',
             stop:function(e) {
-                var ce = $(e.srcElement);
+                var ce = $(e.srcElement).closest('.fx_content_essence');
                 var ce_data = ce.data('fx_content_essence');
                 
                 var next_e = ce.next('.fx_content_essence');

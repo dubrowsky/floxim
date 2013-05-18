@@ -12,7 +12,6 @@
 
         <body>
             <div id="header">
-
                 <!--логотип, название, слоган-->
                 <div id="logo">
                     <a href="/">
@@ -23,36 +22,36 @@
                     </span>
                 </div>
                 <!--//логотип, название, слоган-->
+                
+                {area id="header"}
+                    <!--menu, из-за свеобразной структуры меню, могут быть некоторые трудности у пользователей с сортировкой пунктов меню в системе управления сайтом-->
+                    <div id="menu" fx_template="demo_menu" fx_template_for="component_section.listing" fx_template_name="Горизонтальное меню (главное)">
+                        <ul>
+                            <li fx_render=".">
+                                <a {if test="$item['active']"} class="menu-active"{/if} href="{$url}" fx_replace="href">
+                                    {$name}
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--//menu-->
 
-                <!--menu, из-за свеобразной структуры меню, могут быть некоторые трудности у пользователей с сортировкой пунктов меню в системе управления сайтом-->
-                <div id="menu" fx_template="demo_menu" fx_template_for="component_section.listing" fx_template_name="Горизонтальное меню (главное)">
-                    <ul>
-                        <li fx_render=".">
-                            <a {if test="$item['active']"} class="menu-active"{/if} href="/" fx_replace="href">
-                                {$name}
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                <!--//menu-->
-
-                <!--поиск-->
-                <div class="search" fx_template="search_block" fx_template_for="widget_search.form" fx_template_name="Форма поиска">
-                    <form action="#">
-                        <input type="text" value="Что будем искать?" name="" class="field" onblur="if(this.value==''){this.value='Что будем искать?'}" onfocus="if(this.value=='Что будем искать?'){this.value=''}" />
-                        <input type="submit" value="Поиск" name="" class="submit" />
-                    </form>
-                </div>
-                <!--//поиск-->
+                    <!--поиск-->
+                    <div class="search" fx_template="search_block" fx_template_for="widget_search.form" fx_template_name="Форма поиска">
+                        <form action="#">
+                            <input type="text" value="Что будем искать?" name="" class="field" onblur="if(this.value==''){this.value='Что будем искать?'}" onfocus="if(this.value=='Что будем искать?'){this.value=''}" />
+                            <input type="submit" value="Поиск" name="" class="submit" />
+                        </form>
+                    </div>
+                    <!--//поиск-->
+                {/area}
 
                 <div class="sep"></div>
             </div>
 
             <div id="middle">
                 <!--content-->
-                <div id="content" class="inner" fx_area="center_block">
-
-                    <h1>Ваш путь к успеху бизнеса</h1>
+                <div id="content" class="inner">
                     {$content}
 
                     {template id="wrap_simple" name="Простой блок" for="wrap"}

@@ -153,7 +153,6 @@ class fx_content extends fx_essence {
                 $this[$lf['name']] = $this['parent_id'];
             }
         }
-        dev_log($link_fields, $this);
         parent::_before_save();
     }
 

@@ -121,16 +121,13 @@ class fx_data_content extends fx_data {
     }
 
     public function create($data = array()) {
-        $fx_core = fx_core::get_object();
-        $user = $fx_core->env->get_user();
-        
         $obj = $this->essence($data);
         
         $obj['created'] = date("Y-m-d H:i:s");
-        $obj['user_id'] = +$user['id'];
+        $obj['user_id'] = fx::env()->get_user()->get('id');
         $obj['checked'] = 1;
         $obj['type'] = fx::data('component', $this->component_id)->get('keyword');
-        //$obj['priority'] = $this->next_priority($this->component_id);
+        $obj['site_id'] = fx::env('site')->get('id');
         return $obj;
     }
 
@@ -229,8 +226,17 @@ class fx_data_content extends fx_data {
         
         $root_set = $set['content'];
         $q = "INSERT INTO `{{content}}` SET ".join(", ", $root_set);
-        fx::db()->query($q);
+        
+        $tables_inserted = array();
+        
+        $q_done = fx::db()->query($q);
         $id = fx::db()->insert_id();
+        if ($q_done) {
+            // запоминаем, в какую таблицу вставили
+            $tables_inserted []= 'content';
+        } else {
+            return false;
+        }
         
         foreach ($tables as $table) {
             if ($table == 'content') {
@@ -239,7 +245,18 @@ class fx_data_content extends fx_data {
             $table_set = isset($set[$table]) ? $set[$table] : array();
             $table_set[]= "`id` = '".$id."'";
             $q = "INSERT INTO `{{".$table."}}` SET ".join(", ", $table_set);
-            fx::db()->query($q);
+            $q_done = fx::db()->query($q);
+            if ($q_done) {
+                // запоминаем, в какую таблицу вставили
+                $tables_inserted []= $table;
+            } else {
+                // не получилось - удаляем из всех предыдущих таблиц
+                foreach ($tables_inserted as $tbl) {
+                    fx::db()->query("DELETE FROM {{".$tbl."}} WHERE id  = '".$id."'");
+                }
+                // и возвращаем false
+                return false;
+            }
         }
         return $id;
     }
@@ -249,10 +266,11 @@ class fx_data_content extends fx_data {
         $chain = fx::data('component', $this->component_id)->get_chain();
         foreach ($chain as $level_component) {
             $table_res = array();
-            $fields = $level_component->fields()->get_values('name');
+            $fields = $level_component->fields();
+            $field_names = $fields->get_values('name');
             // пока базовые поля контента выписываем вручную
             if ($level_component['keyword'] == 'content') {
-                $fields += array(
+                $field_names = array_merge($field_names, array(
                     'priority', 
                     'checked',
                     'created',
@@ -261,11 +279,16 @@ class fx_data_content extends fx_data {
                     'type',
                     'infoblock_id',
                     'site_id'
-                );
+                ));
             }
-            foreach ($fields as $f) {
-                if (isset($data[$f])) {
-                    $table_res[]= "`".fx::db()->escape($f)."` = '".fx::db()->escape($data[$f])."' ";
+            foreach ($field_names as $field_name) {
+                $field = $fields->find_one('name', $field_name);
+                if ($field && !$field->get_sql_type()) {
+                    continue;
+                }
+                // вставляем только если sql-тип поля не "false" (e.g. multilink)
+                if (isset($data[$field_name]) ) {
+                    $table_res[]= "`".fx::db()->escape($field_name)."` = '".fx::db()->escape($data[$field_name])."' ";
                 }
             }
             if (count($table_res) > 0) {

@@ -55,4 +55,4 @@ $fx_core->lang->load($lang);
 
 $current_site = fx::data('site')->get_by_host_name($_SERVER['HTTP_HOST'], 1);
 fx::env('site', $current_site);
-// dev_log('bootd');
+fx_content_user::attempt_to_authorize();

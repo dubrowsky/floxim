@@ -30,7 +30,6 @@ class fx_template_processor {
         } else {
             $tpl_name = $tpl_name_parts[1].'_'.$tpl_name_parts[2];
         }
-        dev_log('start proc', $source_dir);
         $source = '{templates source="'.$source_dir.'"}';
         foreach (glob($source_dir.'/*.tpl') as $file) {
             // Не включаем файлы шаблонов, начинающиеся на "_"
@@ -400,7 +399,14 @@ class fx_template_processor {
     }
     
     protected function _token_area_to_code($token) {
-        return '<?=$this->render_area('.var_export($token->get_all_props(),1).')?>';
+        $res = '<?=$this->render_area('.var_export($token->get_all_props(),1).')?>';
+        foreach ($token->get_children() as $child) {
+            if ($child->name == 'template') {
+                $child->set_prop('area', $token->get_prop('id'));
+                $this->add_template($child);
+            }
+        }
+        return $res;
     }
     
     protected function _token_if_to_code($token) {
@@ -571,6 +577,10 @@ class fx_template_token {
     
     public function has_children() {
         return isset($this->children) && count($this->children) > 0;
+    }
+    
+    public function set_prop($name, $value) {
+        $this->props[$name] = $value;
     }
     
     public function get_prop($name) {

@@ -5,7 +5,6 @@ if (!defined('FLOXIM')) {
     require_once('../boot.php');
 }
 
-fx_content_user::attempt_to_authorize();
 ob_start();
 if ( ($controller = fx::router()->route() ) ) {
     // dev_log('routed');

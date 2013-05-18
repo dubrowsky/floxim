@@ -31,14 +31,13 @@ class fx_template_field  {
         return "###fx_template_field|".$id."|".json_encode($this->_meta)."###".$val."###fx_template_field_end###";
     }
     
-    protected static $_field_regexp = "###fx_template_field\|([^\|]*?)\|(.+?)###(.+?)###fx_template_field_end###";
+    protected static $_field_regexp = "###fx_template_field\|([^\|]*?)\|(.+?)###(.*?)###fx_template_field_end###";
     
     /**
      * Постпроцессинг полей
      * @param string $html
      */
     public static function replace_fields($html) {
-        
         $html = self::_replace_fields_in_atts($html);
         $html = self::_replace_fields_wrapped_by_tag($html);
         $html = self::_replace_fields_in_text($html);

@@ -79,6 +79,7 @@ class fx_template_html {
                             break;
                     }
                     $n->set_attribute($replace_att, '{%'.$var_name.' title="'.$var_title.'"}'.$default_val.'{/%'.$var_name.'}');
+                    $n->remove_attribute('fx_replace');
                 }
             }
             if ( ($var_name = $n->get_attribute('fx_var')) ) {
@@ -269,7 +270,12 @@ class fx_html_token {
             if (isset($this->attributes) && isset($this->attributes_modified)) {
                 $res .= '<'.$this->name;
                 foreach ($this->attributes as $att_name => $att_val) {
-                    $res .= ' '.$att_name.'="'.
+                    $res .= ' '.$att_name;
+                    
+                    if ($att_val === null) {
+                        continue;
+                    }
+                    $res .= '="'.
                                 $att_val.
                                 // последний аргумент - выключаем double_encode
                                 //htmlentities($att_val, ENT_COMPAT | ENT_HTML401, 'UTF-8', false).
@@ -283,7 +289,7 @@ class fx_html_token {
                 $res .= $this->source;
             }
         }
-        if ( isset($this->_injections) ) {
+        if ( isset($this->_injections) && count($this->_injections) > 0) {
             $injections = $this->_injections;
             $res = preg_replace_callback(
                 "~#inj(\d+)#~", 
@@ -319,15 +325,35 @@ class fx_html_token {
             $injections []= $matches[0];
             return "#inj".(count($injections)-1)."#";
         }, $source);
+        
+        // здесь должна быть более общая регулярка
+        // пока ловим ифы
+        $source = preg_replace_callback("~{if.*?/if}~i", function($matches) use (&$injections) {
+            $injections []= $matches[0];
+            return '#inj'.(count($injections)-1).'#';
+        }, $source);
+        
         $this->_injections = $injections;
         
         $source  = preg_replace("~\s([a-z]+)\s*?=\s*?([^\'\\\"\s]+)~", ' $1="$2"', $source);
         $atts = null;
-        preg_match_all('~([a-z0-9_-]+)="([^\"]+)"~', $source, $atts);
+        
+        preg_match_all('~(#inj\d+#)|([a-z0-9_-]+)="([^\"]+)"~', $source, $atts);
+        
         $this->attributes = array();
+        foreach ($atts[0] as $att_num => $att_full) {
+            $att_name = $atts[2][$att_num];
+            $att_val = $atts[3][$att_num];
+            if (empty($att_name)) {
+                $att_name = $att_full;
+                $att_val = null;
+            }
+            $this->attributes[$att_name] = $att_val;
+        }
+        /*
         foreach ($atts[1] as $att_num => $att_name) {
             $this->attributes[$att_name] = $atts[2][$att_num];
-        }
+        }*/
     }
     
     public function get_attribute($att_name) {

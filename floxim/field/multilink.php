@@ -7,6 +7,7 @@ class fx_field_multilink extends fx_field_baze {
     public function get_js_field($content, $tname = 'f_%name%', $layer = '', $tab = '') {
         parent::get_js_field($content, $tname, $layer, $tab);
         $this->_js_field['type'] = 'select';
+        $this->_js_field['multiple'] = true;
         return $this->_js_field;
     }
     

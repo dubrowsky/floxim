@@ -5,7 +5,6 @@ class fx_controller_admin_field extends fx_controller_admin {
     public function items( $essence ) {
         
         $items = $essence->fields();
-        dev_log('filds for', $essence, $items);
         
         $ar = array('type' => 'list', 'filter' => true, 'sortable' => true);
         
@@ -40,7 +39,6 @@ class fx_controller_admin_field extends fx_controller_admin {
         //$result['buttons_action']['add']['options']['to_id'] = $essence['id'];
         $result['fields'] = $fields;
         $result['essence'] = 'field';
-        dev_log($result);
         return $result;
     }
     
