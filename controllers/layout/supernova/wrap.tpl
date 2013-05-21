@@ -1,102 +1,108 @@
-{template id="wrap" for="false"}
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <title>My Super Template</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    </head>
-    <body>
-    <div id="main">
-        <!--верхняя цветная полоса-->
-        <div class='color_line'><div><div><div><div><div><div><div><div><div><div></div></div></div></div></div></div></div></div></div></div></div>
-        <!--//верхняя цветная полоса-->
-        <!--шапка сайта, логотип, поиск, меню, языковая версия-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Demo8</title>
+</head>
+<body>
+<div id="main">
+    <div class="content">
+        <!--header-->
         <div id="header">
             <!--логотип, слоган-->
             <div id="logo">
                 <a href="/">
-                    <img src="/controllers/layout/supernova/images/logo.gif" fx_replace="src" />
+                    <img src="controllers/layout/supernova/images/logo.gif" width="103" height="75" alt="" title="" />
                 </a>
-                <div fx_var="slogan">название или слоган <br />вашей компании</div>
+                <span class="name">YOUR<span>LOGO</span></span>
+                <span>Sampletext under logo</span>
             </div>
             <!--//логотип, слоган-->
-            <div id="header_nav">
 
-                <!--//поиск-->
-                <div class="sep"></div>
-                <!--горизонтальное меню-->
-                {area id="header"}
-                <div id="menu" fx_template="demo_menu" fx_template_for="component_section.listing" fx_template_name="Горизонтальное меню (главное)">
-                    <ul>
-                        <li fx_render=".">
-                            <a href="{$url}">
-                                <span class="mw"><span class="mw">
-                                    {$name}
-                                </span></span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                <!--//горизонтальное меню-->
+            <!--поиск, если в блоке содержится только поиск, добавляется class="search top_space", если в блоке присутствуют еще какие-либо элементы то вид class="search"-->
+            <div class="search top_space">
+                <form action="#">
+                    <input type="text" value="Что будем искать?" name="" onblur="if(this.value==''){this.value='Что будем искать?'}" onfocus="if(this.value=='Что будем искать?'){this.value=''}" />
+                    <input type="submit" value="Поиск" name="" class="submit" />
+                </form>
             </div>
+
+            <!--//поиск-->
             <div class="sep"></div>
-        </div>
-        <!--//шапка сайта, логотип, поиск, меню, языковая версия-->
-        <!--центральная часть, контентная область и правый вспомогательный блок-->
-        <div id="center">
-            <!--контент-->
-            <div id="content">
-                {$content}
-                {template id="wrap_simple" name="Простой блок" for="wrap"}
-                    <div class="block">
-                        {$content}
+
+            <!--menu, отступы внутри пунктов меню сделаны через padding, что не совсем правильно, если мало или наоборот много пунктов меню, выглядеть будет не очень, такое меню надо делать на таблице-->
+            <div id="menu">
+                <div class="left">
+                    <div class="right">
+                        {area id="header"}
+                        {template id="demo_menu" name="Горизонтальное меню (главное)" for="component_section.listing"}
+                            <ul>
+                                <li><a href="{$url}" {if test="$active"}class="menu-active"{/if}>{$name}</a></li>
+                            </ul>
+                        {/template}
                     </div>
-                {/template}
-                {template id="wrap_titled" name="Блок с заголовком" for="wrap"}
-                    <div class="block">
-                        <div class="title">
-                            <h1 style="color:{%color}#000{/%color}" fx_var="title">Заголовок</h1>
-                        </div>
-                        <div class="data">{$content}</div>
-                    </div>
-                {/template}
-                <!--//заголовок-->
-
-            </div>
-            <!--//контент-->
-            <!--правый блок-->
-            <div id="right_content" fx_area="sidebar">
-                <!--вертикальное меню-->
-                <div id="menu_vert" fx_template="supermenu" fx_template_for="component_section.listing">
-                    <h2 fx_var="menu_title">Заголовок меню</h2>
-                    <ul>
-                        <li fx_render=".">
-                            <a class="menu-active" href="{$url}">{$name}</a>
-                        </li>
-                    </ul>
                 </div>
-                <!--//вертикальное меню-->
             </div>
-            <!--//правый блок-->
+            <!--//menu-->
         </div>
-        <div class="sep"></div>
-        <!--//центральная часть, контентная область и правый вспомогательный блок-->
-        <!--баннеры-->
-        <div id="banners">
-            <div class="sep"></div>
-        </div>
-        <!--//баннеры-->
-        <div fx_area="footer" id="footer">
-            <div class="left" fx_var="copy">© 2010 группа компаний «Netcat».<br />Все права защищены.</div>
-            <div class="middle" fx_var="contacts">Адрес: г. Москва, ул. Мануфактурная, д. 14<br />Телефон и факс: (831) 220-80-18</div>
-            <div class="right" fx_var="developa">© 2010 Хороший пример <br />сайтостроения — <a href="#">WebSite.pu</a></div>
-            <div class="sep"></div>
-        </div>
-        <!--нижняя цветная полоса-->
-        <div class='color_line'><div><div><div><div><div><div><div><div><div><div></div></div></div></div></div></div></div></div></div></div></div>
-        <!--//нижняя цветная полоса-->
-    </div>
+        <!--//header-->
 
-    </body>
-    </html>
-{/template}
+        <!--блок слева-->
+        <div id="left_content">
+            {area id="sidebar"}
+
+            <div class="submenu" fx_template="supermenu" fx_template_for="component_section.listing">
+                <ul>
+                    <li fx_render="."><a href="{$url}">{$name}</a>
+                    {if test="$submenu"}
+                        <ul>
+                            <li><a href="#">Брелоки</a></li>
+                            <li><a href="#">Игрушки</a></li>
+                            <li><a href="#">Статуэтки</a></li>
+                        </ul>
+                    {/if}
+                    </li>
+                    <li {if test="$last"}class="last"{/if}><a href="{$url}">{$name}</a></li>
+                </ul>
+            </div>
+
+        </div>
+
+<!--//блок слева-->
+<!--content, если есть блок слева то добавляется class="is_left"-->
+<div id="content" class="is_left">
+
+    {area id="content"}
+
+        {template id="wrap_titled"}
+            <h1>{$title}</h1>
+            {$content}
+        {/template}
+        <!--banner-->
+        <div class="banner">
+            {area id="banner"}
+            {*<a href="#"><img src="css/images/content_banner.jpg" width="621" height="91" alt="" /></a>*}
+        </div>
+        <!--banner-->
+
+        <!--блок с двумя колонками на главной-->
+        {$too_blocks}
+        <!--//блок с двумя колонками-->
+</div>
+<!--//content-->
+<div class="sep"></div>
+
+<!--логотипы компаний, партнеры, клиенты и т.п.-->
+{$index_block}
+<!--//логотипы компаний, партнеры, клиенты и т.п.-->
+
+</div></div>
+<!--footer-->
+<div id="footer">
+    <div class="left">&copy; 2010 группа компаний &laquo;Netcat&raquo;.<br />Все права защищены.</div>
+    <div class="right">&copy; 2010 Хороший пример <br />сайтостроения &mdash; <a href="#">WebSite.pu</a></div>
+    <div class="sep"></div>
+</div>
+<!--//footer-->
+</body>
+</html>
