@@ -29,10 +29,16 @@ class fx_controller_admin_content extends fx_controller_admin {
             $this->ui->hidden('data_sent', true),
             $this->ui->hidden('fx_admin', true)
         );
+
+        dev_log('good');
         if (isset($input['content_id'])) {
+            dev_log('content_id',$input['content_id']);
             $fields []= $this->ui->hidden('content_id', $input['content_id']);
         } else {
-            $fields []= $this->ui->hidden('infoblock_id', $input['infoblock_id']);
+            dev_log('else');
+            $debug = $this->ui->hidden('infoblock_id', $input['infoblock_id']);
+            $fields []= $debug;
+            dev_log('fields', $debug);
         }
         
         $this->response->add_fields($fields);
@@ -52,7 +58,8 @@ class fx_controller_admin_content extends fx_controller_admin {
                 }
             }
         }
-        
+        dev_log('content_fields',$c_fields);
+
         //$this->response->add_tab('content', $component['name']);
         $this->response->add_fields($c_fields, false, 'content');
 
