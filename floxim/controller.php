@@ -69,42 +69,56 @@ class fx_controller {
         $tpl = str_replace('fx_controller_', '', get_class($this));
         return fx::template($tpl.'.'.$this->action);
     }
-
+    
+    /*
+     * Возвращает массив с вариантами контроллера, которые можно использовать для поиска шаблона
+     * По умолчанию - только сам контроллер,
+     * Для компонентов переопределяется с добавлением цепочки наследования
+     */
+    protected function _get_controller_variants() {
+        return array(str_replace('fx_controller_', '', get_class($this)));
+    }
+    
+    /*
+     * Возвращает массив шаблонов, которые можно использовать для контроллер-экшна
+     * Вызывать после инициализации контроллера (с экшном)
+     */
     public function get_available_templates( $layout_name = null ) {
-        $templates = array();
-        $fx_template = fx::template($controller_name);
-        if ( !empty($fx_template) ) {
-            $tmpls = $fx_template->get_template_variants();
-            $action = $this->action == 'mirror' ? 'listing' : $this->action; // TODO: убрать  этот костыль для mirror
-            $action = explode('_',$action);
-            foreach ( $tmpls as $tmp ) {
-                if ( $tmp['for'] == 'wrap' ) continue;
-                $act = explode('.',$tmp['for']);
-                $act = explode('_',$act[1]);
-                $intersection = array_intersect_assoc($action,$act);
-                if ( $intersection == $action ) {
-                    $templates[] = $tmp;
-                }
+        // получаем допустимые варианты контроллера
+        $controller_variants = $this->_get_controller_variants();
+        $template_variants = array();
+        // сначала вытаскиваем все варианты шаблонов из лейаута
+        if ($layout_name && ($layout_tpl = fx::template('layout_'.$layout_name)) ) {
+            $template_variants = $layout_tpl->get_template_variants();
+        }
+        // теперь - все варианты шаблонов из шаблона от контроллера
+        foreach ($controller_variants as $controller_variant) {
+            if (($controller_template = fx::template($controller_variant))) {
+                $template_variants = array_merge(
+                        $template_variants, 
+                        $controller_template->get_template_variants()
+                );
             }
         }
-
-        $controller_name = str_replace('fx_controller_', '', get_class($this));
-        $fx_template = fx::template($controller_name);
-        if ( !empty($fx_template) ) {
-            $tmpls = $fx_template->get_template_variants();
-            $action = $this->action == 'mirror' ? 'listing' : $this->action; // TODO: убрать  этот костыль для mirror
-            $action = explode('_',$action);
-            foreach ( $tmpls as $tmp ) {
-                if ( $tmp['for'] == 'wrap' ) continue;
-                $act = explode('.',$tmp['for']);
-                $act = explode('_',$act[1]);
-                $intersection = array_intersect_assoc($action,$act);
-                if ( $intersection == $action ) {
-                    $templates[] = $tmp;
+        // а теперь - фильтруем
+        $result = array();
+        foreach ($template_variants as $k => $tplv) {
+            foreach (explode(",", $tplv['for']) as $tpl_for) {
+                $for_parts = explode(".", $tpl_for);
+                if (count($for_parts) != 2) {
+                    continue;
                 }
+                list($tpl_for_controller, $tpl_for_action) = $for_parts;
+                if ( !in_array($tpl_for_controller, $controller_variants)) {
+                    continue;
+                }
+                if (strpos($this->action, $tpl_for_action) !== 0) {
+                    continue;
+                }
+                $result []= $tplv;
             }
         }
-        return $templates;
+        return $result;
     }
 
     /*
@@ -119,6 +133,34 @@ class fx_controller {
             return call_user_func(array($this, 'get_action_settings_'.$action));
         }
         return array();
+    }
+    
+    public function get_action_info($action) {
+        $info_method = 'info_'.$action;
+        if (method_exists($this, $info_method)) {
+            return call_user_func(array($this, $info_method));
+        }
+        return array('name' => $action);
+    }
+    
+    public function get_actions() {
+        $class = new ReflectionClass(get_class($this));
+        $methods = $class->getMethods(ReflectionMethod::IS_PUBLIC);
+        $props = $class->getDefaultProperties();
+        $prefix = isset($props['_action_prefix']) ? $props['_action_prefix'] : '';
+        $actions = array();
+        foreach ($methods as $method) {
+            $action_name = null;
+            if (preg_match("~^".$prefix."(.+)$~", $method->name, $action_name)) {
+                $action_name = $action_name[1];
+                $action_meta = $this->get_action_info($action_name);
+                if (isset($action_meta['disabled']) && $action_meta['disabled']) {
+                    continue;
+                }
+                $actions[$action_name]= $action_meta;
+            }
+        }
+        return $actions;
     }
     
     /*

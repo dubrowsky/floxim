@@ -64,7 +64,7 @@ class fx_controller_component extends fx_controller {
         return $fields;
     }
     
-    public function get_action_settings_mirror() {
+    public function get_action_settings_listing_mirror() {
         $fields = $this->get_action_settings_list_common();
         $fields['from_all'] = array(
             'name' => 'from_all',
@@ -112,11 +112,24 @@ class fx_controller_component extends fx_controller {
         }
     }
 
+    public function info_record() {
+        return array(
+            'name' => 'Запись',
+            'description' => 'Выводит отдельную запись'
+        );
+    }
+    
     public function do_record() {
         $page = fx::data('content_page', fx::env('page'));
         return array('items' => $page);
     }
-
+    
+    public function info_listing() {
+        return array(
+            'name' => 'Список',
+            'description' => 'Выводит список записей из указанного раздела'
+        );
+    }
 
     public function do_listing() {
         $f = $this->_finder();
@@ -169,7 +182,15 @@ class fx_controller_component extends fx_controller {
         return $parent_id;
     }
     
-    public function do_mirror() {
+    
+    public function info_listing_mirror() {
+        return array(
+            'name' => 'Mirror',
+            'description' => 'Выводит записи по произвольному фильтру'
+        );
+    }
+    
+    public function do_listing_mirror() {
         $f = $this->_finder();
         ///$params = array();
         if ( ($parent_id = $this->param('parent_id')) ) {
@@ -229,31 +250,14 @@ class fx_controller_component extends fx_controller {
         $tpl_name = 'component_'.$this->get_content_type().".".$this->action;
         return fx::template($tpl_name);
     }
-
-    public function get_available_templates ( $layout_name = null ) {
-        $templates = parent::get_available_templates( $layout_name );
-        $component = $this->get_component();
-        $chain = $component->get_chain();
-        $chain = array_reverse($chain);
-        array_shift( $chain );
-        $action = $this->action == 'mirror' ? 'listing' : $this->action; // TODO: убрать  этот костыль для mirror
-        $action = explode('_',$action);
-        foreach ( $chain as $chain_item ) {
-            $template = fx::template( 'component_' . $chain_item['keyword'] );
-            if ( !empty($template) ) {
-                $tmp_variants = $template->get_template_variants();
-                foreach ( $tmp_variants as $tmp ) {
-                    if ( $tmp['for'] == 'wrap' ) continue;
-                    $act = explode('.',$tmp['for']);
-                    $act = explode('_',$act[1]);
-                    $intersection = array_intersect_assoc($action,$act);
-                    if ( $intersection == $action ) {
-                        $templates[] = $tmp;
-                    }
-                }
-            }
+    
+    protected function _get_controller_variants() {
+        $vars = parent::_get_controller_variants();
+        $chain = array_reverse($this->get_component()->get_chain());
+        foreach ($chain as $chain_item) {
+            $vars []= 'component_'.$chain_item['keyword'];
         }
-        return $templates;
+        return array_unique($vars);
     }
 }
 ?>

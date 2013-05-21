@@ -78,7 +78,6 @@ html.find('a.delete_link').click(function(){
 	<img style="max-width:100px; float:left;" <?=_c.old ? 'src="'+_c.path+'"' : ''?> />
 	<input type="hidden" <?=$t.field_id_name(_c)?> />
 	<span class="real_name"><?=_c.old ? _c.real_name : ''?></span>
-	<a class="edit_link"><?=_c.old ? 'РёР·РјРµРЅРёС‚СЊ' : 'Р·Р°РєР°С‡Р°С‚СЊ'?></a>
 	<br style="clear:both;" />
 </div>
 <!--test-->
@@ -795,7 +794,7 @@ $('.fx_admin_colorbasic', html).each( function() {
 
 <!--[input]-->
 <div class="fx_tree">
-<?console.log(_c);?>
+<input type="hidden" <?=$t.field_id_name(_c)?> class="tree_value_input"/>
 <?=$t.tree_children(_c,{is_expanded:true})?>
 </div>
 <!--test-->
@@ -931,6 +930,7 @@ function fx_tree_render(root) {
 		if (!c_row.data('id')) {
 			c_row.data('id', c_row.closest('.fx_tree_item').data('id'));
 		}
+        root.find('.tree_value_input').val(c_row.data('id'));
 		$fx_form.update_available_buttons();
 	});
 	
@@ -975,7 +975,10 @@ if(children) {
 
 <!--[tree_item]-->
 <?
-var id = _c.metadata.id;
+if (!_c.metadata) {
+    _c.metadata = {};
+}
+var id = _c.metadata.id || _c.data;
 ?>
 <li class="fx_tree_item<?=_o.is_first ? ' fx_tree_item_first' : ''?> 
 	<?=_o.is_last ? ' fx_tree_item_last' : ''?>

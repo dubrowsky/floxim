@@ -9,7 +9,7 @@ class JSTX {
 				'context_name' => '_c',
 				'use_with' => true,
 				'js_xjst_var' => '$t',
-				'tpl_file_regexp' => "~^[^_].+?\.jtpl~"
+				'tpl_file_regexp' => "~^[^_].+?\.t\.js~"
 			), $options
 		);
 	}

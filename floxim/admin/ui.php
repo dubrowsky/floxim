@@ -153,8 +153,8 @@ class fx_admin_ui {
         return $result;
     }
     
-    public function tree ( $values ) {
-        return array('type' => 'tree', 'values' => $values, 'filter' => true);
+    public function tree ( $values , $name = 'tree') {
+        return array('type' => 'tree', 'values' => $values, 'filter' => true, 'name' => $name);
     }
     
     public function button_post ( $label, $post = array() ) {

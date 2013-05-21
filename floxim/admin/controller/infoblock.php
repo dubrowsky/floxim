@@ -14,6 +14,37 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
      * Выбор контроллера-экшна
      */
     public function select_controller($input) {
+        /*
+        $tree = array(
+            array(
+                'data' => 'Section',
+                'children' => array(
+                    array('data' => 'listing'),
+                    array(
+                        'data' => 'mirror',
+                        'children' => array(
+                            array('data' => 'mirror_top')
+                        )
+                    )
+                )
+            ), array (
+                'data' => 'Auth Widnget'
+            ),
+            array(
+                'data' => 'Goods',
+                'children' => array(
+                    array('data' => 'listing')
+                ), array(
+                    'data' => 'top'
+                )
+            )
+        );
+        $fields[] = $this->ui->tree($tree);
+        return array('fields' => $fields);
+        
+         * 
+         */
+        
         $fields = array(
             $this->ui->hidden('action', 'select_settings'),
             $this->ui->hidden('essence', 'infoblock'),
@@ -40,6 +71,34 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             ), 
             'values' => array()
     	);
+        $fields['controller'] = array(
+            'type' => 'tree', 
+            'name' => 'controller',
+            'values' => array()
+        );
+        
+        $controllers = fx::data('component')->all();
+        $controllers->concat(fx::data('widget')->all());
+        
+        foreach ($controllers as $c) {
+            $controller_type = $c instanceof fx_component ? 'component' : 'widget';
+            $controller_name = $controller_type.'_'.$c['keyword'];
+            $c_item = array(
+                'data' => $c['name'],
+                'metadata' => array('id' => $controller_name),
+                'children' => array()
+            );
+            $ctrl = fx::controller($controller_name);
+            $actions = $ctrl->get_actions();
+            foreach ($actions as $action_code => $action_info) {
+                $c_item['children'][]= array(
+                    'data' => $action_info['name'],
+                    'metadata' => array('id' => 'component_'.$c['keyword'].'.'.$action_code)
+                );
+            }
+            $fields['controller']['values'][]= $c_item;
+        }
+        /*
         foreach (fx::data('component')->get_all() as $c) {
             if (!file_exists(fx::config()->DOCUMENT_ROOT.'/controllers/component/'.$c['keyword'])) {
                 continue;
@@ -66,7 +125,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                 'id' => 'widget_'.$c['keyword'].'.show'
             );
     	}
-        
+        */
         $result = array(
             'fields' => $fields,
             'dialog_title' => 'Добавление инфоблока',
@@ -373,10 +432,6 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
 
         $wrappers = array('' => 'Без оформления');
         $templates = array('auto.auto' => ' - Автовыбор - ');
-
-
-        $wrappers = array('' => 'Без оформления');
-        $templates = array('auto.auto' => ' - Автовыбор - ');
         $layout_name = fx::data('layout', $i2l['layout_id'])->get('keyword');
         
         $controller_name = $infoblock->get_prop_inherited('controller');
@@ -385,16 +440,10 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
 
         // Собираем доступные wrappers
         // TODO: разобраться зачем они нужны и нужны ли вообще и если нужны - перенести логику сборки в соответствующее место, чтобы не плодить сущности
-        $wrappers = array();
-        foreach ( fx::template('layout_'.$layout_name)->get_template_variants() as $tplv) {
-            $full_id = 'layout_'.$layout_name.'.'.$tplv['id'];
-            if ($tplv['for'] == 'wrap') {
-                $wrappers[$full_id] = $tplv['name'];
-            }
-        }
-        if ($controller_name != 'layout') {
-            foreach (fx::template($controller_name)->get_template_variants() as $tplv) {
-                $full_id = $controller_name.'.'.$tplv['id'];
+        
+        if ( ($layout_tpl = fx::template('layout_'.$layout_name)) ) {
+            foreach ( $layout_tpl->get_template_variants() as $tplv) {
+                $full_id = 'layout_'.$layout_name.'.'.$tplv['id'];
                 if ($tplv['for'] == 'wrap') {
                     $wrappers[$full_id] = $tplv['name'];
                 }
@@ -402,11 +451,10 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         }
 
         // Собираем доступные шаблоны
-        $controler = fx::controller($controller_name,null,$action_name);
+        $controler = fx::controller($controller_name.'.'.$action_name);
         $tmps = $controler->get_available_templates($layout_name);
         if ( !empty($tmps) ) {
             foreach ( $tmps as $template ) {
-                $template_name = explode('.',$template['for']);
                 $templates[$template['full_id']] = $template['name'] . ' (' . $template['full_id'] . ')';
             }
         }
