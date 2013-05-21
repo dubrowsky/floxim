@@ -1,0 +1,46 @@
+.fx_notice {background:#c5c5c5; color:#fff;}
+.fx_item img {border-color:#e5e5e5;}
+.fx_row img {border-color:#6ed0de;}
+
+body, html{background:#363636; color:#777;}
+
+a{color:#008ffe;}
+
+#main{background:#fff; border-color:#484848;}
+
+#logo{color:#4396bf;}
+#logo .name span{color:#000;}
+
+.search input{color:#191c1e;}
+
+.num a{color:#909090; text-shadow:1px 1px #fff;}
+.num a:hover, .num a.menu-active{color:#000;}
+
+#menu a{color:#353535; text-shadow:1px 1px #c0c0c0;}
+#menu a.menu-active, #menu a:hover{color:#4396bf;}
+
+.submenu li{border-color:#e5e5e5;}
+.submenu a{color:#353535;}
+.submenu a.menu-active, .submenu a:hover{color:#000;}
+.submenu li li a{color:#6d6c6c;}
+.submenu li ul{padding:5px 0 0 0;}
+
+#content .note.color{background:#c5c5c5; color:#fff;}
+#content h1, #content h2, #content h3, #content h4{color:#000;}
+#content .block h4{color:#00a5d2;}
+
+#content .block.columns_2 .col img{border-color:#c9c9c9;}
+
+.block.image img{border-color:#6ed0de;}
+
+.block.columns_2 .col img{border-color:#e5e5e5;}
+
+.button .submit, .button a{color:#3d3d3d; text-shadow:-1px 1px #fff;}
+.button .submit:hover, .button a:hover{color:#747474;}
+
+#partners{border-color:#c9c9c9; color:#535353;}
+
+.form textarea, .form select, .form input, .form option{color:#C1C1C1;}
+
+#footer{background:#484848; border-color:#484848;}
+#footer, #footer a{color:#fff;}
