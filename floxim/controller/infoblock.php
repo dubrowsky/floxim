@@ -95,7 +95,6 @@ class fx_controller_infoblock extends fx_controller {
         
         if (!$tpl) {
             $tpl = $controller->find_template();
-            dev_log('tpl',$tpl);
         }
         $tpl_params = $infoblock->get_prop_inherited('visual.template_visual');
         $tpl_params['input'] = $result;

@@ -158,6 +158,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
      */
     
     public function select_settings($input) {
+
         // Текущий (редактируемый) инфоблок
     	$infoblock = null;
         // special mode for layouts
@@ -207,8 +208,6 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                     $settings[$ib_param]['value'] = $ib_param_value;
                 }
             }
-
-
             $this->response->add_tab('settings', 'Что показывать');
             $this->response->add_fields(
                     array(array(

@@ -262,6 +262,9 @@ class fx_data_content extends fx_data {
     }
     
     protected function _set_statement($data) {
+
+        dev_log('set statement',$data);
+
         $res = array();
         $chain = fx::data('component', $this->component_id)->get_chain();
         foreach ($chain as $level_component) {
@@ -288,7 +291,11 @@ class fx_data_content extends fx_data {
                 }
                 // вставляем только если sql-тип поля не "false" (e.g. multilink)
                 if (isset($data[$field_name]) ) {
-                    $table_res[]= "`".fx::db()->escape($field_name)."` = '".fx::db()->escape($data[$field_name])."' ";
+                    if ( empty($data[$field_name]) ) {
+                        $table_res[]= "`".fx::db()->escape($field_name)."` = NULL ";
+                    } else {
+                        $table_res[]= "`".fx::db()->escape($field_name)."` = '".fx::db()->escape($data[$field_name])."' ";
+                    }
                 }
             }
             if (count($table_res) > 0) {

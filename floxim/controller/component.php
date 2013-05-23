@@ -43,15 +43,15 @@ class fx_controller_component extends fx_controller {
         );
         return $fields;
     }
-    
-    public function get_action_settings_listing() {
-        $fields = $this->get_action_settings_list_common();
+
+    public function get_action_settings_list_parrent()
+    {
         $fields['parent_type'] = array(
             'name' => 'parent_type',
             'label' => 'Родитель',
             'type' => 'select',
             'values' => array(
-                'current_page_id' => 'Текущая страница', 
+                'current_page_id' => 'Текущая страница',
                 'mount_page_id' => 'Страница, куда прицеплен инфоблок',
                 'custom' => 'Произвольный'
             )
@@ -61,6 +61,12 @@ class fx_controller_component extends fx_controller {
             'label' => 'Выбрать родителя',
             'parent' => array('parent_type' => 'custom')
         );
+        return $fields;
+    }
+    
+    public function get_action_settings_listing() {
+        $fields = $this->get_action_settings_list_common();
+        $fields = array_merge($fields,$this->get_action_settings_list_parrent());
         return $fields;
     }
     
@@ -138,6 +144,8 @@ class fx_controller_component extends fx_controller {
         $c_ib = fx::data('infoblock', $this->param('infoblock_id'));
         $f->where('infoblock_id', $c_ib->get_root_infoblock()->get('id'));
         $f->where('parent_id', $this->_get_parent_id());
+        $this->trigger('build_query',$f);
+
         if ( ($sorting = $this->param('sorting')) ) {
             if ($sorting == 'manual') {
                 $f->order('priority');
