@@ -19,6 +19,9 @@ class fx_system_page extends fx_system {
      * @param string value
      */
     public function set_metatags($item, $value, $post = '') {
+
+        dev_log('set_metatags');
+
         $item = 'seo_'.$item;
         $this->metatags[$item] = $value;
         if ($post) {
@@ -33,6 +36,11 @@ class fx_system_page extends fx_system {
      * @param mixed value or array
      */
     public function get_metatags($item = '') {
+
+        dev_log('this metatag',$this);
+        dev_log('get_metatags');
+
+
         $item = 'seo_'.$item;
         if ($item) {
             return isset($this->metatags[$item]) ? $this->metatags[$item] : null;
