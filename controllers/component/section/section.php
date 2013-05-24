@@ -1,6 +1,6 @@
 <?
 class fx_controller_component_section extends fx_controller_component {
-    
+
     /*
      * Отключаем "Отдельную страницу" для компонента
      */
@@ -13,14 +13,42 @@ class fx_controller_component_section extends fx_controller_component {
             'name' => 'Меню'
         );
     }
+
+    public function get_action_settings($action)
+    {
+        $fields = parent::get_action_settings_list_parrent();
+        $fields['childs'] = array(
+            'name' => 'childs',
+            'label' => 'Показывать подразделы',
+            'type' => 'checkbox',
+        );
+        return $fields;
+    }
     
     public function do_listing() {
+        if ( $this->input['childs'] == 1 ) {
+            $this->listen('build_query', function($f) {
+                $f->with('childs');
+            });
+        }
         $this->listen('items_ready', function($items) {
             $c_page_id  = fx::env('page');
             $path = fx::data('content_page', $c_page_id)->get_parent_ids();
             $path []= $c_page_id;
+
             if ( ($active_item = $items->find_one('id', $path)) ) {
                 $active_item->set('active',true);
+            }
+            if ( ($active_item = $items->find_one('alias', $path)) ) {
+                $active_item->set('active',true);
+            }
+
+            foreach ( $items as $key => &$item ) {
+                if ( !empty($item['alias']) ) {
+                    $alias = fx::data('content_' . $this->get_content_type(), $item['alias']);
+                    $item['url'] = $alias['url'];
+                    $item['name'] = empty($item['name']) ? $alias['name'] : $item['name'];
+                }
             }
         });
         return parent::do_listing();

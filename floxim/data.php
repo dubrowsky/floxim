@@ -51,6 +51,7 @@ class fx_data {
     }
     
     public function with($relation, $finder = null) {
+        if ( $relation == 'childrens' ) dev_log('my this',$this);
         $this->with []= array($relation, $finder);
         return $this;
     }
@@ -141,10 +142,10 @@ class fx_data {
      * использует $this->with и $this->relations
      */
     protected function _add_relations(fx_collection $essences) {
+
         if (count($this->with) == 0) {
             return;
         }
-        
         //$ids = $essences->get_values('id');
         //echo fen_debug($this->relations);
         $relations = $this->relations();
@@ -155,9 +156,11 @@ class fx_data {
             }
             $rel = $relations[$rel_name];
             list($rel_type, $rel_datatype, $rel_field) = $rel;
+
             if (!$rel_finder){
                 $rel_finder = fx::data($rel_datatype);
             }
+
             // e.g. $rel = array(fx_data::HAS_MANY, 'field', 'component_id');
             switch ($rel_type) {
                 case self::BELONGS_TO:
@@ -181,7 +184,15 @@ class fx_data {
     }
 
     /**
-     * @todo ДАЛЕЕ: разобраться, что можно убить
+     * @todo ДАЛЕЕ: разобраться, что можно убит'okokokoko');
+        $set = $this->_set_statement($data);
+        dev_log('set',$set);
+        if ($set) {
+            fx::db()->query("INSERT INTO `{{".$this->table."}}` SET ".join(",", $set)."");
+            $id = fx::db()->insert_id();
+        }
+
+        return $id;ь
      */
 ///////////////////////////
     
@@ -392,7 +403,6 @@ class fx_data {
 
     public function insert($data) {
         $set = $this->_set_statement($data);
-
         if ($set) {
             fx::db()->query("INSERT INTO `{{".$this->table."}}` SET ".join(",", $set)."");
             $id = fx::db()->insert_id();
