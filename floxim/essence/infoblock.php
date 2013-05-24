@@ -20,7 +20,10 @@ class fx_infoblock extends fx_essence {
             if ($stored) {
                 $this->_visual = $stored;
             } else {
-                $i2l_params = array('layout_id' => fx::env('layout'));
+                $i2l_params = array(
+                    'layout_id' => fx::env('layout'),
+                    'is_stub' => true
+                );
                 if (($ib_id = $this->get('id'))) {
                     $i2l_params['infoblock_id'] = $ib_id;
                 }

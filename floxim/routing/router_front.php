@@ -41,6 +41,15 @@ class fx_router_front extends fx_router {
         foreach ($infoblocks as $ib) {
             if (($c_visual = $visual->find_one('infoblock_id', $ib['id']))) {
                 $ib->set_visual($c_visual);
+            } else {
+                $suitable = new fx_template_suitable();
+                $suitable->suit($infoblocks, $layout_id);
+                echo fen_debug(
+                    'no visual:', 
+                    $ib->get_prop_inherited('controller'),
+                    $ib->get_prop_inherited('action')
+                );
+                die();
             }
             
             if ($ib->get_prop_inherited('controller') == 'layout') {

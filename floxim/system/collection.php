@@ -151,8 +151,8 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
      * $c->sort('id')
      * $c->sort(function($a,$b) {});
      */
-    public function sort() {
-        
+    public function sort($sorter) {
+        uasort($this->data, $sorter);
     }
     
     /*

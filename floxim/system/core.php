@@ -346,7 +346,7 @@ class fx_core extends fx_system {
                 $file = $root.'system/collection';
                 break;
             }
-            if (preg_match("~^template(|_processor|_field|_html)$~", $classname)) {
+            if (preg_match("~^template(|_processor|_field|_html|_suitable)$~", $classname)) {
                 $file = $root.'template/'.$classname;
                 break;
             }
