@@ -1,0 +1,119 @@
+<fx_inherit keyword="header">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<title>Inner</title>
+<link rel="stylesheet" type="text/css" href="css/main.css" />
+<link rel="stylesheet" type="text/css" href="css/color.css" />
+</head>
+
+<body>
+
+<div id="main"><div class="content">
+<!--header-->
+	<div id="header">
+	<!--логотип, слоган-->
+		<div id="logo">
+			<a href="/" fx_replace="href" keyword="logo"><img src="images/logo.gif" width="103" height="75" alt="" title=""  fx_replace="src,alt,title"/></a>
+			<fx_replace keyword="company_name"><span class="name">YOUR<span>LOGO</span></span></fx_replace>
+			<fx_replace keyword="company_slogan"><span>Sampletext under logo</span></fx_replace>
+		</div>
+	<!--//логотип, слоган-->
+	<!--поиск-->
+		<div class="search">
+			<fx_block keyword="right_up" max_repeat="3" embed="miniblock">
+				<fx_content><form action="#">
+					<input type="text" value="Что будем искать?" name="" onblur="if(this.value==''){this.value='Что будем искать?'}" onfocus="if(this.value=='Что будем искать?'){this.value=''}" />
+					<input type="submit" value="Поиск" name="" class="submit" />
+				</form>	
+				</fx_content>
+			</fx_block>
+		</div>
+	<!--//поиск-->
+		<div class="sep"></div>
+	<!--menu, отступы внутри пунктов меню сделаны через padding, что не совсем правильно, если мало или наоборот много пунктов меню, выглядеть будет не очень, такое меню надо делать на таблице-->
+		<div id="menu"><div class="left"><div class="right">
+                <fx_menu keyword="main" necessary="yes">
+                    <fx_prefix><ul></fx_prefix>
+                    <fx_active><li><a href="%url%" class="menu-active">%name%</a></li></fx_active>
+                    <fx_unactive><li><a href="%url%">%name%</a></li></fx_unactive>
+                    <li><a href="#">Партнёрам</a></li>
+                    <li><a href="#">Публикации</a></li>
+                    <li><a href="#">Контакты</a></li>
+                    <fx_suffix></ul></fx_suffix>
+                </fx_menu>
+		</div></div></div>
+	<!--//menu-->
+	</div>
+<!--//header-->
+</fx_inherit>
+<!--блок слева-->
+	
+    <fx_inherit keyword="sidebar">
+	<div id="left_content">
+        <fx_menu keyword="submenu" necessary="yes" kind="independent,dependent" direct="vertical" parent="main">
+            <fx_prefix><div class="submenu"><ul></fx_prefix>
+            <fx_active><li><a href="%url%" class="menu-active">%name%</a></li></fx_active>
+            <fx_unactive><li><a href="%url%">%name%</a></li></fx_unactive>
+            <li><a href="#">Статуэтки</a></li>
+            <li><a href="#">Наборы</a></li>
+            <li><a href="#">Аксессуары</a></li>
+            <fx_suffix></ul></div></fx_suffix>
+        </fx_menu>
+	</div>
+    </fx_inherit>
+	
+<!--//блок слева-->
+<!--content, если есть блок слева то добавляется class="is_left"-->
+	<div id="content" class="is_left">
+    <fx_inherit keyword="content">
+		<h1>Читайте о нас в соц-сетях</h1>
+        <fx_blockset keyword="main_content" main="yes">
+            <fx_block name="Пустой">
+                <div class="block"><fx_content>Текст блока</fx_content></div>
+            </fx_block>
+            <fx_divider>
+                <div class="sep"></div>
+            </fx_divider>
+            <fx_block name="C заголовком (h2)">
+                <div class="block">
+                    <h2><fx_replace name="Заголовок">Заголовок раздела (h2)</fx_replace></h2>
+                    <p><fx_content>Мифопоэтическое пространство, не учитывая количества слогов, стоящих между ударениями, аннигилирует мифопоэтический хронотоп, но известны случаи прочитывания содержания приведённого отрывка иначе.</fx_content></p>
+            </div>
+            </fx_block>  
+            <div class="sep"></div>
+            <fx_block name="Список статей по горизонтали в 2 колонки">
+                <div class="block columns_2">
+                    <div class="col">
+                    <h4><fx_replace name="Заголовок">Наши преимущества в отличии от других (h4)</fx_replace></h4>
+                    <fx_content>Мы знаем толк в продажах игрушек. У нас самый большой ассортимент по всем направлениям игрушкостроительства и их продаж.</fx_content>
+                    </div>
+                </div>
+            </fx_block>
+            <div class="sep"></div>
+            <fx_block name="C заголовком (h3)">
+                <h3><fx_replace name="Заголовок">Заголовок раздела (h3)</fx_replace></h3>
+                <p><fx_content>Мифопоэтическое пространство, не учитывая количества слогов, стоящих между ударениями, аннигилирует мифопоэтический хронотоп, но известны случаи прочитывания содержания приведённого отрывка иначе.</fx_content></p>
+            </fx_block>
+            <div class="sep"></div>
+        </fx_blockset>
+    </fx_inherit>
+	</div>
+<!--//content-->
+	<div class="sep"></div>
+
+</div></div>
+<!--footer-->
+<fx_inherit keyword="footer">
+	<div id="footer">
+		<div class="left"><fx_replace keyword="copyright">&copy; 2010 группа компаний &laquo;Netcat&raquo;.<br />Все права защищены.</fx_replace></div>
+		<div class="right"><fx_replace keyword="developer">&copy; 2010 Хороший пример <br />сайтостроения &mdash; <a href="#">WebSite.pu</a></fx_replace></div>
+		<div class="sep"></div>
+	</div>
+<!--//footer-->
+</body>
+</html>
+</fx_inherit>
