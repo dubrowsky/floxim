@@ -263,4 +263,24 @@ class fx {
     public static function user() {
         return fx::env()->get_user();
     }
+    
+    protected static $_event_manager = null;
+    
+    protected static function _get_event_manager() {
+        if (!self::$_event_manager) {
+            self::$_event_manager = new fx_system_eventmanager();
+        }
+        return self::$_event_manager;
+    }
+    public static function listen($event_name, $callback) {
+        self::_get_event_manager()->listen($event_name, $callback);
+    }
+    
+    public static function unlisten($event_name) {
+        self::_get_event_manager()->unlisten($event_name);
+    }
+    
+    public static function trigger($event, $params = null) {
+        self::_get_event_manager()->trigger($event, $params);
+    }
 }

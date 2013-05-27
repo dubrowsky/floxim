@@ -406,6 +406,11 @@ class fx_template_processor {
                 $this->add_template($child);
             }
         }
+        $current_template =& $this->templates[$this->_get_current_template_id()];
+        if (!isset($current_template['areas'])) {
+            $current_template['areas'] = array();
+        }
+        $current_template['areas'][]= $token->get_prop('id');
         return $res;
     }
     

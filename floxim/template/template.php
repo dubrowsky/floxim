@@ -27,6 +27,7 @@ class fx_template {
         if (fx::env('is_admin')) {
             echo "###fx_area|".$area['id']."|".json_encode($area)."###";
         }
+        fx::trigger('render_area', array('area' => $area));
         $area_blocks = $this->get_var('input.'.$area['id']);
         if (!$area_blocks || !is_array($area_blocks)) {
             $area_blocks = array();
