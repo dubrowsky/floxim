@@ -3,7 +3,7 @@
 
 abstract class fx_system {
     public function __construct() {
-        ;
+        // ;
     }
 }
 

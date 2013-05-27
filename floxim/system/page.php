@@ -37,7 +37,6 @@ class fx_system_page extends fx_system {
         if ($item) {
             return isset($this->metatags[$item]) ? $this->metatags[$item] : null;
         }
-
         return $this->metatags;
     }
 
@@ -211,10 +210,16 @@ class fx_system_page extends fx_system {
             return $buffer;
         }
 
-        // dev_log('post_process_this', $this);
         if ($this->metatags['seo_title']) {
-            $r = "<title>".$this->metatags['seo_title']."</title>";
+            $r = "<title>".$this->metatags['seo_title']."</title>".PHP_EOL;;
         }
+        if ($this->metatags['seo_description']) {
+            $r .= '<meta name="description" content="' . $this->metatags['seo_description'] . '" />'.PHP_EOL;;
+        }
+        if ($this->metatags['seo_keywords']) {
+            $r .= '<meta name="keywords" content="' . $this->metatags['seo_keywords'] . '" />'.PHP_EOL;;
+        }
+
         if ($this->_files_css) {
             foreach ($this->_files_css as $v) {
                 $r .= '<link rel="stylesheet" type="text/css" href="'.$v.'" />'.PHP_EOL;

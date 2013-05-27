@@ -21,8 +21,12 @@ class fx_controller_layout extends fx_controller {
             $html = preg_replace("~^.+?<body[^>]*?>~is", '', $html);
             $html = preg_replace("~</body>.+?$~is", '', $html);
         } else {
+            $page = fx::data('content_page', $this->param('page_id'));
             $this->_show_admin_panel();
-            $html = fx::page()->post_proccess($html);
+            $html = fx::page()->set_metatags('title',$page['title'])
+                                ->set_metatags('description',$page['description'])
+                                ->set_metatags('keywords',$page['keywords'])
+                                ->post_proccess($html);
         }
         return $html;
     }
