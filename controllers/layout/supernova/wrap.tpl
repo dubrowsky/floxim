@@ -25,7 +25,7 @@
                 <!--//поиск-->
                 <div class="sep"></div>
                 <!--горизонтальное меню-->
-                {area id="header"}
+                {area id="header" size="low,wide"}
                 <div id="menu" fx_template="demo_menu" fx_template_for="component_section.listing" fx_template_name="Горизонтальное меню (главное)">
                     <ul>
                         <li fx_render=".">
@@ -65,7 +65,8 @@
             </div>
             <!--//контент-->
             <!--правый блок-->
-            <div id="right_content" fx_area="sidebar">
+            <div id="right_content">
+                {area id="sidebar" size="high,narrow"}
                 <!--вертикальное меню-->
                 <div id="menu_vert" fx_template="supermenu" fx_template_for="component_section.listing">
                     <h2 fx_var="menu_title">Заголовок меню</h2>
@@ -86,7 +87,8 @@
             <div class="sep"></div>
         </div>
         <!--//баннеры-->
-        <div fx_area="footer" id="footer">
+        <div id="footer">
+            {area id="footer" size="wide,low"}
             <div class="left" fx_var="copy">© 2010 группа компаний «Netcat».<br />Все права защищены.</div>
             <div class="middle" fx_var="contacts">Адрес: г. Москва, ул. Мануфактурная, д. 14<br />Телефон и факс: (831) 220-80-18</div>
             <div class="right" fx_var="developa">© 2010 Хороший пример <br />сайтостроения — <a href="#">WebSite.pu</a></div>

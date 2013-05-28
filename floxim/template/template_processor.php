@@ -485,6 +485,7 @@ class fx_template_processor {
         $tpl_var = array();
         foreach ( $this->templates as $tpl_name => $tpl) {
             echo $this->pad()."public function tpl_".$tpl_name.'() {'."\n";
+            echo $this->pad(2).'extract($this->data);'."\n";
             echo $this->pad(2).$tpl["code"];
             echo "\n".$this->pad()."}\n";
             $tpl_meta = $tpl;

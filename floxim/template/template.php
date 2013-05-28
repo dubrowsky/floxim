@@ -52,6 +52,16 @@ class fx_template {
         //echo "<!-- // area ".$area." -->\n";
     }
 
+    public function get_areas() {
+        $areas = array();
+        fx::listen('render_area.get_areas', function($e) use (&$areas) {
+            $areas[$e->area['id']]= $e->area;
+        });
+        $this->render();
+        fx::unlisten('render_area.get_areas');
+        return $areas;
+    }
+    
     public function render(array $data = array()) {
         foreach ($data as $dk => $dv) {
             $this->set_var($dk, $dv);
