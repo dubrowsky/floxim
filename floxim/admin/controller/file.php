@@ -6,6 +6,9 @@
 class fx_controller_admin_file extends fx_controller_admin {
 
     public function upload_save($input) {
+
+        dev_log('gooooooooooooooooood');
+
         $fx_core = fx_core::get_object();
 
         $path = 'content';

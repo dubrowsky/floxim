@@ -19,6 +19,9 @@ if ( (_c.type == 'checkbox' || _c.type == 'bool') && typeof _c.values == 'undefi
 </div>
 <?}?>
 
+
+
+
 <!--[data_input]-->
 <input type="hidden" value="<?=$t.clear($.toJSON(_c))?>" class="data_input" />
 
@@ -73,9 +76,15 @@ html.find('a.delete_link').click(function(){
 	par.hide();
 });
 
+
+
 <!--[input]-->
 <div class="image_field">
-	<img style="max-width:100px; float:left;" <?=_c.old ? 'src="'+_c.path+'"' : ''?> />
+    <input type="file" name="image" />
+    <a class="edit_link">Загрузить</a>
+    <!-- a class="edit_link">Добавить изображение</a -->
+	<!-- img style="max-width:100px; float:left;" <?=_c.old ? 'src="'+_c.path+'"' : ''?> / -->
+    <?= console.log(_c) =>
 	<input type="hidden" <?=$t.field_id_name(_c)?> />
 	<span class="real_name"><?=_c.old ? _c.real_name : ''?></span>
 	<br style="clear:both;" />
@@ -89,6 +98,9 @@ html.find('div.image_field a.edit_link').click(function () {
         path: _c.path,
         filename: _c.real_name
 	};
+
+    console.log(current_file);
+
 	var par = $(this).parent();
 	var preview = par.find('img');
 	var inp = par.find('input:hidden');
