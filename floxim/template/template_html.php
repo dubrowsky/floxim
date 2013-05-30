@@ -9,7 +9,7 @@ class fx_template_html {
     
     public static function has_floxim_atts($string) {
         $res = preg_match(
-                '~<[^>]+fx_(template|area|render|var|replace)[a-z_]*?=[\'\"]~', 
+                '~<[^>]+fx:(template|area|each|var|replace)[a-z_]*?=[\'\"]~', 
                 $string, 
                 $atts
         );
@@ -58,7 +58,7 @@ class fx_template_html {
             if ($n->name == 'text') {
                 return;
             }
-            if ( ($fx_replace = $n->get_attribute('fx_replace')) ){
+            if ( ($fx_replace = $n->get_attribute('fx:replace')) ){
                 $replace_atts = explode(",", $fx_replace);
                 foreach ($replace_atts as $replace_att) {
                     if (!isset($unnamed_replaces[$replace_att])) {
@@ -79,60 +79,64 @@ class fx_template_html {
                             break;
                     }
                     $n->set_attribute($replace_att, '{%'.$var_name.' title="'.$var_title.'"}'.$default_val.'{/%'.$var_name.'}');
-                    $n->remove_attribute('fx_replace');
+                    $n->remove_attribute('fx:replace');
                 }
             }
-            if ( ($var_name = $n->get_attribute('fx_var')) ) {
+            if ( ($var_name = $n->get_attribute('fx:var')) ) {
                 if (!preg_match("~^[\$\%]~", $var_name)) {
                     $var_name = '%'.$var_name;
                 }
                 $n->add_child_first(fx_html_token::create('{'.$var_name.'}'));
                 $n->add_child(fx_html_token::create('{/'.$var_name.'}'));
-                $n->remove_attribute('fx_var');
+                $n->remove_attribute('fx:var');
             }
-            if ( ($tpl_id = $n->get_attribute('fx_template'))) {
+            if ( ($tpl_id = $n->get_attribute('fx:template'))) {
                 $tpl_macro_tag = '{template id="'.$tpl_id.'"';
-                if ( ($tpl_for = $n->get_attribute('fx_template_for')) ) {
+                if ( ($tpl_for = $n->get_attribute('fx:of')) ) {
                     $tpl_macro_tag .= ' for="'.$tpl_for.'"';
-                    $n->remove_attribute('fx_template_for');
+                    $n->remove_attribute('fx:of');
                 }
-                if ( ($tpl_name = $n->get_attribute('fx_template_name'))) {
+                if ( ($tpl_name = $n->get_attribute('fx:name'))) {
                     $tpl_macro_tag .= ' name="'.$tpl_name.'"';
-                    $n->remove_attribute('fx_template_name');
+                    $n->remove_attribute('fx:name');
                 }
                 $tpl_macro_tag .= '}';
                 $n->parent->add_child_before(fx_html_token::create($tpl_macro_tag), $n);
                 $n->parent->add_child_after(fx_html_token::create('{/template}'), $n);
-                $n->remove_attribute('fx_template');
+                $n->remove_attribute('fx:template');
             }
-            if ( ($render_id = $n->get_attribute('fx_render')) ) {
-                $render_macro_tag = '{render';
-                if (!empty($render_id)) {
-                    $render_macro_tag .= ' select="'.$render_id.'"';
+            if ( ($each_id = $n->get_attribute('fx:each')) ) {
+                $each_macro_tag = '{each';
+                if (!empty($each_id)) {
+                    $each_macro_tag .= ' select="'.$each_id.'"';
                 }
-                if ( ($render_as = $n->get_attribute('fx_render_as'))) {
-                    $render_macro_tag .= ' as="'.$render_as.'"';
-                    $n->remove_attribute('fx_render_as');
+                if ( ($each_as = $n->get_attribute('fx:as'))) {
+                    $each_macro_tag .= ' as="'.$each_as.'"';
+                    $n->remove_attribute('fx:as');
                 }
-                if (($render_key = $n->get_attribute('fx_render_key'))) {
-                    $render_macro_tag .= ' key="'.$render_key."'";
-                    $n->remove_attribute('fx_render_key');
+                if (($each_key = $n->get_attribute('fx:key'))) {
+                    $each_macro_tag .= ' key="'.$each_key."'";
+                    $n->remove_attribute('fx:key');
                 }
-                $render_macro_tag .= '}';
-                $n->parent->add_child_before(fx_html_token::create($render_macro_tag), $n);
-                $n->parent->add_child_after(fx_html_token::create('{/render}'), $n);
-                $n->remove_attribute('fx_render');
+                $each_macro_tag .= '}';
+                $n->parent->add_child_before(fx_html_token::create($each_macro_tag), $n);
+                $n->parent->add_child_after(fx_html_token::create('{/each}'), $n);
+                $n->remove_attribute('fx:each');
             }
-            if ( ($area_id = $n->get_attribute('fx_area'))) {
-                $n->remove_attribute('fx_area');
+            if ( ($area_id = $n->get_attribute('fx:area'))) {
+                $n->remove_attribute('fx:area');
                 $area = '{area id="'.$area_id.'" /}';
                 $n->add_child_first(fx_html_token::create($area));
             }
-            if ( ($if_test = $n->get_attribute('fx_if'))) {
-                $n->remove_attribute('fx_if');
+            if ( ($if_test = $n->get_attribute('fx:if'))) {
+                $n->remove_attribute('fx:if');
                 $if = '{if test="'.$if_test.'"}';
                 $n->parent->add_child_before(fx_html_token::create($if), $n);
                 $n->parent->add_child_after(fx_html_token::create('{/if}'), $n);
+            }
+            if ( ($omit = $n->get_attribute('fx:omit'))) {
+                $n->omit = $omit;
+                $n->remove_attribute('fx:omit');
             }
         });
         return $tree->serialize();
@@ -266,46 +270,73 @@ class fx_html_token {
     
     public function serialize() {
         $res = '';
+        // свойство omit добавляется из transform_to_floxim
+        $omit = false;
+        $omit_conditional = false;
+        if ( isset($this->omit) ) {
+            if ($this->omit =='true') {
+                $omit = true;
+            } else {
+                $omit_conditional = true;
+                $omit_var_name = '$omit_'.md5($this->omit);
+                $res .= '<?'.$omit_var_name.' = '.$this->omit.'; if ('.$omit_var_name.') {?>';
+            }
+        }
         if ($this->name != 'root')  {
+            $tag_start = '';
             if (isset($this->attributes) && isset($this->attributes_modified)) {
-                $res .= '<'.$this->name;
+                $tag_start .= '<'.$this->name;
                 foreach ($this->attributes as $att_name => $att_val) {
-                    $res .= ' '.$att_name;
+                    $tag_start .= ' '.$att_name;
                     
                     if ($att_val === null) {
                         continue;
                     }
-                    $res .= '="'.
+                    $tag_start .= '="'.
                                 $att_val.
                                 // последний аргумент - выключаем double_encode
                                 //htmlentities($att_val, ENT_COMPAT | ENT_HTML401, 'UTF-8', false).
                                 '"';
                 }
                 if ($this->type == 'single') {
-                    $res .= ' /';
+                    $tag_start .= ' /';
                 }
-                $res .= '>';
+                $tag_start .= '>';
             } else {
-                $res .= $this->source;
+                $tag_start .= $this->source;
+            }
+            if ( isset($this->_injections) && count($this->_injections) > 0) {
+                $injections = $this->_injections;
+                $tag_start = preg_replace_callback(
+                    "~#inj(\d+)#~", 
+                    function($matches) use ($injections) {
+                        return $injections[$matches[1]];
+                    }, 
+                    $tag_start
+                );
             }
         }
-        if ( isset($this->_injections) && count($this->_injections) > 0) {
-            $injections = $this->_injections;
-            $res = preg_replace_callback(
-                "~#inj(\d+)#~", 
-                function($matches) use ($injections) {
-                    return $injections[$matches[1]];
-                }, 
-                $res
-            );
+        
+        $res .= $tag_start;
+        if ($omit_conditional) {
+            $res .= '<?}?>';
         }
+        
+        // закончили собирать сам тег
         if (isset($this->children)) {
             foreach ($this->children as $child) {
                 $res .= $child->serialize();
             }
         }
         if ($this->type == 'open' && $this->name != 'root') {
+            if ($omit_conditional) {
+                $res .= '<?if ('.$omit_var_name.') {?>';
+            }
             $res .= "</".$this->name.">";
+            
+            if ($omit_conditional) {
+                $res .= '<?}?>';
+            }
         }
         return $res;
     }
@@ -335,10 +366,10 @@ class fx_html_token {
         
         $this->_injections = $injections;
         
-        $source  = preg_replace("~\s([a-z]+)\s*?=\s*?([^\'\\\"\s]+)~", ' $1="$2"', $source);
+        $source  = preg_replace("~\s([a-z0-9\:_-]+)\s*?=\s*?([^\'\\\"\s]+)~", ' $1="$2"', $source);
         $atts = null;
         
-        preg_match_all('~(#inj\d+#)|([a-z0-9_-]+)="([^\"]+)"~', $source, $atts);
+        preg_match_all('~(#inj\d+#)|([a-z0-9\:_-]+)="([^\"]+)"~', $source, $atts);
         
         $this->attributes = array();
         foreach ($atts[0] as $att_num => $att_full) {

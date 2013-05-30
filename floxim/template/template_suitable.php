@@ -1,8 +1,16 @@
 <?php
 class fx_template_suitable {
+    
+    public function unsuit($layout_id) {
+        fx::data('infoblock_visual')->where('layout_id', $layout_id)->all()->apply(function($v) {
+            $v->delete();
+        });
+    }
+    
     public function suit(fx_collection $infoblocks, $layout_id) {
         //echo fen_debug('let it suit!', $infoblocks);
         
+        $layout = fx::data('layout', $layout_id);
         $layout_ib = null;
         $stub_ibs = new fx_collection();
         // Собираем все инфоблоки без визуальной части
@@ -18,25 +26,42 @@ class fx_template_suitable {
         $all_visual = fx::data('infoblock_visual')->get_for_infoblocks($stub_ibs, false);
         $infoblocks->attache_many($all_visual, 'infoblock_id', 'all_visual');
         
-        $this->_adjust_layout_visual($layout_ib, $layout_id);
+        $this->_adjust_layout_visual($layout_ib, $layout);
         $layout_visual = $layout_ib->get_visual();
         $area_map = $layout_visual['area_map'];
         foreach ($infoblocks as $ib) {
             $ib_visual = $ib->get_visual();
-            if (!$ib_visual['is_stub']) {
+            if (!$ib_visual['is_stub'] ) {
                 continue;
             }
             $old_visual = $ib['all_visual'][0];
             if (isset($old_visual['area']) && isset($area_map[$old_visual['area']])) {
                 $ib_visual['area'] = $area_map[$old_visual['area']];
+                $ib_visual['priority'] = $old_visual['priority'];
             }
+            $ib_controller = fx::controller(
+                    $ib->get_prop_inherited('controller'),
+                    $ib->get_prop_inherited('params'),
+                    $ib->get_prop_inherited('action')
+            );
+            $controller_templates = $ib_controller->get_available_templates($layout['keyword']);
+            $old_template = $old_visual['template'];
+            foreach ($controller_templates as $c_tpl) {
+                if ($c_tpl['full_id'] == $old_template) {
+                    $ib_visual['template'] = $c_tpl['full_id'];
+                    break;
+                }
+            }
+            if (!isset($ib_visual['template'])) {
+                $ib_visual['template'] = $controller_templates[0]['full_id'];
+            }
+            
             unset($ib_visual['is_stub']);
+            $ib_visual->save();
         }
     }
     
-    protected function _adjust_layout_visual($layout_ib, $layout_id) {
-        $layout = fx::data('layout', $layout_id);
-        
+    protected function _adjust_layout_visual($layout_ib, $layout) {
         $old_visual = $layout_ib['all_visual'][0];
         $old_areas = fx::template($old_visual['template'])->get_areas();
         
@@ -66,6 +91,7 @@ class fx_template_suitable {
         $layout_vis['areas'] = $c_variant['areas'];
         $layout_vis['area_map'] = $c_variant['map'];
         unset($layout_vis['is_stub']);
+        $layout_vis->save();
         //echo "<pre>" . htmlspecialchars(print_r($c_variant, 1)) . "</pre>";
     }
     

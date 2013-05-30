@@ -221,16 +221,28 @@ class fx_system_page extends fx_system {
         }
 
         if ($this->_files_css) {
-            foreach ($this->_files_css as $v) {
+            $files_css = array_unique($this->_files_css);
+            foreach ($files_css as $v) {
                 $r .= '<link rel="stylesheet" type="text/css" href="'.$v.'" />'.PHP_EOL;
             }
         }
         if ($this->_files_js) {
-            foreach ($this->_files_js as $v) {
+            $files_js = array_unique($this->_files_js);
+            
+            foreach ($files_js as $v) {
                 $r .= '<script type="text/javascript" src="'.$v.'" ></script>'.PHP_EOL;
             }
         }
-        $buffer = str_replace('<head>', '<head>'.$r, $buffer);
+        
+        if (!preg_match("~<head[^>]*?>~", $buffer)) {
+            if (preg_match("~<html[^>]*?>~", $buffer)) {
+                $buffer = preg_replace("~<html[^>]*?>~", '$0<head> </head>', $buffer);
+            } else {
+                $buffer = '<html><head> </head>'.$buffer.'</html>';
+            }
+        }
+        
+        $buffer = preg_replace('~<head[^>]*?>~', '$0'.$r, $buffer);
 
         //h1
         $h1_post = $this->metatags_post['seo_h1'];
@@ -241,7 +253,7 @@ class fx_system_page extends fx_system {
 
 
         if ($this->_after_body) {
-            //$buffer = str_replace('<body>', '<body>'.join("\r\n", $this->_after_body), $buffer);
+            dev_log('append after body', $this->_after_body);
             $after_body = $this->_after_body;
             $buffer = preg_replace_callback(
                 '~<body[^>]*?>~', 

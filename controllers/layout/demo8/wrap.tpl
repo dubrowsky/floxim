@@ -9,7 +9,7 @@
 <div id="main">
     <div class="content">
         <!--header-->
-        <div id="header">
+        <div id="header" fx:area="header">
             <!--логотип, слоган-->
             <div id="logo">
                 <a href="/">
@@ -32,15 +32,17 @@
             <div class="sep"></div>
 
             <!--menu, отступы внутри пунктов меню сделаны через padding, что не совсем правильно, если мало или наоборот много пунктов меню, выглядеть будет не очень, такое меню надо делать на таблице-->
-            <div id="menu">
+            <div id="menu" 
+                 fx:template="demo_menu" 
+                 fx:of="component_section.listing" 
+                 fx:name="Горизонтальное меню (главное)">
                 <div class="left">
                     <div class="right">
-                        {area id="header"}
-                        {template id="demo_menu" name="Горизонтальное меню (главное)" for="component_section.listing"}
-                            <ul>
-                                <li><a href="{$url}" {if test="$active"}class="menu-active"{/if}>{$name}</a></li>
-                            </ul>
-                        {/template}
+                        <ul>
+                            <li fx:each=".">
+                                <a href="{$url}" {if test="$active"}class="menu-active"{/if}>{$name}</a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -49,21 +51,16 @@
         <!--//header-->
 
         <!--блок слева-->
-        <div id="left_content">
-            {area id="sidebar"}
+        <div id="left_content" fx:area="sidebar">
 
-            <div class="submenu" fx_template="supermenu" fx_template_for="component_section.listing">
+            <div class="submenu" fx:template="supermenu" fx:of="component_section.listing">
                 <ul>
-                    <li fx_render="."><a href="{$url}">{$name}</a>
-                    {if test="$submenu"}
-                        <ul>
-                            <li><a href="#">Брелоки</a></li>
-                            <li><a href="#">Игрушки</a></li>
-                            <li><a href="#">Статуэтки</a></li>
+                    <li fx:each="." {if test="$item_is_last"}class="last"{/if}>
+                        <a href="{$url}">{$name}</a>
+                        <ul fx:if="$submenu">
+                            <li fx:each="$submenu"><a href="{$url}">{$name}</a></li>
                         </ul>
-                    {/if}
                     </li>
-                    <li {if test="$last"}class="last"{/if}><a href="{$url}">{$name}</a></li>
                 </ul>
             </div>
 

@@ -17,8 +17,8 @@ class fx_controller_component_section extends fx_controller_component {
     public function get_action_settings($action)
     {
         $fields = parent::get_action_settings_list_parrent();
-        $fields['childs'] = array(
-            'name' => 'childs',
+        $fields['submenu'] = array(
+            'name' => 'submenu',
             'label' => 'Показывать подразделы',
             'type' => 'checkbox',
         );
@@ -26,9 +26,9 @@ class fx_controller_component_section extends fx_controller_component {
     }
     
     public function do_listing() {
-        if ( $this->input['childs'] == 1 ) {
+        if ( $this->input['submenu'] == 1 ) {
             $this->listen('build_query', function($f) {
-                $f->with('childs');
+                $f->with('submenu');
             });
         }
         $this->listen('items_ready', function($items) {
@@ -43,7 +43,7 @@ class fx_controller_component_section extends fx_controller_component {
                 $active_item->set('active',true);
             }
 
-            foreach ( $items as $key => &$item ) {
+            foreach ( $items as $item ) {
                 if ( !empty($item['alias']) ) {
                     $alias = fx::data('content_' . $this->get_content_type(), $item['alias']);
                     $item['url'] = $alias['url'];

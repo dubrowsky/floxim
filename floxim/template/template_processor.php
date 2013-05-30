@@ -38,13 +38,7 @@ class fx_template_processor {
             }
             $file_data = trim(file_get_contents($file));
             $file_data = preg_replace("~\{\*.*?\*\}~s", '', $file_data);
-            if (!preg_match("~^{template~", $file_data)) {
-                preg_match("~/([^/]+)\.tpl~", $file, $file_tpl_name);
-                $file_data = 
-                    '{template id="'.$file_tpl_name[1].'"}'.
-                       trim($file_data).
-                    '{/template}';
-            }
+            
             // удаляем пробелы в начале строки, 
             // если она начинается с {...}
             $file_data = preg_replace(
@@ -63,6 +57,15 @@ class fx_template_processor {
             if (fx_template_html::has_floxim_atts($file_data)) {
                 $T = new fx_template_html($file_data);
                 $file_data = $T->transform_to_floxim();
+            }
+            
+            if (!preg_match("~^{template~", $file_data)) {
+                $file_tpl_name = null;
+                preg_match("~/([^/]+)\.tpl~", $file, $file_tpl_name);
+                $file_data = 
+                    '{template id="'.$file_tpl_name[1].'"}'.
+                       trim($file_data).
+                    '{/template}';
             }
             
             $source .= trim($file_data);
@@ -94,7 +97,7 @@ class fx_template_processor {
     protected static $_token_info = array(
         'template' => array(
             'type' => 'double',
-            'contains' => array('code', 'template', 'area', 'var', 'call', 'render','if')
+            'contains' => array('code', 'template', 'area', 'var', 'call', 'each','if')
         ),
         'code' => array(
             'type' => 'single'
@@ -105,23 +108,23 @@ class fx_template_processor {
         ),
         'var' => array(
             'type' => 'both',
-            'contains' => array('code', 'var', 'call', 'area', 'template', 'render','if')
+            'contains' => array('code', 'var', 'call', 'area', 'template', 'each','if')
         ),
         'call' => array(
             'type' => 'both',
-            'contains' => array('var', 'render', 'if')
+            'contains' => array('var', 'each', 'if')
         ),
         'templates'=> array(
             'type' => 'double',
             'contains' => array('template')
         ),
-        'render' => array(
+        'each' => array(
             'type' => 'both',
-            'contains' => array('code', 'template', 'area', 'var', 'call', 'render', 'if')
+            'contains' => array('code', 'template', 'area', 'var', 'call', 'each', 'if')
         ),
         'if' => array(
             'type' => 'double',
-            'contains' => array('code', 'template', 'area', 'var', 'call', 'render', 'elseif', 'else')
+            'contains' => array('code', 'template', 'area', 'var', 'call', 'each', 'elseif', 'else')
         )
     );
     
@@ -339,7 +342,7 @@ class fx_template_processor {
     }
     
     protected $_loop_depth = 0;
-    protected function _token_render_to_code(fx_template_token $token) {
+    protected function _token_each_to_code(fx_template_token $token) {
         $this->_loop_depth++;
         $code = "<?\n";
         if (! ($arr_id = $token->get_prop('select')) || $arr_id == '.') {

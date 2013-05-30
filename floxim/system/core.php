@@ -396,7 +396,7 @@ class fx_core extends fx_system {
                 break;
             }
             
-            if (in_array($classname, array('http', 'event'))) {
+            if (in_array($classname, array('http', 'event', 'cache'))) {
                 $file = $root.'system/'.$classname;
                 break;
             }

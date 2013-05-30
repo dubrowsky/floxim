@@ -57,7 +57,7 @@ class fx_template {
         fx::listen('render_area.get_areas', function($e) use (&$areas) {
             $areas[$e->area['id']]= $e->area;
         });
-        $this->render();
+        $this->render(array('_idle' => true));
         fx::unlisten('render_area.get_areas');
         return $areas;
     }
@@ -66,13 +66,7 @@ class fx_template {
         foreach ($data as $dk => $dv) {
             $this->set_var($dk, $dv);
         }
-        foreach (glob($this->_source_dir.'/*.{js,css}', GLOB_BRACE) as $f) {
-            if (!preg_match("~_[^/]+$~", $f)) {
-                $file_http = str_replace(fx::config()->DOCUMENT_ROOT, '', $f);
-                fx::page()->add_file($file_http);
-            }
-        }
-        $result = '<!-- template '.$this->_get_template_sign()." -->\n";
+        
         ob_start();
         $method = 'tpl_'.$this->action;
         if (method_exists($this, $method)) {
@@ -81,8 +75,23 @@ class fx_template {
             dev_log('tpl with no action called', get_class($this), $this->action, debug_backtrace());
             echo 'No tpl action: <code>'.get_class($this).".".$this->action.'</code>';
         }
-        $result .= ob_get_clean();
-        $result .= '<!-- // template'.$this->_get_template_sign()." -->\n";
+        $result = ob_get_clean();
+        
+        if ($this->get_var('_idle')) {
+            return $result;
+        }
+        
+        $result =   '<!-- template '.$this->_get_template_sign()." -->\n".
+                    $result.
+                    '<!-- // template'.$this->_get_template_sign()." -->\n";
+        
+        foreach (glob($this->_source_dir.'/*.{js,css}', GLOB_BRACE) as $f) {
+            if (!preg_match("~_[^/]+$~", $f)) {
+                $file_http = str_replace(fx::config()->DOCUMENT_ROOT, '', $f);
+                fx::page()->add_file($file_http);
+            }
+        }
+        
         if (fx::env('is_admin')) {
             $result = fx_template_field::replace_fields($result);
             $result = fx_template::replace_areas($result);

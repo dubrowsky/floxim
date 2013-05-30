@@ -1,0 +1,29 @@
+body {
+    width:900px;
+    margin:0 auto;
+    padding:0;
+}
+
+.header {
+    background:#EEE;
+    overflow: auto;
+}
+
+.left_col {
+    width:200px;
+    float:left;
+    overflow: hidden;
+    border:1px solid #00c;
+    padding:10px;
+}
+
+.right_col {
+    width:200px;
+    float: right;
+}
+
+.content {
+    width:500px;
+    padding:10px;
+    float:left;
+}

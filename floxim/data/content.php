@@ -263,8 +263,6 @@ class fx_data_content extends fx_data {
     
     protected function _set_statement($data) {
 
-        dev_log('set statement',$data);
-
         $res = array();
         $chain = fx::data('component', $this->component_id)->get_chain();
         foreach ($chain as $level_component) {
@@ -284,7 +282,14 @@ class fx_data_content extends fx_data {
                     'site_id'
                 ));
             }
+            $table_name = $level_component->get_content_table();
+            $table_cols = $this->_get_columns($table_name);
             foreach ($field_names as $field_name) {
+                if (!in_array($field_name, $table_cols)) {
+                    dev_log('skip field', $field_name, $table_cols);
+                    continue;
+                }
+                
                 $field = $fields->find_one('name', $field_name);
                 if ($field && !$field->get_sql_type()) {
                     continue;
@@ -299,7 +304,7 @@ class fx_data_content extends fx_data {
                 }
             }
             if (count($table_res) > 0) {
-                $res[$level_component->get_content_table()] = $table_res;
+                $res[$table_name] = $table_res;
             }
         }
         return $res;
