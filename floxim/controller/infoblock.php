@@ -92,13 +92,8 @@ class fx_controller_infoblock extends fx_controller {
             }
         }
         
-        // dev_log($infoblock, $infoblock->get_prop_inherited('visual.template'));
-        
         if (!$tpl) {
             $tpl = $controller->find_template();
-        }
-        if ($infoblock['id'] == 3) {
-            dev_log('rendr menu', $infoblock, $tpl_name, $tpl);
         }
         $tpl_params = $infoblock->get_prop_inherited('visual.template_visual');
         $tpl_params['input'] = $result;

@@ -141,8 +141,10 @@ class fx_controller_component extends fx_controller {
         $f = $this->_finder();
         
         $content_type = $this->get_content_type();
-        $c_ib = fx::data('infoblock', $this->param('infoblock_id'));
-        $f->where('infoblock_id', $c_ib->get_root_infoblock()->get('id'));
+        if ( ($infoblock_id = $this->param('infoblock_id'))) {
+            $c_ib = fx::data('infoblock', $infoblock_id);
+            $f->where('infoblock_id', $c_ib->get_root_infoblock()->get('id'));
+        }
         $f->where('parent_id', $this->_get_parent_id());
         $this->trigger('build_query',$f);
 
@@ -157,7 +159,7 @@ class fx_controller_component extends fx_controller {
         $items = $f->all();
         $this->trigger('items_ready', $items);
 
-        if (fx::env('is_admin')) {
+        if (fx::env('is_admin') && $infoblock_id) {
             $c_ib_name = $c_ib->get_prop_inherited('name');
             $component = fx::data('component', $content_type);
             $adder_title = $component['item_name'].' &rarr; '.($c_ib_name ? $c_ib_name:$c_ib['id']);
@@ -174,7 +176,10 @@ class fx_controller_component extends fx_controller {
     }
     
     protected function _get_parent_id() {
-        $ib = fx::data('infoblock', $this->param('infoblock_id'));
+        $ib = fx::data('infoblock', $this->param('infoblock_id')); 
+        if (!$ib) {
+            return $this->param('parent_id');
+        }
         $parent_id = null;
         switch($this->param('parent_type')) {
             case 'mount_page_id':

@@ -39,8 +39,9 @@
                 <div class="left">
                     <div class="right">
                         <ul>
-                            <li fx:each=".">
+                            <li fx:each="$items as $menu_item_num => $memu_item">
                                 <a href="{$url}" {if test="$active"}class="menu-active"{/if}>{$name}</a>
+                                {if $menu_item_is_last} (that's all){/if}
                             </li>
                         </ul>
                     </div>

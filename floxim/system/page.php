@@ -253,7 +253,6 @@ class fx_system_page extends fx_system {
 
 
         if ($this->_after_body) {
-            dev_log('append after body', $this->_after_body);
             $after_body = $this->_after_body;
             $buffer = preg_replace_callback(
                 '~<body[^>]*?>~', 
