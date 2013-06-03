@@ -27,6 +27,7 @@ class fx_template {
         if (fx::env('is_admin')) {
             echo "###fx_area|".$area['id']."|".json_encode($area)."###";
         }
+        fx::trigger('render_area', array('area' => $area));
         $area_blocks = $this->get_var('input.'.$area['id']);
         if (!$area_blocks || !is_array($area_blocks)) {
             $area_blocks = array();
@@ -51,17 +52,21 @@ class fx_template {
         //echo "<!-- // area ".$area." -->\n";
     }
 
+    public function get_areas() {
+        $areas = array();
+        fx::listen('render_area.get_areas', function($e) use (&$areas) {
+            $areas[$e->area['id']]= $e->area;
+        });
+        $this->render(array('_idle' => true));
+        fx::unlisten('render_area.get_areas');
+        return $areas;
+    }
+    
     public function render(array $data = array()) {
         foreach ($data as $dk => $dv) {
             $this->set_var($dk, $dv);
         }
-        foreach (glob($this->_source_dir.'/*.{js,css}', GLOB_BRACE) as $f) {
-            if (!preg_match("~_[^/]+$~", $f)) {
-                $file_http = str_replace(fx::config()->DOCUMENT_ROOT, '', $f);
-                fx::page()->add_file($file_http);
-            }
-        }
-        $result = '<!-- template '.$this->_get_template_sign()." -->\n";
+        
         ob_start();
         $method = 'tpl_'.$this->action;
         if (method_exists($this, $method)) {
@@ -70,8 +75,23 @@ class fx_template {
             dev_log('tpl with no action called', get_class($this), $this->action, debug_backtrace());
             echo 'No tpl action: <code>'.get_class($this).".".$this->action.'</code>';
         }
-        $result .= ob_get_clean();
-        $result .= '<!-- // template'.$this->_get_template_sign()." -->\n";
+        $result = ob_get_clean();
+        
+        if ($this->get_var('_idle')) {
+            return $result;
+        }
+        
+        $result =   '<!-- template '.$this->_get_template_sign()." -->\n".
+                    $result.
+                    '<!-- // template'.$this->_get_template_sign()." -->\n";
+        
+        foreach (glob($this->_source_dir.'/*.{js,css}', GLOB_BRACE) as $f) {
+            if (!preg_match("~_[^/]+$~", $f)) {
+                $file_http = str_replace(fx::config()->DOCUMENT_ROOT, '', $f);
+                fx::page()->add_file($file_http);
+            }
+        }
+        
         if (fx::env('is_admin')) {
             $result = fx_template_field::replace_fields($result);
             $result = fx_template::replace_areas($result);

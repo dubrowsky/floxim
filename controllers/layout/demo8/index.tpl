@@ -8,6 +8,7 @@
     {$too_blocks}
         <div class="block columns_2">
             <div class="col first">
+<<<<<<< HEAD
                 <h2>{%c1_header}Новости и события{/%}</h2>
                 {%c1_text}
                 <p>
@@ -15,6 +16,10 @@
                         <img src="controllers/layout/supernova/images/news-img.jpg" width="264" height="125" alt="" />
                     </a>
                 </p>
+=======
+                <h2>Новости и события</h2>
+                {*<p><a href="#"><img src="controllers/layout/supernova/images/news-img.jpg" width="264" height="125" alt="" /></a></p>*}
+>>>>>>> 2a2b50edc46ef6303c73a4210efa4a32ec523e84
                 <p>А мне вообще тут всё понравилос, ток не пойму про, что тут?</p>
                 {/%}
             </div>
@@ -47,25 +52,25 @@
             <!-- по идее это вообще бы сделать инфоблоком с -->
             {%partner_1}
             <div class="block first">
-                <a href="#"><img src="controllers/layout/supernova/images/logo_1.gif" width="55" height="49" alt="" /></a>
+                {*<a href="#"><img src="controllers/layout/supernova/images/logo_1.gif" width="55" height="49" alt="" /></a>*}
                 <p>&laquo;CSYSTEM&raquo; &mdash; цифровые системы</p>
             </div>
             {/%}
             {%partner_2}
             <div class="block">
-                <a href="#"><img src="controllers/layout/supernova/images/logo_2.gif" width="174" height="49" alt="" /></a>
+                {*<a href="#"><img src="controllers/layout/supernova/images/logo_2.gif" width="174" height="49" alt="" /></a>*}
                 <p>&laquo;Контур-Вест&raquo; &mdash; каждому по флажку</p>
             </div>
             {/%}
             {%partner_3}
             <div class="block">
-                <a href="#"><img src="controllers/layout/supernova/images/logo_3.gif" width="197" height="49" alt="" /></a>
+                {*<a href="#"><img src="controllers/layout/supernova/images/logo_3.gif" width="197" height="49" alt="" /></a>*}
                 <p>&laquo;КласикСтройКомплект&raquo; &mdash; строительная техника.</p>
             </div>
             {/%}
             {%partner_4}
             <div class="block">
-                <a href="#"><img src="controllers/layout/supernova/images/logo_4.gif" width="122" height="49" alt="" /></a>
+                {*<a href="#"><img src="controllers/layout/supernova/images/logo_4.gif" width="122" height="49" alt="" /></a>*}
                 <p>&laquo;MetroGroup&raquo; &mdash; товары на любой вкус.</p>
             </div>
             {/%}

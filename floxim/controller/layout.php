@@ -13,6 +13,7 @@ class fx_controller_layout extends fx_controller {
                 $page_id, 
                 $layout_id
         );
+        //dev_log('ibs to rnd', $page_infoblocks);
         return $page_infoblocks;
     }
     

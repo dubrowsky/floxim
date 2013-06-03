@@ -41,12 +41,13 @@ class fx {
         if (is_array($datatype)) {
             $datatype = join("_", $datatype);
         }
-        if (!is_null($id) && !is_array($id)) {
-            if (isset(self::$data_cache[$datatype])) {
-                if (isset(self::$data_cache[$datatype][$id])) {
-                    return self::$data_cache[$datatype][$id];
-                }
-            }
+        if (
+            !is_null($id) && 
+            !is_array($id) && 
+            isset(self::$data_cache[$datatype]) &&  
+            isset(self::$data_cache[$datatype][$id])
+        ) {
+                return self::$data_cache[$datatype][$id];
         }
         
         $data_finder = null;
@@ -194,7 +195,7 @@ class fx {
         try {
             return new $class_name($action, $data);
         } catch (Exception $e) {
-            dev_log('template class not found', $class_name, func_get_args(), debug_backtrace());
+            //dev_log('template class not found', $class_name, func_get_args(), debug_backtrace());
             return false;
             /*die();
             return new fx_template($action, $data);*/
@@ -262,5 +263,49 @@ class fx {
     
     public static function user() {
         return fx::env()->get_user();
+    }
+    
+    protected static $_event_manager = null;
+    
+    protected static function _get_event_manager() {
+        if (!self::$_event_manager) {
+            self::$_event_manager = new fx_system_eventmanager();
+        }
+        return self::$_event_manager;
+    }
+    public static function listen($event_name, $callback) {
+        self::_get_event_manager()->listen($event_name, $callback);
+    }
+    
+    public static function unlisten($event_name) {
+        self::_get_event_manager()->unlisten($event_name);
+    }
+    
+    public static function trigger($event, $params = null) {
+        self::_get_event_manager()->trigger($event, $params);
+    }
+    
+    
+    protected static $_cache = null;
+    /*
+     * пока - очень тупой локальный кэш, 
+     * чтобы не доставать из бд одно и то же за одно выполнение
+     */
+    public static function cache($key = null, $value = null) {
+        if (!self::$_cache) {
+            self::$_cache = new fx_cache();
+        }
+        $count_args = func_num_args();
+        switch ($count_args) {
+            case 0:
+                return self::$_cache;
+                break;
+            case 1:
+                return self::$_cache->get($key);
+                break;
+            case 2:
+                self::$_cache->set($key, $value);
+                break;
+        }
     }
 }

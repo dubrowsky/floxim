@@ -1,5 +1,5 @@
 {call id="wrap"}
 <div>
-    {area id="content"}
+    {area id="content" size="wide,high"}
 </div>
 {/call}

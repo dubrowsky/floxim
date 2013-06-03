@@ -65,6 +65,7 @@ abstract class fx_essence implements ArrayAccess {
             if (array_key_exists($prop_name, $this->data)) {
                 return $this->data[$prop_name];
             }
+            return null;
             // dev_log($this, $prop_name);
             throw new Exception("Class: " . get_class($this) . ", undefined item: " . $prop_name);
         }

@@ -7,7 +7,14 @@ class fx_data_infoblock_visual extends fx_data {
         $this->order = 'priority';
     }
     
-    public function get_for_infoblocks($infoblocks) {
+    public function get_for_infoblocks(fx_collection $infoblocks, $layout_id) {
+        $ib_ids = $infoblocks->get_values('id');
+        $this->where('infoblock_id', $ib_ids);
+        if ($layout_id) {
+            $this->where('layout_id', $layout_id);
+        }
+        return $this->all();
+        /*
         if ($infoblocks instanceof fx_infoblock) {
             $infoblocks = array($infoblocks);
         }
@@ -21,6 +28,8 @@ class fx_data_infoblock_visual extends fx_data {
         }
         $i2ls = $this->get_all(array('infoblock_id' => $ids));
         return $i2ls;
+         * 
+         */
     }
 }
 ?>

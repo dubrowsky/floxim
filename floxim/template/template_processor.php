@@ -38,13 +38,7 @@ class fx_template_processor {
             }
             $file_data = trim(file_get_contents($file));
             $file_data = preg_replace("~\{\*.*?\*\}~s", '', $file_data);
-            if (!preg_match("~^{template~", $file_data)) {
-                preg_match("~/([^/]+)\.tpl~", $file, $file_tpl_name);
-                $file_data = 
-                    '{template id="'.$file_tpl_name[1].'"}'.
-                       trim($file_data).
-                    '{/template}';
-            }
+            
             // удаляем пробелы в начале строки, 
             // если она начинается с {...}
             $file_data = preg_replace(
@@ -65,16 +59,27 @@ class fx_template_processor {
                 $file_data = $T->transform_to_floxim();
             }
             
+            if (!preg_match("~^{template~", $file_data)) {
+                $file_tpl_name = null;
+                preg_match("~/([^/]+)\.tpl~", $file, $file_tpl_name);
+                $file_data = 
+                    '{template id="'.$file_tpl_name[1].'"}'.
+                       trim($file_data).
+                    '{/template}';
+            }
+            
             $source .= trim($file_data);
         }
         $source .= '{/templates}';
         $code = $this->process($source, $tpl_name);
-        $target = fx::config()->COMPILED_TEMPLATES_FOLDER .'/'.$tpl_name.'.php';
-        if ( !is_writable(fx::config()->COMPILED_TEMPLATES_FOLDER) ) die ('Can not write to directory' . fx::config()->COMPILED_TEMPLATES_FOLDER);
+        $tpl_dir = fx::config()->COMPILED_TEMPLATES_FOLDER;
+        if ( !is_writable($tpl_dir) ) {
+            die ('Can not write to directory' . fx::config()->COMPILED_TEMPLATES_FOLDER);
+        }
+        $target = $tpl_dir.'/'.$tpl_name.'.php';
         $fh = fopen($target, 'w');
         fputs($fh, $code);
         fclose($fh);
-        //die();
     }
     
     public function tokenize($source) {
@@ -94,7 +99,7 @@ class fx_template_processor {
     protected static $_token_info = array(
         'template' => array(
             'type' => 'double',
-            'contains' => array('code', 'template', 'area', 'var', 'call', 'render','if')
+            'contains' => array('code', 'template', 'area', 'var', 'call', 'each','if')
         ),
         'code' => array(
             'type' => 'single'
@@ -105,23 +110,23 @@ class fx_template_processor {
         ),
         'var' => array(
             'type' => 'both',
-            'contains' => array('code', 'var', 'call', 'area', 'template', 'render','if')
+            'contains' => array('code', 'var', 'call', 'area', 'template', 'each','if')
         ),
         'call' => array(
             'type' => 'both',
-            'contains' => array('var', 'render', 'if')
+            'contains' => array('var', 'each', 'if')
         ),
         'templates'=> array(
             'type' => 'double',
             'contains' => array('template')
         ),
-        'render' => array(
+        'each' => array(
             'type' => 'both',
-            'contains' => array('code', 'template', 'area', 'var', 'call', 'render', 'if')
+            'contains' => array('code', 'template', 'area', 'var', 'call', 'each', 'if')
         ),
         'if' => array(
             'type' => 'double',
-            'contains' => array('code', 'template', 'area', 'var', 'call', 'render', 'elseif', 'else')
+            'contains' => array('code', 'template', 'area', 'var', 'call', 'each', 'elseif', 'else')
         )
     );
     
@@ -195,7 +200,10 @@ class fx_template_processor {
                     $stack []= $token;
                     break;
                 case 'close':
-                    array_pop($stack);
+                    $closed_token = array_pop($stack);
+                    if ($closed_token->name =='template') {
+                        $this->_template_to_each($closed_token);
+                    }
                     break;
                 case 'single': default:
                     $stack_last = end($stack);
@@ -209,6 +217,102 @@ class fx_template_processor {
             }
         }
         return $root;
+    }
+    
+    protected function _template_to_each(fx_template_token $token) {
+        $children = $token->get_children();
+        $subtemplates = array();
+        $each_token = false;
+        $tpl_id = $token->get_prop('id');
+        $each_select = '.';
+        if (substr($tpl_id, 0, 1) == '$') {
+            $token->name = 'if';
+            $token->set_prop('test', $tpl_id);
+            $each_select = $tpl_id;
+        }
+        foreach ($children as $child_num => $child) {
+            if (
+                    $child->name == 'template' && 
+                    in_array($child->get_prop('id'), array(
+                        'active', 
+                        'unactive',
+                        'active_link',
+                        'separator',
+                        'item'
+                    ))
+                ) {
+                $subtemplates[$child->get_prop('id')] = $child;
+                if (!$each_token) {
+                    $each_token = new fx_template_token('each', 'open', array('select' => $each_select));
+                    $token->set_child($each_token, $child_num);
+                } else {
+                    $token->set_child(NULL, $child_num);
+                }
+            }
+        }
+        if (count($subtemplates) == 0) {
+            return;
+        }
+        
+        // выбираем дефолтный шаблон - либо unactive, либо item
+        $basic_tpl = null;
+        $basic_cond = null;
+        if (isset($subtemplates['unactive'])) {
+            $basic_tpl = $subtemplates['unactive'];
+        } elseif (isset($subtemplates['item'])) {
+            $basic_tpl = $subtemplates['item'];
+        }
+        
+        $conds = array();
+        if ($basic_tpl) {
+            
+            // собираем дефолтное условие
+            // если есть шаблоны для active | active_link, 
+            // дефолтный для таких не используем
+            if (isset($subtemplates['active'])) {
+                $conds['active']= '$item["active"]';
+            }
+            if (isset($subtemplates['active_link'])) {
+                $conds ['active_link']= '$item["active_link"]';
+            }
+            $basic_cond = count($conds) == 0 ? null : '!('.join(" && ", $conds).')';
+        }
+        
+        // есть варианты
+        if ($basic_cond) {
+            $basic_cond_token = new fx_template_token('if', 'open', array('test' => $basic_cond));
+            $basic_cond_token->add_children($basic_tpl->get_children());
+            $each_token->add_child($basic_cond_token);
+            if (isset($subtemplates['active_link'])) {
+                $active_link_cond = new fx_temlate_token(
+                    'if', 'open', array('test' => $conds['active_link'])
+                );
+                $active_link_cond->add_children($subtemplates['active_link']->get_children());
+                $each_token->add_child($active_link_cond);
+            }
+            if (isset($subtemplates['active'])) {
+                $active_cond_test = $conds['active'];
+                if (isset($conds['active_link'])) {
+                    $active_cond_test .= ' && !'.$conds['active_link'];
+                } else {
+                    $active_cond_test .= ' || $item["active_link"]';
+                }
+                $active_cond = new fx_template_token('if', 'open', 
+                        array('test' => $active_cond_test)
+                );
+                $active_cond->add_children($subtemplates['active']->get_children());
+                $each_token->add_child($active_cond);
+            }
+        } 
+        // только один подшаблон
+        else {
+            $each_token->add_children($basic_tpl->get_children());
+        }
+        
+        if (isset($subtemplates['separator'])) {
+            $each_token->add_child($subtemplates['separator']);
+        }
+        
     }
     
     protected $templates = array();
@@ -339,28 +443,49 @@ class fx_template_processor {
     }
     
     protected $_loop_depth = 0;
-    protected function _token_render_to_code(fx_template_token $token) {
+    protected function _token_each_to_code(fx_template_token $token) {
         $this->_loop_depth++;
         $code = "<?\n";
-        if (! ($arr_id = $token->get_prop('select')) || $arr_id == '.') {
+        $arr_id = $token->get_prop('select');
+        $item_key = false;
+        $item_alias = false;
+        $arr_id_parts = null;
+        if (preg_match("~(.+?)\sas\s(.+)$~", $arr_id, $arr_id_parts)) {
+            $arr_id = trim($arr_id_parts[1]);
+            $as_parts = explode("=>", $arr_id_parts[2]);
+            if (count($as_parts) == 2) {
+                $item_key = trim($as_parts[0]);
+                $item_alias = trim($as_parts[1]);
+            } else {
+                $item_alias = trim($as_parts[0]);
+            }
+        }
+        if (! $arr_id || $arr_id == '.') {
             $arr_id = '$this->get_var("input.items")';
         }
-        //if (preg_match("~\(~", $arr_id)) {
         $arr_hash_name = '$arr_'.md5($arr_id);
         $code .= $arr_hash_name .'= '.$arr_id.";\n";
         $arr_id = $arr_hash_name;
-        //}
-        if (! ($item_alias = $token->get_prop('as') ) ) {
+        
+        if (!$item_alias && ! ($item_alias = $token->get_prop('as') ) ) {
             $item_alias = '$item';
             if ($this->_loop_depth > 1) {
                 $item_alias .= '_'.$this->_loop_depth;
             }
         }
-        if (! ($item_key = $token->get_prop('key'))) {
+        if (!$item_key && !($item_key = $token->get_prop('key'))) {
             $item_key = $item_alias.'_key';
         }
         if (! ($extract = $token->get_prop('extract'))) {
             $extract = true;
+        }
+        $separator = null;
+        foreach ($token->get_children() as $each_child_num => $each_child) {
+            if ($each_child->name == 'template' && $each_child->get_prop('id') == 'separator') {
+                $separator = $each_child;
+                $token->set_child(null, $each_child_num);
+                break;
+            }
         }
         $counter_id = $item_alias."_index";
         $code .= "if( " . $arr_id . " instanceof fx_content ) {\n ";
@@ -388,6 +513,11 @@ class fx_template_processor {
         $code .= $meta_test;
         $code .= "\t\techo ".$item_alias."->add_template_record_meta(ob_get_clean());\n";
         $code .= "\t}\n";
+        if ($separator) {
+            $code .= 'if (!'.$item_alias."_is_last) {\n";
+            $code .= $this->_token_to_code($separator);
+            $code .= "}\n";
+        }
         $code .= "}\n"; // close foreach
         $code .= "}\n?>"; // close if
         $this->_loop_depth--;
@@ -406,6 +536,11 @@ class fx_template_processor {
                 $this->add_template($child);
             }
         }
+        $current_template =& $this->templates[$this->_get_current_template_id()];
+        if (!isset($current_template['areas'])) {
+            $current_template['areas'] = array();
+        }
+        $current_template['areas'][]= $token->get_prop('id');
         return $res;
     }
     
@@ -480,6 +615,7 @@ class fx_template_processor {
         $tpl_var = array();
         foreach ( $this->templates as $tpl_name => $tpl) {
             echo $this->pad()."public function tpl_".$tpl_name.'() {'."\n";
+            echo $this->pad(2).'extract($this->data);'."\n";
             echo $this->pad(2).$tpl["code"];
             echo "\n".$this->pad()."}\n";
             $tpl_meta = $tpl;
@@ -504,8 +640,8 @@ class fx_template_processor {
      */
     public static function create_token($source) {
         $props = array();
+        $s_source = $source;
         if (preg_match('~^\{~', $source)) {
-            $input_source = $source;
             $source = preg_replace("~^\{|\}$~", '', $source);
             $is_close = preg_match('~^\/~', $source);
             preg_match("~^\/?([^\s\/\}]+)~", $source, $name);
@@ -528,11 +664,16 @@ class fx_template_processor {
             } else {
                 $type = 'unknown';
             }
-            // добавляем отсутствующие кавычки атрибутов
-            $source  = preg_replace("~\s([a-z]+)\s*?=\s*?([^\'\\\"\s]+)~", ' $1="$2"', $source);
-            preg_match_all('~([a-z]+)="([^\"]+)"~', $source, $atts);
-            foreach ($atts[1] as $att_num => $att_name) {
-                $props[$att_name] = $atts[2][$att_num];
+            if ($name == 'if' && $type == 'open' && !preg_match('~test=~', $source)) {
+                //echo fen_debug($source, $s_source);
+                $props['test'] = $source;
+            } else {
+                // добавляем отсутствующие кавычки атрибутов
+                $source  = preg_replace("~\s([a-z]+)\s*?=\s*?([^\'\\\"\s]+)~", ' $1="$2"', $source);
+                preg_match_all('~([a-z]+)="([^\"]+)"~', $source, $atts);
+                foreach ($atts[1] as $att_num => $att_name) {
+                    $props[$att_name] = $atts[2][$att_num];
+                }
             }
         } else {
             $type = 'single';
@@ -567,6 +708,13 @@ class fx_template_token {
         $this->children []= $token;
     }
     
+    public function add_children(array $children) {
+        foreach ($children as $child) {
+            $this->add_child($child);
+        }
+    }
+
+
     public function clear_children() {
         $this->children = array();
     }
@@ -579,6 +727,15 @@ class fx_template_token {
         return isset($this->children) && count($this->children) > 0;
     }
     
+    public function set_child($child, $index) {
+        if ($child === null) {
+            unset($this->children[$index]);
+        } else {
+            $this->children[$index] = $child;
+        }
+    }
+
+
     public function set_prop($name, $value) {
         $this->props[$name] = $value;
     }

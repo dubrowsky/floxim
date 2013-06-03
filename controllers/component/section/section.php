@@ -43,7 +43,7 @@ class fx_controller_component_section extends fx_controller_component {
                 $active_item->set('active',true);
             }
 
-            foreach ( $items as $key => &$item ) {
+            foreach ( $items as $item ) {
                 if ( !empty($item['alias']) ) {
                     $alias = fx::data('content_' . $this->get_content_type(), $item['alias']);
                     $item['url'] = $alias['url'];
@@ -62,10 +62,13 @@ class fx_controller_component_section extends fx_controller_component {
     }
     
     public function do_breadcrumbs() {
-        $page_id = fx::env('page');
+        if ( !($page_id = $this->param('page_id'))) {
+            $page_id = fx::env('page');
+        }
         $essence_page = fx::data('content_page',$page_id);
         $parents = $essence_page->get_parent_ids();
         $pages = fx::data('content_page', $parents);
+        $essence_page['active'] = true;
         $pages[]= $essence_page;
         return array('items' => $pages);
     }

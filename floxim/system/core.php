@@ -346,7 +346,7 @@ class fx_core extends fx_system {
                 $file = $root.'system/collection';
                 break;
             }
-            if (preg_match("~^template(|_processor|_field|_html)$~", $classname)) {
+            if (preg_match("~^template(|_processor|_field|_html|_suitable)$~", $classname)) {
                 $file = $root.'template/'.$classname;
                 break;
             }
@@ -396,7 +396,7 @@ class fx_core extends fx_system {
                 break;
             }
             
-            if (in_array($classname, array('http'))) {
+            if (in_array($classname, array('http', 'event', 'cache'))) {
                 $file = $root.'system/'.$classname;
                 break;
             }

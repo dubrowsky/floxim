@@ -181,17 +181,10 @@ class fx_data {
             }
         }
     }
+    
 
     /**
-     * @todo ДАЛЕЕ: разобраться, что можно убить
-        $set = $this->_set_statement($data);
-        dev_log('set',$set);
-        if ($set) {
-            fx::db()->query("INSERT INTO `{{".$this->table."}}` SET ".join(",", $set)."");
-            $id = fx::db()->insert_id();
-        }
-
-        return $id;ь
+     * @todo ДАЛЕЕ: разобраться, что можно убить;
      */
 ///////////////////////////
     
@@ -464,11 +457,30 @@ class fx_data {
         } catch (Exception $e) {}
         return 'fx_simplerow';
     }
+    
+    protected function _get_columns($table = null) {
+        if (!$table) {
+            $table = $this->table;
+        }
+        $cache_key = 'table_columns_'.$table;
+        if ( ($columns = fx::cache($cache_key)) ) {
+            return $columns;
+        }
+        $columns = fx::db()->get_col('SHOW COLUMNS FROM {{'.$table.'}}', 0);
+        fx::cache($cache_key, $columns);
+        return $columns;
+    }
 
     protected function _set_statement($data) {
+        
+        $cols = $this->_get_columns();
+        
         $set = array();
 
         foreach ($data as $k => $v) {
+            if (!in_array($k, $cols)) {
+                continue;
+            }
             if (in_array($k, $this->serialized) && is_array($v)) {
                 $v = serialize($v);
             }

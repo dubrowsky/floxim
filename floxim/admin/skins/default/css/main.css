@@ -1568,20 +1568,20 @@ li ul .fx_tree_label .fx_tree_title {
 }
 
 .fx_infoblock_adder {
-    display:none;
+    display:none !important;
     background: #3FB7DE !important;
     color:#FFF !important;
-    cursor:pointer;
-    font-family: Tahoma;
-    font-size:12px;
-    font-weight:bold;
-    text-transform: lowercase;
-    padding:5px 8px;
+    cursor:pointer  !important;
+    font-family: Tahoma  !important;
+    font-size:12px  !important;
+    font-weight:bold  !important;
+    text-transform: lowercase  !important;
+    padding:5px 8px  !important;
 }
 
 .fx_mode_page_design .fx_infoblock_adder {
-    display: inline-block;
-    position:absolute;
+    display: inline-block !important;
+    position:absolute !important;
 }
 
 .fx_mode_page_design .fx_infoblock {
