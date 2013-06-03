@@ -1,5 +1,4 @@
-<div class="post_list" fx:template="component_blogpost.listing">
-    Prefix
+<div class="post_list">
     <div fx:template="item" class="post">
         <h1><a href="{$url}">{$header}</a></h1>
         <p>{$anounce}</p>
