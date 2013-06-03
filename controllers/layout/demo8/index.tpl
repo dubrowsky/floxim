@@ -8,7 +8,6 @@
     {$too_blocks}
         <div class="block columns_2">
             <div class="col first">
-<<<<<<< HEAD
                 <h2>{%c1_header}Новости и события{/%}</h2>
                 {%c1_text}
                 <p>
@@ -16,10 +15,6 @@
                         <img src="controllers/layout/supernova/images/news-img.jpg" width="264" height="125" alt="" />
                     </a>
                 </p>
-=======
-                <h2>Новости и события</h2>
-                {*<p><a href="#"><img src="controllers/layout/supernova/images/news-img.jpg" width="264" height="125" alt="" /></a></p>*}
->>>>>>> 2a2b50edc46ef6303c73a4210efa4a32ec523e84
                 <p>А мне вообще тут всё понравилос, ток не пойму про, что тут?</p>
                 {/%}
             </div>
