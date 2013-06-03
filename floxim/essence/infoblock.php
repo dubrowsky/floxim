@@ -5,32 +5,35 @@ defined("FLOXIM") || die("Unable to load file.");
 class fx_infoblock extends fx_essence {
 
     
-    protected $_visual = null;
+    protected $_visual = array();
     
     public function set_visual(fx_infoblock_visual $visual) {
-        $this->_visual = $visual;
+        $this->_visual[$visual['layout_id']] = $visual;
     }
     
-    public function get_visual() {
+    public function get_visual($layout_id = null) {
+        if (!$layout_id) {
+            $layout_id = fx::env('layout');
+        }
         if (!$this->_visual) {
             $stored = fx::data('infoblock_visual')->
                     where('infoblock_id', $this['id'])-> 
-                    where('layout_id', fx::env('layout'))->
+                    where('layout_id', $layout_id)->
                     one();
             if ($stored) {
-                $this->_visual = $stored;
+                $this->_visual[$layout_id] = $stored;
             } else {
                 $i2l_params = array(
-                    'layout_id' => fx::env('layout'),
+                    'layout_id' => $layout_id,
                     'is_stub' => true
                 );
                 if (($ib_id = $this->get('id'))) {
                     $i2l_params['infoblock_id'] = $ib_id;
                 }
-                $this->_visual = fx::data('infoblock_visual')->create($i2l_params);
+                $this->_visual[$layout_id] = fx::data('infoblock_visual')->create($i2l_params);
             }
         }
-        return $this->_visual;
+        return $this->_visual[$layout_id];
     }
     
     public function get_type() {
@@ -102,11 +105,11 @@ class fx_infoblock extends fx_essence {
         return fx::data('infoblock', $parent_ib_id);
     }
     
-    public function get_prop_inherited($path_str) {
+    public function get_prop_inherited($path_str, $layout_id = null) {
         $own_result = null;
         $path = explode(".", $path_str);
         if ($path[0] == 'visual') {
-            $c_i2l = $this->get_visual();
+            $c_i2l = $this->get_visual($layout_id);
             $vis_path_str = join(".", array_slice($path, 1));
             $own_result = fx::dig($c_i2l, $vis_path_str);
         } else {

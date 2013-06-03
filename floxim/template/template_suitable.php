@@ -23,21 +23,36 @@ class fx_template_suitable {
                 $layout_ib = $ib;
             }
         }
+        $layout_rate = array();
         $all_visual = fx::data('infoblock_visual')->get_for_infoblocks($stub_ibs, false);
-        $infoblocks->attache_many($all_visual, 'infoblock_id', 'all_visual');
+        //$infoblocks->attache_many($all_visual, 'infoblock_id', 'all_visual');
+        foreach ($all_visual as $c_vis) {
+            $c_layout_id = $c_vis['layout_id'];
+            $infoblocks->
+                    find_one('id', $c_vis['infoblock_id'])->
+                    set_visual($c_vis, $c_layout_id);
+            if (!isset($layout_rate[$c_layout_id])) {
+                $layout_rate[$c_layout_id] = 0;
+            }
+            $layout_rate[$c_layout_id]++;
+        }
         
-        $this->_adjust_layout_visual($layout_ib, $layout);
+        $source_layout_id = $c_layout_id;
+        
+        $this->_adjust_layout_visual($layout_ib, $layout_id, $source_layout_id);
         $layout_visual = $layout_ib->get_visual();
         $area_map = $layout_visual['area_map'];
         foreach ($infoblocks as $ib) {
-            $ib_visual = $ib->get_visual();
+            $ib_visual = $ib->get_visual($layout_id);
             if (!$ib_visual['is_stub'] ) {
                 continue;
             }
-            $old_visual = $ib['all_visual'][0];
-            if (isset($old_visual['area']) && isset($area_map[$old_visual['area']])) {
-                $ib_visual['area'] = $area_map[$old_visual['area']];
-                $ib_visual['priority'] = $old_visual['priority'];
+            //$old_visual = $ib['all_visual'][0];
+            $old_area = $ib->get_prop_inherited('visual.area', $source_layout_id);
+            if ($old_area && isset($area_map[$old_area])) {
+                $ib_visual['area'] = $area_map[$old_area];
+                $ib_visual['priority'] = $ib->get_prop_inherited('visual.priority', $source_layout_id);
+                //$old_visual['priority'];
             }
             $ib_controller = fx::controller(
                     $ib->get_prop_inherited('controller'),
@@ -45,7 +60,7 @@ class fx_template_suitable {
                     $ib->get_prop_inherited('action')
             );
             $controller_templates = $ib_controller->get_available_templates($layout['keyword']);
-            $old_template = $old_visual['template'];
+            $old_template = $ib->get_prop_inherited('visual.template', $source_layout_id);
             foreach ($controller_templates as $c_tpl) {
                 if ($c_tpl['full_id'] == $old_template) {
                     $ib_visual['template'] = $c_tpl['full_id'];
@@ -61,9 +76,13 @@ class fx_template_suitable {
         }
     }
     
-    protected function _adjust_layout_visual($layout_ib, $layout) {
-        $old_visual = $layout_ib['all_visual'][0];
-        $old_areas = fx::template($old_visual['template'])->get_areas();
+    protected function _adjust_layout_visual($layout_ib, $layout_id, $source_layout_id) {
+        $layout = fx::data('layout', $layout_id);
+        
+        //$old_visual = $layout_ib['all_visual'][0];
+        //echo fen_debug($layout_ib);
+        $source_template = $layout_ib->get_prop_inherited('visual.template', $source_layout_id);
+        $old_areas = fx::template($source_template)->get_areas();
         
         $layout_tpl = fx::template('layout_'.$layout['keyword']);
         $template_variants = $layout_tpl->get_template_variants();
