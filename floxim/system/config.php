@@ -26,6 +26,12 @@ class fx_config {
             'DIRCHMOD' => 0755,
             'PHP_TYPE' => 'module',
 
+            'IMAGE_MAX_WIDTH' => 1000,
+            'IMAGE_MAX_HEIGHT' => 1000,
+            'THUMB_MAX_WIDTH' => 200,
+            'THUMB_MAX_HEIGHT' => 200,
+
+
             'HTTP_ROOT_PATH' => '/floxim/',
             'HTTP_FILES_PATH' => '/floxim_files/',
             'HTTP_DUMP_PATH' => '/floxim_dump/',

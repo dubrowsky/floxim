@@ -70,9 +70,7 @@
 <!--//блок слева-->
 <!--content, если есть блок слева то добавляется class="is_left"-->
 <div id="content" class="is_left">
-
     {area id="content"}
-
         {template id="wrap_titled"}
             <h1>{$title}</h1>
             {$content}

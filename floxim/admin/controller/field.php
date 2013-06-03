@@ -161,9 +161,7 @@ class fx_controller_admin_field extends fx_controller_admin {
             $field = fx::data('field')->create( array('type' => $input['type']));
             $field[$input['to_essence'].'_id'] = $input['to_id'];
         }
-        
-        dev_log($field, $input);
-        
+       
         $datatype = fx_data::optional('datatype')->get_by_id($input['type']);
         if ( $datatype['not_null'] ) {
             $fields[] = $this->ui->checkbox('not_null', 'Обязательно для заполнения', null, $field['not_null']);

@@ -206,7 +206,7 @@ class fx_system_page extends fx_system {
     public function post_proccess($buffer) {
 
         $fx_core = fx_core::get_object();
-        if ($fx_core->is_admin_mode()) {
+        if ( $fx_core->is_admin_mode() ) {
             return $buffer;
         }
 

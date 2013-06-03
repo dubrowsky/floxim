@@ -239,7 +239,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         if ($input['settings_sent'] == 'true') {
             if ($is_layout) {
                 $this->response->set_reload(true);
-                dev_log('saving relod', $this);
+                // dev_log('saving relod', $this);
             }
             if (
                     $input['fx_dialog_button'] == 'inherit_delete' && 
@@ -633,7 +633,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                 //$priorities [$vis['id']] = $cpos;
                 $new_priority = $cpos;
                 $cpos++;
-                dev_log('new prior', $new_priority);
+                // dev_log('new prior', $new_priority);
             }
             if ($ctv['priority'] != $cpos) {
                 fx::db()->query(
@@ -641,13 +641,13 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                     SET priority = '".$cpos."'
                     WHERE id = '".$ctv['id']."'"
                 );
-                dev_log($ctv['id'].' -- '.$cpos);
+                // dev_log($ctv['id'].' -- '.$cpos);
             }
             $cpos++;
         }
         if (!$new_priority) {
             $new_priority = $cpos;
-            dev_log('new prior last', $new_priority);
+            // dev_log('new prior last', $new_priority);
         }
         
         fx::db()->query(

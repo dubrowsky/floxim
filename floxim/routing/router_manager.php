@@ -7,11 +7,10 @@ fx::routers()->register($callback, 1);
 class fx_router_manager {
 
     public function __construct() {
-        foreach (array('admin', 'front', 'infoblock', 'error') as $r_name) {
+        foreach (array('dynamic', 'admin', 'front', 'infoblock', 'error') as $r_name) {
             try {
                 $classname = 'fx_router_'.$r_name;
                 if (class_exists($classname)) {
-                    
                     $router = new $classname;
                     $this->register($router);
                 }

@@ -51,7 +51,6 @@ class fx_data {
     }
     
     public function with($relation, $finder = null) {
-        if ( $relation == 'childrens' ) dev_log('my this',$this);
         $this->with []= array($relation, $finder);
         return $this;
     }
@@ -187,6 +186,7 @@ class fx_data {
     /**
      * @todo ДАЛЕЕ: разобраться, что можно убить;
      */
+///////////////////////////
     
     static public function optional($table) {
         return new self($table);

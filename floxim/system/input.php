@@ -94,7 +94,6 @@ class fx_system_input extends fx_system {
   }
 
   public function fetch_post ($item = "") {
-
     if ( empty($this->_POST) ) return array();
 
     if ( $item ) {
@@ -133,7 +132,6 @@ class fx_system_input extends fx_system {
   }
 
   public function fetch_files ($item = "") {
-
     if ( empty($this->_FILES) ) return array();
 
     if ( $item ) {

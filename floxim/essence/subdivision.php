@@ -84,9 +84,9 @@ class fx_subdivision extends fx_essence {
 
     protected function _after_update() {
         if (isset($this->modified_data['keyword']) && $this->modified_data['keyword'] != $this->data['keyword']) {
-            $childs = fx::data('subdivision')->get_all('parent_id', $this['id']);
-            foreach ($childs as $child) {
-                $child->update_hidden_url();
+            $submenu = fx::data('subdivision')->get_all('parent_id', $this['id']);
+            foreach ($submenu as $sub_item) {
+                $sub_item->update_hidden_url();
             }
         }
     }
@@ -95,9 +95,9 @@ class fx_subdivision extends fx_essence {
         $this['hidden_url'] = $this->get_real_hidden_url();
         $this->save();
 
-        $childs = fx::data('subdivision')->get_all('parent_id', $this['id']);
-        foreach ($childs as $child) {
-            $child->update_hidden_url();
+        $submenu = fx::data('subdivision')->get_all('parent_id', $this['id']);
+        foreach ($submenu as $sub_item) {
+            $sub_item->update_hidden_url();
         }
     }
 
