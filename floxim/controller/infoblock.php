@@ -56,6 +56,8 @@ class fx_controller_infoblock extends fx_controller {
         }
         
         $params = $infoblock->get_prop_inherited('params');
+
+        dev_log('INFOBLOCK PARAMS',$params);
         
         if (!is_array($params)) {
             $params = array();

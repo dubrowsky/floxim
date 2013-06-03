@@ -9,17 +9,17 @@ ob_start();
 if ( ($controller = fx::router()->route() ) ) {
     // dev_log('routed');
     $result = $controller->process();
-    dev_log('processed');
+    // dev_log('processed');
     if (!is_string($result)) {
         $template = $controller->find_template();
         $result = $template->render(array('input' => $result));
         $result = fx::page()->post_proccess($result);
-        dev_log('postprocessed');
+        // dev_log('postprocessed');
     }
 
     echo $result;
     echo ob_get_clean();
-    dev_log('end');
+    // dev_log('end');
     die();
 }
 ?>

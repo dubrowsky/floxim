@@ -5,5 +5,7 @@ abstract class fx_router {
 	}
     
     abstract function route($url = null, $context = null);
+
+
 }
 ?>

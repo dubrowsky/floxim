@@ -639,6 +639,94 @@ class fx_system_files extends fx_system {
         }
     }
 
+    public function resize_image ( $image_path, $sizes = array(), $new_path = false, $new_type = false, $jpeg_compression = false ) {
+        
+        list($width, $height, $type, $attr, $mime) = getimagesize($image_path);        
+        switch ( $type ) {
+            case IMAGETYPE_JPEG:
+                $image = imagecreatefromjpeg($image_path);
+                break;
+            case IMAGETYPE_GIF:
+                $image = imagecreatefrompng($image_path);
+                break;
+            case IMAGETYPE_PNG:
+                $image = imagecreatefromgif($image_path);
+                break;
+            default:
+                return false;
+                break;
+        }
+
+        if ( empty($sizes) ) {
+            if ( $width > fx::config()->IMAGE_MAX_WIDTH || $height > fx::config()->IMAGE_MAX_WIDTH ) {
+                $bearings = ( $width > $height ) ? 'horizontal' : 'vertical';
+                switch ($bearings) {
+                    case 'horizontal':
+                        $result_width = fx::config()->IMAGE_MAX_WIDTH;
+                        $result_height = floor(($height*$result_width)/$width);
+                        break;
+                    default:
+                        $result_height = fx::config()->IMAGE_MAX_HEIGHT;
+                        $result_width = floor(($width*$result_height)/$height);
+                        break;
+                }
+            }
+        } elseif ( !empty($sizes['width']) && !empty($sizes['height']) ) {
+            $result_width = $sizes['width'];
+            $result_height = $sizes['height'];
+        } else {
+            if ( empty($sizes['width']) ) {
+                $result_height = $sizes['height'];
+                $result_width = floor(($width*$result_height)/$height);
+            } else {
+                $result_width = $sizes['width'];
+                $result_height = floor(($height*$result_width)/$width);
+            }
+        }
+
+        $result_image = imagecreatetruecolor($result_width, $result_height);
+        imagecopyresized($result_image,$image,0,0,0,0,$result_width,$result_height,imagesx($image),imagesy($image));
+        $new_type = !empty($new_type) ? $new_type : $type;
+        $new_path = !empty($new_path) ? $new_path : $image_path;
+
+        switch ( $new_type ) {
+            case IMAGETYPE_JPEG:
+                $jpeg_compression = empty($jpeg_compression) ? 80 : $jpeg_compression;
+                $image = imagejpeg($result_image, $new_path, $jpeg_compression);
+                break;
+            case IMAGETYPE_GIF:
+                $image = imagepng($result_image, $new_path);
+                break;
+            case IMAGETYPE_PNG:
+                $image = imagegif($result_image, $new_path);
+                break;
+            default:
+                return false;
+                break;
+        }
+        return true;
+    }
+
+    public function create_thumb ( $image_path, $thumb_path = null, $thumb_size = array() ) {
+        if ( empty($thumb_path) ) {
+            $path = explode('/',$image_path);
+            $filename = array_pop($path);
+            $filename = explode('.',$filename);
+            $filename[count($filename)-2] = $filename[count($filename)-2] . '-thumb';
+            $filename = implode('.',$filename);
+            array_push($path, $filename);
+            $thumb_path = implode('/',$path);
+            $thumb_path = $thumb_path;
+        }
+        list($width, $height, $type, $attr, $mime) = getimagesize($image_path);
+        $bearings = ( $width > $height ) ? 'horizontal' : 'vertical';
+        if ( empty($thumb_size) ) {
+            $thumb_size = ( $bearings == 'horizontal' ) ? array('width' => fx::config()->THUMB_MAX_WIDTH) : array('height' => fx::config()->THUMB_MAX_HEIGHT);
+        }
+        $this->resize_image( $image_path, $thumb_size, $thumb_path );        
+        return $thumb_path;
+    }
+
     public function move_uploaded_file($tmp_file, $destination) {
 
         if (!$tmp_file || !$destination) {
@@ -652,6 +740,8 @@ class fx_system_files extends fx_system {
         $local_destination = $this->base_path.$destination;
 
         $res = move_uploaded_file($tmp_file, $local_destination);
+        $this->resize_image($local_destination);
+
 
         if (($res === false) && is_uploaded_file($tmp_file)) {
             $content = file_get_contents($tmp_file);
@@ -751,9 +841,7 @@ class fx_system_files extends fx_system {
         if ($filename[0] != '/') {
             $filename = '/'.$filename;
         }
-
         $local_filename = $this->base_path.$filename;
-
         return file_exists($local_filename);
     }
 
@@ -761,9 +849,7 @@ class fx_system_files extends fx_system {
         if ($filename[0] != '/') {
             $filename = '/'.$filename;
         }
-
         $local_filename = $this->base_path.$filename;
-
         return is_writable($local_filename);
     }
 
@@ -836,6 +922,7 @@ class fx_system_files extends fx_system {
     //--------------------------------------------------------------------
 
     public function save_file($file, $dir) {
+
         $fx_core = fx_core::get_object();
 
         $dir = trim($dir, '/').'/';
@@ -865,9 +952,17 @@ class fx_system_files extends fx_system {
         }
 
         $put_file = $this->get_put_filename($dir, $filename);
+        $thumb_path = NULL;
 
         if ($type == 1) {
-            $this->move_uploaded_file($file['tmp_name'], fx::config()->HTTP_FILES_PATH.$dir.$put_file);
+            $destination = fx::config()->HTTP_FILES_PATH.$dir.$put_file;
+            if ($destination[0] != '/') {
+                $destination = '/'.$destination;
+            }
+            $this->move_uploaded_file($file['tmp_name'], $destination);
+            $destination = $this->base_path . $destination;
+            $thumb_path = $fx_core->files->create_thumb($destination);
+            // dev_log('thumb path in saving file',$thumb_path);
         } else if ( $type == 2 || $type == 3) {
             $content = file_get_contents($link);
             file_put_contents(fx::config()->FILES_FOLDER.$dir.$put_file, $content);
@@ -877,12 +972,18 @@ class fx_system_files extends fx_system {
         }
 
         $this->core->db->query("INSERT INTO `{{filetable}}` SET
-        `real_name` = '".$this->core->db->escape($filename)."',
-        `path` = '".$dir.$put_file."',
-        `type` = '".$filetype."',
-        `size` = '".filesize(fx::config()->FILES_FOLDER.$dir.$put_file)."'");
+        `real_name` = '" . $this->core->db->escape($filename) . "',
+        `path` = '" . $destination . "',
+        `type` = '" . $filetype . "',
+        `size` = '" . filesize(fx::config()->FILES_FOLDER.$dir.$put_file) . "',
+        `thumb_path` = '" . ( empty($thumb_path) ? NULL : $thumb_path ) . "'");
 
-        return array('id' => $this->core->db->insert_id(), 'path' => $dir.$put_file, 'filename' => $filename);
+        return array(   
+            'id' => $this->core->db->insert_id(), 
+            'path' => $destination,
+            'thumb_path' => ( empty($thumb_path) ? NULL : $thumb_path ),
+            'filename' => $filename
+        );
     }
 
     protected function get_put_filename($dir, $name) {

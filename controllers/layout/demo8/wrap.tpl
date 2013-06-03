@@ -12,10 +12,9 @@
             <!--логотип, слоган-->
             <div id="logo">
                 <a href="/">
-                    <img src="controllers/layout/supernova/images/logo.gif" width="103" height="75" alt="" title="" />
+                    <img src="{$logo}" width="103" height="75" alt="" title="" />
                 </a>
-                <span class="name">YOUR<span>LOGO</span></span>
-                <span>Sampletext under logo</span>
+                <span>{%slogan}Самый бодрый слоган{/%}</span>
             </div>
             <!--//логотип, слоган-->
 
@@ -53,16 +52,16 @@
 
             <div class="submenu" fx_template="supermenu" fx_template_for="component_section.listing">
                 <ul>
-                    <li fx_render="."><a href="{$url}">{$name}</a>
-                    {if test="$submenu"}
-                        <ul>
-                            <li><a href="#">Брелоки</a></li>
-                            <li><a href="#">Игрушки</a></li>
-                            <li><a href="#">Статуэтки</a></li>
-                        </ul>
-                    {/if}
+                    <li fx_render="." {if test="$item_is_last"}class="last"{/if}><a href="{$url}">{$name}</a>
+                        {if test="$submenu"}
+                            <ul>
+                                <!-- а правда ли что fx_render="."-->
+                                <li fx_render=".">
+                                    <a href="{$url}">{$name}</a>
+                                </li>
+                            </ul>
+                        {/if}
                     </li>
-                    <li {if test="$last"}class="last"{/if}><a href="{$url}">{$name}</a></li>
                 </ul>
             </div>
 
@@ -71,9 +70,7 @@
 <!--//блок слева-->
 <!--content, если есть блок слева то добавляется class="is_left"-->
 <div id="content" class="is_left">
-
     {area id="content"}
-
         {template id="wrap_titled"}
             <h1>{$title}</h1>
             {$content}
@@ -99,8 +96,8 @@
 </div></div>
 <!--footer-->
 <div id="footer">
-    <div class="left">&copy; 2010 группа компаний &laquo;Netcat&raquo;.<br />Все права защищены.</div>
-    <div class="right">&copy; 2010 Хороший пример <br />сайтостроения &mdash; <a href="#">WebSite.pu</a></div>
+    <div class="left">{%copyright}&copy; 2010 группа компаний &laquo;Netcat&raquo;.<br />Все права защищены.{/%}</div>
+    <div class="right">{%footer_link}&copy; 2010 Хороший пример <br />сайтостроения &mdash; <a href="#">WebSite.pu</a>{/%}</div>
     <div class="sep"></div>
 </div>
 <!--//footer-->

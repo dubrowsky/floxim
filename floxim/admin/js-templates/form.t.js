@@ -77,39 +77,41 @@ html.find('a.delete_link').click(function(){
 });
 
 
-
 <!--[input]-->
 <div class="image_field">
-    <input type="file" name="image" />
-    <a class="edit_link">Загрузить</a>
-    <!-- a class="edit_link">Добавить изображение</a -->
+    <div class="file_input">
+    	<input type="file" name="file" id="image_file" />
+	</div>
+	<a class="download_file" style="cursor: pointer">Загрузить изображение</a>
+    <input type="hidden" <?=$t.field_id_name(_c)?> />
+    <span class="real_name"><?=_c.old ? _c.real_name : ''?></span>
+    <br style="clear:both;" />
 	<!-- img style="max-width:100px; float:left;" <?=_c.old ? 'src="'+_c.path+'"' : ''?> / -->
-    <?= console.log(_c) =>
-	<input type="hidden" <?=$t.field_id_name(_c)?> />
-	<span class="real_name"><?=_c.old ? _c.real_name : ''?></span>
-	<br style="clear:both;" />
 </div>
 <!--test-->
 _c.type == 'image'
 <!--jquery:form_row-->
-html.find('div.image_field a.edit_link').click(function () {
-	var current_file = {
-		file_id: _c.old,
-        path: _c.path,
-        filename: _c.real_name
-	};
 
-    console.log(current_file);
-
-	var par = $(this).parent();
-	var preview = par.find('img');
-	var inp = par.find('input:hidden');
-	var dialog_file = new fx_dialog_file(_c.field_id, current_file, function ( new_file) {
-		par.find('img').attr('src', new_file.path + '?rnd=' + ( Math.random() * (51174) ) );
-		par.find('input:hidden').val(new_file.file_id);
-		par.find('span').text(new_file.filename);
-	});
-	dialog_file.open();
+/* html.find('div.image_field div.file_input input[type=file]').on('change',function () { */
+html.find('div.image_field a.download_file').on('click', function(){
+	console.log('ololo');
+    $.ajaxFileUpload({
+        /* url:'_test/doajaxfileupload.php', */
+        url:'/floxim/index.php',
+        secureuri:false,
+        fileElementId:'image_file',
+        dataType: 'json',
+        /* data: { name:'logan', id:'id' }, */
+        /* TODO: выяснить что передавать в fx_admin */
+        data: { essence:'file', fx_admin:1, action:'upload_save' },
+        success: function ( data, status ) {
+            /*$('div.image_field div.file_input').html('');
+            $('div.image_field div.file_input').html('<input type="file" name="file" id="image_file" />');*/
+        },
+        error: function (data, status, e) {
+        	console.log(e);
+        }
+    });
 });
 
 <!--[input]-->

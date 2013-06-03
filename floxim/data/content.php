@@ -262,9 +262,6 @@ class fx_data_content extends fx_data {
     }
     
     protected function _set_statement($data) {
-
-        dev_log('set statement',$data);
-
         $res = array();
         $chain = fx::data('component', $this->component_id)->get_chain();
         foreach ($chain as $level_component) {

@@ -6,5 +6,9 @@ class fx_controller_component_blogpost extends fx_controller_component {
         });
         return parent::do_listing();
     }
+
+    public function search_by_date() {
+        // search will be here
+    }
 }
 ?>

@@ -7,10 +7,7 @@ class fx_controller_admin_file extends fx_controller_admin {
 
     public function upload_save($input) {
 
-        dev_log('gooooooooooooooooood');
-
         $fx_core = fx_core::get_object();
-
         $path = 'content';
         if ( $input['field_id'] ) {
             $field = $fx_core->field->get_by_id($input['field_id']);
@@ -21,14 +18,8 @@ class fx_controller_admin_file extends fx_controller_admin {
         }
 
         $result = $fx_core->files->save_file($input['file'], $path);
-
-        $result['path'] = fx::config()->HTTP_FILES_PATH.$result['path'];
-        $result['file_id'] = $result['id'];
-        $result['filename'] = $result['filename'];
-
         return $result;
     }
-
 
     public function image_editor ( $input ) {
         // PhpImageEditor берет путь до изображения из imagesrc

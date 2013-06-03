@@ -129,6 +129,8 @@ class fx_controller_admin extends fx_controller {
         $fx_core->page->add_js_file('/floxim/lib/js/jquery.nestedSortable.js');
         $fx_core->page->add_js_file('/floxim/lib/js/jquery.ba-hashchange.min.js');
         $fx_core->page->add_js_file('/floxim/lib/js/jquery.json-2.3.js');
+
+        $fx_core->page->add_js_file('/floxim/lib/js/ajaxfileupload.js'); // ajax upload files
         $fx_core->page->add_js_file('/floxim/admin/js-templates/jstx.js');
         $fx_core->page->add_js_file('/floxim/admin/js-templates/compile.php');
         $fx_core->page->add_js_file('/floxim/admin/js/lib.js');
@@ -156,7 +158,8 @@ class fx_controller_admin extends fx_controller {
         $fx_core->page->add_js_file('/floxim/lib/js/jquery-gp-gallery.js');
         $fx_core->page->add_js_file('/floxim/lib/js/jquery.tipTip.minified.js');
         $fx_core->page->add_js_file('/floxim/lib/js/jquery-ui-timepicker-addon.js');
-        
+
+
         $auth_form = '';
         if (fx::env('is_admin')) {
             $fx_core->page->add_css_file('/floxim/lib/css/elrte/elrte.min.css');

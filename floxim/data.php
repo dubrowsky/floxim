@@ -51,7 +51,6 @@ class fx_data {
     }
     
     public function with($relation, $finder = null) {
-        if ( $relation == 'childrens' ) dev_log('my this',$this);
         $this->with []= array($relation, $finder);
         return $this;
     }
@@ -184,7 +183,7 @@ class fx_data {
     }
 
     /**
-     * @todo ДАЛЕЕ: разобраться, что можно убит'okokokoko');
+     * @todo ДАЛЕЕ: разобраться, что можно убить
         $set = $this->_set_statement($data);
         dev_log('set',$set);
         if ($set) {

@@ -22,8 +22,9 @@ class fx_controller_layout extends fx_controller {
             $html = preg_replace("~</body>.+?$~is", '', $html);
         } else {
             $page = fx::data('content_page', $this->param('page_id'));
+            $meta_title = empty($page['title']) ? $page['name'] : $page['title'];
             $this->_show_admin_panel();
-            $html = fx::page()->set_metatags('title',$page['title'])
+            $html = fx::page()->set_metatags('title',$meta_title)
                                 ->set_metatags('description',$page['description'])
                                 ->set_metatags('keywords',$page['keywords'])
                                 ->post_proccess($html);
@@ -86,6 +87,7 @@ class fx_controller_layout extends fx_controller {
         $p->add_js_file('/floxim/lib/js/jquery-ui-1.8.21.custom.js');
         $p->add_js_file('/floxim/lib/js/jquery.nestedSortable.js');
         $p->add_js_file('/floxim/lib/js/jquery.ba-hashchange.min.js');
+        $p->add_js_file('/floxim/lib/js/ajaxfileupload.js'); // ajax upload files
         $p->add_js_file('/floxim/lib/js/jquery.json-2.3.js');
         $p->add_js_file('/floxim/admin/js-templates/jstx.js');
         $p->add_js_file('/floxim/admin/js-templates/compile.php');

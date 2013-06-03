@@ -9,6 +9,7 @@ class fx_controller_admin_adminpanel extends fx_controller_admin {
         $fx_core->page->add_js_file('/floxim/lib/js/jquery-1.7.1.js');
         $fx_core->page->add_js_file('/floxim/lib/js/jquery-ui-1.8.13.custom.min.js');
         $fx_core->page->add_js_file('/floxim/lib/js/jquery.ba-hashchange.min.js');
+        $fx_core->page->add_js_file('/floxim/lib/js/ajaxfileupload.js'); // ajax upload files
         $fx_core->page->add_js_file('/floxim/admin/js/lib.js');
         $fx_core->page->add_js_file('/floxim/admin/js/adminpanel.js');
         $fx_core->page->add_js_file('/floxim/admin/js/form.js');
