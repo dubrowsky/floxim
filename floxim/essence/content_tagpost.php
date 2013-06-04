@@ -8,6 +8,10 @@ class fx_content_tagpost extends fx_content {
     protected function _after_insert() {
         parent::_after_insert();
         $tag = $this->_get_tag();
+        if (!$tag) {
+            //echo fen_debug('no tag found', $this);
+            return;
+        }
         $tag['counter'] = $tag['counter']+1;
         $tag->save();
     }

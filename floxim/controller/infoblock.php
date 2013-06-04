@@ -56,8 +56,6 @@ class fx_controller_infoblock extends fx_controller {
         }
         
         $params = $infoblock->get_prop_inherited('params');
-
-        dev_log('INFOBLOCK PARAMS',$params);
         
         if (!is_array($params)) {
             $params = array();
@@ -98,12 +96,19 @@ class fx_controller_infoblock extends fx_controller {
             $tpl = $controller->find_template();
         }
         $tpl_params = $infoblock->get_prop_inherited('visual.template_visual');
-        $tpl_params['input'] = $result;
+        //$tpl_params['input'] = $result;
+        if (!is_array($tpl_params)) {
+            $tpl_params = array();
+        }
+        if (is_array($result)) {
+            $tpl_params = array_merge($tpl_params, $result);
+        }
 
         $tpl_params['infoblock'] = $infoblock;
         $output = $tpl->render($tpl_params);
         if (fx::env('is_admin')) {
             if (!preg_match("~[^\s+]~", strip_tags($output))) {
+                //dev_log('ib empty', htmlspecialchars($output), strip_tags($output));
                 $output .= '<span class="fx_empty_infoblock">[empty: '.self::_get_infoblock_sign($infoblock).']</span>';
             }
         }
@@ -135,9 +140,10 @@ class fx_controller_infoblock extends fx_controller {
      */
     protected static function _get_infoblock_sign($infoblock) {
         return "infoblock#".$infoblock["id"].
-                ($infoblock['name'] ? " &laquo;".$infoblock['name'].'&raquo;' : '').' '.
-                $infoblock['controller'].'.'.
-                $infoblock['action'];
+                ($infoblock['name'] ? " &laquo;".$infoblock['name'].'&raquo;' : '').'<br />'.
+                'controller: <b>'.$infoblock->get_prop_inherited('controller').'.'.
+                $infoblock->get_prop_inherited('action')."</b><br />".
+                'template: <b>'.$infoblock->get_prop_inherited('visual.template').'</b>';
     }
     
     protected function _add_infoblock_meta($html_result, $infoblock, $controller_meta = null) {
@@ -169,8 +175,24 @@ class fx_controller_infoblock extends fx_controller {
                 $html_result
             );
         } else {
-            $html_proc = new fx_template_html($html_result);
-            $html_result = $html_proc->add_meta($meta);
+            //dev_log('adding meta', htmlspecialchars($html_result));
+            $subroot_found = false;
+            $html_result = preg_replace_callback(
+                "~^(\s*?)(<[^>]+fx:is_sub_root[^>]+>)~", 
+                function($matches) use (&$subroot_found, $meta) {
+                    $subroot_found = true;
+                    $tag = fx_html_token::create_standalone($matches[2]);
+                    $tag->add_meta($meta);
+                    $tag->remove_attribute('fx:is_sub_root');
+                    //dev_log('adding by subroot', $tag);
+                    return $matches[1].$tag->serialize();
+                }, 
+                $html_result
+            );
+            if (!$subroot_found) {
+                $html_proc = new fx_template_html($html_result);
+                $html_result = $html_proc->add_meta($meta);
+            }
         }
         return $html_result;
     }

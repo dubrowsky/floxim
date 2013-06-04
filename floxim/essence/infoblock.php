@@ -15,7 +15,7 @@ class fx_infoblock extends fx_essence {
         if (!$layout_id) {
             $layout_id = fx::env('layout');
         }
-        if (!$this->_visual) {
+        if (!isset($this->_visual[$layout_id])) {
             $stored = fx::data('infoblock_visual')->
                     where('infoblock_id', $this['id'])-> 
                     where('layout_id', $layout_id)->

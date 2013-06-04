@@ -109,6 +109,12 @@ class fx_template_html {
                 $n->parent->add_child_before(fx_html_token::create($tpl_macro_tag), $n);
                 $n->parent->add_child_after(fx_html_token::create('{/template}'), $n);
                 $n->remove_attribute('fx:template');
+                if (
+                    !in_array($tpl_id, array('item', 'active', 'unactive', 'separator')) &&
+                    !preg_match('~^\$~', $tpl_id)
+                    ) {
+                        $n->set_attribute('fx:is_sub_root', $tpl_id);
+                }
             }
             if ( ($each_id = $n->get_attribute('fx:each')) ) {
                 $each_macro_tag = '{each';
@@ -382,7 +388,6 @@ class fx_html_token {
         
         $source  = preg_replace("~\s([a-z0-9\:_-]+)\s*?=\s*?([^\'\\\"\s]+)~", ' $1="$2"', $source);
         $atts = null;
-        //echo fen_debug($source, htmlspecialchars($this->source));
         
         preg_match_all('~(#inj\d+#)|([a-z0-9\:_-]+)="([^\"]+)"~', $source, $atts);
         
@@ -505,8 +510,8 @@ class fx_html_tokenizer {
 	}
 	
 	protected $stack = '';
-	
-	public function parse($string) {
+	/*
+	public function _parse($string) {
 		$this->position = 0;
         $string = str_split($string);
 		while ( isset($string[$this->position]) ) {
@@ -546,6 +551,43 @@ class fx_html_tokenizer {
 			}
 			$this->stack .= $ch;
 			$this->position++;
+		}
+		return $this->res;
+	}
+    
+     * 
+     */
+    public function parse($string) {
+		$this->position = 0;
+        $parts = preg_split("~(<[a-z0-9\/\?]+|>|[\{\}]|=[\'\"]?|[\'\"]|\s+)~", $string, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+		//while ( isset($string[$this->position]) ) {
+		//	$ch = $string[$this->position];
+        foreach ($parts as $ch) {
+			foreach($this->rules as $rule) {
+				list($old_state, $r_char, $new_state, $callback, $r_first, $test_length) = $rule;
+				
+				if ($old_state != $this->state && $old_state != self::STATE_ANY) { 
+					continue;
+				}
+                if (substr($ch, 0, $test_length) != $r_char) {
+                    continue;
+                }
+                $callback_ok = true;
+                if ($callback) {
+                    $callback_ok = $this->$callback($ch);
+                }
+                if ($callback_ok !== false) {
+                    if ($new_state) {
+                        $this->prev_state = $this->state;
+                        $this->state = $new_state;
+                    }
+                    if (!$callback) {
+                        $this->stack .= $ch;
+                    }
+                    continue 2;
+                }
+			}
+			$this->stack .= $ch;
 		}
 		return $this->res;
 	}

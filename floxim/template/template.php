@@ -21,14 +21,14 @@ class fx_template {
         $template_name = preg_replace("~^fx_template_~", '', get_class($this));
         return $template_name.'.'.$this->action;
     }
+    
+    public static $area_replacements = array();
 
     public function render_area($area) {
-        //echo "<!-- area ".$area." -->\n";
-        if (fx::env('is_admin')) {
-            echo "###fx_area|".$area['id']."|".json_encode($area)."###";
-        }
+    	$is_admin =  fx::env('is_admin');
         fx::trigger('render_area', array('area' => $area));
-        $area_blocks = $this->get_var('input.'.$area['id']);
+        
+        $area_blocks = $this->data[$area['id']];
         if (!$area_blocks || !is_array($area_blocks)) {
             $area_blocks = array();
         }
@@ -37,6 +37,9 @@ class fx_template {
             $b_pos = $b->get_prop_inherited('visual.priority');
             return $a_pos - $b_pos;
         });
+        if ($is_admin) {
+        	ob_start();
+        }
         foreach ($area_blocks as $ib) {
             if (! $ib instanceof fx_infoblock) {
                 die();
@@ -44,12 +47,11 @@ class fx_template {
             $result = $ib->render();
             echo $result;
         }
-        if (fx::env('is_admin')) {
-
-            echo "<a class='fx_infoblock_adder'>Добавить инфоблок</a>";
-            echo "###fx_area_end###";
+        if ($is_admin) {
+        	$area_result = ob_get_clean();
+        	self::$area_replacements []= array($area, $area_result);
+        	echo '###fxa'.(count(self::$area_replacements)-1).'###';
         }
-        //echo "<!-- // area ".$area." -->\n";
     }
 
     public function get_areas() {
@@ -77,24 +79,21 @@ class fx_template {
         }
         $result = ob_get_clean();
         
-        if ($this->get_var('_idle')) {
+        if ($this->data['_idle']) {
             return $result;
         }
         
-        $result =   '<!-- template '.$this->_get_template_sign()." -->\n".
-                    $result.
-                    '<!-- // template'.$this->_get_template_sign()." -->\n";
-        
-        foreach (glob($this->_source_dir.'/*.{js,css}', GLOB_BRACE) as $f) {
-            if (!preg_match("~_[^/]+$~", $f)) {
-                $file_http = str_replace(fx::config()->DOCUMENT_ROOT, '', $f);
-                fx::page()->add_file($file_http);
-            }
+        if ( ($tpl_files = glob($this->_source_dir.'/*.{js,css}', GLOB_BRACE)) ) {
+			foreach ($tpl_files as $f) {
+				if (!preg_match("~_[^/]+$~", $f)) {
+					$file_http = str_replace(fx::config()->DOCUMENT_ROOT, '', $f);
+					fx::page()->add_file($file_http);
+				}
+			}
         }
-        
         if (fx::env('is_admin')) {
-            $result = fx_template_field::replace_fields($result);
             $result = fx_template::replace_areas($result);
+            $result = fx_template_field::replace_fields($result);
         }
         return $result;
     }
@@ -116,6 +115,24 @@ class fx_template {
     protected static $_area_regexp = "###fx_area\|([^\|]*?)\|(.+?)###(.+?)###fx_area_end###";
     
     protected static function _replace_areas_wrapped_by_tag($html) {
+    	$html = preg_replace("~<!--.*?-->~s", '', $html);
+    	$html = preg_replace_callback(
+    		"~(<[a-z0-9_-]+[^>]*?>)\s*###fxa(\d+)###\s*(</[a-z0-9_-]+>)~s",
+    		function($matches) {
+    			$replacement = fx_template::$area_replacements[$matches[2]];
+    			$tag = fx_html_token::create_standalone($matches[1]);
+                $tag->add_meta(array(
+                    'class' => 'fx_area',
+                    'data-fx_area' => $replacement[0]
+                ));
+                $tag = $tag->serialize();
+                fx_template::$area_replacements[$matches[2]] = null;
+    			return $tag.$replacement[1].$matches[3]; 
+    		},
+    		$html
+		);
+		return $html;
+		/*
         if (!preg_match("~###fx_area~", $html)) {
             return $html;
         }
@@ -141,9 +158,28 @@ class fx_template {
             $html
         );
         return $html;
+        */
     }
     
     protected static function _replace_areas_in_text($html) {
+    	$html = preg_replace_callback(
+    		"~###fxa(\d+)###~",
+    		function($matches) {
+    			$replacement = fx_template::$area_replacements[$matches[1]];
+    			$tag_name = preg_match("~<(?:div|ul|li|table|br)~i", $content) ? 'div' : 'span';
+    			$tag = fx_html_token::create_standalone('<'.$tag_name.'>');
+                $tag->add_meta(array(
+                    'class' => 'fx_area',
+                    'data-fx_area' => $replacement[0]
+                ));
+                $tag = $tag->serialize();
+                fx_template::$area_replacements[$matches[1]] = null;
+                return $tag.$replacement[1].'</'.$tag_name.'>';
+    		},
+    		$html
+		);
+		return $html;
+		/*
         $html = preg_replace_callback("~".self::$_area_regexp."~s", function($matches) {
             $content = $matches[3];
             $tag = preg_match("~<(?:div|ul|li|table|br)~i", $content) ? 'div' : 'span';
@@ -151,6 +187,7 @@ class fx_template {
                     $matches[3].'</'.$tag.'>';
         }, $html);
         return $html;
+        */
     }
 }
 ?>

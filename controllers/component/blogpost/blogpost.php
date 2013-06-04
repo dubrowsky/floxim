@@ -1,10 +1,14 @@
 <?php
 class fx_controller_component_blogpost extends fx_controller_component {
     public function do_listing() {
+        //echo fen_debug('start listing');
         $this->listen('query_ready', function (fx_data $query) {
             $query->with('tags');
+            //$query->limit(25);
         });
-        return parent::do_listing();
+        $res = parent::do_listing();
+        //echo fen_debug('data grabbed');
+        return $res;
     }
 
     public function search_by_date() {

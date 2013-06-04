@@ -244,6 +244,8 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
                     $what_items = $what_items->get_values($extract_field, null, true);
                 }
                 $our_item[$res_field]=$what_items;
+            } else {
+                $our_item[$res_field] = null;
             }
         }
         return $this;

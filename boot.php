@@ -1,7 +1,7 @@
 <?php
 require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . '_devlog' . DIRECTORY_SEPARATOR . 'log.php');
 
- //dev_log('start');
+dev_log('start');
  //die();
 
 $db_config = array(
@@ -22,7 +22,7 @@ $db_config = array(
     )
 );
 
-$config = $db_config['remote'];
+$config = $db_config['ilya_local'];
 
 $SYSTEM_FOLDER = dirname(__FILE__) . (isset($config['HTTP_ROOT_PATH']) ? $config['HTTP_ROOT_PATH'] : '/floxim/') . 'system/';
 

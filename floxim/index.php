@@ -19,7 +19,7 @@ if ( ($controller = fx::router()->route() ) ) {
 
     echo $result;
     echo ob_get_clean();
-    // dev_log('end');
+    dev_log('end');
     die();
 }
 ?>

@@ -8,6 +8,7 @@ class fx_template_processor {
      * @return string php-код
      */
     public function process($source, $code) {
+        //dev_log('processing fx tpl');
         $source = str_replace("{php}", '<?', $source);
         $source = str_replace("{/php}", '?>', $source);
         
@@ -409,9 +410,13 @@ class fx_template_processor {
             $code .= '${"'.$var_parts[0].'"}';
         }
         $code .= ";\n";
+        $code .= "}\n";
+        /*
         $code .= "} else {\n";
         $code .= "\t".$var_tmp.' = fx::dig($this->data, "'.$var_id.'");'."\n";
         $code .= "}";
+         * 
+         */
         if ($token->get_prop('default') || count($token->get_children()) > 0) {
             $code .= "\nif (is_null(".$var_tmp.")) {\n";
             if (!($default = $token->get_prop('default')) ) {
@@ -461,7 +466,8 @@ class fx_template_processor {
             }
         }
         if (! $arr_id || $arr_id == '.') {
-            $arr_id = '$this->get_var("input.items")';
+            //$arr_id = '$this->get_var("input.items")';
+            $arr_id = '$items';
         }
         $arr_hash_name = '$arr_'.md5($arr_id);
         $code .= $arr_hash_name .'= '.$arr_id.";\n";
@@ -491,7 +497,7 @@ class fx_template_processor {
         $code .= "if( " . $arr_id . " instanceof fx_content ) {\n ";
         $code .= $arr_id . " = array(" . $arr_id . ");\n";
         $code .= "}\n";
-        $code .= "if (is_array(".$arr_id.") || ".$arr_id." instanceof Traversable) {\n";
+        //$code .= "if (is_array(".$arr_id.") || ".$arr_id." instanceof Traversable) {\n";
         $code .= $counter_id." = 0;\n";
         $code .= $item_alias."_total = count(".$arr_id.");\n";
         $code .= "\nforeach (".$arr_id." as ".$item_key." => ".$item_alias.") {\n";
@@ -519,7 +525,8 @@ class fx_template_processor {
             $code .= "}\n";
         }
         $code .= "}\n"; // close foreach
-        $code .= "}\n?>"; // close if
+        /*$code .= "}\n";*/  // close if*/
+        $code .= "\n?>";
         $this->_loop_depth--;
         return $code;
     }

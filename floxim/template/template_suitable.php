@@ -79,9 +79,11 @@ class fx_template_suitable {
     protected function _adjust_layout_visual($layout_ib, $layout_id, $source_layout_id) {
         $layout = fx::data('layout', $layout_id);
         
-        //$old_visual = $layout_ib['all_visual'][0];
-        //echo fen_debug($layout_ib);
         $source_template = $layout_ib->get_prop_inherited('visual.template', $source_layout_id);
+        if (!$source_template) {
+            echo fen_debug('no src tpl', $layout_ib, $source_layout_id);
+            die();
+        }
         $old_areas = fx::template($source_template)->get_areas();
         
         $layout_tpl = fx::template('layout_'.$layout['keyword']);
