@@ -2,6 +2,14 @@
 class fx_router_front extends fx_router {
 
     public function route($url = null, $context = null) {
+        $url = array($url);
+        if ( !empty($url) ) {
+            if ( substr($url[0], -1) != '/' ) {
+                $url[1] = $url[0] . '/';
+            } else {
+                $url[1] = substr($url[0], 0, strlen($url[0])-1);
+            }
+        }
         $site = fx::data('site', $context['site_id']);
         $page = fx::data('content_page')->
                     where('url', $url)->
