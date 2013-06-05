@@ -10,4 +10,9 @@
         </div>
     </div>
     <hr fx:template="separator" />
+    <div class="pagination" fx:template="$pagination">
+        <a fx:template="unactive" href="{$url}">{$page}</a>
+        <b fx:template="active">{$page}</b>
+        <span fx:template="separator"> | </span>
+    </div>
 </div>

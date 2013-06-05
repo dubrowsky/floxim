@@ -25,6 +25,13 @@ class fx_controller_component extends fx_controller {
             'label' => 'Сколько выводить',
             'value' => 10
         );
+        $fields['show_pagination'] = array(
+            'name' => 'show_pagination',
+            'label' => 'Разбивать на страницы?',
+            'type' => 'checkbox',
+            'value' => true,
+            'parent' => array('limit' => '!=0')
+        );
 
         $sortings = array('manual' => 'Ручная', 'created'=> 'Дата создания');
         $sortings += $this->get_component()->fields()->get_values('description', 'name');
@@ -138,7 +145,7 @@ class fx_controller_component extends fx_controller {
     }
 
     public function do_listing() {
-        $f = $this->_finder();
+        $f = $this->_get_finder();
         
         $content_type = $this->get_content_type();
         if ( ($infoblock_id = $this->param('infoblock_id'))) {
@@ -158,6 +165,7 @@ class fx_controller_component extends fx_controller {
         $this->trigger('query_ready', $f);
         $items = $f->all();
         $this->trigger('items_ready', $items);
+        
 
         if (fx::env('is_admin') && $infoblock_id) {
             $c_ib_name = $c_ib->get_prop_inherited('name');
@@ -172,7 +180,25 @@ class fx_controller_component extends fx_controller {
                 )
             );
         }
-        return array('items' => $items);
+        return array('items' => $items, 'pagination' => $this->_get_pagination());
+    }
+    
+    protected function _get_pagination() {
+        if (!$this->param('show_pagination')){
+            return null;
+        }
+        $total_rows = $this->_get_finder()->get_found_rows();
+        $limit = $this->param('limit');
+        $total_pages = ceil($total_rows / $limit);
+        $result = array();
+        foreach (range(1, $total_pages) as $page_num) {
+            $result[]= array(
+                'active' => $page_num == 3, //$page_num == $_GET['page'],
+                'page' => $page_num,
+                'url' => '#page_'.$page_num
+            );
+        }
+        return $result;
     }
     
     protected function _get_parent_id() {
@@ -204,7 +230,7 @@ class fx_controller_component extends fx_controller {
     }
     
     public function do_listing_mirror() {
-        $f = $this->_finder();
+        $f = $this->_get_finder();
         ///$params = array();
         if ( ($parent_id = $this->param('parent_id')) ) {
             //$params['parent_id'] = $parent_id;
@@ -252,11 +278,24 @@ class fx_controller_component extends fx_controller {
         return $component;
     }
     
+    
+    protected $_finder = null;
     /**
      * @return fx_data_content data finder
      */
-    protected function _finder() {
-        return fx::data('content_'.$this->get_content_type());
+    protected function _get_finder() {
+        if ($this->_finder) {
+            return $this->_finder;
+        }
+        $finder = fx::data('content_'.$this->get_content_type());
+        if ($this->param('show_pagination')) {
+            $finder->calc_found_rows();
+        }
+        if ( ($limit = $this->param('limit'))) {
+            $finder->limit($limit);
+        }
+        $this->_finder = $finder;
+        return $finder;
     }
     
     public function find_template() {

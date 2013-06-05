@@ -65,11 +65,24 @@ class fx_data {
         return $this;
     }
     
+    protected $calc_found_rows = false;
+    public function calc_found_rows($on = true) {
+        $this->calc_found_rows = (bool) $on;
+    }
+    
+    public function get_found_rows() {
+        return isset($this->found_rows) ? $this->found_rows : null;
+    }
+    
     public function build_query() {
         // 1. Получить таблицы-родители
         $tables = $this->get_tables();
         $base_table = array_shift($tables);
-        $q = 'SELECT * FROM `{{'.$base_table."}}`\n";
+        $q = 'SELECT ';
+        if ($this->calc_found_rows) {
+            $q .= 'SQL_CALC_FOUND_ROWS ';
+        }
+        $q .= ' * FROM `{{'.$base_table."}}`\n";
         foreach ($tables as $t) {
             $q .= 'INNER JOIN `{{'.$t.'}}` ON `{{'.$t.'}}`.id = `{{'.$base_table."}}`.id\n";
         }
@@ -118,6 +131,10 @@ class fx_data {
 
         if (fx::db()->is_error()) {
             throw new Exception("SQL ERROR ".fx::db()->debug());
+        }
+        
+        if ($this->calc_found_rows) {
+            $this->found_rows = fx::db()->get_var('SELECT FOUND_ROWS()');
         }
 
         $objs = array();
