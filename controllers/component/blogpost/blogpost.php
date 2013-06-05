@@ -24,10 +24,35 @@ class fx_controller_component_blogpost extends fx_controller_component {
         return parent::do_listing();
     }
 
-    public function do_listing_calendar() {
+    public function do_calendar() {
         $month_names = array(
             'январь','февраль','март','апрель','май','июнь','июль','август','сентябрь','октябрь','ноябрь','декабрь',
         );
+        
+        $f = $this->_get_finder();
+        $months = fx::data('content_blogpost')->
+            select('DATE_FORMAT(`publish_date`, "%c") as month')->
+            select('DATE_FORMAT(`publish_date`, "%Y") as year')->
+            select('COUNT(DISTINCT({{content}}.id)) as cnt')->
+            order('year', 'DESC')->order('month')->
+            group('month')->group('year')->
+            get_data();
+        
+        $blog_page = fx::data(
+                'content_page', 
+                fx::data('infoblock', $this->param('infoblock_id')->get('page_id'))
+        );
+        echo fen_debug($blog_page);
+        die();
+        $years = array();
+        foreach ($months as $m) {
+            if (!isset($years[$m['year']])) {
+                $months[$m['year']] = array();
+            }
+            $months[$m['year']][] = $m + array(
+                'url' => ''
+            );
+        }
         // TODO: сделать составитель урла с учетом нескольких передаваемых GET параметров из разных мест
         $curent_year = isset($_GET['p_year']) ? $_GET['p_year'] : date('Y');
         $f = $this->_get_finder();

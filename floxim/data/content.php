@@ -45,9 +45,13 @@ class fx_data_content extends fx_data {
         return $relations;
     }
     
-    protected function _get_data() {
-        $data = parent::_get_data();
+    public function get_data() {
+        $data = parent::get_data();
         $types_by_id = $data->get_values('type', 'id');
+        unset($types_by_id['']);
+        if (count($types_by_id) == 0) {
+            return $data;
+        }
         $base_component = fx::data('component', $this->component_id);
         $base_type = $base_component['keyword'];
         $base_table = $base_component->get_content_table();

@@ -74,6 +74,31 @@ class fx_data {
         return isset($this->found_rows) ? $this->found_rows : null;
     }
     
+    protected $select = null;
+    
+    public function select($what) {
+        // сбросить так: $finder->select(null)
+        if (func_num_args() == 1 && is_null($what)) {
+            $this->select = null;
+            return $this;
+        }
+        if (is_null($this->select)) {
+            $this->select = array();
+        }
+        $this->select []= $what;
+        return $this;
+    }
+    
+    protected $group = array();
+    public function group($by) {
+        if (func_num_args() == 1 && is_null($by)) {
+            $this->group = array();
+            return $this;
+        }
+        $this->group []= $by;
+        return $this;
+    }
+    
     public function build_query() {
         // 1. Получить таблицы-родители
         $tables = $this->get_tables();
@@ -82,7 +107,13 @@ class fx_data {
         if ($this->calc_found_rows) {
             $q .= 'SQL_CALC_FOUND_ROWS ';
         }
-        $q .= ' * FROM `{{'.$base_table."}}`\n";
+        
+        if (!is_null($this->select)) {
+            $q .= join(", ", $this->select);
+        } else {
+            $q .= ' * ';
+        }
+        $q .= ' FROM `{{'.$base_table."}}`\n";
         foreach ($tables as $t) {
             $q .= 'INNER JOIN `{{'.$t.'}}` ON `{{'.$t.'}}`.id = `{{'.$base_table."}}`.id\n";
         }
@@ -109,6 +140,9 @@ class fx_data {
             }
             $q .= "WHERE ".join(" AND ", $conds);
         }
+        if (count($this->group) > 0) {
+            $q .= " GROUP BY ".join(", ", $this->group);
+        }
         if (is_array($this->order) && count($this->order) > 0) {
             $q .= " ORDER BY ".join(", ", $this->order);
         }
@@ -125,7 +159,7 @@ class fx_data {
      /*
      * Метод собирает плоские данные
      */
-    protected function _get_data() {
+    public function get_data() {
         $query = $this->build_query();
         $res = fx::db()->get_results($query);
 
@@ -151,11 +185,11 @@ class fx_data {
     }
     
     /*
-     * Метод вызывает $this->_get_data(),
+     * Метод вызывает $this->get_data(),
      * и из коллекции плоских данных собирает эссенсы
      */
     protected function _get_essences() {
-        $data = $this->_get_data();
+        $data = $this->get_data();
         foreach ($data as $dk => $dv) {
             $data[$dk] = $this->essence($dv);
         }
@@ -172,8 +206,6 @@ class fx_data {
         if (count($this->with) == 0) {
             return;
         }
-        //$ids = $essences->get_values('id');
-        //echo fen_debug($this->relations);
         $relations = $this->relations();
         foreach ($this->with as $with) {
             list($rel_name, $rel_finder) = $with;
@@ -202,9 +234,7 @@ class fx_data {
                 case self::MANY_MANY:
                     $end_rel = $rel[3];
                     $rel_finder->with($end_rel)->where($rel_field, $essences->get_values('id'));
-                    //echo fen_debug('looking for many');
                     $rel_items = $rel_finder->all();
-                    //echo fen_debug('attaching '.count($rel_items).' items');
                     $essences->attache_many($rel_items, $rel_field, $rel_name, 'id', $end_rel);
                     break;
             }

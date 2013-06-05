@@ -2,7 +2,9 @@
 class fx_router_front extends fx_router {
 
     public function route($url = null, $context = null) {
-        $url = array($url);
+        $url = array($_GET['REQUEST_URI']);
+        $site = fx::data('site', $context['site_id']);
+
         if ( !empty($url) ) {
             if ( substr($url[0], -1) != '/' ) {
                 $url[1] = $url[0] . '/';
@@ -10,11 +12,10 @@ class fx_router_front extends fx_router {
                 $url[1] = substr($url[0], 0, strlen($url[0])-1);
             }
         }
-        $site = fx::data('site', $context['site_id']);
         $page = fx::data('content_page')->
-                    where('url', $url)->
-                    where('site_id', $site['id'])->
-                    one();
+            where('url', $url)->
+            where('site_id', $site['id'])->
+            one();
         if (!$page) {
             return null;
         }
@@ -22,10 +23,11 @@ class fx_router_front extends fx_router {
         $layout_id = fx::env('layout');
         $infoblocks = $this->get_page_infoblocks($page['id'], $layout_id);
         $layout_ib = $infoblocks['layout'][0];
+
         return fx::controller(
-            'infoblock.render', 
+            'infoblock.render',
             array(
-                'infoblock' => $layout_ib,
+                'infoblock_id' => $layout_ib['id'],
                 'override_params' => array(
                     'page_id' => $page['id'],
                     'layout_id' => $layout_id
