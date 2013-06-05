@@ -30,7 +30,7 @@ class fx_controller_component_blogpost extends fx_controller_component {
         );
         // TODO: сделать составитель урла с учетом нескольких передаваемых GET параметров из разных мест
         $curent_year = isset($_GET['p_year']) ? $_GET['p_year'] : date('Y');
-        $f = $this->_finder();
+        $f = $this->_get_finder();
         $content_type = $this->get_content_type();
         $items = $f->all();
         $months = array();
