@@ -114,6 +114,9 @@ class fx_template {
     
     protected static $_area_regexp = "###fx_area\|([^\|]*?)\|(.+?)###(.+?)###fx_area_end###";
     
+    public static $_adder_html = "<a class='fx_infoblock_adder'>Добавить инфоблок</a>";
+
+
     protected static function _replace_areas_wrapped_by_tag($html) {
     	$html = preg_replace("~<!--.*?-->~s", '', $html);
     	$html = preg_replace_callback(
@@ -127,7 +130,7 @@ class fx_template {
                 ));
                 $tag = $tag->serialize();
                 fx_template::$area_replacements[$matches[2]] = null;
-    			return $tag.$replacement[1].$matches[3]; 
+    			return $tag.$replacement[1].fx_template::$_adder_html.$matches[3]; 
     		},
     		$html
 		);
@@ -174,7 +177,7 @@ class fx_template {
                 ));
                 $tag = $tag->serialize();
                 fx_template::$area_replacements[$matches[1]] = null;
-                return $tag.$replacement[1].'</'.$tag_name.'>';
+                return $tag.$replacement[1].fx_template::$_adder_html.'</'.$tag_name.'>';
     		},
     		$html
 		);
