@@ -4,7 +4,7 @@ class fx_data_content_section extends fx_data_content {
         return parent::relations() + array(
             'submenu' => array(
                 self::HAS_MANY,
-                'content',
+                'content_section',
                 'parent_id'
             )
         );

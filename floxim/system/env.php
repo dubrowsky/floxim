@@ -106,14 +106,10 @@ class fx_system_env extends fx_system {
   }
   
   public function is_admin() {
-      $user = $this->get_user();
-      if (!$user) {
-          return false;
-      }
-      return $user->perm()->is_supervisor();
+      return ($user = $this->get_user()) ? $user->perm()->is_supervisor() : false;
   }
   
-    public function get_layout() {
+  public function get_layout() {
         if (!$this->current['layout']) {
             $page_id = $this->get_page();
             if ($page_id) {

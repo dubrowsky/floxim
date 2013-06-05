@@ -71,7 +71,8 @@ class fx_db extends PDO {
                 '#'.self::$q_count, 
                 'q_time: '.$q_time, 
                 'q_total: '.self::$q_time,
-                $statement
+                $statement,
+                'bt10'
         );
         return $this->last_result;
     }

@@ -17,6 +17,9 @@
                     <span style="color:#F00;">{$name}</span>
                 </span></span>
             </a>
+            <ul fx:template="$submenu" class="submenu">
+                <li fx:template="item"><a href="{$url}">{$name}</a></li>
+            </ul>
         </li>
     </ul>
 </div>

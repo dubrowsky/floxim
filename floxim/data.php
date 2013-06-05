@@ -37,6 +37,16 @@ class fx_data {
         return isset($data[0]) ? $data[0] : false;
     }
     
+    public function limit() {
+        $args = func_get_args();
+        if (count($args) == 1) {
+            $this->limit = $args[0];
+        } elseif (count($args) == 2) {
+            $this->limit = $args[0].', '.$args[1];
+        }
+        return $this;
+    }
+    
     public function where($field, $value, $type = '=') {
         $this->where []= array($field, $value, $type);
         return $this;
@@ -175,7 +185,9 @@ class fx_data {
                 case self::MANY_MANY:
                     $end_rel = $rel[3];
                     $rel_finder->with($end_rel)->where($rel_field, $essences->get_values('id'));
+                    //echo fen_debug('looking for many');
                     $rel_items = $rel_finder->all();
+                    //echo fen_debug('attaching '.count($rel_items).' items');
                     $essences->attache_many($rel_items, $rel_field, $rel_name, 'id', $end_rel);
                     break;
             }

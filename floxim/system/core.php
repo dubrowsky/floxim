@@ -358,6 +358,7 @@ class fx_core extends fx_system {
                 $tpl_name = $tpl_name[1];
                 $tpl_file = fx::config()->COMPILED_TEMPLATES_FOLDER.'/'.$tpl_name;
                 if (false && file_exists($tpl_file.'.php')) {
+                //if (file_exists($tpl_file.'.php')) {
                     $file = $tpl_file;
                     break;
                 }

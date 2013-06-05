@@ -1,7 +1,8 @@
-<div class="post_list">
+<div class="post_list" fx:template="listing">
     <div fx:template="item" class="post">
-        <h1><a href="{$url}">{$header}</a></h1>
+        <h1><a href="{$url}" title="{$header}">{$header}</a></h1>
         <p>{$anounce}</p>
+        
         <div fx:template="$tags">
             {%tags_label}Метки:{/%}
             <a fx:template="item" href="{$url}">{$name}</a>
