@@ -3,7 +3,7 @@ class fx_router_dynamic extends fx_router_front {
     public function route($url = null, $context = null) {
         if( count($_GET) > 1 )
         {
-            $url = array($_GET['REQUEST_URI']);
+            $url = array(preg_replace("~\?.+$~", '', $_SERVER['REQUEST_URI']));
             $site = fx::data('site', $context['site_id']);
 
             if ( !empty($url) ) {
