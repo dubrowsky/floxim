@@ -56,8 +56,6 @@ class fx_controller_infoblock extends fx_controller {
         }
         
         $params = $infoblock->get_prop_inherited('params');
-
-        dev_log('INFOBLOCK PARAMS',$params);
         
         if (!is_array($params)) {
             $params = array();
@@ -72,13 +70,13 @@ class fx_controller_infoblock extends fx_controller {
             $params['infoblock_id'] = $infoblock['id'];
         }
 
-
         //
         $controller = fx::controller(
             $infoblock->get_prop_inherited('controller'), 
             $params, 
             $infoblock->get_prop_inherited('action')
         );
+        // dev_log('controller in infoblock', $controller);
         
         $result = $controller->process();
         $controller_meta = fx::dig($result, '_meta');

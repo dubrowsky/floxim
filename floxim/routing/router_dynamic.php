@@ -5,7 +5,7 @@ class fx_router_dynamic extends fx_router_front {
         {
             $url = array($_GET['REQUEST_URI']);
             $site = fx::data('site', $context['site_id']);
-            $action = $_GET['action'];
+
             if ( !empty($url) ) {
                 if ( substr($url[0], -1) != '/' ) {
                     $url[1] = $url[0] . '/';
@@ -30,6 +30,8 @@ class fx_router_dynamic extends fx_router_front {
                 array(
                     'infoblock_id' => $layout_ib['id'],
                     'override_params' => array(
+                        // 'dynamic_action' => $action,
+                        // 'dynamic_params' => $params,
                         'page_id' => $page['id'],
                         'layout_id' => $layout_id
                     )

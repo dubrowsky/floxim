@@ -149,9 +149,7 @@ class fx_controller_layout extends fx_controller {
 
     	$tpl_file = $fx_core->files->get_full_path($template->get_path_php());
     	$tpl_source_file = $fx_core->files->get_full_path($template->get_path_html());
-
     	$recompilation_needed = false;
-
 
     	if (!file_exists($tpl_file)) {
     		$recompilation_needed = true;
@@ -258,7 +256,6 @@ class fx_controller_layout extends fx_controller {
             $fx_core->page->set_after_body(fx_controller_admin_adminpanel::panel_html());
         }
 
-
         // пользовательские css и js
         $files = $parent['files'];
         if ($files) {
@@ -268,7 +265,6 @@ class fx_controller_layout extends fx_controller {
         }
 
         // цветовая раскраска
-
         if ( $preview = fx_controller_admin_template::get_preview_data()) {
         	$color_id = $preview['color_id'];
         } else {
