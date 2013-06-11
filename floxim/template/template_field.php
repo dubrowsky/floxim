@@ -7,7 +7,7 @@ class fx_template_field  {
     
     public function __construct($value = null, $meta = array()) {
         $this->_value = $value;
-        $this->_meta = array_merge($this->_meta, $meta);
+        $this->_meta = $meta;
     }
     
     public function get_value(){
@@ -26,16 +26,13 @@ class fx_template_field  {
     
     public function __toString() {
         $val = $this->get_value();
-        if (!$this->get_meta('editable') || !fx::env('is_admin')) {
+        if (!$this->get_meta('editable') || !fx::is_admin()) {
             return $val;
         }
         $id = $this->get_meta('id');
         self::$replacements []= array($id, $this->_meta, $val);
         return "###fxf".(count(self::$replacements)-1)."###";
-        return "###fx_template_field|".$id."|".json_encode($this->_meta)."###".$val."###fx_template_field_end###";
     }
-    
-    protected static $_field_regexp = "###fx_template_field\|([^\|]*?)\|(.+?)###(.*?)###fx_template_field_end###";
     
     /**
      * Постпроцессинг полей

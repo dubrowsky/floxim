@@ -2,9 +2,13 @@
 class fx_router_front extends fx_router {
 
     public function route($url = null, $context = null) {
-        $url = array($_GET['REQUEST_URI']);
+        $url = $_GET['REQUEST_URI'];
+        if (!preg_match("~^/~", $url)) {
+            $url = '/'.$url;
+        }
+        $url = array($url);
         $site = fx::data('site', $context['site_id']);
-
+        
         if ( !empty($url) ) {
             if ( substr($url[0], -1) != '/' ) {
                 $url[1] = $url[0] . '/';

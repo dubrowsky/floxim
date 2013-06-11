@@ -184,7 +184,6 @@
                     container.append('<input type="hidden" name="action" value="'+$fx.admin.get_action()+'" />');
                 }
                 container.append('<input type="hidden" name="fx_admin" value="1" />');
-                container.append('<input type="hidden" name="fx_token" value="'+$fx.g_data.main.token+'" />');
             }
             
             if ( settings.form_button ) {
@@ -201,7 +200,6 @@
                         form.append(
                         	'<input type="hidden" name="posting" value="1" />'+
                         	'<input type="hidden" name="fx_admin" value="1" />'+
-                        	'<input type="hidden" name="fx_token" value="'+$fx.g_data.main.token+'" />'+
                         	'<input type="submit" value="Сохранить" />'
                         );
                         

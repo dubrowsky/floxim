@@ -108,6 +108,14 @@ class fx {
     	return self::$router;
     }
     
+    protected static $is_admin = null;
+    public static function is_admin() {
+        if (is_null(self::$is_admin)) {
+            self::$is_admin = self::env('is_admin');
+        }
+        return self::$is_admin;
+    }
+    
     /**
      * @todo Пока держим env внутри fx_core, позже надо тоже перетащить 
      * Вызов без параметров - вернуть объект, с параметрами - получить/установить свойство
@@ -115,8 +123,13 @@ class fx {
      * @param mixed $value установить значение
      */
     public static function env() {
-    	$args = func_get_args();
-    	$env = fx_core::get_object()->env;
+        static $env = false;
+        if ($env === false) {
+            $env = new fx_system_env();
+        }
+    	
+    	//$env = fx_core::get_object()->env;
+        $args = func_get_args();
     	if (count($args) == 0) {
             return $env;
     	}
@@ -252,7 +265,37 @@ class fx {
             $arr = $var_value;
         }
     }
+    /*
+     * @return fx_system_input
+     */
+    public static function input() {
+        static $input = false;
+        if ($input === false) {
+            $input = new fx_system_input();
+        }
+        return $input;
+    }
     
+    /*
+     * @return fx_core
+     */
+    public static function core() {
+        static $core = false;
+        if ($core === false) {
+            $core = new fx_core();
+        }
+        return $core;
+    }
+    
+    public static function lang() {
+        static $lang = false;
+        if ($lang === false) {
+            $lang = new fx_system_lang();
+        }
+        return $lang;
+    }
+
+
     protected static $http = null;
     public static function http() {
         if (!self::$http) {
@@ -307,5 +350,21 @@ class fx {
                 self::$_cache->set($key, $value);
                 break;
         }
+    }
+    
+    public static function files() {
+        static $files = false;
+        if ($files === false) {
+            $files = new fx_system_files();
+        }
+        return $files;
+    }
+    
+    public static function util() {
+        static $util = false;
+        if ($util === false) {
+            $util = new fx_system_util();
+        }
+        return $util;
     }
 }

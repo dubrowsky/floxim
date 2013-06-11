@@ -175,9 +175,9 @@ class fx_system_page extends fx_system {
     /**
      * Создает или изменяет значение макроконстанты
      * Можно вставить макроконстанту в любую часть страницы:
-     * <?=$fx_core->page->set_macroconst('foo')?>
+     * <?=fx::page()->set_macroconst('foo')?>
      * А потом поменять ее значение:
-     * $fx_core->page->set_macroconst('foo', 'bar');
+     * fx::page()->set_macroconst('foo', 'bar');
      */
     public function set_macroconst($name, $value = '') {
         if ( isset($this->_macroconst[$name]) ) {
@@ -203,10 +203,9 @@ class fx_system_page extends fx_system {
         $this->_after_body[] = $txt;
     }
 
-    public function post_proccess($buffer) {
+    public function post_process($buffer) {
 
-        $fx_core = fx_core::get_object();
-        if ( $fx_core->is_admin_mode() ) {
+        if ( fx::core()->is_admin_mode() ) {
             return $buffer;
         }
 
@@ -234,7 +233,7 @@ class fx_system_page extends fx_system {
             }
         }
         
-        if (!preg_match("~<head[^>]*?>~", $buffer)) {
+        if (!preg_match("~<head(\s[^>]*?|)>~", $buffer)) {
             if (preg_match("~<html[^>]*?>~", $buffer)) {
                 $buffer = preg_replace("~<html[^>]*?>~", '$0<head> </head>', $buffer);
             } else {
@@ -242,7 +241,7 @@ class fx_system_page extends fx_system {
             }
         }
         
-        $buffer = preg_replace('~<head[^>]*?>~', '$0'.$r, $buffer);
+        $buffer = preg_replace("~<head(\s[^>]*?|)>~", '$0'.$r, $buffer);
 
         //h1
         $h1_post = $this->metatags_post['seo_h1'];
@@ -264,27 +263,16 @@ class fx_system_page extends fx_system {
         }
         $buffer = str_replace("<body", "<body data-fx_page_id='".fx::env('page')."'", $buffer);
 
-        $user = fx_core::get_object()->env->get_user();
-        if (fx::env('is_admin')) {
-            $this->add_data_js('block_number', $this->block_number);
-            $this->add_data_js('field_number', $this->field_number);
-
+        
+        if (fx::is_admin()) {
             $js = '<script type="text/javascript">'.PHP_EOL;
-            $js .= '$("body").data('.json_encode($this->get_data_js()).');'.PHP_EOL;
             if ( ($js_text = $this->get_js_text() )) {
                 $js .= join(PHP_EOL, $js_text).PHP_EOL;
             }
-            $js .= '$fx.set_data('.json_encode(array('main' => array('url' => $_SERVER['REQUEST_URI']))).');'.PHP_EOL;
-            $js .= '$fx.set_data('.json_encode(array('infoblock' => $this->get_infoblocks())).');'.PHP_EOL;
-            $js .= '$fx.set_data('.json_encode(array('blocks' => $this->get_blocks())).');'.PHP_EOL;
-            $js .= '$fx.set_data('.json_encode(array('fields' => $this->get_edit_fields())).');'.PHP_EOL;
-            $js .= '$fx.set_data('.json_encode(array('sortable' => $this->get_sortable())).');'.PHP_EOL;
-            $js .= '$fx.set_data('.json_encode(array('addition_block' => $fx_core->page->get_addition_block())).');';
             $js .= '</script>'.PHP_EOL;
-
             $buffer = str_replace('</body>', $js.'</body>', $buffer);
         }
-
+        
         $buffer = $this->replace_macroconst($buffer);
 
         return $buffer;

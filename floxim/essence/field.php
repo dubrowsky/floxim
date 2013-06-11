@@ -54,7 +54,6 @@ class fx_field extends fx_essence {
     }
 
     public function validate() {
-        $fx_core = fx_core::get_object();
         $res = true;
 
         if (!$this['name']) {
@@ -69,7 +68,7 @@ class fx_field extends fx_essence {
         $modified = $this->modified_data['name'] && $this->modified_data['name'] != $this->data['name'];
 
         if ($this['component_id'] && ( $modified || !$this['id'])) {
-            if ($fx_core->util->is_mysql_keyword($this->data['name'])) {
+            if (fx::util()->is_mysql_keyword($this->data['name'])) {
                 $this->validate_errors[] = array('field' => 'name', 'text' => 'Данное поле зарезервированно');
                 $res = false;
             }
@@ -78,12 +77,12 @@ class fx_field extends fx_essence {
             $chain = $component->get_chain();
             foreach ( $chain as $c_level ) {
 
-                if ( $fx_core->db->column_exists( $c_level->get_content_table(), $this->data['name']) ) {
+                if ( fx::db()->column_exists( $c_level->get_content_table(), $this->data['name']) ) {
                     $this->validate_errors[] = array('field' => 'name', 'text' => 'Такое поле уже существует');
                     $res = false;
                 }
             }
-            if ($fx_core->db->column_exists($this->get_table(), $this->data['name'])) {
+            if (fx::db()->column_exists($this->get_table(), $this->data['name'])) {
                 $this->validate_errors[] = array('field' => 'name', 'text' => 'Такое поле уже существует');
                 $res = false;
             }
@@ -117,10 +116,10 @@ class fx_field extends fx_essence {
             $type = self::get_sql_type_by_type($this->data['type']);
             if ($type) {
                 if ($this->modified_data['name'] && $this->modified_data['name'] != $this->data['name']) {
-                    fx_core::get_object()->db->query("ALTER TABLE `{{".$this->get_table()."}}` 
+                    fx::db()->query("ALTER TABLE `{{".$this->get_table()."}}` 
                     CHANGE `".$this->modified_data['name']."` `".$this->data['name']."` ".$type);
                 } else if ($this->modified_data['type'] && $this->modified_data['type'] != $this->data['type']) {
-                    fx_core::get_object()->db->query("ALTER TABLE `{{".$this->get_table()."}}`
+                    fx::db()->query("ALTER TABLE `{{".$this->get_table()."}}`
                     MODIFY `".$this->data['name']."` ".$type);
                 }
             }
@@ -130,7 +129,7 @@ class fx_field extends fx_essence {
     protected function _after_delete() {
         if ($this['component_id']) {
             if (self::get_sql_type_by_type($this->data['type'])) {
-                fx_core::get_object()->db->query("ALTER TABLE `{{".$this->get_table()."}}` DROP COLUMN `".$this->name."`");
+                fx::db()->query("ALTER TABLE `{{".$this->get_table()."}}` DROP COLUMN `".$this->name."`");
             }
         }
     }
@@ -150,8 +149,7 @@ class fx_field extends fx_essence {
             return true;
         }
         if ($this['type_of_edit'] == 2) {
-            $fx_core = fx_core::get_object();
-            $user = $fx_core->env->get_user();
+            $user = fx::env()->get_user();
             return $user && $user->perm()->is_supervisor();
         }
 

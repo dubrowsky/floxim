@@ -1587,7 +1587,7 @@ li ul .fx_tree_label .fx_tree_title {
 .fx_mode_page_design .fx_infoblock {
     outline:2px dashed #0F0;
     outline-offset:-2px;
-    overflow:auto;
+    /*overflow:auto;*/
 }
 
 .fx_mode_page_edit .fx_template_var {
@@ -1622,4 +1622,15 @@ li ul .fx_tree_label .fx_tree_title {
 
 .fx_infoblock_disabled {
     opacity:0.3;
+}
+
+.fx_area_target { 
+    display:block !important;
+    min-height:100px;
+    background:#FAA;
+}
+
+.fx_overlay {
+    font-family:Tahoma;
+    font-size:12px;
 }

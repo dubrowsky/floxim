@@ -15,7 +15,10 @@ class fx_content_page extends fx_content {
     }
     
     public function get_path() {
-        
+        $path_ids = $this->get_parent_ids();
+        $path_ids []= $this['id'];
+        $path = fx::data('content_page')->where('id', $path_ids)->all();
+        return $path;
     }
 }
 ?>

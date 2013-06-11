@@ -45,9 +45,6 @@ class fx_controller_infoblock extends fx_controller {
     
     public function render() {
 
-        /*$this->prepare_controller_data();
-        echo "</pre>";*/
-
         $infoblock = $this->_get_infoblock();
         
         if (!$infoblock) {
@@ -70,17 +67,15 @@ class fx_controller_infoblock extends fx_controller {
             $params['infoblock_id'] = $infoblock['id'];
         }
 
-        //
         $controller = fx::controller(
             $infoblock->get_prop_inherited('controller'), 
             $params, 
             $infoblock->get_prop_inherited('action')
         );
-        // dev_log('controller in infoblock', $controller);
         
         $result = $controller->process();
         $controller_meta = fx::dig($result, '_meta');
-        if (fx::dig($controller_meta, 'disabled') && !fx::env('is_admin')) {
+        if (fx::dig($controller_meta, 'disabled') && !fx::is_admin()) {
             return;
         }
         $tpl_params = array();
@@ -96,7 +91,7 @@ class fx_controller_infoblock extends fx_controller {
             $tpl = $controller->find_template();
         }
         $tpl_params = $infoblock->get_prop_inherited('visual.template_visual');
-        //$tpl_params['input'] = $result;
+        
         if (!is_array($tpl_params)) {
             $tpl_params = array();
         }
@@ -107,7 +102,7 @@ class fx_controller_infoblock extends fx_controller {
         $tpl_params['infoblock'] = $infoblock;
         $output = $tpl->render($tpl_params);
         if (fx::env('is_admin')) {
-            if (!preg_match("~[^\s+]~", strip_tags($output))) {
+            if (!preg_match("~[^\s+]~", $output)) {
                 //dev_log('ib empty', htmlspecialchars($output), strip_tags($output));
                 $output .= '<span class="fx_empty_infoblock">[empty: '.self::_get_infoblock_sign($infoblock).']</span>';
             }

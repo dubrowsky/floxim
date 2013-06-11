@@ -4,15 +4,16 @@ fx_additional_menu = function ( ) {
 
 fx_additional_menu.prototype.load = function () {
     var menu = this.container;
-        
+    /*
     $.each( ['undo', 'redo'], function(k, v) {
         var item = $('<div>').addClass('fx_admin_button').addClass('fx_admin_button_'+v).appendTo(menu);
         item.click( function(){
             console.log('history will be here some day...');
         });
     });
+    */
 
-    $('<span/>').addClass('fx_admin_additional_menu_divider').appendTo(menu);
+    //$('<span/>').addClass('fx_admin_additional_menu_divider').appendTo(menu);
     var logout = $('<a style="cursor:pointer;"/>').text('выход');
     logout.appendTo(menu);
     logout.click(function() {

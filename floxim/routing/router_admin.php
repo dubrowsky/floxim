@@ -13,10 +13,9 @@ class fx_router_admin extends fx_router {
         if (!preg_match($regexp, $url)) {
             return null;
         }
-        $fx_core = fx_core::get_object();
-        $fx_core->modules->load_env();
-        $input = $fx_core->input->make_input();
-
+        //$fx_core->modules->load_env(); ???
+        $input = fx::input()->make_input();
+        
         if (empty($_REQUEST))
         {
             // параметров запроса нет, идем стандартной 
@@ -28,10 +27,10 @@ class fx_router_admin extends fx_router {
         // площадку для понятного кода. Админка в плане задумывалась как набор
         // контроллеров, которые лежат в /floxim/admin/controllers/
 
-        $essence = $fx_core->input->fetch_post('essence');
-        $action = $fx_core->input->fetch_post('action');
-        $fx_admin = $fx_core->input->fetch_post('fx_admin');
-        $posting = $fx_core->input->fetch_post('posting');
+        $essence = fx::input()->fetch_post('essence');
+        $action = fx::input()->fetch_post('action');
+        $fx_admin = fx::input()->fetch_post('fx_admin');
+        $posting = fx::input()->fetch_post('posting');
 
         if ($fx_admin) {
             $essence = 'admin_'.$essence;
@@ -56,21 +55,7 @@ class fx_router_admin extends fx_router {
             die("Error! Essence: " . htmlspecialchars($essence));
         }
 
-        $fx_buffer = function($str) {
-            $fx_core = fx_core::get_object();
-            $str = $fx_core->page->post_proccess($str);
-            return $str;
-        };
-
-        // мутные контроллеры не умеют вызывать
-        // post_postprocess самостоятельно
-        ob_start($fx_buffer);
-        $controller->process();
-        $str = ob_get_clean();
-        echo $str;
-        die();
-
-
+        return $controller;
     }
 
 }

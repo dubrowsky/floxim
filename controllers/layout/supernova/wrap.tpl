@@ -4,6 +4,7 @@
     <head>
         <title>My Super Template</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        {css}main.css{/css}
     </head>
     <body>
     <div id="main">
@@ -15,9 +16,9 @@
             <!--логотип, слоган-->
             <div id="logo">
                 <a href="/">
-                    <img src="/controllers/layout/supernova/images/logo.gif" fx_replace="src" />
+                    <img src="/controllers/layout/supernova/images/logo.gif" />
                 </a>
-                <div fx_var="slogan">название или слоган <br />вашей компании</div>
+                <div>{%slogan}название или слоган <br />вашей компании{/%}</div>
             </div>
             <!--//логотип, слоган-->
             <div id="header_nav">
@@ -26,9 +27,13 @@
                 <div class="sep"></div>
                 <!--горизонтальное меню-->
                 {area id="header" size="low,wide"}
-                <div class="supernova_menu" id="menu" fx_template="demo_menu" fx_template_for="component_section.listing" fx_template_name="Горизонтальное меню (главное)">
+                <div 
+                    fx:template="demo_menu" 
+                    fx:of="component_section.listing" 
+                    fx:template_name="Горизонтальное меню (главное)"
+                    class="supernova_menu" id="menu" >
                     <ul>
-                        <li fx_render=".">
+                        <li fx:template="item">
                             <a href="{$url}">
                                 <span class="mw"><span class="mw">
                                     {$name}
@@ -55,7 +60,7 @@
                 {template id="wrap_titled" name="Блок с заголовком" for="wrap"}
                     <div class="block">
                         <div class="title">
-                            <h1 style="color:{%color}#000{/%color}" fx_var="title">Заголовок</h1>
+                            <h1 style="color:{%color}#000{/%color}" fx:var="title">Заголовок</h1>
                         </div>
                         <div class="data">{$content}</div>
                     </div>
@@ -68,10 +73,10 @@
             <div id="right_content">
                 {area id="sidebar" size="high,narrow"}
                 <!--вертикальное меню-->
-                <div id="menu_vert" fx_template="supermenu" fx_template_for="component_section.listing">
-                    <h2 fx_var="menu_title">Заголовок меню</h2>
+                <div id="menu_vert" fx:template="supermenu" fx:template_for="component_section.listing">
+                    <h2 fx:var="menu_title">Заголовок меню</h2>
                     <ul>
-                        <li fx_render=".">
+                        <li fx:template="item">
                             <a class="menu-active" href="{$url}">{$name}</a>
                         </li>
                     </ul>
@@ -89,9 +94,9 @@
         <!--//баннеры-->
         <div id="footer">
             {area id="footer" size="wide,low"}
-            <div class="left" fx_var="copy">© 2010 группа компаний «Netcat».<br />Все права защищены.</div>
-            <div class="middle" fx_var="contacts">Адрес: г. Москва, ул. Мануфактурная, д. 14<br />Телефон и факс: (831) 220-80-18</div>
-            <div class="right" fx_var="developa">© 2010 Хороший пример <br />сайтостроения — <a href="#">WebSite.pu</a></div>
+            <div class="left" fx:var="copy">© 2010 группа компаний «Netcat».<br />Все права защищены.</div>
+            <div class="middle" fx:var="contacts">Адрес: г. Москва, ул. Мануфактурная, д. 14<br />Телефон и факс: (831) 220-80-18</div>
+            <div class="right" fx:var="developa">© 2010 Хороший пример <br />сайтостроения — <a href="#">WebSite.pu</a></div>
             <div class="sep"></div>
         </div>
         <!--нижняя цветная полоса-->

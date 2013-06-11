@@ -150,7 +150,6 @@ class fx_controller_admin_user extends fx_controller_admin {
 
             $r = array(
                     'id' => $v['id'],
-                    'img' => $v->get_file_path(),
                     'header' => array('name' => $header_text, 'url' => 'user.full('.$v['id'].')'),
                     'text' => $text,
                     'name' => $v['login']);

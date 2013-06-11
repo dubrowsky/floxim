@@ -56,7 +56,7 @@ class fx_db extends PDO {
         $this->num_queries++;
         $this->last_query = $statement;
 
-        if (!$this->last_result && fx_core::get_object()->beta) {
+        if (!$this->last_result) {
             $this->last_error = $this->errorInfo();
             echo "<div style='border: 2pt solid red; margin: 10px; padding:10px; font-size:13px; color:black;'><br/>\n";
             echo "Query: <b>" . $statement . "</b><br/>\n";

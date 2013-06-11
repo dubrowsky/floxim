@@ -4,7 +4,7 @@
     id="menu" 
     class="std_menu">
     <ul>
-        <li fx:template="unactive">
+        <li fx:template="inactive">
             <a href="{$url}">
                 <span class="mw"><span class="mw">
                     <span>{$name}</span>

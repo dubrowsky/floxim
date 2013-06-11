@@ -29,13 +29,6 @@ class fx_field_datetime extends fx_field_baze {
         return $result;
     }
 
-   /* public function get_edit_jsdata($content) {
-        parent::get_edit_jsdata($content);
-        $this->_edit_jsdata['type'] = 'date';
-        $this->_edit_jsdata['datetime'] = date('d.m.Y', $content['f_'.$this->name]);
-        return $this->_edit_jsdata;
-    }*/
-
     public function get_js_field($content, $tname = 'f_%name%', $layer = '', $tab = '') {
         parent::get_js_field($content, $tname, $layer, $tab);
 

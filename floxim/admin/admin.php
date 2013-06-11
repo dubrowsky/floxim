@@ -122,50 +122,56 @@ class fx_controller_admin extends fx_controller {
      */
     public function admin_office()
     {   
-        $fx_core = fx_core::get_object();
-
-        $fx_core->page->add_js_file('/floxim/lib/js/jquery-1.7.1.js');
-        $fx_core->page->add_js_file('/floxim/lib/js/jquery-ui-1.8.21.custom.js');
-        $fx_core->page->add_js_file('/floxim/lib/js/jquery.nestedSortable.js');
-        $fx_core->page->add_js_file('/floxim/lib/js/jquery.ba-hashchange.min.js');
-        $fx_core->page->add_js_file('/floxim/lib/js/jquery.json-2.3.js');
-
-        $fx_core->page->add_js_file('/floxim/lib/js/ajaxfileupload.js'); // ajax upload files
-        $fx_core->page->add_js_file('/floxim/admin/js-templates/jstx.js');
-        $fx_core->page->add_js_file('/floxim/admin/js-templates/compile.php');
-        $fx_core->page->add_js_file('/floxim/admin/js/lib.js');
-        $fx_core->page->add_js_file('/floxim/admin/js/adminpanel.js');
-        $fx_core->page->add_js_file('/floxim/admin/js/front.js');
-        $fx_core->page->add_js_file('/floxim/admin/js/buttons.js');
-        $fx_core->page->add_js_file('/floxim/admin/js/form.js');
-        $fx_core->page->add_js_file('/floxim/admin/js/dialog.js');
-        $fx_core->page->add_js_file('/floxim/admin/js/fields.js');
-        $fx_core->page->add_js_file('/floxim/admin/js/edit-in-place.js');
-        $fx_core->page->add_js_file('/floxim/admin/js/store.js');
-        $fx_core->page->add_js_file('/floxim/admin/js/dialog_file.js');
-        $fx_core->page->add_js_file('/floxim/admin/js/admin.js');
-        $fx_core->page->add_js_file('/floxim/admin/js/sort.js');
-        $fx_core->page->add_js_file('/floxim/admin/js/menu/main.js');
-        $fx_core->page->add_js_file('/floxim/admin/js/menu/mode.js');
-        $fx_core->page->add_js_file('/floxim/admin/js/menu/more.js');
-        $fx_core->page->add_js_file('/floxim/admin/js/menu/submenu.js');
-        $fx_core->page->add_js_file('/floxim/admin/js/menu/additional.js');
-        $fx_core->page->add_js_file('/floxim/admin/js/menu/breadcrumb.js');
-        $fx_core->page->add_js_file('/floxim/lib/editors/elrte/elrte.full.js');
-        $fx_core->page->add_js_file('/floxim/lib/editors/elrte/i18n/elrte.ru.js');
-        $fx_core->page->add_js_file('/floxim/lib/js/jquery.form.js');
-        $fx_core->page->add_js_file('/floxim/lib/js/jquery.jstree.js');
-        $fx_core->page->add_js_file('/floxim/lib/js/jquery-gp-gallery.js');
-        $fx_core->page->add_js_file('/floxim/lib/js/jquery.tipTip.minified.js');
-        $fx_core->page->add_js_file('/floxim/lib/js/jquery-ui-timepicker-addon.js');
-
-
+        $js_files = array(
+            FX_JQUERY_PATH,
+            '/floxim/lib/js/jquery-ui-1.8.21.custom.js',
+            '/floxim/lib/js/jquery.nestedSortable.js',
+            '/floxim/lib/js/jquery.ba-hashchange.min.js',
+            '/floxim/lib/js/jquery.json-2.3.js',
+            '/floxim/lib/js/ajaxfileupload.js',                                            
+            '/floxim/admin/js-templates/jstx.js',
+            '/floxim/admin/js-templates/compile.php',
+            '/floxim/admin/js/lib.js',
+            '/floxim/admin/js/adminpanel.js',
+            '/floxim/admin/js/front.js',
+            '/floxim/admin/js/buttons.js',                                     
+            '/floxim/admin/js/form.js',
+            '/floxim/admin/js/dialog.js',
+            '/floxim/admin/js/fields.js',
+            '/floxim/admin/js/edit-in-place.js',
+            '/floxim/admin/js/store.js',
+            '/floxim/admin/js/dialog_file.js',
+            '/floxim/admin/js/admin.js',
+            '/floxim/admin/js/sort.js',
+            '/floxim/admin/js/menu/main.js',
+            '/floxim/admin/js/menu/mode.js',
+            '/floxim/admin/js/menu/more.js',
+            '/floxim/admin/js/menu/submenu.js',
+            '/floxim/admin/js/menu/additional.js',
+            '/floxim/admin/js/menu/breadcrumb.js',
+            '/floxim/lib/editors/elrte/elrte.full.js',
+            '/floxim/lib/editors/elrte/i18n/elrte.ru.js',
+            '/floxim/lib/js/jquery.form.js',
+            '/floxim/lib/js/jquery.jstree.js',
+            '/floxim/lib/js/jquery-gp-gallery.js',
+            '/floxim/lib/js/jquery.tipTip.minified.js',
+            '/floxim/lib/js/jquery-ui-timepicker-addon.js'
+        );
+        $page = fx::page();
+        foreach ($js_files as $file) {
+            $page->add_js_file($file);
+        }
+        $css_files = array(
+            '/floxim/lib/css/elrte/elrte.min.css',
+            '/floxim/admin/skins/default/jquery-ui/main.css',
+            '/floxim/admin/skins/default/css/main.css'
+        );
+        foreach ($css_files as $file) {
+            $page->add_css_file($file);
+        }
+        
         $auth_form = '';
         if (fx::env('is_admin')) {
-            $fx_core->page->add_css_file('/floxim/lib/css/elrte/elrte.min.css');
-            $fx_core->page->add_css_file('/floxim/admin/skins/default/jquery-ui/main.css');
-            $fx_core->page->add_css_file('/floxim/admin/skins/default/css/main.css');
-
             $panel = '
             <div id="fx_admin_panel">
                 <div id="fx_admin_panel_logo"></div>
@@ -186,7 +192,7 @@ class fx_controller_admin extends fx_controller {
             </div>
             <div id="fx_dialog"></div>
             <div id="fx_dialog_file"></div>';
-            $fx_core->page->set_after_body($panel);
+            $page->set_after_body($panel);
         } else {
             $auth_form = '<div>
                 <form method="post" action="/floxim/">
@@ -203,11 +209,11 @@ class fx_controller_admin extends fx_controller {
             $js_config->add_main_menu(fx_controller_admin_adminpanel::get_main_menu());
             $js_config->add_more_menu(fx_controller_admin_adminpanel::get_more_menu());
             $js_config->add_buttons(fx_controller_admin_adminpanel::get_buttons());
-            $fx_core->page->add_js_text("fx_adminpanel.init(".$js_config->get_config().");");
+            $page->add_js_text("fx_adminpanel.init(".$js_config->get_config().");");
         }
         
         $html = '<html class="fx_admin_html"><head><title>Floxim</title></head><body> '.$auth_form.'</body></html>';
-        $html = $fx_core->page->post_proccess($html);
+        $html = $page->post_process($html);
         return $html;
     }
     
@@ -217,8 +223,7 @@ class fx_controller_admin extends fx_controller {
      */
     public function admin_auth($input) {
         
-        $fx_core = fx_core::get_object();
-        $db = $fx_core->db;
+        $db = fx::db();
         $AUTH_USER = $input['AUTH_USER'];
         $AUTH_PW = $input['AUTH_PW'];
 

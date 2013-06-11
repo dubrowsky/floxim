@@ -19,6 +19,7 @@ class fx_template_html {
     public function tokenize() {
         $tokenizer = new fx_html_tokenizer();
         $tokens = $tokenizer->parse($this->_string);
+        //echo fen_debug($tokens);
         return $tokens;
         /*
         $tags = preg_split(
@@ -98,7 +99,7 @@ class fx_template_html {
             if ( ($tpl_id = $n->get_attribute('fx:template'))) {
                 $tpl_macro_tag = '{template id="'.$tpl_id.'"';
                 if ( ($tpl_for = $n->get_attribute('fx:of')) ) {
-                    $tpl_macro_tag .= ' for="'.$tpl_for.'"';
+                    $tpl_macro_tag .= ' of="'.$tpl_for.'"';
                     $n->remove_attribute('fx:of');
                 }
                 if ( ($tpl_name = $n->get_attribute('fx:name'))) {
@@ -110,7 +111,7 @@ class fx_template_html {
                 $n->parent->add_child_after(fx_html_token::create('{/template}'), $n);
                 $n->remove_attribute('fx:template');
                 if (
-                    !in_array($tpl_id, array('item', 'active', 'unactive', 'separator')) &&
+                    !in_array($tpl_id, array('item', 'active', 'inactive', 'separator')) &&
                     !preg_match('~^\$~', $tpl_id)
                     ) {
                         $n->set_attribute('fx:is_sub_root', $tpl_id);
@@ -150,7 +151,9 @@ class fx_template_html {
                 $n->remove_attribute('fx:omit');
             }
         });
-        return $tree->serialize();
+        $res = $tree->serialize();
+        //echo fen_debug(htmlspecialchars($res));
+        return $res;
     }
     
     public function make_tree($tokens) {
@@ -302,7 +305,7 @@ class fx_html_token {
             }
         }
         $tag_start = '';
-        if ($this->name != 'root' && !$this->omit)  {
+        if ($this->name != 'root' && !$omit)  {
             if (isset($this->attributes) && isset($this->attributes_modified)) {
                 $tag_start .= '<'.$this->name;
                 foreach ($this->attributes as $att_name => $att_val) {
@@ -347,7 +350,7 @@ class fx_html_token {
                 $res .= $child->serialize();
             }
         }
-        if ($this->type == 'open' && $this->name != 'root' && !$this->omit) {
+        if ($this->type == 'open' && $this->name != 'root' && !$omit) {
             if ($omit_conditional) {
                 $res .= '<?if ('.$omit_var_name.') {?>';
             }
@@ -484,7 +487,10 @@ class fx_html_tokenizer {
 		$this->add_rule(self::STATE_ANY, '<?', self::STATE_PHP, 'php_start');
 		$this->add_rule(self::STATE_PHP, '?>', false, 'php_end');
 		
-        $this->add_rule(self::STATE_ANY, '{', self::STATE_FX, 'fx_start');
+        $this->add_rule(self::STATE_TAG, '{', self::STATE_FX, 'fx_start');
+        $this->add_rule(self::STATE_TEXT, '{', self::STATE_FX, 'fx_start');
+        $this->add_rule(self::STATE_ATT_NAME, '{', self::STATE_FX, 'fx_start');
+        $this->add_rule(self::STATE_ATT_VAL, '{', self::STATE_FX, 'fx_start');
         $this->add_rule(self::STATE_FX, '}', false, 'fx_end');
         
 		$this->add_rule(self::STATE_TEXT, '<', self::STATE_TAG, 'text_to_tag');
@@ -559,7 +565,7 @@ class fx_html_tokenizer {
      */
     public function parse($string) {
 		$this->position = 0;
-        $parts = preg_split("~(<[a-z0-9\/\?]+|>|[\{\}]|=[\'\"]?|[\'\"]|\s+)~", $string, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+        $parts = preg_split("~(<[a-z0-9\/\?]+|>|<\?|\?>|[\{\}]|=[\'\"]?|[\'\"]|\s+)~", $string, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 		//while ( isset($string[$this->position]) ) {
 		//	$ch = $string[$this->position];
         foreach ($parts as $ch) {

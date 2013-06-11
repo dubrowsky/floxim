@@ -28,7 +28,7 @@ class fx_template {
     	$is_admin =  fx::env('is_admin');
         fx::trigger('render_area', array('area' => $area));
         
-        $area_blocks = $this->data[$area['id']];
+        $area_blocks = $this->data['areas'][$area['id']];
         if (!$area_blocks || !is_array($area_blocks)) {
             $area_blocks = array();
         }
@@ -68,7 +68,6 @@ class fx_template {
         foreach ($data as $dk => $dv) {
             $this->set_var($dk, $dv);
         }
-        
         ob_start();
         $method = 'tpl_'.$this->action;
         if (method_exists($this, $method)) {
@@ -82,7 +81,7 @@ class fx_template {
         if ($this->data['_idle']) {
             return $result;
         }
-        
+        /*
         if ( ($tpl_files = glob($this->_source_dir.'/*.{js,css}', GLOB_BRACE)) ) {
 			foreach ($tpl_files as $f) {
 				if (!preg_match("~_[^/]+$~", $f)) {
@@ -90,7 +89,7 @@ class fx_template {
 					fx::page()->add_file($file_http);
 				}
 			}
-        }
+        }*/
         if (fx::env('is_admin')) {
             $result = fx_template::replace_areas($result);
             $result = fx_template_field::replace_fields($result);

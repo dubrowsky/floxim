@@ -87,8 +87,7 @@ class fx_controller_module_auth extends fx_controller_module {
     }
 
     public function logout($input) {
-        $fx_core = fx_core::get_object();
-        $user = $fx_core->env->get_user();
+        $user = fx::env()->get_user();
         if ($user) {
             $user->unauthorize();
         }

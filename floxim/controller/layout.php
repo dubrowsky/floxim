@@ -13,8 +13,12 @@ class fx_controller_layout extends fx_controller {
                 $page_id, 
                 $layout_id
         );
-        //dev_log('ibs to rnd', $page_infoblocks);
-        return $page_infoblocks;
+        $res = array(
+            'areas' => $page_infoblocks,
+            'page_id' => $page_id,
+            'path' => fx::data('content_page', $page_id)->get_path()
+        );
+        return $res;
     }
     
     public function postprocess($html) {
@@ -28,7 +32,7 @@ class fx_controller_layout extends fx_controller {
             $html = fx::page()->set_metatags('title',$meta_title)
                                 ->set_metatags('description',$page['description'])
                                 ->set_metatags('keywords',$page['keywords'])
-                                ->post_proccess($html);
+                                ->post_process($html);
         }
         return $html;
     }
@@ -84,7 +88,7 @@ class fx_controller_layout extends fx_controller {
         $p = fx::page();
         $p->add_js_text("fx_adminpanel.init(".$js_config->get_config().");");
         
-        $p->add_js_file('/floxim/lib/js/jquery-1.7.1.js');
+        $p->add_js_file(FX_JQUERY_PATH);
         $p->add_js_file('/floxim/lib/js/jquery-ui-1.8.21.custom.js');
         $p->add_js_file('/floxim/lib/js/jquery.nestedSortable.js');
         $p->add_js_file('/floxim/lib/js/jquery.ba-hashchange.min.js');
@@ -215,7 +219,7 @@ class fx_controller_layout extends fx_controller {
         $path = $parent->get_path();
         $tpl->set_vars('fx_path', $path);
 
-        $fx_core->page->add_js_file('/floxim/lib/js/jquery-1.7.1.js');
+        $fx_core->page->add_js_file(FX_JQUERY_PATH);
         $fx_core->page->add_js_file('/floxim/lib/js/jquery-ui-1.8.21.custom.js');
         $fx_core->page->add_js_file('/floxim/lib/js/jquery.nestedSortable.js');
         $fx_core->page->add_js_file('/floxim/lib/js/jquery.ba-hashchange.min.js');
@@ -390,7 +394,7 @@ class fx_controller_layout extends fx_controller {
     public function _admin() {
         $fx_core = fx_core::get_object();
 
-        $fx_core->page->add_js_file('/floxim/lib/js/jquery-1.7.1.js');
+        $fx_core->page->add_js_file(FX_JQUERY_PATH);
         $fx_core->page->add_js_file('/floxim/lib/js/jquery-ui-1.8.21.custom.js');
         $fx_core->page->add_js_file('/floxim/lib/js/jquery.nestedSortable.js');
         $fx_core->page->add_js_file('/floxim/lib/js/jquery.ba-hashchange.min.js');

@@ -159,8 +159,6 @@ class fx_controller_admin_module_auth extends fx_controller_admin_module {
 
     public function tab_common_save($input) {
         $fx_core = fx_core::get_object();
-        $fx_auth = fx_auth::get_object();
-
         $result = array('status' => 'ok');
 
         if (!$input['external_user_groups']) {
@@ -170,10 +168,10 @@ class fx_controller_admin_module_auth extends fx_controller_admin_module {
             return $result;
         }
 
-        if (!$fx_core->util->validate_email($input['admin_notify_email'])) {
+        if (!fx::util()->validate_email($input['admin_notify_email'])) {
             $result['status'] = 'error';
             $result['text'] = 'Неверный формат адреса e-mail.';
-            var_dump($fx_core->util->validate_email($input['admin_notify_email']));
+            var_dump(fx::util()->validate_email($input['admin_notify_email']));
             die;
             $result['fields'][] = 'admin_notify_email';
             return $result;

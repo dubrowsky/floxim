@@ -1,32 +1,6 @@
 <?php
 class fx_controller_admin_adminpanel extends fx_controller_admin {
 
-    public function main($input) {
-        $fx_core = fx_core::get_object();
-
-        echo '<html><title>Floxim</title><body></body></html>';
-
-        $fx_core->page->add_js_file('/floxim/lib/js/jquery-1.7.1.js');
-        $fx_core->page->add_js_file('/floxim/lib/js/jquery-ui-1.8.13.custom.min.js');
-        $fx_core->page->add_js_file('/floxim/lib/js/jquery.ba-hashchange.min.js');
-        $fx_core->page->add_js_file('/floxim/lib/js/ajaxfileupload.js'); // ajax upload files
-        $fx_core->page->add_js_file('/floxim/admin/js/lib.js');
-        $fx_core->page->add_js_file('/floxim/admin/js/adminpanel.js');
-        $fx_core->page->add_js_file('/floxim/admin/js/form.js');
-        $fx_core->page->add_js_file('/floxim/admin/js/dialog.js');
-        $fx_core->page->add_js_file('/floxim/admin/js/fields.js');
-        $fx_core->page->add_js_file('/floxim/admin/js/edit-in-place.js');
-        $fx_core->page->add_js_file('floxim/lib/editors/elrte/elrte.full.js');
-        $fx_core->page->add_js_file('/floxim/lib/editors/elrte/i18n/elrte.ru.js');
-        $fx_core->page->add_js_file('/floxim/lib/js/jquery.form.js');
-        $fx_core->page->add_js_file('/floxim/lib/js/jquery.jstree.js');
-
-        $fx_core->page->add_css_file('/floxim/lib/css/elrte/elrte.min.css');
-        $fx_core->page->add_css_file('/floxim/admin/skins/default/jquery-ui/main.css');
-        $fx_core->page->add_css_file('/floxim/admin/skins/default/css/main.css');
-
-        $fx_core->page->set_after_body(fx_controller_admin_adminpanel::panel_html());
-    }
 
     public function index($input) {
         $fx_core = fx_core::get_object();
@@ -54,8 +28,8 @@ class fx_controller_admin_adminpanel extends fx_controller_admin {
 
     public static function get_main_menu() {
         $main_menu = array();
-        $main_menu[] = array('name' => 'Управление', 'items' => array(
-                'site' => array('name' => 'Сайт', 'href' => '/#page.view'),
+        $main_menu[] = array('name' => FX_ADMINPANEL_MANAGE, 'items' => array(
+                'site' => array('name' => FX_ADMINPANEL_SITE, 'href' => '/#page.view'),
                 'user' => array('name' => 'Пользователи', 'href' => '/floxim/#admin.user.all'),
                 'tools' => array('name' => 'Инструменты', 'href' => '/floxim/#admin.redirect.all'),
                 'administrate' => array('name' => 'Администрирование', 'href' => '/floxim/#admin.administrate.site.all'),

@@ -77,12 +77,12 @@ class fx_controller_admin_component extends fx_controller_admin {
     	
     	$titles = array(
     		'component' => array(
-				'ctpl' => 'Шаблоны',
+				//'ctpl' => 'Шаблоны',
 				'fields' => 'Поля',
 				'settings' => 'Настройки'
 			), 
 			'widget' => array(
-				'tpl' => 'Шаблон',
+				//'tpl' => 'Шаблон',
 				'fields' => 'Поля',
 				'settings' => 'Настройки'
 			)
@@ -115,15 +115,15 @@ class fx_controller_admin_component extends fx_controller_admin {
                 $groups = fx::data('component')->get_all_groups();
 
                 $fields[] = $this->ui->hidden('action', 'add');
-                $fields[] = array('label' => 'Название компонента (по-русски)', 'name' => 'name');
-                $fields[] = array('label' => 'Название сущности создаваемой компонентом (по-русски)', 'name' => 'item_name');
+                $fields[] = array('label' => 'Название компонента', 'name' => 'name');
+                $fields[] = array('label' => 'Название сущности, создаваемой компонентом', 'name' => 'item_name');
                 $fields[] = array('label' => 'Ключевое слово', 'name' => 'keyword');
                 $fields[] = array('label' => 'Группа', 'type' => 'select', 'values' => $groups, 'name' => 'group', 'extendable' => 'Другая группа');
         }
 
         $fields[] = $this->ui->hidden('source', $input['source']);
         $fields[] = $this->ui->hidden('posting');
-        $fields []= $this->_get_parent_component_field();
+        $fields[]= $this->_get_parent_component_field();
 
 
         return array('fields' => $fields);
@@ -205,6 +205,7 @@ class fx_controller_admin_component extends fx_controller_admin {
             $data['group'] = $input['fx_new_group'];
         }
         $data['parent_id'] = $input['parent_id'];
+        $data['item_name'] = $input['item_name'];
 
         $component = fx::data('component')->create($data);
 
@@ -250,6 +251,7 @@ class fx_controller_admin_component extends fx_controller_admin {
         }
         $component['parent_id'] = $input['parent_id'];
         $component['description'] = $input['description'];
+        $component['item_name'] = $input['item_name'];
         $component->save();
         return array('status' => 'ok');
     }
@@ -330,26 +332,16 @@ class fx_controller_admin_component extends fx_controller_admin {
     public function settings($component) {
         $groups = fx::data('component')->get_all_groups();
 
-        $fields[] = $this->ui->label("<a href='/floxim/?essence=admin_component&amp;action=export&amp;id=".$component['id']."'>Экспортировать в файл</a>");
         $fields[] = array('label' => 'Ключевое слово: '.$component['keyword'], 'type' => 'label');
 
-        $fields[] = array('label' => 'Название компонента (по-русски)', 'name' => 'name', 'value' => $component['name']);
-        $fields[] = array('label' => 'Название сущности создаваемой компонентом (по-русски)', 'name' => 'name', 'value' => $component['item_name']);
+        $fields[] = array('label' => 'Название компонента', 'name' => 'name', 'value' => $component['name']);
+        $fields[] = array('label' => 'Название сущности создаваемой компонентом', 'name' => 'item_name', 'value' => $component['item_name']);
 
         $fields[] = array('label' => 'Группа', 'type' => 'select', 'values' => $groups, 'name' => 'group', 'value' => $component['group'], 'extendable' => 'Другая группа');
 
         $fields[] = array('label' => 'Описание', 'name' => 'description', 'value' => $component['description'], 'type' => 'text');
         
-        /*
-        $fields []= array(
-            'label' => 'Создает страницы?',
-            'name' => 'has_page',
-            'type' => 'checkbox',
-            'value' => $component['has_page']
-        );*/
         $fields []= $this->_get_parent_component_field($component);
-
-        //$fields[] = array('label' => 'И еще можно сменить иконку', 'type' => 'label');
 
         $fields[] = array('type' => 'hidden', 'name' => 'phase', 'value' => 'settings');
         $fields[] = array('type' => 'hidden', 'name' => 'id', 'value' => $component['id']);
@@ -380,5 +372,4 @@ class fx_controller_admin_component extends fx_controller_admin {
     }
 
 }
-
 ?>

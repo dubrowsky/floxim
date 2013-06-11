@@ -233,7 +233,14 @@ class fx_data {
                     break;
                 case self::MANY_MANY:
                     $end_rel = $rel[3];
+                    // чтобы вынимались связанные сущности 
+                    // только с непустым полем, по которому связываем
+                    $end_rel_data = $rel_finder->relations();
+                    $end_rel_field = $end_rel_data[$end_rel][2];
                     $rel_finder->with($end_rel)->where($rel_field, $essences->get_values('id'));
+                    if ($end_rel_field) {
+                        $rel_finder->where($end_rel_field, 0, '!=');
+                    }
                     $rel_items = $rel_finder->all();
                     $essences->attache_many($rel_items, $rel_field, $rel_name, 'id', $end_rel);
                     break;

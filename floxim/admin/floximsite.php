@@ -4,9 +4,7 @@ class fx_admin_floximsite {
 
     protected $url = 'http://floxim.org/';
 
-    /**
-     * @todo использовать $fx_core->util->http_request
-     */
+    
     protected function send($post) {
         $data = http_build_query($post, null, '&');
 

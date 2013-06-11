@@ -31,32 +31,23 @@ class fx_site extends fx_essence {
     }
     
     protected function _before_delete() {
-        $this->delete_subdivisions();
         $this->delete_infoblocks();
-        $this->delete_menu();
+        $this->delete_content();
     }
     
-    protected function delete_subdivisions () {
-        $subs = fx::data('subdivision')->get_all('site_id', $this['id']);
-        foreach ( $subs as $sub ) {
-            $sub->delete();
+    protected function delete_content() {
+        $content = fx::data('content')->where('site_id', $this['id'])->all();
+        foreach ( $content as $content_item ) {
+            $content_item->delete();
         }
     }
     
     protected function delete_infoblocks () {
-        $infoblocks = fx::data('infoblock')->get_all('site_id', $this['id']);
+        $infoblocks = fx::data('infoblock')->where('site_id', $this['id'])->all();
         foreach ($infoblocks as $infoblock) {
             $infoblock->delete();
         }
     }
-    
-     protected function delete_menu () {
-        $menu = fx::data('menu')->get_all('site_id', $this['id']);
-        foreach ($menu as $v) {
-            $v->delete();
-        }
-    }
-
 }
 
 ?>

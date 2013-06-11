@@ -35,9 +35,9 @@ class fx_controller_admin_site extends fx_controller_admin {
         $this->response->add_field($list);
 
         $this->response->add_pulldown_item('add', 'Новый', 'source=new');
-        $this->response->add_pulldown_item('add', 'импортировать', 'source=import');
-        $this->response->add_pulldown_item('add', 'установить с FloximStore', 'source=store');
-
+        //$this->response->add_pulldown_item('add', 'импортировать', 'source=import');
+        //$this->response->add_pulldown_item('add', 'установить с FloximStore', 'source=store');
+        
         $this->response->add_buttons("add,delete");//settings,
         $this->response->breadcrumb->add_item('Сайты');
         $this->response->submenu->set_menu('site');
@@ -50,28 +50,15 @@ class fx_controller_admin_site extends fx_controller_admin {
             case 'store':
                 $fields[] = $this->ui->store('site');
                 break;
-            case 'import':
-                $fields[] = $this->ui->select('template_id', "Макет дизайна", $this->get_templates());
-                $fields[] = $this->ui->file('importfile', 'Файл');
-                $fields[] = $this->ui->hidden('action', 'import');
-                break;
             default:
                 $fields[] = $this->ui->hidden('action', 'add');
                 $fields[] = $this->ui->input('name', 'Название сайта', 'Новый сайт');
-                $fields[] = $this->ui->input('domain', 'Название сайта', 'Домен');
+                $fields[] = $this->ui->input('domain', 'Домен', 'Домен');
         }
 
         $fields[] = $this->ui->hidden('posting');
         $this->response->add_fields($fields);
         $this->response->dialog->set_title('Добавление нового сайта');
-    }
-
-    protected function get_templates() {
-        $tpl_values = array();
-        foreach (fx::data('template')->get_all('type', 'parent') as $tpl) {
-            $tpl_values[$tpl['id']] = $tpl['name'];
-        }
-        return $tpl_values;
     }
 
     public function store($input) {
@@ -126,21 +113,44 @@ class fx_controller_admin_site extends fx_controller_admin {
         }
 
         $current_site = fx::data('site')->get_by_host_name();
-        $template_id = $current_site['template_id'];
-        if (!$template_id) {
-            $template = fx::data('template')->get('type', 'parent');
-            $template_id = $template['id'];
+        $layout_id = $current_site['layout_id'];
+        if (!$layout_id) {
+            $layout_id = fx::data('layout')->one()->get('id');
         }
-
-        $site['template_id'] = $template_id;
+        
+        $site['layout_id'] = $layout_id;
         $site['checked'] = 1;
         $site->save();
+        
+        //dev_log('site saved', $site, $site['id']);
 
-        $sub_index = fx::data('subdivision')->create(array('name' => 'Титульная страница', 'keyword' => 'index', 'site_id' => $site['id']))->save();
-        $site['title_sub_id'] = $sub_index['id'];
-
-        $sub_e404 = fx::data('subdivision')->create(array('name' => 'Страница не найдена', 'keyword' => 'e404', 'site_id' => $site['id']))->save();
-        $site['e404_sub_id'] = $sub_e404['id'];
+        $index_page = fx::data('content_page')->create(array(
+            'name' => 'Титульная страница', 
+            'url' => '/', 
+            'site_id' => $site['id']
+        ))->save();
+        
+        //dev_log('index saved', $index_page);
+        
+        $error_page = fx::data('content_page')->create(array(
+            'name' => 'Страница не найдена', 
+            'url' => '/404', 
+            'site_id' => $site['id']
+        ))->save();
+        $site['e404_sub_id'] = $error_page['id'];
+        
+        $layout_infoblock = fx::data('infoblock')->create(
+                array(
+                    'controller' => 'layout',
+                    'action' => 'show',
+                    'name' => 'Layout',
+                    'site_id' => $site['id']
+                )
+        )->save();
+        /*
+        $layout_infoblock_visual = fx::data('infoblock_visual')->create(array(
+                'template' => 'layout_'.$layout['key']
+        ))->save();*/
 
         $site->save();
         return $result;

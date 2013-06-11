@@ -1,5 +1,5 @@
-{render}
-    <div class="text">
+<div class="text_block" fx:template="listing">
+    <p class="text" fx:template="item">
         {$text}
-    </div>
-{/render}
+    </p>
+</div>

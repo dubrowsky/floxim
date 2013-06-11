@@ -4,21 +4,10 @@
 if (!defined('FLOXIM')) {
     require_once('../boot.php');
 }
-
+dev_log('booted');
 ob_start();
 if ( ($controller = fx::router()->route() ) ) {
-    // dev_log('routed');
-    $result = $controller->process();
-    // dev_log('processed');
-    if (!is_string($result)) {
-        $template = $controller->find_template();
-        $result = $template->render(array('input' => $result));
-        $result = fx::page()->post_proccess($result);
-        // dev_log('postprocessed');
-    }
-
-    echo $result;
-    echo ob_get_clean();
+    echo $controller->process();
     dev_log('end');
     die();
 }

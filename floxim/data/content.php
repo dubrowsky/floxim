@@ -131,7 +131,9 @@ class fx_data_content extends fx_data {
         $obj['user_id'] = fx::env()->get_user()->get('id');
         $obj['checked'] = 1;
         $obj['type'] = fx::data('component', $this->component_id)->get('keyword');
-        $obj['site_id'] = fx::env('site')->get('id');
+        if (!isset($data['site_id'])) {
+            $obj['site_id'] = fx::env('site')->get('id');
+        }
         return $obj;
     }
 

@@ -16,29 +16,60 @@ class fx_controller_component_section extends fx_controller_component {
 
     public function get_action_settings($action)
     {
-        $fields = parent::get_action_settings_list_parrent();
-        $fields['submenu'] = array(
-            'name' => 'submenu',
-            'label' => 'Показывать подразделы',
-            'type' => 'checkbox',
-        );
+        $fields = parent::get_action_settings($action);
+        if ($action == 'listing') {
+            foreach (
+                array('parent_type', 'parent_id', 'sorting', 'sorting_dir', 'limit', 'show_pagination')
+                as $fk) {
+                    unset($fields[$fk]);
+            }
+            $fields['submenu'] = array(
+                'name' => 'submenu',
+                'label' => 'Подразделы',
+                'type' => 'select',
+                'values' => array(
+                    'none' => 'Не показывать',
+                    'active' => 'Показывать у активного',
+                    'all' => 'Показывать у всех'
+                )
+            );
+        }
         return $fields;
     }
     
     public function do_listing() {
-        if ( $this->input['submenu'] == 1 ) {
-            $this->listen('build_query', function($f) {
-                $f->with('submenu');
-            });
-        }
-        $this->listen('items_ready', function($items) {
-            $c_page_id  = fx::env('page');
-            $path = fx::data('content_page', $c_page_id)->get_parent_ids();
-            $path []= $c_page_id;
-
+        $this->set_param('sorting', 'manual');
+        $this->set_param('parent_type', 'mount_page_id');
+        $controller = $this;
+        $c_page_id  = fx::env('page');
+        $path = fx::data('content_page', $c_page_id)->get_parent_ids();
+        $path []= $c_page_id;
+        $this->listen('build_query', function($f) use ($controller, $path) {
+            $submenu = $controller->param('submenu');
+            switch ($submenu) {
+                case 'none':
+                    return;
+                case 'all':
+                    $f->with('submenu');
+                    return;
+                case 'active':
+                    $sub_f = fx::data('content_section')->where('parent_id', $path);
+                    $f->with('submenu', $sub_f);
+                    dev_log('submenu findr', $sub_f);
+                    return;
+            }
+        });
+        $this->listen('items_ready', function($items) use ($path, $controller) {
             if ( ($active_item = $items->find_one('id', $path)) ) {
                 $active_item->set('active',true);
+                
+                $controller->accept_content(array(
+                    'title' => "Подраздел &rarr; ".$active_item['name'],
+                    'parent_id' => $active_item['id'],
+                ));
             }
+            dev_log('menu items', $items);
+            /*
             if ( ($active_item = $items->find_one('alias', $path)) ) {
                 $active_item->set('active',true);
             }
@@ -50,6 +81,8 @@ class fx_controller_component_section extends fx_controller_component {
                     $item['name'] = empty($item['name']) ? $alias['name'] : $item['name'];
                 }
             }
+             * 
+             */
         });
         return parent::do_listing();
     }

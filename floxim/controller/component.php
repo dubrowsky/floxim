@@ -51,7 +51,7 @@ class fx_controller_component extends fx_controller {
         return $fields;
     }
 
-    public function get_action_settings_list_parrent()
+    public function get_action_settings_list_parent()
     {
         $fields['parent_type'] = array(
             'name' => 'parent_type',
@@ -73,7 +73,7 @@ class fx_controller_component extends fx_controller {
     
     public function get_action_settings_listing() {
         $fields = $this->get_action_settings_list_common();
-        $fields = array_merge($fields,$this->get_action_settings_list_parrent());
+        $fields = array_merge($fields,$this->get_action_settings_list_parent());
         return $fields;
     }
     
@@ -152,7 +152,9 @@ class fx_controller_component extends fx_controller {
             $c_ib = fx::data('infoblock', $infoblock_id);
             $f->where('infoblock_id', $c_ib->get_root_infoblock()->get('id'));
         }
-        $f->where('parent_id', $this->_get_parent_id());
+        if ( ($parent_id = $this->_get_parent_id()) ) {
+            $f->where('parent_id', $this->_get_parent_id());
+        }
         $this->trigger('build_query',$f);
 
         if ( ($sorting = $this->param('sorting')) ) {
@@ -171,18 +173,44 @@ class fx_controller_component extends fx_controller {
             $c_ib_name = $c_ib->get_prop_inherited('name');
             $component = fx::data('component', $content_type);
             $adder_title = $component['item_name'].' &rarr; '.($c_ib_name ? $c_ib_name:$c_ib['id']);
-            $this->_meta['accept_content'] = array(
-                array(
-                    'title' => $adder_title,
-                    'parent_id' => $this->_get_parent_id(),
-                    'type' => $content_type,
-                    'infoblock_id' => $this->param('infoblock_id')
-                )
-            );
+            
+            $this->accept_content(array(
+                'title' => $adder_title,
+                'parent_id' => $this->_get_parent_id(),
+                'type' => $content_type,
+                'infoblock_id' => $this->param('infoblock_id')
+            ));
         }
-        return array('items' => $items, 'pagination' => $this->_get_pagination());
+        $res = array('items' => $items);
+        if ( ($pagination = $this->_get_pagination()) ) {
+            $res ['pagination'] = $pagination;
+        }
+        return $res;
     }
     
+    public function accept_content($params) {
+        $params = array_merge(
+            array(
+                'infoblock_id' => $this->param('infoblock_id'),
+                'type' => $this->get_content_type()
+            ), $params
+        );
+        if (!isset($this->_meta['accept_content'])) {
+            $this->_meta['accept_content'] = array();
+        }
+        $this->_meta['accept_content'] []= $params;
+    }
+    
+    protected function _get_pagination_url_template() {
+        $url = $_SERVER['REQUEST_URI'];
+        $url = preg_replace("~[\?\&]page=\d+~", '', $url);
+        return $url.'##'.(preg_match("~\?~", $url) ? '&' : '?').'page=%d##';
+    }
+    
+    protected function _get_current_page() {
+        return isset($_GET['page']) ? $_GET['page'] : 1;
+    }
+
     protected function _get_pagination() {
         if (!$this->param('show_pagination')){
             return null;
@@ -190,12 +218,22 @@ class fx_controller_component extends fx_controller {
         $total_rows = $this->_get_finder()->get_found_rows();
         $limit = $this->param('limit');
         $total_pages = ceil($total_rows / $limit);
+        if ($total_pages == 1) {
+            return null;
+        }
         $result = array();
+        $url_tpl = $this->_get_pagination_url_template();
+        $base_url = preg_replace('~##.*?##~', '', $url_tpl);
+        $url_tpl = str_replace("##", '', $url_tpl);
+        $c_page = $this->_get_current_page();
         foreach (range(1, $total_pages) as $page_num) {
             $result[]= array(
-                'active' => $page_num == 3, //$page_num == $_GET['page'],
+                'active' => $page_num == $c_page,
                 'page' => $page_num,
-                'url' => '#page_'.$page_num
+                'url' => 
+                    $page_num == 1 ? 
+                    $base_url : 
+                    sprintf($url_tpl, $page_num)
             );
         }
         return $result;
@@ -288,11 +326,21 @@ class fx_controller_component extends fx_controller {
             return $this->_finder;
         }
         $finder = fx::data('content_'.$this->get_content_type());
-        if ($this->param('show_pagination')) {
+        $show_pagination = $this->param('show_pagination');
+        $c_page = $this->_get_current_page();
+        $limit = $this->param('limit');
+        if ( $show_pagination && $limit) {
             $finder->calc_found_rows();
         }
-        if ( ($limit = $this->param('limit'))) {
-            $finder->limit($limit);
+        if ( $limit ) {
+            if ($show_pagination && $c_page != 1) {
+                $finder->limit(
+                        $limit*($c_page-1),
+                        $limit
+                );
+            } else {
+                $finder->limit($limit);
+            }
         }
         $this->_finder = $finder;
         return $finder;

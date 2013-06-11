@@ -9,14 +9,11 @@
 <div id="main">
     <div class="content">
         <!--header-->
-        <div id="header" fx:area="header">
+        <div id="header">
             <!--логотип, слоган-->
             <div id="logo">
-                <a href="/">
-                    <img src="controllers/layout/supernova/images/logo.gif" width="103" height="75" alt="" title="" />
-                </a>
-                <span class="name">YOUR<span>LOGO</span></span>
-                <span>Sampletext under logo</span>
+                <span class="name">{%logo_text}YOUR<span>LOGO{/%}</span></span>
+                <span>{%slogan}Sampletext under logo{/%}</span>
             </div>
             <!--//логотип, слоган-->
 
@@ -30,7 +27,8 @@
 
             <!--//поиск-->
             <div class="sep"></div>
-
+            
+            <div fx:area="header"></div>
             <!--menu, отступы внутри пунктов меню сделаны через padding, что не совсем правильно, если мало или наоборот много пунктов меню, выглядеть будет не очень, такое меню надо делать на таблице-->
             <div id="menu" 
                  fx:template="demo_menu" 

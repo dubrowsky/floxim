@@ -92,53 +92,58 @@ class fx_content extends fx_essence {
 
 
     public function get_fields_to_show() {
-        //if (!isset($this->_fields_to_show)) {
-            $this->_fields_to_show = array();
-            /*
-            if (!$this->component_id) {
-                dev_log('no component!', $this);
-                die();
-            }*/
-            if (!isset(self::$content_fields_by_component[$this->component_id])) {
-                $component = fx::data('component', $this->component_id);
-                $chain = $component->get_chain();
-                $content_fields_col = new fx_collection();
+        $fields_to_show = array();
+        /*
+        if (true && !isset(self::$content_fields_by_component[$this->component_id])) {
+            $component = fx::data('component', $this->component_id);
+            $chain = $component->get_chain();
+            $content_fields_col = new fx_collection();
 
-                foreach ( $chain as $chain_level ) {
-                    if ( $chain_level['keyword'] == 'content') {
-                        continue;
-                    }
-                    $content_fields_col->concat ( $chain_level->fields() );
+            foreach ( $chain as $chain_level ) {
+                if ( $chain_level['keyword'] == 'content') {
+                    continue;
                 }
-                $content_fields = array();
-                foreach ($content_fields_col as $cf) {
-                    $content_fields[$cf['name']] = $cf;
-                }
-                self::$content_fields_by_component[$this->component_id] = $content_fields;
+                $content_fields_col->concat ( $chain_level->fields() );
+            }
+            $content_fields = array();
+            foreach ($content_fields_col as $cf) {
+                $content_fields[$cf['name']] = $cf;
+            }
+            self::$content_fields_by_component[$this->component_id] = $content_fields;
+        } else {
+            //dev_log('cached flds '.$this->component_id);
+            $content_fields = self::$content_fields_by_component[$this->component_id];
+        }
+        */
+        $com_id = $this->component_id;
+        if (!isset(self::$content_fields_by_component[$com_id])) {
+            self::$content_fields_by_component[$com_id] = array();
+            foreach ( fx::data('component', $com_id)->all_fields()  as $f) {
+                self::$content_fields_by_component[$com_id][$f['name']] = $f;
+            }
+        }
+        $com_fields = self::$content_fields_by_component[$com_id];
+        
+        $is_admin = fx::is_admin();
+        
+        foreach ($this->data as $fkey => $v) {
+            $cf = $com_fields[$fkey];
+            if ($is_admin && $cf && $cf->type != 'multilink') {
+                $fields_to_show[$fkey] = new fx_template_field($v, array(
+                    'var_type' => 'content', 
+                    'content_id' => $this['id'],
+                    'content_type_id' => $com_id,
+                    'id' => $cf['id'],
+                    'name' => $cf['name'],
+                    'title' => $cf['description'],
+                    'editable' => true
+                ));
             } else {
-                $content_fields = self::$content_fields_by_component[$this->component_id];
+                $fields_to_show[$fkey] = $v;
             }
-            
+        }
 
-            foreach ($this->data as $k => $v) {
-                $cf = $content_fields[$k];
-                $fkey = $k;
-                if (fx::env('is_admin') && $cf && $cf->type != 'multilink') {
-                    $this->_fields_to_show[$fkey] = new fx_template_field($v, array(
-                        'var_type' => 'content', 
-                        'content_id' => $this['id'],
-                        'content_type_id' => $this->get_component_id(),
-                        'id' => $cf['id'],
-                        'name' => $cf['name'],
-                        'title' => $cf['description'],
-                        'editable' => true
-                    ));
-                } else {
-                    $this->_fields_to_show[$fkey] = $v;
-                }
-            }
-        //}
-        return $this->_fields_to_show;
+        return $fields_to_show;
     }
     
     public function get_field_to_show($field) {

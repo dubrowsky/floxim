@@ -41,8 +41,10 @@ class fx_component extends fx_essence {
             $res = false;
         }
 
-        if ($this['keyword'] && !preg_match("/^[a-z][a-z0-9-]*$/i", $this['keyword'])) {
-            $this->validate_errors[] = array('field' => 'keyword', 'text' => 'Keyword может сожержать только буквы и цифры');
+        if ($this['keyword'] && !preg_match("/^[a-z][a-z0-9_-]*$/i", $this['keyword'])) {
+            $this->validate_errors[] = array(
+                'field' => 'keyword', 
+                'text' => 'Keyword может сожержать только буквы, цифры, символы "дефис" и "подчеркивание"');
             $res = false;
         }
 
@@ -128,7 +130,7 @@ class fx_component extends fx_essence {
             `id` int(11) NOT NULL,
             PRIMARY KEY (`id`)
             ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;";
-        fx_core::get_object()->db->query($sql);
+        fx::db()->query($sql);
     }
 
     protected function _before_delete() {

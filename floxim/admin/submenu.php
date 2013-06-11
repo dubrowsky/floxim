@@ -142,7 +142,7 @@ class fx_admin_submenu {
 
     protected function init_manage() {
         $fx_core = fx_core::get_object();
-        $modules = $fx_core->modules->get_data();
+        //$modules = $fx_core->modules->get_data();
         
         $this->menu[] = $node_site = $this->add_node('site', 'Список сайтов', 'site.all');
 
@@ -155,6 +155,7 @@ class fx_admin_submenu {
         $this->menu[] = $this->add_node('redirect', 'Переадресации', 'redirect.all', $node_tools);
         $this->menu[] = $this->add_node('crontask', 'Управление задачами', 'crontask.all', $node_tools);
         
+        /*
         foreach ($modules as $module) {
             try {
                 $keyword = $module['keyword'];
@@ -171,17 +172,20 @@ class fx_admin_submenu {
             }
         }
 
-
+        */
+        
         $this->menu[] = $node_users = $this->add_node('user', 'Пользователи', 'user.all');
         $this->menu[] = $this->add_node('user', 'Список пользователей', 'user.all', $node_users);
         $this->menu[] = $this->add_node('group', 'Группы', 'group.all', $node_users);
 
         $this->menu[] = $node_settings = $this->add_node('settings', 'Настройки', 'settings.system');
-        
+        /*
         foreach ( $modules as $module ) {
             $keyword = $module['keyword'];
             $this->menu[] = $this->add_node('settings-'.$keyword, 'Настройки '.$keyword, 'module_'.$keyword.'.basesettings', $node_settings);
         }
+         * 
+         */
     }
 
     protected function init_menu_component($id) {
@@ -201,11 +205,14 @@ class fx_admin_submenu {
             	$this->menu[] = $this->add_node($item['code'], $item['title'], $item['url']);
             }
             
+            /*
             // добавляем шаблоны
             $ctpls = fx::data('ctpl')->get_by_component($cid);
             foreach ($ctpls as $v) {
                 $this->menu[] = $this->add_node('ctpl-'.$v['id'], $v['name'], 'ctpl.edit('.$v['id'].')', 'ctpl');
             }
+             * 
+             */
             
             // и поля
             foreach ($component->fields() as $v) {

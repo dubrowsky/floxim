@@ -443,7 +443,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         if ( ($layout_tpl = fx::template('layout_'.$layout_name)) ) {
             foreach ( $layout_tpl->get_template_variants() as $tplv) {
                 $full_id = 'layout_'.$layout_name.'.'.$tplv['id'];
-                if ($tplv['for'] == 'wrap') {
+                if ($tplv['of'] == 'block') {
                     $wrappers[$full_id] = $tplv['name'];
                 }
             }

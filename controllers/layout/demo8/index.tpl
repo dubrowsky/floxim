@@ -4,7 +4,7 @@
         <img src="images/top_banner.jpg" width="834" height="360" alt="" />
     </div>
     <!--//верхний баннер-->
-    {area id="content"}
+    <div id="booo"></div>
     {$too_blocks}
         <div class="block columns_2">
             <div class="col first">

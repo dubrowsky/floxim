@@ -1,15 +1,23 @@
-<?php dev_log('items in template',$input); ?>
-<div class="blog_calendar">
-    <h2>Посты по месяцам:</h2>
-    {each select="$years" as="$item"}
-        <h3><a href="{$url}">{$name}</a></h3>
-    {/each}
-        <ul>
-            {each select="$months" as="$item"}
-            <li>
-                <a href="{$url}">{$name}</a>&nbsp;({$post_counter})
-            </li>
-            {/each}
-        </ul>
-
+<div fx:template="calendar" class="blog_calendar">
+    <?
+    fx::page()->add_js_file(FX_JQUERY_PATH);
+    fx::page()->add_js_file('/controllers/component/blogpost/_calendar.js');
+    ?>
+    <h2 fx:if="$show_header">{%header}Посты по месяцам:{/%}</h2>
+    <?
+    $month_names = array(
+        '', 'январь','февраль','март','апрель','май','июнь','июль','август','сентябрь','октябрь','ноябрь','декабрь'
+    );
+    ?>
+    <div fx:template="item" class="year{if $active} year_active{/if}">
+        <div class="year_title">{$year}</div>
+        <div class="months" fx:template="$months">
+            <div fx:template="item">
+                <a fx:omit="!$active" href="{$url}">
+                    {%month_$month}<?=$month_names[ (int) $month]?>{/%}
+                </a> 
+                ({$count})
+            </div>
+        </div>
+    </div>
 </div>

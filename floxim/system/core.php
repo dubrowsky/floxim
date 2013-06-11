@@ -1,59 +1,5 @@
 <?php
-
-/* $Id: fx_core.class.php 4714 2011-05-20 10:48:13Z denis $ */
-/**
- * For IDE autocomplete:
- * @property fx_data_site $site
- * @property fx_data_classificator $classificator
- * @property fx_data_component $component
- * @property fx_data_crontask $crontask
- * @property fx_data_ctpl $ctpl
- * @property fx_data_field $field
- * @property fx_data_filetable $filetable
- * @property fx_data_group $group
- * @property fx_data_history $history
- * @property fx_data_infoblock $infoblock
- * @property fx_data_mailtemplate $mailtemplate
- * @property fx_data_menu $menu
- * @property fx_data_content $content
- * @property fx_data_redirect $redirect
- * @property fx_data_rights $rights
- * @property fx_data_subdivision $subdivision
- * @property fx_data_template $template
- * @property fx_data_user $user
- * @property fx_data_widget $widget
- *
- * @property string $SUB_FOLDER
- * @property string $AUTHORIZE_BY
- * @property string $HTTP_ROOT_PATH
- * @property string $HTTP_MODULE_PATH
- * @property string $HTTP_FILES_PATH
- * @property string $HTTP_ACTION_LINK
- * @property string $HTTP_COMPONENT_PATH
- * @property string $HTTP_WIDGET_PATH
- * @property string $DOCUMENT_ROOT
- * @property string $HTTP_HOST
- * @property string $FLOXIM_FOLDER
- * @property string $ROOT_FOLDER
- * @property string $SYSTEM_FOLDER
- * @property string $FILES_FOLDER
- * @property string $DUMP_FOLDER
- * @property string $TEMPLATE_FOLDER
- * @property string $COMPONENT_FOLDER
- * @property string $WIDGET_FOLDER
- * @property string $MODULE_TPL_FOLDER
- * @property string $INCLUDE_FOLDER
- * @property string $TMP_FOLDER
- * @property string $MODULE_FOLDER
- * @property string $ADMIN_FOLDER
- * @property string $NC_JQUERY_PATH
- *
- */
 class fx_core extends fx_system {
-
-    /** @var fx_Db */
-    public $db;
-    public $beta = true;
 
     /** @var fx_system_page */
     public $page;
@@ -61,29 +7,11 @@ class fx_core extends fx_system {
     /** @var fx_system_eventmanager */
     public $event;
 
-    /** @var fx_system_files */
-    public $files;
-
-    /** @var fx_system_input */
-    public $input;
-
-    /** @var fx_system_input */
-    public $lang;
-
-    /** @var fx_system_mail */
-    public $mail;
-
     /** @var fx_system_modules */
     public $modules;
 
-    /** @var fx_system_url */
-    public $url;
-
     /** @var fx_system_env */
     public $env;
-
-    /** @var fx_system_token */
-    public $token;
 
     /** @var fx_system_util */
     public $util;
@@ -93,10 +21,7 @@ class fx_core extends fx_system {
 
     public function __construct() {
         parent::__construct();
-
         spl_autoload_register(array($this, 'load_class'));
-
-        //$this->beta = true;
     }
 
     public function db_init() {
@@ -123,8 +48,8 @@ class fx_core extends fx_system {
     public function get_settings($item = '', $module = '') {
 
         if (empty($this->settings)) {
-            $res = $this->db->get_results("SELECT `key`, `module`, `value` FROM `{{settings}}`");
-            $count = $this->db->row_count();
+            $res = fx::db()->get_results("SELECT `key`, `module`, `value` FROM `{{settings}}`");
+            $count = fx::db()->row_count();
             for ($i = 0; $i < $count; $i++) {
                 $this->settings[$res[$i]['module']][$res[$i]['key']] = $res[$i]['value'];
             }
@@ -158,15 +83,16 @@ class fx_core extends fx_system {
         // обновляем состояние
         $this->settings[$module][$key] = $value;
         // подготовка записи в БД
-        $key = $this->db->escape($key);
-        $value = $this->db->prepare($value);
-        $module = $this->db->escape($module);
+        $db = fx::db();
+        $key = $db->escape($key);
+        $value = $db->prepare($value);
+        $module = $db->escape($module);
 
-        $id = $this->db->get_var("SELECT `id` FROM `{{settings}}` WHERE `key` = '".$key."' AND `module` = '".$module."' ");
+        $id = $db->get_var("SELECT `id` FROM `{{settings}}` WHERE `key` = '".$key."' AND `module` = '".$module."' ");
         if ($id) {
-            $this->db->query("UPDATE `{{settings}}` SET `value` = '".$value."' WHERE `id` = '".$id."' ");
+            $db->query("UPDATE `{{settings}}` SET `value` = '".$value."' WHERE `id` = '".$id."' ");
         } else {
-            $this->db->query("INSERT INTO `{{settings}}`(`key`, `module`, `value`)
+            $db->query("INSERT INTO `{{settings}}`(`key`, `module`, `value`)
                         VALUES('".$key."','".$module."','".$value."') ");
         }
 
@@ -185,12 +111,13 @@ class fx_core extends fx_system {
         // обновляем состояние
         unset($this->settings[$module][$key]);
         // подготовка запроса к БД
-        $key = $this->db->escape($key);
-        $module = $this->db->escape($module);
+        $db = fx::db();
+        $key = $db->escape($key);
+        $module = $db->escape($module);
 
-        $this->db->get_query("DELETE FROM `{{settings}}` WHERE `key` = '".$key."' AND `module` = '".$module."' ");
+        $db->get_query("DELETE FROM `{{settings}}` WHERE `key` = '".$key."' AND `module` = '".$module."' ");
 
-        return $this->db->affected_rows;
+        return $db->affected_rows;
     }
 
     public function load_default_extensions() {
@@ -304,9 +231,7 @@ class fx_core extends fx_system {
         require_once $file;
     }
 
-
     public static function get_class_file($classname) {
-
       	$root = fx::config()->ROOT_FOLDER;
         $doc_root = fx::config()->DOCUMENT_ROOT.'/';
 

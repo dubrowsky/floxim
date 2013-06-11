@@ -143,8 +143,6 @@ class fx_controller_admin_layout extends fx_controller_admin {
     }
 
     public function add_save($input) {
-        $fx_core = fx_core::get_object();
-
         $result = array('status' => 'ok');
         $keyword = trim($input['keyword']);
         $name = trim($input['name']);
@@ -153,7 +151,7 @@ class fx_controller_admin_layout extends fx_controller_admin {
         $layout = fx::data('layout')->create($data);
         $path = $layout->get_path();
         try {
-            $fx_core->files->mkdir($path);
+            fx::files()->mkdir($path);
             $layout->save();
         } catch (Exception $e) {
             $result['status'] = 'error';

@@ -27,6 +27,10 @@ class fx_controller {
     public function param($name) {
         return isset($this->input[$name]) ? $this->input[$name] : null;
     }
+    
+    public function set_param($name, $value) {
+        $this->input[$name] = $value;
+    }
 
     public function set_input($input) {
         $this->input = $input;
@@ -103,16 +107,16 @@ class fx_controller {
         // а теперь - фильтруем
         $result = array();
         foreach ($template_variants as $k => $tplv) {
-            foreach (explode(",", $tplv['for']) as $tpl_for) {
-                $for_parts = explode(".", $tpl_for);
-                if (count($for_parts) != 2) {
+            foreach (explode(",", $tplv['of']) as $tpl_of) {
+                $of_parts = explode(".", $tpl_of);
+                if (count($of_parts) != 2) {
                     continue;
                 }
-                list($tpl_for_controller, $tpl_for_action) = $for_parts;
-                if ( !in_array($tpl_for_controller, $controller_variants)) {
+                list($tpl_of_controller, $tpl_of_action) = $of_parts;
+                if ( !in_array($tpl_of_controller, $controller_variants)) {
                     continue;
                 }
-                if (strpos($this->action, $tpl_for_action) !== 0) {
+                if (strpos($this->action, $tpl_of_action) !== 0) {
                     continue;
                 }
                 $result []= $tplv;

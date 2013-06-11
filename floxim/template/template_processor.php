@@ -1,5 +1,4 @@
 <?php
-//require_once '../../boot.php';
 class fx_template_processor {
     /**
      * Преобразовать шаблон в php-код
@@ -13,8 +12,8 @@ class fx_template_processor {
         $source = str_replace("{/php}", '?>', $source);
         
         $tokens = $this->tokenize($source);
-        $tree = $this->make_tree($tokens);
-        $code = $this->make_code($tree, $code);
+        $tree = $this->_make_tree($tokens);
+        $code = $this->_make_code($tree, $code);
         return $code;
     }
     /**
@@ -23,6 +22,9 @@ class fx_template_processor {
      * @return string php-код
      */
     public function process_dir($source_dir) {
+        $this->source_dir = $source_dir;
+        $this->template_dir = str_replace($_SERVER['DOCUMENT_ROOT'], '', $this->source_dir).'/';
+        $tpl_name_parts = null;
         preg_match("~([a-z]+)[\/\\\]([a-z0-9_]+)$~", $source_dir, $tpl_name_parts);
         $this->_controller_type = $tpl_name_parts[1];
         $this->_controller_name = $tpl_name_parts[2];
@@ -43,13 +45,13 @@ class fx_template_processor {
             // удаляем пробелы в начале строки, 
             // если она начинается с {...}
             $file_data = preg_replace(
-                "~(?<=[\n\r])\s+(\{.+?\})~s", 
+                "~\s*?[\n\r]+\s*?(\{.+?\})~s", 
                 '\1', 
                 $file_data
             );
             // или заканчивается на {...}
             $file_data = preg_replace(
-                "~(\{.+?\})\s+(?=[\n\r])~s",
+                "~(\{.+?\})\s*?[\n\r]+\s*~s",
                 '\1',
                 $file_data
             );
@@ -186,7 +188,7 @@ class fx_template_processor {
     }
 
 
-    protected function make_tree($tokens) {
+    protected function _make_tree($tokens) {
         $stack = array();
         $root = $tokens[0];
         while ($token = array_shift($tokens)) {
@@ -236,7 +238,7 @@ class fx_template_processor {
                     $child->name == 'template' && 
                     in_array($child->get_prop('id'), array(
                         'active', 
-                        'unactive',
+                        'inactive',
                         'active_link',
                         'separator',
                         'item'
@@ -255,11 +257,13 @@ class fx_template_processor {
             return;
         }
         
-        // выбираем дефолтный шаблон - либо unactive, либо item
+        //echo fen_debug($subtemplates, $each_token);
+        
+        // выбираем дефолтный шаблон - либо inactive, либо item
         $basic_tpl = null;
         $basic_cond = null;
-        if (isset($subtemplates['unactive'])) {
-            $basic_tpl = $subtemplates['unactive'];
+        if (isset($subtemplates['inactive'])) {
+            $basic_tpl = $subtemplates['inactive'];
         } elseif (isset($subtemplates['item'])) {
             $basic_tpl = $subtemplates['item'];
         }
@@ -304,9 +308,12 @@ class fx_template_processor {
                 $active_cond->add_children($subtemplates['active']->get_children());
                 $each_token->add_child($active_cond);
             }
-        } 
+        }
         // только один подшаблон
         else {
+            /*foreach ($subtemplates as $subtpl) {
+                $each_token->add_children($subtpl->get_children());
+            }*/
             $each_token->add_children($basic_tpl->get_children());
         }
         
@@ -429,7 +436,7 @@ class fx_template_processor {
             $code .= "}\n";
         }
         if ($token->get_prop('var_type') == 'visual' && !($token->get_prop('editable') == 'false')) {
-            $code .= 'if (fx::env("is_admin") && !('.$var_tmp." instanceof fx_template_field)) {\n";
+            $code .= 'if (fx::is_admin() && !('.$var_tmp." instanceof fx_template_field)) {\n";
             $code .= "\t".$var_tmp." = new fx_template_field(".$var_tmp.", ";
             $code .= 'array("id" => "'.$var_id.'", ';
             $code .= '"var_type" => "visual", ';
@@ -500,8 +507,10 @@ class fx_template_processor {
         //$code .= "if (is_array(".$arr_id.") || ".$arr_id." instanceof Traversable) {\n";
         $code .= $counter_id." = 0;\n";
         $code .= $item_alias."_total = count(".$arr_id.");\n";
+        $code .= "\$_is_admin = fx::is_admin();\n";
         $code .= "\nforeach (".$arr_id." as ".$item_key." => ".$item_alias.") {\n";
         $code .= $counter_id."++;\n";
+        $code .= $item_alias."_is_first = ".$counter_id." === 1;\n";
         $code .= $item_alias."_is_last = ".$item_alias."_total == ".$counter_id.";\n";
         $code .= $item_alias."_is_odd = ".$counter_id." % 2 != 0;\n";
         if ($extract) {
@@ -511,7 +520,7 @@ class fx_template_processor {
             $code .= "\t\textract(".$item_alias." instanceof fx_content ? ".$item_alias."->get_fields_to_show() : get_object_vars(".$item_alias."));\n";
             $code .= "\t}\n";
         }
-        $meta_test = "\tif (fx::env('is_admin') && (".$item_alias." instanceof fx_essence) ) {\n";
+        $meta_test = "\tif (\$_is_admin && (".$item_alias." instanceof fx_essence) ) {\n";
         $code .= $meta_test;
         $code .= "\t\tob_start();\n";
         $code .= "\t}\n";
@@ -558,6 +567,42 @@ class fx_template_processor {
         $code .= "}\n?>";
         return $code;
     }
+    
+    protected function _token_js_to_code($token) {
+        return $this->_token_headfile_to_code($token, 'js');
+    }
+    
+    protected function _token_css_to_code($token) {
+        return $this->_token_headfile_to_code($token, 'css');
+    }
+    
+    protected function _token_headfile_to_code($token, $type) {
+        $code .= "<?\n";
+        $tpl_path = $this->template_dir;
+        foreach ($token->get_children() as $js_set) {
+            $js_set = preg_split("~[\n\r]~", $js_set->get_prop('value'));
+            foreach ($js_set as $js_file) {
+                $js_file = trim($js_file);
+                if (empty($js_file)) {
+                    continue;
+                }
+                $res_string = '';
+                // constant
+                if (preg_match("~^[A-Z0-9_]+$~", $js_file)) {
+                    $res_string = $js_file;
+                } elseif (
+                        !preg_match("~^/~", $js_file) && 
+                        !preg_match("~^https?://~", $js_file)) {
+                    $res_string = '"'.$tpl_path.$js_file.'"';
+                } else {
+                    $res_string = '"'.$js_file.'"';
+                }
+                $code .= 'fx::page()->add_'.$type.'_file('.$res_string.");\n";
+            }
+        }
+        $code .= "\n?>";
+        return $code;
+    }
 
 
     protected function _token_to_code(fx_template_token $token) {
@@ -587,17 +632,17 @@ class fx_template_processor {
         if ( !($name = $token->get_prop('name'))) {
             $name = $token->get_prop('id');
         }
-        if (! ($for = $token->get_prop('for'))) {
+        if (! ($of = $token->get_prop('of'))) {
             if ($this->_controller_type == 'layout') {
-                $for = 'layout.show';
+                $of = 'layout.show';
             } else {
-                $for = $this->_controller_type."_".$this->_controller_name.".".$token->get_prop('id');
+                $of = $this->_controller_type."_".$this->_controller_name.".".$token->get_prop('id');
             }
         }
         $this->templates [$token->get_prop('id')] += array(
             'code' => $code,
             'name' => $name,
-            'for' => $for
+            'of' => $of
         );
         array_pop($this->_template_stack);
     }
@@ -607,7 +652,7 @@ class fx_template_processor {
     }
     
     protected $_class_code = null;
-    protected function  make_code(fx_template_token $tree, $class_code) {
+    protected function  _make_code(fx_template_token $tree, $class_code) {
         $this->_class_code = preg_replace('~[^a-z0-9]+~', '_', $class_code);
         foreach ($tree->get_children() as $token) {
             $this->add_template($token);
@@ -615,13 +660,17 @@ class fx_template_processor {
         ob_start();
         echo '<'."?\n";
         echo 'class fx_template_'.$this->_class_code." extends fx_template {\n";
-        if ( ($source_dir = $tree->get_prop('source') ) ) {
+        if ( ($source_dir = $this->source_dir ) ) {
+            $template_dir = $this->template_dir;
             echo 'protected $_source_dir = "'.$source_dir.'";'."\n";
         }
         
         $tpl_var = array();
         foreach ( $this->templates as $tpl_name => $tpl) {
             echo $this->pad()."public function tpl_".$tpl_name.'() {'."\n";
+            if (isset($template_dir)) {
+                echo $this->pad(2)."\$template_dir = '".$template_dir."';\n";
+            }
             echo $this->pad(2).'extract($this->data);'."\n";
             echo $this->pad(2).$tpl["code"];
             echo "\n".$this->pad()."}\n";

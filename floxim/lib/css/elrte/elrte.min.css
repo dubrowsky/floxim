@@ -28,7 +28,7 @@
 .ui-widget .el-dialogform-rtl{direction:rtl}
 .ui-widget .el-dialogform-rtl .ui-tabs-nav li{float:right}
 .el-dialogform div.tab:hover{background:transparent}
-.ui-dialog .ui-dialog-title,.ui-dialog .ui-dialog-content{font-size:.9em}
+/*.ui-dialog .ui-dialog-title,.ui-dialog .ui-dialog-content{font-size:.9em}*/
 .ui-tabs .ui-tabs-nav li a{padding:.2em .7em}
 .el-dialogform .tab{padding:5px 0 12px 0;border:0}
 .el-dialogform .separator{border-top:1px solid #ccc;margin:5px 2px}

@@ -79,34 +79,48 @@ class fx_template_suitable {
     protected function _adjust_layout_visual($layout_ib, $layout_id, $source_layout_id) {
         $layout = fx::data('layout', $layout_id);
         
-        $source_template = $layout_ib->get_prop_inherited('visual.template', $source_layout_id);
-        if (!$source_template) {
-            echo fen_debug('no src tpl', $layout_ib, $source_layout_id);
-            die();
-        }
-        $old_areas = fx::template($source_template)->get_areas();
         
         $layout_tpl = fx::template('layout_'.$layout['keyword']);
         $template_variants = $layout_tpl->get_template_variants();
-        $c_relevance = 0;
-        $c_variant = null;
-        foreach ($template_variants as $tplv) {
-            if ($tplv['for'] == 'layout.show') {
-                $test_tpl_name = 'layout_'.$layout['keyword'].'.'.$tplv['id'];
-                $test_layout_tpl = fx::template($test_tpl_name);
-                $tplv['real_areas'] = $test_layout_tpl->get_areas();
-                if ( !($map = $this->_map_areas($old_areas, $tplv['real_areas'])) ) {
-                    continue;
-                }
-                if ($map['relevance'] > $c_relevance) {
-                    $c_relevance = $map['relevance'];
-                    $c_variant = $map + array(
-                        'full_template_id' => $test_tpl_name,
-                        'areas' => $tplv['real_areas']
-                    );
+        
+        if ($source_layout_id) {
+            $source_template = $layout_ib->get_prop_inherited('visual.template', $source_layout_id);
+            $old_areas = fx::template($source_template)->get_areas();
+            $c_relevance = 0;
+            $c_variant = null;
+            foreach ($template_variants as $tplv) {
+                if ($tplv['of'] == 'layout.show') {
+                    $test_tpl_name = 'layout_'.$layout['keyword'].'.'.$tplv['id'];
+                    $test_layout_tpl = fx::template($test_tpl_name);
+                    $tplv['real_areas'] = $test_layout_tpl->get_areas();
+                    if ( !($map = $this->_map_areas($old_areas, $tplv['real_areas'])) ) {
+                        continue;
+                    }
+                    if ($map['relevance'] > $c_relevance) {
+                        $c_relevance = $map['relevance'];
+                        $c_variant = $map + array(
+                            'full_template_id' => $test_tpl_name,
+                            'areas' => $tplv['real_areas']
+                        );
+                    }
                 }
             }
         }
+        
+        if (!$source_layout_id || !$c_variant) {
+            foreach ($template_variants as $tplv) {
+                if ($tplv['for'] == 'layout.show') {
+                    $layout_vis = $layout_ib->get_visual();
+                    $layout_vis['template'] = $tplv['full_id'];
+                    unset($layout_vis['is_stub']);
+                    $layout_vis->save();
+                    return;
+                }
+            }
+            echo fen_debug($template_variants, $source_layout_id);
+            die();
+        }
+        
         $layout_vis = $layout_ib->get_visual();
         $layout_vis['template'] = $c_variant['full_template_id'];
         $layout_vis['areas'] = $c_variant['areas'];
@@ -126,7 +140,7 @@ class fx_template_suitable {
         foreach ($old_set as &$old_area) {
             $old_size = $this->_get_size($old_area);
             $c_match = false;
-            $c_match_index = 0;
+            $c_match_index = 1;
             foreach ($new_set as $new_area_id => $new_area) {
                 $new_size = $this->_get_size($new_area);
                 $area_match = 0;
