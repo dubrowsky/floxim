@@ -89,7 +89,7 @@ class fx_controller_admin extends fx_controller {
     }
 
     protected function get_status_text() {
-        return "Сохранено";
+        return fx_lang("Сохранено");
     }
 
     public function admin_tabs($tabs, $callback_param = null) {
@@ -205,7 +205,7 @@ class fx_controller_admin extends fx_controller {
                 <input type="hidden" name="essence" value="admin" />
                 <input name="AUTH_USER" />
                 <input type="password" name="AUTH_PW" />
-                <input type="submit" value="Вход" class="auth_submit">
+                <input type="submit" value="' . fx_lang('Вход') . '" class="auth_submit">
                 </form></div>';
         }
 
@@ -332,13 +332,13 @@ class fx_controller_admin_module extends fx_controller_admin {
     public function basesettings($input) {
         $module_keyword = str_replace('fx_controller_admin_module_', '', get_class($this));
         $this->response->submenu->set_menu('settings')->set_subactive('settings-'.$module_keyword);
-        $this->response->breadcrumb->add_item('Настройка модуля '.$module_keyword);
+        $this->response->breadcrumb->add_item( fx_lang('Настройка модуля') . ' ' . $module_keyword);
         $this->response->add_form_button('save');
         $this->settings();
     }
 
     public function settings() {
-        $this->response->add_field($this->ui->label('Переопределите метод settings в своем классе'));
+        $this->response->add_field($this->ui->label( fx_lang('Переопределите метод settings в своем классе') ));
     }
 
     public function basesettings_save($input) {

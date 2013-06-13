@@ -24,7 +24,7 @@ class fx_field_link extends fx_field_baze {
         $fields[] = array(
             'id' => 'format[target]',
             'name' => 'format[target]',
-            'label' => 'Куда ссылается',
+            'label' => fx_lang('Куда ссылается'),
             'type' => 'select',
             'values' => $comp_values,
             'value' => $this['format']['target'] ? $this['format']['target'] : 'classificator'
@@ -32,13 +32,13 @@ class fx_field_link extends fx_field_baze {
         $fields[] = array(
             'id' => 'format[prop_name]',
             'name' => 'format[prop_name]',
-            'label' => 'Ключ для свойства',
+            'label' => fx_lang('Ключ для свойства'),
             'value' => $this->get_prop_name()
         );
         $fields[]= array(
             'id' => 'format[is_parent]',
             'name' => 'format[is_parent]',
-            'label' => 'Привязать значение к родителю',
+            'label' => fx_lang('Привязать значение к родителю'),
             'type' => 'checkbox',
             'value' => $this['format']['is_parent']
         );        

@@ -36,7 +36,7 @@ class fx_admin_parser {
             $new_function = $this->make_function_full($name, $type, $values[$name]);
             if ($new_function) {
                 if (!$this->check_syntax($new_function))
-                    throw new Exception("Синтаксическая ошибка в функции ".$name."()");
+                    throw new Exception( fx_lang("Синтаксическая ошибка в функции") . " " . $name . "()");
             }
             
             $old_function = $this->get_function_full($name);
@@ -54,7 +54,7 @@ class fx_admin_parser {
         }
         
         if (!$this->check_syntax($this->get_class_full($content)))
-            throw new Exception("Синтаксическая ошибка в классе компонента");
+            throw new Exception( fx_lang("Синтаксическая ошибка в классе компонента") );
         
         return $content;
     }
@@ -80,7 +80,7 @@ class fx_admin_parser {
             $opentag_pos = strpos($code, '<?');
         }
         if ($opentag_pos===false)
-            throw new Exception('Не могу найти <?php в файле класса');
+            throw new Exception( fx_lang('Не могу найти <?php в файле класса') );
         
         $brace_pos = strrpos($code, '}');
         

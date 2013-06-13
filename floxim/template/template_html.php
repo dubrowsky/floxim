@@ -75,10 +75,10 @@ class fx_template_html {
                     $default_val = $n->get_attribute($replace_att);
                     switch($replace_att) {
                         case 'src':
-                            $var_title = 'Картинка';
+                            $var_title = fx_lang('Картинка');
                             break;
                         case 'href':
-                            $var_title = 'Ссылка';
+                            $var_title = fx_lang('Ссылка');
                             break;
                         default:
                             $var_title = $replace_att;

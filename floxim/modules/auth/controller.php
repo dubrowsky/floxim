@@ -103,19 +103,19 @@ class fx_controller_module_auth extends fx_controller_module {
 
         $result = "";
         if (!$confirm_user || !$confirm_code) {
-            $result = "Не передан код подтверждения регистрации.";
+            $result = fx_lang("Не передан код подтверждения регистрации.");
         }
 
         $fx_auth = fx_auth::get_object();
         $user = $fx_auth->registration_confirm($confirm_user, $confirm_code);
 
         if (!$user) {
-            $result = "Неверный код подтверждения регистрации.";
+            $result = fx_lang("Неверный код подтверждения регистрации.");
         } else {
             if ($fx_core->get_settings('registration_premoderation', 'auth')) {
-                $result = "Ваш адрес e-mail подтвержден. Дожитесь проверки и активации учетной записи администратором.";
+                $result = fx_lang("Ваш адрес e-mail подтвержден. Дождитесь проверки и активации учетной записи администратором.");
             } else {
-                $result = "Ваш аккаунт активирован.";
+                $result = fx_lang("Ваш аккаунт активирован.");
                 if ($fx_core->get_settings('autoauthorize', 'auth')) {
                     $user->authorize();
                 }
@@ -143,7 +143,7 @@ class fx_controller_module_auth extends fx_controller_module {
                 $subdivision_id = $infoblock['subdivision_id'];
             }
             else {
-                $content = "Неверный код";
+                $content = fx_lang("Неверный код");
                 $subdivision_id = $input['subdivision'];
             }
 
@@ -170,7 +170,7 @@ class fx_controller_module_auth extends fx_controller_module {
         $id = intval($input['id']);
 
         if (!$id) {
-            echo "Неверный id пользователя";
+            echo fx_lang("Неверный id пользователя");
             return;
         }
 
@@ -186,7 +186,7 @@ class fx_controller_module_auth extends fx_controller_module {
                 $fx_auth->relation->delete_relation($id);
                 break;
             default :
-                echo "Неверное действие";
+                echo fx_lang("Неверное действие");
                 return;
         }
 

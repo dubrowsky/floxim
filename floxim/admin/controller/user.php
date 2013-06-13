@@ -12,7 +12,7 @@ class fx_controller_admin_user extends fx_controller_admin {
 
         if (!$fx_core->get_settings('allow_registration', 'auth')) {
             $result['status'] = 'error';
-            $result['text'][] = 'Самостоятельная регистрация запрещена.';
+            $result['text'][] = fx_lang('Самостоятельная регистрация запрещена.');
             return $result;
         }
 
@@ -23,7 +23,7 @@ class fx_controller_admin_user extends fx_controller_admin {
 
         if ($infoblock['essence_id'] != $user_component_id) {
             $result['status'] = 'error';
-            $result['text'][] = 'Ошибка: не найден инфоблок с пользователями.';
+            $result['text'][] = fx_lang('Ошибка: не найден инфоблок с пользователями.');
             return $result;
         }
 
@@ -73,21 +73,21 @@ class fx_controller_admin_user extends fx_controller_admin {
 
         if (fx::data('user')->get($auth_by, $input['f_'.$auth_by] )) {
             $result['status'] = 'error';
-            $result['text'][] = 'Такой логин уже используется';
+            $result['text'][] = fx_lang('Такой логин уже используется');
             $result['fields'][] = 'f_'.$auth_by;
         }
 
         if (!$password) {
             $result['status'] = 'error';
-            $result['text'][] = 'Введите пароль.';
+            $result['text'][] = fx_lang('Введите пароль.');
             $result['fields'][] = 'password';
         } elseif (($passwd_len = $fx_core->get_settings('min_pasword_length', 'auth')) && (strlen($password) < $passwd_len)) {
             $result['status'] = 'error';
-            $result['text'][] = 'Пароль слишком короткий. Минимальная длина пароля '.$passwd_len.' символ(ов).';
+            $result['text'][] = fx_lang('Пароль слишком короткий. Минимальная длина пароля').' '.$passwd_len.' ' .fx_lang('символ(ов).');
             $result['fields'][] = 'f_password';
         } elseif ($password != $input['password1']) {
             $result['status'] = 'error';
-            $result['text'][] = 'Пароль и подтверждение не совпадают.';
+            $result['text'][] = fx_lang('Пароль и подтверждение не совпадают.');
             $result['fields'][] = 'password1';
         }
 
@@ -144,7 +144,7 @@ class fx_controller_admin_user extends fx_controller_admin {
 
             $text = join(', ', $groups)."<br/>";
             $text .= $v['name'].', <a href="mailto:'.$v['email'].'">'.$v['email'].'</a>';
-            $text .= '<br/><a href="#admin.rights.all(user-'.$v['id'].')">Управление правами</a>';
+            $text .= '<br/><a href="#admin.rights.all(user-'.$v['id'].')">' . fx_lang('Управление правами') . '</a>';
 
             $header_text = isset($v[fx::config()->AUTHORIZE_BY]) ? $v[fx::config()->AUTHORIZE_BY] : '#'.$v['id'];
 
@@ -169,8 +169,8 @@ class fx_controller_admin_user extends fx_controller_admin {
         $user = fx::data('user')->get_by_id($input['params'][0]);
 
         $areas = array(
-                'edit_form' => array('name' => 'Регистрационные данные', 'class' => 'fx_admin_user_edit_form'),
-                'info' => array('name' => 'Активность', 'class' => 'fx_admin_user_info')
+                'edit_form' => array('name' => fx_lang('Регистрационные данные'), 'class' => 'fx_admin_user_edit_form'),
+                'info' => array('name' => fx_lang('Активность'), 'class' => 'fx_admin_user_info')
         );
 
         // регистрационные данные
@@ -180,14 +180,14 @@ class fx_controller_admin_user extends fx_controller_admin {
         }
 
         // активность
-        $fields[] = array('label' => 'зарегистрирован: '.$user['created'], 'type' => 'label');
+        $fields[] = array('label' => fx_lang('зарегистрирован: ') . $user['created'], 'type' => 'label');
 
-        $fields[] = array('label' => 'друзья, отправить сообщение<br/>', 'type' => 'label');
-        $fields[] = array('label' => 'надо подумать, может ли какой-нибудь модуль, кроме ЛК писать сюда что-нибудь<br/>', 'type' => 'label');
+        $fields[] = array('label' => fx_lang('друзья, отправить сообщение') .'<br/>', 'type' => 'label');
+        $fields[] = array('label' => fx_lang('надо подумать, может ли какой-нибудь модуль, кроме ЛК писать сюда что-нибудь') . '<br/>', 'type' => 'label');
 
         $content_items = $this->get_used_components($user['id']);
         if ($content_items) {
-            $fields[] = array('label' => '<br/>опубликовал: ', 'type' => 'label');
+            $fields[] = array('label' => '<br/>' . fx_lang('опубликовал:') . ' ', 'type' => 'label');
             foreach ($content_items as $content) {
                 $fields[] = array('label' => '<a href="#admin.user.content('.$user['id'].','.$content['component_id'].')">'.$content['name'].' ('.$content['count'].')</a><br/>', 'type' => 'label');
             }
@@ -199,7 +199,7 @@ class fx_controller_admin_user extends fx_controller_admin {
 
         $this->response->submenu->set_menu('user-'.$user['id'])->set_subactive('profile');
 
-        $this->response->breadcrumb->add_item('Пользователи');
+        $this->response->breadcrumb->add_item( fx_lang('Пользователи') );
         $this->response->breadcrumb->add_item($user['name']);
 
 
@@ -236,14 +236,14 @@ class fx_controller_admin_user extends fx_controller_admin {
         $component = fx::data('component')->get_by_id($input['params'][1]);
 
         $values = fx_infoblock_content::objects_list('component'.$component['id'], 'output=array&ctpl=select&by_user_id='.$user['id']);
-        $fields[] = array('name' => 'sort_objects', 'label' => '<h2>Выберите объекты</h2>', 'type' => 'itemselect', 'values' => $values, 'multiple' => 1);
+        $fields[] = array('name' => 'sort_objects', 'label' => '<h2>' . fx_lang('Выберите объекты') . '</h2>', 'type' => 'itemselect', 'values' => $values, 'multiple' => 1);
 
 
         $result['fields'] = $fields;
 
         $result['buttons'] = array('edit', 'on', 'off', 'delete');
         $result['breadcrumbs'][] = array('name' => $user['name'], 'url' => '#admin.user.full('.$user['id'].')');
-        $result['breadcrumbs'][] = array('name' => 'публикации в "'.$component['name'].'"');
+        $result['breadcrumbs'][] = array('name' => fx_lang('публикации в'). ' "'.$component['name'].'"');
         return $result;
     }
 
@@ -252,7 +252,7 @@ class fx_controller_admin_user extends fx_controller_admin {
         $fields[] = $this->ui->hidden('action', 'add');
 
         $result = array('fields' => $fields);
-        $result['dialog_title'] = 'Добавление пользователя';
+        $result['dialog_title'] = fx_lang('Добавление пользователя');
 
         return $result;
     }
@@ -280,13 +280,13 @@ class fx_controller_admin_user extends fx_controller_admin {
 
         if (empty($input['group'])) {
             $result['status'] = 'error';
-            $result['text'][] = 'Выберите хотя бы одну группу';
+            $result['text'][] = fx_lang('Выберите хотя бы одну группу');
             $result['fields'][] = 'group';
         }
 
         if (!$login) {
             $result['status'] = 'error';
-            $result['text'][] = 'Заполните поле с логином';
+            $result['text'][] = fx_lang('Заполните поле с логином');
             $result['fields'][] = 'login';
         }
 
@@ -297,7 +297,7 @@ class fx_controller_admin_user extends fx_controller_admin {
         if (!$info) {
             if (!$input['password']) {
                 $result['status'] = 'error';
-                $result['text'][] = 'Пароль не может быть пустым';
+                $result['text'][] = fx_lang('Пароль не может быть пустым');
                 $result['fields'][] = 'password';
             }
 
@@ -329,7 +329,7 @@ class fx_controller_admin_user extends fx_controller_admin {
         if (isset($input['password'])) {
 			if ($input['password'] && $input['password'] != $input['password2']) {
 				$result['status'] = 'error';
-				$result['text'][] = 'Пароли не совпадают';
+				$result['text'][] = fx_lang('Пароли не совпадают');
 				$result['fields'][] = 'password';
 				$result['fields'][] = 'password2';
 			} else {
@@ -375,18 +375,18 @@ class fx_controller_admin_user extends fx_controller_admin {
             $fields []= $this->ui->hidden('id', $info['id']);
         }
 
-        $fields[] = $this->ui->checkbox('group', 'Группы', $values, $gr, 1);
+        $fields[] = $this->ui->checkbox('group', fx_lang('Группы'), $values, $gr, 1);
 
-        $fields[] = $this->ui->input('login', 'Логин', $info['login']);
+        $fields[] = $this->ui->input('login', fx_lang('Логин'), $info['login']);
 
         //if (!$info['id']) {
-            $fields[] = $this->ui->password('password', 'Пароль');
-            $fields[] = $this->ui->password('password2', 'Пароль еще раз');
+            $fields[] = $this->ui->password('password', fx_lang('Пароль'));
+            $fields[] = $this->ui->password('password2', fx_lang('Пароль еще раз'));
         //}
         // временно
         $fields[] = $this->ui->input('f_email', 'Email', $info['email']);
-        $fields[] = $this->ui->input('f_name', 'Имя на сайте', $info['name']);
-        $fields[] = $this->ui->file('f_avatar', 'Аватар');
+        $fields[] = $this->ui->input('f_name', fx_lang('Имя на сайте'), $info['name']);
+        $fields[] = $this->ui->file('f_avatar', fx_lang('Аватар'));
 
         $fields[] = $this->ui->hidden('posting');
 

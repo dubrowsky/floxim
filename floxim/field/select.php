@@ -64,13 +64,13 @@ class fx_field_select extends fx_field_baze {
 
         $fields[] = array('id' => 'format[source]',
                 'name' => 'format[source]',
-                'label' => 'Источник',
+                'label' => fx_lang('Источник'),
                 'type' => 'select',
-                'values' => array('classificator' => 'Классификатор', 'manual' => 'Вручную'),
+                'values' => array('classificator' => fx_lang('Классификатор'), 'manual' => fx_lang('Вручную')),
                 'value' => $this['format']['source'] ? $this['format']['source'] : 'classificator');
 
-        $fields[] = array('name' => 'format[table]', 'label' => 'Классификатор', 'type' => 'select', 'values' => $cl_values, 'value' => $this['format']['table'], 'parent' => array('format[source]', 'classificator'), 'unactive' => true);
-        $fields[] = array('name' => 'format[values]', 'label' => 'Элементы', 'type' => 'set', 'tpl' => array(
+        $fields[] = array('name' => 'format[table]', 'label' => fx_lang('Классификатор'), 'type' => 'select', 'values' => $cl_values, 'value' => $this['format']['table'], 'parent' => array('format[source]', 'classificator'), 'unactive' => true);
+        $fields[] = array('name' => 'format[values]', 'label' => fx_lang('Элементы'), 'type' => 'set', 'tpl' => array(
                         array('name' => 'id', 'type' => 'string'),
                         array('name' => 'value', 'type' => 'string')
                 ),

@@ -32,19 +32,17 @@ class fx_component extends fx_essence {
         $res = true;
 
         if (!$this['name']) {
-            $this->validate_errors[] = array('field' => 'name', 'text' => 'Название компонента не может быть пустым');
+            $this->validate_errors[] = array('field' => 'name', 'text' => fx_lang('Название компонента не может быть пустым'));
             $res = false;
         }
 
         if (!$this['keyword']) {
-            $this->validate_errors[] = array('field' => 'keyword', 'text' => 'Укажите keyword компонента');
+            $this->validate_errors[] = array('field' => 'keyword', 'text' => fx_lang('Укажите keyword компонента'));
             $res = false;
         }
 
-        if ($this['keyword'] && !preg_match("/^[a-z][a-z0-9_-]*$/i", $this['keyword'])) {
-            $this->validate_errors[] = array(
-                'field' => 'keyword', 
-                'text' => 'Keyword может сожержать только буквы, цифры, символы "дефис" и "подчеркивание"');
+        if ($this['keyword'] && !preg_match("/^[a-z][a-z0-9-]*$/i", $this['keyword'])) {
+            $this->validate_errors[] = array('field' => 'keyword', 'text' => fx_lang('Keyword может содержать только буквы, цифры, символы "дефис" и "подчеркивание"'));
             $res = false;
         }
 
@@ -52,7 +50,7 @@ class fx_component extends fx_essence {
             $components = fx::data('component')->get_all();
             foreach ($components as $component) {
                 if ($component['id'] != $this['id'] && $component['keyword'] == $this['keyword']) {
-                    $this->validate_errors[] = array('field' => 'keyword', 'text' => 'Такой keyword уже используется компоненте "'.$component['name'].'"');
+                    $this->validate_errors[] = array('field' => 'keyword', 'text' => fx_lang('Такой keyword уже используется компоненте') . ' "'.$component['name'].'"');
                     $res = false;
                 }
             }
@@ -83,9 +81,9 @@ class fx_component extends fx_essence {
 
         $result = array();
 
-        $result['created'] = 'Дата создания';
+        $result['created'] = fx_lang('Дата создания');
         $result['id'] = 'ID';
-        $result['priority'] = 'Приоритет';
+        $result['priority'] = fx_lang('Приоритет');
 
 
         foreach ($this->fields() as $v) {

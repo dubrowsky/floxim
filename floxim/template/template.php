@@ -113,7 +113,9 @@ class fx_template {
     
     protected static $_area_regexp = "###fx_area\|([^\|]*?)\|(.+?)###(.+?)###fx_area_end###";
     
-    public static $_adder_html = "<a class='fx_infoblock_adder'>Добавить инфоблок</a>";
+	// LANG ERROR
+	public static $_adder_html = "<a class='fx_infoblock_adder'>Добавить инфоблок</a>";
+	// public static $_adder_html = "<a class='fx_infoblock_adder'>" . fx_lang('Добавить инфоблок') . "</a>";
 
 
     protected static function _replace_areas_wrapped_by_tag($html) {

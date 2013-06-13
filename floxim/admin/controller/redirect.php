@@ -6,7 +6,7 @@ class fx_controller_admin_redirect extends fx_controller_admin {
         $items = fx::data('redirect')->get_all();
 
         $ar = array('type' => 'list', 'filter' => true, 'sortable' => true);
-        $ar['labels'] = array('old' => 'Старый url', 'new' => 'Новый url', 'header' => 'Заголовок');
+        $ar['labels'] = array('old' => fx_lang('Старый url'), 'new' => fx_lang('Новый url'), 'header' => fx_lang('Заголовок'));
 
         foreach ($items as $item) {
             $el = array('id' => $item['id'], 'old' => $item['old_url'], 'new' => $item['new_url'], 'header' => $item['header']);
@@ -28,7 +28,7 @@ class fx_controller_admin_redirect extends fx_controller_admin {
         $fields[] = $this->ui->hidden('action', 'add');
 
         $result = array('fields' => $fields);
-        $result['dialog_title'] = 'Добавление правила переадресации';
+        $result['dialog_title'] = fx_lang('Добавление правила переадресации');
 
         return $result;
     }
@@ -41,7 +41,7 @@ class fx_controller_admin_redirect extends fx_controller_admin {
         $fields[] = $this->ui->hidden('id', $info['id']);
 
         $result = array('fields' => $fields);
-        $result['dialog_title'] = 'Изменение правила переадресации';
+        $result['dialog_title'] = fx_lang('Изменение правила переадресации');
 
         return $result;
     }
@@ -57,9 +57,9 @@ class fx_controller_admin_redirect extends fx_controller_admin {
 
     protected function _form($info) {
         $hs = array('301' => '301 Moved Permanently', '302' => '302 Found');
-        $fields[] = $this->ui->input('old_url', 'Старый url', $info['old_url']);
-        $fields[] = $this->ui->input('new_url', 'Новый url', $info['new_url']);
-        $fields[] = $this->ui->select('header', 'Посылаемый заголовок', $hs);
+        $fields[] = $this->ui->input('old_url', fx_lang('Старый url'), $info['old_url']);
+        $fields[] = $this->ui->input('new_url', fx_lang('Новый url'), $info['new_url']);
+        $fields[] = $this->ui->select('header', fx_lang('Посылаемый заголовок'), $hs);
         $fields[] = $this->ui->hidden('posting');
 
         return $fields;

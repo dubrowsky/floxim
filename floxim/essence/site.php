@@ -18,7 +18,7 @@ class fx_site extends fx_essence {
         $res = true;
 
         if (!$this['name']) {
-            $this->validate_errors[] = array('field' => 'name', 'text' => 'Укажите название сайта');
+            $this->validate_errors[] = array('field' => 'name', 'text' => fx_lang('Укажите название сайта'));
             $res = false;
         }
 

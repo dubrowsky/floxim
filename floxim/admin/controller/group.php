@@ -28,13 +28,13 @@ class fx_controller_admin_group extends fx_controller_admin {
 
     public function add($input) {
         $fx_core = fx_core::get_object();
-        $info['name'] = 'Новая группа';
+        $info['name'] = fx_lang('Новая группа');
 
         $fields = $this->_form($info);
         $fields[] = $this->ui->hidden('action', 'add');
 
         $result = array('fields' => $fields);
-        $result['dialog_title'] = 'Добавление группы пользователей';
+        $result['dialog_title'] = fx_lang('Добавление группы пользователей');
         
         return $result;
     }
@@ -48,7 +48,7 @@ class fx_controller_admin_group extends fx_controller_admin {
         $fields[] = $this->ui->hidden('id', $info['id']);
 
         $result = array('fields' => $fields);
-        $result['dialog_title'] = 'Изменение группы пользователей "'.$info['name'].'"';
+        $result['dialog_title'] = fx_lang('Изменение группы пользователей') . ' "'.$info['name'].'"';
         
         return $result;
     }
@@ -71,7 +71,7 @@ class fx_controller_admin_group extends fx_controller_admin {
     }
     
     protected function _form($info) {
-        $fields[] = $this->ui->input('name', 'Название', $info['name']);
+        $fields[] = $this->ui->input('name', fx_lang('Название'), $info['name']);
         $fields[] = $this->ui->hidden('posting');
 
         return $fields;
@@ -85,7 +85,7 @@ class fx_controller_admin_group extends fx_controller_admin {
 
         if (!$name) {
             $result['status'] = 'error';
-            $result['text'][] = 'Укажите название';
+            $result['text'][] = fx_lang('Укажите название');
             $result['fields'][] = 'name';
         }
 

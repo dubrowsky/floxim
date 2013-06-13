@@ -24,7 +24,7 @@ class fx_auth_facebook extends fx_auth_external {
             $self = new self();
             $self->dispatcher();
         } else {
-            die("Авторизация через facebook запрещена");
+            die( fx_lang("Авторизация через facebook запрещена"));
         }
     }
 
@@ -37,7 +37,7 @@ class fx_auth_facebook extends fx_auth_external {
     protected function start($authurl) {
 
         echo '<meta http-equiv="refresh" content="0; url=' . $authurl . '" />';
-        echo '<p>Сейчас вы будете переброшены на страницу авторизации. <a href="' . $authurl . '">Нажмите, если не хотите ждать</a></p>';
+        echo '<p>' . fx_lang('Сейчас вы будете переброшены на страницу авторизации.') . ' <a href="' . $authurl . '">' . fx_lang('Нажмите, если не хотите ждать.') . '</a></p>';
     }
 
     public function dispatcher() {
