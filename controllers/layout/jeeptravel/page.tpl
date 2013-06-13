@@ -35,7 +35,7 @@
                 <!-- для страниц с контентом на всю ширину -->
                 <div class="full_content" fx:area="content">
                 
-                <div class="gallery" fx:template="index_slider" fx:of="component_page.listing">
+                <div class="gallery fx_not_sortable" fx:template="index_slider" fx:of="component_page.listing">
                     <div 
                         fx:each="$items"
                         class="gallery_item {if $item_is_first} gallery_item_active{/if}">
@@ -87,15 +87,6 @@
                                 <span>{$name}</span>
                             </li>
                         </ul>
-                        <div class="contact">
-                            <span>{%contacts_label}Для связи:{/%}<span>{%phone}+7 (495) 440 72 72{/%}</span></span>
-                            <a href="mailto:{%mail}info@jt.ru{/%}">{%mail/}</a>
-                            <span class="copy">
-                                {%copy}&copy; JT, <?=date('Y')?><br />
-                                Автор фото: <a href="#">Lee Cannon</a>. <a href="#">Лицензия</a>
-                                {/%}
-                            </span>
-                        </div>
                     </div>
                     <div class="center">
                         {area id="index_center" /}
@@ -107,12 +98,29 @@
                             <li fx:template="item"><a href="{$url}">{$name}</a></li>
                         </ul>
                         <div fx:template="index_calendar_links" fx:of="component_page.listing" fx:omit="true">
-                            <a fx:template="item" href="{$url}" class="calendar">{$name}</a>
-                            <br fx:template="separator" />
+                            <div fx:template="item"><a href="{$url}" class="calendar">{$name}</a></div>
                         </div>
                     </div>
                     <div class="r-side" fx:area="index_right">
                         
+                    </div>
+                </div>
+                <div class="places" fx:template="pages_by_year" fx:of="component_page.listing">
+                    <?
+                    $years = $items->group(function($item) {
+                            return preg_replace("~-.+$~", '', $item['publish_date']); 
+                    });
+                    ?>
+                    <div 
+                        fx:each="$years as $year => $pages" 
+                        class="col"
+                        {if ($pages_index-1) % 3 == 0} style="clear:both;"{/if}>
+                        <strong>{$year}</strong>
+                        <ul fx:template="$pages">
+                            <li fx:template="item">
+                                <a href="{$url}">{$name}</a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -139,11 +147,10 @@
             }
         }
         ?>
-        <section 
-            style="background:
-                {%page_bg_color_$page_id}<?=$bg_color?>{/%} url('{%page_bg_image_$page_id}<?=$bg_image?>{/%}');" 
-                class="section_inner" 
-                fx:if="!$full_content">
+        <section fx:if="!$full_content"
+            style="
+                background:{%page_bg_color_$page_id}<?=$bg_color?>{/%} url('{%page_bg_image_$page_id}<?=$bg_image?>{/%}') no-repeat 50% 0;" 
+                class="section_inner">
             <div class="wrapper">
                 <div style="clear:both;"></div>
                 <!-- Для внутренних -->
@@ -151,11 +158,27 @@
                     
                 </div>
                 <!-- И это для внутренних -->
-                <div class="sidebar" fx:area="sidebar">
+                <div class="sidebar" fx:area="sidebar" fx:if="!$skip_sidebar">
                     <ul fx:template="side_menu" fx:of="component_section.listing">
                         <li fx:template="inactive"><a href="{$url}">{$name}</a></li>
                         <li fx:template="active"><a href="{$url}"><b>{$name}</b></a></li>
                     </ul>
+                </div>
+            </div>
+        </section>
+        <section class="footer" fx:if="!$hide_footer">
+            <div class="wrapper">
+                <div class="contact">
+                    <span>
+                        {%contacts_label}Для связи:{/%}
+                        <span class="phone">{%phone}+7 (495) 440 72 72{/%}</span>
+                    </span>
+                    <a href="mailto:{%mail editable="false"}info@jt.ru{/%}">{%mail}info@jt.ru{/%}</a>
+                    <span class="copy">
+                        {%copy}&copy; JT, <?=date('Y')?><br />
+                        Автор фото: <a href="#">Lee Cannon</a>. <a href="#">Лицензия</a>
+                        {/%}
+                    </span>
                 </div>
             </div>
         </section>
@@ -166,5 +189,12 @@
     {call id="page"}
         {$index_areas select="true"}
         {$full_content select="true"}
+    {/call}
+</span>
+
+<span fx:template="full" fx:name="Во всю ширину" fx:omit="true">
+    {call id="page"}
+        {$index_areas select="false"}
+        {$skip_sidebar select="true"}
     {/call}
 </span>

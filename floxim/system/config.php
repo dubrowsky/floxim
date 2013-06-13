@@ -16,7 +16,6 @@ class fx_config {
             'PAGE_TPL' => 'page',
             'SEARCH_KEY' => 'fxsrch',
 
-            'CHECK_PATCH_PERIOD' => 7,
             'REDIRECT_FULL_MESSAGE' => 1,
 
             'AUTHORIZE_BY' => 'email',

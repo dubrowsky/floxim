@@ -20,5 +20,43 @@ class fx_content_page extends fx_content {
         $path = fx::data('content_page')->where('id', $path_ids)->all();
         return $path;
     }
+    
+    protected function _before_save() {
+        parent::_before_save();
+        if (empty($this['url']) && !empty($this['name'])) {
+            $this['url'] = $this['name'];
+        }
+        if (
+                in_array('url', $this->modified) && 
+                !empty($this['url']) && 
+                !preg_match("~^https?://~", $this['url'])
+            ) {
+            $url = fx::util()->str_to_latin($this['url']);
+            $url  = preg_replace("~[^a-z0-9_-]+~i", '-', $url);
+            $url = trim($url, '-');
+            $url = preg_replace("~\-+~", '-', $url);
+            if (!preg_match("~^/~", $url)) {
+                $url = '/'.$url;
+            }
+            $index = 1;
+            while ( fx::data('content_page')->
+                    where('url', $url)->
+                    where('site_id', $this['site_id'])->
+                    where('id', $this['id'], '!=')->
+                    one()) {
+                $index++;
+                $url = preg_replace("~\-".($index-1)."$~", '', $url).'-'.$index;
+            }
+            $this['url'] = $url;
+        }
+    }
+    
+    protected function _after_insert() {
+        parent::_after_insert();
+        if (empty($this['url'])) {
+            $this['url'] = '/page-'.$this['id'].'.html';
+            $this->save();
+        }
+    }
 }
 ?>

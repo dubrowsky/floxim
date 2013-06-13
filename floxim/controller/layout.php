@@ -62,68 +62,20 @@ class fx_controller_layout extends fx_controller {
     }
     
     protected function _show_admin_panel() {
-        /*
-        if (!$user = fx::env()->get_user()) {
-            return;
-        }
-        if (!$user->perm()->is_supervisor()) {
-            return;
-        }*/
         if (!fx::env('is_admin')) {
             return;
         }
         // инициализация админ панели
-        //fx::page()->add_data_js('sub', $fx_core->env->get_sub()->get('id'));
-        //$fx_core->page->add_data_js('url', $_SERVER['REQUEST_URI']);
-
+        
         $js_config = new fx_admin_configjs();
         $js_config->add_main_menu(fx_controller_admin_adminpanel::get_main_menu());
         $js_config->add_more_menu(fx_controller_admin_adminpanel::get_more_menu());
         $js_config->add_buttons(fx_controller_admin_adminpanel::get_buttons());
         
-        /*if ($text) {
-            $js_config->add_additional_text($text);
-        }*/
-        
         $p = fx::page();
         $p->add_js_text("fx_adminpanel.init(".$js_config->get_config().");");
         
-        $p->add_js_file(FX_JQUERY_PATH);
-        $p->add_js_file('/floxim/lib/js/jquery-ui-1.8.21.custom.js');
-        $p->add_js_file('/floxim/lib/js/jquery.nestedSortable.js');
-        $p->add_js_file('/floxim/lib/js/jquery.ba-hashchange.min.js');
-        $p->add_js_file('/floxim/lib/js/ajaxfileupload.js'); // ajax upload files
-        $p->add_js_file('/floxim/lib/js/jquery.json-2.3.js');
-        $p->add_js_file('/floxim/admin/js-templates/jstx.js');
-        $p->add_js_file('/floxim/admin/js-templates/compile.php');
-        $p->add_js_file('/floxim/admin/js/lib.js');
-        $p->add_js_file('/floxim/admin/js/adminpanel.js');
-        $p->add_js_file('/floxim/admin/js/front.js');
-        $p->add_js_file('/floxim/admin/js/buttons.js');
-        $p->add_js_file('/floxim/admin/js/form.js');
-        $p->add_js_file('/floxim/admin/js/dialog.js');
-        $p->add_js_file('/floxim/admin/js/fields.js');
-        $p->add_js_file('/floxim/admin/js/edit-in-place.js');
-        $p->add_js_file('/floxim/admin/js/store.js');
-        $p->add_js_file('/floxim/admin/js/dialog_file.js');
-        $p->add_js_file('/floxim/admin/js/admin.js');
-        $p->add_js_file('/floxim/admin/js/sort.js');
-        $p->add_js_file('/floxim/admin/js/menu/main.js');
-        $p->add_js_file('/floxim/admin/js/menu/more.js');
-        $p->add_js_file('/floxim/admin/js/menu/additional.js');
-        $p->add_js_file('/floxim/admin/js/menu/mode.js');
-        $p->add_js_file('/floxim/admin/js/menu/submenu.js');
-        $p->add_js_file('/floxim/admin/js/menu/breadcrumb.js');
-        $p->add_js_file('/floxim/lib/editors/elrte/elrte.full.js');
-        $p->add_js_file('/floxim/lib/editors/elrte/i18n/elrte.ru.js');
-        $p->add_js_file('/floxim/lib/js/jquery.form.js');
-        $p->add_js_file('/floxim/lib/js/jquery.jstree.js');
-        $p->add_js_file('/floxim/lib/js/jquery-gp-gallery.js');
-        $p->add_js_file('/floxim/lib/js/jquery.tipTip.minified.js');
-        $p->add_js_file('/floxim/lib/js/jquery-ui-timepicker-addon.js');
-        $p->add_css_file('/floxim/lib/css/elrte/elrte.min.css');
-        $p->add_css_file('/floxim/admin/skins/default/jquery-ui/main.css');
-        $p->add_css_file('/floxim/admin/skins/default/css/main.css');
+        fx_controller_admin::add_admin_files();
         $p->set_after_body(fx_controller_admin_adminpanel::panel_html());        
     }
 

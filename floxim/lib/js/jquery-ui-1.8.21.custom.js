@@ -3959,7 +3959,6 @@ $.widget("ui.sortable", $.ui.mouse, {
 	},
 
 	_contactContainers: function(event) {
-		
 		// get innermost container that intersects with item 
 		var innermostContainer = null, innermostIndex = null;		
 		
@@ -3991,13 +3990,13 @@ $.widget("ui.sortable", $.ui.mouse, {
 		
 		// if no intersecting containers found, return 
 		if(!innermostContainer) return; 
-
-		// move the item into the container if it's not there already
+        
+        console.log('jiis hr');
+        // move the item into the container if it's not there already
 		if(this.containers.length === 1) {
 			this.containers[innermostIndex]._trigger("over", event, this._uiHash(this));
 			this.containers[innermostIndex].containerCache.over = 1;
 		} else if(this.currentContainer != this.containers[innermostIndex]) {
-
 			//When entering a new container, we will find the item with the least distance and append our item near it
 			var dist = 10000; var itemWithLeastDistance = null; var base = this.positionAbs[this.containers[innermostIndex].floating ? 'left' : 'top'];
 			for (var j = this.items.length - 1; j >= 0; j--) {
@@ -4009,8 +4008,9 @@ $.widget("ui.sortable", $.ui.mouse, {
 				}
 			}
 
-			if(!itemWithLeastDistance && !this.options.dropOnEmpty) //Check if dropOnEmpty is enabled
+			if(!itemWithLeastDistance && !this.options.dropOnEmpty) {//Check if dropOnEmpty is enabled
 				return;
+            }
 
 			this.currentContainer = this.containers[innermostIndex];
 			itemWithLeastDistance ? this._rearrange(event, itemWithLeastDistance, null, true) : this._rearrange(event, null, this.containers[innermostIndex].element, true);
@@ -4019,7 +4019,8 @@ $.widget("ui.sortable", $.ui.mouse, {
 
 			//Update the placeholder
 			this.options.placeholder.update(this.currentContainer, this.placeholder);
-
+            
+            console.log('tr branch 2');
 			this.containers[innermostIndex]._trigger("over", event, this._uiHash(this));
 			this.containers[innermostIndex].containerCache.over = 1;
 		} 

@@ -38,8 +38,7 @@ class fx_controller_admin_adminpanel extends fx_controller_admin {
         $main_menu[] = array('name' => 'Разработка', 'items' => array(
                 'layout' => array('name' => 'Макеты', 'href' => '/floxim/#admin.layout.all'), /// template -> layout
                 'component' => array('name' => 'Компоненты', 'href' => '/floxim/#admin.component.group'),
-                'widget' => array('name' => 'Виджеты', 'href' => '/floxim/#admin.widget.group'),
-                'devtools' => array('name' => 'Инструменты разработчика', 'href' => '/floxim/#admin.devtools.sql')
+                'widget' => array('name' => 'Виджеты', 'href' => '/floxim/#admin.widget.group')
                 ));
 
         return $main_menu;

@@ -647,10 +647,10 @@ class fx_system_files extends fx_system {
                 $image = imagecreatefromjpeg($image_path);
                 break;
             case IMAGETYPE_GIF:
-                $image = imagecreatefrompng($image_path);
+                $image = imagecreatefromgif($image_path);
                 break;
             case IMAGETYPE_PNG:
-                $image = imagecreatefromgif($image_path);
+                $image = imagecreatefrompng($image_path);
                 break;
             default:
                 return false;
@@ -683,7 +683,9 @@ class fx_system_files extends fx_system {
                 $result_height = floor(($height*$result_width)/$width);
             }
         }
-
+        if (!$result_width || !$result_height) {
+            return true;
+        }
         $result_image = imagecreatetruecolor($result_width, $result_height);
         imagecopyresized($result_image,$image,0,0,0,0,$result_width,$result_height,imagesx($image),imagesy($image));
         $new_type = !empty($new_type) ? $new_type : $type;
@@ -922,9 +924,6 @@ class fx_system_files extends fx_system {
     //--------------------------------------------------------------------
 
     public function save_file($file, $dir) {
-
-        $fx_core = fx_core::get_object();
-
         $dir = trim($dir, '/').'/';
         $this->mkdir(fx::config()->HTTP_FILES_PATH.$dir);
 
@@ -941,7 +940,7 @@ class fx_system_files extends fx_system {
         }
         else if (is_array($file) && $file['source_id']) {
             $type = 2;
-            $fileinfo = $this->core->db->get_row("SELECT `real_name`, `type`, `path` FROM {{filetable}} WHERE id = '".intval($file['source_id'])."' ");
+            $fileinfo = fx::db()->get_row("SELECT `real_name`, `type`, `path` FROM {{filetable}} WHERE id = '".intval($file['source_id'])."' ");
             $filename = $fileinfo['real_name'];
             $filetype = $fileinfo['type'];
             $link = fx::config()->FILES_FOLDER.$fileinfo['path'];
@@ -961,27 +960,27 @@ class fx_system_files extends fx_system {
             }
             $this->move_uploaded_file($file['tmp_name'], $destination);
             $destination = $this->base_path . $destination;
-            $thumb_path = $fx_core->files->create_thumb($destination);
+            //$thumb_path = fx::files()->create_thumb($destination);
             // dev_log('thumb path in saving file',$thumb_path);
         } else if ( $type == 2 || $type == 3) {
             $content = file_get_contents($link);
             file_put_contents(fx::config()->FILES_FOLDER.$dir.$put_file, $content);
         }
         else {
-            $fx_core->files->copy($file['path'], fx::config()->HTTP_FILES_PATH.$dir.$put_file);
+            fx::files()->copy($file['path'], fx::config()->HTTP_FILES_PATH.$dir.$put_file);
         }
 
-        $this->core->db->query("INSERT INTO `{{filetable}}` SET
-        `real_name` = '" . $this->core->db->escape($filename) . "',
+        fx::db()->query("INSERT INTO `{{filetable}}` SET
+        `real_name` = '" . fx::db()->escape($filename) . "',
         `path` = '" . $destination . "',
         `type` = '" . $filetype . "',
-        `size` = '" . filesize(fx::config()->FILES_FOLDER.$dir.$put_file) . "',
-        `thumb_path` = '" . ( empty($thumb_path) ? NULL : $thumb_path ) . "'");
+        `size` = '" . filesize(fx::config()->FILES_FOLDER.$dir.$put_file) . "'");/*,
+        `thumb_path` = '" . ( empty($thumb_path) ? NULL : $thumb_path ) . "'");*/
 
         return array(   
-            'id' => $this->core->db->insert_id(), 
+            'id' => fx::db()->insert_id(), 
             'path' => $destination,
-            'thumb_path' => ( empty($thumb_path) ? NULL : $thumb_path ),
+            //'thumb_path' => ( empty($thumb_path) ? NULL : $thumb_path ),
             'filename' => $filename
         );
     }

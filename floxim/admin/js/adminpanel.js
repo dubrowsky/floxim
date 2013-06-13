@@ -136,10 +136,13 @@ fx_adminpanel = {
             $fx.hash[1] = 'view';
         }
         $fx.mode = $fx.hash[0]; // page or admin
-              
+            
+        /*
+         * если оставить, проматывает страницу в начало при переходе в #page.view
         if ( window.location.hash == '#page.view' ) {
             window.location.hash = '';
         }
+        */
     },
 
     draw_additional_text: function (data) {

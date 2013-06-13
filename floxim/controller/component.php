@@ -216,7 +216,13 @@ class fx_controller_component extends fx_controller {
             return null;
         }
         $total_rows = $this->_get_finder()->get_found_rows();
+        if ($total_rows == 0) {
+            return null;
+        }
         $limit = $this->param('limit');
+        if ($limit == 0) {
+            return null;
+        }
         $total_pages = ceil($total_rows / $limit);
         if ($total_pages == 1) {
             return null;

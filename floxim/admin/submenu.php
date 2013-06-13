@@ -148,44 +148,14 @@ class fx_admin_submenu {
 
         $this->menu[] = $node_administrate = $this->add_node('administrate', 'Администрирование', 'administrate.module');
         $this->menu[] = $this->add_node('module', 'Модули', 'administrate.module', $node_administrate);
-        $this->menu[] = $this->add_node('patch', 'Обновления', 'patch.all', $node_administrate);
-        $this->menu[] = $this->add_node('classificator', 'Списки', 'classificator.all', $node_administrate);
-
-        $this->menu[] = $node_tools = $this->add_node('tools', 'Инструменты', 'redirect.all');
-        $this->menu[] = $this->add_node('redirect', 'Переадресации', 'redirect.all', $node_tools);
-        $this->menu[] = $this->add_node('crontask', 'Управление задачами', 'crontask.all', $node_tools);
         
-        /*
-        foreach ($modules as $module) {
-            try {
-                $keyword = $module['keyword'];
-                $classname = 'fx_controller_admin_module_'.$keyword;
-                if (class_exists($classname)) {
-                    $controller = new $classname;
-                    $items = $controller->get_menu_items();
-                    foreach ($items as $item) {
-                        $this->menu[] = $this->add_node($item['id'], $item['name'], $item['href'], $node_tools);
-                    }
-                }
-            } catch (Exception $e) {
-                
-            }
-        }
-
-        */
+        $this->menu[] = $node_tools = $this->add_node('tools', 'Инструменты', 'redirect.all');
         
         $this->menu[] = $node_users = $this->add_node('user', 'Пользователи', 'user.all');
         $this->menu[] = $this->add_node('user', 'Список пользователей', 'user.all', $node_users);
         $this->menu[] = $this->add_node('group', 'Группы', 'group.all', $node_users);
 
         $this->menu[] = $node_settings = $this->add_node('settings', 'Настройки', 'settings.system');
-        /*
-        foreach ( $modules as $module ) {
-            $keyword = $module['keyword'];
-            $this->menu[] = $this->add_node('settings-'.$keyword, 'Настройки '.$keyword, 'module_'.$keyword.'.basesettings', $node_settings);
-        }
-         * 
-         */
     }
 
     protected function init_menu_component($id) {

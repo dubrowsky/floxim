@@ -155,6 +155,18 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
         uasort($this->data, $sorter);
     }
     
+    public function group($groupper) {
+        $res = new fx_collection();
+        foreach ($this as $item) {
+            $key = call_user_func($groupper, $item);
+            if (!isset($res[$key])) {
+                $res[$key] = new fx_collection();
+            }
+            $res[$key] []= $item;
+        }
+        return $res;
+    }
+    
     /*
      * Применить функцию ко всем элементам
      */

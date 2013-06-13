@@ -45,8 +45,6 @@ class fx_controller_admin extends fx_controller {
         
         $this->response = new fx_admin_response($input);
         
-        //fx_admin_checkpatch::check();
-
         if ($this->save_history && $input['posting']) {
             $history = fx::data('history')->create(array('user_id' => 1));
             $history['name'] = $this->get_history_name($action);
@@ -113,17 +111,10 @@ class fx_controller_admin extends fx_controller {
         return $this->input['params'][1];
     }
     
-    ///// ACTIONS ////
-            
-    /**
-     * Возвращает строку с базовой разметкой и
-     * собирает все сопутсвующие файлы в fx_core::get_object()->page'е
-     * @return string
-     */
-    public function admin_office()
-    {   
+    public static function add_admin_files() {
         $js_files = array(
             FX_JQUERY_PATH,
+            '/floxim/admin/js/lang.js.php',
             '/floxim/lib/js/jquery-ui-1.8.21.custom.js',
             '/floxim/lib/js/jquery.nestedSortable.js',
             '/floxim/lib/js/jquery.ba-hashchange.min.js',
@@ -169,7 +160,21 @@ class fx_controller_admin extends fx_controller {
         foreach ($css_files as $file) {
             $page->add_css_file($file);
         }
-        
+    }
+
+
+    ///// ACTIONS ////
+            
+    
+    /**
+     * Возвращает строку с базовой разметкой и
+     * собирает все сопутсвующие файлы в fx_core::get_object()->page'е
+     * @return string
+     */
+    public function admin_office()
+    {   
+        self::add_admin_files();
+        $page = fx::page();
         $auth_form = '';
         if (fx::env('is_admin')) {
             $panel = '

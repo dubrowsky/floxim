@@ -364,7 +364,7 @@ class fx_core extends fx_system {
                 break;
             }
 
-            if (preg_match("/^controller_(administrate|site|template_files|template_colors|template|layput|component|ctpl|field|devtools|menu|menu_item|settings|widget|patch|redirect|crontask)$/", $classname, $match)) {
+            if (preg_match("/^controller_(administrate|site|template_files|template_colors|template|component|field|settings|widget)$/", $classname, $match)) {
                 $file = $root.'/admin/controller/'.str_replace('_', '/', $match[1]);
                 break;
             }
