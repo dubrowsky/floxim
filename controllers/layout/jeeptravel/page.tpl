@@ -119,6 +119,9 @@
                         <ul fx:template="$pages">
                             <li fx:template="item">
                                 <a href="{$url}">{$name}</a>
+                                <div fx:if="$cover->get_value()">
+                                <img src="{$cover}" alt="" style="height:50px;" />
+                                </div>
                             </li>
                         </ul>
                     </div>

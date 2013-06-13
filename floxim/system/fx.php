@@ -5,31 +5,30 @@
 */ 
 
 class fx {
-    static protected $config = null;
-
     protected function __construct() {
 
     }
 
     /* Get config data */
     static public function config() {
-        if (self::$config === null) {
-            self::$config = new fx_config();
+        static $config = false;
+        if ($config === false) {
+            $config = new fx_config();
         }
-        return self::$config;
+        return $config;
     }
     
-    protected static $db = null;
     /**
      * Получить объект базы данных
      * @return fx_db
      */
     public static function db() {
-    	if (is_null(self::$db)) {
-            self::$db = new fx_db();
-            self::$db->query("SET NAMES '".fx::config()->DB_CHARSET."'");
+        static $db = false;
+    	if ($db === false) {
+            $db = new fx_db();
+            $db->query("SET NAMES '".fx::config()->DB_CHARSET."'");
     	}
-    	return self::$db;
+    	return $db;
     }
     
     protected static $data_cache = array();

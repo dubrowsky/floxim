@@ -93,28 +93,6 @@ class fx_content extends fx_essence {
 
     public function get_fields_to_show() {
         $fields_to_show = array();
-        /*
-        if (true && !isset(self::$content_fields_by_component[$this->component_id])) {
-            $component = fx::data('component', $this->component_id);
-            $chain = $component->get_chain();
-            $content_fields_col = new fx_collection();
-
-            foreach ( $chain as $chain_level ) {
-                if ( $chain_level['keyword'] == 'content') {
-                    continue;
-                }
-                $content_fields_col->concat ( $chain_level->fields() );
-            }
-            $content_fields = array();
-            foreach ($content_fields_col as $cf) {
-                $content_fields[$cf['name']] = $cf;
-            }
-            self::$content_fields_by_component[$this->component_id] = $content_fields;
-        } else {
-            //dev_log('cached flds '.$this->component_id);
-            $content_fields = self::$content_fields_by_component[$this->component_id];
-        }
-        */
         $com_id = $this->component_id;
         if (!isset(self::$content_fields_by_component[$com_id])) {
             self::$content_fields_by_component[$com_id] = array();
@@ -128,19 +106,33 @@ class fx_content extends fx_essence {
         
         foreach ($this->data as $fkey => $v) {
             $cf = $com_fields[$fkey];
-            if ($is_admin && $cf && $cf->type != 'multilink') {
-                $fields_to_show[$fkey] = new fx_template_field($v, array(
-                    'var_type' => 'content', 
-                    'content_id' => $this['id'],
-                    'content_type_id' => $com_id,
-                    'id' => $cf['id'],
-                    'name' => $cf['name'],
-                    'title' => $cf['description'],
-                    'editable' => true
-                ));
-            } else {
+            // не-поля и поля-мультилинки - всегда возращаем просто значение
+            if (!$cf || $cf->type == 'multilink') {
                 $fields_to_show[$fkey] = $v;
+                continue;
             }
+            // простое поле для не-админа - возвращаем значение
+            if (!in_array($cf->type, array('image', 'file', 'date')) && !$is_admin) {
+                $fields_to_show[$fkey] = $v;
+                continue;
+            }
+            
+            if ($cf->type == 'image' || $cf->type == 'file') {
+                if ($v && is_numeric($v) && ($file_obj = fx::data('filetable', $v)) ) {
+                    $v = fx::config()->HTTP_FILES_PATH.$file_obj['path'];
+                }
+            }
+            
+            $fields_to_show[$fkey] = new fx_template_field($v, array(
+                'var_type' => 'content', 
+                'content_id' => $this['id'],
+                'content_type_id' => $com_id,
+                'id' => $cf['id'],
+                'name' => $cf['name'],
+                'title' => $cf['description'],
+                'type' => $cf->type,
+                'editable' => true
+            ));
         }
 
         return $fields_to_show;

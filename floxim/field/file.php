@@ -76,7 +76,7 @@ class fx_field_file extends fx_field_baze {
         $file_id = $content[$this->name];
         if ($file_id) {
             $sql = "SELECT * FROM `{{filetable}}` WHERE `id` = '".$file_id."'";
-            $fileinfo = fx_core::get_object()->db->get_row($sql);
+            $fileinfo = fx::db()->get_row($sql);
             $this->_edit_jsdata['fileinfo']['real_name'] = $fileinfo['real_name'];
             $this->_edit_jsdata['fileinfo']['path'] = fx::config()->HTTP_FILES_PATH.$fileinfo['path'];
             $this->_edit_jsdata['fileinfo']['old'] = $file_id;
@@ -94,7 +94,7 @@ class fx_field_file extends fx_field_baze {
         $file_id = $content[$this->name];
         if ($file_id) {
             $sql = "SELECT * FROM `{{filetable}}` WHERE `id` = '".$file_id."'";
-            $fileinfo = fx_core::get_object()->db->get_row($sql);
+            $fileinfo = fx::db()->get_row($sql);
             $this->_js_field['real_name'] = $fileinfo['real_name'];
             $this->_js_field['path'] = fx::config()->HTTP_FILES_PATH.$fileinfo['path'];
             $this->_js_field['old'] = $file_id;
@@ -116,9 +116,12 @@ class fx_field_file extends fx_field_baze {
     }
 
     public function get_savestring(fx_essence $content = null) {
-        $fx_core = fx_core::get_object();
+        if (is_numeric($this->value)) {
+            return $this->value;
+        }
 
         $current_file_id = $content ? $content[$this->name] : null;
+        return $current_file_id;
 
         if ($this->value['delete'] && $current_file_id == $this->value['delete']) {
             $this->_to_delete_id = $current_file_id;
@@ -134,7 +137,7 @@ class fx_field_file extends fx_field_baze {
         }
 
         if ($this->value) {
-            $r = $fx_core->files->save_file($this->value, $content->get_upload_folder());
+            $r = fx::files()->save_file($this->value, $content->get_upload_folder());
         }
 
         return +$r['id'];

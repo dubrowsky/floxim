@@ -250,7 +250,8 @@ fx_front.prototype.set_mode_edit = function () {
                 fields.push({
                     value:data.value,
                     name:data.id,
-                    label: data.title || data.name || data.id
+                    label: data.title || data.name || data.id,
+                    type: data.type || 'text'
                 });
                 vars[data.id] = data;
             }

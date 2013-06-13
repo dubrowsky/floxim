@@ -951,43 +951,37 @@ class fx_system_files extends fx_system {
         }
 
         $put_file = $this->get_put_filename($dir, $filename);
-        $thumb_path = NULL;
-
+        
+        $stored_path = $dir.$put_file;
+        $http_path = fx::config()->HTTP_FILES_PATH.$dir.$put_file;
+        $full_path = fx::config()->FILES_FOLDER.$dir.$put_file;
+        
         if ($type == 1) {
-            $destination = fx::config()->HTTP_FILES_PATH.$dir.$put_file;
-            if ($destination[0] != '/') {
-                $destination = '/'.$destination;
-            }
-            $this->move_uploaded_file($file['tmp_name'], $destination);
-            $destination = $this->base_path . $destination;
-            //$thumb_path = fx::files()->create_thumb($destination);
-            // dev_log('thumb path in saving file',$thumb_path);
+            move_uploaded_file($file['tmp_name'], $full_path);
+            //$this->move_uploaded_file($file['tmp_name'], $full_path);
         } else if ( $type == 2 || $type == 3) {
             $content = file_get_contents($link);
-            file_put_contents(fx::config()->FILES_FOLDER.$dir.$put_file, $content);
+            file_put_contents($full_path, $content);
+        } else {
+            fx::files()->copy($file['path'], $full_path);
         }
-        else {
-            fx::files()->copy($file['path'], fx::config()->HTTP_FILES_PATH.$dir.$put_file);
-        }
+        
+        $q = "INSERT INTO `{{filetable}}` SET
+            `real_name` = '" . fx::db()->escape($filename) . "',
+            `path` = '" . $stored_path. "',
+            `type` = '" . $filetype . "',
+            `size` = '" . filesize($full_path) . "'";
 
-        fx::db()->query("INSERT INTO `{{filetable}}` SET
-        `real_name` = '" . fx::db()->escape($filename) . "',
-        `path` = '" . $destination . "',
-        `type` = '" . $filetype . "',
-        `size` = '" . filesize(fx::config()->FILES_FOLDER.$dir.$put_file) . "'");/*,
-        `thumb_path` = '" . ( empty($thumb_path) ? NULL : $thumb_path ) . "'");*/
-
+        fx::db()->query($q);
+        
         return array(   
             'id' => fx::db()->insert_id(), 
-            'path' => $destination,
-            //'thumb_path' => ( empty($thumb_path) ? NULL : $thumb_path ),
+            'path' => $http_path,
             'filename' => $filename
         );
     }
 
     protected function get_put_filename($dir, $name) {
-        $fx_core = fx_core::get_object();
-
         if ( $this->file_exists(fx::config()->HTTP_FILES_PATH.$dir.$name) ) {
             return $name;
         }

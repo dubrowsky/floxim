@@ -58,39 +58,22 @@ name="<?=_c.name?>" id="<?=_c.name?>"
 _c.type == 'hidden'
 
 <!--[input]-->
-<input type="file" <?=$t.field_id_name(_c)?> />
-<?if (_c.old) {?>
-	<div class="old">
-		<span>РўРµРєСѓС‰РёР№ С„Р°Р№Р»: </span><a target="_blank" href="<?=_c.path?>"><?=_c.real_name?></a>
-		<a class="delete_link delete_<?=_c.old?>">СѓРґР°Р»РёС‚СЊ</a>
-		<input type="hidden" name="<?=_c.name?>[delete]" value="-1" />
-	</div>
-<?}?>
-<!--test-->
-_c.type == 'file'
-<!--jquery:form_row-->
-html.find('a.delete_link').click(function(){
-	var delete_id = this.className.match(/delete_(\d+)/)[1];
-	var par = $(this).parent();
-	par.find('input').val(delete_id);
-	par.hide();
-});
-
-
-<!--[input]-->
 <div class="image_field">
     <div class="file_input">
     	<input type="file" name="file" id="image_file" />
 	</div>
-    <input type="hidden" <?=$t.field_id_name(_c)?> />
-    <span class="real_name"><?=_c.old ? _c.real_name : ''?></span>
+    <input type="hidden" <?=$t.field_id_name(_c)?> class="real_value" value="<?=_c.value?>" />
+    <div class="preview">
+        <img <?=(_c.path ? 'src="'+_c.path+'"' : '')?> style="max-height:100px; max-width:100px; border:1px solid #CCC;" />
+    </div>
 </div>
 <!--test-->
 _c.type == 'image'
 <!--jquery:form_row-->
 
 html.on('.file_input input').on('change', function(){
-	console.log('ololo');
+    var field = $(this);
+    var res_inp = $('.real_value', field);
     $.ajaxFileUpload({
         url:'/floxim/index.php',
         secureuri:false,
@@ -98,13 +81,14 @@ html.on('.file_input input').on('change', function(){
         dataType: 'json',
         data: { essence:'file', fx_admin:1, action:'upload_save' },
         success: function ( data, status ) {
-            console.log('success upl', data,status);
+            res_inp.val(data.id);
+            $('.preview img', field).attr('src', data.path);
+            console.log('success upl', res_inp, data,status);
         },
         error: function (data, status, e) {
         	console.log('error uploda', e);
         }
     });
-    console.log('ajaupl inited');
 });
 
 <!--[input]-->

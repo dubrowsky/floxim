@@ -60,6 +60,7 @@ class fx_controller_admin_content extends fx_controller_admin {
 
         if ($input['data_sent']) {
             $content->set_field_values($all_fields, $input['content']);
+            dev_log('saving content', $input, $content);
             $content->save();
         }
         return array('status' => 'ok', 'dialog_title' => 'Редактирование контента');
