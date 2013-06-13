@@ -20,7 +20,7 @@ class fx_controller_admin_layout extends fx_controller_admin {
         }
 
         $ar = array('type' => 'list', 'filter' => true);
-        $ar['labels'] = array('name' => FX_ADMIN_NAME, 'use' => 'Используется на сайтах', 'buttons' => array('type' => 'buttons'));
+        $ar['labels'] = array('name' => FX_ADMIN_NAME, 'use' => fx_lang('Используется на сайтах'), 'buttons' => array('type' => 'buttons'));
 
         foreach ($items as $item) {
         	$submenu = self::get_template_submenu($item);
@@ -52,9 +52,9 @@ class fx_controller_admin_layout extends fx_controller_admin {
 
         $buttons = array("add", "delete");
         $buttons_pulldown['add'] = array(
-                array('name' => 'пустой', 'options' => array('source' => 'new')),
-                array('name' => 'импортировать', 'options' => array('source' => 'import')),
-                array('name' => 'установить с FloximStore', 'options' => array('source' => 'store'))
+                array('name' => fx_lang('пустой'), 'options' => array('source' => 'new')),
+                array('name' => fx_lang('импортировать'), 'options' => array('source' => 'import')),
+                array('name' => fx_lang('установить с FloximStore'), 'options' => array('source' => 'store'))
         );
 
         $result = array('fields' => $fields, 'buttons' => $buttons, 'buttons_pulldown' => $buttons_pulldown);
@@ -67,8 +67,8 @@ class fx_controller_admin_layout extends fx_controller_admin {
 
         switch ($input['source']) {
             case 'import' :
-                $fields[] = array('name' => 'importfile', 'type' => 'file', 'label' => 'Файл');
-                $result['dialog_title'] = 'Импорт макета дизайна';
+                $fields[] = array('name' => 'importfile', 'type' => 'file', 'label' => fx_lang('Файл'));
+                $result['dialog_title'] = fx_lang('Импорт макета дизайна');
                 $fields[] = $this->ui->hidden('action', 'import');
                 break;
             case 'store' :
@@ -83,9 +83,9 @@ class fx_controller_admin_layout extends fx_controller_admin {
             default :
                 $input['source'] = 'new';
                 $fields[] = $this->ui->hidden('action', 'add');
-                $fields[] = array('name' => 'name', 'label' => 'Название макета');
-                $fields[] = array('name' => 'keyword', 'label' => 'Keyword (название папки с макетом)');
-                $result['dialog_title'] = 'Добавление макета дизайна';
+                $fields[] = array('name' => 'name', 'label' => fx_lang('Название макета'));
+                $fields[] = array('name' => 'keyword', 'label' => fx_lang('Keyword (название папки с макетом)'));
+                $result['dialog_title'] = fx_lang('Добавление макета дизайна');
         }
 
         $fields[] = $this->ui->hidden('source', $input['source']);
@@ -100,7 +100,7 @@ class fx_controller_admin_layout extends fx_controller_admin {
         $file = $input['importfile'];
         if (!$file) {
             $result = array('status' => 'error');
-            $result['text'][] = 'Ошибка при создании временного файла';
+            $result['text'][] = fx_lang('Ошибка при создании временного файла');
         }
 
         $result = array('status' => 'ok');
@@ -155,7 +155,7 @@ class fx_controller_admin_layout extends fx_controller_admin {
             $layout->save();
         } catch (Exception $e) {
             $result['status'] = 'error';
-            $result['text'][] = "Не удалось создать каталог ".$path;
+            $result['text'][] = fx_lang("Не удалось создать каталог"). ' ' .$path;
         }
         return $result;
     }
@@ -183,7 +183,7 @@ class fx_controller_admin_layout extends fx_controller_admin {
         $action = isset($input['params'][1]) ? $input['params'][1] : 'layouts';
 
         if (!$layout) {
-            $fields[] = $this->ui->error('Макет не найден');
+            $fields[] = $this->ui->error(fx_lang('Макет не найден'));
             return array('fields' => $fields);
         }
         
@@ -203,7 +203,7 @@ class fx_controller_admin_layout extends fx_controller_admin {
     	$tpl_submenu = self::get_template_submenu($template);
         $tpl_submenu_first = current($tpl_submenu);
         
-    	$breadcrumb->add_item('Макеты', '#admin.layout.all');
+    	$breadcrumb->add_item(fx_lang('Макеты'), '#admin.layout.all');
         $breadcrumb->add_item($template['name'], $tpl_submenu_first['url']);
 		$breadcrumb->add_item($tpl_submenu[$action]['title'], $tpl_submenu[$action]['url']);
     }
@@ -234,7 +234,7 @@ class fx_controller_admin_layout extends fx_controller_admin {
     		// 'layouts' => 'Лэйауты',
 			// 'files' => 'Файлы',
 			// 'colors' => 'Расцветки',
-			'settings' => 'Настройки'
+			'settings' => fx_lang('Настройки')
 		);
 
         $layout_id = $layout['id'];
@@ -283,7 +283,7 @@ class fx_controller_admin_layout extends fx_controller_admin {
                 $el = array('id' => $id, 'name' => array('name' =>$name, 'url' => 'template_files.edit('.$template['id'].','.$id.') '));
                 $ar['values'][] = $el;
             } else {
-            $fields[] = $this->ui->label('Нет файлов');
+            $fields[] = $this->ui->label( fx_lang('Нет файлов') );
         }
 
         $fields[] = $ar;
@@ -300,8 +300,8 @@ class fx_controller_admin_layout extends fx_controller_admin {
     }
 
     public function settings($template) {
-    	$fields[] = $this->ui->label("<a href='/floxim/?essence=template&amp;action=export&amp;id=".$template['id']."'>Экспортировать в файл</a>");
-        $fields[] = $this->ui->input('name', 'Название макета', $template['name']);
+    	$fields[] = $this->ui->label("<a href='/floxim/?essence=template&amp;action=export&amp;id=".$template['id']."'>fx_lang('Экспортировать в файл')</a>");
+        $fields[] = $this->ui->input('name', fx_lang('Название макета'), $template['name']);
         $fields[] = $this->ui->hidden('action', 'settings');
         $fields[] = $this->ui->hidden('id', $template['id']);
         
@@ -313,7 +313,7 @@ class fx_controller_admin_layout extends fx_controller_admin {
         $name = trim($input['name']);
         if ( !$name ) {
             $result['status'] = 'error';
-            $result['text'][] = 'Укажите название макета';
+            $result['text'][] = fx_lang('Укажите название макета');
             $result['fields'][] = 'name';
         }
         else {
@@ -324,7 +324,7 @@ class fx_controller_admin_layout extends fx_controller_admin {
             }
             else {
                 $result['status'] = 'error';
-                $result['text'][] = 'Макет не найден';
+                $result['text'][] = fx_lang('Макет не найден');
             }
         }
         
@@ -441,17 +441,17 @@ class fx_controller_admin_layout extends fx_controller_admin {
         		'type' => 'select', 
         		'values' => $tpl_values, 
         		'value' => $preview['template_id'], 
-        		'label' => 'Макет',
+        		'label' => fx_lang('Макет'),
         		'post' => $post_on_change
         );
         foreach ($colors as $tpl_id => $color) {
             if ($color) {
-                $color_value = array("По умолчанию");
+                $color_value = array( fx_lang("По умолчанию") );
                 foreach ($color as $color_id => $v) {
                     $color_value[$color_id] = $v['name'];
                 }
                 $fields[] = array(
-                	'label' => 'Расцветка', 
+                	'label' => fx_lang('Расцветка'),
                 	'name' => 'color', 
                 	'type' => 'select', 
                 	'value' => $preview['color_id'], 
@@ -462,8 +462,8 @@ class fx_controller_admin_layout extends fx_controller_admin {
                 );
             }
         }
-        $fields []= array('type' => 'button', 'label' => 'Применить текущий', 'post' => array('essence' => 'template', 'action' => 'approve_preview'));
-        $fields []= array('type' => 'button', 'label' => 'Выход', 'post' => array('essence' => 'template', 'action' => 'exit_preview'));
+        $fields []= array('type' => 'button', 'label' => fx_lang('Применить текущий'), 'post' => array('essence' => 'template', 'action' => 'approve_preview'));
+        $fields []= array('type' => 'button', 'label' => fx_lang('Выход'), 'post' => array('essence' => 'template', 'action' => 'exit_preview'));
         $this->response->add_fields($fields);
     }
 
@@ -475,15 +475,15 @@ class fx_controller_admin_layout extends fx_controller_admin {
     }
 
     protected function _get_index_tpl() {
-        return '<html><head><title>Макет титульной страницы</title></head><body>Макет титульной страницы</body></html>';
+        return '<html><head><title>' . fx_lang('Макет титульной страницы') . '</title></head><body>' . fx_lang('Макет титульной страницы') . '</body></html>';
     }
 
     protected function _get_inner_tpl() {
-        return '<html><head><title>Макет внутренней страницы</title></head><body>Макет внутренней страницы</body></html>';
+        return '<html><head><title>' . fx_lang('Макет внутренней страницы') . '</title></head><body>' . fx_lang('Макет внутренней страницы') . '</body></html>';
     }
     
     protected function _get_other_tpl() {
-        return '<html><head><title>Макет</title></head><body>Макет</body></html>';
+        return '<html><head><title>' . fx_lang('Макет') . '</title></head><body>' . fx_lang('Макет') . '</body></html>';
     }
 
 }

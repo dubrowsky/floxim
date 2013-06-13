@@ -14,7 +14,7 @@ class fx_controller_admin_widget extends fx_controller_admin_component {
 
         switch ($input['source']) {
             case 'import':
-                $fields[] = array('name' => 'importfile', 'type' => 'file', 'label' => 'Файл');
+                $fields[] = array('name' => 'importfile', 'type' => 'file', 'label' => fx_lang('Файл'));
                 $fields[] = $this->ui->hidden('action', 'import');
                 break;
             case 'store':
@@ -23,9 +23,9 @@ class fx_controller_admin_widget extends fx_controller_admin_component {
             default:
                 $input['source'] = 'new';
                 $fields[] = $this->ui->hidden('action', 'add');
-                $fields[] = array('label' => 'Название', 'name' => 'name');
-                $fields[] = array('label' => 'Ключевое слово', 'name' => 'keyword');
-                $fields[] = array('label' => 'Группа', 'type' => 'select', 'values' => $groups, 'name' => 'group', 'extendable' => 'Другая группа');
+                $fields[] = array('label' => fx_lang('Название'), 'name' => 'name');
+                $fields[] = array('label' => fx_lang('Ключевое слово'), 'name' => 'keyword');
+                $fields[] = array('label' => fx_lang('Группа'), 'type' => 'select', 'values' => $groups, 'name' => 'group', 'extendable' => fx_lang('Другая группа'));
         }
 
         $fields[] = $this->ui->hidden('source', $input['source']);
@@ -119,7 +119,7 @@ class fx_controller_admin_widget extends fx_controller_admin_component {
 
             if (!trim($input['name'])) {
                 $result['status'] = 'error';
-                $result['text'][] = 'Введите название виджета';
+                $result['text'][] = fx_lang('Введите название виджета');
                 $result['fields'][] = 'name';
             }
 
@@ -146,7 +146,7 @@ class fx_controller_admin_widget extends fx_controller_admin_component {
         $file = $input['importfile'];
         if (!$file) {
             $result = array('status' => 'error');
-            $result['text'][] = 'Ошибка при создании временного файла';
+            $result['text'][] = fx_lang('Ошибка при создании временного файла');
         }
 
         $result = array('status' => 'ok');
@@ -194,13 +194,13 @@ class fx_controller_admin_widget extends fx_controller_admin_component {
         $groups = fx::data('widget')->get_all_groups();
 
 
-        $fields[] = $this->ui->label("<a href='/floxim/?essence=admin_widget&amp;action=export&amp;id=".$widget['id']."'>Экспортировать в файл</a>");
-        $fields[] = array('label' => 'Ключевое слово: '.$widget['keyword'], 'type' => 'label');
+        $fields[] = $this->ui->label("<a href='/floxim/?essence=admin_widget&amp;action=export&amp;id=".$widget['id']."'>" . fx_lang("Экспортировать в файл") . "</a>");
+        $fields[] = array('label' => fx_lang('Ключевое слово:') . ' '.$widget['keyword'], 'type' => 'label');
 
-        $fields[] = array('label' => 'Название', 'name' => 'name', 'value' => $widget['name']);
-        $fields[] = array('label' => 'Группа', 'type' => 'select', 'values' => $groups, 'name' => 'group', 'value' => $widget['group'], 'extendable' => 'Другая группа');
+        $fields[] = array('label' => fx_lang('Название'), 'name' => 'name', 'value' => $widget['name']);
+        $fields[] = array('label' => fx_lang('Группа'), 'type' => 'select', 'values' => $groups, 'name' => 'group', 'value' => $widget['group'], 'extendable' => fx_lang('Другая группа'));
 
-        $fields[] = array('label' => 'Описание', 'name' => 'description', 'value' => $widget['description'], 'type' => 'text');
+        $fields[] = array('label' => fx_lang('Описание'), 'name' => 'description', 'value' => $widget['description'], 'type' => 'text');
 
         // иконка
 
@@ -208,21 +208,21 @@ class fx_controller_admin_widget extends fx_controller_admin_component {
 
         if ($widget['icon']) { // выбранна
             $type = 1;
-            $icon .= 'эта иконка выбрана из списка иконок';
+            $icon .= fx_lang('эта иконка выбрана из списка иконок');
         } else if (file_exists(fx::config()->WIDGET_FOLDER.$widget['keyword'].'/icon.png')) { // находится в директории
             $type = 2;
-            $icon .= 'эта иконка находится в файле icon.png в директории виджета';
+            $icon .= fx_lang('эта иконка находится в файле icon.png в директории виджета');
         } else { // по умолчанию
             $type = 3;
-            $icon .= 'эта иконка используется по умолчанию';
+            $icon .= fx_lang('эта иконка используется по умолчанию');
         }
 
-        $fields[] = array('label' => 'Используемая иконка', 'type' => 'label');
+        $fields[] = array('label' => fx_lang('Используемая иконка'), 'type' => 'label');
 
         $fields[] = $this->ui->label($icon);
 
-        $embed = array('miniblock' => 'Миниблок', 'narrow' => 'Узкий', 'wide' => 'Широкий', 'narrow-wide' => 'Узко-широкий');
-        $fields[] = $this->ui->radio('embed', 'Размер виджета', $embed, $widget['embed']);
+        $embed = array('miniblock' => fx_lang('Миниблок'), 'narrow' => fx_lang('Узкий'), 'wide' => fx_lang('Широкий'), 'narrow-wide' => fx_lang('Узко-широкий'));
+        $fields[] = $this->ui->radio('embed', fx_lang('Размер виджета'), $embed, $widget['embed']);
 
         $fields[] = array('type' => 'hidden', 'name' => 'phase', 'value' => 'settings');
         $fields[] = array('type' => 'hidden', 'name' => 'id', 'value' => $widget['id']);
@@ -244,7 +244,7 @@ class widget_".$keyword." extends fx_tpl_widget {
     public function record() {
         extract(\$this->get_vars());
          ?>
-        <div>Новый виджет</div>
+        <div><?php fx_lang("Новый виджет"); ?> </div>
         <?php
     }
 

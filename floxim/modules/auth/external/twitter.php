@@ -35,7 +35,7 @@ class fx_auth_twitter extends fx_auth_external {
             $self->dispatcher();
         }
         else {
-            die("Авторизация череp twitter запрещена");
+            die(fx_lang("Авторизация через twitter запрещена"));
         }
 
     }
@@ -91,7 +91,7 @@ class fx_auth_twitter extends fx_auth_external {
             $_SESSION['oauth'] = $this->tmhOAuth->extract_params($this->tmhOAuth->response['response']);
             $authurl = $this->tmhOAuth->url("oauth/authorize", '')."?oauth_token={$_SESSION['oauth']['oauth_token']}";
             echo '<meta http-equiv="refresh" content="0; url='.$authurl.'" />';
-            echo '<p>Сейчас вы будете переброшены на страницу авторизации. <a href="'.$authurl.'">Нажмите, если не хотите ждать</a></p>';
+            echo '<p>' . fx_lang('Сейчас вы будете переброшены на страницу авторизации.') . ' <a href="'.$authurl.'">' . fx_lang('Нажмите, если не хотите ждать.') '</a></p>';
         } else {
             $this->output_error();
         }

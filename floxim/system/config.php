@@ -12,6 +12,7 @@ class fx_config {
             'DB_ENCRYPT' => 'MD5',
 
             'CHARSET' => 'utf-8',
+            'LANGUAGE' => 'en',
 
             'PAGE_TPL' => 'page',
             'SEARCH_KEY' => 'fxsrch',

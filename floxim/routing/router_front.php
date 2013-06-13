@@ -8,7 +8,7 @@ class fx_router_front extends fx_router {
         }
         $url = array($url);
         $site = fx::data('site', $context['site_id']);
-        
+
         if ( !empty($url) ) {
             if ( substr($url[0], -1) != '/' ) {
                 $url[1] = $url[0] . '/';

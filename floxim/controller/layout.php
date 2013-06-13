@@ -414,7 +414,7 @@ class fx_controller_layout extends fx_controller {
                 <input type="hidden" name="essence" value="layout" />
                 <input name="AUTH_USER" />
                 <input type="password" name="AUTH_PW" />
-                <input type="submit" value="Вход" class="auth_submit">
+                <input type="submit" value="' . fx_lang('Вход') . '" class="auth_submit">
                 </form></div>';
         }
 

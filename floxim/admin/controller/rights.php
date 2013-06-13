@@ -14,9 +14,9 @@ class fx_controller_admin_rights extends fx_controller {
         }
 
         $ar = array('type' => 'list', 'filter' => true, 'tab' => 'fields');
-        $ar['labels'] = array('name' => 'Право');
+        $ar['labels'] = array('name' => fx_lang('Право'));
         if (empty($items)) {
-            $fields[] = $this->ui->label('Нет никак прав');
+            $fields[] = $this->ui->label( fx_lang('Нет никак прав') );
             $ar['filter'] = false;
             unset($ar['labels']);
         }
@@ -42,15 +42,15 @@ class fx_controller_admin_rights extends fx_controller {
         $result = array('fields' => $fields, 'buttons' => $buttons, 'buttons_action' => $buttons_action);
         $result['tree']['mode'] = 'user';
         $result['breadcrumbs'][] = array('name' => $essence['name'], 'url' => '#admin.user.full('.$essence['id'].')');
-        $result['breadcrumbs'][] = array('name' => 'Права');
+        $result['breadcrumbs'][] = array( 'name' => fx_lang('Права') );
         
         return $result;
     }
 
     public function add($input) {
 
-        $fields[] = $this->ui->label('В первой версии есть толькт право Директор');
-        $fields[] = $this->ui->checkbox('director', 'Присовить право директора');
+        $fields[] = $this->ui->label( fx_lang('В первой версии есть только право Директор') );
+        $fields[] = $this->ui->checkbox('director', fx_lang('Присвоить право директора'));
 
         $fields[] = $this->ui->hidden('to', $input['to']);
         $fields[] = $this->ui->hidden('posting');

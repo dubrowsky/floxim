@@ -7,7 +7,7 @@
 class fx_controller_admin_module_filemanager extends fx_controller_admin_module {
 
     public function init_menu() {
-        $this->add_node('filemanager', 'Файл-менеджер', 'module_filemanager.ls');
+        $this->add_node('filemanager', fx_lang('Файл-менеджер'), 'module_filemanager.ls');
     }
 
     protected $root_name = 'корневой каталог'; // название корня для пути
@@ -101,7 +101,7 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
 		}
 
         $ar = array('type' => 'list', 'filter' => true);
-        $ar['labels'] = array('name' => FX_ADMIN_NAME, 'type' => 'Тип', 'size' => 'Размер', 'permission' => 'Права');
+        $ar['labels'] = array('name' => FX_ADMIN_NAME, 'type' => fx_lang('Тип'), 'size' => fx_lang('Размер'), 'permission' => fx_lang('Права'));
 
         $ls_res = $fx_core->files->ls(($dir ? $dir : '/'), false, true);
 
@@ -110,7 +110,7 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
             $parent_dir = $pos ? substr($dir, 0, $pos) : '';
             $ar['values'][] = array(
             	'name' => array(
-            		'name' => 'родительский каталог',
+            		'name' => fx_lang('родительский каталог'),
             		'url' => $this->_get_url('ls', $this->_trim_path($parent_dir)) //'module_filemanager.ls('.$parent_dir.')'
             	)
             );
@@ -126,13 +126,13 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
                 if (!$v['dir']) {
                     $size = $fx_core->files->filesize($path);
                     if ($size < 1e3) {
-                        $size .= ' байт';
+                        $size .= ' ' . fx_lang('байт');
                     } elseif ($size < 1e6) {
-                        $size = number_format($size / 1e3, 1).' Кб';
+                        $size = number_format($size / 1e3, 1).' ' . fx_lang('Кб');
                     } elseif ($size < 1e9) {
-                        $size = number_format($size / 1e6, 1).' Мб';
+                        $size = number_format($size / 1e6, 1).' ' . fx_lang('Мб');
                     } else {
-                        $size = number_format($size / 1e9, 1).' Гб';
+                        $size = number_format($size / 1e9, 1).' ' . fx_lang('Гб');
                     }
                 }
 
@@ -142,8 +142,8 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
                 	'id' => $path,
 					//'name' => ($v['dir'] ? array('name' => $v['name'], 'url' => 'module_filemanager.ls('.$path.')') : array('name' => $v['name'], 'url' => 'module_filemanager.editor('.$path.')')),
 					'name' => array('name' => $v['name'], 'url' => $this->_get_url($item_action, $this->_trim_path($path))),
-					'size' => ($v['dir'] ? '&nbsp;—&nbsp;' : $size),
-					'type' => ($v['dir'] ? 'каталог' : 'файл'),
+					'size' => ($v['dir'] ? ' - ' : $size),
+					'type' => ($v['dir'] ? fx_lang('каталог') : fx_lang('файл')),
 					'permission' => $perm
 				);
             }
@@ -167,7 +167,7 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
 
         if (!$filename) {
             $result['status'] = 'error';
-            $result['text'] = 'Не передано имя файла!';
+            $result['text'] = fx_lang('Не передано имя файла!');
             return $result;
         }
 
@@ -193,7 +193,7 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
                 $fields[] = array('type' => 'hidden', 'name' => 'file_name', 'value' => $filename);
                 $fields[] = array('type' => 'hidden', 'name' => 'action', 'value' => 'editor');
             } else {
-                $fields[] = $this->ui->error('Не удалось прочитать файл!');
+                $fields[] = $this->ui->error( fx_lang('Не удалось прочитать файл!') );
             }
         }
         $fields[]= array('type' => 'hidden', 'name' => 'essence', 'value' => 'module_filemanager');
@@ -209,12 +209,12 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
         /* проверки */
         if (!isset($input['file_content']) || !isset($input['file_name'])) {
             $result['status'] = 'error';
-            $result['text'] = 'Не все поля переданы!';
+            $result['text'] = fx_lang('Не все поля переданы!');
         } else {
             $res = $fx_core->files->writefile($input['file_name'], $input['file_content'], false);
             if ($res !== 0) {
                 $result['status'] = 'error';
-                $result['text'] = 'Не удалась запись в файл';
+                $result['text'] = fx_lang('Не удалась запись в файл');
             }
         }
         return $result;
@@ -223,16 +223,23 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
     public function add($input) {
         $fx_core = fx_core::get_object();
 
-        $fields[] = array('type' => 'select', 'name' => 'type',
-                'values' => array('file' => 'файл', 'dir' => 'каталог'), 'label' => 'Что создаём');
-        $fields[] = array('name' => 'name', 'label' => 'Имя файла/каталога');
+        $fields[] = array(
+            'type' => 'select',
+            'name' => 'type',
+            'values' => array(
+                'file' => fx_lang('файл'), 
+                'dir' => fx_lang('каталог')
+            ), 
+            'label' => fx_lang('Что создаём')
+        );
+        $fields[] = array('name' => 'name', 'label' => fx_lang('Имя файла/каталога'));
         $fields[] = array('type' => 'hidden', 'name' => 'dir', 'value' => $input['dir']);
 
         $fields[] = array('type' => 'hidden', 'name' => 'posting', 'value' => 1);
         $fields[] = array('type' => 'hidden', 'name' => 'action', 'value' => 'add');
 
         $result = array('fields' => $fields);
-        $result['dialog_title'] = 'Создание нового файла/директории';
+        $result['dialog_title'] = fx_lang('Создание нового файла/директории');
 
         return $result;
     }
@@ -244,12 +251,12 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
         /* проверки */
         if (!$input['name']) {
             $result['status'] = 'error';
-            $result['text'][] = 'Укажите имя файла/каталога';
+            $result['text'][] = fx_lang('Укажите имя файла/каталога');
             $result['fields'][] = 'name';
         }
         if (!isset($input['dir'])) {
             $result['status'] = 'error';
-            $result['text'][] = 'Не все поля переданы';
+            $result['text'][] = fx_lang('Не все поля переданы');
             $result['fields'][] = 'name';
         }
 
@@ -261,7 +268,7 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
             }
             if ($res !== 0) {
                 $result['status'] = 'error';
-                $result['text'][] = 'Ошибка при создании файла/каталога';
+                $result['text'][] = fx_lang('Ошибка при создании файла/каталога');
             } elseif ($input['type'] != 'dir') {
                 $result['location'] = 'tools.module_filemanager.editor('.$input['dir'].'/'.$input['name'].')';
             }
@@ -277,7 +284,7 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
 
         if (!$filename) {
             $result['status'] = 'error';
-            $result['text'] = 'Не передано имя файла!';
+            $result['text'] = fx_lang('Не передано имя файла!');
         }
 
         $pos = strrpos($filename, '/');
@@ -287,18 +294,18 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
         $is_dir = ($perms & 0x4000) == 0x4000;
         $perms = $perms & 0777;
 
-        $fields[] = array('name' => 'name', 'label' => 'Имя', 'value' => $only_name);
+        $fields[] = array('name' => 'name', 'label' => fx_lang('Имя'), 'value' => $only_name);
 
         $active_perm = array();
         if ($perms & 0400) $active_perm[] = 'r';
         if ($perms & 0200) $active_perm[] = 'w';
         if ($perms & 0100) $active_perm[] = 'x';
         $fields[] = array('name' => 'perm_user', 'type' => 'checkbox',
-                'label' => 'Права для пользователя-владельца',
+                'label' => fx_lang('Права для пользователя-владельца'),
                 'values' => array(
-                        'r' => 'Чтение',
-                        'w' => 'Запись',
-                        'x' => ($is_dir ? 'Просмотр содержимого' : 'Выполнение'),
+                        'r' => fx_lang('Чтение'),
+                        'w' => fx_lang('Запись'),
+                        'x' => ($is_dir ? fx_lang('Просмотр содержимого') : fx_lang('Выполнение')),
                 ), 'value' => $active_perm);
 
         $active_perm = array();
@@ -306,11 +313,11 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
         if ($perms & 020) $active_perm[] = 'w';
         if ($perms & 010) $active_perm[] = 'x';
         $fields[] = array('name' => 'perm_group', 'type' => 'checkbox',
-                'label' => 'Права для группы-владельца',
+                'label' => fx_lang('Права для группы-владельца'),
                 'values' => array(
-                        'r' => 'Чтение',
-                        'w' => 'Запись',
-                        'x' => ($is_dir ? 'Просмотр содержимого' : 'Выполнение'),
+                        'r' => fx_lang('Чтение'),
+                        'w' => fx_lang('Запись'),
+                        'x' => ($is_dir ? fx_lang('Просмотр содержимого') : fx_lang('Выполнение')),
                 ), 'value' => $active_perm);
 
         $active_perm = array();
@@ -318,11 +325,11 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
         if ($perms & 02) $active_perm[] = 'w';
         if ($perms & 01) $active_perm[] = 'x';
         $fields[] = array('name' => 'perm_other', 'type' => 'checkbox',
-                'label' => 'Права для остальных',
+                'label' => fx_lang('Права для остальных'),
                 'values' => array(
-                        'r' => 'Чтение',
-                        'w' => 'Запись',
-                        'x' => ($is_dir ? 'Просмотр содержимого' : 'Выполнение'),
+                        'r' => fx_lang('Чтение'),
+                        'w' => fx_lang('Запись'),
+                        'x' => ($is_dir ? fx_lang('Просмотр содержимого') : fx_lang('Выполнение')),
                 ), 'value' => $active_perm);
 
         $fields[] = array('type' => 'hidden', 'name' => 'filename', 'value' => $filename);
@@ -331,7 +338,7 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
         $fields[] = array('type' => 'hidden', 'name' => 'action', 'value' => 'edit');
 
         $result = array('fields' => $fields);
-        $result['dialog_title'] = 'Правка файла/директории';
+        $result['dialog_title'] = fx_lang('Правка файла/директории');
 
         return $result;
     }
@@ -339,7 +346,7 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
     public function edit_save($input) {
         $filename = $input['filename'];
         if (!$filename) {
-            return array('status' => 'error', 'text' => 'Не все поля переданы!');
+            return array('status' => 'error', 'text' => fx_lang('Не все поля переданы!'));
         }
 
         $fx_core = fx_core::get_object();
@@ -348,12 +355,12 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
         /* проверки */
         if (!$input['name']) {
             $result['status'] = 'error';
-            $result['text'][] = 'Укажите имя';
+            $result['text'][] = fx_lang('Укажите имя');
             $result['fields'][] = 'name';
         }
         if (!$input['perm_user'] && !$input['perm_group'] && !$input['perm_other']) {
             $result['status'] = 'error';
-            $result['text'][] = 'Задайте права доступа';
+            $result['text'][] = fx_lang('Задайте права доступа');
             $result['fields'][] = 'perm_user';
         }
 
@@ -383,7 +390,7 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
                 $res = $fx_core->files->chmod($filename, $perms);
                 if ($res !== 0) {
                     $result = array('status' => 'error');
-                    $result['text'][] = 'Ошибка при измении прав доступа';
+                    $result['text'][] = fx_lang('Ошибка при изменении прав доступа');
                 }
             }
         }
@@ -396,7 +403,7 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
                 $res = $fx_core->files->rename($filename, $input['name']);
                 if ($res !== 0) {
                     $result = array('status' => 'error');
-                    $result['text'][] = 'Ошибка при изменении имени';
+                    $result['text'][] = fx_lang('Ошибка при изменении имени');
                 }
             }
         }
@@ -423,7 +430,7 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
                 $res = $fx_core->files->rm($v);
                 if ($res !== 0) {
                     $result = array('status' => 'error');
-                    $result['text'][] = 'Ошибка при удалении файла "'.$v.'"';
+                    $result['text'][] = fx_lang('Ошибка при удалении файла') .' "'.$v. '"';
                     break;
                 }
             }
@@ -434,7 +441,7 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
         $fx_core = fx_core::get_object();
 
         $fields[] = array('type' => 'file', 'name' => 'file',
-                'label' => 'Закачать файл');
+                'label' => fx_lang('Закачать файл'));
 
         $fields[] = array('type' => 'hidden', 'name' => 'dir', 'value' => $input['dir']);
 
@@ -446,7 +453,7 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
 
     public function upload_save($input) {
         if (!isset($input['dir'])) {
-            return array('status' => 'error', 'text' => 'Не все поля переданы!');
+            return array('status' => 'error', 'text' => fx_lang('Не все поля переданы!'));
         }
 
         $dir = $input['dir'];
@@ -457,7 +464,7 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
         /* проверки */
         if (!$input['file']) {
             $result['status'] = 'error';
-            $result['text'][] = 'Укажите файл';
+            $result['text'][] = fx_lang('Укажите файл');
             $result['fields'][] = 'file';
         }
 
@@ -467,7 +474,7 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
             $res = $fx_core->files->move_uploaded_file($file['tmp_name'], $dir.'/'.$file['name']);
             if ($res !== 0) {
                 $result = array('status' => 'error');
-                $result['text'][] = 'Ошибка при закачке файла';
+                $result['text'][] = fx_lang('Ошибка при закачке файла');
             }
         }
 
@@ -550,7 +557,7 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
             die;
         } else {
             $result['status'] = 'error';
-            $result['text'] = 'Не получилось открыть файл!';
+            $result['text'] = fx_lang('Не получилось открыть файл!');
             return $result;
         }
     }

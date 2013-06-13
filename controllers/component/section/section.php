@@ -10,7 +10,7 @@ class fx_controller_component_section extends fx_controller_component {
     
     public function info_listing() {
         return array(
-            'name' => 'Меню'
+            'name' => fx_lang('Меню')
         );
     }
 
@@ -25,12 +25,12 @@ class fx_controller_component_section extends fx_controller_component {
             }
             $fields['submenu'] = array(
                 'name' => 'submenu',
-                'label' => 'Подразделы',
+                'label' => fx_lang('Подразделы'),
                 'type' => 'select',
                 'values' => array(
-                    'none' => 'Не показывать',
-                    'active' => 'Показывать у активного',
-                    'all' => 'Показывать у всех'
+                    'none' => fx_lang('Не показывать'),
+                    'active' => fx_lang('Показывать у активного'),
+                    'all' => fx_lang('Показывать у всех')
                 )
             );
         }
@@ -89,8 +89,8 @@ class fx_controller_component_section extends fx_controller_component {
     
     public function info_breadcrumbs() {
         return array(
-            'name' => 'Хлебные крошки',
-            'description' => 'Отображает путь до текущей страницы в структуре сайта'
+            'name' => fx_lang('Хлебные крошки'),
+            'description' => fx_lang('Отображает путь до текущей страницы в структуре сайта')
         );
     }
     

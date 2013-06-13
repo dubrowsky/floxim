@@ -272,7 +272,6 @@ class fx_system_page extends fx_system {
             $js .= '</script>'.PHP_EOL;
             $buffer = str_replace('</body>', $js.'</body>', $buffer);
         }
-        
         $buffer = $this->replace_macroconst($buffer);
 
         return $buffer;

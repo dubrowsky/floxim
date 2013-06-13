@@ -63,7 +63,7 @@ class fx_controller_admin_content extends fx_controller_admin {
             dev_log('saving content', $input, $content);
             $content->save();
         }
-        return array('status' => 'ok', 'dialog_title' => 'Редактирование контента');
+        return array('status' => 'ok', 'dialog_title' => fx_lang('Редактирование контента'));
     }
 
     public function checked_save($input) {

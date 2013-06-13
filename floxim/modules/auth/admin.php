@@ -5,6 +5,12 @@ class fx_controller_admin_module_auth extends fx_controller_admin_module {
     protected $mail_templates = array('register_confirm' => 'Подтверждение регистрации',
             'passwd_recovery' => 'Восстановление пароля');
 
+	// LANG ERROR	
+	/*	
+	protected $mail_templates = array('register_confirm' => fx_lang('Подтверждение регистрации'),
+            'passwd_recovery' => fx_lang('Восстановление пароля'));
+	*/
+
     public function settings() {
         $this->admin_tabs($this->get_tabs());
         $this->response->add_field($this->ui->hidden('tab', $active_tab));
@@ -16,10 +22,10 @@ class fx_controller_admin_module_auth extends fx_controller_admin_module {
 
     protected function get_tabs() {
         $tabs = array();
-        $tabs['common'] = 'Общие';
-        $tabs['components'] = 'Компоненты';
-        $tabs['mail_templates'] = 'Шаблоны писем';
-        $tabs['external'] = 'Авторизация через внешние сервисы';
+        $tabs['common'] = fx_lang('Общие');
+        $tabs['components'] = fx_lang('Компоненты');
+        $tabs['mail_templates'] = fx_lang('Шаблоны писем');
+        $tabs['external'] = fx_lang('Авторизация через внешние сервисы');
 
         return $tabs;
     }
@@ -29,7 +35,7 @@ class fx_controller_admin_module_auth extends fx_controller_admin_module {
 
         if (!is_callable(array($this, 'tab_'.$input['tab']."_save"))) {
             $result['status'] = 'error';
-            $result['text'] = 'Несуществующая вкладка!';
+            $result['text'] = fx_lang('Несуществующая вкладка!');
         } else {
             $result = call_user_func(array($this, 'tab_'.$input['tab']."_save"), $input);
         }
@@ -50,7 +56,7 @@ class fx_controller_admin_module_auth extends fx_controller_admin_module {
             return array('status' => 'error');
         }
 
-        return array('status' => 'ok', 'text' => 'Восстановлено', 'value' => $value);
+        return array('status' => 'ok', 'text' => fx_lang('Восстановлено'), 'value' => $value);
     }
 
     public function restore_mail_template($input) {
@@ -66,7 +72,7 @@ class fx_controller_admin_module_auth extends fx_controller_admin_module {
             return array('status' => 'error');
         }
 
-        return array('status' => 'ok', 'text' => 'Восстановлено', 'value' => array(${$tpl.'_subject'}, ${$tpl.'_body'}, ${$tpl.'_html'}));
+        return array('status' => 'ok', 'text' => fx_lang('Восстановлено'), 'value' => array(${$tpl.'_subject'}, ${$tpl.'_body'}, ${$tpl.'_html'}));
     }
 
     public function tab_common() {
@@ -78,36 +84,36 @@ class fx_controller_admin_module_auth extends fx_controller_admin_module {
         }
 
         $fields[] = $this->ui->checkbox(
-                'common', 'Общие настройки', array('incorrect_login_form_disable' => 'Не показывать форму при неудачной попытке авторизации',
-                'deny_recoverpasswd' => 'Запретить самостоятельно восстанавливать пароль',
-                'bind_to_site' => 'Привязывать пользователей к сайтам'), array($settings['incorrect_login_form_disable'] ? 'incorrect_login_form_disable' : null,
+                'common', fx_lang('Общие настройки'), array('incorrect_login_form_disable' => fx_lang('Не показывать форму при неудачной попытке авторизации'),
+                'deny_recoverpasswd' => fx_lang('Запретить самостоятельно восстанавливать пароль'),
+                'bind_to_site' => fx_lang('Привязывать пользователей к сайтам')), array($settings['incorrect_login_form_disable'] ? 'incorrect_login_form_disable' : null,
                 $settings['deny_recoverpasswd'] ? 'deny_recoverpasswd' : null,
                 $settings['bind_to_site'] ? 'bind_to_site' : null)
         );
-        $fields[] = $this->ui->input('online_timeleft', 'Время, в течение которого пользователь считается online (в секундах)', $settings['online_timeleft']);
+        $fields[] = $this->ui->input('online_timeleft', fx_lang('Время, в течение которого пользователь считается online (в секундах)'), $settings['online_timeleft']);
 
 
-        $fields[] = $this->ui->label('<br><br>Регистрация');
-        $fields[] = $this->ui->checkbox('allow_registration', 'Разрешить самостоятельную регистрацию', null, $settings['allow_registration']);
-        $fields[] = $this->ui->input('min_pasword_length', 'Минимальная длина пароля (в символах)', $settings['min_pasword_length']);
-        $fields[] = $this->ui->checkbox('external_user_groups', 'Группы, куда попадёт пользователь после регистрации', $groups, array(unserialize($settings['external_user_groups'])));
+        $fields[] = $this->ui->label('<br><br>' . fx_lang('Регистрация'));
+        $fields[] = $this->ui->checkbox('allow_registration', fx_lang('Разрешить самостоятельную регистрацию'), null, $settings['allow_registration']);
+        $fields[] = $this->ui->input('min_pasword_length', fx_lang('Минимальная длина пароля (в символах)'), $settings['min_pasword_length']);
+        $fields[] = $this->ui->checkbox('external_user_groups', fx_lang('Группы, куда попадёт пользователь после регистрации'), $groups, array(unserialize($settings['external_user_groups'])));
         $fields[] = $this->ui->label('<br>');/** @todo */
-        $fields[] = $this->ui->checkbox('registration_confirm', 'Требовать подтверждение через e-mail', null, $settings['registration_confirm']);
-        $fields[] = $this->ui->checkbox('registration_premoderation', 'Премодерация администратором', null, $settings['registration_premoderation']);
-        $fields[] = $this->ui->checkbox('registration_notify_admin', 'Отправлять письмо администратору при регистрации пользователя', null, $settings['registration_notify_admin']);
-        $fields[] = $this->ui->input('admin_notify_email', 'E-mail администратора для отсылки оповещений', $settings['admin_notify_email'] ? $settings['admin_notify_email'] : $fx_core->get_settings('spam_from_email', 'system'));
-        $fields[] = $this->ui->checkbox('autoauthorize', 'Авторизация пользователя сразу после подтверждения', null, $settings['autoauthorize']);
+        $fields[] = $this->ui->checkbox('registration_confirm', fx_lang('Требовать подтверждение через e-mail'), null, $settings['registration_confirm']);
+        $fields[] = $this->ui->checkbox('registration_premoderation', fx_lang('Премодерация администратором'), null, $settings['registration_premoderation']);
+        $fields[] = $this->ui->checkbox('registration_notify_admin', fx_lang('Отправлять письмо администратору при регистрации пользователя'), null, $settings['registration_notify_admin']);
+        $fields[] = $this->ui->input('admin_notify_email', fx_lang('E-mail администратора для отсылки оповещений'), $settings['admin_notify_email'] ? $settings['admin_notify_email'] : $fx_core->get_settings('spam_from_email', 'system'));
+        $fields[] = $this->ui->checkbox('autoauthorize', fx_lang('Авторизация пользователя сразу после подтверждения'), null, $settings['autoauthorize']);
 
 
         $fields[] = $this->ui->checkbox(
-                'pm', '<br><br>Личные сообщения', array('pm_allow' => 'Разрешить отправлять личные сообщения',
-                'pm_notify' => 'Оповещать пользователя по e-mail о новом сообщении'), array($settings['pm_allow'] ? 'pm_allow' : null,
+                'pm', '<br><br>'.fx_lang('Личные сообщения'), array('pm_allow' => fx_lang('Разрешить отправлять личные сообщения'),
+                'pm_notify' => fx_lang('Оповещать пользователя по e-mail о новом сообщении')), array($settings['pm_allow'] ? 'pm_allow' : null,
                 $settings['pm_notify'] ? 'pm_notify' : null)
         );
 
         $fields[] = $this->ui->checkbox(
-                'friends', '<br><br>Друзья и враги', array('friend_allow' => 'Разрешить добавлять пользователей в друзья',
-                'banned_allow' => 'Разрешить добавлять пользователей во враги'), array($settings['friend_allow'] ? 'friend_allow' : null,
+                'friends', '<br><br>' . fx_lang('Друзья и враги'), array('friend_allow' => fx_lang('Разрешить добавлять пользователей в друзья'),
+                'banned_allow' => fx_lang('Разрешить добавлять пользователей во враги')), array($settings['friend_allow'] ? 'friend_allow' : null,
                 $settings['banned_allow'] ? 'banned_allow' : null)
         );
 
@@ -127,10 +133,10 @@ class fx_controller_admin_module_auth extends fx_controller_admin_module {
             }
 
             $fields[] = array('type' => 'select', 'name' => 'user_component_id',
-                    'values' => $components, 'label' => 'Компонент "Пользователи"',
+                    'values' => $components, 'label' => fx_lang('Компонент "Пользователи"'),
                     'value' => $settings['user_component_id']);
             $fields[] = array('type' => 'select', 'name' => 'pm_component_id',
-                    'values' => $components, 'label' => 'Компонент "Личные сообщения"',
+                    'values' => $components, 'label' => fx_lang('Компонент "Личные сообщения"'),
                     'value' => $settings['pm_component_id']);
         }
 
@@ -146,12 +152,12 @@ class fx_controller_admin_module_auth extends fx_controller_admin_module {
             $tpl = fx::data('mailtemplate')->get('keyword', 'auth_'.$k);
 
             $fields[] = $this->ui->label($v);
-            $fields[] = $this->ui->ajaxlink('Восстановить форму по умолчанию', array($k.'_subject', $k.'_body', $k.'_html'), array('essence' => 'module_auth',
+            $fields[] = $this->ui->ajaxlink(fx_lang('Восстановить форму по умолчанию'), array($k.'_subject', $k.'_body', $k.'_html'), array('essence' => 'module_auth',
                     'action' => 'restore_mail_template',
                     'name' => $k));
-            $fields[] = $this->ui->input($k.'_subject', 'Заголовок письма', $tpl['subject']);
-            $fields[] = $this->ui->text($k.'_body', 'Тело письма', $tpl['body']);
-            $fields[] = $this->ui->checkbox($k.'_html', 'HTML-письмо', null, $tpl['html']);
+            $fields[] = $this->ui->input($k.'_subject', fx_lang('Заголовок письма'), $tpl['subject']);
+            $fields[] = $this->ui->text($k.'_body', fx_lang('Тело письма'), $tpl['body']);
+            $fields[] = $this->ui->checkbox($k.'_html', fx_lang('HTML-письмо'), null, $tpl['html']);
         }
 
         $this->response->add_fields($fields, 'mail_templates');
@@ -163,14 +169,14 @@ class fx_controller_admin_module_auth extends fx_controller_admin_module {
 
         if (!$input['external_user_groups']) {
             $result['status'] = 'error';
-            $result['text'] = 'Вы не выбрали ни одной группы для зарегистрированных пользователей.';
+            $result['text'] = fx_lang('Вы не выбрали ни одной группы для зарегистрированных пользователей.');
             $result['fields'][] = 'external_user_groups';
             return $result;
         }
 
         if (!fx::util()->validate_email($input['admin_notify_email'])) {
             $result['status'] = 'error';
-            $result['text'] = 'Неверный формат адреса e-mail.';
+            $result['text'] = fx_lang('Неверный формат адреса e-mail.');
             var_dump(fx::util()->validate_email($input['admin_notify_email']));
             die;
             $result['fields'][] = 'admin_notify_email';
@@ -179,14 +185,14 @@ class fx_controller_admin_module_auth extends fx_controller_admin_module {
 
         if (!is_numeric($input['online_timeleft']) || !$input['online_timeleft']) {
             $result['status'] = 'error';
-            $result['text'] = 'Время, в течение которого пользователь считается online, должно быть целым числом больше 0.';
+            $result['text'] = fx_lang('Время, в течение которого пользователь считается online, должно быть целым числом больше 0.');
             $result['fields'][] = 'online_timeleft';
             return $result;
         }
 
         if (!is_numeric($input['min_pasword_length'])) {
             $result['status'] = 'error';
-            $result['text'] = 'Минимальная длина пароля должна быть целым числом.';
+            $result['text'] = fx_lang('Минимальная длина пароля должна быть целым числом.');
             $result['fields'][] = 'min_pasword_length';
             return $result;
         }
@@ -268,41 +274,41 @@ class fx_controller_admin_module_auth extends fx_controller_admin_module {
 
         $settings = $fx_core->get_settings('', 'auth');
 
-        $fields[] = $this->ui->checkbox('twitter_enabled', 'включить авторизацию через твиттер', null, $settings['twitter_enabled']);
+        $fields[] = $this->ui->checkbox('twitter_enabled', fx_lang('включить авторизацию через твиттер'), null, $settings['twitter_enabled']);
         $fields[] = $this->ui->input('twitter_app_id', 'Consumer key', $settings['twitter_app_id']);
         $fields[] = $this->ui->input('twitter_app_key', 'Consumer secret', $settings['twitter_app_key']);
 
         $twitter_map = unserialize($settings['twitter_map']);
         if (!is_array($twitter_map)) $twitter_map = array();
         $twitter_fields = array('id' => 'ID', 'name' => 'Name', 'screen_name' => 'Screen name', 'profile_image_url' => 'avatar');
-        $fields[] = array('name' => 'twitter_map', 'label' => 'Соответсвие полей', 'type' => 'set',
-                'labels' => array('Данные twiiter', 'Поля пользователя'),
+        $fields[] = array('name' => 'twitter_map', 'label' => fx_lang('Соответсвие полей'), 'type' => 'set',
+                'labels' => array(fx_lang('Данные twiiter'), fx_lang('Поля пользователя')),
                 'tpl' => array(
                         array('name' => 'external_field', 'type' => 'select', 'values' => $twitter_fields),
                         array('name' => 'user_field', 'type' => 'select', 'values' => $user_fields)),
                 'values' => $twitter_map
         );
-        $fields[] = $this->ui->checkbox('twitter_group', 'Группы, куда попадет пользователь после авторизации ', $user_groups, unserialize($settings['twitter_group']));
+        $fields[] = $this->ui->checkbox('twitter_group', fx_lang('Группы, куда попадет пользователь после авторизации '), $user_groups, unserialize($settings['twitter_group']));
 
-        $fields[] = $this->ui->text('twitter_addaction', 'Действие после первой авторизации', $settings['twitter_addaction']);
+        $fields[] = $this->ui->text('twitter_addaction', fx_lang('Действие после первой авторизации'), $settings['twitter_addaction']);
 
-        $fields[] = $this->ui->checkbox('facebook_enabled', 'включить авторизацию через facebook', null, $settings['facebook_enabled']);
+        $fields[] = $this->ui->checkbox('facebook_enabled', fx_lang('включить авторизацию через facebook'), null, $settings['facebook_enabled']);
         $fields[] = $this->ui->input('facebook_app_id', 'Consumer key', $settings['facebook_app_id']);
         $fields[] = $this->ui->input('facebook_app_key', 'Consumer secret', $settings['facebook_app_key']);
 
         $facebook_map = unserialize($settings['facebook_map']);
         if (!is_array($facebook_map)) $facebook_map = array();
         $facebook_fields = array('id' => 'ID', 'name' => 'Name', 'first_name' => 'first name', 'last_name' => 'last name', 'email' => 'email', 'avatar' => 'avatar');
-        $fields[] = array('name' => 'facebook_map', 'label' => 'Соответсвие полей', 'type' => 'set',
-                'labels' => array('Данные facebook', 'Поля пользователя'),
+        $fields[] = array('name' => 'facebook_map', 'label' => fx_lang('Соответсвие полей'), 'type' => 'set',
+                'labels' => array(fx_lang('Данные facebook'), fx_lang('Поля пользователя')),
                 'tpl' => array(
                         array('name' => 'external_field', 'type' => 'select', 'values' => $facebook_fields),
                         array('name' => 'user_field', 'type' => 'select', 'values' => $user_fields)),
                 'values' => $facebook_map
         );
-        $fields[] = $this->ui->checkbox('facebook_group', 'Группы, куда попадет пользователь после авторизации ', $user_groups, unserialize($settings['facebook_group']));
+        $fields[] = $this->ui->checkbox('facebook_group', fx_lang('Группы, куда попадет пользователь после авторизации '), $user_groups, unserialize($settings['facebook_group']));
 
-        $fields[] = $this->ui->text('facebook_addaction', 'Действие после первой авторизации', $settings['facebook_addaction']);
+        $fields[] = $this->ui->text('facebook_addaction', fx_lang('Действие после первой авторизации'), $settings['facebook_addaction']);
 
 
 
