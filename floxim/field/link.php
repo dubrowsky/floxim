@@ -41,7 +41,18 @@ class fx_field_link extends fx_field_baze {
             'label' => fx_lang('Привязать значение к родителю'),
             'type' => 'checkbox',
             'value' => $this['format']['is_parent']
-        );        
+        );
+        $fields[]= array(
+            'id' => 'format[render_type]',
+            'name' => 'format[render_type]',
+            'label' => fx_lang('Способ отображения'),
+            'type' => 'select',
+            'values' => array(
+                'select' => fx_lang('Выпадающий список'), 
+                'livesearch' => fx_lang('Live Search')
+            ),
+            'value' => $this['format']['render_type']
+        );
         return $fields;
     }
     
@@ -57,12 +68,44 @@ class fx_field_link extends fx_field_baze {
     
     public function get_js_field($content, $tname = 'f_%name%', $layer = '', $tab = '') {
         parent::get_js_field($content, $tname, $layer, $tab);
-        $this->_js_field['type'] = 'select';
         $target_component = fx::data('component', $this['format']['target']);
-        $finder = fx::data('content_'.$target_component['keyword']);
+        $target_content = 'content_'.$target_component['keyword'];
+        $finder = fx::data($target_content);
+        
+        if ($this['format']['render_type'] == 'livesearch') {
+            $this->_js_field['type'] = 'livesearch';
+            $this->_js_field['datatype'] = $target_content;
+            if ( ($c_val = $content[$this->name])) {
+                $c_val_obj = $finder->where('id', $c_val)->one();
+                if ($c_val_obj) {
+                    $this->_js_field['value'] = array(
+                        'id' => $c_val_obj['id'],
+                        'name' => $c_val_obj['name']
+                    );
+                }
+            }
+            dev_log('link fld', $this, $content);
+            return $this->_js_field;
+        }
+        // else:
+        
+        $this->_js_field['type'] = 'select';
+        
+        $finder->where('site_id', $content['site_id']);
         $val_items = $finder->all();
         $this->_js_field['values'] = $val_items->get_values('name', 'id');
         return $this->_js_field;
+    }
+    
+    public function get_relation() {
+        if (!$this['format']['target']) {
+            return false;
+        }
+        return array(
+            fx_data::BELONGS_TO,
+            'content_'.fx::data('component', $this['format']['target'])->get('keyword'),
+            $this['name']
+        );
     }
 }
 

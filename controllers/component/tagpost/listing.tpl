@@ -1,7 +1,7 @@
 <div class="posttags">
     Метки:
-    <span fx_render=".">
-        <a fx_render="$tag" href="{$url}">{$name}</a>
-        {if test="!$item_is_last"}, {/if}
+    <span fx:template="item">
+        <a fx:each="$tag" href="{$url}">{$name}</a> чочо
     </span>
+    <span fx:template="separator" fx:omit="true">, </span>
 </div>

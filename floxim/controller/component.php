@@ -75,6 +75,43 @@ class fx_controller_component extends fx_controller {
         $fields = $this->get_action_settings_list_common();
         $fields = array_merge($fields,$this->get_action_settings_list_parent());
         return $fields;
+        /*
+         * Ниже код, который добывает допустимые инфоблоки для полей-ссылок
+         * и предлагает выбрать, откуда брать/куда добавлять значения-ссылки
+         * временно не используем из-за непонятного гуя 
+         */
+        $link_fields = $this->
+                            get_component()->
+                            all_fields()->
+                            find('type', array(fx_field::FIELD_LINK, fx_field::FIELD_MULTILINK))->
+                            find('type_of_edit', fx_field::EDIT_NONE, fx_collection::FILTER_NEQ);
+        
+        foreach ($link_fields as $lf) {
+            if ($lf['type'] == fx_field::FIELD_LINK) {
+                $target_com_id = $lf['format']['target'];
+            } else {
+                $target = explode(".", $lf['format']['target']);
+                $target_com_id = fx::data('field', $target[0])->get('component_id');
+            }
+            $target_com = fx::data('component', $target_com_id);
+            $com_infoblocks = fx::data('infoblock')->
+                    where('site_id', fx::env('site')->get('id'))->
+                    get_content_infoblocks($target_com['keyword']);
+            $ib_values = $com_infoblocks->get_values('name', 'id') + array('new' => fx_lang('Новый инфоблок'));
+            $fields ['field_'.$lf['id'].'_infoblock']= array(
+                'type' => 'select',
+                'values' => $ib_values,
+                'name' => 'field_'.$lf['id'].'_infoblock',
+                'label' => fx_lang('Инфоблок для поля ').$lf['description']
+            );/*
+            echo fen_debug(
+                    'we are '.  get_class($this), 
+                    'field: '.$lf['name'], 
+                    'com: '.$target_com['name'],
+                    $com_infoblocks
+            );*/
+        }
+        return $fields;
     }
     
     public function get_action_settings_listing_mirror() {
@@ -275,13 +312,20 @@ class fx_controller_component extends fx_controller {
     
     public function do_listing_mirror() {
         $f = $this->_get_finder();
-        ///$params = array();
         if ( ($parent_id = $this->param('parent_id')) ) {
-            //$params['parent_id'] = $parent_id;
             $f->where('parent_id', $parent_id);
         }
+        $this->trigger('build_query',$f);
+
+        if ( ($sorting = $this->param('sorting')) ) {
+            if ($sorting == 'manual') {
+                $f->order('priority');
+            } else {
+                $f->order($sorting, $this->param('sorting_dir'));
+            }
+        }
+        $this->trigger('query_ready', $f);
         $items = $f->all();
-        //fx::data('content_page')->attache_to_content($items);
         return array('items' => $items);
     }
     

@@ -6,6 +6,19 @@ class fx_field_multilink extends fx_field_baze {
     
     public function get_js_field($content, $tname = 'f_%name%', $layer = '', $tab = '') {
         parent::get_js_field($content, $tname, $layer, $tab);
+        $this->_js_field['type'] = 'livesearch';
+        $this->_js_field['is_multiple'] = true;
+        if (isset($content[$this['name']])) {
+            $this->_js_field['value'] = array();
+            foreach ($content[$this['name']] as $v) {
+                $this->_js_field['value'] []= array(
+                    'id' => $v['id'], 
+                    'name' => $v['name'], 
+                    'value_id' => $v['_linker_id']
+                );
+            }
+        }
+        return $this->_js_field;
         $this->_js_field['type'] = 'select';
         $this->_js_field['multiple'] = true;
         return $this->_js_field;
@@ -14,7 +27,6 @@ class fx_field_multilink extends fx_field_baze {
     public function format_settings() {
         $fields = array();
         $linking_types = array();
-        dev_log($this);
         
         if (!$this['component_id']) {
             return $fields;
@@ -57,6 +69,35 @@ class fx_field_multilink extends fx_field_baze {
             'value' => $this['format']['target']
         );
         return $fields;
+    }
+    
+    public function set_value($value) {
+        dev_log('setting multilink val', $value, $this);
+        parent::set_value($value);
+    }
+    
+    public function get_relation() {
+        if (!$this['format']['target']) {
+            return false;
+        }
+        $target_fields = explode(".", $this['format']['target']);
+        $direct_target_field = fx::data('field', array_shift($target_fields));
+        $direct_target_component = fx::data('component', $direct_target_field['component_id']);
+        if (count($target_fields) == 0) {
+            return array(
+                fx_data::HAS_MANY,
+                'content_'.$direct_target_component['keyword'],
+                $direct_target_field['name']
+            );
+        }
+        
+        $next_target_field = fx::data('field', array_shift($target_fields));
+        return array(
+            fx_data::MANY_MANY,
+            'content_'.$direct_target_component['keyword'],
+            $direct_target_field['name'],
+            $next_target_field->get_prop_name()
+        );
     }
 }
 ?>

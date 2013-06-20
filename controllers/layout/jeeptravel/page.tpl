@@ -81,10 +81,14 @@
                 <!-- Для главной -->
                 <div fx:if="$index_areas" class="section-info holder">
                     <div class="l-side" fx:area="index_left">
-                        <ul fx:template="index_photo_anounces" fx:of="component_page.listing">
+                        <ul fx:template="index_photo_anounces" fx:of="component_photo.listing">
                             <li fx:template="item">
-                                <img src="{%image_$id}{$image editable="false"}{/%}" alt="" />
-                                <span>{$name}</span>
+                                <?
+                                $parent = fx::data('content_page', $item['parent_id']);
+                                extract($parent->get_fields_to_show());
+                                ?>
+                                <a href="{$url}"><img src="{%image_$id}{$photo editable="false"}{/%}" alt="" /></a>
+                                <span>{$description}</span>
                             </li>
                         </ul>
                     </div>
@@ -103,6 +107,20 @@
                     </div>
                     <div class="r-side" fx:area="index_right">
                         
+                    </div>
+                </div>
+                <div class="img-list" fx:template="photo_listing" fx:of="component_photo.listing">
+                    <div class="images fx_not_sortable" fx:template="$items">
+                        <div fx:template="item" class="img-block {if $item_is_first}img-block-active{/if}">
+                            <img src="{$photo}" alt="{$description}" />
+                            <span class="left">{$description}</span>
+                            <span class="right" fx:if="$copy->get_value()">© {$copy}</span>
+                        </div>
+                    </div>
+                    <div class="img-slider" fx:template="$items">
+                        <div fx:template="item" class="preview{if $item_is_first} preview-active{/if}">
+                            <img src="{$photo}" style="height:100px;" />
+                        </div>
                     </div>
                 </div>
                 <div class="places" fx:template="pages_by_year" fx:of="component_page.listing">
@@ -145,14 +163,13 @@
                 if (empty(${"page_bg_image_$path_page_id"})) {
                     unset(${"page_bg_image_$path_page_id"});
                 } else {
-                    $bg_image= ${"page_bg_image_$path_page_id"};
+                    $bg_image= fx_filetable::get_path(${"page_bg_image_$path_page_id"});
                 }
             }
         }
         ?>
         <section fx:if="!$full_content"
-            style="
-                background:{%page_bg_color_$page_id}<?=$bg_color?>{/%} url('{%page_bg_image_$page_id}<?=$bg_image?>{/%}') no-repeat 50% 0;" 
+            style="background:{%page_bg_color_$page_id}<?=$bg_color?>{/%} url('{%page_bg_image_$page_id}<?=$bg_image?>{/%}') no-repeat 50% 0;" 
                 class="section_inner">
             <div class="wrapper">
                 <div style="clear:both;"></div>

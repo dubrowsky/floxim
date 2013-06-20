@@ -45,7 +45,16 @@ class fx_content extends fx_essence {
         return "content/".$this->component_id;
     }
 
-    public function set_field_values($fields = array(), $values = array()) {
+    /*
+     * Заполняет $this->data на основе админской формы
+     * @param array $values массив значений из формы вида array('f_name' => 'Название', 'f_title => '');
+     */
+    public function set_field_values($values = array()) {
+        if (count($values) == 0) {
+            return;
+        }
+
+        $fields = fx::data('component', $this->component_id)->all_fields();
         $result = array('status' => 'ok');
 
         foreach ($fields as $field) {
@@ -117,13 +126,15 @@ class fx_content extends fx_essence {
                 continue;
             }
             
+            $field_meta = array();
             if ($cf->type == 'image' || $cf->type == 'file') {
                 if ($v && is_numeric($v) && ($file_obj = fx::data('filetable', $v)) ) {
+                    $field_meta['filetable_id'] = $v;
                     $v = fx::config()->HTTP_FILES_PATH.$file_obj['path'];
                 }
             }
             
-            $fields_to_show[$fkey] = new fx_template_field($v, array(
+            $field_meta = array_merge(array(
                 'var_type' => 'content', 
                 'content_id' => $this['id'],
                 'content_type_id' => $com_id,
@@ -132,7 +143,9 @@ class fx_content extends fx_essence {
                 'title' => $cf['description'],
                 'type' => $cf->type,
                 'editable' => true
-            ));
+            ), $field_meta);
+            
+            $fields_to_show[$fkey] = new fx_template_field($v, $field_meta);
         }
 
         return $fields_to_show;
@@ -140,8 +153,19 @@ class fx_content extends fx_essence {
     
     public function get_field_to_show($field) {
         $fields = $this->get_fields_to_show();
-        $index = $field;
-        return isset($fields[$index]) ? $fields[$index] : 'nu';
+        return isset($fields[$field]) ? $fields[$field] : null;
+    }
+    
+    public function get_form_fields() {
+        $all_fields = fx::data('component', $this->component_id)->all_fields();
+        $form_fields = array();
+        foreach ($all_fields as $field) {
+            if ($field['type_of_edit'] == fx_field::EDIT_NONE) {
+                continue;
+            }
+            $form_fields[]= $field->get_js_field($this);
+        }
+        return $form_fields;
     }
     
     public function add_template_record_meta($html) {
@@ -158,13 +182,32 @@ class fx_content extends fx_essence {
     
     protected function _before_save() {
         $component = fx::data('component', $this->component_id);
-        $link_fields = $component->fields()->find('type', 13);
+        $link_fields = $component->fields()->find('type', fx_field::FIELD_LINK);
         foreach ($link_fields as $lf) {
             if ($lf['format']['is_parent']) {
                 $this[$lf['name']] = $this['parent_id'];
             }
         }
         parent::_before_save();
+    }
+    
+    protected function _save_links() {
+        $link_fields = 
+            fx::data('component', $this->component_id)->
+            all_fields()->
+            find('name', $this->modified)->
+            find('type', fx_field::FIELD_MULTILINK);
+        foreach ($link_fields as $link_field) {
+            $val = $this[$link_field['name']];
+            $relation = $link_field->get_relation();
+            switch ($relation[0]) {
+                case fx_data::HAS_MANY:
+                    break;
+                case fx_data::MANY_MANY:
+                    echo fen_debug('val to save', $val, $link_field, $relation);
+                    break;
+            }
+        }
     }
 
 }

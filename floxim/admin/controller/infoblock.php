@@ -18,37 +18,6 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
      * Выбор контроллера-экшна
      */
     public function select_controller($input) {
-        /*
-        $tree = array(
-            array(
-                'data' => 'Section',
-                'children' => array(
-                    array('data' => 'listing'),
-                    array(
-                        'data' => 'mirror',
-                        'children' => array(
-                            array('data' => 'mirror_top')
-                        )
-                    )
-                )
-            ), array (
-                'data' => 'Auth Widnget'
-            ),
-            array(
-                'data' => 'Goods',
-                'children' => array(
-                    array('data' => 'listing')
-                ), array(
-                    'data' => 'top'
-                )
-            )
-        );
-        $fields[] = $this->ui->tree($tree);
-        return array('fields' => $fields);
-        
-         * 
-         */
-        
         $fields = array(
             $this->ui->hidden('action', 'select_settings'),
             $this->ui->hidden('essence', 'infoblock'),
@@ -64,17 +33,6 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         
         	
         /* Список контроллеров */
-        $fields['controller']= array(
-            'type' => 'list', 
-            'name' => 'controller',
-            'labels' => array(
-                'name' => array('label' => fx_lang('Название'), 'filter' => 'text'),
-                'action' => array('label' => fx_lang('Действие'), 'filter' => 'select'),
-                'type' => array('label' => fx_lang('Тип'), 'filter' => 'select'),
-                'group' => array('label' => fx_lang('Группа'), 'filter' => 'select')
-            ), 
-            'values' => array()
-    	);
         $fields['controller'] = array(
             'type' => 'tree', 
             'name' => 'controller',
@@ -102,34 +60,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             }
             $fields['controller']['values'][]= $c_item;
         }
-        /*
-        foreach (fx::data('component')->get_all() as $c) {
-            if (!file_exists(fx::config()->DOCUMENT_ROOT.'/controllers/component/'.$c['keyword'])) {
-                continue;
-            }
-            foreach (array('record', 'mirror', 'listing', 'add', 'edit') as $c_action) {
-                if (isset($this->_component_actions[$c_action])) {
-                    $fields['controller']['values'][]= array(
-                        'name' => array('name' => $c['name'], 'url' => null), 
-                        'action' => $this->_component_actions[$c_action],
-                        'type' => $types['component'],
-                        'group' => $c['group'],
-                        'id' => 'component_'.$c['keyword'].'.'.$c_action
-                    );
-                }
-            }
-    	}
         
-    	foreach (fx::data('widget')->get_all() as  $c){
-            $fields['controller']['values'][]= array(
-                'name' => array('name' => $c['name'], 'url' => null), 
-                'action' => 'Показать',
-                'type' => $types['widget'],
-                'group' => $c['group'],
-                'id' => 'widget_'.$c['keyword'].'.show'
-            );
-    	}
-        */
         $result = array(
             'fields' => $fields,
             'dialog_title' => fx_lang('Добавление инфоблока'),
@@ -243,7 +174,6 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         if ($input['settings_sent'] == 'true') {
             if ($is_layout) {
                 $this->response->set_reload(true);
-                // dev_log('saving relod', $this);
             }
             if (
                     $input['fx_dialog_button'] == 'inherit_delete' && 
@@ -298,13 +228,15 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             $infoblock->save();
             $i2l['infoblock_id'] = $infoblock['id'];
             $i2l->save();
-            // dev_log('ib saving', $infoblock, $i2l, $input);
             $this->response->set_status_ok();
             return;
         }
     	
     	$result = array(
-            'dialog_title' => $is_layout ? fx_lang('Выбор шаблона страницы') : fx_lang('Настройка инфоблока'). ', ' . $controller_name . '.' . $action,
+            'dialog_title' => $is_layout ? 
+                    fx_lang('Выбор шаблона страницы') : 
+                    fx_lang('Настройка инфоблока'). 
+                    ', ' . $controller_name . '.' . $action.' #'.$infoblock['id'],
             'step' => 'settings_select',
             'dialog_button' => array(
                 array('key' => 'save', 'text' => $input['id'] ? fx_lang('Обновить') : fx_lang('Создать'))
@@ -520,6 +452,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                     }
                     $ib_visual['template_visual'] = $template_visual;
                 }
+                dev_log('saving ib vis', $ib_visual);
                 $ib_visual->save();
             } elseif ($var['var_type'] == 'content') {
                 $content_id = $var['content_id'];

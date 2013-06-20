@@ -60,4 +60,23 @@ $(function(){
 
         return false;
     });
+    
+    $('.img-slider').on('click', '.preview', function() {
+        if (!$(this).hasClass('active')) {
+            var previews = $(this).closest('.img-slider').find('.preview');
+            var index = previews.index(this);
+            var images = $(this).closest('.img-list').find('.img-block');
+            images.filter(':visible').stop().fadeOut();
+            images.eq(index).fadeIn();
+            //alert(index + ' clickd (of '+images.length);
+            return false;
+            $li.addClass('active').siblings().removeClass('active');
+
+            var $slides = $('.main-section .gallery .gallery_item');
+            $slides.filter(':visible').stop().fadeOut();
+            $slides.eq(index).fadeIn();
+        }
+
+        return false;
+    });
 });

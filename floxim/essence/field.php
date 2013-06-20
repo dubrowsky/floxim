@@ -7,7 +7,25 @@ class fx_field extends fx_essence {
 
     protected $name, $format, $type_id, $description;
     
-
+    const FIELD_STRING = 1;
+    const FIELD_INT = 2;
+    const FIELD_TEXT = 3;
+    const FIELD_SELECT = 4;
+    const FIELD_BOOL = 5;
+    const FIELD_FILE = 6;
+    const FIELD_FLOAT = 7;
+    const FIELD_DATETIME = 8;
+    const FIELD_COLOR = 9;
+    const FIELD_INFOBLOCK = 10;
+    const FIELD_IMAGE = 11;
+    const FIELD_MULTISELECT = 12;
+    const FIELD_LINK = 13;
+    const FIELD_MULTILINK = 14;
+    
+    const EDIT_ALL = 1;
+    const EDIT_ADMIN = 2;
+    const EDIT_NONE = 3;
+    
     public static function get_type_by_id($id) {
 
         static $res = array();
@@ -145,10 +163,10 @@ class fx_field extends fx_essence {
     }
 
     public function check_rights() {
-        if ($this['type_of_edit'] <= 1) {
+        if ($this['type_of_edit'] == fx_field::EDIT_ALL || empty($this['type_of_edit'])) {
             return true;
         }
-        if ($this['type_of_edit'] == 2) {
+        if ($this['type_of_edit'] == fx_field::EDIT_ADMIN) {
             $user = fx::env()->get_user();
             return $user && $user->perm()->is_supervisor();
         }

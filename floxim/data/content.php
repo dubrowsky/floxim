@@ -5,41 +5,18 @@ class fx_data_content extends fx_data {
         $relations = array();
         $fields = fx::data('component', $this->component_id)->
                     all_fields()->
-                    find('type', array(13, 14));
+                    find('type', array(fx_field::FIELD_LINK, fx_field::FIELD_MULTILINK));
         foreach ($fields as $f) {
+            if ( !($relation = $f->get_relation()) ) {
+                continue;
+            }
             switch ($f['type']) {
-                case 13:
-                    if (!isset($f['format']['target'])) {
-                        break;
-                    }
-                    $relations[$f->get_prop_name()] = array(
-                        self::BELONGS_TO,
-                        'content_'.fx::data('component', $f['format']['target'])->get('keyword'),
-                        $f['name']
-                    );
+                case fx_field::FIELD_LINK:
+                    $relations[$f->get_prop_name()] = $relation;
                     break;
-                case 14:
-                    if (!isset($f['format']['target'])) {
-                        break;
-                    }
-                    $target_fields = explode(".", $f['format']['target']);
-                    $direct_target_field = fx::data('field', array_shift($target_fields));
-                    $direct_target_component = fx::data('component', $direct_target_field['component_id']);
-                    if (count($target_fields) == 0) {
-                        $relations[$f['name']] = array(
-                            self::HAS_MANY,
-                            'content_'.$direct_target_component['keyword'],
-                            $direct_target_field['name']
-                        );
-                    } else {
-                        $next_target_field = fx::data('field', array_shift($target_fields));
-                        $relations[$f['name']] = array(
-                            self::MANY_MANY,
-                            'content_'.$direct_target_component['keyword'],
-                            $direct_target_field['name'],
-                            $next_target_field->get_prop_name()
-                        );
-                    }
+                case fx_field::FIELD_MULTILINK:
+                    $relations[$f['name']] = $relation;
+                    break;
             }
         }
         return $relations;

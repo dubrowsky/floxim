@@ -23,7 +23,7 @@ class fx_controller_admin extends fx_controller {
         $this->essence_type = str_replace('fx_controller_admin_', '', get_class($this));
         $this->ui = new fx_admin_ui();
         
-        $this->process_do_return = $do_return;
+        $this->process_do_return = isset($input['do_return']) ? $input['do_return'] : $do_return;
     }
 
     public function process() {
@@ -128,6 +128,7 @@ class fx_controller_admin extends fx_controller {
             '/floxim/admin/js/buttons.js',                                     
             '/floxim/admin/js/form.js',
             '/floxim/admin/js/dialog.js',
+            '/floxim/admin/js/livesearch.js',
             '/floxim/admin/js/fields.js',
             '/floxim/admin/js/edit-in-place.js',
             '/floxim/admin/js/store.js',

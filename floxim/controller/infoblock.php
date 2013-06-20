@@ -21,28 +21,6 @@ class fx_controller_infoblock extends fx_controller {
     }
 
 
-    /**************************************
-    * TODO Метод лдя получения параметров с которыми должен быть вызван контроллер, чтобы контроллер ничего не знал о том, где и кто его вызывает
-    ***************************************/
-    private function prepare_controller_params() {
-        echo "<pre>";
-        $infoblock = $this->_get_infoblock();
-        $params = $infoblock->get_prop_inherited('params');
-
-        if ( empty($params['parent_type']) ) return null;
-        switch ( $params['parent_type'] ) {
-            case 'mount_page_id':
-                $this->controller_data["page"] ="SDF";
-                break;
-            case 'current_page_id':
-                echo "\nmount_page_id\n";
-                break;
-            case 'custom':
-                echo "\ncustom\n";
-                break;
-        }
-    }
-    
     public function render() {
 
         $infoblock = $this->_get_infoblock();
@@ -122,6 +100,7 @@ class fx_controller_infoblock extends fx_controller {
             $tpl_wrap->set_var('infoblock', $infoblock);
             $output = $tpl_wrap->render();
         }
+        //echo fen_debug(htmlspecialchars($output));
         if (fx::env('is_admin')) {
             $output = $this->_add_infoblock_meta($output, $infoblock, $controller_meta);
         }

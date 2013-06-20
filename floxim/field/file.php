@@ -119,6 +119,9 @@ class fx_field_file extends fx_field_baze {
         if (is_numeric($this->value)) {
             return $this->value;
         }
+        if (empty($this->value)) {
+            return $this->value;
+        }
 
         $current_file_id = $content ? $content[$this->name] : null;
         return $current_file_id;

@@ -261,7 +261,8 @@ class fx_core extends fx_system {
             'site', 
             'subdivision', 
             'template', 
-            'widget'
+            'widget',
+            'filetable'
         ); //'user'
 
         $classname = str_replace(array('nc_', 'fx_'), '', $classname);

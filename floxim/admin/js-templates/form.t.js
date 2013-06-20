@@ -59,19 +59,20 @@ _c.type == 'hidden'
 
 <!--[input]-->
 <div class="image_field">
-    <div class="file_input">
+    <div class="file_input" style="display:<?=(_c.path ? 'none' : 'block')?>">
     	<input type="file" name="file" id="image_file" />
 	</div>
     <input type="hidden" <?=$t.field_id_name(_c)?> class="real_value" value="<?=_c.value?>" />
     <div class="preview">
         <img <?=(_c.path ? 'src="'+_c.path+'"' : '')?> style="max-height:100px; max-width:100px; border:1px solid #CCC;" />
+        <a class="killer" style="display:<?=(_c.path ? 'block' : 'none')?>">&times;</a>
     </div>
 </div>
 <!--test-->
 _c.type == 'image'
 <!--jquery:form_row-->
 
-html.on('.file_input input').on('change', function(){
+html.on('change', '.image_field', function(){
     var field = $(this);
     var res_inp = $('.real_value', field);
     $.ajaxFileUpload({
@@ -82,13 +83,22 @@ html.on('.file_input input').on('change', function(){
         data: { essence:'file', fx_admin:1, action:'upload_save' },
         success: function ( data, status ) {
             res_inp.val(data.id);
-            $('.preview img', field).attr('src', data.path);
+            $('.preview img', field).attr('src', data.path).show();
+            $('.killer', field).show();
+            $('.file_input', field).hide();
             console.log('success upl', res_inp, data,status);
         },
         error: function (data, status, e) {
         	console.log('error uploda', e);
         }
     });
+});
+html.on('click', '.killer', function() {
+   var field = $(this).closest('.image_field'); 
+   $('.preview img', field).hide();
+   $('.real_value', field).val('');
+   $('.file_input', field).show();
+   $(this).hide();
 });
 
 <!--[input]-->
@@ -782,6 +792,36 @@ $('.fx_admin_colorbasic', html).each( function() {
 		$('input', cb).val( $t.inline_data( c )[2] );
 	});
 });
+
+<!--[input]-->
+<div class="livesearch" data-params="" data-prototype_name="<?=_c.name?>[prototype]" data-is_multiple="<?=(_c.is_multiple ? 'Y' : 'N')?>">
+    <?
+    if (_c.is_multiple) {
+        $.each(_c.value, function(vi, vv) {
+            ?><input class="preset_value" type="hidden" 
+                name="<?=_c.name?>[<?=vv.value_id?>]"
+                value="<?=vv.id?>"
+                data-name="<?=vv.name?>" /><?
+        });
+    } else {
+        ?><input class="preset_value" type="hidden" <?=$t.field_id_name(_c)?>
+                <?if (_c.value) {?>
+                value="<?=_c.value.id?>" 
+                data-name="<?=_c.value.name?>" 
+                <?}?>/><?
+                    
+    }
+    ?>
+    <ul class="livesearch_items">
+        <li class="livesearch_input">
+            <input type="text" name="livesearch_input" style="width:3px;" />
+        </li>
+    </ul>
+    <div class="livesearch_results">
+    </div>
+</div>
+<!--test-->
+_c.type == 'livesearch'
 
 <!--[input]-->
 <div class="fx_tree">

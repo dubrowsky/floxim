@@ -77,6 +77,11 @@ fx_front.prototype.get_selectable_up = function(rel_node) {
     return selectable_up;
 }
 
+fx_front.prototype.fix = function() {
+    $('body').css('opacity', '0.99');
+    setTimeout(function(){$('body').css('opacity', 1);}, 5);
+}
+
 fx_front.prototype.select_item = function(node) {
     var c_selected = this.get_selected_item();
     if (c_selected == node) {
@@ -94,6 +99,7 @@ fx_front.prototype.select_item = function(node) {
     } else {
         $fx.buttons.unbind('select_block', $fx.front.select_level_up);
     }
+    $fx.front.fix();
     $('body').on('click', this.click_out);
 }
 
@@ -108,6 +114,9 @@ fx_front.prototype.deselect_item = function() {
                 removeClass('fx_selected').
                 trigger('fx_deselect').
                 unbind('remove.deselect_removed');
+        // chrome outline bug
+        $('body').css('opacity', '0.99');
+        setTimeout(function(){$('body').css('opacity', 1);}, 5);
     }
     $fx.buttons.unbind('select_block');
 }
@@ -247,12 +256,18 @@ fx_front.prototype.set_mode_edit = function () {
         for( var i in var_node.data()) {
             if (/^fx_template_var/.test(i)) {
                 var data = var_node.data(i);
-                fields.push({
-                    value:data.value,
+                var field_props = {
                     name:data.id,
                     label: data.title || data.name || data.id,
-                    type: data.type || 'text'
-                });
+                    type: data.type || 'string'
+                };
+                if (data.type == 'image') {
+                    field_props.value = data.filetable_id;
+                    field_props.path = data.value;
+                } else {
+                    field_props.value = data.value;
+                }
+                fields.push(field_props);
                 vars[data.id] = data;
             }
         }
@@ -273,6 +288,7 @@ fx_front.prototype.set_mode_edit = function () {
                     fx_admin:true
                 }, function(res) {
                     $fx.front.reload_infoblock(var_node.closest('.fx_infoblock').get(0));
+                    $fx_dialog.close();
                 });
                 return false;
             }
@@ -413,6 +429,7 @@ fx_front.prototype.set_mode_edit = function () {
                     }, function(res) {
 
                     });
+                    $fx.front.fix();
                 }
             });
         });
@@ -482,6 +499,7 @@ fx_front.prototype.set_mode_design = function() {
                     $fx.post(params, function(res) {
                         console.log('posted');
                     });
+                    $fx.front.fix();
                 }
             });
         });
@@ -571,8 +589,22 @@ fx_front.prototype.reload_infoblock = function(infoblock_node) {
     $.ajax({
        url:'/~ib/'+meta.id+'@'+page_id,
        success:function(res) {
-           $(infoblock_node).hide().before(res);
-           $(infoblock_node).remove();
+           if (infoblock_node.nodeName == 'BODY') {
+               var inserted = false;
+               $(infoblock_node).children().each(function() {
+                   if(!$(this).hasClass('fx_overlay')) {
+                       if (!inserted) {
+                            $(this).before(res);
+                            inserted = true;
+                       }
+                       $(this).remove();
+                   }
+               });
+               console.log('redraw body');
+           } else {
+               $(infoblock_node).hide().before(res);
+               $(infoblock_node).remove();
+           }
            if (selected_selector) {
                $fx.front.select_item(ib_parent.find(selected_selector).get(0));
            }

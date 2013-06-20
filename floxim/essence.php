@@ -35,20 +35,32 @@ abstract class fx_essence implements ArrayAccess {
                 $data[$v] = $this->data[$v];
             }
             $this->_get_finder()->update($data, array($pk => $this->data[$pk]));
+            $this->_save_links();
             $this->_after_update();
-            if (!$dont_log)
+            if (!$dont_log) {
                 $this->_add_history_operation('update', $data);
+            }
         } // insert
         else {
             $this->_before_insert();
             $id = $this->_get_finder()->insert($this->data);
             $this->data['id'] = $id;
+            $this->_save_links();
             $this->_after_insert();
-            if (!$dont_log)
+            if (!$dont_log) {
                 $this->_add_history_operation('add', $this->data);
+            }
         }
+        
 
         return $this;
+    }
+    
+    /*
+     * Сохраняет поля-ссылки, определяется в fx_data_content
+     */
+    protected function _save_links() {
+        
     }
     
     protected function _before_save () {
@@ -174,7 +186,16 @@ abstract class fx_essence implements ArrayAccess {
     }
 
     public function offsetGet($offset) {
-        return isset($this->data[$offset]) ? $this->data[$offset] : null;
+        if (isset($this->data[$offset])) {
+            return $this->data[$offset];
+        }
+        $finder = $this->_get_finder();
+        $rels = $finder->relations();
+        if (!isset($rels[$offset])) {
+            return null;
+        }
+        $finder->add_related($offset, new fx_collection(array($this)));
+        return $this->data[$offset];
     }
     
     public function get_type() {

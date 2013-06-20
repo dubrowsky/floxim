@@ -74,8 +74,17 @@ class fx_controller_admin_field extends fx_controller_admin {
         	'change_on_render' => true
         );
         
-        $values = array(1 => fx_lang('всем'), 2 => fx_lang('только админам'), 3 => fx_lang('никому'));
-        $fields[] = $this->ui->select('type_of_edit', fx_lang('Поле доступно'), $values, $info['type_of_edit'] ? $info['type_of_edit'] : 1  );
+        $values = array(
+            fx_field::EDIT_ALL => fx_lang('всем'), 
+            fx_field::EDIT_ADMIN => fx_lang('только админам'), 
+            fx_field::EDIT_NONE => fx_lang('никому')
+        );
+        $fields[] = $this->ui->select(
+                'type_of_edit', 
+                fx_lang('Поле доступно'), 
+                $values, 
+                $info['type_of_edit'] ? $info['type_of_edit'] : fx_field::EDIT_ALL  
+        );
         
         $fields[] = $this->ui->hidden('posting');
         $fields[] = $this->ui->hidden('action', 'add');
@@ -142,6 +151,7 @@ class fx_controller_admin_field extends fx_controller_admin {
         }
         else {
             $result = array('status' => 'ok');
+            dev_log('saving field', $field);
             $field->save();
         }
         

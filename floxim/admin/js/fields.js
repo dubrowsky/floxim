@@ -52,8 +52,11 @@
         	return $t.jQuery('form_row', json);
         },
         
-        itemselect: function(json) {
-        	return $t.jQuery('form_row', json);
+        livesearch: function(json) {
+        	var ls = $t.jQuery('form_row', json);
+            var ls_node = $('.livesearch', ls);
+            ls_node.data('livesearch', new fx_livesearch(ls_node));
+            return ls;
         },
         
         

@@ -1,6 +1,6 @@
 <div fx:template="listing" class="post_list">
     <div fx:template="item" class="post">
-        <h1><a href="{$url}" title="{$header}">{$header}</a></h1>
+        <h1><a href="{$url}" title="{$name}">{$name}</a></h1>
         <div class="date">{$publish_date}</div>
         <p>{$anounce}</p>
         

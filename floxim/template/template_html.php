@@ -21,19 +21,6 @@ class fx_template_html {
         $tokens = $tokenizer->parse($this->_string);
         //echo fen_debug($tokens);
         return $tokens;
-        /*
-        $tags = preg_split(
-                "~(<[/]?[a-z0-9]+[^>]*?(?<!\=)>)~is", 
-                $this->_string, 
-                -1, 
-                PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY
-        );
-        $tokens = array();
-        foreach ($tags as $tag) {
-            $tokens []= fx_html_token::create($tag);
-        }
-        return $tokens;
-         */
     }
     
     public function add_meta($meta = array()) {
@@ -64,6 +51,10 @@ class fx_template_html {
             if ($n->name == 'text') {
                 return;
             }
+            if (preg_match("~\{\%~", $n->source)) {
+                $n->source = fx_template_html::parse_floxim_vars_in_atts($n->source);
+            }
+            
             if ( ($fx_replace = $n->get_attribute('fx:replace')) ){
                 $replace_atts = explode(",", $fx_replace);
                 foreach ($replace_atts as $replace_att) {
@@ -152,7 +143,101 @@ class fx_template_html {
             }
         });
         $res = $tree->serialize();
-        //echo fen_debug(htmlspecialchars($res));
+        //dev_log('transformd', htmlspecialchars($res));
+        return $res;
+    }
+    
+    public static function parse_floxim_vars_in_atts($input_source) {
+        $res = '';
+        $source = preg_split("~(\s|=[\'\"]|:|<\?.+?\?>|\{[^\}]+?\})~", $input_source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+        $c_tag = null;
+        $c_att = null;
+        $c_prop = null;
+        $c_mode = null;
+        //echo fen_debug($source);
+        foreach ($source as $part) {
+            if (!$c_tag && preg_match("~^<~", $part)) {
+                $c_tag = preg_replace("~^<~", '', $part);
+                $res .= $part;
+                $c_mode = 'tag';
+                continue;
+            }
+            if (preg_match("~^<\?~", $part)) {
+                $res .= $part;
+                continue;
+            }
+            if (preg_match("~^\{[^\%]~", $part)) {
+                $res .= $part;
+                continue;
+            }
+            if (preg_match("~^\s+$~", $part)) {
+                $res .= $part;
+                continue;
+            }
+            if ($c_mode == 'tag') {
+                $res .= $part;
+                $c_att = $part;
+                $c_mode = 'att';
+                continue;
+            }
+            if ($c_mode == 'att') {
+                if (preg_match("~^=[\'\"]$~", $part)) {
+                    $c_prop = null;
+                    $c_mode = 'attval';
+                } else {
+                    $c_att .= $part;
+                }
+                $res .= $part;
+                continue;
+            }
+            if ($c_mode == 'attval') {
+                // конец атрибута
+                if (preg_match('~\"$~', $part)) {
+                    $c_att = '';
+                    $c_mode = 'tag';
+                    $res .= $part;
+                    continue;
+                }
+                // запоминаем css-свойство
+                if ($c_att == 'style' && !$c_prop) {
+                    $c_prop = preg_replace('~^\"~', '', $part);
+                    $res.= $part;
+                    continue;
+                }
+                if ($c_att == 'style' && preg_match("~;$~", $part)) {
+                    $c_prop = null;
+                    $res .= $part;
+                    continue;
+                }
+                if (preg_match("~^\{\%~", $part)) {
+                    if (!preg_match("~type=~", $part)) {
+                        $c_type = '';
+                        if ($c_att == 'style') {
+                            if (
+                                    ($c_prop == 'background' 
+                                    && preg_match('~url\([\'\"]?$~', $res) ) ||
+                                    $c_prop == 'background-image'
+                                ) {
+                                $c_type = 'image';
+                            } elseif ($c_prop == 'background' || $c_prop == 'background-color') {
+                                $c_type = 'color';
+                            } elseif ($c_prop == 'width' || $c_prop == 'height') {
+                                $c_type = 'number';
+                            }
+                        } elseif ($c_att == 'src') {
+                            $c_type = 'image';
+                        }
+                        if ($c_type) {
+                            $part = preg_replace("~\}$~", ' type="'.$c_type.'"}', $part);
+                        }
+                    }
+                    $res .= $part;
+                    continue;
+                }
+            }
+            $res .= $part;
+        }
+        ///dev_log('att vs', '<pre>'.htmlspecialchars($input_source).'</pre>', htmlspecialchars($res));
         return $res;
     }
     
@@ -381,11 +466,26 @@ class fx_html_token {
         }, $source);
         
         // здесь должна быть более общая регулярка
-        // пока ловим ифы
-        $source = preg_replace_callback("~{if.*?/if}~i", function($matches) use (&$injections) {
-            $injections []= $matches[0];
-            return '#inj'.(count($injections)-1).'#';
-        }, $source);
+        // пока ловим fx-ы
+        $source = preg_replace_callback(
+            //"~{if.*?/if}~i", 
+            "~{.+?}~i", 
+            function($matches) use (&$injections) {
+                $injections []= $matches[0];
+                return '#inj'.(count($injections)-1).'#';
+            }, 
+            $source
+        );
+        
+        // и аналогично для пыха
+        $source = preg_replace_callback(
+            "~<\?.+?\?>~i", 
+            function($matches) use (&$injections) {
+                $injections []= $matches[0];
+                return '#inj'.(count($injections)-1).'#';
+            }, 
+            $source
+        );
         
         $this->_injections = $injections;
         
@@ -516,59 +616,11 @@ class fx_html_tokenizer {
 	}
 	
 	protected $stack = '';
-	/*
-	public function _parse($string) {
-		$this->position = 0;
-        $string = str_split($string);
-		while ( isset($string[$this->position]) ) {
-			$ch = $string[$this->position];
-			foreach($this->rules as $rule) {
-				list($old_state, $r_char, $new_state, $callback, $r_first, $test_length) = $rule;
-				
-				if ($old_state != $this->state && $old_state != self::STATE_ANY) { 
-					continue;
-				}
-                if ($r_first != $ch) {
-                    continue;
-                }
-                if($test_length > 1) {
-                    $test_ch = join('', array_slice($string, $this->position, $test_length));
-                } else {
-                    $test_ch = $ch;
-                }
-				if ($r_char == $test_ch) {
-					$callback_ok = true;
-					if ($callback) {
-						$callback_ok = $this->$callback($test_ch);
-					}
-					if ($callback_ok !== false) {
-						$this->position += $test_length;
-						if ($new_state) {
-                            $this->prev_state = $this->state;
-                            $this->state = $new_state;
-							//$this->set_state($new_state);
-						}
-						if (!$callback) {
-							$this->stack .= $test_ch;
-						}
-						continue 2;
-					}
-				}
-			}
-			$this->stack .= $ch;
-			$this->position++;
-		}
-		return $this->res;
-	}
-    
-     * 
-     */
+	
     public function parse($string) {
 		$this->position = 0;
         $parts = preg_split("~(<[a-z0-9\/\?]+|>|<\?|\?>|[\{\}]|=[\'\"]?|[\'\"]|\s+)~", $string, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
-		//while ( isset($string[$this->position]) ) {
-		//	$ch = $string[$this->position];
-        foreach ($parts as $ch) {
+		foreach ($parts as $ch) {
 			foreach($this->rules as $rule) {
 				list($old_state, $r_char, $new_state, $callback, $r_first, $test_length) = $rule;
 				

@@ -982,6 +982,10 @@ class fx_system_files extends fx_system {
     }
 
     protected function get_put_filename($dir, $name) {
+        $name = fx::util()->str_to_latin($name);
+        $name = preg_replace("~[^a-z0-9_\.-]~i", '_', $name);
+        $name = trim($name, "_");
+        $name = preg_replace("~_+~", "_", $name);
         if ( $this->file_exists(fx::config()->HTTP_FILES_PATH.$dir.$name) ) {
             return $name;
         }
