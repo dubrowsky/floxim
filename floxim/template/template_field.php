@@ -39,23 +39,13 @@ class fx_template_field  {
      * @param string $html
      */
     public static function replace_fields($html) {
-        //echo fen_debug('rep start');
-        $html = self::_replace_fields_in_atts_2($html);
-        //echo fen_debug('atts don');
-        $html = self::_replace_fields_wrapped_by_tag_2($html);
-        //echo fen_debug('tags don');
-        $html = self::_replace_fields_in_text_2($html);
-        //echo fen_debug('text don');
-        return $html;
-        /*
         $html = self::_replace_fields_in_atts($html);
         $html = self::_replace_fields_wrapped_by_tag($html);
         $html = self::_replace_fields_in_text($html);
         return $html;
-        */
     }
     
-    protected static function _replace_fields_in_atts_2($html) {
+    protected static function _replace_fields_in_atts($html) {
         $html = preg_replace_callback(
             "~<[^>]+###fxf\d+###[^>]+?>~", 
             function($tag_matches) {
@@ -86,7 +76,7 @@ class fx_template_field  {
         return $html;
     }
 
-    protected static function _replace_fields_wrapped_by_tag_2($html) {
+    protected static function _replace_fields_wrapped_by_tag($html) {
         $html = preg_replace_callback(
             "~(<[a-z0-9_-]+[^>]*?>)(\s*?)###fxf(\d+)###(\s*?</[a-z0-9_-]+>)~", 
             function($matches) {
@@ -105,7 +95,7 @@ class fx_template_field  {
         return $html;
     }
     
-    protected static function _replace_fields_in_text_2($html) {
+    protected static function _replace_fields_in_text($html) {
         $html = preg_replace_callback(
             "~###fxf(\d+)###~", 
             function($matches) {
@@ -117,91 +107,12 @@ class fx_template_field  {
                     'data-fx_var' => $replacement[1]
                 ));
                 fx_template_field::$replacements[$matches[1]] = null;
-                return $tag->serialize().$replacement[2].'</'.$tag_name.'>';
+                $res = $tag->serialize().$replacement[2].'</'.$tag_name.'>';
+                return $res;
             },
             $html
         );
         return $html;
     }
 
-    /**
-     * Замена полей в атрибутах
-     * @param string $html
-     */
-    protected static function _replace_fields_in_atts($html) {
-        // Регулярка для атрибутов
-        $field_regexp = "~".self::$_field_regexp."~s";
-        // заменяем подстановки в атрибутах
-        $html = preg_replace_callback(
-            "~<[^>]+###fx_template_field[^>]+?>~", 
-            function($tag_matches) use ($field_regexp) {
-                $att_fields = array();
-                $tag = preg_replace_callback(
-                    $field_regexp, 
-                    function($field_matches) use (&$att_fields) {
-                        $att_fields[$field_matches[1]] = array(
-                            'meta' => $field_matches[2], 
-                            'value' => $field_matches[3]
-                        );
-                        return $field_matches[3];
-                    }, 
-                    $tag_matches[0]
-                );
-                $tag_meta = array('class' => 'fx_template_var_in_att');
-                foreach ($att_fields as $afk => $af) {
-                    $af_meta = json_decode($af['meta']);
-                    $af_meta->value = $af['value'];
-                    $tag_meta['data-fx_template_var_'.$afk] = htmlentities(json_encode($af_meta));
-                }
-                $tag = fx_html_token::create_standalone($tag);
-                $tag->add_meta($tag_meta);
-                $tag = $tag->serialize();
-                return $tag;
-            }, 
-            $html
-        );
-        return $html;
-    }
-    
-    /*
-     * Заменяет переменные, завернутые в единственный тег
-     * (чтоб не создавать лишнюю разметку)
-     */
-    protected static function _replace_fields_wrapped_by_tag($html) {
-        $html = preg_replace("~<!--.*?-->~s", '', $html);
-        echo fen_debug(htmlspecialchars($html));
-        $frex = "###fx_template_field\|([^\|]*?)\|(.+?)###(.*?)###fx_template_field_end###";
-        preg_match_all("~<([a-z0-9]+)[^>]*?>\s*?".$frex.'\s*?(<\/\1>)~s', $html, $matches);
-        echo fen_debug($matches);
-        die();
-        $field_regexp = '~(<([a-z0-9]+)[^>]*?>)([\s]*?)'.self::$_field_regexp.'([\s]*?)(</\2>)~s';
-        /*$field_regexp = '~(<([a-z0-9]+)[^>]*?>)([\s]*?)'.self::$_field_regexp."([\s]*?)(</[^>]+>)~s";*/
-        $html = preg_replace_callback(
-            $field_regexp, 
-            function($matches) {
-                $tag = fx_html_token::create_standalone($matches[1]);
-                $tag->add_meta(array(
-                    'class' => 'fx_template_var',
-                    'data-fx_var' => htmlentities($matches[5])
-                ));
-                dev_log($matches, $tag);
-                $tag = $tag->serialize();
-                
-                return $tag.$matches[3].$matches[6].$matches[7].$matches[8];
-            },
-            $html
-        );
-        dev_log('wbt repd', htmlspecialchars($html));
-        return $html;
-    }
-    
-    protected static function _replace_fields_in_text($html) {
-        $html = preg_replace_callback("~".self::$_field_regexp."~s", function($field_matches) {
-            $field_content = $field_matches[3];
-            $tag = preg_match("~<(?:div|ul|li|table|br)~i", $field_content) ? 'div' : 'span';
-            return '<'.$tag.' class="fx_template_var" data-fx_var="'.htmlentities($field_matches[2]).'">'.
-                    $field_matches[3].'</'.$tag.'>';
-        }, $html);
-        return $html;
-    }
 }

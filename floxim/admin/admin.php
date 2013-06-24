@@ -134,7 +134,6 @@ class fx_controller_admin extends fx_controller {
             '/floxim/admin/js/store.js',
             '/floxim/admin/js/dialog_file.js',
             '/floxim/admin/js/admin.js',
-            '/floxim/admin/js/sort.js',
             '/floxim/admin/js/menu/main.js',
             '/floxim/admin/js/menu/mode.js',
             '/floxim/admin/js/menu/more.js',

@@ -18,6 +18,7 @@ class fx_controller_admin_adminpanel extends fx_controller_admin {
             </div>
             <div id="fx_admin_control" class="fx_overlay">
                 <div id="fx_admin_buttons"></div>
+                <div id="fx_admin_fields"></div>
                 <div id="fx_admin_additionl_text"></div>
                 <div id="fx_admin_statustext"></div>
             </div>
@@ -90,10 +91,14 @@ class fx_controller_admin_adminpanel extends fx_controller_admin {
                 'more' => array('title' => FX_ADMINPANEL_SITE_BUTTON_REDO)
             ),
             'map' => array(
-                'page' => array(
+                'page' => explode(
+                    ",",
+                    'add,divider,edit,on,off,delete,divider,select_block,settings'
+                )
+                /*array(
                     'edit' => array('add', 'divider', 'edit', 'on', 'off', 'delete','divider', 'select_block' , 'settings'),
                     'design' => array('add','divider','on', 'off', 'settings', 'delete', 'select_block')
-                )
+                )*/
             )
         );
 

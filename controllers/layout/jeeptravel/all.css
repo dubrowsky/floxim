@@ -146,12 +146,16 @@ h1, h2, h3, h4, h5, h6 {
     cursor: pointer;
     border: 0;
 }
+
+.header_area {
+    float:right;
+}
 .header nav {
     overflow: hidden;
     text-align: center;
     padding: 12px 0 0;
     font: 20px/23px 'CalibriLight', Arial, sans-serif;
-    height: 38px;
+    height: 35px;
 }
 
 .header nav ul {
@@ -160,7 +164,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .header nav li {
     display: inline;
-    padding: 0 15px;
+    padding: 5px 15px;
 }
 .header nav a {
     color: #fff;

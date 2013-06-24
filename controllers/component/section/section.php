@@ -55,7 +55,6 @@ class fx_controller_component_section extends fx_controller_component {
                 case 'active':
                     $sub_f = fx::data('content_section')->where('parent_id', $path);
                     $f->with('submenu', $sub_f);
-                    dev_log('submenu findr', $sub_f);
                     return;
             }
         });
@@ -68,21 +67,6 @@ class fx_controller_component_section extends fx_controller_component {
                     'parent_id' => $active_item['id'],
                 ));
             }
-            dev_log('menu items', $items);
-            /*
-            if ( ($active_item = $items->find_one('alias', $path)) ) {
-                $active_item->set('active',true);
-            }
-
-            foreach ( $items as $item ) {
-                if ( !empty($item['alias']) ) {
-                    $alias = fx::data('content_' . $this->get_content_type(), $item['alias']);
-                    $item['url'] = $alias['url'];
-                    $item['name'] = empty($item['name']) ? $alias['name'] : $item['name'];
-                }
-            }
-             * 
-             */
         });
         return parent::do_listing();
     }

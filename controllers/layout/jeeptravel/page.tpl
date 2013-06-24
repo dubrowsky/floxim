@@ -13,7 +13,7 @@
                 <div class="logo">
                     <a href="/"><img src="{%logo}<?=$template_dir?>images/logo.png{/%}" alt="" /></a>
                 </div>
-                {area id="header" size="wide,low"}
+                <div class="header_area" fx:area="header" fx:size="wide,low">
                     <nav 
                         fx:template="top_menu"
                         fx:of="component_section.listing"
@@ -27,7 +27,7 @@
                             </li>
                         </ul>
                     </nav>
-                {/area}
+                </div>
             </div>
         </header>
         <section class="main-section" fx:if="$full_content">

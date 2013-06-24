@@ -1557,18 +1557,7 @@ li ul .fx_tree_label .fx_tree_title {
 	margin-bottom:7px;
 	margin-top:14px;
 }
-
-.fx_infoblock_adder {
-    display:none !important;
-    background: #3FB7DE !important;
-    color:#FFF !important;
-    cursor:pointer  !important;
-    font-family: Tahoma  !important;
-    font-size:12px  !important;
-    font-weight:bold  !important;
-    text-transform: lowercase  !important;
-    padding:5px 8px  !important;
-}
+/* подсветка по режимам, старая 
 
 .fx_mode_page_design .fx_infoblock_adder {
     display: inline-block !important;
@@ -1578,23 +1567,22 @@ li ul .fx_tree_label .fx_tree_title {
 .fx_mode_page_design .fx_infoblock {
     outline:1px dotted #0F0;
     outline-offset:-1px;
-    /*overflow:auto;*/
 }
 
 .fx_mode_page_edit .fx_template_var {
     outline:1px dotted rgba(0, 255, 0, 0.5);
     outline-offset:-1px;
 }
-/*
-.fx_mode_page_edit .fx_var_editable:hover {
-    outline:2px dashed #FF0;
-    outline-offset: -2px;
-}
-*/
 
 .fx_mode_page_edit .fx_template_var_in_att:hover {
     outline:1px dotted #00F;
     outline-offset: -1px;
+}
+*/
+
+.fx_hilight {
+    outline:1px dotted rgba(0, 255, 0, 0.8);
+    outline-offset:-1px;
 }
 
 .fx_selected {
@@ -1734,3 +1722,13 @@ body div.fx_overlay {
 .fx_suggest_box .search_item_active {
 	background:#FFA;
 }
+
+/*
+.fx_infoblock_design {
+    outline: 4px solid #F00;
+}
+
+.fx_infoblock_edit {
+    outline: 4px solid #00F;
+}
+*/

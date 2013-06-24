@@ -21,6 +21,7 @@ class fx_controller_component_blogpost extends fx_controller_component {
             select('DATE_FORMAT(`publish_date`, "%m") as month')->
             select('DATE_FORMAT(`publish_date`, "%Y") as year')->
             select('COUNT(DISTINCT({{content}}.id)) as `count`')->
+            where('site_id', fx::env('site')->get('id'))->
             order('publish_date', 'DESC')->
             group('month')->group('year')->
             get_data();

@@ -1,12 +1,7 @@
 fx_adminpanel = {
-    g_data:{},    
     history:{},       
         
     KEYCODE_ESC: 27,
-        
-    set_data: function(data) {
-        $.extend(true, $fx.g_data, data);
-    },
         
     init: function(options) {
         $fx.settings = options;
@@ -26,7 +21,6 @@ fx_adminpanel = {
                             
             
             $fx.admin = false;
-            $fx.sort = new fx_sort();
             $fx.buttons = new fx_buttons($fx.settings.buttons.source);
                 
             $fx.settings.mainmenu = {

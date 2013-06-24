@@ -19,11 +19,16 @@ class fx_template_html {
     public function tokenize() {
         $tokenizer = new fx_html_tokenizer();
         $tokens = $tokenizer->parse($this->_string);
-        //echo fen_debug($tokens);
         return $tokens;
     }
     
-    public function add_meta($meta = array()) {
+    public function add_meta($meta = array(), $skip_parsing = false) {
+        // добавляем сразу обертку
+        if ($skip_parsing) {
+            $wrapper = fx_html_token::create_standalone('<div class="fx_wrapper">');
+            $wrapper->add_meta($meta);
+            return $wrapper->serialize().$this->_string."</div>";
+        }
         $tree = $this->make_tree($this->tokenize());
         $children = $tree->get_children();
         if (count($children) == 1) {
@@ -143,7 +148,6 @@ class fx_template_html {
             }
         });
         $res = $tree->serialize();
-        //dev_log('transformd', htmlspecialchars($res));
         return $res;
     }
     
@@ -237,7 +241,6 @@ class fx_template_html {
             }
             $res .= $part;
         }
-        ///dev_log('att vs', '<pre>'.htmlspecialchars($input_source).'</pre>', htmlspecialchars($res));
         return $res;
     }
     
@@ -620,7 +623,7 @@ class fx_html_tokenizer {
     public function parse($string) {
 		$this->position = 0;
         $parts = preg_split("~(<[a-z0-9\/\?]+|>|<\?|\?>|[\{\}]|=[\'\"]?|[\'\"]|\s+)~", $string, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
-		foreach ($parts as $ch) {
+        foreach ($parts as $ch) {
 			foreach($this->rules as $rule) {
 				list($old_state, $r_char, $new_state, $callback, $r_first, $test_length) = $rule;
 				
@@ -652,7 +655,7 @@ class fx_html_tokenizer {
 	
 	protected $res = array();
 	protected function text_to_tag($ch) {
-        if (!empty($this->stack)) {
+        if ($this->stack !== '') {
             $this->res []= fx_html_token::create($this->stack);
         }
 		$this->stack = $ch;

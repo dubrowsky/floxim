@@ -379,8 +379,10 @@
         /**
      * @todo убрать повторяющиеся типы, проверка наличия функции
      */
-        draw_field: function(json, container) {
-            if (json.type === undefined) json['type'] = 'input';
+        draw_field: function(json) { //, container) {
+            if (json.type === undefined) {
+                json['type'] = 'input';
+            }
  
             var label = '', type='';
             switch(json.type) {
@@ -403,7 +405,7 @@
             }
             
             label = fx_call_user_func('$fx_fields.'+type, json);
-            if (label !== '') return label;
+            return label !== '' ? label : null;
         },
 
         add_elrte: function() {
@@ -521,6 +523,7 @@
                         pexp = 'regexp';
                     }
                     var par_inp = $(':input[name="'+pkey+'"]');
+                    console.log('chps', pkey, pval, par_inp);
                     if (par_inp.length == 0) {
                         return;
                     }
@@ -539,7 +542,10 @@
                             do_show = (par_val == pval);
                             break;
                         case '!=':
-                            if (!par_inp.is(':visible')) {
+                            if (
+                                par_inp.css('display') == 'none' ||
+                                par_inp.closest('.field').css('display') == 'none'
+                                ) {
                                 do_show = true;
                             } else {
                                 do_show = (par_val != pval);
@@ -556,6 +562,7 @@
                 } else {
                     _el.hide();
                 }
+                console.log(do_show ? 'showd' : 'hidd');
                 _el.find(':input').trigger('change');
             };
 

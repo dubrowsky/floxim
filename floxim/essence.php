@@ -35,7 +35,7 @@ abstract class fx_essence implements ArrayAccess {
                 $data[$v] = $this->data[$v];
             }
             $this->_get_finder()->update($data, array($pk => $this->data[$pk]));
-            $this->_save_links();
+            $this->_save_multi_links();
             $this->_after_update();
             if (!$dont_log) {
                 $this->_add_history_operation('update', $data);
@@ -45,7 +45,7 @@ abstract class fx_essence implements ArrayAccess {
             $this->_before_insert();
             $id = $this->_get_finder()->insert($this->data);
             $this->data['id'] = $id;
-            $this->_save_links();
+            $this->_save_multi_links();
             $this->_after_insert();
             if (!$dont_log) {
                 $this->_add_history_operation('add', $this->data);
@@ -59,7 +59,7 @@ abstract class fx_essence implements ArrayAccess {
     /*
      * Сохраняет поля-ссылки, определяется в fx_data_content
      */
-    protected function _save_links() {
+    protected function _save_multi_links() {
         
     }
     
@@ -74,12 +74,7 @@ abstract class fx_essence implements ArrayAccess {
      */
     public function get($prop_name = null) {
         if ($prop_name) {
-            if (array_key_exists($prop_name, $this->data)) {
-                return $this->data[$prop_name];
-            }
-            return null;
-            // dev_log($this, $prop_name);
-            throw new Exception("Class: " . get_class($this) . ", undefined item: " . $prop_name);
+            return $this->offsetGet($prop_name);
         }
         return $this->data;
     }
@@ -91,12 +86,7 @@ abstract class fx_essence implements ArrayAccess {
             }
             return $this;
         }
-        if (!isset($this->modified_data[$item]))
-            $this->modified_data[$item] = $this->data[$item];
-
-        $this->data[$item] = $value;
-        $this->modified[] = $item;
-
+        $this->offsetSet($item, $value);
         return $this;
     }
 
@@ -110,7 +100,9 @@ abstract class fx_essence implements ArrayAccess {
         $this->_get_finder()->delete($pk, $this->data[$pk]);
         $this->modified_data = $this->data;
         $this->_after_delete();
-        if (!$dont_log) $this->_add_history_operation('delete');
+        if (!$dont_log) {
+            $this->_add_history_operation('delete');
+        }
     }
 
     public function unchecked() {
@@ -172,9 +164,37 @@ abstract class fx_essence implements ArrayAccess {
     
 
     /* Array access */
+    public function offsetGet($offset) {
+        if (isset($this->data[$offset])) {
+            return $this->data[$offset];
+        }
+        /**
+         * Например для $post['tags'], где tags - поле-мультисвязь
+         * Если связанные не загружены, просим файндер их загрузить
+         */
+        $finder = $this->_get_finder();
+        $rels = $finder->relations();
+        if (!isset($rels[$offset])) {
+            return null;
+        }
+        $finder->add_related($offset, new fx_collection(array($this)));
+        if (!isset($this->data[$offset])) {
+            return null;
+        }
+        $this->modified_data[$offset] = clone $this->data[$offset];
+        return $this->data[$offset];
+    }
 
     public function offsetSet($offset, $value) {
-        $this->set($offset, $value);
+        // ставим modified | modified_data только если существовал ключик
+        // чтобы при первой догрузке полей-связей они не помечались как обновленные
+        if (array_key_exists($offset, $this->data)) {
+            if (!isset($this->modified_data[$offset])) {
+                $this->modified_data[$offset] = $this->data[$offset];
+            }
+            $this->modified[] = $offset;
+        }
+        $this->data[$offset] = $value;
     }
 
     public function offsetExists($offset) {
@@ -185,19 +205,6 @@ abstract class fx_essence implements ArrayAccess {
         unset($this->data[$offset]);
     }
 
-    public function offsetGet($offset) {
-        if (isset($this->data[$offset])) {
-            return $this->data[$offset];
-        }
-        $finder = $this->_get_finder();
-        $rels = $finder->relations();
-        if (!isset($rels[$offset])) {
-            return null;
-        }
-        $finder->add_related($offset, new fx_collection(array($this)));
-        return $this->data[$offset];
-    }
-    
     public function get_type() {
         return str_replace("fx_", "", get_class($this));
     }

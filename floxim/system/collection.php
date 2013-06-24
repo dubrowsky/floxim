@@ -189,6 +189,16 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
         }
     }
     
+    /*
+     * Find elemenets and remove them from the collection
+     */
+    public function find_remove($field, $prop, $compare_type = null) {
+        $items=  $this->find($field, $prop, $compare_type);
+        foreach ($items as $i) {
+            $this->remove($i);
+        }
+    }
+    
     public function get_values($field, $key_field = null, $as_collection = false) {
         $result = array();
         foreach ($this->data as $k => $v) {
@@ -242,53 +252,29 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
         // this = [user1, user2]
         // cond_field = 'author'
         // res_field = 'posts'
-        //echo fen_debug('atm start', count($what), count($this));
         $res_index = array();
         foreach ($what as $what_item) {
             $index_key = $what_item[$cond_field];
             if (!isset($res_index[$index_key])) {
-                $res_index[$index_key] = array();
+                $res_index[$index_key] = new fx_collection();
+                if ($extract_field) {
+                    $res_index[$index_key]->linker_map = array();
+                }
             }
-            $res_index[$index_key][]= $extract_field ? $what_item[$extract_field] : $what_item;
+            if (!$extract_field) {
+                $res_index[$index_key] []= $what_item;
+            } else {
+                $end_value = $what_item[$extract_field];
+                $res_index[$index_key][]= $end_value;
+                $res_index[$index_key]->linker_map[$what_item['id']] = $end_value['id'];
+            }
+            //$res_index[$index_key][]= $extract_field ? $what_item[$extract_field] : $what_item;
         }
         foreach ($this as $our_item) {
             $check_value = $our_item[$check_field];
             $our_item[$res_field] = isset($res_index[$check_value]) ?
                                     $res_index[$check_value] : null;
         }
-        //echo fen_debug('atm end');
-        return $this;
-        foreach ($this as $our_item) {
-            /*
-            $what_items = array();
-            $check_value = $our_item[$check_field];
-            foreach ($what as $what_item) {
-                if ($what_item[$cond_field] == $check_value) {
-                    $what_items[]= $extract_field ? $what_item[$extract_field] : $what_item;
-                }
-            }
-            if (count($what_items) == 0){
-                $our_item[$res_field] = null;
-                continue;
-            }
-            $what_items = new fx_collection($what_items);
-            $our_item[$res_field] = $what_items;
-            continue;
-            $our_item[$res_field] = is_null($extract_field) ? 
-                                        $what_items : 
-                                        $what_items->get_values($extract_field, null, true);
-            */
-            $what_items = $what->find($cond_field, $our_item[$check_field]);
-            if (count($what_items) > 0) {
-                if (!is_null($extract_field)) {
-                    $what_items = $what_items->get_values($extract_field, null, true);
-                }
-                $our_item[$res_field]=$what_items;
-            } else {
-                $our_item[$res_field] = null;
-            }
-        }
-        echo fen_debug('atm don');
         return $this;
     }
 

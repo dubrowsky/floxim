@@ -675,7 +675,6 @@ html.filter('.fx_list').each( function() {
 		}
 	});
 });
-$fx_form.update_available_buttons();
 
 <!--[list_field_row]-->
 <?

@@ -28,13 +28,13 @@ fx_buttons = function ( source ) {
 
 fx_buttons.prototype.bind = function(button_key, callback) {
     var b = $('.fx_admin_button_'+button_key);
-    b.removeClass('fx_admin_notavailable');
+    b.show();
     b.click(callback);
 }
 
 fx_buttons.prototype.unbind = function(button_key, callback) {
     var b = $('.fx_admin_button_'+button_key);
-    b.addClass('fx_admin_notavailable');
+    b.hide();
     b.unbind('click', callback);
 }
 
@@ -54,7 +54,7 @@ fx_buttons.prototype.draw_buttons = function ( buttons ) {
         }
         else {
             var button_source = self.source[button];
-            element = $('<div/>').addClass('fx_admin_notavailable fx_admin_button_'+button);
+            element = $('<div/>').addClass('fx_admin_button_'+button);
             element.attr('title', button_source.title);
             if ( button_source.type && button_source.type == 'text' ) {
                 element.addClass('fx_admin_button_text').html( $('<span>').text(button_source.title) );
@@ -65,11 +65,10 @@ fx_buttons.prototype.draw_buttons = function ( buttons ) {
 
             element.data(button_source).data('key', button);
             element.click( function () {
-                if ( $(this).hasClass('fx_admin_notavailable') ) return false;
                 self.handle(button);
                 return false;
             });
-                
+			element.hide();
         }
                 
         self.container.append(element);
@@ -79,12 +78,11 @@ fx_buttons.prototype.draw_buttons = function ( buttons ) {
 
 fx_buttons.prototype.set_active_buttons = function ( buttons ) {
     $('div', this.container).each(function() {
-                
         if ( $(this).data('key') == 'more' || $(this).data('key') == 'divider'  ) return true;
         if ($.inArray($(this).data('key'), buttons) == -1 ) {
-            $(this).addClass('fx_admin_notavailable'); 
+            $(this).hide();
         } else {
-            $(this).removeClass('fx_admin_notavailable');
+        	$(this).show();
         }
     });
 }
@@ -97,10 +95,10 @@ fx_buttons.prototype.update_button = function ( btn, settings) {
             
     if ( settings.available !== undefined ) {
         if ( settings.available ) {
-            button.removeClass('fx_admin_notavailable');
+            button.show();
         }
         else {
-            button.addClass('fx_admin_notavailable');
+        	button.hide();
         }
     }
 }

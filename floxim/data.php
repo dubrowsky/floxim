@@ -232,10 +232,10 @@ class fx_data {
                     $rel_finder->where($end_rel_field, 0, '!=');
                 }
                 $rel_items = $rel_finder->all();
-                
+                /*
                 foreach ($rel_items as $rel_item) {
                     $rel_item[$end_rel]['_linker_id'] = $rel_item['id'];
-                }
+                }*/
                 $essences->attache_many($rel_items, $rel_field, $rel_name, 'id', $end_rel);
                 break;
         }

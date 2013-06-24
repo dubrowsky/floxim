@@ -53,42 +53,34 @@ class fx_content extends fx_essence {
         if (count($values) == 0) {
             return;
         }
-
+        
         $fields = fx::data('component', $this->component_id)->all_fields();
         $result = array('status' => 'ok');
 
         foreach ($fields as $field) {
-            $name = $field->get_name();
-
-            if ($this['id']) {
-                if (!isset($this->modified_data[$name])) {
-                    if (isset($values['f_'.$name]) && $field->check_rights()) {
-                        $value = $values['f_'.$name];
-                    } else {
-                        continue;
-                    }
+            $field_name = $field->get_name();
+            if (!isset($values['f_'.$field_name])) {
+                if ($field['type'] == fx_field::FIELD_MULTILINK) {
+                    $value = array();
                 } else {
-                    $value = $this->data[$name];
+                    continue;
                 }
             } else {
-                if (isset($this[$name])) {
-                    $value = $this[$name];
-                } else if (isset($values['f_'.$name]) && $field->check_rights()) {
-                    $value = $values['f_'.$name];
-                } else {
-                    $value = $field['default'];
-                }
+                $value = $values['f_'.$field_name];
             }
-
-
+            
+            if (!$field->check_rights()) {
+                continue;
+            }
+            
             if ($field->validate_value($value)) {
                 $field->set_value($value);
-                $this[$name] = $field->get_savestring($this);
+                $this[$field_name] = $field->get_savestring($this);
             } else {
                 $field->set_error();
                 $result['status'] = 'error';
                 $result['text'][] = $field->get_error();
-                $result['fields'][] = 'f_'.$name;
+                $result['fields'][] = 'f_'.$field_name;
             }
         }
 
@@ -190,8 +182,10 @@ class fx_content extends fx_essence {
         }
         parent::_before_save();
     }
-    
-    protected function _save_links() {
+    /*
+     * Сохраняет множественные ссылки, привязанные к сущности
+     */
+    protected function _save_multi_links() {
         $link_fields = 
             fx::data('component', $this->component_id)->
             all_fields()->
@@ -200,11 +194,103 @@ class fx_content extends fx_essence {
         foreach ($link_fields as $link_field) {
             $val = $this[$link_field['name']];
             $relation = $link_field->get_relation();
+            $related_data_type = $relation[1];
+            $related_field_name = $relation[2];
+            // получаем компонент, управляющий связанной сущностью
+            $related_component = fx::data(
+                    'component', 
+                    preg_replace("~^content_~", '', $related_data_type)
+            );
+            $related_component_fields = $related_component->all_fields();
+            // и поле сущности, которое ссылается на нас
+            $related_field = $related_component_fields->find_one('name', $related_field_name);
+            // если оно привязано к родителю, будем сохранять порядок (сортировку)
+            $related_is_child = $related_field['format']['is_parent'];
+            $old_linker_map = isset($this->modified_data[$link_field['name']]->linker_map) ? 
+                        $this->modified_data[$link_field['name']]->linker_map : 
+                        array();
+            
             switch ($relation[0]) {
                 case fx_data::HAS_MANY:
                     break;
                 case fx_data::MANY_MANY:
-                    echo fen_debug('val to save', $val, $link_field, $relation);
+                    $priority = 0;
+                    // получаем релейшны сущности-связки (tagpost например)
+                    // чтобы достать оттуда $end_field
+                    $related_relations = fx::data($related_data_type)->relations();
+                    $end_field = $related_relations[$relation[3]][2];
+                    $actual_linker_ids = array();
+                    $linker_infoblock_id = null;
+                    foreach ($val as $rel_obj) {
+                        // $rel_obj - тэг например
+                        // $end_field - конечное поле мультисвязи, tag например
+                        // $linker_id - id тагпоста
+                        
+                        // если у конечного объекта нет id (новый) - сохраняем
+                        if (!$rel_obj['id']) {
+                            $rel_obj->save();
+                        }
+                        
+                        // находим id линкера для текущего значения
+                        // и удаляем его из старой карты линкеров
+                        $found_linkers = array_keys($old_linker_map, $rel_obj['id']);
+                        if (count($found_linkers) > 0) {
+                            $linker_id = $found_linkers[0];
+                            unset($old_linker_map[$linker_id]);
+                            $linker_obj  = fx::data($related_data_type, $linker_id);
+                        } else {
+                            // выясняем, к какому инфоблоку прикреплять новую сущность-связь
+                            if (is_null($linker_infoblock_id)) {
+                                // инфоблок, где живем мы сами
+                                $our_infoblock = fx::data('infoblock', $this['infoblock_id']);
+                                
+                                // достаем значение поля настроек листинга "инфоблок для поля тагпосты"
+                                $c_infoblock_id = $our_infoblock['params']['field_'.$link_field['id'].'_infoblock'];
+                                if ($c_infoblock_id) {
+                                    $linker_infoblock_id = $c_infoblock_id;
+                                } 
+                                // если такого нет, используем первый попавшийся инфоблок, 
+                                // содержащий объекты нашего типа
+                                else {
+                                    $related_container_infoblock = fx::data('infoblock')->
+                                            where('site_id', $this['site_id'])->
+                                            get_content_infoblocks($related_component['keyword'])->
+                                            first();
+                                    if ($related_container_infoblock) {
+                                        $linker_infoblock_id = $related_container_infoblock['id'];
+                                    }
+                                }
+                            }
+                            $linker_params = array(
+                                $relation[2] => $this['id'],
+                                $end_field => $rel_obj['id'],
+                                'infoblock_id' => $linker_infoblock_id,
+                                'site_id' => $this['site_id']
+                            );
+                            if ($related_is_child) {
+                                $linker_params['parent_id'] = $this['id'];
+                            }
+                            $linker_obj = fx::data($related_data_type)->create($linker_params);
+                        }
+                        $priority++;
+                        if ($related_is_child) {
+                            $linker_obj['priority'] = $priority;
+                        }
+                        //echo fen_debug('let-s save', $linker_obj);
+                        $linker_obj->save();
+                        $actual_linker_ids []= $linker_obj['id'];
+                    }
+                    // теперь удаляем старые связи
+                    // если были
+                    if (!isset($this->modified_data[$link_field['name']]->linker_map)) {
+                        break;
+                    }
+                    foreach ($this->modified_data[$link_field['name']]->linker_map as $old_linker_id => $old_rel_id) {
+                        if (!in_array($old_linker_id, $actual_linker_ids)) {
+                            $old_linker = fx::data($related_data_type, $old_linker_id);
+                            $old_linker->delete();
+                        }
+                    }
                     break;
             }
         }
