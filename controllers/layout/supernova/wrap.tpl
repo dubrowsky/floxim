@@ -16,7 +16,7 @@
             <!--логотип, слоган-->
             <div id="logo">
                 <a href="/">
-                    <img src="/controllers/layout/supernova/images/logo.gif" />
+                    <img src="{%logo}/controllers/layout/supernova/images/logo.gif{/%}" />
                 </a>
                 <div>{%slogan}название или слоган <br />вашей компании{/%}</div>
             </div>
