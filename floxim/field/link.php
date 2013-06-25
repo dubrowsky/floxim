@@ -45,11 +45,19 @@ class fx_field_link extends fx_field_baze {
         $fields[]= array(
             'id' => 'format[render_type]',
             'name' => 'format[render_type]',
+<<<<<<< HEAD
             'label' => fx::lang('Способ отображения','system'),
             'type' => 'select',
             'values' => array(
                 'select' => fx::lang('Выпадающий список','system'), 
                 'livesearch' => fx::lang('Live Search','system')
+=======
+            'label' => fx_lang('Способ отображения'),
+            'type' => 'select',
+            'values' => array(
+                'select' => fx_lang('Выпадающий список'), 
+                'livesearch' => fx_lang('Live Search')
+>>>>>>> 288c9e46e2f230f751ca01c7cc1429f3dd095c39
             ),
             'value' => $this['format']['render_type']
         );

@@ -79,6 +79,7 @@ class fx_controller_infoblock extends fx_controller {
 
         $tpl_params['infoblock'] = $infoblock;
         $output = $tpl->render($tpl_params);
+        
         if (fx::env('is_admin')) {
             if (!preg_match("~[^\s+]~", $output)) {
                 //dev_log('ib empty', htmlspecialchars($output), strip_tags($output));
@@ -100,6 +101,7 @@ class fx_controller_infoblock extends fx_controller {
             $tpl_wrap->set_var('infoblock', $infoblock);
             $output = $tpl_wrap->render();
         }
+        
         if (fx::env('is_admin')) {
             $output = $this->_add_infoblock_meta($output, $infoblock, $controller_meta);
         }

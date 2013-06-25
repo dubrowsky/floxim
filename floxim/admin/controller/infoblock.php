@@ -71,6 +71,10 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             }
             $fields['controller']['values'][]= $c_item;
         }
+<<<<<<< HEAD
+=======
+        
+>>>>>>> 288c9e46e2f230f751ca01c7cc1429f3dd095c39
         $result = array(
             'fields' => $fields,
             'dialog_title' => fx::lang('Добавление инфоблока','system'),
@@ -244,8 +248,13 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
     	
     	$result = array(
             'dialog_title' => $is_layout ? 
+<<<<<<< HEAD
                     fx::lang('Выбор шаблона страницы','system') : 
                     fx::lang('Настройка инфоблока','system'). 
+=======
+                    fx_lang('Выбор шаблона страницы') : 
+                    fx_lang('Настройка инфоблока'). 
+>>>>>>> 288c9e46e2f230f751ca01c7cc1429f3dd095c39
                     ', ' . $controller_name . '.' . $action.' #'.$infoblock['id'],
             'step' => 'settings_select',
             'dialog_button' => array(
