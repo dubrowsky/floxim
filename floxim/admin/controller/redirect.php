@@ -6,7 +6,7 @@ class fx_controller_admin_redirect extends fx_controller_admin {
         $items = fx::data('redirect')->get_all();
 
         $ar = array('type' => 'list', 'filter' => true, 'sortable' => true);
-        $ar['labels'] = array('old' => fx_lang('Старый url'), 'new' => fx_lang('Новый url'), 'header' => fx_lang('Заголовок'));
+        $ar['labels'] = array('old' => fx::lang('Старый url','system'), 'new' => fx::lang('Новый url','system'), 'header' => fx::lang('Заголовок','system'));
 
         foreach ($items as $item) {
             $el = array('id' => $item['id'], 'old' => $item['old_url'], 'new' => $item['new_url'], 'header' => $item['header']);
@@ -28,21 +28,18 @@ class fx_controller_admin_redirect extends fx_controller_admin {
         $fields[] = $this->ui->hidden('action', 'add');
 
         $result = array('fields' => $fields);
-        $result['dialog_title'] = fx_lang('Добавление правила переадресации');
+        $result['dialog_title'] = fx::lang('Добавление правила переадресации','system');
 
         return $result;
     }
 
     public function edit($input) {
         $info = fx::data('redirect')->get_by_id($input['id']);
-
         $fields = $this->_form($info);
         $fields[] = $this->ui->hidden('action', 'edit');
         $fields[] = $this->ui->hidden('id', $info['id']);
-
         $result = array('fields' => $fields);
-        $result['dialog_title'] = fx_lang('Изменение правила переадресации');
-
+        $result['dialog_title'] = fx::lang('Изменение правила переадресации','system');
         return $result;
     }
 
@@ -57,9 +54,9 @@ class fx_controller_admin_redirect extends fx_controller_admin {
 
     protected function _form($info) {
         $hs = array('301' => '301 Moved Permanently', '302' => '302 Found');
-        $fields[] = $this->ui->input('old_url', fx_lang('Старый url'), $info['old_url']);
-        $fields[] = $this->ui->input('new_url', fx_lang('Новый url'), $info['new_url']);
-        $fields[] = $this->ui->select('header', fx_lang('Посылаемый заголовок'), $hs);
+        $fields[] = $this->ui->input('old_url', fx::lang('Старый url','system'), $info['old_url']);
+        $fields[] = $this->ui->input('new_url', fx::lang('Новый url','system'), $info['new_url']);
+        $fields[] = $this->ui->select('header', fx::lang('Посылаемый заголовок','system'), $hs);
         $fields[] = $this->ui->hidden('posting');
 
         return $fields;
@@ -91,5 +88,4 @@ class fx_controller_admin_redirect extends fx_controller_admin {
    
 
 }
-
 ?>

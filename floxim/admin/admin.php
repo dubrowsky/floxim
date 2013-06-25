@@ -23,7 +23,7 @@ class fx_controller_admin extends fx_controller {
         $this->essence_type = str_replace('fx_controller_admin_', '', get_class($this));
         $this->ui = new fx_admin_ui();
         
-        $this->process_do_return = $do_return;
+        $this->process_do_return = isset($input['do_return']) ? $input['do_return'] : $do_return;
     }
 
     public function process() {
@@ -89,7 +89,7 @@ class fx_controller_admin extends fx_controller {
     }
 
     protected function get_status_text() {
-        return fx_lang("Сохранено");
+        return fx::lang('Сохранено','system');
     }
 
     public function admin_tabs($tabs, $callback_param = null) {
@@ -114,6 +114,8 @@ class fx_controller_admin extends fx_controller {
     public static function add_admin_files() {
         $js_files = array(
             FX_JQUERY_PATH,
+            '/floxim/lib/js/lang-load.js',
+            '/floxim/lib/js/fx-lang.js',
             '/floxim/admin/js/lang.js.php',
             '/floxim/lib/js/jquery-ui-1.8.21.custom.js',
             '/floxim/lib/js/jquery.nestedSortable.js',
@@ -128,12 +130,12 @@ class fx_controller_admin extends fx_controller {
             '/floxim/admin/js/buttons.js',                                     
             '/floxim/admin/js/form.js',
             '/floxim/admin/js/dialog.js',
+            '/floxim/admin/js/livesearch.js',
             '/floxim/admin/js/fields.js',
             '/floxim/admin/js/edit-in-place.js',
             '/floxim/admin/js/store.js',
             '/floxim/admin/js/dialog_file.js',
             '/floxim/admin/js/admin.js',
-            '/floxim/admin/js/sort.js',
             '/floxim/admin/js/menu/main.js',
             '/floxim/admin/js/menu/mode.js',
             '/floxim/admin/js/menu/more.js',
@@ -205,7 +207,7 @@ class fx_controller_admin extends fx_controller {
                 <input type="hidden" name="essence" value="admin" />
                 <input name="AUTH_USER" />
                 <input type="password" name="AUTH_PW" />
-                <input type="submit" value="' . fx_lang('Вход') . '" class="auth_submit">
+                <input type="submit" value="' . fx::lang('Вход','system') . '" class="auth_submit">
                 </form></div>';
         }
 
@@ -332,13 +334,13 @@ class fx_controller_admin_module extends fx_controller_admin {
     public function basesettings($input) {
         $module_keyword = str_replace('fx_controller_admin_module_', '', get_class($this));
         $this->response->submenu->set_menu('settings')->set_subactive('settings-'.$module_keyword);
-        $this->response->breadcrumb->add_item( fx_lang('Настройка модуля') . ' ' . $module_keyword);
+        $this->response->breadcrumb->add_item( fx::lang('Настройка модуля','system') . ' ' . $module_keyword);
         $this->response->add_form_button('save');
         $this->settings();
     }
 
     public function settings() {
-        $this->response->add_field($this->ui->label( fx_lang('Переопределите метод settings в своем классе') ));
+        $this->response->add_field($this->ui->label( fx::lang('Переопределите метод settings в своем классе','system') ));
     }
 
     public function basesettings_save($input) {

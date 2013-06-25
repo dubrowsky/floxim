@@ -5,7 +5,6 @@ class fx_controller_component extends fx_controller {
     
     protected $_action_prefix = 'do_';
 
-
     public function process() {
         $result = parent::process();
         if (!isset($result['_meta'])) {
@@ -22,30 +21,30 @@ class fx_controller_component extends fx_controller {
         $fields = array();
         $fields['limit'] = array(
             'name' => 'limit',
-            'label' => fx_lang('Сколько выводить'),
+            'label' => fx::lang('Сколько выводить','controller_component'),
             'value' => 10
         );
         $fields['show_pagination'] = array(
             'name' => 'show_pagination',
-            'label' => fx_lang('Разбивать на страницы?'),
+            'label' => fx::lang('Разбивать на страницы?','controller_component'),
             'type' => 'checkbox',
             'value' => true,
             'parent' => array('limit' => '!=0')
         );
 
-        $sortings = array('manual' => fx_lang('Ручная'), 'created'=> fx_lang('Дата создания'));
+        $sortings = array('manual' => fx::lang('Ручная','controller_component'), 'created'=> fx::lang('Дата создания','controller_component'));
         $sortings += $this->get_component()->fields()->get_values('description', 'name');
         $fields['sorting'] = array(
             'name' => 'sorting',
-            'label' => fx_lang('Сортировка'),
+            'label' => fx::lang('Сортировка','controller_component'),
             'type' => 'select',
             'values' => $sortings
         );
         $fields['sorting_dir'] = array(
             'name' => 'sorting_dir',
-            'label' => fx_lang('Порядок'),
+            'label' => fx::lang('Порядок','controller_component'),
             'type' => 'select',
-            'values' => array('asc' => fx_lang('По возрастанию'), 'desc' => fx_lang('По убыванию')),
+            'values' => array('asc' => fx::lang('По возрастанию','controller_component'), 'desc' => fx::lang('По убыванию','controller_component')),
             'parent' => array('sorting' => '!=manual')
         );
         return $fields;
@@ -55,17 +54,17 @@ class fx_controller_component extends fx_controller {
     {
         $fields['parent_type'] = array(
             'name' => 'parent_type',
-            'label' => fx_lang('Родитель'),
+            'label' => fx::lang('Родитель','controller_component'),
             'type' => 'select',
             'values' => array(
-                'current_page_id' => fx_lang('Текущая страница'),
-                'mount_page_id' => fx_lang('Страница, куда прицеплен инфоблок'),
-                'custom' => fx_lang('Произвольный')
+                'current_page_id' => fx::lang('Текущая страница','controller_component'),
+                'mount_page_id' => fx::lang('Страница, куда прицеплен инфоблок','controller_component'),
+                'custom' => fx::lang('Произвольный','controller_component')
             )
         );
         $fields['parent_id']= array(
             'name' => 'parent_id',
-            'label' => fx_lang('Выбрать родителя'),
+            'label' => fx::lang('Выбрать родителя','controller_component'),
             'parent' => array('parent_type' => 'custom')
         );
         return $fields;
@@ -74,6 +73,42 @@ class fx_controller_component extends fx_controller {
     public function get_action_settings_listing() {
         $fields = $this->get_action_settings_list_common();
         $fields = array_merge($fields,$this->get_action_settings_list_parent());
+        /*
+         * Ниже код, который добывает допустимые инфоблоки для полей-ссылок
+         * и предлагает выбрать, откуда брать/куда добавлять значения-ссылки
+         * возможно, откажемся из-за непонятного гуя 
+         */
+        $link_fields = $this->
+                            get_component()->
+                            all_fields()->
+                            find('type', array(fx_field::FIELD_LINK, fx_field::FIELD_MULTILINK))->
+                            find('type_of_edit', fx_field::EDIT_NONE, fx_collection::FILTER_NEQ);
+        
+        foreach ($link_fields as $lf) {
+            if ($lf['type'] == fx_field::FIELD_LINK) {
+                $target_com_id = $lf['format']['target'];
+            } else {
+                $target = explode(".", $lf['format']['target']);
+                $target_com_id = fx::data('field', $target[0])->get('component_id');
+            }
+            $target_com = fx::data('component', $target_com_id);
+            $com_infoblocks = fx::data('infoblock')->
+                    where('site_id', fx::env('site')->get('id'))->
+                    get_content_infoblocks($target_com['keyword']);
+            $ib_values = $com_infoblocks->get_values('name', 'id') + array('new' => fx_lang('Новый инфоблок'));
+            $fields ['field_'.$lf['id'].'_infoblock']= array(
+                'type' => 'select',
+                'values' => $ib_values,
+                'name' => 'field_'.$lf['id'].'_infoblock',
+                'label' => fx_lang('Инфоблок для поля ').$lf['description']
+            );/*
+            echo fen_debug(
+                    'we are '.  get_class($this), 
+                    'field: '.$lf['name'], 
+                    'com: '.$target_com['name'],
+                    $com_infoblocks
+            );*/
+        }
         return $fields;
     }
     
@@ -81,7 +116,7 @@ class fx_controller_component extends fx_controller {
         $fields = $this->get_action_settings_list_common();
         $fields['from_all'] = array(
             'name' => 'from_all',
-            'label' => fx_lang('Из любого раздела'),
+            'label' => fx::lang('Из любого раздела','controller_component'),
             'type' => 'checkbox',
             'parent' => array('is_mirror' => '1'),
             'value' => 1
@@ -103,7 +138,7 @@ class fx_controller_component extends fx_controller {
         }
         $fields['parent_id'] = array(
             'name' => 'parent_id',
-            'label' => fx_lang('Указать раздел явно'),
+            'label' => fx::lang('Указать раздел явно','controller_component'),
             'parent' => array('from_all' => '0')
         );
         return $fields;
@@ -127,8 +162,8 @@ class fx_controller_component extends fx_controller {
 
     public function info_record() {
         return array(
-            'name' => fx_lang('Запись'),
-            'description' => fx_lang('Выводит отдельную запись')
+            'name' => fx::lang('Запись','controller_component'),
+            'description' => fx::lang('Выводит отдельную запись','controller_component')
         );
     }
     
@@ -139,8 +174,8 @@ class fx_controller_component extends fx_controller {
     
     public function info_listing() {
         return array(
-            'name' => fx_lang('Список'),
-            'description' => fx_lang('Выводит список записей из указанного раздела')
+            'name' => fx::lang('Список','controller_component'),
+            'description' => fx::lang('Выводит список записей из указанного раздела','controller_component')
         );
     }
 
@@ -269,19 +304,26 @@ class fx_controller_component extends fx_controller {
     public function info_listing_mirror() {
         return array(
             'name' => 'Mirror',
-            'description' => fx_lang('Выводит записи по произвольному фильтру')
+            'description' => fx::lang('Выводит записи по произвольному фильтру','controller_component')
         );
     }
     
     public function do_listing_mirror() {
         $f = $this->_get_finder();
-        ///$params = array();
         if ( ($parent_id = $this->param('parent_id')) ) {
-            //$params['parent_id'] = $parent_id;
             $f->where('parent_id', $parent_id);
         }
+        $this->trigger('build_query',$f);
+
+        if ( ($sorting = $this->param('sorting')) ) {
+            if ($sorting == 'manual') {
+                $f->order('priority');
+            } else {
+                $f->order($sorting, $this->param('sorting_dir'));
+            }
+        }
+        $this->trigger('query_ready', $f);
         $items = $f->all();
-        //fx::data('content_page')->attache_to_content($items);
         return array('items' => $items);
     }
     

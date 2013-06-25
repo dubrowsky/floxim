@@ -414,7 +414,11 @@ class fx_template_processor {
         if (isset($var_parts[1])) {
             $code .= 'fx::dig(${"'.$var_parts[0].'"}, "'.$var_parts[1].'")';
         } else {
-            $code .= '${"'.$var_parts[0].'"}';
+            if ($token->get_prop('type') == 'image') {
+                $code .= 'fx_filetable::get_path(${"'.$var_parts[0].'"})';
+            } else {
+                $code .= '${"'.$var_parts[0].'"}';
+            }
         }
         $code .= ";\n";
         $code .= "}\n";
@@ -440,10 +444,14 @@ class fx_template_processor {
             $code .= "\t".$var_tmp." = new fx_template_field(".$var_tmp.", ";
             $code .= 'array("id" => "'.$var_id.'", ';
             $code .= '"var_type" => "visual", ';
+            $code .= '"type" => "'.$token->get_prop('type').'", ';
             $code .= '"infoblock_id" => fx::dig($this->data, "infoblock.id"), ';
             $code .= '"template" => $this->_get_template_sign(), ';
             if ( ( $var_title = $token->get_prop('title')) ) {
                 $code .= '"title" => "'.$var_title.'", ';
+            }
+            if($token->get_prop('type') =='image') {
+                $code .= '"filetable_id" => ${"'.$var_parts[0].'"}, ';
             }
             $code .= '"editable" => true))'.";\n";
             $code .= "}\n";
@@ -504,7 +512,7 @@ class fx_template_processor {
         $code .= "if( " . $arr_id . " instanceof fx_content ) {\n ";
         $code .= $arr_id . " = array(" . $arr_id . ");\n";
         $code .= "}\n";
-        //$code .= "if (is_array(".$arr_id.") || ".$arr_id." instanceof Traversable) {\n";
+        $code .= "if (is_array(".$arr_id.") || ".$arr_id." instanceof Traversable) {\n";
         $code .= $counter_id." = 0;\n";
         $code .= $item_alias."_total = count(".$arr_id.");\n";
         $code .= "\$_is_admin = fx::is_admin();\n";
@@ -534,7 +542,7 @@ class fx_template_processor {
             $code .= "}\n";
         }
         $code .= "}\n"; // close foreach
-        /*$code .= "}\n";*/  // close if*/
+        $code .= "}\n";  // close if
         $code .= "\n?>";
         $this->_loop_depth--;
         return $code;
@@ -696,7 +704,6 @@ class fx_template_processor {
      */
     public static function create_token($source) {
         $props = array();
-        $s_source = $source;
         if (preg_match('~^\{~', $source)) {
             $source = preg_replace("~^\{|\}$~", '', $source);
             $is_close = preg_match('~^\/~', $source);

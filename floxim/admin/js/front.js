@@ -6,7 +6,7 @@ fx_front = function () {
     this.mode_menu = new fx_mode_menu();
     this.mode_menu.load();
     
-    this.bind_actions();
+    //this.bind_actions();
     this.move_down_body();
     
     this.mode_selectable_selector = null;
@@ -22,40 +22,183 @@ fx_front = function () {
     });
     
     $('html').on('click', function(e) {
-        if ($fx.front.mode_selectable_selector == null) {
+        if ($fx.front.mode == 'view') {
             return;
         }
         var target = $(e.target);
         if (target.closest('.fx_overlay').length > 0) {
+        	console.log('over click');
             return;
         }
         var closest_selectable = null;
         if ($fx.front.is_selectable(target)) {
             closest_selectable = target;
         } else {
-            closest_selectable = $fx.front.get_selectable_up(target);
+        	closest_selectable = $fx.front.get_selectable_up(target);
         }
         
-        if (closest_selectable) {
-            // перемещение между страницами по ссылкам с зажатым контролом,
-            // и даже сохраняет текущий режим
-            var clicked_link = $(e.target).closest('a');
-            if (clicked_link.length > 0 && e.ctrlKey && clicked_link.attr('href')) {
-                document.location.href = clicked_link.attr('href')+document.location.hash;
-                return false;
-            }
-            if ($(closest_selectable).hasClass('fx_selected')) {
-                return;
-            }
-            $fx.front.select_item(closest_selectable);
-            return false;
+        // нечего выбирать
+        if (!closest_selectable) {
+        	if (target.closest('html').lenght > 0) {
+        		console.log(
+					'deselect by click',
+					target.closest('html').lenght
+				);
+				$fx.front.deselect_item();
+			}
+        	return;
         }
-        $fx.front.deselect_item();
+        
+		// перемещение между страницами по ссылкам с зажатым контролом,
+		// и даже сохраняет текущий режим
+		var clicked_link = target.closest('a');
+		if (clicked_link.length > 0 && e.ctrlKey && clicked_link.attr('href')) {
+			document.location.href = clicked_link.attr('href')+document.location.hash;
+			return false;
+		}
+		// тут надо отлавливать только contenteditable, по идее
+		if ($(closest_selectable).hasClass('fx_selected')) {
+			return;
+		}
+		$fx.front.select_item(closest_selectable);
+		return false;
+        
+    });
+    
+    $('html').on('fx_select', function(e) {
+		var n = $(e.target);
+		if (n.is('.fx_content_essence')) {
+			$fx.front.select_content_essence(n);
+		}
+		if (n.is('.fx_template_var, .fx_template_var_in_att')) {
+			n.edit_in_place();
+		}
+		if (n.is('.fx_infoblock')) {
+			$fx.front.select_infoblock(n);
+		}
+		$fx.front.redraw_add_button(n, $fx.front.mode);
+    	return false;
     });
 }
 
+fx_front.prototype.redraw_add_button = function(node, mode) {
+	$fx.buttons.unbind('add');
+	var buttons = [];
+	if (!node) {
+		return;
+	}
+	
+	var ib = node.closest('.fx_infoblock_'+mode);
+	var cm = ib.data('fx_controller_meta');
+	if (cm && cm.accept_content) {
+		for (var i = 0; i < cm.accept_content.length; i++) {
+			var c_cnt = cm.accept_content[i];
+			var cb_closure = (function(c_cnt) {
+				return function() {
+					$fx.post({
+					   essence:'content',
+					   action:'add_edit',
+					   content_type:c_cnt.type,
+					   infoblock_id:c_cnt.infoblock_id,
+					   parent_id:c_cnt.parent_id
+					}, function(res) {
+						$fx_dialog.open_dialog(res, {
+							onfinish:function() {
+								$fx.front.reload_infoblock(ib_node);
+							}
+						});
+					});
+				}
+			})(c_cnt);
+			buttons.push({
+				name:c_cnt.title,
+				callback:cb_closure
+			});
+        }
+	}
+	var area_meta = node.closest('.fx_area').data('fx_area');
+	if (area_meta) {
+		buttons.push({
+			name:'Add new infoblock to '+area_meta.id,
+			callback: function() {
+				$fx.post({
+					essence:'infoblock',
+					action:'select_controller',
+					page_id:$('body').data('fx_page_id'),
+					area:area_meta.id,
+					fx_admin:true
+				}, function(json) {
+					$fx_dialog.open_dialog(json);
+				});
+			}
+		});
+	}
+	if (buttons.length > 0) {
+		$fx.buttons.bind('add', function() {
+			console.log('btnz', buttons);
+			$fx.buttons.show_pulldown('add', buttons);
+			return false;
+		});
+		$('html').one('fx_deselect', function() {
+			$fx.front.redraw_add_button();
+		});
+	}
+	
+	/*
+	$fx.buttons.bind('add', function() {
+        var buttons = [];
+        $('.fx_infoblock').each(function() {
+            var ib_node = this;
+            var cm = $(this).data('fx_controller_meta');
+            
+            if ( cm && cm.accept_content) {
+                for (var i = 0; i < cm.accept_content.length; i++) {
+                    var c_cnt = cm.accept_content[i];
+                    var cb_closure = (function(c_cnt) {
+                        return function() {
+                            $fx.post({
+                               essence:'content',
+                               action:'add_edit',
+                               content_type:c_cnt.type,
+                               infoblock_id:c_cnt.infoblock_id,
+                               parent_id:c_cnt.parent_id
+                            }, function(res) {
+                                $fx_dialog.open_dialog(res, {
+                                    onfinish:function() {
+                                        $fx.front.reload_infoblock(ib_node);
+                                    }
+                                });
+                            });
+                        }
+                    })(c_cnt);
+                    buttons.push({
+                        name:c_cnt.title,
+                        callback:cb_closure
+                    });
+                }
+            }
+        });
+        $fx.buttons.show_pulldown('add', buttons);
+    });
+    */
+}
+
 fx_front.prototype.is_selectable = function(node) {
-    return $(node).is(this.mode_selectable_selector) && !$(node).hasClass('fx_unselectable');
+	var n = $(node);
+	if (n.hasClass('fx_unselectable')) {
+		return false;
+	}
+	if (n.hasClass('fx_area')) {
+		return true;
+	}
+	if (!n.is('.fx_template_var, .fx_template_var_in_att, .fx_content_essence, .fx_infoblock')) {
+		return false;
+	}
+	var ib_node = n.closest('.fx_infoblock');
+	if (!ib_node.hasClass('fx_infoblock_'+$fx.front.mode)) {
+		return false;
+	}
+	return true;
 }
 
 fx_front.prototype.get_selectable_up = function(rel_node) {
@@ -77,6 +220,11 @@ fx_front.prototype.get_selectable_up = function(rel_node) {
     return selectable_up;
 }
 
+fx_front.prototype.fix = function() {
+    $('body').css('opacity', '0.99');
+    setTimeout(function(){$('body').css('opacity', 1);}, 5);
+}
+
 fx_front.prototype.select_item = function(node) {
     var c_selected = this.get_selected_item();
     if (c_selected == node) {
@@ -94,7 +242,7 @@ fx_front.prototype.select_item = function(node) {
     } else {
         $fx.buttons.unbind('select_block', $fx.front.select_level_up);
     }
-    $('body').on('click', this.click_out);
+    $fx.front.fix();
 }
 
 fx_front.prototype.get_selected_item = function() {
@@ -108,6 +256,8 @@ fx_front.prototype.deselect_item = function() {
                 removeClass('fx_selected').
                 trigger('fx_deselect').
                 unbind('remove.deselect_removed');
+        // chrome outline bug
+        $fx.front.fix();
     }
     $fx.buttons.unbind('select_block');
 }
@@ -118,28 +268,31 @@ fx_front.prototype.select_level_up = function() {
         $fx.front.select_item(item_up);
     }
 }
-    
-fx_front.prototype.bind_actions = function () {
-    $fx.panel.bind('fx.dialog.ok', function(event, data) {
-        if ( $fx.mode == 'page' ) {
-            //window.location.reload(true);
-        }
-    });
+
+
+fx_front.prototype.hilight = function() {
+	var items = $('.fx_template_var, .fx_area, .fx_template_var_in_att, .fx_content_essence, .fx_infoblock').not('.fx_unselectable');
+	items.removeClass('fx_hilight');
+	if ($fx.front.mode == 'view') {
+		return;
+	}
+	items.each(function(index, item) {
+		if ($fx.front.is_selectable(item)) {
+			$(item).addClass('fx_hilight');
+		}
+	});
 }
 
 fx_front.prototype.load = function ( mode ) {
     this.mode = mode;
-    $fx.buttons.draw_buttons($fx.buttons_map.page[mode]);
+    
+    $fx.front.deselect_item();
+    
+    $fx.front.hilight();
+    
+    $fx.buttons.draw_buttons($fx.buttons_map.page);
     
     $fx.main_menu.set_active_item('site');
-    
-    var link;
-    $('a').each( function(){
-        link = $(this);
-        if (  link.data('fx_href') ) {
-            link.attr('href', link.data('fx_href') );
-        }
-    });
         
     if (mode == 'view') {
         this.set_mode_view();
@@ -162,82 +315,93 @@ fx_front.prototype.load = function ( mode ) {
     }
 }
 
-fx_front.prototype.set_mode_view = function () {
-    $('.fx_admin_blockedit').removeClass('fx_admin_blockedit');
-    $('.fx_admin_unchecked').hide();
-    $('.fx_admin_selected').removeClass('fx_admin_selected');
+fx_front.prototype.select_content_essence = function(n) {
+	var essence_meta = n.data('fx_content_essence');
+	var ib_node = n.closest('.fx_infoblock').get(0);
+	$fx.buttons.bind('edit', function() {
+		$fx.post({
+			essence:'content',
+			action:'add_edit',
+			content_type:essence_meta.type,
+			content_id:essence_meta.id
+		 }, function(res) {
+			 $fx_dialog.open_dialog(res, {
+				 onfinish:function() {
+					 $fx.front.reload_infoblock(ib_node);
+				 }
+			 });
+		 });
+	});
+	$fx.buttons.bind('delete', function() {
+	   if (confirm("ORLY???")) {
+		   $fx.post({
+			   essence:'content',
+			   action:'delete_save',
+			   content_type:essence_meta.type,
+			   content_id:essence_meta.id
+		   }, function () {
+			   $fx.front.reload_infoblock(ib_node);
+		   });
+	   }
+	});
+	$('html').one('fx_deselect', function() {
+		$fx.buttons.unbind('edit');
+		$fx.buttons.unbind('delete');
+	});
 }
-    
-fx_front.prototype.set_mode_edit = function () {
-    // селектор для блоков, которые можно выбирать в режиме редактирования
-    this.mode_selectable_selector = '.fx_template_var, .fx_template_var_in_att, .fx_content_essence';
-    $fx.panel.one('fx.startsetmode', function() {
-        $fx.front.mode_selectable_selector = null;
-        $fx.front.deselect_item();
-        $('html').off('.fx_edit_mode');
-        stop_essences_sortable();
-    });
-    var save_var = function() {
-        var var_node = $(this);
-        var val = var_node.html().replace(/<br[\s\/]*?>$/, '');
-        if (val == var_node.data('fx_saved_value')) {
+
+fx_front.prototype.select_infoblock = function(n) {
+	$fx.buttons.bind('settings', function() {
+        var ib_node = n;
+        var ib = $(ib_node).data('fx_infoblock');
+        if (!ib) {
             return;
         }
         $fx.post({
-            essence:'infoblock',
-            action:'save_var',
-            infoblock:var_node.closest('.fx_infoblock').data('fx_infoblock'),
-            'vars': [
-                {'var':var_node.data('fx_var'),value:val}
-            ],
-            fx_admin:true
-        }, function(res) {
-            var_node.html(val);
-            var_node.data('fx_saved_value', val);
+           essence:'infoblock',
+           action:'select_settings',
+           id:ib.id,
+           visual_id:ib.visual_id,
+           page_id:$('body').data('fx_page_id'),
+           fx_admin:true
+        }, function(json) {
+            $fx_dialog.open_dialog(
+            	json, 
+            	{
+            		onfinish:function() {
+					 $fx.front.reload_infoblock(ib_node);
+					}
+				}
+			);
         });
-    }
+    });
+    $('html').one('fx_deselect', function() {
+    	$fx.buttons.unbind('settings');	
+    });
+}
+
+fx_front.prototype.set_mode_view = function () {
     
+}
+
+fx_front.prototype.set_mode_edit = function () {
+    $fx.panel.one('fx.startsetmode', function() {
+        $('html').off('.fx_edit_mode');
+        //stop_essences_sortable();
+    });
+    
+    /*
     var edit_off = function() {
         $(this).unbind('fx_deselect');
         $(this).blur();
         $(this).removeClass('fx_var_editable');
         $(this).attr('contenteditable', 'false');
-        start_essences_sortable();
+        //start_essences_sortable();
     }
     
     var restore_var = function() {
         $(this).html($(this).data('fx_saved_value'));
     }
-    
-    var var_select = function() {
-        stop_essences_sortable();
-        $(this).addClass('fx_var_editable')
-            .attr('contenteditable', 'true')
-            .data('fx_saved_value', $(this).html())
-            .one('fx_deselect', save_var)
-            .one('fx_deselect', edit_off)
-            .focus();
-        var var_node = $($fx.front.get_selected_item());
-        var var_meta = var_node.data('fx_var');
-        var ib_node = var_node.closest('.fx_infoblock');
-        var infoblock_meta = ib_node.data('fx_infoblock');
-        if (var_meta.var_type == 'visual') {
-            $fx.buttons.bind('delete', function() {
-                $fx.post({
-                    essence:'infoblock',
-                    action:'save_var',
-                    infoblock:infoblock_meta,
-                    'vars': [
-                        {'var':var_meta,value:null}
-                    ],
-                    fx_admin:true
-                }, function(res) {
-                    $fx.front.reload_infoblock(ib_node.get(0));
-                });
-            });
-        }
-        return false;
-    };
     
     var edit_att_vars = function() {
         var var_node = $($fx.front.get_selected_item());
@@ -247,11 +411,18 @@ fx_front.prototype.set_mode_edit = function () {
         for( var i in var_node.data()) {
             if (/^fx_template_var/.test(i)) {
                 var data = var_node.data(i);
-                fields.push({
-                    value:data.value,
+                var field_props = {
                     name:data.id,
-                    label: data.title || data.name || data.id
-                });
+                    label: data.title || data.name || data.id,
+                    type: data.type || 'string'
+                };
+                if (data.type == 'image') {
+                    field_props.value = data.filetable_id;
+                    field_props.path = data.value;
+                } else {
+                    field_props.value = data.value;
+                }
+                fields.push(field_props);
                 vars[data.id] = data;
             }
         }
@@ -272,16 +443,19 @@ fx_front.prototype.set_mode_edit = function () {
                     fx_admin:true
                 }, function(res) {
                     $fx.front.reload_infoblock(var_node.closest('.fx_infoblock').get(0));
+                    $fx_dialog.close();
                 });
                 return false;
             }
         });
     }
+    */
     
-    $('html').on('fx_select.fx_edit_mode', '.fx_template_var', var_select);
+    /*$('html').on('fx_select.fx_edit_mode', '.fx_template_var', var_select);
     $('html').on('fx_deselect.fx_edit_mode', '.fx_template_var', function() {
         $fx.buttons.unbind('delete');
     });
+    
     
     $('html').on('fx_select.fx_edit_mode', '.fx_template_var_in_att', function() {
         $fx.buttons.bind('settings', edit_att_vars);
@@ -291,6 +465,7 @@ fx_front.prototype.set_mode_edit = function () {
         $fx.buttons.unbind('settings', edit_att_vars);
         return false;
     })
+    
     
     $('html').on('fx_select.fx_edit_mode', '.fx_content_essence', function() {
         var essence_node = $(this);
@@ -368,6 +543,7 @@ fx_front.prototype.set_mode_edit = function () {
         $fx.buttons.show_pulldown('add', buttons);
     });
     
+   
     var var_keydown = function(e) {
         if (e.which == 27) {
             $(this).unbind('fx_deselect', save_var);
@@ -381,6 +557,7 @@ fx_front.prototype.set_mode_edit = function () {
         }
     };
     $('html').on('keydown.fx_edit_mode', '.fx_var_editable', var_keydown);
+     
     function start_essences_sortable() {
         $('.fx_content_essence').each(function() {
             var cp = $(this).parent();
@@ -412,6 +589,7 @@ fx_front.prototype.set_mode_edit = function () {
                     }, function(res) {
 
                     });
+                    $fx.front.fix();
                 }
             });
         });
@@ -427,18 +605,17 @@ fx_front.prototype.set_mode_edit = function () {
             cp.sortable('destroy');
         });
     }
+    */
 },
 
 fx_front.prototype.set_mode_design = function() {
-    this.mode_selectable_selector = '.fx_infoblock, .fx_area';
+	/*
     $fx.panel.one('fx.startsetmode', function() {
-        $fx.front.mode_selectable_selector = null;
-        $fx.front.deselect_item();
         $('html').off('.fx_design_mode');
         $('.fx_area_sortable').
             sortable('destroy').
             removeClass('fx_area_sortable');
-    });
+    });*/
     
     function start_areas_sortable() {
         $('.fx_area').each(function(){ 
@@ -453,9 +630,6 @@ fx_front.prototype.set_mode_design = function() {
                 start:function(e, ui) {
                     $('.fx_area').addClass('fx_area_target');
                     cp.sortable('refreshPositions');
-                },
-                over:function(e, ui) {
-                    console.log('it is over');
                 },
                 stop:function(e, ui) {
                     $('.fx_area').removeClass('fx_area_target');
@@ -479,33 +653,14 @@ fx_front.prototype.set_mode_design = function() {
                     }
 
                     $fx.post(params, function(res) {
-                        console.log('posted');
+                        
                     });
+                    $fx.front.fix();
                 }
             });
         });
     }
     start_areas_sortable();
-    var configure_infoblock = function() {
-        var ib_node = $fx.front.get_selected_item();
-        if (!ib_node) {
-            return;
-        }
-        var ib = $(ib_node).data('fx_infoblock');
-        if (!ib) {
-            return;
-        }
-        $fx.post({
-           essence:'infoblock',
-           action:'select_settings',
-           id:ib.id,
-           visual_id:ib.visual_id,
-           page_id:$('body').data('fx_page_id'),
-           fx_admin:true
-        }, function(json) {
-            $fx_dialog.open_dialog(json);
-        });
-    }
     
     var add_infoblock = function() {
         var area = $(this).closest('.fx_area').data('fx_area');
@@ -539,6 +694,7 @@ fx_front.prototype.set_mode_design = function() {
         });
     }
     
+    /*
     $('html').on('fx_select.fx_design_mode', '.fx_infoblock', function(e) {
         $fx.buttons.bind('settings', configure_infoblock);
         $fx.buttons.bind('delete', delete_infoblock);
@@ -546,7 +702,6 @@ fx_front.prototype.set_mode_design = function() {
     });
     
     $('html').on('fx_select.fx_design_mode', '.fx_area', function() {
-        console.log('area selected');
         return false;
     });
     
@@ -556,6 +711,7 @@ fx_front.prototype.set_mode_design = function() {
         return false;
     });
     $('html').on('click.fx_design_mode', '.fx_infoblock_adder', add_infoblock);
+    */
 }
 
 fx_front.prototype.reload_infoblock = function(infoblock_node) {
@@ -570,8 +726,21 @@ fx_front.prototype.reload_infoblock = function(infoblock_node) {
     $.ajax({
        url:'/~ib/'+meta.id+'@'+page_id,
        success:function(res) {
-           $(infoblock_node).hide().before(res);
-           $(infoblock_node).remove();
+           if (infoblock_node.nodeName == 'BODY') {
+               var inserted = false;
+               $(infoblock_node).children().each(function() {
+                   if(!$(this).hasClass('fx_overlay')) {
+                       if (!inserted) {
+                            $(this).before(res);
+                            inserted = true;
+                       }
+                       $(this).remove();
+                   }
+               });
+           } else {
+               $(infoblock_node).hide().before(res);
+               $(infoblock_node).remove();
+           }
            if (selected_selector) {
                $fx.front.select_item(ib_parent.find(selected_selector).get(0));
            }
@@ -579,288 +748,12 @@ fx_front.prototype.reload_infoblock = function(infoblock_node) {
     });
 }
 
-fx_front.prototype.reload =  function( forcibly ) {
-    var self = this;
-    if (this.reloaded && !forcibly) {
-        return false;
-    }
-            
-    var action = $("body").data('action') != undefined ? $("body").data('action') : 'index';
-    var message_id = $("body").data('message_id') != undefined ? $("body").data('message_id') : 0;
-    $.ajax({
-        url: $fx.settings.action_link,
-        data: {
-            'action':'index', 
-            'essence':'infoblock', 
-            'sub' : $("body").data('sub'), 
-            'url': $("body").data('url'),
-            'infoblocks': $fx.g_data.infoblock, 
-            'show_method':action, 
-            'message_id':message_id, 
-            'url': $fx.g_data.main.url,
-            'block_number' : $("body").data("block_number"),
-            'field_number' : $("body").data("field_number")
-        },
-        dataType: 'json',
-        async: false,
-        type: 'POST',
-        success: function(data) {
-            $.each(data, function(key, val){
-                if ( key == 'nc_scripts') {
-                    $("body").append("<script>" + val + "</script>");
-                }
-                else {
-                    $('#fx_design_'+key).html(val);
-                }
-            });
-            self.reloaded = true;
-        }
-    });
-},
-    
-fx_front.prototype.load_items = function (type) {
-    var key, item, mode;
-    var re = type == 'block' ? /fx_page_block_(\d*)/ : /fx_page_field_(\d*)/;
-    var self = this;
-    
-    var items = $('.fx_page_'+type);
-    items.each ( function() {
-        item = $(this);
-        item.unbind('click');
-        
-        key = $fx.regexp(re, item.attr('class'))[1];
-        item.data('key', key).data('type', type);
-                    
-        mode = $fx.g_data[type+'s'][key].mode || 'edit';
-        if ( $fx.hash[1] == mode ) {
-            self[type + 's'].push(item);
-        }
-        
-        if ( type == 'block' && !$fx.g_data.blocks[key].checked ) {
-            item.addClass('fx_admin_unchecked fx_admin_unchecked_'+mode);
-        }
-    });   
-    
-    self[type + 's'] = $(self[type + 's']);
-}
-
-/**
- * По существу, функция проставляет fx_admin_blockedit
- * Такие блоки будут выделены и на них можно нажать
- */
-fx_front.prototype.update_view = function () { 
-    var selected_blocks = $('.fx_admin_selected');
-    var count = selected_blocks.length;
-    $('.fx_admin_blockedit').removeClass('fx_admin_blockedit');
-    
-    var parent_block = false;
-    if ( count == 1 ) {
-        parent_block = 'fx_page_block_' + selected_blocks.data('key');
-    }
-            
-    this.blocks.each ( function() {
-    	var block_key = this.data('key');
-        var block = $fx.g_data.blocks[ block_key ];
-        if ( block === undefined ) {;
-        	return true;
-        }
-        var show_blockedit = true;
-        if (  block.hidden ) {
-            show_blockedit = false;
-        } 
-        if (  block.parent ) {
-            var cur_parent_block = $('.'+ block.parent ).data('key');
-            var cur_parent_block_hidden = $fx.g_data.blocks[cur_parent_block].hidden;
-            var selected_parent = (parent_block && block.parent == parent_block); 
-            if ( cur_parent_block_hidden === undefined ) {
-                show_blockedit = false;
-            }  
-            if ( selected_parent ) {
-                show_blockedit = true;
-            }
-        }
-                
-        if ( show_blockedit ) {
-            this.addClass('fx_admin_blockedit');
-        }
-        else {
-            this.removeClass('fx_admin_blockedit');
-        }    
-    });
-    
-    this.fields.each( function() {
-        if ( $fx.g_data.fields[ this.data('key') ] === undefined )  return true;
-                    
-                
-        var parent = $fx.g_data.fields[ this.data('key') ].parent;
-        if (  parent === undefined || parent_block == parent ) {
-            this.addClass('fx_admin_blockedit');
-        }
-        else {
-            this.removeClass('fx_admin_blockedit');
-        }
-    });
-    
-    this.update_available_buttons(selected_blocks);
-    
-    $fx.sort.update($fx.hash[1]);          
-}
-
-fx_front.prototype.update_available_buttons = function ( selected_blocks ) {
-    var buttons_cfg = {};
-    buttons_cfg.view = {
-        'none': []
-    };
-    buttons_cfg.edit = {
-        'none': [], 
-        'one': ['edit',  'on', 'off', 'delete', 'select_block', 'settings'], 
-        'many':['on', 'off', 'delete']
-    };
-    buttons_cfg.design = buttons_cfg.edit;
-    var count = selected_blocks.length;
-    var key = count ? ( count == 1  ? 'one' : 'many') : 'none';
-    var buttons = buttons_cfg[ $fx.hash[1] ][key];
-    $.each ( selected_blocks , function (k,v){
-        var data = $fx.g_data.blocks[ $(v).data('key') ];
-        if (data) {
-            buttons = array_intersect(buttons, data.buttons);
-        }
-    });
-    
-    if ( count <= 1 && this.show_add_button(selected_blocks) ) {
-        buttons.push('add');
-    }
-    
-    $fx.buttons.set_active_buttons(buttons);
-}
-
-fx_front.prototype.bind_blocks = function () {
-    var self = this;
-    
-    $fx.panel.bind('fx.click', function(event, owner){
-        if ( owner != 'block' ) {
-            var selected = $('.fx_admin_selected');
-            if ( selected.length ) {
-				selected.each(function() {
-					if ($(this).parents('.ui-dialog').length == 0) {
-						$(this).removeClass('fx_admin_selected');
-					}
-				});
-                self.update_view();
-            }
-        }
-    });
-    
-    this.blocks.each ( function() { 
-        this.click (function (e) { 
-            var target = $(this);
-            if ( !target.hasClass('fx_admin_blockedit')) return true;
-                    
-            if ( !e.ctrlKey && !e.metaKey) {
-                $('.fx_admin_selected').removeClass('fx_admin_selected');
-            }
-			target.toggleClass('fx_admin_selected');
-			
-            self.update_view();
-            
-            $fx.panel.trigger('fx.click', 'block');
-            return false;
-        });
-        
-    });    
-}
-
-fx_front.prototype.bind_fields = function () {
-    this.fields.each ( function () {
-        this.click ( function (e){
-            var target = $(this);
-            if ( !target.hasClass('fx_admin_blockedit')) return true;
-            if ( target.hasClass('nc_editor')) return false;
-            var parent_data = false;
-            var selected = $fx.g_data.fields[target.data('key')];
-            if ( selected.parent !== undefined ) {
-                var parent_key = $('.'+selected.parent).data('key');
-                parent_data = $fx.g_data.blocks[parent_key].post;
-            }
-          
-            $fx.panel.trigger('fx.click', 'field');
-            
-            target.addClass('nc_editor');
-            $fx.buttons.hide_panel();
-            target.edit_in_place(selected, parent_data, function(){
-                $('.nc_editor').removeClass('nc_editor');
-                $('.fx_admin_selected').removeClass('fx_admin_selected');
-                $fx.buttons.show_panel();
-                $fx.front.update_view();
-            }); 
-
-            return false;
-        }); 
-    });
-}
-
 fx_front.prototype.move_down_body =function () {
     $("body").css('margin-top','74px'); //74 - высота панели
 }
 
-fx_front.prototype.show_add_button = function (selected) {
-    var mode = $fx.hash[1];
-    var menu = [];
-    var selected_block = false;
-    
-    if ( mode == 'design' ) {
-        return true;
-    }
-            
-    if ( selected.length == 1 ) {
-        selected_block = $fx.g_data.blocks[selected.data('key')];
-    }
-    if ( $fx.g_data.addition_block ) {
-        $.each ( $fx.g_data.addition_block, function (k, block) {
-            var push = false;
-            block.post.subdivision_id = $('body').data('sub'); 
-
-            if ( !block.mode || block.mode != mode ) {
-                return true;
-            } 
-
-            if ( selected.length ) {
-                if ( block.decent_parent && selected.hasClass(block.decent_parent) ) {
-                    push = true;
-                }
-                    
-                if ( block.parent_key && selected.hasClass(block.parent_key) ) {
-                    push = true;
-                }
-                        
-                if ( block.key && selected_block && selected_block.parent == block.key ) {
-                    push = true;
-                }
-            }
-            else {
-                if ( !block.parent_key ) {
-                    push = true;
-                }
-            }
-                
-            if ( push ) {
-                menu.push({
-                    name:block.name, 
-                    options: block.post
-                });
-            }
-
-        });
-            
-
-            
-    }
-    
-    
-    if ( menu.length  ) {
-        $fx.buttons.pulldown.add = menu;
-        return true;
-    }
-    
-    return false;
+fx_front.prototype.add_panel_field = function(field) {
+	var field_node = $fx_form.draw_field(field);
+	$('#fx_admin_fields').append(field_node);
+	return field_node;
 }

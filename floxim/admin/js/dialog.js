@@ -36,8 +36,8 @@
             
             $fx_dialog.main.dialog("option", "buttons", []);
             
-            $fx_dialog.add_button("save", "Сохранить", $fx_dialog.settings.onsubmit);
-            $fx_dialog.add_button("cancel", "Отменить", $fx_dialog.close);
+            $fx_dialog.add_button("save", fx_lang("Сохранить"), $fx_dialog.settings.onsubmit);
+            $fx_dialog.add_button("cancel", fx_lang("Отменить"), $fx_dialog.close);
 
             if ( data.dialog_title ) {
                 $fx_dialog.set_title(data.dialog_title);

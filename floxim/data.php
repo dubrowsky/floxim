@@ -197,6 +197,50 @@ class fx_data {
         return $data;
     }
     
+    public function add_related($rel_name, $essences, $rel_finder = null) {
+        $relations = $this->relations();
+        if (!isset($relations[$rel_name])) {
+            return;
+        }
+        $rel = $relations[$rel_name];
+        list($rel_type, $rel_datatype, $rel_field) = $rel;
+
+        if (!$rel_finder){
+            $rel_finder = fx::data($rel_datatype);
+        }
+
+        // e.g. $rel = array(fx_data::HAS_MANY, 'field', 'component_id');
+        switch ($rel_type) {
+            case self::BELONGS_TO:
+                $rel_items = $rel_finder->where('id', $essences->get_values($rel_field))->all();
+                $essences->attache($rel_items, $rel_field, $rel_name);
+                break;
+            case self::HAS_MANY:
+                $rel_items = $rel_finder->where($rel_field, $essences->get_values('id'))->all();
+                $essences->attache_many($rel_items, $rel_field, $rel_name);
+                break;
+            case self::HAS_ONE:
+                break;
+            case self::MANY_MANY:
+                $end_rel = $rel[3];
+                // чтобы вынимались связанные сущности 
+                // только с непустым полем, по которому связываем
+                $end_rel_data = $rel_finder->relations();
+                $end_rel_field = $end_rel_data[$end_rel][2];
+                $rel_finder->with($end_rel)->where($rel_field, $essences->get_values('id'));
+                if ($end_rel_field) {
+                    $rel_finder->where($end_rel_field, 0, '!=');
+                }
+                $rel_items = $rel_finder->all();
+                /*
+                foreach ($rel_items as $rel_item) {
+                    $rel_item[$end_rel]['_linker_id'] = $rel_item['id'];
+                }*/
+                $essences->attache_many($rel_items, $rel_field, $rel_name, 'id', $end_rel);
+                break;
+        }
+    }
+    
     /*
      * Метод добавляет релейтед-сущности к коллекции
      * использует $this->with и $this->relations
@@ -212,39 +256,7 @@ class fx_data {
             if (!isset($relations[$rel_name])) {
                 continue;
             }
-            $rel = $relations[$rel_name];
-            list($rel_type, $rel_datatype, $rel_field) = $rel;
-
-            if (!$rel_finder){
-                $rel_finder = fx::data($rel_datatype);
-            }
-
-            // e.g. $rel = array(fx_data::HAS_MANY, 'field', 'component_id');
-            switch ($rel_type) {
-                case self::BELONGS_TO:
-                    $rel_items = $rel_finder->where('id', $essences->get_values($rel_field))->all();
-                    $essences->attache($rel_items, $rel_field, $rel_name);
-                    break;
-                case self::HAS_MANY:
-                    $rel_items = $rel_finder->where($rel_field, $essences->get_values('id'))->all();
-                    $essences->attache_many($rel_items, $rel_field, $rel_name);
-                    break;
-                case self::HAS_ONE:
-                    break;
-                case self::MANY_MANY:
-                    $end_rel = $rel[3];
-                    // чтобы вынимались связанные сущности 
-                    // только с непустым полем, по которому связываем
-                    $end_rel_data = $rel_finder->relations();
-                    $end_rel_field = $end_rel_data[$end_rel][2];
-                    $rel_finder->with($end_rel)->where($rel_field, $essences->get_values('id'));
-                    if ($end_rel_field) {
-                        $rel_finder->where($end_rel_field, 0, '!=');
-                    }
-                    $rel_items = $rel_finder->all();
-                    $essences->attache_many($rel_items, $rel_field, $rel_name, 'id', $end_rel);
-                    break;
-            }
+            $this->add_related($rel_name, $essences, $rel_finder);
         }
     }
     

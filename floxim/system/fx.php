@@ -5,31 +5,30 @@
 */ 
 
 class fx {
-    static protected $config = null;
-
     protected function __construct() {
 
     }
 
     /* Get config data */
     static public function config() {
-        if (self::$config === null) {
-            self::$config = new fx_config();
+        static $config = false;
+        if ($config === false) {
+            $config = new fx_config();
         }
-        return self::$config;
+        return $config;
     }
     
-    protected static $db = null;
     /**
      * Получить объект базы данных
      * @return fx_db
      */
     public static function db() {
-    	if (is_null(self::$db)) {
-            self::$db = new fx_db();
-            self::$db->query("SET NAMES '".fx::config()->DB_CHARSET."'");
+        static $db = false;
+    	if ($db === false) {
+            $db = new fx_db();
+            $db->query("SET NAMES '".fx::config()->DB_CHARSET."'");
     	}
-    	return self::$db;
+    	return $db;
     }
     
     protected static $data_cache = array();
@@ -209,6 +208,7 @@ class fx {
             return new $class_name($action, $data);
         } catch (Exception $e) {
             //dev_log('template class not found', $class_name, func_get_args(), debug_backtrace());
+            return new fx_template($action, $data);
             return false;
             /*die();
             return new fx_template($action, $data);*/
@@ -286,7 +286,67 @@ class fx {
         }
         return $core;
     }
-    
+
+    public static function lang ( $string, $dict_key ) {
+        // add file cache
+        $dict_key = empty($dict_key) ? 'content' : $dict_key;
+        $cur_lang = fx::config()->LANGUAGE;
+
+        // TODO: временный костыль для русских фраз чтобы не таскать портянку
+        if ( $cur_lang == 'ru' ) return $string;
+
+        $dict_file = fx::config()->DOCUMENT_ROOT . '/floxim_files/php_dictionaries/' . $cur_lang . '.' . $dict_key . '.php';
+
+        // если файл-кэша не существует создаем его
+        if (!file_exists($dict_file)) {
+            self::createDictFile($cur_lang,$dict_key);
+        }
+        $res = self::dictCacheGet($cur_lang,$dict_key,$string);
+        if ( $res ) return $res;
+
+        $str = fx::db()->prepare($string);
+        $dc = fx::db()->prepare($dict_key);
+        $db_str = fx::db()->get_results('SELECT * FROM {{dictionary}} WHERE lang_string = "' . $str . '" AND dict_key = "' . $dc . '"');
+        $db_str = $db_str[0];
+        if ( empty($db_str) ) {
+            // не забыть удалить файловый кэш при добавлении нового слова в словарь
+            fx::db('INSERT INTO {{dictionary}} (dict_key,lang_string) VALUES ("' . $dc . '","' . $str .'")');
+            unlink($dict_file);
+        }
+        return empty($db_str['lang_'.$cur_lang]) ? $string : $db_str['lang_'.$cur_lang];
+    }
+
+    private static function dictCacheGet( $lang, $key, $string ) {
+        // не забыть делать addslashes при поиске в массиве-кэше
+        $dict_file = fx::config()->DOCUMENT_ROOT . '/floxim_files/php_dictionaries/' . $lang . '.' . $key . '.php';
+        try {
+            require_once($dict_file);
+        } catch (Exception $e) {
+            dev_log($e);
+            return false;
+        }
+        $string = addslashes($string);
+        return $dictionary[$lang][$key][$string];
+    }
+
+    private static function createDictFile ( $lang, $key) {
+        $dictionary = fx::db()->get_results('SELECT lang_string, lang_' . $lang . ' FROM {{dictionary}}');
+        $output = '<?php ';
+        $output .= '$dictionary["' . $lang . '"]["' . $key . '"] = array(';
+        foreach ( $dictionary as $phrase ) {
+            $output .= '"' . addslashes($phrase['lang_string']) .'" => "' . addslashes($phrase['lang_'.$lang]) . '",';
+        }
+        $output = substr($output,0,strlen($output)-1);
+        $output .= ');';
+        $dict_file = fx::config()->DOCUMENT_ROOT . '/floxim_files/php_dictionaries/' . $lang . '.' . $key . '.php';
+        try {
+            file_put_contents($dict_file,$output);
+        } catch (Exception $e) {
+            dev_log($e);
+        }
+    }
+
+    /* old language function
     public static function lang() {
         static $lang = false;
         if ($lang === false) {
@@ -294,7 +354,7 @@ class fx {
         }
         return $lang;
     }
-
+    */
 
     protected static $http = null;
     public static function http() {

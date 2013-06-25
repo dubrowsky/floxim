@@ -27,7 +27,7 @@ fx_store.prototype.load_containers = function () {
     this.containers.more = $('<div />').addClass('fx_admin_store_more');
     
     this.containers.main.append(this.containers.filter);
-    this.containers.total.html('Найдено: ').append(this.containers.total_num);
+    this.containers.total.html( fx_lang('Найдено: ') ).append(this.containers.total_num);
     this.containers.main.append(this.containers.total);
     this.containers.main.append(this.containers.items);
     this.containers.main.append(this.containers.more);
@@ -121,10 +121,10 @@ fx_store.prototype.draw_items = function (items) {
             item_div.append('<h3>'+item.price+' $</h3>');
         }
         else {
-            item_div.append('<h3>бесплатно</h3>');
+            item_div.append('<h3>' + fx_lang('бесплатно') + '</h3>');
         }
         if ( item.description ) item_div.append('<p>'+item.description+'</p>');
-        if ( item.url ) item_div.append('<a target="_blank" href="'+item.url+'">посмотреть описание на сайте</a>');
+        if ( item.url ) item_div.append('<a target="_blank" href="'+item.url+'">' + fx_lang('посмотреть описание на сайте') + '</a>');
         item_div.append('<div style="clear:both;"></div>');
         
         if ( self.essence_type == 'infoblock' ) {
@@ -161,9 +161,9 @@ fx_store.prototype.get_setup_button = function ( store_id ) {
     var button = $('<button>').text('Установить');
     var self = this;
     button.click( function () {
-        cont.html('Установка...');
+        cont.html( fx_lang('Установка...'));
         self.setup(store_id, function(){
-            cont.html('Установлено');
+            cont.html( fx_lang('Установлено') );
         });
        return false; 
     });
@@ -176,7 +176,7 @@ fx_store.prototype.get_setup_button_front = function ( store_id ) {
     var button = $('<button>').text('Установить и использовать');
     var self = this;
     button.click( function () {
-        cont.html('Установлено. Дальше будут переход на страницу настроек');
+        cont.html( fx_lang('Установлено. Дальше будут переход на страницу настроек') );
        /* self.setup(store_id, function(){
             $fx.store_after_install();
         });*/

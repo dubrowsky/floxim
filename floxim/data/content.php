@@ -5,41 +5,18 @@ class fx_data_content extends fx_data {
         $relations = array();
         $fields = fx::data('component', $this->component_id)->
                     all_fields()->
-                    find('type', array(13, 14));
+                    find('type', array(fx_field::FIELD_LINK, fx_field::FIELD_MULTILINK));
         foreach ($fields as $f) {
+            if ( !($relation = $f->get_relation()) ) {
+                continue;
+            }
             switch ($f['type']) {
-                case 13:
-                    if (!isset($f['format']['target'])) {
-                        break;
-                    }
-                    $relations[$f->get_prop_name()] = array(
-                        self::BELONGS_TO,
-                        'content_'.fx::data('component', $f['format']['target'])->get('keyword'),
-                        $f['name']
-                    );
+                case fx_field::FIELD_LINK:
+                    $relations[$f->get_prop_name()] = $relation;
                     break;
-                case 14:
-                    if (!isset($f['format']['target'])) {
-                        break;
-                    }
-                    $target_fields = explode(".", $f['format']['target']);
-                    $direct_target_field = fx::data('field', array_shift($target_fields));
-                    $direct_target_component = fx::data('component', $direct_target_field['component_id']);
-                    if (count($target_fields) == 0) {
-                        $relations[$f['name']] = array(
-                            self::HAS_MANY,
-                            'content_'.$direct_target_component['keyword'],
-                            $direct_target_field['name']
-                        );
-                    } else {
-                        $next_target_field = fx::data('field', array_shift($target_fields));
-                        $relations[$f['name']] = array(
-                            self::MANY_MANY,
-                            'content_'.$direct_target_component['keyword'],
-                            $direct_target_field['name'],
-                            $next_target_field->get_prop_name()
-                        );
-                    }
+                case fx_field::FIELD_MULTILINK:
+                    $relations[$f['name']] = $relation;
+                    break;
             }
         }
         return $relations;
@@ -130,15 +107,22 @@ class fx_data_content extends fx_data {
         $obj['created'] = date("Y-m-d H:i:s");
         $obj['user_id'] = fx::env()->get_user()->get('id');
         $obj['checked'] = 1;
-        $obj['type'] = fx::data('component', $this->component_id)->get('keyword');
+        $component = fx::data('component', $this->component_id);
+        $obj['type'] = $component['keyword'];
         if (!isset($data['site_id'])) {
             $obj['site_id'] = fx::env('site')->get('id');
+        }
+        $fields = $component->all_fields()->find('default', '', fx_collection::FILTER_NEQ);
+        foreach ($fields as $f) {
+            if (!isset($obj[$f['name']])) {
+                $obj[$f['name']] = $f['default'];
+            }
         }
         return $obj;
     }
 
     public function next_priority () {
-        return fx_core::get_object()->db->get_var(
+        return fx::db()->get_var(
                 "SELECT MAX(`priority`)+1 FROM `{{content}}`"
         );
     }
@@ -227,6 +211,7 @@ class fx_data_content extends fx_data {
             throw  new Exception('Can not save essence with no type specified');
         }
         $set = $this->_set_statement($data);
+        dev_log('saving', $set,$data);
         
         $tables = $this->get_tables();
         
@@ -292,7 +277,7 @@ class fx_data_content extends fx_data {
             $table_cols = $this->_get_columns($table_name);
             foreach ($field_names as $field_name) {
                 if (!in_array($field_name, $table_cols)) {
-                    dev_log('skip field', $field_name, $table_cols);
+                    //dev_log('skip field', $field_name, $table_cols);
                     continue;
                 }
                 
@@ -302,11 +287,7 @@ class fx_data_content extends fx_data {
                 }
                 // вставляем только если sql-тип поля не "false" (e.g. multilink)
                 if (isset($data[$field_name]) ) {
-                    if ( empty($data[$field_name]) ) {
-                        $table_res[]= "`".fx::db()->escape($field_name)."` = NULL ";
-                    } else {
-                        $table_res[]= "`".fx::db()->escape($field_name)."` = '".fx::db()->escape($data[$field_name])."' ";
-                    }
+                    $table_res[]= "`".fx::db()->escape($field_name)."` = '".fx::db()->escape($data[$field_name])."' ";
                 }
             }
             if (count($table_res) > 0) {

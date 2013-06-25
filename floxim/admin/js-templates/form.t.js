@@ -58,39 +58,23 @@ name="<?=_c.name?>" id="<?=_c.name?>"
 _c.type == 'hidden'
 
 <!--[input]-->
-<input type="file" <?=$t.field_id_name(_c)?> />
-<?if (_c.old) {?>
-	<div class="old">
-		<span>РўРµРєСѓС‰РёР№ С„Р°Р№Р»: </span><a target="_blank" href="<?=_c.path?>"><?=_c.real_name?></a>
-		<a class="delete_link delete_<?=_c.old?>">СѓРґР°Р»РёС‚СЊ</a>
-		<input type="hidden" name="<?=_c.name?>[delete]" value="-1" />
-	</div>
-<?}?>
-<!--test-->
-_c.type == 'file'
-<!--jquery:form_row-->
-html.find('a.delete_link').click(function(){
-	var delete_id = this.className.match(/delete_(\d+)/)[1];
-	var par = $(this).parent();
-	par.find('input').val(delete_id);
-	par.hide();
-});
-
-
-<!--[input]-->
 <div class="image_field">
-    <div class="file_input">
+    <div class="file_input" style="display:<?=(_c.path ? 'none' : 'block')?>">
     	<input type="file" name="file" id="image_file" />
 	</div>
-    <input type="hidden" <?=$t.field_id_name(_c)?> />
-    <span class="real_name"><?=_c.old ? _c.real_name : ''?></span>
+    <input type="hidden" <?=$t.field_id_name(_c)?> class="real_value" value="<?=_c.value?>" />
+    <div class="preview">
+        <img <?=(_c.path ? 'src="'+_c.path+'"' : '')?> style="max-height:100px; max-width:100px; border:1px solid #CCC;" />
+        <a class="killer" style="display:<?=(_c.path ? 'block' : 'none')?>">&times;</a>
+    </div>
 </div>
 <!--test-->
 _c.type == 'image'
 <!--jquery:form_row-->
 
-html.on('.file_input input').on('change', function(){
-	console.log('ololo');
+html.on('change', '.image_field', function(){
+    var field = $(this);
+    var res_inp = $('.real_value', field);
     $.ajaxFileUpload({
         url:'/floxim/index.php',
         secureuri:false,
@@ -98,13 +82,23 @@ html.on('.file_input input').on('change', function(){
         dataType: 'json',
         data: { essence:'file', fx_admin:1, action:'upload_save' },
         success: function ( data, status ) {
-            console.log('success upl', data,status);
+            res_inp.val(data.id);
+            $('.preview img', field).attr('src', data.path).show();
+            $('.killer', field).show();
+            $('.file_input', field).hide();
+            res_inp.trigger('fx_change_file');
         },
         error: function (data, status, e) {
         	console.log('error uploda', e);
         }
     });
-    console.log('ajaupl inited');
+});
+html.on('click', '.killer', function() {
+   var field = $(this).closest('.image_field'); 
+   $('.preview img', field).hide();
+   $('.real_value', field).val('');
+   $('.file_input', field).show();
+   $(this).hide();
 });
 
 <!--[input]-->
@@ -681,7 +675,6 @@ html.filter('.fx_list').each( function() {
 		}
 	});
 });
-$fx_form.update_available_buttons();
 
 <!--[list_field_row]-->
 <?
@@ -799,6 +792,53 @@ $('.fx_admin_colorbasic', html).each( function() {
 	});
 });
 
+<!--[input]-->
+<div class="livesearch" data-params="" data-prototype_name="<?=_c.name?>[prototype]" data-is_multiple="<?=(_c.is_multiple ? 'Y' : 'N')?>">
+    <?
+    if (_c.is_multiple) {
+        $.each(_c.value, function(vi, vv) {
+            ?><input class="preset_value" type="hidden" 
+                name="<?=_c.name?>[<?=vv.value_id?>]"
+                value="<?=vv.id?>"
+                data-name="<?=vv.name?>" /><?
+        });
+    } else {
+        ?><input class="preset_value" type="hidden" <?=$t.field_id_name(_c)?>
+                <?if (_c.value) {?>
+                value="<?=_c.value.id?>" 
+                data-name="<?=_c.value.name?>" 
+                <?}?>/><?
+                    
+    }
+    ?>
+    <ul class="livesearch_items">
+        <li class="livesearch_input">
+            <input type="text" name="livesearch_input" style="width:3px;" />
+        </li>
+    </ul>
+    <div class="livesearch_results">
+    </div>
+</div>
+<!--test-->
+_c.type == 'livesearch'
+
+<!--[input]-->
+	<div class="date_field">
+		<input type="text" value="<?=_c.value?>" <?=$t.field_id_name(_c)?> />
+	</div>
+	<?console.log(_c);?>
+<!--test-->
+_c.type == 'datetime'
+
+<!--jquery:form_row-->
+var inp  = $('input', html);
+inp.datepicker({
+		showOn:'button',
+		buttonText:_c.value ? _c.value : 'choose date'
+});
+inp.datepicker('widget').addClass('fx_overlay');
+
+	
 <!--[input]-->
 <div class="fx_tree">
 <input type="hidden" <?=$t.field_id_name(_c)?> class="tree_value_input"/>

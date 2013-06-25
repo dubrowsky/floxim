@@ -18,6 +18,7 @@ class fx_controller_admin_adminpanel extends fx_controller_admin {
             </div>
             <div id="fx_admin_control" class="fx_overlay">
                 <div id="fx_admin_buttons"></div>
+                <div id="fx_admin_fields"></div>
                 <div id="fx_admin_additionl_text"></div>
                 <div id="fx_admin_statustext"></div>
             </div>
@@ -28,17 +29,17 @@ class fx_controller_admin_adminpanel extends fx_controller_admin {
 
     public static function get_main_menu() {
         $main_menu = array();
-        $main_menu[] = array('name' => fx_lang('Управление'), 'items' => array(
-                'site' => array('name' => fx_lang('Сайт'), 'href' => '/#page.view'),
-                'user' => array('name' => fx_lang('Пользователи'), 'href' => '/floxim/#admin.user.all'),
-                'tools' => array('name' => fx_lang('Инструменты'), 'href' => '/floxim/#admin.redirect.all'),
-                'administrate' => array('name' => fx_lang('Администрирование'), 'href' => '/floxim/#admin.administrate.site.all'),
-                'settings' => array('name' => fx_lang('Настройки'), 'href' => '/floxim/#admin.settings.system')
+        $main_menu[] = array('name' => fx::lang('Управление','system'), 'items' => array(
+                'site' => array('name' => fx::lang('Сайт','system'), 'href' => '/#page.view'),
+                'user' => array('name' => fx::lang('Пользователи','system'), 'href' => '/floxim/#admin.user.all'),
+                'tools' => array('name' => fx::lang('Инструменты','system'), 'href' => '/floxim/#admin.redirect.all'),
+                'administrate' => array('name' => fx::lang('Администрирование','system'), 'href' => '/floxim/#admin.administrate.site.all'),
+                'settings' => array('name' => fx::lang('Настройки','system'), 'href' => '/floxim/#admin.settings.system')
                 ));
-        $main_menu[] = array('name' => fx_lang('Разработка'), 'items' => array(
-                'layout' => array('name' => 'Макеты', 'href' => '/floxim/#admin.layout.all'), /// template -> layout
-                'component' => array('name' => fx_lang('Компоненты'), 'href' => '/floxim/#admin.component.group'),
-                'widget' => array('name' => fx_lang('Виджеты'), 'href' => '/floxim/#admin.widget.group')
+        $main_menu[] = array('name' => fx::lang('Разработка','system'), 'items' => array(
+                'layout' => array('name' => fx::lang('Макеты','system'), 'href' => '/floxim/#admin.layout.all'), /// template -> layout
+                'component' => array('name' => fx::lang('Компоненты','system'), 'href' => '/floxim/#admin.component.group'),
+                'widget' => array('name' => fx::lang('Виджеты','system'), 'href' => '/floxim/#admin.widget.group')
                 ));
 
         return $main_menu;
@@ -47,7 +48,7 @@ class fx_controller_admin_adminpanel extends fx_controller_admin {
     public static function get_more_menu() {
         $more_menu = array();
         $more_menu[] = array(
-            'name' => fx_lang('Дизайн страницы'),
+            'name' => fx::lang('Дизайн страницы','system'),
             'button' => array(
                 'essence' => 'infoblock',
                 'action' => 'layout_settings',
@@ -57,7 +58,7 @@ class fx_controller_admin_adminpanel extends fx_controller_admin {
         //$more_menu[] = array('name' => 'Настройки дизайна', 'button' => 'design_settings');
         //$more_menu[] = array('name' => 'Настройки прав', 'button' => 'page_rights');
         $more_menu[] = array(
-        	'name' => fx_lang('Сменить макет сайта'),
+        	'name' => fx::lang('Сменить макет сайта','system'),
         	'button' => array(
         		'essence' => 'template',
         		'action' => 'set_preview',
@@ -76,24 +77,28 @@ class fx_controller_admin_adminpanel extends fx_controller_admin {
                 'off' => array('title' => FX_ADMINPANEL_SITE_BUTTON_OFF),
                 'settings' => array('title' => FX_ADMINPANEL_SITE_BUTTON_SETTINGS),
                 'delete' => array('title' => FX_ADMINPANEL_SITE_BUTTON_DELETE),
-                'select_block' => array('title' => fx_lang('выделить блок')),
-                'rights' => array('title' => fx_lang('Права')),
-                'upload' => array('title' => fx_lang('Закачать файл')),
-                'download' => array('title' => fx_lang('Cкачать файл')),
-                'map' => array('title' => fx_lang('Карта сайта')),
-                'export' => array('title' => fx_lang('Экспорт')),
-                'store' => array('title' => fx_lang('Скачать с FloximStore')),
-                'import' => array('title' => fx_lang('Импорт')),
-                'change_password' => array('title' => fx_lang('Сменить пароль')),
+                'select_block' => array('title' => fx::lang('выделить блок','system')),
+                'rights' => array('title' => fx::lang('Права','system')),
+                'upload' => array('title' => fx::lang('Закачать файл','system')),
+                'download' => array('title' => fx::lang('Cкачать файл','system')),
+                'map' => array('title' => fx::lang('Карта сайта','system')),
+                'export' => array('title' => fx::lang('Экспорт','system')),
+                'store' => array('title' => fx::lang('Скачать с FloximStore','system')),
+                'import' => array('title' => fx::lang('Импорт','system')),
+                'change_password' => array('title' => fx::lang('Сменить пароль','system')),
                 'undo' => array('title' => FX_ADMINPANEL_SITE_BUTTON_UNDO),
                 'redo' => array('title' => FX_ADMINPANEL_SITE_BUTTON_REDO),
                 'more' => array('title' => FX_ADMINPANEL_SITE_BUTTON_REDO)
             ),
             'map' => array(
-                'page' => array(
+                'page' => explode(
+                    ",",
+                    'add,divider,edit,on,off,delete,divider,select_block,settings'
+                )
+                /*array(
                     'edit' => array('add', 'divider', 'edit', 'on', 'off', 'delete','divider', 'select_block' , 'settings'),
                     'design' => array('add','divider','on', 'off', 'settings', 'delete', 'select_block')
-                )
+                )*/
             )
         );
 

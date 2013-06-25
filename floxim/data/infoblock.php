@@ -67,6 +67,11 @@ class fx_data_infoblock extends fx_data {
     }
 
     public function get_content_infoblocks($content_type = null) {
+        if ($content_type) {
+            $this->where('controller', 'component_'.$content_type);
+        }
+        $this->where('action', 'listing');
+        return $this->all();
         $params = array();//'is_listing' => '1');
         if ($content_type) {
             $params ['controller'] = 'component_'.$content_type;

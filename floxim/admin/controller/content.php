@@ -3,15 +3,12 @@
 class fx_controller_admin_content extends fx_controller_admin {
 
     public function add_edit($input) {
-
-        $content_type = $input['content_type'];
-        $component = fx::data('component', $content_type);
-
+        // получаем редактируемый объект
         if ($input['content_id']) {
-            // редактирование
-            $content = fx::data('content_'.$content_type, $input['content_id']);
+            $content = fx::data('content', $input['content_id']);
+            $content_type = $content['type'];
         } else {
-            // создание
+            $content_type = $input['content_type'];
             $parent_page = fx::data('content_page', $input['parent_id']);
             $content = fx::data('content_'.$content_type)->create(array(
                 'parent_id' => $input['parent_id'],
@@ -20,7 +17,7 @@ class fx_controller_admin_content extends fx_controller_admin {
                 'site_id' => $parent_page['site_id']
             ));
         }
-                
+        
         $fields = array(
             $this->ui->hidden('content_type',$content_type),
             $this->ui->hidden('parent_id', $content['parent_id']),
@@ -33,36 +30,18 @@ class fx_controller_admin_content extends fx_controller_admin {
         if (isset($input['content_id'])) {
             $fields []= $this->ui->hidden('content_id', $input['content_id']);
         } else {
-            $debug = $this->ui->hidden('infoblock_id', $input['infoblock_id']);
-            $fields []= $debug;
+            $fields []= $this->ui->hidden('infoblock_id', $input['infoblock_id']);
         }
         
         $this->response->add_fields($fields);
-
-        $c_fields = array();
-
-        $chain = $component->get_chain();
-        $all_fields = array();
-        foreach ( $chain as $chain_level ) {
-            if ( $chain_level['keyword'] == 'content') {
-                continue;
-            }
-            $content_fields = $chain_level->fields();
-            foreach ( $content_fields as $field ) {
-                if ($field['type_of_edit'] != 3) {
-                    $all_fields[]= $field;
-                    $c_fields[] = $field->get_js_field($content);
-                }
-            }
-        }
-        //$this->response->add_tab('content', $component['name']);
-        $this->response->add_fields($c_fields, false, 'content');
+        $this->response->add_fields($content->get_form_fields(), false, 'content');
 
         if ($input['data_sent']) {
-            $content->set_field_values($all_fields, $input['content']);
+            $content->set_field_values($input['content']);
+            dev_log('saving content', $input, $content);
             $content->save();
         }
-        return array('status' => 'ok', 'dialog_title' => fx_lang('Редактирование контента'));
+        return array('status' => 'ok', 'dialog_title' => fx::lang('Редактирование контента','system'));
     }
 
     public function checked_save($input) {
@@ -91,22 +70,18 @@ class fx_controller_admin_content extends fx_controller_admin {
     }
 
     public function unchecked_save($input) {
-        
         $ids = $input['id'];
         if (!is_array($ids)) {
             $ids = array($ids);
         }
-
         foreach ($ids as $id) {
             if (preg_match("/(\d+)-(\d+)/", $id, $match)) {
                 $class_id = $match[1];
                 $content_id = $match[2];
             }
-
             $content = fx::data('content')->get_by_id($class_id, $content_id);
             $content->unchecked();
         }
-
         $result['status'] = 'ok';
         return $result;
     }

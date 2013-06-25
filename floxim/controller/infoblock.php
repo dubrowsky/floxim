@@ -21,28 +21,6 @@ class fx_controller_infoblock extends fx_controller {
     }
 
 
-    /**************************************
-    * TODO Метод лдя получения параметров с которыми должен быть вызван контроллер, чтобы контроллер ничего не знал о том, где и кто его вызывает
-    ***************************************/
-    private function prepare_controller_params() {
-        echo "<pre>";
-        $infoblock = $this->_get_infoblock();
-        $params = $infoblock->get_prop_inherited('params');
-
-        if ( empty($params['parent_type']) ) return null;
-        switch ( $params['parent_type'] ) {
-            case 'mount_page_id':
-                $this->controller_data["page"] ="SDF";
-                break;
-            case 'current_page_id':
-                echo "\nmount_page_id\n";
-                break;
-            case 'custom':
-                echo "\ncustom\n";
-                break;
-        }
-    }
-    
     public function render() {
 
         $infoblock = $this->_get_infoblock();
@@ -151,6 +129,11 @@ class fx_controller_infoblock extends fx_controller {
             'data-fx_infoblock' => htmlentities(json_encode($ib_info)),
             'class' => 'fx_infoblock'
         );
+        
+        // определяем scope/режим правки инфоблока
+        $meta['class'] .= ' fx_infoblock_'.$this->_get_infoblock_scope_name($infoblock);
+        
+        
         if ($controller_meta) {
             if (fx::dig($controller_meta, 'disabled')) {
                 $meta['class'] .= ' fx_infoblock_disabled';
@@ -179,16 +162,41 @@ class fx_controller_infoblock extends fx_controller {
                     $tag = fx_html_token::create_standalone($matches[2]);
                     $tag->add_meta($meta);
                     $tag->remove_attribute('fx:is_sub_root');
-                    //dev_log('adding by subroot', $tag);
                     return $matches[1].$tag->serialize();
                 }, 
                 $html_result
             );
             if (!$subroot_found) {
                 $html_proc = new fx_template_html($html_result);
-                $html_result = $html_proc->add_meta($meta);
+                $html_result = $html_proc->add_meta($meta, true);
             }
         }
         return $html_result;
+    }
+    
+    protected function _get_infoblock_scope_name(fx_infoblock $infoblock) {
+        $ib_controller = $infoblock->get_prop_inherited('controller');
+        $ib_action = $infoblock->get_prop_inherited('action');
+        if ($ib_controller == 'layout' && $ib_action == 'show') {
+            return 'design';
+        }
+        $ib_page_id = $infoblock['page_id'];
+        $scope = $infoblock->get_prop_inherited('scope');
+        if (!$scope) {
+            if ($ib_page_id == 0) {
+                return 'design';
+            }
+            return 'edit';
+        }
+        if ($ib_page_id == 0 && !$scope['page_type']) {
+            return 'design';
+        }
+        if ($scope['pages'] != 'descendants') {
+            return 'edit';
+        }
+        if (fx::data('content_page', $ib_page_id)->get('url') == '/') {
+            return 'design';
+        }
+        return 'edit';
     }
 }

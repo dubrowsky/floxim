@@ -8,7 +8,7 @@ function phpimageeditor_footer_link()
 		a.setAttribute('target', '_blank');
 		a.setAttribute('style', 'color: #4d4d4d; text-decoration: none; font-size: 10px; display: block; text-align: center; margin: 10px;');
 		a.setAttribute('id', 'pie-footer-link');
-		a.innerHTML = 'We´re using PHP Image Editor';
+		a.innerHTML = 'Were using PHP Image Editor';
 
 		document.body.appendChild(a);
 	}

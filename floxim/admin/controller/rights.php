@@ -14,15 +14,13 @@ class fx_controller_admin_rights extends fx_controller {
         }
 
         $ar = array('type' => 'list', 'filter' => true, 'tab' => 'fields');
-        $ar['labels'] = array('name' => fx_lang('Право'));
+        $ar['labels'] = array('name' => fx::lang('Право','system'));
         if (empty($items)) {
-            $fields[] = $this->ui->label( fx_lang('Нет никак прав') );
+            $fields[] = $this->ui->label( fx::lang('Нет никак прав','system') );
             $ar['filter'] = false;
             unset($ar['labels']);
         }
       //  } else {
-            
-            
             $ar['values'] = array();
 
             foreach ($items as $item) {
@@ -33,24 +31,19 @@ class fx_controller_admin_rights extends fx_controller {
 
             $fields[] = $ar;
        // }
-
-
-
-
         $buttons = array("add", "delete");
         $buttons_action['add']['options']['to'] = $essence_type . '-' . $id;
         $result = array('fields' => $fields, 'buttons' => $buttons, 'buttons_action' => $buttons_action);
         $result['tree']['mode'] = 'user';
         $result['breadcrumbs'][] = array('name' => $essence['name'], 'url' => '#admin.user.full('.$essence['id'].')');
-        $result['breadcrumbs'][] = array( 'name' => fx_lang('Права') );
-        
+        $result['breadcrumbs'][] = array( 'name' => fx::lang('Права','system') );
         return $result;
     }
 
     public function add($input) {
 
-        $fields[] = $this->ui->label( fx_lang('В первой версии есть только право Директор') );
-        $fields[] = $this->ui->checkbox('director', fx_lang('Присвоить право директора'));
+        $fields[] = $this->ui->label( fx::lang('В первой версии есть только право Директор','system') );
+        $fields[] = $this->ui->checkbox('director', fx::lang('Присвоить право директора','system'));
 
         $fields[] = $this->ui->hidden('to', $input['to']);
         $fields[] = $this->ui->hidden('posting');
@@ -74,5 +67,4 @@ class fx_controller_admin_rights extends fx_controller {
     }
 
 }
-
 ?>

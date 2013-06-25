@@ -10,23 +10,23 @@ class fx_controller_admin_site extends fx_controller_admin {
 
         $list['values'] = array();
         foreach ($sites as $v) {
-            $text = fx_lang('Язык: ') . $v['language'];
+            $text = fx::lang('Язык:','system') . ' ' . $v['language'];
             if ($v['domain']) {
                 $text .= "<br />".$v['domain'];
             }
             $text = '<a href="http://'.$v['domain'].'" style="color:#666;" target="_blank"> '.$v['domain'].'</a>';
             $text .=" <span style='font-size:10px; color:#777;'>&middot;</span> ".$v['language'];
-            if ($v['type'] == 'mobile') $text .= "<br/>" . fx_lang("для мобильный устройств");
+            if ($v['type'] == 'mobile') $text .= "<br/>" . fx::lang('для мобильный устройств','system');
             $r = array(
                     'id' => $v['id'],
                     'img' => '/floxim/admin/skins/default/images/site1.png',
                     'header' => array('name' => $v['name'], 'url' => 'site.map('.$v['id'].')'),
                     'text' => $text,
                     'buttons' => array(
-                    	array('url' => 'site.map('.$v['id'].')', 'label' => fx_lang('Карта сайта')),
-                    	array('url' => 'site.settings('.$v['id'].')', 'label' => fx_lang('Настройки')),
-                    	array('url' => 'site.design('.$v['id'].')', 'label' => fx_lang('Дизайн')),
-                    	array('label' => fx_lang('Экспорт'), array('essence' => 'site', 'action' => 'export', 'id' => $v['id']))
+                    	array('url' => 'site.map('.$v['id'].')', 'label' => fx::lang('Карта сайта','system')),
+                    	array('url' => 'site.settings('.$v['id'].')', 'label' => fx::lang('Настройки','system')),
+                    	array('url' => 'site.design('.$v['id'].')', 'label' => fx::lang('Дизайн','system')),
+                    	array('label' => fx::lang('Экспорт','system'), array('essence' => 'site', 'action' => 'export', 'id' => $v['id']))
                     )
             );
             $list['values'][] = $r;
@@ -34,12 +34,12 @@ class fx_controller_admin_site extends fx_controller_admin {
 
         $this->response->add_field($list);
 
-        $this->response->add_pulldown_item('add', fx_lang('Новый'), 'source=new');
-        //$this->response->add_pulldown_item('add', fx_lang('импортировать'), 'source=import');
-        //$this->response->add_pulldown_item('add', fx_lang('установить с FloximStore'), 'source=store');
+        $this->response->add_pulldown_item('add', fx::lang('Новый','system'), 'source=new');
+        // $this->response->add_pulldown_item('add', fx_lang('импортировать'), 'source=import');
+        // $this->response->add_pulldown_item('add', fx_lang('установить с FloximStore'), 'source=store');
 
         $this->response->add_buttons("add,delete");//settings,
-        $this->response->breadcrumb->add_item( fx_lang('Сайты') );
+        $this->response->breadcrumb->add_item( fx::lang('Сайты','system') );
         $this->response->submenu->set_menu('site');
     }
 
@@ -52,13 +52,13 @@ class fx_controller_admin_site extends fx_controller_admin {
                 break;
             default:
                 $fields[] = $this->ui->hidden('action', 'add');
-                $fields[] = $this->ui->input('name', fx_lang('Название сайта'), fx_lang('Новый сайт'));
-                $fields[] = $this->ui->input('domain', fx_lang('Домен'), fx_lang('Домен'));
+                $fields[] = $this->ui->input('name', fx::lang('Название сайта','system'), fx::lang('Новый сайт','system'));
+                $fields[] = $this->ui->input('domain', fx::lang('Домен','system'), fx::lang('Домен','system'));
         }
 
         $fields[] = $this->ui->hidden('posting');
         $this->response->add_fields($fields);
-        $this->response->dialog->set_title( fx_lang('Добавление нового сайта') );
+        $this->response->dialog->set_title( fx::lang('Добавление нового сайта','system') );
     }
 
     public function store($input) {
@@ -86,7 +86,7 @@ class fx_controller_admin_site extends fx_controller_admin {
         $file = $input['importfile'];
         if (!$file) {
             $result = array('status' => 'error');
-            $result['text'][] = fx_lang('Ошибка при создании временного файла');
+            $result['text'][] = fx::lang('Ошибка при создании временного файла','system');
         }
 
         $result = array('status' => 'ok');
@@ -125,15 +125,15 @@ class fx_controller_admin_site extends fx_controller_admin {
         //dev_log('site saved', $site, $site['id']);
 
         $index_page = fx::data('content_page')->create(array(
-            'name' => fx_lang('Титульная страница'), 
-            'url' => '/', 
+            'name' => fx::lang('Титульная страница','system'),
+            'url' => '/',
             'site_id' => $site['id']
         ))->save();
         
         //dev_log('index saved', $index_page);
         
         $error_page = fx::data('content_page')->create(array(
-            'name' => fx_lang('Страница не найдена'), 
+            'name' => fx::lang('Страница не найдена','system'),
             'url' => '/404', 
             'site_id' => $site['id']
         ))->save();
@@ -159,7 +159,7 @@ class fx_controller_admin_site extends fx_controller_admin {
     public function map($input) {
         $site = fx::data('site')->get_by_id($input['params'][0]);
         if (!$site) {
-            $this->response->set_status_error( fx_lang("Сайт не найден") );
+            $this->response->set_status_error( fx::lang('Сайт не найден','system') );
             return;
         }
         $fields = array();
@@ -174,11 +174,11 @@ class fx_controller_admin_site extends fx_controller_admin {
     
     protected function _set_layout($section, $site) {
     	$titles = array(
-    		'map' => fx_lang('Карта сайта'),
-    		'settings' => fx_lang('Настройки'),
-    		'design' => fx_lang('Дизайн')
+    		'map' => fx::lang('Карта сайта','system'),
+    		'settings' => fx::lang('Настройки','system'),
+    		'design' => fx::lang('Дизайн','system')
 		);
-    	$this->response->breadcrumb->add_item( fx_lang('Сайты'), '#admin.site.all');
+    	$this->response->breadcrumb->add_item( fx::lang('Сайты','system'), '#admin.site.all');
         $this->response->breadcrumb->add_item($site['name'], '#admin.site.map('.$site['id'].')');
         $this->response->breadcrumb->add_item($titles[$section]);
         $this->response->submenu->set_menu('site-'.$site['id'])->set_subactive('site'.$section.'-'.$site['id']);
@@ -238,8 +238,8 @@ class fx_controller_admin_site extends fx_controller_admin {
             $blocks = $menu = array('type' => 'set',
                     'without_add' => true,
                     'name' => "requirements[$i][units]",
-                    'label' => fx_lang('Блоки') . ' ' . $page_type,
-                    'labels' => array( fx_lang('Блок'), fx_lang('Обязательный')),
+                    'label' => fx::lang('Блоки','system') . ' ' . $page_type,
+                    'labels' => array( fx::lang('Блок','system'), fx::lang('Обязательный','system')),
                     'tpl' => array(
                             array('type' => 'label', 'name' => 'name'),
                             array('type' => 'select', 'values' => array('yes' => 'yes', 0 => 'no'), 'name' => 'nessesary'),
@@ -250,11 +250,11 @@ class fx_controller_admin_site extends fx_controller_admin {
             $menu = $menu = array('type' => 'set',
                     'name' => "requirements[$i][units]",
                     'without_add' => true,
-                    'label' => fx_lang('Меню ') . $page_type,
-                    'labels' => array( fx_lang('Меню'), fx_lang('Направление'), fx_lang('Обязательный')),
+                    'label' => fx::lang('Меню','system') . ' ' . $page_type,
+                    'labels' => array( fx::lang('Меню','system'), fx::lang('Направление','system'), fx::lang('Обязательный','system')),
                     'tpl' => array(
                             array('type' => 'label', 'name' => 'name'),
-                            array('type' => 'select', 'values' => array(0 => fx_lang('любое'), 'vertical' => fx_lang('вертикальное')), 'name' => 'direct'),
+                            array('type' => 'select', 'values' => array(0 => fx::lang('любое','system'), 'vertical' => fx::lang('вертикальное','system')), 'name' => 'direct'),
                             array('type' => 'select', 'values' => array('yes' => 'yes', 0 => 'no'), 'name' => 'nessesary'),
                             array('type' => 'hidden', 'name' => 'id'),
                             array('type' => 'hidden', 'name' => 'type'),
@@ -305,34 +305,34 @@ class fx_controller_admin_site extends fx_controller_admin {
             $content_pages_list[$page['id']] = $page['url'];
         }
 
-        $this->response->add_tab('main', fx_lang('Основные'));
-        //$this->response->add_tab('design', fx_lang('Дизайн'));
+        $this->response->add_tab('main', fx::lang('Основные','system'));
+		//$this->response->add_tab('design', fx::lang('Дизайн','system'));
         $this->response->add_tab('seo', 'SEO');
-        $this->response->add_tab('system', fx_lang('Системные'));
+        $this->response->add_tab('system', fx::lang('Системные','system'));
 
         $main_fields = array();
-        $main_fields[] = $this->ui->checkbox('checked', fx_lang('Включен'), null, $site['checked']);
-        $main_fields[] = $this->ui->input('name', fx_lang('Название сайта'), $site['name']);
-        $main_fields[] = $this->ui->input('domain', fx_lang('Домен'), $site['domain']);
-        $main_fields[] = $this->ui->input('mirrors', fx_lang('Зеркала'), $site['mirrors']);
-        $main_fields[] = $this->ui->input('language', fx_lang('Язык сайта'), $site['language']);
+        $main_fields[] = $this->ui->checkbox('checked', fx::lang('Включен','system'), null, $site['checked']);
+        $main_fields[] = $this->ui->input('name', fx::lang('Название сайта','system'), $site['name']);
+        $main_fields[] = $this->ui->input('domain', fx::lang('Домен','system'), $site['domain']);
+        $main_fields[] = $this->ui->input('mirrors', fx::lang('Зеркала','system'), $site['mirrors']);
+        $main_fields[] = $this->ui->input('language', fx::lang('Язык сайта','system'), $site['language']);
         $this->response->add_fields($main_fields, 'main');
 
         $seo_fields = array();
-        $seo_fields[] = $this->ui->text('robots', fx_lang('Содержимое robots.txt'), $site['robots']);
-        $seo_fields[] = $this->ui->checkbox('disallow_indexing', fx_lang('Запретить индексирование'), null, $site['disallow_indexing']);
+        $seo_fields[] = $this->ui->text('robots', fx::lang('Содержимое robots.txt','system'), $site['robots']);
+        $seo_fields[] = $this->ui->checkbox('disallow_indexing', fx::lang('Запретить индексирование','system'), null, $site['disallow_indexing']);
         $this->response->add_fields($seo_fields, 'seo');
 
         $system_fields = array();
-        $system_fields[] = array('name' => 'title_sub_id', 'type' => 'select', 'values' => $content_pages_list, 'value' => $site['title_sub_id'], 'label' => fx_lang('Титульная страница'));
+        $system_fields[] = array('name' => 'title_sub_id', 'type' => 'select', 'values' => $content_pages_list, 'value' => $site['title_sub_id'], 'label' => fx::lang('Титульная страница','system'));
         $system_fields[] = array(
 			'name' => 'e404_sub_id',
 			'type' => 'select',
 			'values' => $content_pages_list,
 			'value' => $site['e404_sub_id'],
-			'label' => fx_lang('Страница не найдена (ошибка 404)')
+			'label' => fx::lang('Страница не найдена (ошибка 404)','system')
 		);
-        $system_fields[] = array('name' => 'offline_text', 'type' => 'textarea', 'value' => $site['offline_text'], 'label' => fx_lang('Показывать, когда сайт выключен'));
+        $system_fields[] = array('name' => 'offline_text', 'type' => 'textarea', 'value' => $site['offline_text'], 'label' => fx::lang('Показывать, когда сайт выключен','system'));
         $this->response->add_fields($system_fields, 'system');
 
         $fields = array();
@@ -382,7 +382,7 @@ class fx_controller_admin_site extends fx_controller_admin {
 				'type' => 'select', 
 				'values' => $layouts_select,
 				'value' => $site['layout_id'],
-				'label' => fx_lang('Макет')
+				'label' => fx::lang('Макет','system')
 			),
 			array(
 				'type' => 'hidden',
@@ -414,7 +414,7 @@ class fx_controller_admin_site extends fx_controller_admin {
         
         $fields []= array(
         	'type' => 'button',
-        	'label' => fx_lang('Превью'),
+        	'label' => fx::lang('Превью','system'),
         	'send_form' => true,
         	'post' => array(
         		'essence' => 'layout',
@@ -458,7 +458,7 @@ class fx_controller_admin_site extends fx_controller_admin {
         $items = $input['params'];
         if ($items) {
             $store = new fx_admin_store();
-            $fields[] = $this->ui->label( fx_lang("Вы собираетесь установить:") );
+            $fields[] = $this->ui->label( fx::lang('Вы собираетесь установить:','system') );
             foreach ($items as $store_id) {
                 $info = $store->get_info($store_id);
                 $fields[] = $this->ui->hidden('download['.$info['type'].']', $store_id);
@@ -493,5 +493,4 @@ class fx_controller_admin_site extends fx_controller_admin {
             $result = $imex->import_by_content($content);
         }
     }
-
 }

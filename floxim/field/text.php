@@ -46,8 +46,8 @@ class fx_field_text extends fx_field_baze {
     }
 
     public function format_settings() {
-        $fields[] = array('type' => 'checkbox', 'name' => 'format[html]', 'label' => fx_lang('разрешить html-теги'), 'value' => $this['format']['html']);
-        $fields[] = array('type' => 'checkbox', 'name' => 'format[nl2br]', 'label' => fx_lang('заменять перенос строки на br'), 'value' => $this['format']['nl2br']);
+        $fields[] = array('type' => 'checkbox', 'name' => 'format[html]', 'label' => fx::lang('разрешить html-теги','system'), 'value' => $this['format']['html']);
+        $fields[] = array('type' => 'checkbox', 'name' => 'format[nl2br]', 'label' => fx::lang('заменять перенос строки на br','system'), 'value' => $this['format']['nl2br']);
         return $fields;
     }
 

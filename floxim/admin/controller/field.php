@@ -11,7 +11,7 @@ class fx_controller_admin_field extends fx_controller_admin {
         $essence_code = str_replace('fx_','',get_class($essence));
         
         $ar['values'] = array();
-        $ar['labels'] = array('name' => fx_lang('Имя'), 'label' => fx_lang('Описание'),'type' => fx_lang('Тип'));
+        $ar['labels'] = array('name' => fx::lang('Имя','system'), 'label' => fx::lang('Описание','system'),'type' => fx::lang('Тип','system'));
         foreach ( $items as $field ) {
             $r = array(
                 'id' => $field->get_id(), 
@@ -53,8 +53,8 @@ class fx_controller_admin_field extends fx_controller_admin {
     }
     
     protected function _form ( $info = array() ) {
-        $fields[] = $this->ui->input('name', fx_lang('Название на латинице'), $info['name']);
-        $fields[] = $this->ui->input('description', fx_lang('Описание'), $info['description']);
+        $fields[] = $this->ui->input('name', fx::lang('Название на латинице','system'), $info['name']);
+        $fields[] = $this->ui->input('description', fx::lang('Описание','system'), $info['description']);
         
         $finder = fx_data::optional('datatype');
         foreach ($finder->get_all() as $v ) {
@@ -63,7 +63,7 @@ class fx_controller_admin_field extends fx_controller_admin {
         $fields[] = array(
         	'type' => 'select', 
         	'name' => 'type', 
-        	'label' => fx_lang('Тип поля'),
+        	'label' => fx::lang('Тип поля','system'),
         	'values' => $values, 
         	'value' => $info['type'] ?  $info['type']  : 1, 
         	'post' => array(
@@ -74,14 +74,21 @@ class fx_controller_admin_field extends fx_controller_admin {
         	'change_on_render' => true
         );
         
-        $values = array(1 => fx_lang('всем'), 2 => fx_lang('только админам'), 3 => fx_lang('никому'));
-        $fields[] = $this->ui->select('type_of_edit', fx_lang('Поле доступно'), $values, $info['type_of_edit'] ? $info['type_of_edit'] : 1  );
+        $values = array(
+            fx_field::EDIT_ALL => fx::lang('всем','system'), 
+            fx_field::EDIT_ADMIN => fx::lang('только админам','system'), 
+            fx_field::EDIT_NONE => fx::lang('никому','system')
+        );
+        $fields[] = $this->ui->select(
+                'type_of_edit', 
+                fx::lang('Поле доступно','system'), 
+                $values, 
+                $info['type_of_edit'] ? $info['type_of_edit'] : fx_field::EDIT_ALL  
+        );
         
         $fields[] = $this->ui->hidden('posting');
         $fields[] = $this->ui->hidden('action', 'add');
         $fields[] = $this->ui->hidden('essence', 'field');
-
-
         return $fields;
     }
     
@@ -120,7 +127,7 @@ class fx_controller_admin_field extends fx_controller_admin {
             $fields[] = $this->ui->hidden('action','edit');
         }
         else {
-            $fields[] = $this->ui->error( fx_lang("Поле не найдено") );
+            $fields[] = $this->ui->error( fx::lang('Поле не найдено','system') );
         }
 
         return array('fields' => $fields);
@@ -142,6 +149,7 @@ class fx_controller_admin_field extends fx_controller_admin {
         }
         else {
             $result = array('status' => 'ok');
+            dev_log('saving field', $field);
             $field->save();
         }
         
@@ -163,22 +171,21 @@ class fx_controller_admin_field extends fx_controller_admin {
        
         $datatype = fx_data::optional('datatype')->get_by_id($input['type']);
         if ( $datatype['not_null'] ) {
-            $fields[] = $this->ui->checkbox('not_null', fx_lang('Обязательно для заполнения'), null, $field['not_null']);
+            $fields[] = $this->ui->checkbox('not_null', fx::lang('Обязательно для заполнения','system'), null, $field['not_null']);
         }
         if ( $datatype['searchable'] ) {
-            $fields[] = $this->ui->checkbox('searchable', fx_lang('Возможен поиск по полю'), null, $field['searchable']);
+            $fields[] = $this->ui->checkbox('searchable', fx::lang('Возможен поиск по полю','system'), null, $field['searchable']);
         }
         if ( $datatype['default'] ) {
-            $fields[] = $this->ui->input('default', fx_lang('Значение по умолчанию'), $field['default']);
+            $fields[] = $this->ui->input('default', fx::lang('Значение по умолчанию','system'), $field['default']);
         }
 
         $format_settings =  $field->format_settings();  
         if ( $format_settings ) {
             foreach ( $format_settings as $v) {
                 $fields[] = $v;
-            } 
+            }
         }
-        
         return (array('fields' => $fields)) ;
     }
     
@@ -193,7 +200,6 @@ class fx_controller_admin_field extends fx_controller_admin {
                 }
             }
         }
-        
         return array('status' => 'ok');
     }
 }

@@ -7,7 +7,25 @@ class fx_field extends fx_essence {
 
     protected $name, $format, $type_id, $description;
     
-
+    const FIELD_STRING = 1;
+    const FIELD_INT = 2;
+    const FIELD_TEXT = 3;
+    const FIELD_SELECT = 4;
+    const FIELD_BOOL = 5;
+    const FIELD_FILE = 6;
+    const FIELD_FLOAT = 7;
+    const FIELD_DATETIME = 8;
+    const FIELD_COLOR = 9;
+    const FIELD_INFOBLOCK = 10;
+    const FIELD_IMAGE = 11;
+    const FIELD_MULTISELECT = 12;
+    const FIELD_LINK = 13;
+    const FIELD_MULTILINK = 14;
+    
+    const EDIT_ALL = 1;
+    const EDIT_ADMIN = 2;
+    const EDIT_NONE = 3;
+    
     public static function get_type_by_id($id) {
 
         static $res = array();
@@ -57,11 +75,11 @@ class fx_field extends fx_essence {
         $res = true;
 
         if (!$this['name']) {
-            $this->validate_errors[] = array('field' => fx_lang('name'), 'text' => fx_lang('Укажите название поля'));
+            $this->validate_errors[] = array('field' => fx::lang('name','system'), 'text' => fx::lang('Укажите название поля','system'));
             $res = false;
         }
         if ($this['name'] && !preg_match("/^[a-z][a-z0-9_]*$/i", $this['name'])) {
-            $this->validate_errors[] = array('field' => 'name', 'text' => fx_lang('Имя поля может содержать только латинские буквы, цифры и знак подчеркивания'));
+            $this->validate_errors[] = array('field' => 'name', 'text' => fx::lang('Имя поля может содержать только латинские буквы, цифры и знак подчеркивания','system'));
             $res = false;
         }
 
@@ -69,7 +87,7 @@ class fx_field extends fx_essence {
 
         if ($this['component_id'] && ( $modified || !$this['id'])) {
             if (fx::util()->is_mysql_keyword($this->data['name'])) {
-                $this->validate_errors[] = array('field' => 'name', 'text' => fx_lang('Данное поле зарезервировано'));
+                $this->validate_errors[] = array('field' => 'name', 'text' => fx::lang('Данное поле зарезервировано','system'));
                 $res = false;
             }
             /// Правим тут
@@ -78,19 +96,19 @@ class fx_field extends fx_essence {
             foreach ( $chain as $c_level ) {
 
                 if ( fx::db()->column_exists( $c_level->get_content_table(), $this->data['name']) ) {
-                    $this->validate_errors[] = array('field' => 'name', 'text' => fx_lang('Такое поле уже существует'));
+                    $this->validate_errors[] = array('field' => 'name', 'text' => fx::lang('Такое поле уже существует','system'));
                     $res = false;
                 }
             }
             if (fx::db()->column_exists($this->get_table(), $this->data['name'])) {
-                $this->validate_errors[] = array('field' => 'name', 'text' => fx_lang('Такое поле уже существует'));
+                $this->validate_errors[] = array('field' => 'name', 'text' => fx::lang('Такое поле уже существует','system'));
                 $res = false;
             }
         }
 
 
         if (!$this['description']) {
-            $this->validate_errors[] = array('field' => 'description', 'text' => fx_lang('Укажите описание поля'));
+            $this->validate_errors[] = array('field' => 'description', 'text' => fx::lang('Укажите описание поля','system'));
             $res = false;
         }
 
@@ -145,10 +163,10 @@ class fx_field extends fx_essence {
     }
 
     public function check_rights() {
-        if ($this['type_of_edit'] <= 1) {
+        if ($this['type_of_edit'] == fx_field::EDIT_ALL || empty($this['type_of_edit'])) {
             return true;
         }
-        if ($this['type_of_edit'] == 2) {
+        if ($this['type_of_edit'] == fx_field::EDIT_ADMIN) {
             $user = fx::env()->get_user();
             return $user && $user->perm()->is_supervisor();
         }

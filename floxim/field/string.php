@@ -13,7 +13,7 @@ class fx_field_string extends fx_field_baze {
     }
 
     public function format_settings() {
-        $fields[] = array('type' => 'checkbox', 'name' => 'html', 'label' => fx_lang('разрешить html-теги'));
+        $fields[] = array('type' => 'checkbox', 'name' => 'html', 'label' => fx::lang('разрешить html-теги','system'));
         return $fields;
     }
 

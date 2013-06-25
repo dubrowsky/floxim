@@ -12,6 +12,8 @@ class fx_config {
             'DB_ENCRYPT' => 'MD5',
 
             'CHARSET' => 'utf-8',
+
+            'AVAILABLE_LANGUAGES' => array("ru","en"),
             'LANGUAGE' => 'en',
 
             'PAGE_TPL' => 'page',

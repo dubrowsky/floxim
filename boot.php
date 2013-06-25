@@ -1,7 +1,5 @@
 <?php
 require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . '_devlog' . DIRECTORY_SEPARATOR . 'log.php');
-require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'lang.php');
-
 dev_log('start');
  //die();
 
@@ -46,7 +44,7 @@ fx::core();
 
 /* Загрузка языка */
 $lang = 'en';
-fx::lang()->load($lang);
+// fx::lang()->load($lang);
 
 $current_site = fx::data('site')->get_by_host_name($_SERVER['HTTP_HOST'], 1);
 fx::env('site', $current_site);

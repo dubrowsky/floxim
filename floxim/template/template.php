@@ -111,13 +111,6 @@ class fx_template {
         return $html;
     }
     
-    protected static $_area_regexp = "###fx_area\|([^\|]*?)\|(.+?)###(.+?)###fx_area_end###";
-    
-	// LANG ERROR
-	public static $_adder_html = "<a class='fx_infoblock_adder'>Добавить инфоблок</a>";
-	// public static $_adder_html = "<a class='fx_infoblock_adder'>" . fx_lang('Добавить инфоблок') . "</a>";
-
-
     protected static function _replace_areas_wrapped_by_tag($html) {
     	$html = preg_replace("~<!--.*?-->~s", '', $html);
     	$html = preg_replace_callback(
@@ -131,38 +124,11 @@ class fx_template {
                 ));
                 $tag = $tag->serialize();
                 fx_template::$area_replacements[$matches[2]] = null;
-    			return $tag.$replacement[1].fx_template::$_adder_html.$matches[3]; 
+    			return $tag.$replacement[1].$matches[3]; 
     		},
     		$html
 		);
 		return $html;
-		/*
-        if (!preg_match("~###fx_area~", $html)) {
-            return $html;
-        }
-        $html = preg_replace("~<!--.*?-->~s", '', $html);
-
-        $area_regexp = '~(<([a-z0-9]+)[^>]*?>)([\s]*?)'.self::$_area_regexp.'([\s]*?)(</\2>)~s';
-        preg_match_all($area_regexp, $html, $areas);
-        $html = preg_replace_callback(
-            $area_regexp, 
-            function($matches) {
-                // если внутри есть еще маркер - значит, мы наловили лишнего
-                if (preg_match("~###fx_area~", $matches[6])) {
-                    return $matches[0];
-                }
-                $tag = fx_html_token::create_standalone($matches[1]);
-                $tag->add_meta(array(
-                    'class' => 'fx_area',
-                    'data-fx_area' => htmlentities($matches[5])
-                ));
-                $tag = $tag->serialize();
-                return $tag.$matches[3].$matches[6].$matches[7].$matches[8];
-            },
-            $html
-        );
-        return $html;
-        */
     }
     
     protected static function _replace_areas_in_text($html) {
@@ -170,7 +136,8 @@ class fx_template {
     		"~###fxa(\d+)###~",
     		function($matches) {
     			$replacement = fx_template::$area_replacements[$matches[1]];
-    			$tag_name = preg_match("~<(?:div|ul|li|table|br)~i", $content) ? 'div' : 'span';
+    			//$tag_name = preg_match("~<(?:div|ul|li|table|br|nav)~i", $content) ? 'div' : 'span';
+                $tag_name = 'div';
     			$tag = fx_html_token::create_standalone('<'.$tag_name.'>');
                 $tag->add_meta(array(
                     'class' => 'fx_area',
@@ -178,20 +145,11 @@ class fx_template {
                 ));
                 $tag = $tag->serialize();
                 fx_template::$area_replacements[$matches[1]] = null;
-                return $tag.$replacement[1].fx_template::$_adder_html.'</'.$tag_name.'>';
+                return $tag.$replacement[1].'</'.$tag_name.'>';
     		},
     		$html
 		);
 		return $html;
-		/*
-        $html = preg_replace_callback("~".self::$_area_regexp."~s", function($matches) {
-            $content = $matches[3];
-            $tag = preg_match("~<(?:div|ul|li|table|br)~i", $content) ? 'div' : 'span';
-            return '<'.$tag.' class="fx_area" data-fx_area="'.htmlentities($matches[2]).'">'.
-                    $matches[3].'</'.$tag.'>';
-        }, $html);
-        return $html;
-        */
     }
 }
 ?>

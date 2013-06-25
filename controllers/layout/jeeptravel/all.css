@@ -146,15 +146,25 @@ h1, h2, h3, h4, h5, h6 {
     cursor: pointer;
     border: 0;
 }
+
+.header_area {
+    float:right;
+}
 .header nav {
     overflow: hidden;
     text-align: center;
     padding: 12px 0 0;
     font: 20px/23px 'CalibriLight', Arial, sans-serif;
+    height: 35px;
 }
+
+.header nav ul {
+    height: 28px;
+}
+
 .header nav li {
     display: inline;
-    padding: 0 15px;
+    padding: 5px 15px;
 }
 .header nav a {
     color: #fff;
@@ -310,6 +320,11 @@ h1, h2, h3, h4, h5, h6 {
     width: 140px;
     font: 14px/16px 'CalibriRegular', Arial, sans-serif;
 }
+
+.l-side ul li img {
+    width: 140px;
+}
+
 .l-side ul span {
     display: block;
     padding: 5px 10px;
@@ -368,6 +383,11 @@ a.calendar {
     width: 560px;
     margin-top: 20px;
 }
+
+.section_inner_full .content {
+    width:auto;
+}
+
 .content h1,
 .sidebar h1 {
     font: 48px/50px 'CambriaBoldItalic', Times, sans-serif;
@@ -481,21 +501,7 @@ section .btn-next.active { background-position: -46px 0; }
 }
 .portfolio h2 a { color: #fff; }
 .portfolio h2 span { color: #323639; }
-.img-block {
-    padding: 10px;
-    overflow: hidden;
-    background: #fff;
-    font-size: 18px;
-    width: 881px;
-    position: relative;
-    color: #33373a;
-}
-.img-block img {
-    display: block;
-    margin: 0;
-}
-.img-block .left { float: left; }
-.img-block .right { float: right; }
+
 .contact-holder {
     background: #33373a url(images/bg-contact-holder.gif) 0 438px repeat-x;
     display: none;
@@ -649,4 +655,48 @@ section.footer {
 
 .text_block {
     margin-bottom:30px;
+}
+
+.img-list .images {
+    padding: 10px;
+    overflow: hidden;
+    background: #fff;
+    font-size: 18px;
+    width: 881px;
+    height: 571px;
+    position: relative;
+    color: #33373a;
+}
+
+.img-block {
+    display:none;
+    position: absolute;
+    width: 881px;
+    top:10px;
+    left:10px;
+}
+
+.img-block-active {
+    display: block;
+}
+
+.img-block img {
+    display: block;
+    margin: 0 auto;
+    max-width:880px; 
+    max-height:550px;
+}
+.img-block .left { float: left; }
+.img-block .right { float: right; }
+
+.img-slider {
+    margin:15px 0;
+    overflow: hidden;
+    width:901px;
+}
+
+.img-slider div.preview {
+    cursor:pointer;
+    float:left;
+    margin-right:15px;
 }

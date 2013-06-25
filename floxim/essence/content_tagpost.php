@@ -2,24 +2,30 @@
 class fx_content_tagpost extends fx_content {
     
     protected function _get_tag(){
-        return fx::data('content_tag', $this->get('tag_id'));
+        if (!$this['tag_id']) {
+            return;
+        }
+        return fx::data('content_tag', $this['tag_id']);
     }
     
     protected function _after_insert() {
         parent::_after_insert();
         $tag = $this->_get_tag();
         if (!$tag) {
-            //echo fen_debug('no tag found', $this);
             return;
         }
         $tag['counter'] = $tag['counter']+1;
+        dev_log('saving tag', $tag);
         $tag->save();
     }
     
     protected function _after_delete() {
         parent::_after_delete();
-        $tag = $this->_get_tag();
+        if (! ($tag = $this->_get_tag()) ) {
+            return;
+        }
         $tag['counter'] = $tag['counter']-1;
+        dev_log('saving tag', $tag);
         $tag->save();
     }
 }

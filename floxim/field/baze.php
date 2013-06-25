@@ -83,7 +83,9 @@ class fx_field_baze extends fx_field {
     }
 
     public function validate_value($value) {
-        if (!is_array($value)) $value = trim($value);
+        if (!is_array($value) && !is_object($value)) {
+            $value = trim($value);
+        }
         if ($this['not_null'] && !$value) {
             $this->error = sprintf(FX_FRONT_FIELD_FILED, $this->description);
             return false;
