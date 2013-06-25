@@ -21,7 +21,7 @@ $db_config = array(
     )
 );
 
-$config = $db_config['ilya_local'];
+$config = $db_config['remote'];
 
 $SYSTEM_FOLDER = dirname(__FILE__) . (isset($config['HTTP_ROOT_PATH']) ? $config['HTTP_ROOT_PATH'] : '/floxim/') . 'system/';
 define("FX_JQUERY_PATH", '/floxim/lib/js/jquery-1.7.1.js');
