@@ -292,7 +292,7 @@ class fx {
         $dict_key = empty($dict_key) ? 'content' : $dict_key;
         $cur_lang = fx::config()->LANGUAGE;
 
-        // TODO: временный костыль для русских фраз чтобы не таскать портянку
+        // TODO: заполнить русские строки в базе и убрать временный костыль для русских фраз чтобы не таскать портянку
         if ( $cur_lang == 'ru' ) return $string;
 
         $dict_file = fx::config()->DOCUMENT_ROOT . '/floxim_files/php_dictionaries/' . $cur_lang . '.' . $dict_key . '.php';
@@ -309,7 +309,6 @@ class fx {
         $db_str = fx::db()->get_results('SELECT * FROM {{dictionary}} WHERE lang_string = "' . $str . '" AND dict_key = "' . $dc . '"');
         $db_str = $db_str[0];
         if ( empty($db_str) ) {
-            // не забыть удалить файловый кэш при добавлении нового слова в словарь
             fx::db('INSERT INTO {{dictionary}} (dict_key,lang_string) VALUES ("' . $dc . '","' . $str .'")');
             unlink($dict_file);
         }
@@ -317,7 +316,6 @@ class fx {
     }
 
     private static function dictCacheGet( $lang, $key, $string ) {
-        // не забыть делать addslashes при поиске в массиве-кэше
         $dict_file = fx::config()->DOCUMENT_ROOT . '/floxim_files/php_dictionaries/' . $lang . '.' . $key . '.php';
         try {
             require_once($dict_file);
