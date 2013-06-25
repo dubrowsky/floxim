@@ -383,6 +383,11 @@ a.calendar {
     width: 560px;
     margin-top: 20px;
 }
+
+.section_inner_full .content {
+    width:auto;
+}
+
 .content h1,
 .sidebar h1 {
     font: 48px/50px 'CambriaBoldItalic', Times, sans-serif;

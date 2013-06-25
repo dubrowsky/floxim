@@ -25,72 +25,114 @@ function fx_edit_in_place( node ) {
 		if (!/^fx_template_var/.test(i)) {
 			continue;
 		}
-		this.start(this.node.data(i));
+		var meta = this.node.data(i);
+		meta.is_att = true;
+		this.start(meta);
 	}
 }
 
 fx_edit_in_place.prototype.start = function(meta) {
+	console.log('starting '+meta.type);
+	var edit_in_place = this;
 	switch (meta.type) {
 		case 'datetime':
 			var field = this.add_panel_field(meta);
+			console.log('dtf', field);
 			break;
-		case 'image': case 'file':
-			var field_props = $.extend(meta, {
-				value:meta.filetable_id,
-				path:meta.value
+		case 'image': case 'file': 
+			var field = this.add_panel_field(
+				$.extend({}, meta, {
+					value:meta.filetable_id,
+					path:meta.value
+				})
+			);
+			field.on('fx_change_file', function() {
+				edit_in_place.save().stop();
 			});
-			var field = this.add_panel_field(field_props);
 			break;
-		case 'html':
+		case 'color':
+			var field = this.add_panel_field(meta);
 			break;
-		case 'text': default:
-			this.start_text();
+		case 'string': case 'html': case '': case 'text':
+			if (meta.is_att) {
+				this.add_panel_field(meta);
+			} else {
+				this.node.addClass('fx_var_editable')
+					.attr('contenteditable', 'true')
+					.data('fx_saved_value', this.node.html())
+					.focus();
+			}
 			break;
 	}
 	this.node.one('fx_deselect', function() {
-		$(this).data('edit_in_place').stop().save();
+		var eip = $(this).data('edit_in_place');
+		if (eip) {
+			eip.save().stop();
+		}
 	});
-            
 }
 
 fx_edit_in_place.prototype.add_panel_field = function(meta) {
+	if (meta.var_type == 'visual') {
+		meta.name = meta.id;
+	}
 	var field = $fx.front.add_panel_field(meta);
+	field.data('meta', meta);
 	this.panel_fields.push(field);
 	return field;
 }
-
-fx_edit_in_place.prototype.start_text = function () {
-	this.node.addClass('fx_var_editable')
-            .attr('contenteditable', 'true')
-            .data('fx_saved_value', this.node.html())
-            .focus();
-};
 
 fx_edit_in_place.prototype.stop = function() {
 	for (var i =0 ;i<this.panel_fields.length; i++) {
 		this.panel_fields[i].remove();
 	}
 	this.panel_fields = [];
+	this.node.data('edit_in_place', null);
 	return this;
 }
 
 fx_edit_in_place.prototype.save = function() {
 	var node = this.node;
-	var val = node.html().replace(/<br[\s\/]*?>$/, '');
-	if (val == node.data('fx_saved_value') ) {
-		return;
+	var vars = [];
+	// редактируем текст узла
+	var is_content_editable = node.data('fx_var');
+	if (is_content_editable) {
+		var val = node.html().replace(/<br[\s\/]*?>$/, '');
+		if (val != node.data('fx_saved_value') ) {
+			vars.push({
+				'var':this.meta,
+				value:val
+			});
+		}
+	}
+	for (var i = 0; i < this.panel_fields.length; i++) {
+		var pf = this.panel_fields[i];
+		var pf_meta= pf.data('meta');
+		var old_value = pf_meta.value;
+		var new_value = $(':input[name="'+pf_meta['name']+'"]', pf).val();
+		if (old_value != new_value) {
+			vars.push({
+				'var': pf_meta,
+				value:new_value
+			});
+		}
+	}
+	// ничего не поменялось
+	if (vars.length == 0) {
+		return this;
 	}
 	$fx.post({
 		essence:'infoblock',
 		action:'save_var',
 		infoblock:this.ib_meta,
-		'vars': [
-			{'var':this.meta,value:val}
-		],
+		vars: vars,
 		fx_admin:true
 	}, function(res) {
-		node.html(val);
-		node.data('fx_saved_value', val);
+		if (is_content_editable) {
+			node.html(val);
+			node.data('fx_saved_value', val);
+		}
+		$fx.front.reload_infoblock(node.closest('.fx_infoblock').get(0));
 	});
 	return this;
 }

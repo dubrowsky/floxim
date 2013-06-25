@@ -86,7 +86,7 @@ html.on('change', '.image_field', function(){
             $('.preview img', field).attr('src', data.path).show();
             $('.killer', field).show();
             $('.file_input', field).hide();
-            console.log('success upl', res_inp, data,status);
+            res_inp.trigger('fx_change_file');
         },
         error: function (data, status, e) {
         	console.log('error uploda', e);
@@ -822,6 +822,23 @@ $('.fx_admin_colorbasic', html).each( function() {
 <!--test-->
 _c.type == 'livesearch'
 
+<!--[input]-->
+	<div class="date_field">
+		<input type="text" value="<?=_c.value?>" <?=$t.field_id_name(_c)?> />
+	</div>
+	<?console.log(_c);?>
+<!--test-->
+_c.type == 'datetime'
+
+<!--jquery:form_row-->
+var inp  = $('input', html);
+inp.datepicker({
+		showOn:'button',
+		buttonText:_c.value ? _c.value : 'choose date'
+});
+inp.datepicker('widget').addClass('fx_overlay');
+
+	
 <!--[input]-->
 <div class="fx_tree">
 <input type="hidden" <?=$t.field_id_name(_c)?> class="tree_value_input"/>

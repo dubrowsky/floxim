@@ -113,7 +113,7 @@ class fx_content extends fx_essence {
                 continue;
             }
             // простое поле для не-админа - возвращаем значение
-            if (!in_array($cf->type, array('image', 'file', 'date')) && !$is_admin) {
+            if (!in_array($cf->type, array('image', 'file', 'datetime')) && !$is_admin) {
                 $fields_to_show[$fkey] = $v;
                 continue;
             }
@@ -124,6 +124,9 @@ class fx_content extends fx_essence {
                     $field_meta['filetable_id'] = $v;
                     $v = fx::config()->HTTP_FILES_PATH.$file_obj['path'];
                 }
+            }
+            if ($cf->type == 'datetime') {
+                $field_meta['value'] = $v;
             }
             
             $field_meta = array_merge(array(

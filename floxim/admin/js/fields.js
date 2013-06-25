@@ -190,6 +190,8 @@
         },
         
         datetime: function ( json ) {
+        	return $t.jQuery('form_row', json);
+        	
             var cont = $('<div />').addClass('fx_admin_form_datetime');
             if ( json.label ) {
                 cont.append( $('<label>').text(json.label) );

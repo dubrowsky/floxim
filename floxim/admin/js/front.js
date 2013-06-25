@@ -27,6 +27,7 @@ fx_front = function () {
         }
         var target = $(e.target);
         if (target.closest('.fx_overlay').length > 0) {
+        	console.log('over click');
             return;
         }
         var closest_selectable = null;
@@ -36,21 +37,32 @@ fx_front = function () {
         	closest_selectable = $fx.front.get_selectable_up(target);
         }
         
-        if (closest_selectable) {
-            // перемещение между страницами по ссылкам с зажатым контролом,
-            // и даже сохраняет текущий режим
-            var clicked_link = $(e.target).closest('a');
-            if (clicked_link.length > 0 && e.ctrlKey && clicked_link.attr('href')) {
-                document.location.href = clicked_link.attr('href')+document.location.hash;
-                return false;
-            }
-            if ($(closest_selectable).hasClass('fx_selected')) {
-                return;
-            }
-            $fx.front.select_item(closest_selectable);
-            return false;
+        // нечего выбирать
+        if (!closest_selectable) {
+        	if (target.closest('html').lenght > 0) {
+        		console.log(
+					'deselect by click',
+					target.closest('html').lenght
+				);
+				$fx.front.deselect_item();
+			}
+        	return;
         }
-        $fx.front.deselect_item();
+        
+		// перемещение между страницами по ссылкам с зажатым контролом,
+		// и даже сохраняет текущий режим
+		var clicked_link = target.closest('a');
+		if (clicked_link.length > 0 && e.ctrlKey && clicked_link.attr('href')) {
+			document.location.href = clicked_link.attr('href')+document.location.hash;
+			return false;
+		}
+		// тут надо отлавливать только contenteditable, по идее
+		if ($(closest_selectable).hasClass('fx_selected')) {
+			return;
+		}
+		$fx.front.select_item(closest_selectable);
+		return false;
+        
     });
     
     $('html').on('fx_select', function(e) {
@@ -64,8 +76,111 @@ fx_front = function () {
 		if (n.is('.fx_infoblock')) {
 			$fx.front.select_infoblock(n);
 		}
+		$fx.front.redraw_add_button(n, $fx.front.mode);
     	return false;
     });
+}
+
+fx_front.prototype.redraw_add_button = function(node, mode) {
+	$fx.buttons.unbind('add');
+	var buttons = [];
+	if (!node) {
+		return;
+	}
+	
+	var ib = node.closest('.fx_infoblock_'+mode);
+	var cm = ib.data('fx_controller_meta');
+	if (cm && cm.accept_content) {
+		for (var i = 0; i < cm.accept_content.length; i++) {
+			var c_cnt = cm.accept_content[i];
+			var cb_closure = (function(c_cnt) {
+				return function() {
+					$fx.post({
+					   essence:'content',
+					   action:'add_edit',
+					   content_type:c_cnt.type,
+					   infoblock_id:c_cnt.infoblock_id,
+					   parent_id:c_cnt.parent_id
+					}, function(res) {
+						$fx_dialog.open_dialog(res, {
+							onfinish:function() {
+								$fx.front.reload_infoblock(ib_node);
+							}
+						});
+					});
+				}
+			})(c_cnt);
+			buttons.push({
+				name:c_cnt.title,
+				callback:cb_closure
+			});
+        }
+	}
+	var area_meta = node.closest('.fx_area').data('fx_area');
+	if (area_meta) {
+		buttons.push({
+			name:'Add new infoblock to '+area_meta.id,
+			callback: function() {
+				$fx.post({
+					essence:'infoblock',
+					action:'select_controller',
+					page_id:$('body').data('fx_page_id'),
+					area:area_meta.id,
+					fx_admin:true
+				}, function(json) {
+					$fx_dialog.open_dialog(json);
+				});
+			}
+		});
+	}
+	if (buttons.length > 0) {
+		$fx.buttons.bind('add', function() {
+			console.log('btnz', buttons);
+			$fx.buttons.show_pulldown('add', buttons);
+			return false;
+		});
+		$('html').one('fx_deselect', function() {
+			$fx.front.redraw_add_button();
+		});
+	}
+	
+	/*
+	$fx.buttons.bind('add', function() {
+        var buttons = [];
+        $('.fx_infoblock').each(function() {
+            var ib_node = this;
+            var cm = $(this).data('fx_controller_meta');
+            
+            if ( cm && cm.accept_content) {
+                for (var i = 0; i < cm.accept_content.length; i++) {
+                    var c_cnt = cm.accept_content[i];
+                    var cb_closure = (function(c_cnt) {
+                        return function() {
+                            $fx.post({
+                               essence:'content',
+                               action:'add_edit',
+                               content_type:c_cnt.type,
+                               infoblock_id:c_cnt.infoblock_id,
+                               parent_id:c_cnt.parent_id
+                            }, function(res) {
+                                $fx_dialog.open_dialog(res, {
+                                    onfinish:function() {
+                                        $fx.front.reload_infoblock(ib_node);
+                                    }
+                                });
+                            });
+                        }
+                    })(c_cnt);
+                    buttons.push({
+                        name:c_cnt.title,
+                        callback:cb_closure
+                    });
+                }
+            }
+        });
+        $fx.buttons.show_pulldown('add', buttons);
+    });
+    */
 }
 
 fx_front.prototype.is_selectable = function(node) {
@@ -136,7 +251,6 @@ fx_front.prototype.get_selected_item = function() {
 
 fx_front.prototype.deselect_item = function() {
     var selected_item = this.get_selected_item();
-    console.log('desel', selected_item);
     if (selected_item) {
         $(selected_item).
                 removeClass('fx_selected').
@@ -276,7 +390,7 @@ fx_front.prototype.set_mode_edit = function () {
         //stop_essences_sortable();
     });
     
-    
+    /*
     var edit_off = function() {
         $(this).unbind('fx_deselect');
         $(this).blur();
@@ -335,6 +449,7 @@ fx_front.prototype.set_mode_edit = function () {
             }
         });
     }
+    */
     
     /*$('html').on('fx_select.fx_edit_mode', '.fx_template_var', var_select);
     $('html').on('fx_deselect.fx_edit_mode', '.fx_template_var', function() {

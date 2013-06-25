@@ -19,7 +19,7 @@ fx_buttons = function ( source ) {
     });
     
     $fx.panel.bind('fx.click', function(event,owner){
-        if ( owner != 'button_pulldown') {
+		if ( owner != 'button_pulldown') {
             self.hide_pulldown();
         } 
     });
@@ -121,7 +121,7 @@ fx_buttons.prototype.handle = function ( button ) {
             this.show_pulldown(button, this.pulldown[button]);
         }
         else {
-            this.hide_pulldown();
+        	this.hide_pulldown();
         }
 
         $fx.panel.trigger('fx.click', 'button_pulldown');
@@ -204,5 +204,5 @@ fx_buttons.prototype.show_pulldown = function ( button, data ) {
 }
 
 fx_buttons.prototype.hide_pulldown = function () {
-    $('.fx_admin_pull_down_menu').remove();
+	$('.fx_admin_pull_down_menu').remove();
 }

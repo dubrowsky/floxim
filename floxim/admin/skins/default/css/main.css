@@ -1609,10 +1609,11 @@ li ul .fx_tree_label .fx_tree_title {
     background:#FAA;
 }
 
-body div.fx_overlay {
+body div.fx_overlay, body div.fx_overlay table {
     font-family:Tahoma;
     font-size:12px;
     line-height: normal;
+    color:#000;
 }
 
 /* LiveSearch */
@@ -1732,3 +1733,25 @@ body div.fx_overlay {
     outline: 4px solid #00F;
 }
 */
+
+#fx_admin_fields .field {
+    float:left;
+    min-width: 40px;
+}
+
+#fx_admin_fields .image_field {
+    background:#FFF;
+    padding:10px 10px 10px 10px;
+    border:1px solid #CCC;
+}
+
+.fx_overlay .image_field .killer {
+    text-decoration: none;
+    cursor:pointer;
+    color:#F00;
+}
+
+.fx_overlay .date_field {
+    color:#00C;
+    cursor:pointer;
+}

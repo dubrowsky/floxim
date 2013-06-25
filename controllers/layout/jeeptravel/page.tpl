@@ -137,7 +137,7 @@
                         <ul fx:template="$pages">
                             <li fx:template="item">
                                 <a href="{$url}">{$name}</a>
-                                <div fx:if="$cover->get_value()">
+                                <div fx:if="$cover && $cover->get_value()">
                                 <img src="{$cover}" alt="" style="height:50px;" />
                                 </div>
                             </li>
@@ -170,7 +170,7 @@
         ?>
         <section fx:if="!$full_content"
             style="background:{%page_bg_color_$page_id}<?=$bg_color?>{/%} url('{%page_bg_image_$page_id}<?=$bg_image?>{/%}') no-repeat 50% 0;" 
-                class="section_inner">
+                class="section_inner{if $skip_sidebar} section_inner_full{/if}">
             <div class="wrapper">
                 <div style="clear:both;"></div>
                 <!-- Для внутренних -->
