@@ -1,11 +1,13 @@
 <div fx:template="listing" class="post_list">
     <div fx:template="item" class="post">
         <h1><a href="{$url}" title="{$name}">{$name}</a></h1>
-        <div class="date">{$publish_date}</div>
+        <div class="date">
+        	{$publish_date | 'd.m.Y'}
+		</div>
         <p>{$anounce}</p>
         
         <div fx:template="$tags">
-            {%tags_label}Метки:{/%}
+            {%tags_label | mb_strtoupper}Метки:{/%} 
             <a fx:template="item" href="{$url}">
                  {$name}
             </a>

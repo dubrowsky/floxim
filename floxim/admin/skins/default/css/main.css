@@ -1585,6 +1585,11 @@ li ul .fx_tree_label .fx_tree_title {
     outline-offset:-1px;
 }
 
+img.fx_hilight {
+	min-width:5px;
+	min-height:5px;
+}
+
 .fx_selected {
     outline:4px solid rgba(255, 255, 0, 0.5)  !important;
     outline-offset: -4px !important;
@@ -1606,6 +1611,7 @@ li ul .fx_tree_label .fx_tree_title {
 .fx_area_target { 
     display:block !important;
     min-height:100px;
+    min-width:100px;
     background:#FAA;
 }
 
@@ -1754,4 +1760,12 @@ body div.fx_overlay, body div.fx_overlay table {
 .fx_overlay .date_field {
     color:#00C;
     cursor:pointer;
+}
+
+.fx_overlay .ui-datepicker-current-day {
+    background: #FF0;
+}
+
+.fx_overlay .ui-datepicker-today {
+    border: 1px solid #F00;
 }

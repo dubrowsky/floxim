@@ -1,6 +1,14 @@
 <?php
 
 class fx_template_field  {
+	
+	public static function format_date($value, $format) {
+		if (!is_numeric($value)) {
+			$value = strtotime($value);
+		}
+		return date($format, $value);
+	}
+	
     protected $_value = null;
     
     protected $_meta = array();
@@ -25,7 +33,7 @@ class fx_template_field  {
     public static $replacements = array();
     
     public function __toString() {
-        $val = $this->get_value();
+        $val = isset($this->_meta['display_value']) ? $this->_meta['display_value'] : $this->get_value();
         if (!$this->get_meta('editable') || !fx::is_admin()) {
             return $val;
         }

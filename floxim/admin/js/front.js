@@ -27,7 +27,6 @@ fx_front = function () {
         }
         var target = $(e.target);
         if (target.closest('.fx_overlay').length > 0) {
-        	console.log('over click');
             return;
         }
         var closest_selectable = null;
@@ -39,13 +38,13 @@ fx_front = function () {
         
         // нечего выбирать
         if (!closest_selectable) {
-        	if (target.closest('html').lenght > 0) {
-        		console.log(
-					'deselect by click',
-					target.closest('html').lenght
-				);
-				$fx.front.deselect_item();
+        	// случаи, когда target оказался вне основого дерева
+        	// как с jqueryui-datepicker при перерисовке
+        	if (target.closest('html').length == 0) {
+        		return;
 			}
+			// снимаем выделение и заканчиваем обработку
+			$fx.front.deselect_item();
         	return;
         }
         

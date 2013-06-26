@@ -96,6 +96,7 @@ h1, h2, h3, h4, h5, h6 {
 .wrapper {
     width: 900px;
     margin: 0 auto;
+    position:relative;
 }
 .header.active .wrapper {
     overflow: hidden;
@@ -105,8 +106,6 @@ h1, h2, h3, h4, h5, h6 {
     width: 208px;
     height: 62px;
     overflow: hidden;
-    /*text-indent: -9999px;
-    background: url(images/logo.png) no-repeat;*/
     float: left;
 }
 .logo a {
@@ -148,7 +147,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .header_area {
-    float:right;
+    position:absolute;
+    right:0px;
+    
 }
 .header nav {
     overflow: hidden;

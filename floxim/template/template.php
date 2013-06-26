@@ -151,5 +151,29 @@ class fx_template {
 		);
 		return $html;
     }
+    
+    protected function _apply_modifiers($var, $modifiers) {
+    	$val = $var instanceof fx_template_field ? $var->get_value() : $var;
+    	echo "~".$val."~";
+    	foreach ($modifiers as $mod) {
+    		$callback = array_shift($mod);
+    		if (!is_callable($callback)) {
+    			continue;
+    		}
+    		$self_key = array_keys($mod, "self");
+    		if (isset($self_key[0])) {
+    			$mod[$self_key[0]] = $val;
+    		} else {
+    			array_unshift($mod, $val);
+    		}
+    		echo '<br>'.$callback."(<pre>".htmlspecialchars(print_r($mod,1))."</pre>)";
+    		$val = call_user_func_array($callback, $mod);
+    		echo "<pre>".htmlspecialchars(print_r($val,1))."</pre>";
+    		//echo "<pre>".htmlspecialchars(print_r($mod,1))."</pre>";
+    	}
+    	echo "<pre>".htmlspecialchars(print_r($val,1))."</pre>";
+    	//echo "<pre>".htmlspecialchars(print_r($modifiers,1))."</pre>";
+    	return $var;
+    }
 }
 ?>

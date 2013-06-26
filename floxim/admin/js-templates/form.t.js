@@ -824,19 +824,26 @@ _c.type == 'livesearch'
 
 <!--[input]-->
 	<div class="date_field">
-		<input type="text" value="<?=_c.value?>" <?=$t.field_id_name(_c)?> />
+		<input type="text" class="date_input" value="<?=_c.value.replace(/\s.*$/, '')?>" <?=$t.field_id_name(_c)?> />
 	</div>
-	<?console.log(_c);?>
 <!--test-->
 _c.type == 'datetime'
 
 <!--jquery:form_row-->
-var inp  = $('input', html);
+var inp  = $('input.date_input', html);
+var show_format = 'yy-mm-dd';
+var store_format = 'yy-mm-dd';
 inp.datepicker({
-		showOn:'button',
-		buttonText:_c.value ? _c.value : 'choose date'
+		changeMonth: true,
+		changeYear: true,
+		firstDay:1,
+		dateFormat: show_format,
+		onSelect:function(dateText, datepicker) {
+			//$(this).datepicker('option', 'buttonText', dateText);
+		}
 });
 inp.datepicker('widget').addClass('fx_overlay');
+//handler.on('click', function() {$(this).datepicker('show');});
 
 	
 <!--[input]-->

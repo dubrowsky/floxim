@@ -51,7 +51,7 @@ class fx_template_processor {
             );
             // или заканчивается на {...}
             $file_data = preg_replace(
-                "~(\{.+?\})\s*?[\n\r]+\s*~s",
+                "~(\{.+?\}\s*?)[\n\r]+\s*~s",
                 '\1',
                 $file_data
             );
@@ -456,6 +456,47 @@ class fx_template_processor {
             $code .= '"editable" => true))'.";\n";
             $code .= "}\n";
         }
+        if ( ( $modifiers = $token->get_prop('modifiers') ) ) {
+        	//$code .= $var_tmp.' = $this->_apply_modifiers('.$var_tmp.', '.var_export($modifiers,1).");\n";
+        	$code .= '$val = '.$var_tmp.' instanceof fx_template_field ? '.$var_tmp.'->get_value() : '.$var_tmp.";\n";
+        	foreach ($modifiers as $mod) {
+        		$callback = array_shift($mod);
+        		//$code .= 'if (is_callable("'.$callback.'")) {'."\n"; 		// test callable
+        			if ($callback == 'fx_default') {
+        				$code .= 'if ('.$var_tmp.' instanceof fx_template_field) {'."\n";
+        				$code .= 'switch ('.$var_tmp.'->get_meta("type")) {'."\n";
+        				$code .= "case 'datetime':\n";
+        				$code .= '$callback = "fx_template_field::format_date";'."\nbreak;\n";
+        				$code .= "case 'image':\n";
+        				$code .= '$callback = "fx_template_field::format_image";'."\nbreak;\n";
+        				$code .= "}\n";
+        				$code .= "}\n";
+        			} else {
+						if (!is_callable($callback)) {
+							continue;
+						}
+					}
+					$self_key = array_keys($mod, "self");
+					if (isset($self_key[0])) {
+						$mod[$self_key[0]] = '$val';
+					} else {
+						array_unshift($mod, '$val');
+					}
+					if ($callback == 'fx_default') {
+						$code .= '$val = call_user_func($callback, ';
+					} else {
+						$code .= '$val = '.$callback.'(';
+					}
+					$code .= join(", ", $mod);
+					$code .= ");\n";
+				//$code .= "}\n";											// end test callable
+        	}
+        	$code .= 'if ('.$var_tmp.' instanceof fx_template_field) {'."\n";
+			$code .= $var_tmp.'->set_meta("display_value", $val)'.";\n";
+			$code .= "} else {\n";
+			$code .= $var_tmp.' = $val'.";\n";
+			$code .= "}\n";
+        }
         $code .= "\necho ".$var_tmp.";\n";
         $code .= "unset(".$var_tmp.");\n";
         $code .= "\n?>";
@@ -703,47 +744,144 @@ class fx_template_processor {
      * @return fx_template_token
      */
     public static function create_token($source) {
-        $props = array();
-        if (preg_match('~^\{~', $source)) {
-            $source = preg_replace("~^\{|\}$~", '', $source);
-            $is_close = preg_match('~^\/~', $source);
-            preg_match("~^\/?([^\s\/\}]+)~", $source, $name);
-            $source = substr($source, strlen($name[0]));
-            $name = $name[1];
-            $type_info = self::get_token_info($name);
-            if (preg_match("~^[\\\$%]~", $name, $var_marker)) {
-                $props['id'] = preg_replace("~^[\\\$%]~", '', $name);
-                $props['var_type'] = $var_marker[0] == '%' ? 'visual' : 'data';
-                $name = 'var';
-            }
-            if (preg_match("~\/$~", $source)) {
-                $type = 'single';
-            } elseif ($is_close) {
-                $type = 'close';
-            } elseif ($type_info['type'] == 'single') {
-                $type = 'single';
-            } elseif ($type_info['type'] == 'double') {
-                $type = 'open';
-            } else {
-                $type = 'unknown';
-            }
-            if ($name == 'if' && $type == 'open' && !preg_match('~test=~', $source)) {
-                //echo fen_debug($source, $s_source);
-                $props['test'] = $source;
-            } else {
-                // добавляем отсутствующие кавычки атрибутов
-                $source  = preg_replace("~\s([a-z]+)\s*?=\s*?([^\'\\\"\s]+)~", ' $1="$2"', $source);
-                preg_match_all('~([a-z]+)="([^\"]+)"~', $source, $atts);
-                foreach ($atts[1] as $att_num => $att_name) {
-                    $props[$att_name] = $atts[2][$att_num];
-                }
-            }
-        } else {
-            $type = 'single';
+        
+        if (!preg_match('~^\{~', $source)) {
+        	$type = 'single';
             $name = 'code';
             $props['value'] = $source;
+            return new fx_template_token($name, $type, $props);
         }
-        return new fx_template_token($name, $type, $props);
+        $props = array();
+		$source = preg_replace("~^\{|\}$~", '', $source);
+		$is_close = preg_match('~^\/~', $source);
+		preg_match("~^\/?([^\s\/\\|}]+)~", $source, $name);
+		$source = substr($source, strlen($name[0]));
+		$name = $name[1];
+		$type_info = self::get_token_info($name);
+		if (preg_match("~^[\\\$%]~", $name, $var_marker)) {
+			$props['id'] = preg_replace("~^[\\\$%]~", '', $name);
+			$props['var_type'] = $var_marker[0] == '%' ? 'visual' : 'data';
+			$name = 'var';
+		}
+		if (preg_match("~\/$~", $source)) {
+			$type = 'single';
+			$source = preg_replace("~/$~", '', $source);
+		} elseif ($is_close) {
+			$type = 'close';
+		} elseif ($type_info['type'] == 'single') {
+			$type = 'single';
+		} elseif ($type_info['type'] == 'double') {
+			$type = 'open';
+		} else {
+			$type = 'unknown';
+		}
+		if ($name == 'if' && $type == 'open' && !preg_match('~test=~', $source)) {
+			$props['test'] = $source;
+		} else {
+			// добавляем отсутствующие кавычки атрибутов
+			$source  = preg_replace("~\s([a-z]+)\s*?=\s*?([^\'\\\"\s]+)~", ' $1="$2"', $source);
+			
+			$source = preg_replace_callback(
+				'~([a-z]+)="([^\"]+)"~',
+				function ($matches) use (&$props) {
+					$props[$matches[1]] = $matches[2];
+					return '';
+				},
+				$source
+			);
+			
+			if ($name == 'var' && preg_match("~^\s*\|~", $source)) {
+				$source = preg_replace("~^\s*\|~", '', $source);
+				$source = trim($source);
+				$source .= '|';
+				$source = preg_split("~(\s*\|\s*|\s*:\s*|[\'\"])~", $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+				if (count($source) > 0) {
+					$modifiers = array();
+					$c_modifier = array();
+					$c_state = 'default';
+					$c_arg_quote = '';
+					$c_arg = '';
+					foreach ($source as $chunk_num => $chunk) {
+						$is_separator = preg_match("~^\s*\|\s*$~", $chunk);
+						$is_arg_separator = preg_match("~^\s*:\s*$~", $chunk);
+						if ($c_state == 'default') {
+							// нормальное название модификатора
+							if (preg_match("~^[a-z0-9_-]+$~i", $chunk)) {
+								$c_modifier['name'] = $chunk;
+								$c_state = 'modifier';
+								$c_arg_quote = '';
+								continue;
+							}
+							// вместо модификатора - аргумент в кавычках
+							if ($chunk == '"' || $chunk = "'") {
+								$c_modifier['name'] = 'fx_default';
+								$c_state = 'arg';
+								$c_arg_quote = $chunk;
+								$c_arg = $chunk;
+								continue;
+							}
+						}
+						if ($c_state == 'arg') {
+							if ( $c_arg_quote == '' && ($chunk == '"' || $chunk == "'")) {
+								$c_arg_quote = $chunk;
+								$c_arg .= $chunk;
+								continue;
+							}
+							// закрылась кавычка аргумента
+							if ( $c_arg_quote != '' && $chunk == $c_arg_quote ) {
+								$c_arg .= $chunk;
+								$c_arg_quote = '';
+								continue;
+							}
+							// начался новый аргумент
+							if ($c_arg_quote == '' && $is_arg_separator) {
+								$c_modifier['args'][]= $c_arg;
+								$c_arg = '';
+								continue;
+							}
+							// конец аргумента и модификатора
+							if ($c_arg_quote == '' && $is_separator) {
+								$c_state = 'default';
+								$c_modifier['args'] []= $c_arg;
+								$modifiers []= $c_modifier;
+								$c_modifier = array('args' => array());
+								$c_arg = '';
+								continue;
+							}
+							$c_arg .= $chunk;
+							continue;
+						}
+						// конец модификатора
+						if ($c_state == 'modifier' && $is_separator) {
+							$c_state = 'default';
+							$modifiers []= $c_modifier;
+							$c_modifier = array('args' => array());
+							//echo "Save mod<br />";
+							//echo $c_state.'/'.htmlspecialchars($chunk)."<hr />";
+							continue;
+						}
+						if ($c_state == 'modifier' && $is_arg_separator) {
+							$c_state = 'arg';
+							$c_arg = '';
+							//echo $c_state.'/'.htmlspecialchars($chunk)."<hr />";
+							continue;
+						}
+						
+					}
+					if (count($modifiers) > 0) {
+						$props['modifiers'] = array();
+						foreach ($modifiers as $modifier) {
+							$c_mod = array($modifier['name']);
+							if (isset($modifier['args'])) {
+								$c_mod = array_merge($c_mod, $modifier['args']);
+							}
+							$props['modifiers'] []= $c_mod;
+						}
+					}
+				}
+			}
+		}
+        return new fx_template_token($name, $type, $props);   
     }
 }
 

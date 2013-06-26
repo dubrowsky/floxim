@@ -25,9 +25,9 @@ class JSTX {
 		$res .= ($this->opt('use_with') ? "with(_c){" : "")." p.push('";
 		
 		// Превратить шаблон в чистый JavaScript
+		
 		$tpl = preg_replace("~[\r\t\n]~", " ", $tpl);
 		$tpl = preg_replace("~\/\*.+?\*\/~", '', $tpl);
-		//echo "-------------------------------------\n".print_r($tpl,1)."\n---------------------------\n";
 		
 		$tpl = explode($this->opt('left_bracket'), $tpl);
 		$tpl = join("\t", $tpl);
@@ -71,6 +71,15 @@ class JSTX {
 	public function parseFile($file) {
 		$tpls = file_get_contents($file);
 		$tpls = trim($tpls);
+		// удаляем однострочные комментарии
+		$tpls = preg_replace_callback(
+			"~//.*?([\n\r])~", function($matches) {
+				//echo "<pre>".htmlspecialchars(print_r($matches,1))."</pre>";
+				//die();
+				return $matches[1];
+			}, 
+			$tpls
+		);
 		
 		$templates = array();
 		

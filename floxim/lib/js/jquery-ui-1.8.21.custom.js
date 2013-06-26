@@ -3893,9 +3893,7 @@ $.widget("ui.sortable", $.ui.mouse, {
 			}
 
 			var p = t.offset();
-			if (!p) {
-				console.log(item.item.html());
-			} else {
+			if (p) {
 				item.left = p.left;
 				item.top = p.top;
 			}
@@ -3991,7 +3989,6 @@ $.widget("ui.sortable", $.ui.mouse, {
 		// if no intersecting containers found, return 
 		if(!innermostContainer) return; 
         
-        console.log('jiis hr');
         // move the item into the container if it's not there already
 		if(this.containers.length === 1) {
 			this.containers[innermostIndex]._trigger("over", event, this._uiHash(this));
@@ -4020,7 +4017,6 @@ $.widget("ui.sortable", $.ui.mouse, {
 			//Update the placeholder
 			this.options.placeholder.update(this.currentContainer, this.placeholder);
             
-            console.log('tr branch 2');
 			this.containers[innermostIndex]._trigger("over", event, this._uiHash(this));
 			this.containers[innermostIndex].containerCache.over = 1;
 		} 
