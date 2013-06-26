@@ -13,18 +13,15 @@ class fx_auth_facebook extends fx_auth_external {
 
         return ($settings['facebook_enabled'] && $settings['facebook_app_id'] && $settings['facebook_app_key'] && $curl);
     }
-
     static public function get_auth_url() {
         return fx::config()->HTTP_ROOT_PATH . '?essence=module_auth&action=auth_by_facebook&redirect=' . $_SERVER['REQUEST_URI'];
     }
-
-
     static public function proccess() {
         if (self::enabled()) {
             $self = new self();
             $self->dispatcher();
         } else {
-            die( fx_lang("Авторизация через facebook запрещена"));
+            die( fx::lang('Авторизация через facebook запрещена','system'));
         }
     }
 
@@ -37,7 +34,7 @@ class fx_auth_facebook extends fx_auth_external {
     protected function start($authurl) {
 
         echo '<meta http-equiv="refresh" content="0; url=' . $authurl . '" />';
-        echo '<p>' . fx_lang('Сейчас вы будете переброшены на страницу авторизации.') . ' <a href="' . $authurl . '">' . fx_lang('Нажмите, если не хотите ждать.') . '</a></p>';
+        echo '<p>' . fx::lang('Сейчас вы будете переброшены на страницу авторизации.','system') . ' <a href="' . $authurl . '">' . fx::lang('Нажмите, если не хотите ждать.','system') . '</a></p>';
     }
 
     public function dispatcher() {
@@ -47,7 +44,6 @@ class fx_auth_facebook extends fx_auth_external {
                         'secret' => $this->settings['facebook_app_key'],
                     ));
             $user = $facebook->getUser();
-
             if (!$user) {
                 $this->start($facebook->getLoginUrl());
             } else {
@@ -60,6 +56,5 @@ class fx_auth_facebook extends fx_auth_external {
             echo $e->getMessage();
         }
     }
-
 }
 ?>

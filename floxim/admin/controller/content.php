@@ -41,7 +41,7 @@ class fx_controller_admin_content extends fx_controller_admin {
             dev_log('saving content', $input, $content);
             $content->save();
         }
-        return array('status' => 'ok', 'dialog_title' => fx_lang('Редактирование контента'));
+        return array('status' => 'ok', 'dialog_title' => fx::lang('Редактирование контента','system'));
     }
 
     public function checked_save($input) {
@@ -70,22 +70,18 @@ class fx_controller_admin_content extends fx_controller_admin {
     }
 
     public function unchecked_save($input) {
-        
         $ids = $input['id'];
         if (!is_array($ids)) {
             $ids = array($ids);
         }
-
         foreach ($ids as $id) {
             if (preg_match("/(\d+)-(\d+)/", $id, $match)) {
                 $class_id = $match[1];
                 $content_id = $match[2];
             }
-
             $content = fx::data('content')->get_by_id($class_id, $content_id);
             $content->unchecked();
         }
-
         $result['status'] = 'ok';
         return $result;
     }

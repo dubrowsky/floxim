@@ -108,7 +108,7 @@ class fx_field_file extends fx_field_baze {
         if ( $this->value ) {
             $file = fx::data('filetable')->get_by_id($this->value);
             if ( $file ) {
-                $html .= '<br/> <span>' . fx_lang('Текущий файл:') . ' </span><a href="'.fx::config()->HTTP_FILES_PATH.$file['path'].'">'.$file['real_name'].'</a>';
+                $html .= '<br/> <span>' . fx::lang('Текущий файл:','system') . ' </span><a href="'.fx::config()->HTTP_FILES_PATH.$file['path'].'">'.$file['real_name'].'</a>';
             }
         }
 

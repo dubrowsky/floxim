@@ -64,13 +64,13 @@ class fx_field_select extends fx_field_baze {
 
         $fields[] = array('id' => 'format[source]',
                 'name' => 'format[source]',
-                'label' => fx_lang('Источник'),
+                'label' => fx::lang('Источник','system'),
                 'type' => 'select',
-                'values' => array('classificator' => fx_lang('Классификатор'), 'manual' => fx_lang('Вручную')),
+                'values' => array('classificator' => fx::lang('Классификатор','system'), 'manual' => fx::lang('Вручную','system')),
                 'value' => $this['format']['source'] ? $this['format']['source'] : 'classificator');
 
-        $fields[] = array('name' => 'format[table]', 'label' => fx_lang('Классификатор'), 'type' => 'select', 'values' => $cl_values, 'value' => $this['format']['table'], 'parent' => array('format[source]', 'classificator'), 'unactive' => true);
-        $fields[] = array('name' => 'format[values]', 'label' => fx_lang('Элементы'), 'type' => 'set', 'tpl' => array(
+        $fields[] = array('name' => 'format[table]', 'label' => fx::lang('Классификатор','system'), 'type' => 'select', 'values' => $cl_values, 'value' => $this['format']['table'], 'parent' => array('format[source]', 'classificator'), 'unactive' => true);
+        $fields[] = array('name' => 'format[values]', 'label' => fx::lang('Элементы','system'), 'type' => 'set', 'tpl' => array(
                         array('name' => 'id', 'type' => 'string'),
                         array('name' => 'value', 'type' => 'string')
                 ),

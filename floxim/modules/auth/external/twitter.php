@@ -35,9 +35,8 @@ class fx_auth_twitter extends fx_auth_external {
             $self->dispatcher();
         }
         else {
-            die(fx_lang("Авторизация через twitter запрещена"));
+            die(fx::lang('Авторизация через twitter запрещена','system'));
         }
-
     }
 
     protected function output_error() {
@@ -54,7 +53,6 @@ class fx_auth_twitter extends fx_auth_external {
     protected function make_request() {
         $this->tmhOAuth->config['user_token'] = $_SESSION['access_token']['oauth_token'];
         $this->tmhOAuth->config['user_secret'] = $_SESSION['access_token']['oauth_token_secret'];
-
         $code = $this->tmhOAuth->request('GET', $this->tmhOAuth->url('1/account/verify_credentials'));
         if ($code == 200) {
             $resp = json_decode($this->tmhOAuth->response['response'], 1);
@@ -68,11 +66,9 @@ class fx_auth_twitter extends fx_auth_external {
     protected function twitter_callback() {
         $this->tmhOAuth->config['user_token'] = $_SESSION['oauth']['oauth_token'];
         $this->tmhOAuth->config['user_secret'] = $_SESSION['oauth']['oauth_token_secret'];
-
         $code = $this->tmhOAuth->request('POST', $this->tmhOAuth->url('oauth/access_token', ''), array(
                 'oauth_verifier' => $_REQUEST['oauth_verifier']
                 ));
-
         if ($code == 200) {
             $_SESSION['access_token'] = $this->tmhOAuth->extract_params($this->tmhOAuth->response['response']);
             unset($_SESSION['oauth']);
@@ -84,14 +80,12 @@ class fx_auth_twitter extends fx_auth_external {
 
     protected function start() {
         $params = array('oauth_callback' => $this->here);
-
         $code = $this->tmhOAuth->request('POST', $this->tmhOAuth->url('oauth/request_token', ''), $params);
-
         if ($code == 200) {
             $_SESSION['oauth'] = $this->tmhOAuth->extract_params($this->tmhOAuth->response['response']);
             $authurl = $this->tmhOAuth->url("oauth/authorize", '')."?oauth_token={$_SESSION['oauth']['oauth_token']}";
             echo '<meta http-equiv="refresh" content="0; url='.$authurl.'" />';
-            echo '<p>' . fx_lang('Сейчас вы будете переброшены на страницу авторизации.') . ' <a href="'.$authurl.'">' . fx_lang('Нажмите, если не хотите ждать.') '</a></p>';
+            echo '<p>' . fx::lang('Сейчас вы будете переброшены на страницу авторизации.','system') . ' <a href="'.$authurl.'">' . fx::lang('Нажмите, если не хотите ждать.','system') . '</a></p>';
         } else {
             $this->output_error();
         }
@@ -110,5 +104,4 @@ class fx_auth_twitter extends fx_auth_external {
     }
 
 }
-
 ?>

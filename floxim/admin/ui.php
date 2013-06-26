@@ -109,7 +109,7 @@ class fx_admin_ui {
         $store = new fx_admin_store();
         $response = $store->get_items($type, $filter, $reason, $position);
         if ($response === false) {
-            $result = $this->error( fx_lang('Не удалось соединиться с сервером') );
+            $result = $this->error( fx::lang('Не удалось соединиться с сервером','system') );
         } 
         else if ( $response['error'] ) {
             $result = $this->html( $response['error'] );

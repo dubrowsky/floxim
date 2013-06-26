@@ -103,19 +103,19 @@ class fx_controller_module_auth extends fx_controller_module {
 
         $result = "";
         if (!$confirm_user || !$confirm_code) {
-            $result = fx_lang("Не передан код подтверждения регистрации.");
+            $result = fx::lang('Не передан код подтверждения регистрации.','system');
         }
 
         $fx_auth = fx_auth::get_object();
         $user = $fx_auth->registration_confirm($confirm_user, $confirm_code);
 
         if (!$user) {
-            $result = fx_lang("Неверный код подтверждения регистрации.");
+            $result = fx::lang('Неверный код подтверждения регистрации.','system');
         } else {
             if ($fx_core->get_settings('registration_premoderation', 'auth')) {
-                $result = fx_lang("Ваш адрес e-mail подтвержден. Дождитесь проверки и активации учетной записи администратором.");
+                $result = fx::lang('Ваш адрес e-mail подтвержден. Дождитесь проверки и активации учетной записи администратором.','system');
             } else {
-                $result = fx_lang("Ваш аккаунт активирован.");
+                $result = fx::lang('Ваш аккаунт активирован.','system');
                 if ($fx_core->get_settings('autoauthorize', 'auth')) {
                     $user->authorize();
                 }
@@ -136,22 +136,19 @@ class fx_controller_module_auth extends fx_controller_module {
             $user = fx::data('user')->get('id', $input['uid'], 'registration_code', $input['ucc'], 'checked', 1);
             if ( $user ) {
                 $user->authorize();
-
                 $component_id = $fx_core->get_settings('user_component_id', 'auth');
                 $change_password_ctpl = fx::data('ctpl')->get('component_id', $component_id, 'keyword', 'passwordchange');
                 $infoblock = fx::data('infoblock')->get('list_ctpl_id', $change_password_ctpl['id']);
                 $subdivision_id = $infoblock['subdivision_id'];
             }
             else {
-                $content = fx_lang("Неверный код");
+                $content = fx::lang('Неверный код','system');
                 $subdivision_id = $input['subdivision'];
             }
-
             $page = new fx_controller_page();
             if ( $content ) {
                 $page->set_main_content($result);
             }
-
             $page->load_subdivision($subdivision_id);
             $page->index();
 
@@ -162,15 +159,13 @@ class fx_controller_module_auth extends fx_controller_module {
             $result = array('result' => $res ? 'ok' : 'error');
             return $result;
         }
-
     }
 
     public function change_relation($input) {
         $do = $input['do'];
         $id = intval($input['id']);
-
         if (!$id) {
-            echo fx_lang("Неверный id пользователя");
+            echo fx::lang('Неверный id пользователя','system');
             return;
         }
 
@@ -186,7 +181,7 @@ class fx_controller_module_auth extends fx_controller_module {
                 $fx_auth->relation->delete_relation($id);
                 break;
             default :
-                echo fx_lang("Неверное действие");
+                echo fx::lang('Неверное действие','system');
                 return;
         }
 

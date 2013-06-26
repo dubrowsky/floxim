@@ -64,7 +64,7 @@ class fx_field_multilink extends fx_field_baze {
         $fields[] = array(
             'id' => 'format[target]',
             'name' => 'format[target]',
-            'label' => fx_lang('Связанный тип'),
+            'label' => fx::lang('Связанный тип','system'),
             'type' => 'select',
             'values' => $linking_types,
             'value' => $this['format']['target']

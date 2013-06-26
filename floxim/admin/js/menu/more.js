@@ -2,7 +2,7 @@
 fx_more_menu = function ( data ) {
     this.container = $('#fx_admin_more_menu');
     this.data = data;
-    this.name = 'Еще';
+    this.name = fx_lang('Еще');
     
     this.is_hide = true;
 }

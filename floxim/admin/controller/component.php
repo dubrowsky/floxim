@@ -52,14 +52,14 @@ class fx_controller_admin_component extends fx_controller_admin {
 
         $buttons = array("add", "delete");
         $buttons_pulldown['add'] = array(
-                array('name' => fx_lang('новый'), 'options' => array('source' => 'new')),
-                array('name' => fx_lang('импортировать'), 'options' => array('source' => 'import')),
-                array('name' => fx_lang('установить с FloximStore'), 'options' => array('source' => 'store'))
+                array('name' => fx::lang('новый','system'), 'options' => array('source' => 'new')),
+                array('name' => fx::lang('импортировать','system'), 'options' => array('source' => 'import')),
+                array('name' => fx::lang('установить с FloximStore','system'), 'options' => array('source' => 'store'))
         );
 
         $result = array('fields' => $fields, 'buttons' => $buttons, 'buttons_pulldown' => $buttons_pulldown);
 
-        $this->response->breadcrumb->add_item(self::$_essence_types[$essence], '#admin.'.$essence.'.group');
+        $this->response->breadcrumb->add_item(self::_essence_types($essence), '#admin.'.$essence.'.group');
         if ($input['params'][0]) {
             $this->response->submenu->set_menu($essence.'group-'.md5($components[0]['group']));
             $this->response->breadcrumb->add_item($components[0]['group']);
@@ -78,13 +78,13 @@ class fx_controller_admin_component extends fx_controller_admin {
     	$titles = array(
     		'component' => array(
 				//'ctpl' => fx_lang('Шаблоны'),
-				'fields' => fx_lang('Поля'),
-				'settings' => fx_lang('Настройки')
+				'fields' => fx::lang('Поля','system'),
+				'settings' => fx::lang('Настройки','system')
 			), 
 			'widget' => array(
 				//'tpl' => fx_lang('Шаблон'),
-				'fields' => fx_lang('Поля'),
-				'settings' => fx_lang('Настройки')
+				'fields' => fx::lang('Поля','system'),
+				'settings' => fx::lang('Настройки','system')
 			)
 		);
 		
@@ -104,7 +104,7 @@ class fx_controller_admin_component extends fx_controller_admin {
 
         switch ($input['source']) {
             case 'import':
-                $fields[] = array('name' => 'importfile', 'type' => 'file', 'label' => fx_lang('Файл'));
+                $fields[] = array('name' => 'importfile', 'type' => 'file', 'label' => fx::lang('Файл','system'));
                 $fields[] = $this->ui->hidden('action', 'import');
                 break;
             case 'store':
@@ -115,10 +115,10 @@ class fx_controller_admin_component extends fx_controller_admin {
                 $groups = fx::data('component')->get_all_groups();
 
                 $fields[] = $this->ui->hidden('action', 'add');
-                $fields[] = array('label' => fx_lang('Название компонента (по-русски)'), 'name' => 'name');
-                $fields[] = array('label' => fx_lang('Название сущности создаваемой компонентом (по-русски)'), 'name' => 'item_name');
-                $fields[] = array('label' => fx_lang('Ключевое слово'), 'name' => 'keyword');
-                $fields[] = array('label' => fx_lang('Группа'), 'type' => 'select', 'values' => $groups, 'name' => 'group', 'extendable' => fx_lang('Другая группа'));
+                $fields[] = array('label' => fx::lang('Название компонента (по-русски)','system'), 'name' => 'name');
+                $fields[] = array('label' => fx::lang('Название сущности создаваемой компонентом (по-русски)','system'), 'name' => 'item_name');
+                $fields[] = array('label' => fx::lang('Ключевое слово','system'), 'name' => 'keyword');
+                $fields[] = array('label' => fx::lang('Группа','system'), 'type' => 'select', 'values' => $groups, 'name' => 'group', 'extendable' => fx::lang('Другая группа','system'));
         }
 
         $fields[] = $this->ui->hidden('source', $input['source']);
@@ -169,17 +169,26 @@ class fx_controller_admin_component extends fx_controller_admin {
         return $result;
     }
     
-    // LANG ERROR
-    protected static $_essence_types = array(
+
+    // пропертю в метод
+    /* protected static $_essence_types = array(
     	'widget' => 'Виджеты',
     	'component' => 'Компоненты'
-	);
+	);*/
+
+    protected static function _essence_types( $key = null ) {
+        $arr = array (
+            'widget' => fx::lang('Виджеты','system'),
+            'component' => fx::lang('Компоненты','system')
+        );
+        return ( empty($key) ? $arr : $arr[$key] );
+    }
     
     public static function make_breadcrumb($component, $action, $breadcrumb) {
     	$essence_code = str_replace('fx_','',get_class($component));
     	$submenu = self::get_component_submenu($component);
         $submenu_first = current($submenu);
-    	$breadcrumb->add_item(self::$_essence_types[$essence_code], '#admin.'.$essence_code.'.group');
+    	$breadcrumb->add_item(self::_essence_types($essence_code), '#admin.'.$essence_code.'.group');
         $breadcrumb->add_item($component['group'], '#admin.'.$essence_code.'.group('.md5($component['group']).')');
         $breadcrumb->add_item($component['name'], $submenu_first['url']);
         if (isset($submenu[$action])) {
@@ -190,7 +199,6 @@ class fx_controller_admin_component extends fx_controller_admin {
     public function export($input) {
         $fx_core = fx_core::get_object();
         $widget = fx::data('component')->get_by_id($input['id']);
-
         $fx_export = new fx_export();
         $fx_export->export_essence($widget);
     }
@@ -261,7 +269,7 @@ class fx_controller_admin_component extends fx_controller_admin {
         $file = $input['importfile'];
         if (!$file) {
             $result = array('status' => 'error');
-            $result['text'][] = fx_lang('Ошибка при создании временного файла');
+            $result['text'][] = fx::lang('Ошибка при создании временного файла','system');
         }
 
         $result = array('status' => 'ok');
@@ -290,17 +298,15 @@ class fx_controller_admin_component extends fx_controller_admin {
                     'name' => array('name' => $v['name'], 'url' => 'ctpl.edit('.$v['id'].')'),
             );
             if ( $v->is_default() ) {
-                $r['name']['name'] .= " " . fx_lang('по умолчанию');
+                $r['name']['name'] .= " " . fx::lang('по умолчанию','system');
                 $r['fx_not_available_buttons'] = array('delete');
             }
             
             $ar['values'][] = $r;
         }
         $fields[] = $ar;
-
         $buttons = array("add", "delete");
         $buttons_action['add']['options']['component_id'] = $component['id'];
-
         $this->response->submenu->set_subactive('ctpl-'.$component['id']);
         return array('essence' => 'ctpl', 'fields' => $fields, 'buttons' => $buttons, 'buttons_action' => $buttons_action);
     }
@@ -313,10 +319,10 @@ class fx_controller_admin_component extends fx_controller_admin {
     
     protected function _get_parent_component_field($component = null) {
         $field = array(
-            'label' => fx_lang('Компонент-родитель'),
+            'label' => fx::lang('Компонент-родитель','system'),
             'name' => 'parent_id',
             'type' => 'select',
-            'values' => array('' => fx_lang('--нет--'))
+            'values' => array('' => fx::lang('--нет--','system'))
         );
         $c_finder = fx::data('component');
         if ($component) {
@@ -324,7 +330,7 @@ class fx_controller_admin_component extends fx_controller_admin {
             $field['value'] = $component['parent_id'];
         }
         $field['values'] = array_merge(
-                array(array('', fx_lang('--нет--'))),
+                array(array('', fx::lang('--нет--','system'))),
                 $c_finder->get_select_values()
         );
         return $field;
@@ -333,14 +339,11 @@ class fx_controller_admin_component extends fx_controller_admin {
     public function settings($component) {
         $groups = fx::data('component')->get_all_groups();
 
-        $fields[] = array('label' => fx_lang('Ключевое слово:') . ' '.$component['keyword'], 'type' => 'label');
-
-        $fields[] = array('label' => fx_lang('Название компонента'), 'name' => 'name', 'value' => $component['name']);
-        $fields[] = array('label' => fx_lang('Название сущности создаваемой компонентом'), 'name' => 'item_name', 'value' => $component['item_name']);
-
-        $fields[] = array('label' => fx_lang('Группа'), 'type' => 'select', 'values' => $groups, 'name' => 'group', 'value' => $component['group'], 'extendable' => fx_lang('Другая группа'));
-
-        $fields[] = array('label' => fx_lang('Описание'), 'name' => 'description', 'value' => $component['description'], 'type' => 'text');
+        $fields[] = array('label' => fx::lang('Ключевое слово:','system') . ' '.$component['keyword'], 'type' => 'label');
+        $fields[] = array('label' => fx::lang('Название компонента','system'), 'name' => 'name', 'value' => $component['name']);
+        $fields[] = array('label' => fx::lang('Название сущности создаваемой компонентом','system'), 'name' => 'item_name', 'value' => $component['item_name']);
+        $fields[] = array('label' => fx::lang('Группа','system'), 'type' => 'select', 'values' => $groups, 'name' => 'group', 'value' => $component['group'], 'extendable' => fx::lang('Другая группа','system'));
+        $fields[] = array('label' => fx::lang('Описание','system'), 'name' => 'description', 'value' => $component['description'], 'type' => 'text');
         
         $fields []= $this->_get_parent_component_field($component);
 

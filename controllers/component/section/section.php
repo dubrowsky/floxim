@@ -10,7 +10,7 @@ class fx_controller_component_section extends fx_controller_component {
     
     public function info_listing() {
         return array(
-            'name' => fx_lang('Меню')
+            'name' => fx::lang('Меню','component_section')
         );
     }
 
@@ -25,12 +25,12 @@ class fx_controller_component_section extends fx_controller_component {
             }
             $fields['submenu'] = array(
                 'name' => 'submenu',
-                'label' => fx_lang('Подразделы'),
+                'label' => fx::lang('Подразделы','component_section'),
                 'type' => 'select',
                 'values' => array(
-                    'none' => fx_lang('Не показывать'),
-                    'active' => fx_lang('Показывать у активного'),
-                    'all' => fx_lang('Показывать у всех')
+                    'none' => fx::lang('Не показывать','component_section'),
+                    'active' => fx::lang('Показывать у активного','component_section'),
+                    'all' => fx::lang('Показывать у всех','component_section')
                 )
             );
         }
@@ -63,7 +63,7 @@ class fx_controller_component_section extends fx_controller_component {
                 $active_item->set('active',true);
                 
                 $controller->accept_content(array(
-                    'title' => "Подраздел &rarr; ".$active_item['name'],
+                    'title' => fx::lang('Подраздел','component_section') . ' &rarr; ' . $active_item['name'],
                     'parent_id' => $active_item['id'],
                 ));
             }
@@ -73,8 +73,8 @@ class fx_controller_component_section extends fx_controller_component {
     
     public function info_breadcrumbs() {
         return array(
-            'name' => fx_lang('Хлебные крошки'),
-            'description' => fx_lang('Отображает путь до текущей страницы в структуре сайта')
+            'name' => fx::lang('Хлебные крошки','component_section'),
+            'description' => fx::lang('Отображает путь до текущей страницы в структуре сайта','component_section')
         );
     }
     

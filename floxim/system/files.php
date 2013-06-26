@@ -323,7 +323,7 @@ class fx_system_files extends fx_system {
             return 0;
         }
 
-        throw new fx_exception_files(fx_lang("Не могу произвести запись в файл ").$filename);
+        throw new fx_exception_files( fx::lang('Не могу произвести запись в файл','system') . ' ' . $filename);
 
         // В противном случае пишем через ftp
         $tmpfile = tmpfile();

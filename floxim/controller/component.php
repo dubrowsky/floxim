@@ -5,7 +5,6 @@ class fx_controller_component extends fx_controller {
     
     protected $_action_prefix = 'do_';
 
-
     public function process() {
         $result = parent::process();
         if (!isset($result['_meta'])) {
@@ -22,30 +21,30 @@ class fx_controller_component extends fx_controller {
         $fields = array();
         $fields['limit'] = array(
             'name' => 'limit',
-            'label' => fx_lang('Сколько выводить'),
+            'label' => fx::lang('Сколько выводить','controller_component'),
             'value' => 10
         );
         $fields['show_pagination'] = array(
             'name' => 'show_pagination',
-            'label' => fx_lang('Разбивать на страницы?'),
+            'label' => fx::lang('Разбивать на страницы?','controller_component'),
             'type' => 'checkbox',
             'value' => true,
             'parent' => array('limit' => '!=0')
         );
 
-        $sortings = array('manual' => fx_lang('Ручная'), 'created'=> fx_lang('Дата создания'));
+        $sortings = array('manual' => fx::lang('Ручная','controller_component'), 'created'=> fx::lang('Дата создания','controller_component'));
         $sortings += $this->get_component()->fields()->get_values('description', 'name');
         $fields['sorting'] = array(
             'name' => 'sorting',
-            'label' => fx_lang('Сортировка'),
+            'label' => fx::lang('Сортировка','controller_component'),
             'type' => 'select',
             'values' => $sortings
         );
         $fields['sorting_dir'] = array(
             'name' => 'sorting_dir',
-            'label' => fx_lang('Порядок'),
+            'label' => fx::lang('Порядок','controller_component'),
             'type' => 'select',
-            'values' => array('asc' => fx_lang('По возрастанию'), 'desc' => fx_lang('По убыванию')),
+            'values' => array('asc' => fx::lang('По возрастанию','controller_component'), 'desc' => fx::lang('По убыванию','controller_component')),
             'parent' => array('sorting' => '!=manual')
         );
         return $fields;
@@ -55,17 +54,17 @@ class fx_controller_component extends fx_controller {
     {
         $fields['parent_type'] = array(
             'name' => 'parent_type',
-            'label' => fx_lang('Родитель'),
+            'label' => fx::lang('Родитель','controller_component'),
             'type' => 'select',
             'values' => array(
-                'current_page_id' => fx_lang('Текущая страница'),
-                'mount_page_id' => fx_lang('Страница, куда прицеплен инфоблок'),
-                'custom' => fx_lang('Произвольный')
+                'current_page_id' => fx::lang('Текущая страница','controller_component'),
+                'mount_page_id' => fx::lang('Страница, куда прицеплен инфоблок','controller_component'),
+                'custom' => fx::lang('Произвольный','controller_component')
             )
         );
         $fields['parent_id']= array(
             'name' => 'parent_id',
-            'label' => fx_lang('Выбрать родителя'),
+            'label' => fx::lang('Выбрать родителя','controller_component'),
             'parent' => array('parent_type' => 'custom')
         );
         return $fields;
@@ -117,7 +116,7 @@ class fx_controller_component extends fx_controller {
         $fields = $this->get_action_settings_list_common();
         $fields['from_all'] = array(
             'name' => 'from_all',
-            'label' => fx_lang('Из любого раздела'),
+            'label' => fx::lang('Из любого раздела','controller_component'),
             'type' => 'checkbox',
             'parent' => array('is_mirror' => '1'),
             'value' => 1
@@ -139,7 +138,7 @@ class fx_controller_component extends fx_controller {
         }
         $fields['parent_id'] = array(
             'name' => 'parent_id',
-            'label' => fx_lang('Указать раздел явно'),
+            'label' => fx::lang('Указать раздел явно','controller_component'),
             'parent' => array('from_all' => '0')
         );
         return $fields;
@@ -163,8 +162,8 @@ class fx_controller_component extends fx_controller {
 
     public function info_record() {
         return array(
-            'name' => fx_lang('Запись'),
-            'description' => fx_lang('Выводит отдельную запись')
+            'name' => fx::lang('Запись','controller_component'),
+            'description' => fx::lang('Выводит отдельную запись','controller_component')
         );
     }
     
@@ -175,8 +174,8 @@ class fx_controller_component extends fx_controller {
     
     public function info_listing() {
         return array(
-            'name' => fx_lang('Список'),
-            'description' => fx_lang('Выводит список записей из указанного раздела')
+            'name' => fx::lang('Список','controller_component'),
+            'description' => fx::lang('Выводит список записей из указанного раздела','controller_component')
         );
     }
 
@@ -305,7 +304,7 @@ class fx_controller_component extends fx_controller {
     public function info_listing_mirror() {
         return array(
             'name' => 'Mirror',
-            'description' => fx_lang('Выводит записи по произвольному фильтру')
+            'description' => fx::lang('Выводит записи по произвольному фильтру','controller_component')
         );
     }
     

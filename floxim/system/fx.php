@@ -286,7 +286,65 @@ class fx {
         }
         return $core;
     }
-    
+
+    public static function lang ( $string, $dict_key ) {
+        // add file cache
+        $dict_key = empty($dict_key) ? 'content' : $dict_key;
+        $cur_lang = fx::config()->LANGUAGE;
+
+        // TODO: заполнить русские строки в базе и убрать временный костыль для русских фраз чтобы не таскать портянку
+        if ( $cur_lang == 'ru' ) return $string;
+
+        $dict_file = fx::config()->DOCUMENT_ROOT . '/floxim_files/php_dictionaries/' . $cur_lang . '.' . $dict_key . '.php';
+
+        // если файл-кэша не существует создаем его
+        if (!file_exists($dict_file)) {
+            self::createDictFile($cur_lang,$dict_key);
+        }
+        $res = self::dictCacheGet($cur_lang,$dict_key,$string);
+        if ( $res ) return $res;
+
+        $str = fx::db()->prepare($string);
+        $dc = fx::db()->prepare($dict_key);
+        $db_str = fx::db()->get_results('SELECT * FROM {{dictionary}} WHERE lang_string = "' . $str . '" AND dict_key = "' . $dc . '"');
+        $db_str = $db_str[0];
+        if ( empty($db_str) ) {
+            fx::db('INSERT INTO {{dictionary}} (dict_key,lang_string) VALUES ("' . $dc . '","' . $str .'")');
+            unlink($dict_file);
+        }
+        return empty($db_str['lang_'.$cur_lang]) ? $string : $db_str['lang_'.$cur_lang];
+    }
+
+    private static function dictCacheGet( $lang, $key, $string ) {
+        $dict_file = fx::config()->DOCUMENT_ROOT . '/floxim_files/php_dictionaries/' . $lang . '.' . $key . '.php';
+        try {
+            require_once($dict_file);
+        } catch (Exception $e) {
+            dev_log($e);
+            return false;
+        }
+        $string = addslashes($string);
+        return $dictionary[$lang][$key][$string];
+    }
+
+    private static function createDictFile ( $lang, $key) {
+        $dictionary = fx::db()->get_results('SELECT lang_string, lang_' . $lang . ' FROM {{dictionary}}');
+        $output = '<?php ';
+        $output .= '$dictionary["' . $lang . '"]["' . $key . '"] = array(';
+        foreach ( $dictionary as $phrase ) {
+            $output .= '"' . addslashes($phrase['lang_string']) .'" => "' . addslashes($phrase['lang_'.$lang]) . '",';
+        }
+        $output = substr($output,0,strlen($output)-1);
+        $output .= ');';
+        $dict_file = fx::config()->DOCUMENT_ROOT . '/floxim_files/php_dictionaries/' . $lang . '.' . $key . '.php';
+        try {
+            file_put_contents($dict_file,$output);
+        } catch (Exception $e) {
+            dev_log($e);
+        }
+    }
+
+    /* old language function
     public static function lang() {
         static $lang = false;
         if ($lang === false) {
@@ -294,7 +352,7 @@ class fx {
         }
         return $lang;
     }
-
+    */
 
     protected static $http = null;
     public static function http() {

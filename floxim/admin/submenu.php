@@ -126,9 +126,9 @@ class fx_admin_submenu {
     }
 
     protected function init_develop() {
-        $this->menu[] = $node_component = $this->add_node('component', fx_lang('Компоненты'), 'component.group');
-        $this->menu[] = $node_template = $this->add_node('layout', 'Макеты', 'layout.all'); // template ->layout
-        $this->menu[] = $node_widget = $this->add_node('widget', fx_lang('Виджеты'), 'widget.group');
+        $this->menu[] = $node_component = $this->add_node('component', fx::lang('Компоненты','system'), 'component.group');
+        $this->menu[] = $node_template = $this->add_node('layout', fx::lang('Макеты','system'), 'layout.all'); // template ->layout
+        $this->menu[] = $node_widget = $this->add_node('widget', fx::lang('Виджеты','system'), 'widget.group');
 
         foreach (fx::data('component')->get_all_groups() as $group) {
             $hash = md5($group);
@@ -144,31 +144,29 @@ class fx_admin_submenu {
         $fx_core = fx_core::get_object();
         //$modules = $fx_core->modules->get_data();
         
-        $this->menu[] = $node_site = $this->add_node('site', fx_lang('Список сайтов'), 'site.all');
+        $this->menu[] = $node_site = $this->add_node('site', fx::lang('Список сайтов','system'), 'site.all');
 
-        $this->menu[] = $node_administrate = $this->add_node('administrate', fx_lang('Администрирование'), 'administrate.module');
-        $this->menu[] = $this->add_node('module', fx_lang('Модули'), 'administrate.module', $node_administrate);
+        $this->menu[] = $node_administrate = $this->add_node('administrate', fx::lang('Администрирование','system'), 'administrate.module');
+        $this->menu[] = $this->add_node('module', fx::lang('Модули','system'), 'administrate.module', $node_administrate);
         
-        $this->menu[] = $node_tools = $this->add_node('tools', fx_lang('Инструменты'), 'redirect.all');
+        $this->menu[] = $node_tools = $this->add_node('tools', fx::lang('Инструменты','system'), 'redirect.all');
         
-        $this->menu[] = $node_users = $this->add_node('user', fx_lang('Пользователи'), 'user.all');
+        $this->menu[] = $node_users = $this->add_node('user', fx::lang('Пользователи','system'), 'user.all');
         $this->menu[] = $this->add_node('user', 'Список пользователей', 'user.all', $node_users);
         $this->menu[] = $this->add_node('group', 'Группы', 'group.all', $node_users);
 
-        $this->menu[] = $node_settings = $this->add_node('settings', fx_lang('Настройки'), 'settings.system');
+        $this->menu[] = $node_settings = $this->add_node('settings', fx::lang('Настройки','system'), 'settings.system');
     }
 
     protected function init_menu_component($id) {
         $this->type = 'full';
         $component = fx::data('component')->get_by_id($id);
         if (!$component) {
-            $this->error = fx_lang('Компонент не найден');
+            $this->error = fx::lang('Компонент не найден','system');
         } else {
             $this->title = $component['name'];
             $this->backlink = 'component.group';
-
             $cid = $component['id'];
-            
             // выводим основные разделы
             $submenu_items = fx_controller_admin_component::get_component_submenu($component);
             foreach ($submenu_items as $item) {
@@ -196,11 +194,10 @@ class fx_admin_submenu {
         // $template = fx::data('template')->get_by_id($id);
         $layout = fx::data('layout', $id);
         if (!$layout) {
-            $this->error = fx_lang('Макет не найден');
+            $this->error = fx::lang('Макет не найден','system');
         } else {
             $this->title = $layout['name'];
             $this->backlink = 'template.all';
-
             /*
             foreach ($layout->get_layouts() as $l) {
                 $this->menu[] = $this->add_node('layout-'.$l['id'], $l['name'], 'layout.edit('.$l['id'].')', 'layouts');
@@ -218,7 +215,7 @@ class fx_admin_submenu {
         $this->type = 'full';
         $widget = fx::data('widget')->get_by_id($id);
         if (!$widget) {
-            $this->error = fx_lang('Виджет не найден');
+            $this->error = fx::lang('Виджет не найден','system');
         } else {
             $this->title = $widget['name'];
             $this->backlink = 'widget.group';
@@ -240,14 +237,14 @@ class fx_admin_submenu {
         $this->type = 'full';
         $site = fx::data('site')->get_by_id($id);
         if (!$site) {
-            $this->error = fx_lang('Сайт не найден');
+            $this->error = fx::lang('Сайт не найден','system');
         } else {
             $this->title = $site['name'];
             $this->backlink = 'site.all';
 
-            $this->menu[] = $this->add_node('sitemap-'.$site['id'], fx_lang('Карта сайта'), 'site.map('.$site['id'].')');
-            $this->menu[] = $this->add_node('sitesettings-'.$site['id'], fx_lang('Настройки'), 'site.settings('.$site['id'].')');
-            $this->menu[] = $this->add_node('sitedesign-'.$site['id'], fx_lang('Дизайн'), 'site.design('.$site['id'].')');
+            $this->menu[] = $this->add_node('sitemap-'.$site['id'], fx::lang('Карта сайта','system'), 'site.map('.$site['id'].')');
+            $this->menu[] = $this->add_node('sitesettings-'.$site['id'], fx::lang('Настройки','system'), 'site.settings('.$site['id'].')');
+            $this->menu[] = $this->add_node('sitedesign-'.$site['id'], fx::lang('Дизайн','system'), 'site.design('.$site['id'].')');
         }
     }
 
@@ -255,7 +252,7 @@ class fx_admin_submenu {
         $this->type = 'full';
         $classificator = fx::data('classificator')->get_by_id($id);
         if (!$classificator) {
-            $this->error = fx_lang('Список не найден');
+            $this->error = fx::lang('Список не найден','system');
         } else {
             $this->title = $classificator['name'];
             $this->backlink = 'classificator.all';
@@ -266,11 +263,11 @@ class fx_admin_submenu {
         $this->type = 'full';
         $user = fx::data('user')->get_by_id($id);
         if (!$user) {
-            $this->error = fx_lang('Пользователь не найден');
+            $this->error = fx::lang('Пользователь не найден','system');
         } else {
             $this->title = $user['name'];
             $this->backlink = 'user.all';
-            $this->menu[] = $this->add_node('profile', fx_lang('Профиль'), 'user.full('.$user['id'].')');
+            $this->menu[] = $this->add_node('profile', fx::lang('Профиль','system'), 'user.full('.$user['id'].')');
         }
     }
 
@@ -297,8 +294,6 @@ class fx_admin_submenu {
         $res['subactive'] = $this->subactive;
         $res['type'] = $this->type;
         $res['menu_id'] = $this->menu_id;
-
-
         return $res;
     }
 
@@ -314,5 +309,4 @@ class fx_admin_submenu {
     public function get_active_main_menu() {
         return $this->active_main_menu;
     }
-
 }

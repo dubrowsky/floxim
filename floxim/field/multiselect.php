@@ -131,7 +131,7 @@ class fx_field_multiselect extends fx_field_select {
         $fields = $this->format_settings_source();
 
         $show = array('select' => 'Select', 'checkbox' => 'Checkbox');
-        $fields[] = array('name' => 'format[show]', 'label' => fx_lang('Показывать как'), 'values' => $show, 'type' => 'select', 'value' => $this->_show_type);
+        $fields[] = array('name' => 'format[show]', 'label' => fx::lang('Показывать как','system'), 'values' => $show, 'type' => 'select', 'value' => $this->_show_type);
         return $fields;
     }
 

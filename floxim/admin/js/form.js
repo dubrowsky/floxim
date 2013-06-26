@@ -200,7 +200,7 @@
                         form.append(
                         	'<input type="hidden" name="posting" value="1" />'+
                         	'<input type="hidden" name="fx_admin" value="1" />'+
-                        	'<input type="submit" value="Сохранить" />'
+                        	'<input type="submit" value="' + fx_lang('Сохранить') + '" />'
                         );
                         
                         var status_block = $("#fx_admin_status_block");
@@ -646,7 +646,7 @@
                             }
                         }
                         else {
-                            $fx.show_status_text('Ошибка: не удалось восстановить', 'error' );
+                            $fx.show_status_text( fx_lang('Ошибка: не удалось восстановить'), 'error' );
                             return;
                         }
                     });

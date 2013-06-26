@@ -24,7 +24,7 @@ class fx_field_link extends fx_field_baze {
         $fields[] = array(
             'id' => 'format[target]',
             'name' => 'format[target]',
-            'label' => fx_lang('Куда ссылается'),
+            'label' => fx::lang('Куда ссылается','system'),
             'type' => 'select',
             'values' => $comp_values,
             'value' => $this['format']['target'] ? $this['format']['target'] : 'classificator'
@@ -32,24 +32,25 @@ class fx_field_link extends fx_field_baze {
         $fields[] = array(
             'id' => 'format[prop_name]',
             'name' => 'format[prop_name]',
-            'label' => fx_lang('Ключ для свойства'),
+            'label' => fx::lang('Ключ для свойства','system'),
             'value' => $this->get_prop_name()
         );
         $fields[]= array(
             'id' => 'format[is_parent]',
             'name' => 'format[is_parent]',
-            'label' => fx_lang('Привязать значение к родителю'),
+            'label' => fx::lang('Привязать значение к родителю','system'),
             'type' => 'checkbox',
             'value' => $this['format']['is_parent']
         );
         $fields[]= array(
             'id' => 'format[render_type]',
             'name' => 'format[render_type]',
-            'label' => fx_lang('Способ отображения'),
+
+            'label' => fx::lang('Способ отображения','system'),
             'type' => 'select',
             'values' => array(
-                'select' => fx_lang('Выпадающий список'), 
-                'livesearch' => fx_lang('Live Search')
+                'select' => fx::lang('Выпадающий список','system'), 
+                'livesearch' => fx::lang('Live Search','system')
             ),
             'value' => $this['format']['render_type']
         );

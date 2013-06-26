@@ -2,18 +2,21 @@ fx_mode_menu = function ( ) {
     this.container = $('#fx_admin_page_modes');
     this.data =  {
         "view" : {
-            "name" : "Просмотр", 
+            "name" : fx_lang("Просмотр"),
             "href" : "view"
         },
         "edit" : {
-            "name" : "Редактирование", 
+            "name" : fx_lang("Редактирование"),
             "href" : "edit"
         }, 
         "design" : {
-            "name" : "Дизайн",
+            "name" : fx_lang("Дизайн"),
             "href" : "design"
         }
     };
+    // this.data['view']['name'] = fx_lang(this.data['view']['name']);
+    // this.data['edit']['name'] = fx_lang(this.data['view']['name']);
+    // this.data['design']['name'] = fx_lang(this.data['view']['name']);
 }
 
 fx_mode_menu.prototype.load = function ( active ) {

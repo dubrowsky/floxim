@@ -25,17 +25,17 @@ fx_adminpanel = {
                 
             $fx.settings.mainmenu = {
                 manage: {
-                    name:'управление',
+                    name: fx_lang('управление'),
                     key: 'manage',
                     href: '/floxim/#admin.administrate.site.all'
                 }, 
                 develop : {
-                    name:'разработка',
+                    name: fx_lang('разработка'),
                     key :'develop',
                     href: '/floxim/#admin.component.group'
                 }, 
                 site : {
-                    name: 'сайт',
+                    name: fx_lang('сайт'),
                     key: 'site',
                     href: '/'
                 }
@@ -254,7 +254,7 @@ fx_adminpanel = {
             callback],
             error: function(jqXHR, textStatus, errorThrown) {
                 if ( textStatus == 'parsererror') {
-                    $fx.show_status_text('Ошибка сервера:' + jqXHR.responseText, 'error');
+                    $fx.show_status_text( fx_lang('Ошибка сервера:') + jqXHR.responseText, 'error');
                 }
                 return false;
             }  
