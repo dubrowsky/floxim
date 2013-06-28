@@ -77,12 +77,10 @@ class fx_controller_admin_component extends fx_controller_admin {
     	
     	$titles = array(
     		'component' => array(
-				//'ctpl' => fx_lang('Шаблоны'),
 				'fields' => fx::lang('Поля','system'),
 				'settings' => fx::lang('Настройки','system')
 			), 
 			'widget' => array(
-				//'tpl' => fx_lang('Шаблон'),
 				'fields' => fx::lang('Поля','system'),
 				'settings' => fx::lang('Настройки','system')
 			)

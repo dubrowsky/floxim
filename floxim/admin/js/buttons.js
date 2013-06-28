@@ -29,11 +29,16 @@ fx_buttons = function ( source ) {
 fx_buttons.prototype.bind = function(button_key, callback) {
     var b = $('.fx_admin_button_'+button_key);
     b.show();
-    b.click(callback);
+    b.data('has_callback', true);
+    b.click(function() {
+    		callback();
+    		return false;
+    });
 }
 
 fx_buttons.prototype.unbind = function(button_key, callback) {
     var b = $('.fx_admin_button_'+button_key);
+    b.data('has_callback', null);
     b.hide();
     b.unbind('click', callback);
 }
@@ -65,6 +70,9 @@ fx_buttons.prototype.draw_buttons = function ( buttons ) {
 
             element.data(button_source).data('key', button);
             element.click( function () {
+				if ($(this).data('has_callback')) {
+					return;
+				}
                 self.handle(button);
                 return false;
             });

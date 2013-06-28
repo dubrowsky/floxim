@@ -1,25 +1,11 @@
 <?php
 class fx_controller_admin_infoblock extends fx_controller_admin {
 
-    // пропертю в метод
-    /* protected $_component_actions = array(
-        'listing' => 'Список',
-        // 'listing' => fx_lang('Список'),
-        'mirror' => 'Mirror',
-        'record' => 'Отдельный объект'
-        // 'record' => fx_lang('Отдельный объект')
-        //'add' => 'Добавление',
-        //'edit' => 'Редактирование'
-    ); */
     protected function _component_actions ( $key ) {
         $arr = array(
             'listing' => fx::lang('Список','system'),
-            // 'listing' => fx_lang('Список'),
             'mirror' => fx::lang('Mirror','system'),
             'record' => fx::lang('Отдельный объект','system')
-            // 'record' => fx_lang('Отдельный объект')
-            //'add' => 'Добавление',
-            //'edit' => 'Редактирование'
         );
         return empty($key) ? $arr : $arr[$key];
     }
@@ -71,10 +57,6 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             }
             $fields['controller']['values'][]= $c_item;
         }
-<<<<<<< HEAD
-=======
-        
->>>>>>> 288c9e46e2f230f751ca01c7cc1429f3dd095c39
         $result = array(
             'fields' => $fields,
             'dialog_title' => fx::lang('Добавление инфоблока','system'),
@@ -248,13 +230,8 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
     	
     	$result = array(
             'dialog_title' => $is_layout ? 
-<<<<<<< HEAD
                     fx::lang('Выбор шаблона страницы','system') : 
                     fx::lang('Настройка инфоблока','system'). 
-=======
-                    fx_lang('Выбор шаблона страницы') : 
-                    fx_lang('Настройка инфоблока'). 
->>>>>>> 288c9e46e2f230f751ca01c7cc1429f3dd095c39
                     ', ' . $controller_name . '.' . $action.' #'.$infoblock['id'],
             'step' => 'settings_select',
             'dialog_button' => array(
@@ -438,7 +415,12 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
     public function save_var($input) {
         /* @var $ib fx_infoblock */
         $ib = fx::data('infoblock', $input['infoblock']['id']);
-        if ( ($visual_id = fx::dig($input, 'infoblock.visual_id')) ) {
+        // для инфоблоков-лейаутов всегда сохраняем параметры в корневой инфоблок
+        if ($ib->get_prop_inherited('controller') == 'layout') {
+            $root_ib = $ib->get_root_infoblock();
+            $ib_visual = $root_ib->get_visual();
+            dev_log('saving lay ib', $root_ib, $ib_visual);
+        } elseif ( ($visual_id = fx::dig($input, 'infoblock.visual_id')) ) {
             $ib_visual = fx::data('infoblock_visual', $visual_id);
         } else {
             $ib_visual = $ib->get_visual();
@@ -471,7 +453,6 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                     }
                     $ib_visual['template_visual'] = $template_visual;
                 }
-                dev_log('saving ib vis', $ib_visual);
                 $ib_visual->save();
             } elseif ($var['var_type'] == 'content') {
                 $content_id = $var['content_id'];

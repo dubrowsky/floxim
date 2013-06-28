@@ -337,22 +337,10 @@ class fx {
         $output = substr($output,0,strlen($output)-1);
         $output .= ');';
         $dict_file = fx::config()->DOCUMENT_ROOT . '/floxim_files/php_dictionaries/' . $lang . '.' . $key . '.php';
-        try {
-            file_put_contents($dict_file,$output);
-        } catch (Exception $e) {
-            dev_log($e);
-        }
+        $dfh = fopen($dict_file, 'w');
+        fputs($dfh, $output);
+        fclose($dfh);
     }
-
-    /* old language function
-    public static function lang() {
-        static $lang = false;
-        if ($lang === false) {
-            $lang = new fx_system_lang();
-        }
-        return $lang;
-    }
-    */
 
     protected static $http = null;
     public static function http() {

@@ -108,7 +108,7 @@ class fx_content extends fx_essence {
         foreach ($this->data as $fkey => $v) {
             $cf = $com_fields[$fkey];
             // не-поля и поля-мультилинки - всегда возращаем просто значение
-            if (!$cf || $cf->type == 'multilink') {
+            if (!$cf || $cf->type == 'multilink' || $cf['type_of_edit'] == fx_field::EDIT_NONE) {
                 $fields_to_show[$fkey] = $v;
                 continue;
             }

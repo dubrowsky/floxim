@@ -116,7 +116,6 @@ class fx_controller_admin extends fx_controller {
             FX_JQUERY_PATH,
             '/floxim/lib/js/lang-load.js',
             '/floxim/lib/js/fx-lang.js',
-            '/floxim/admin/js/lang.js.php',
             '/floxim/lib/js/jquery-ui-1.8.21.custom.js',
             '/floxim/lib/js/jquery.nestedSortable.js',
             '/floxim/lib/js/jquery.ba-hashchange.min.js',

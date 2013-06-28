@@ -103,7 +103,7 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
 					}, function(res) {
 						$fx_dialog.open_dialog(res, {
 							onfinish:function() {
-								$fx.front.reload_infoblock(ib_node);
+								$fx.front.reload_infoblock(ib);
 							}
 						});
 					});
@@ -743,6 +743,7 @@ fx_front.prototype.reload_infoblock = function(infoblock_node) {
            if (selected_selector) {
                $fx.front.select_item(ib_parent.find(selected_selector).get(0));
            }
+           $fx.front.hilight();
        }
     });
 }

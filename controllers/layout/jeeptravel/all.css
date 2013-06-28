@@ -701,3 +701,7 @@ section.footer {
     float:left;
     margin-right:15px;
 }
+
+.photo_anounces a {
+    display:block;
+}

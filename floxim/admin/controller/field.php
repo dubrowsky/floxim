@@ -20,7 +20,7 @@ class fx_controller_admin_field extends fx_controller_admin {
                 	'url' =>  '#admin.'.$essence_code.'.edit('.$essence['id'].',edit_field,'.$field->get_id().')'
                 ),
                 'label' => $field->get_description(), 
-                'type' => constant("FX_ADMIN_FIELD_".strtoupper($field->get_type(false)))
+                'type' => fx::lang("FX_ADMIN_FIELD_".strtoupper($field->get_type(false)), 'system')
 		   );
             $ar['values'][] = $r;
         }
@@ -58,7 +58,7 @@ class fx_controller_admin_field extends fx_controller_admin {
         
         $finder = fx_data::optional('datatype');
         foreach ($finder->get_all() as $v ) {
-            $values[$v['id']] = constant("FX_ADMIN_FIELD_".strtoupper($v['name']));
+            $values[$v['id']] = fx::lang("FX_ADMIN_FIELD_".strtoupper($v['name']), 'system');
         }
         $fields[] = array(
         	'type' => 'select', 
@@ -75,7 +75,6 @@ class fx_controller_admin_field extends fx_controller_admin {
         );
         
         $values = array(
-<<<<<<< HEAD
             fx_field::EDIT_ALL => fx::lang('всем','system'), 
             fx_field::EDIT_ADMIN => fx::lang('только админам','system'), 
             fx_field::EDIT_NONE => fx::lang('никому','system')
@@ -83,15 +82,6 @@ class fx_controller_admin_field extends fx_controller_admin {
         $fields[] = $this->ui->select(
                 'type_of_edit', 
                 fx::lang('Поле доступно','system'), 
-=======
-            fx_field::EDIT_ALL => fx_lang('всем'), 
-            fx_field::EDIT_ADMIN => fx_lang('только админам'), 
-            fx_field::EDIT_NONE => fx_lang('никому')
-        );
-        $fields[] = $this->ui->select(
-                'type_of_edit', 
-                fx_lang('Поле доступно'), 
->>>>>>> 288c9e46e2f230f751ca01c7cc1429f3dd095c39
                 $values, 
                 $info['type_of_edit'] ? $info['type_of_edit'] : fx_field::EDIT_ALL  
         );

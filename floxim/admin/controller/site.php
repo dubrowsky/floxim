@@ -35,9 +35,7 @@ class fx_controller_admin_site extends fx_controller_admin {
         $this->response->add_field($list);
 
         $this->response->add_pulldown_item('add', fx::lang('Новый','system'), 'source=new');
-        // $this->response->add_pulldown_item('add', fx_lang('импортировать'), 'source=import');
-        // $this->response->add_pulldown_item('add', fx_lang('установить с FloximStore'), 'source=store');
-
+        
         $this->response->add_buttons("add,delete");//settings,
         $this->response->breadcrumb->add_item( fx::lang('Сайты','system') );
         $this->response->submenu->set_menu('site');

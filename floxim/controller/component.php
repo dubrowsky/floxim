@@ -95,19 +95,13 @@ class fx_controller_component extends fx_controller {
             $com_infoblocks = fx::data('infoblock')->
                     where('site_id', fx::env('site')->get('id'))->
                     get_content_infoblocks($target_com['keyword']);
-            $ib_values = $com_infoblocks->get_values('name', 'id') + array('new' => fx_lang('Новый инфоблок'));
+            $ib_values = $com_infoblocks->get_values('name', 'id') + array('new' => fx::lang('Новый инфоблок', 'controller_component'));
             $fields ['field_'.$lf['id'].'_infoblock']= array(
                 'type' => 'select',
                 'values' => $ib_values,
                 'name' => 'field_'.$lf['id'].'_infoblock',
-                'label' => fx_lang('Инфоблок для поля ').$lf['description']
-            );/*
-            echo fen_debug(
-                    'we are '.  get_class($this), 
-                    'field: '.$lf['name'], 
-                    'com: '.$target_com['name'],
-                    $com_infoblocks
-            );*/
+                'label' => fx::lang('Инфоблок для поля ', 'controller_component').$lf['description']
+            );
         }
         return $fields;
     }

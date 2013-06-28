@@ -71,12 +71,12 @@ class fx_controller_admin_adminpanel extends fx_controller_admin {
     public static function get_buttons() {
         $result = array(
             'source' => array(
-                'add' => array('title' => FX_ADMINPANEL_SITE_BUTTON_ADD, 'type' => 'text'),
-                'edit' => array('title' => FX_ADMINPANEL_SITE_BUTTON_EDIT),
-                'on' => array('title' => FX_ADMINPANEL_SITE_BUTTON_ON),
-                'off' => array('title' => FX_ADMINPANEL_SITE_BUTTON_OFF),
-                'settings' => array('title' => FX_ADMINPANEL_SITE_BUTTON_SETTINGS),
-                'delete' => array('title' => FX_ADMINPANEL_SITE_BUTTON_DELETE),
+                'add' => array('title' => fx::lang('add', 'system'), 'type' => 'text'),
+                'edit' => array('title' => fx::lang('edit', 'system')),
+                'on' => array('title' => fx::lang('on', 'system')),
+                'off' => array('title' => fx::lang('off', 'system')),
+                'settings' => array('title' => fx::lang('settings', 'system')),
+                'delete' => array('title' => fx::lang('delete', 'system')),
                 'select_block' => array('title' => fx::lang('выделить блок','system')),
                 'rights' => array('title' => fx::lang('Права','system')),
                 'upload' => array('title' => fx::lang('Закачать файл','system')),

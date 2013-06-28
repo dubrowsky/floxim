@@ -81,13 +81,13 @@
                 <!-- Для главной -->
                 <div fx:if="$index_areas" class="section-info holder">
                     <div class="l-side" fx:area="index_left">
-                        <ul fx:template="index_photo_anounces" fx:of="component_photo.listing">
+                        <ul fx:template="index_photo_anounces" fx:of="component_photo.listing" class="photo_anounces">
                             <li fx:template="item">
                                 <?
                                 $parent = fx::data('content_page', $item['parent_id']);
                                 extract($parent->get_fields_to_show());
                                 ?>
-                                <a href="{$url}"><img src="{%image_$id}{$photo editable="false"}{/%}" alt="" /></a>
+                                <a href="{$url}"><img src="{$photo}" alt="" /></a>
                                 <span>{$description}</span>
                             </li>
                         </ul>
@@ -114,7 +114,7 @@
                         <div fx:template="item" class="img-block {if $item_is_first}img-block-active{/if}">
                             <img src="{$photo}" alt="{$description}" />
                             <span class="left">{$description}</span>
-                            <span class="right" fx:if="$copy->get_value()">© {$copy}</span>
+                            <span class="right" fx:if="$copy">© {$copy}</span>
                         </div>
                     </div>
                     <div class="img-slider" fx:template="$items">

@@ -1,7 +1,7 @@
 <?php
 class fx_controller_layout extends fx_controller {
     
-    public function default_action() {
+    public function show() {
         if (! ($page_id = $this->param('page_id')) ) {
             $page_id = fx::env('page');
             $this->input['page_id'] = $page_id;
