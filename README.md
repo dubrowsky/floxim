@@ -1,7 +1,7 @@
 floxim
 ======
 
-*Как устроен Флоксим*
+**Как устроен Флоксим**
 
 Во Флоксиме бывают следующие сущности:
  - контроллер - класс, содержащий набор action-методов, action возвращает результат в виде массива с какими-либо данными.
@@ -19,7 +19,7 @@ floxim
 5. К инфоблоку, который собирается на предыдущем шаге, привязан контроллер "layout" с экшном "show" - этот контроллер достает все инфоблоки, которые должны быть показаны на этой конкретной странице, а также информацию о самой странице. Его шаблон - шаблон-лейаут, то есть вся обвязка сайта. В обвязке определяются области (area), где могут быть показаны инфоблоки.
 6. При отработке шаблона-лейаута для каждой области собираются инфоблоки, назначенные в нее (то есть выполняется контроллер/экшн, привязанный к инфоблоку, затем на его результат накладывается шаблон, привязанный к инфоблоку), результат вставляется в область.
 
-*Компоненты*
+**Компоненты**
 
 Компонент - составная структура для работы с контентными данными. Компонент определяет тип контента, например "Новости" - задает название типа и информацию обо всех его полях (описание таблички в БД). Данные компонентов хранятся в табличках с префиксом "content", например "fx_content_news". Для компонента есть базовый контроллер, от которого могут наследоваться другие контроллеры компонентов (например мы можем создать fx_controller_component_news extends fx_controller_component). В базовом компонент-контроллере определен набор типичных методов-экшнов: listing для отображения списка данных компонента, привязанных к разделу, listing_mirror - для отображения произвольного списка (например, транслирует данные в другой раздел), record - для отображения отдельного объекта.
 
@@ -32,99 +32,99 @@ floxim
 
 Кроме того, реализовано псевдо-наследование шаблонов для экшнов: если шаблон объявлен как подходящий для "component_page.listing", им можно отобразить результат работы любого экшна, начинающегося с "listing" - listing_mirror, listing_top, listing_author и т.д.
 
-*Как что делать*
+**Как что делать**
 
 Для наиболее частых операций есть "класс-шорткат" fx, содержащий статические методы. Вот некоторые примеры.
 
-*fx::data()*
+**fx::data()**
 
 Возвращает данные, либо finder для данных.
-    $com = fx::data('component', 10); // получить компонент с id=10
+        $com = fx::data('component', 10); // получить компонент с id=10
 
 Finder умеет строить запросы через chained-вызовы:
-    $com = fx::data('component')->where('keyword', 'news')->one(); // получить компонент с keyword='news'
-    $com = fx::data('content_news')->where('author_id', 10)->order('publish_date','desc')->limit(5)->all(); // получить 5 последних новостей автора #10.
+        $com = fx::data('component')->where('keyword', 'news')->one(); // получить компонент с keyword='news'
+        $com = fx::data('content_news')->where('author_id', 10)->order('publish_date','desc')->limit(5)->all(); // получить 5 последних новостей автора #10.
 
 Finder может создавать записи:
-    $news = fx::data('content_news')->create(array('title' => 'Super news'));
-    $news->save();
+        $news = fx::data('content_news')->create(array('title' => 'Super news'));
+        $news->save();
 
-*fx::controller()*
+**fx::controller()**
 
 Возвращает контроллер, загруженный параметрами.
-    $ctr = fx::controller('component_news.listing', array('parent_id' =>10));
-    $res = $ctr->process(); // массив с результатом
+        $ctr = fx::controller('component_news.listing', array('parent_id' =>10));
+        $res = $ctr->process(); // массив с результатом
 
-*fx::template()*
+**fx::template()**
 
 Загружает шаблон
-$tpl = fx::template('component_news.listing');
-echo $tpl->render($res); // $res из предыдущего примера
+        $tpl = fx::template('component_news.listing');
+        echo $tpl->render($res); // $res из предыдущего примера
 
-*fx::db()*
+**fx::db()**
 
 Возвращает экземпляр класса-абстракции БД (основан на PDO)
 Названия таблиц следует указывать без префикса fx, и заворачивать в двойные фигурные скобки:
-$news = fx::db()->get_results('select * from {{content_news}}');
-fx::db()->query('update {{content_news}} set title = 'olo' where id = 2');
+        $news = fx::db()->get_results('select * from {{content_news}}');
+        fx::db()->query('update {{content_news}} set title = 'olo' where id = 2');
 
-*fx::is_admin()*
+**fx::is_admin()**
 
 Сообщает, является ли текущий юзер админом
 
-*fx::env()*
+**fx::env()**
 
 Возвращает объект с "окружением" - туда записываются текущий сайт, текущая страница, текущий выбранный шаблон, текущий юзер и т.д.
 
-*fx_collection*
+**fx_collection**
 
 Классы-файндеры возвращают объекты fx_collection, наша обертка над стандартными массивами. Умеют следующее:
-$news = fx::data('content_news')->all(); // $news - fx_collection
-foreach ($news as $news_item) { ... } // можно обходить как обычный массив
-$news_ids = $news->get_values('id'); // вернет массив с идентификаторами
-$my_news = $news->find('author_id', 10); // вернет коллекцию новостей, у которых author_id=10
-$the_news = $news->find_one('id', 100); // вернет первую найденную
-$news->find_remove('author_id', 10); // удалит из коллекции все новости с автора #10
+        $news = fx::data('content_news')->all(); // $news - fx_collection
+        foreach ($news as $news_item) { ... } // можно обходить как обычный массив
+        $news_ids = $news->get_values('id'); // вернет массив с идентификаторами
+        $my_news = $news->find('author_id', 10); // вернет коллекцию новостей, у которых author_id=10
+        $the_news = $news->find_one('id', 100); // вернет первую найденную
+        $news->find_remove('author_id', 10); // удалит из коллекции все новости с автора #10
 
-// можно группировать
-// вернет коллекцию коллекций для каждого родителя
-$by_parent = $news->group( function($news) {
-    return $news['parent_id'];
-});
-echo "News in  ".count($by_parent)." sections";
+        // можно группировать
+        // вернет коллекцию коллекций для каждого родителя
+        $by_parent = $news->group( function($news) {
+            return $news['parent_id'];
+        });
+        echo "News in  ".count($by_parent)." sections";
 
-* essence *
+**essence**
 
 Объект-эссенс можно использовать так:
-$news = fx::data('content_news', 10); // получили новость с id=10, это экземпляр fx_content_news
-echo $news['title']; // доступ к полям  - через ключи массива
-$news['title'] = 'OLOLO'; // изменение - тоже
-echo $news->get('anounce'); // есть дублирующие методы get()
-$news->set('anounce', 'Trololo'); // и set()
-// благодаря ним можно писать так:
-echo fx::data('news', 12)->get('name');
+        $news = fx::data('content_news', 10); // получили новость с id=10, это экземпляр fx_content_news
+        echo $news['title']; // доступ к полям  - через ключи массива
+        $news['title'] = 'OLOLO'; // изменение - тоже
+        echo $news->get('anounce'); // есть дублирующие методы get()
+        $news->set('anounce', 'Trololo'); // и set()
+        // благодаря ним можно писать так:
+        echo fx::data('news', 12)->get('name');
 
-$news->save(); // сохранили изменения
-$news->delete(); // удалили новость
+        $news->save(); // сохранили изменения
+        $news->delete(); // удалили новость
 
 В essence-классе можно определить специальные методы для сохранения целостности: _before_save(), _before_update(), _after_update(), _before_insert(), _after_insert(), _before_delete(), _after_delete().
 
 Система поддерживает поля-связи: HAS_ONE, HAS_MANY, MANY_MANY.
 Чтобы извлечь записи вместе со связанными объектами, используется метод файндера with().
 
-// HAS_ONE
-$news = fx::data('content_news')->with('author')->where('id', 12)->one();
-echo $news['author']['name']; // в $news['author'] - эссенс с автором
+        // HAS_ONE
+        $news = fx::data('content_news')->with('author')->where('id', 12)->one();
+        echo $news['author']['name']; // в $news['author'] - эссенс с автором
 
-// HAS_MANY
-$authors = fx::data('content_user')->with('news')->all();
-foreach ($authors as $author) {
-   echo $author['name'].' has '.count($author['news']).' news, ';
-   echo 'first is '.$author['news']->first()->get('name')."<br />";
-}
+        // HAS_MANY
+        $authors = fx::data('content_user')->with('news')->all();
+        foreach ($authors as $author) {
+           echo $author['name'].' has '.count($author['news']).' news, ';
+           echo 'first is '.$author['news']->first()->get('name')."<br />";
+        }
 
-// MANY_MANY
-// посты и теги связываются через третий компонент "tagpost"
-// но эту логику можно скрыть :)
-$post = fx::data('content_blogpost')->with('tags')->where('id', 12)->one();
-echo "Post ".$post['name']." has tags: ".join(', ', $post['tags']->get_values('name'));
+        // MANY_MANY
+        // посты и теги связываются через третий компонент "tagpost"
+        // но эту инфу можно скрыть :)
+        $post = fx::data('content_blogpost')->with('tags')->where('id', 12)->one();
+        echo "Post ".$post['name']." has tags: ".join(', ', $post['tags']->get_values('name'));
