@@ -39,25 +39,30 @@ floxim
 **fx::data()**
 
 Возвращает данные, либо finder для данных.
+
         $com = fx::data('component', 10); // получить компонент с id=10
 
 Finder умеет строить запросы через chained-вызовы:
+
         $com = fx::data('component')->where('keyword', 'news')->one(); // получить компонент с keyword='news'
         $com = fx::data('content_news')->where('author_id', 10)->order('publish_date','desc')->limit(5)->all(); // получить 5 последних новостей автора #10.
 
 Finder может создавать записи:
+
         $news = fx::data('content_news')->create(array('title' => 'Super news'));
         $news->save();
 
 **fx::controller()**
 
 Возвращает контроллер, загруженный параметрами.
+
         $ctr = fx::controller('component_news.listing', array('parent_id' =>10));
         $res = $ctr->process(); // массив с результатом
 
 **fx::template()**
 
 Загружает шаблон
+
         $tpl = fx::template('component_news.listing');
         echo $tpl->render($res); // $res из предыдущего примера
 
@@ -65,6 +70,7 @@ Finder может создавать записи:
 
 Возвращает экземпляр класса-абстракции БД (основан на PDO)
 Названия таблиц следует указывать без префикса fx, и заворачивать в двойные фигурные скобки:
+
         $news = fx::db()->get_results('select * from {{content_news}}');
         fx::db()->query('update {{content_news}} set title = 'olo' where id = 2');
 
@@ -79,13 +85,13 @@ Finder может создавать записи:
 **fx_collection**
 
 Классы-файндеры возвращают объекты fx_collection, наша обертка над стандартными массивами. Умеют следующее:
+
         $news = fx::data('content_news')->all(); // $news - fx_collection
         foreach ($news as $news_item) { ... } // можно обходить как обычный массив
         $news_ids = $news->get_values('id'); // вернет массив с идентификаторами
         $my_news = $news->find('author_id', 10); // вернет коллекцию новостей, у которых author_id=10
         $the_news = $news->find_one('id', 100); // вернет первую найденную
         $news->find_remove('author_id', 10); // удалит из коллекции все новости с автора #10
-
         // можно группировать
         // вернет коллекцию коллекций для каждого родителя
         $by_parent = $news->group( function($news) {
@@ -96,14 +102,16 @@ Finder может создавать записи:
 **essence**
 
 Объект-эссенс можно использовать так:
+
         $news = fx::data('content_news', 10); // получили новость с id=10, это экземпляр fx_content_news
         echo $news['title']; // доступ к полям  - через ключи массива
         $news['title'] = 'OLOLO'; // изменение - тоже
+        
         echo $news->get('anounce'); // есть дублирующие методы get()
         $news->set('anounce', 'Trololo'); // и set()
         // благодаря ним можно писать так:
         echo fx::data('news', 12)->get('name');
-
+        
         $news->save(); // сохранили изменения
         $news->delete(); // удалили новость
 
@@ -115,14 +123,14 @@ Finder может создавать записи:
         // HAS_ONE
         $news = fx::data('content_news')->with('author')->where('id', 12)->one();
         echo $news['author']['name']; // в $news['author'] - эссенс с автором
-
+        
         // HAS_MANY
         $authors = fx::data('content_user')->with('news')->all();
         foreach ($authors as $author) {
            echo $author['name'].' has '.count($author['news']).' news, ';
            echo 'first is '.$author['news']->first()->get('name')."<br />";
         }
-
+        
         // MANY_MANY
         // посты и теги связываются через третий компонент "tagpost"
         // но эту инфу можно скрыть :)
