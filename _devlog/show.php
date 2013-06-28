@@ -42,7 +42,7 @@ if ($mode == 'show') {
 	$file_content = file_get_contents($lf['path']);
 	list($file_header, $file_data) = preg_split("~[\n\r]~", $file_content, 2);
 	$file_header = unserialize(trim($file_header));
-    fen_debug_start();
+    fx_debug_start();
 	?>
 	<table><?show_log_file_header($file_header)?></table><?
 	echo $file_data;

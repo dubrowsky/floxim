@@ -1,5 +1,4 @@
 <?php
-
 class fx_config {
     private $config = array(
             'SUB_FOLDER' => '',

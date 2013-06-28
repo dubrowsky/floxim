@@ -1,7 +1,7 @@
 <?
 define("DEV_LOG_PATH", dirname(__FILE__).'/log');
 
-function fen_debug_start() {
+function fx_debug_start() {
 ?>
 	<link type="text/css" href="/_devlog/debug.css" rel="stylesheet" />
 	<script type="text/javascript" src="/floxim/lib/js/jquery-1.7.1.js"></script>
@@ -21,11 +21,11 @@ function dev_log() {
 		);
 		fputs($fh, serialize($log_header)."\n");
 	}
-	$res = call_user_func_array('fen_debug', func_get_args());
+	$res = call_user_func_array('fx_debug', func_get_args());
 	fputs($fh, $res);
 }
 
-function fen_debug() {
+function fx_debug() {
 	$call_time = Timer::Instance()->elapsed();
 	static $is_first_launch = true;
 	static $last_timer_value = 0;
@@ -41,7 +41,7 @@ function fen_debug() {
         }
     }
     if (! $is_dev_log && $is_first_launch) {
-        fen_debug_start();
+        fx_debug_start();
         $is_first_launch = false;
     }
 	foreach (func_get_args() as $print_item) {
