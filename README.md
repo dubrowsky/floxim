@@ -45,7 +45,11 @@ floxim
 Finder умеет строить запросы через chained-вызовы:
 
         $com = fx::data('component')->where('keyword', 'news')->one(); // получить компонент с keyword='news'
-        $com = fx::data('content_news')->where('author_id', 10)->order('publish_date','desc')->limit(5)->all(); // получить 5 последних новостей автора #10.
+        $com = fx::data('content_news')->
+           where('author_id', 10)->
+           order('publish_date','desc')->
+           limit(5)->
+           all(); // получить 5 последних новостей автора #10.
 
 Finder может создавать записи:
 
