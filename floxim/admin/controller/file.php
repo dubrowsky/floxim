@@ -6,18 +6,7 @@
 class fx_controller_admin_file extends fx_controller_admin {
 
     public function upload_save($input) {
-
-        //$fx_core = fx_core::get_object();
         $path = 'content';
-        /*
-        if ( $input['field_id'] ) {
-            $field = $fx_core->field->get_by_id($input['field_id']);
-            $component_id = $field['component_id'];
-            if ( $component_id ) {
-                $path .= '/'.$component_id;
-            }
-        }*/
-
         $result = fx::files()->save_file($input['file'], $path);
         return $result;
     }

@@ -60,7 +60,6 @@
         },
 
         click_save: function () {
-            $("textarea.fx_wysiwyg", $fx_dialog.main).elrte("updateSource");
             $('.ui-state-error', $fx_dialog.main).removeClass("ui-state-error");
             $("#nc_dialog_error").html('');
             $('form', $fx_dialog.main).trigger('fx_form_submit');

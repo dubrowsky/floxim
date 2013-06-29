@@ -13,6 +13,7 @@ function fx_edit_in_place( node ) {
         lang:'ru',
         allowSource: false
     };
+    this.is_content_editable = false;
     
     this.ib_meta = node.closest('.fx_infoblock').data('fx_infoblock');
     // редактировать нужно содержимое узла
@@ -32,7 +33,6 @@ function fx_edit_in_place( node ) {
 }
 
 fx_edit_in_place.prototype.start = function(meta) {
-	console.log('starting '+meta.type);
 	var edit_in_place = this;
 	switch (meta.type) {
 		case 'datetime':
@@ -57,10 +57,15 @@ fx_edit_in_place.prototype.start = function(meta) {
 			if (meta.is_att) {
 				this.add_panel_field(meta);
 			} else {
+                this.is_content_editable = true;
 				this.node.addClass('fx_var_editable')
 					.attr('contenteditable', 'true')
 					.data('fx_saved_value', this.node.html())
 					.focus();
+                if (meta.type == 'text') {
+                    this.is_wysiwyg = true;
+                    this.make_wysiwyg();
+                }
 			}
 			break;
 	}
@@ -88,6 +93,10 @@ fx_edit_in_place.prototype.stop = function() {
 	}
 	this.panel_fields = [];
 	this.node.data('edit_in_place', null);
+    this.node.attr('contenteditable', null);
+    if (this.is_content_editable && this.is_wysiwyg) {
+        this.destroy_wysiwyg();
+    }
 	return this;
 }
 
@@ -95,9 +104,9 @@ fx_edit_in_place.prototype.save = function() {
 	var node = this.node;
 	var vars = [];
 	// редактируем текст узла
-	var is_content_editable = node.data('fx_var');
+    var is_content_editable = this.is_content_editable;
 	if (is_content_editable) {
-		var val = node.html().replace(/<br[\s\/]*?>$/, '');
+        var val = this.is_wysiwyg ? node.html() : node.text();
 		if (val != node.data('fx_saved_value') ) {
 			vars.push({
 				'var':this.meta,
@@ -121,6 +130,7 @@ fx_edit_in_place.prototype.save = function() {
 	if (vars.length == 0) {
 		return this;
 	}
+    console.log('vars to change', vars);
 	$fx.post({
 		essence:'infoblock',
 		action:'save_var',
@@ -135,4 +145,28 @@ fx_edit_in_place.prototype.save = function() {
 		$fx.front.reload_infoblock(node.closest('.fx_infoblock').get(0));
 	});
 	return this;
+}
+
+fx_edit_in_place.prototype.make_wysiwyg = function () {
+    if (!this.node.attr('id')) {
+        this.node.attr('id', 'stub'+Math.round(Math.random()*1000));
+    }
+    $('#fx_admin_control').append('<div class="editor_panel" />');
+    this.node.redactor({
+        focus:true,
+        toolbarExternal: '.editor_panel',
+        imageUpload : '/floxim/admin/controller/redactor-upload.php',
+        buttons: ['html', '|', 'formatting', '|', 'bold', 'italic', 'deleted', '|',
+                'unorderedlist', 'orderedlist', 'outdent', 'indent', '|',
+                'image', 'video', 'file', 'table', 'link', '|',
+                'fontcolor', 'backcolor', '|', 'alignment', '|', 'horizontalrule']
+
+    });
+    //this.node.removeClass('redactor_editor');
+    //this.node.parent().removeClass('redactor_box');
+}
+
+fx_edit_in_place.prototype.destroy_wysiwyg = function() {
+    this.node.redactor('destroy');
+    $('#fx_admin_control .editor_panel').remove();
 }

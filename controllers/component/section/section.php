@@ -33,6 +33,19 @@ class fx_controller_component_section extends fx_controller_component {
                     'all' => fx::lang('Показывать у всех','component_section')
                 )
             );
+        } elseif ($action == 'breadcrumbs') {
+            $fields = array(
+                'header_only' => array(
+                    'name' => 'header_only',
+                    'type' => 'checkbox',
+                    'label' => fx::lang('Показывать только заголовок?', 'component_section'),
+                ),
+                'hide_on_index' => array(
+                    'name' => 'hide_on_index',
+                    'type' => 'checkbox',
+                    'label' => fx::lang('Скрыть на главной?', 'component_section')
+                )
+            );
         }
         return $fields;
     }
@@ -84,9 +97,17 @@ class fx_controller_component_section extends fx_controller_component {
         }
         $essence_page = fx::data('content_page',$page_id);
         $parents = $essence_page->get_parent_ids();
-        $pages = fx::data('content_page', $parents);
+        if (count($parents) == 0 && $this->param('hide_on_index')) {
+            $this->_meta['disabled'] = true;
+            return array();
+        }
         $essence_page['active'] = true;
-        $pages[]= $essence_page;
+        if ($this->param('header_only')) {
+            $pages = new fx_collection(array($essence_page));
+        } else {
+            $pages = fx::data('content_page', $parents);
+            $pages[]= $essence_page;
+        }
         return array('items' => $pages);
     }
 }

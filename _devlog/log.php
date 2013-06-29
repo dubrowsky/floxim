@@ -21,7 +21,13 @@ function dev_log() {
 		);
 		fputs($fh, serialize($log_header)."\n");
 	}
-	$res = call_user_func_array('fx_debug', func_get_args());
+    $args = func_get_args();
+    foreach ($args as &$arg) {
+        if (is_string($arg) && preg_match("~<.+>~", $arg)) {
+            $arg = '<pre>'.htmlspecialchars($arg).'</pre>';
+        }
+    }
+	$res = call_user_func_array('fx_debug', $args);
 	fputs($fh, $res);
 }
 

@@ -409,63 +409,9 @@
         },
 
         add_elrte: function() {
-            $('textarea.fx_wysiwyg', $fx_dialog.main).elrte({
-                toolbar: 'nc_maxi_toolbar', 
-                lang:'ru', 
-                height: 200
+            $('textarea.fx_wysiwyg', $fx_dialog.main).redactor({
+                imageUpload : '/floxim/admin/controller/redactor-upload.php'
             });
-        /*
-            if ($('textarea.fx_code').length > 0) {
-                //if ( typeof CodeMirror == 'undefined' ) {
-                    $.getScript('/floxim/lib/codemirror/codemirror.all.js', function(){
-                        $('textarea.fx_code').each( function(){
-                            if ( $(this).data('editor_loader') ) {
-                                return true;
-                            }
-                            
-                            $(this).data('editor_loader', 1);
-                            var editor = CodeMirror.fromTextArea(this, {
-                                mode: "htmlmixed",
-                                lineNumbers: true,
-                                matchBrackets: true,
-                                tabMode: "indent"
-                            });
-                        });
-                    });
-                //}
-            }*/
-           
-                    
-            
-        /*
-            if ($('textarea.fx_code').length > 0) {
-                var init = function(name) {
-                    editAreaLoader.init({
-                        id:name,
-                        language:'ru',
-                        syntax: $('#'+name).data('syntax'),
-                        allow_toggle:false,
-                        start_highlight:true,
-                        plugins: 'charmap',
-                        charmap_default: 'Mathematical Operators',
-                        display:'later',
-                        toolbar:'go_to_line, search, fullscreen, |, undo, redo, |, syntax_selection,|, select_font, charmap,|, change_smooth_selection, highlight, reset_highlight,|, help',
-                        EA_toggle_on_callback: '_edit_area_toggle_on_callback'
-                    });
-                }; 
-                if (typeof editAreaLoader == 'undefined') {
-                    $.getScript('/floxim/lib/edit_area/edit_area_full.js', function(){
-                        editAreaLoader.window_loaded();
-                    });
-                }
-               
-                $.each( $('textarea.fx_code'), function () {
-                    var textarea_id = $(this).attr('id');
-                    $(this).before('<span style="float:right;"> Подсветка синтаксиса: <span class="dashed-link" onclick="_edit_area_show(\''+textarea_id+'\', this)">включить</span>; Перенос по словам: <span class="dashed-link" onclick="_edit_area_wordwrap(\''+textarea_id+'\', this)">выключить</span></span>');
-                    init(textarea_id);
-                });
-                        
-            }*/
         },
         
         update_available_buttons: function () {

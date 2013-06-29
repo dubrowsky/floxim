@@ -15,9 +15,9 @@ fx_adminpanel = {
         $fx.init_form_function();
             
         $(function () {
-            elRTE.prototype.options.panels.nc_panel = ['horizontalrule', 'blockquote', 'stopfloat', 'smiley'];
-            elRTE.prototype.options.toolbars.fx_einp_toolbar = $fx.settings.elrte_toolbar;
-            elRTE.prototype.options.toolbars.nc_maxi_toolbar = ['copypaste', 'undoredo', 'elfinder', 'style', 'alignment', 'direction', 'colors', 'format', 'indent', 'lists', 'media', 'tables', 'nc_panel'];
+            //elRTE.prototype.options.panels.nc_panel = ['horizontalrule', 'blockquote', 'stopfloat', 'smiley'];
+            //elRTE.prototype.options.toolbars.fx_einp_toolbar = $fx.settings.elrte_toolbar;
+            //elRTE.prototype.options.toolbars.nc_maxi_toolbar = ['copypaste', 'undoredo', 'elfinder', 'style', 'alignment', 'direction', 'colors', 'format', 'indent', 'lists', 'media', 'tables', 'nc_panel'];
                             
             
             $fx.admin = false;

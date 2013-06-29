@@ -4,7 +4,7 @@
         <div class="date">
         	{$publish_date | 'd.m.Y'}
 		</div>
-        <p>{$anounce}</p>
+        <div class="anounce">{$anounce}</div>
         
         <div fx:template="$tags">
             {%tags_label | mb_strtoupper}Метки:{/%} 

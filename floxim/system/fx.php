@@ -337,9 +337,11 @@ class fx {
         $output = substr($output,0,strlen($output)-1);
         $output .= ');';
         $dict_file = fx::config()->DOCUMENT_ROOT . '/floxim_files/php_dictionaries/' . $lang . '.' . $key . '.php';
-        $dfh = fopen($dict_file, 'w');
-        fputs($dfh, $output);
-        fclose($dfh);
+        @ $dfh = fopen($dict_file, 'w');
+        if ($dfh) {
+            fputs($dfh, $output);
+            fclose($dfh);
+        }
     }
 
     protected static $http = null;

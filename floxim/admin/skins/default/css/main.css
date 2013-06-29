@@ -1769,3 +1769,14 @@ body div.fx_overlay, body div.fx_overlay table {
 .fx_overlay .ui-datepicker-today {
     border: 1px solid #F00;
 }
+
+#fx_admin_control .editor_panel {
+    float:left;
+    position: relative;
+    top:-4px;
+}
+
+.fx_var_editable {
+    -webkit-line-break:normal;
+    word-wrap: normal;
+}

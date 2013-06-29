@@ -116,7 +116,7 @@ class fx_controller_admin extends fx_controller {
             FX_JQUERY_PATH,
             '/floxim/lib/js/lang-load.js',
             '/floxim/lib/js/fx-lang.js',
-            '/floxim/lib/js/jquery-ui-1.8.21.custom.js',
+            '/floxim/lib/js/jquery-ui-1.10.3.custom.min.js',
             '/floxim/lib/js/jquery.nestedSortable.js',
             '/floxim/lib/js/jquery.ba-hashchange.min.js',
             '/floxim/lib/js/jquery.json-2.3.js',
@@ -141,20 +141,18 @@ class fx_controller_admin extends fx_controller {
             '/floxim/admin/js/menu/submenu.js',
             '/floxim/admin/js/menu/additional.js',
             '/floxim/admin/js/menu/breadcrumb.js',
-            '/floxim/lib/editors/elrte/elrte.full.js',
-            '/floxim/lib/editors/elrte/i18n/elrte.ru.js',
+            '/floxim/lib/editors/redactor/redactor.js',
             '/floxim/lib/js/jquery.form.js',
             '/floxim/lib/js/jquery.jstree.js',
-            '/floxim/lib/js/jquery-gp-gallery.js',
-            '/floxim/lib/js/jquery.tipTip.minified.js',
-            '/floxim/lib/js/jquery-ui-timepicker-addon.js'
+            '/floxim/lib/js/jquery-gp-gallery.js'
         );
         $page = fx::page();
         foreach ($js_files as $file) {
             $page->add_js_file($file);
         }
         $css_files = array(
-            '/floxim/lib/css/elrte/elrte.min.css',
+            //'/floxim/lib/css/elrte/elrte.min.css',
+            '/floxim/lib/editors/redactor/redactor.css',
             '/floxim/admin/skins/default/jquery-ui/main.css',
             '/floxim/admin/skins/default/css/main.css'
         );
