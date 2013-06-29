@@ -55,9 +55,13 @@ fx_front = function () {
 			document.location.href = clicked_link.attr('href')+document.location.hash;
 			return false;
 		}
-		// тут надо отлавливать только contenteditable, по идее
+        
+		// отлавливаем только contenteditable
 		if ($(closest_selectable).hasClass('fx_selected')) {
-			return;
+            if ($(closest_selectable).attr('contenteditable') == 'true') {
+                return;
+            }
+            return false;
 		}
 		$fx.front.select_item(closest_selectable);
 		return false;
@@ -68,6 +72,10 @@ fx_front = function () {
 		var n = $(e.target);
 		if (n.is('.fx_content_essence')) {
 			$fx.front.select_content_essence(n);
+            var tvs = $('.fx_template_var', n);
+            if (tvs.length == 1) {
+                tvs.edit_in_place();
+            }
 		}
 		if (n.is('.fx_template_var, .fx_template_var_in_att')) {
 			n.edit_in_place();
@@ -197,6 +205,12 @@ fx_front.prototype.is_selectable = function(node) {
 	if (!ib_node.hasClass('fx_infoblock_'+$fx.front.mode)) {
 		return false;
 	}
+    if (n.is('.fx_template_var') && !n.is('.fx_content_essence') ) {
+        var ne = n.closest('.fx_content_essence');
+        if (ne && $('.fx_template_var', ne).length == 1) {
+            return false;
+        }
+    }
 	return true;
 }
 
@@ -608,13 +622,12 @@ fx_front.prototype.set_mode_edit = function () {
 },
 
 fx_front.prototype.set_mode_design = function() {
-	/*
-    $fx.panel.one('fx.startsetmode', function() {
+	$fx.panel.one('fx.startsetmode', function() {
         $('html').off('.fx_design_mode');
         $('.fx_area_sortable').
             sortable('destroy').
             removeClass('fx_area_sortable');
-    });*/
+    });
     
     function start_areas_sortable() {
         $('.fx_area').each(function(){ 

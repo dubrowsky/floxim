@@ -69,11 +69,13 @@ fx_edit_in_place.prototype.start = function(meta) {
 			}
 			break;
 	}
-	this.node.one('fx_deselect', function() {
-		var eip = $(this).data('edit_in_place');
-		if (eip) {
-			eip.save().stop();
-		}
+	this.node.closest('.fx_selected').one('fx_deselect', function() {
+		//var eip = $(this).data('edit_in_place');
+        //console.log('desel');
+		//if (eip) {
+            //console.log('stops-v');
+			edit_in_place.save().stop();
+		//}
 	});
 }
 
