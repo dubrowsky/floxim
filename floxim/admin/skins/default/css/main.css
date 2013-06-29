@@ -1585,6 +1585,18 @@ li ul .fx_tree_label .fx_tree_title {
     outline-offset:-1px;
 }
 
+.fx_hilight .fx_hilight {
+    outline-offset:-2px;
+}
+
+.fx_hilight .fx_hilight .fx_hilight {
+    outline-offset:-3px;
+}
+
+.fx_area.fx_hilight, .fx_infoblock.fx_hilight {
+    outline:1px dotted rgba(0, 0, 255, 0.8);
+}
+
 img.fx_hilight {
 	min-width:5px;
 	min-height:5px;
