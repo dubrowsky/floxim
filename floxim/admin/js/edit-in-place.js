@@ -62,7 +62,7 @@ fx_edit_in_place.prototype.start = function(meta) {
 					.attr('contenteditable', 'true')
 					.data('fx_saved_value', this.node.html())
 					.focus();
-                if (meta.type == 'text') {
+                if (meta.type == 'text' && meta.html) {
                     this.is_wysiwyg = true;
                     this.make_wysiwyg();
                 }

@@ -20,15 +20,10 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             $this->ui->hidden('essence', 'infoblock'),
             $this->ui->hidden('fx_admin', true),
             $this->ui->hidden('area', $input['area']),
-            $this->ui->hidden('page_id', $input['page_id'])
+            $this->ui->hidden('page_id', $input['page_id']),
+            $this->ui->hidden('admin_mode', $input['admin_mode'])
         );
 	
-        $types = array(
-                'widget' => fx::lang('Виджет','system'),
-                'component' => fx::lang('Компонент','system')
-        );
-        
-        	
         /* Список контроллеров */
         $fields['controller'] = array(
             'type' => 'tree', 
@@ -50,12 +45,19 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             $ctrl = fx::controller($controller_name);
             $actions = $ctrl->get_actions();
             foreach ($actions as $action_code => $action_info) {
+                $act_ctr = fx::controller($controller_name.'.'.$action_code);
+                $act_templates = $act_ctr->get_available_templates();
+                if (count($act_templates) == 0) {
+                    continue;
+                }
                 $c_item['children'][]= array(
                     'data' => $action_info['name'],
                     'metadata' => array('id' => 'component_'.$c['keyword'].'.'.$action_code)
                 );
             }
-            $fields['controller']['values'][]= $c_item;
+            if (count($c_item['children']) > 0) {
+                $fields['controller']['values'][]= $c_item;
+            }
         }
         $result = array(
             'fields' => $fields,
@@ -160,12 +162,24 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         
         
         $c_page = fx::data('content_page', $input['page_id']);
-        $scope_fields = $this->_get_scope_fields($infoblock, $c_page);
+        $scope_fields = $this->_get_scope_fields($infoblock, $c_page, $input['admin_mode']);
+        
+        $scope_tab = !$is_layout;
+        if ($scope_tab) {
+            // выставляем в false и ищем хоть одно не-хидден поле
+            $scope_tab = false;
+            foreach ($scope_fields as $scope_field) {
+                if ($scope_field['type'] != 'hidden') {
+                    $scope_tab = true;
+                    break;
+                }
+            }
+        }
 
-        if (!$is_layout) {
+        if ($scope_tab) {
             $this->response->add_tab('scope', fx::lang('Где показывать','system'));
         }
-        $this->response->add_fields($scope_fields, $is_layout ? false : 'scope', 'scope');
+        $this->response->add_fields($scope_fields, $scope_tab ? 'scope' : false, 'scope');
         
         if ($input['settings_sent'] == 'true') {
             if ($is_layout) {
@@ -290,8 +304,17 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
      * @param fx_content_page $c_page - страница, на которой открыли окошко настроек
      */
     
-    protected function _get_scope_fields(fx_infoblock $infoblock, fx_content_page $c_page) {
+    protected function _get_scope_fields(fx_infoblock $infoblock, fx_content_page $c_page, $admin_mode) {
         $fields = array();
+        
+        if ($admin_mode == 'design') {
+            $fields []= array(
+                'type' => 'hidden',
+                'name' => 'page_id',
+                'value' => 0
+            );
+            return $fields;
+        }
         
         $path_vals = array('0' => fx::lang('На всех страницах','system'));
         $path_ids = $c_page->get_parent_ids();

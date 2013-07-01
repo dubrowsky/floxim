@@ -297,7 +297,7 @@ class fx_core extends fx_system {
                     $ctr_name = $tpl_name;
                 }
                 
-                $source_dir = $doc_root.'controllers/'.$ctr_type.'/'.$ctr_name;
+                $source_dir = $doc_root.$ctr_type.'/'.$ctr_name;
                 if (is_dir($source_dir)) {
                     $processor = new fx_template_processor();
                     $processor->process_dir($source_dir);
@@ -319,7 +319,8 @@ class fx_core extends fx_system {
             }
             
             if (preg_match('~^content_~', $classname)) {
-                $file = $root.'essence/'.$classname;
+                $com_name = preg_replace("~^content_~", '', $classname);
+                $file = $doc_root.'component/'.$com_name.'/'.$com_name.'.essence';
                 break;
             }
             
@@ -337,7 +338,7 @@ class fx_core extends fx_system {
                     $ctr_type = 'other';
                     $ctr_name = $controller_name;
                 }
-                $test_file = fx::config()->DOCUMENT_ROOT.'/controllers/'.$ctr_type.'/'.$ctr_name.'/'.$ctr_name;
+                $test_file = $doc_root.$ctr_type.'/'.$ctr_name.'/'.$ctr_name;
                 if (file_exists($test_file.'.php')) {
                     $file = $test_file;
                     break;
@@ -345,7 +346,6 @@ class fx_core extends fx_system {
             }
 
             if ($classname == 'controller_layout' || $classname == 'controller_admin_layout') {
-                // $file = $root.'admin/controller/template/layout';
                 $file = $root.'admin/controller/layout';
                 break;
             }
@@ -382,7 +382,13 @@ class fx_core extends fx_system {
             }
             
             if (preg_match("~^data_(.+)$~", $classname, $match)) {
-                $file = $root.'data/'.$match[1];
+                $data_name = $match[1];
+                if (preg_match("~^content_~", $data_name)) {
+                    $com_name = preg_replace("~^content_~", '', $data_name);
+                    $file = $doc_root.'component/'.$com_name.'/'.$com_name.'.data';
+                } else {
+                    $file = $root.'data/'.$match[1];
+                }
                 break;
             }
             

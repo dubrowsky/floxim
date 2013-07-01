@@ -1,8 +1,8 @@
 <div fx:template="calendar" class="blog_calendar">
-    <?
-    fx::page()->add_js_file(FX_JQUERY_PATH);
-    fx::page()->add_js_file('/controllers/component/blogpost/_calendar.js');
-    ?>
+    {js}
+        FX_JQUERY_PATH
+        calendar.js
+    {/js}
     <h2 fx:if="$show_header">{%header}Посты по месяцам:{/%}</h2>
     <?
     $month_names = array(

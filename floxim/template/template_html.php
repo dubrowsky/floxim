@@ -133,7 +133,12 @@ class fx_template_html {
             }
             if ( ($area_id = $n->get_attribute('fx:area'))) {
                 $n->remove_attribute('fx:area');
-                $area = '{area id="'.$area_id.'" /}';
+                $area = '{area id="'.$area_id.'" ';
+                if ( ($area_size = $n->get_attribute('fx:size')) ) {
+                    $area .= 'size="'.$area_size.'" ';
+                    $n->remove_attribute('fx:size');
+                }
+                $area .= '/}';
                 $n->add_child_first(fx_html_token::create($area));
             }
             if ( ($if_test = $n->get_attribute('fx:if'))) {

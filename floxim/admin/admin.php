@@ -114,9 +114,11 @@ class fx_controller_admin extends fx_controller {
     public static function add_admin_files() {
         $js_files = array(
             FX_JQUERY_PATH,
+            #'/floxim/lib/js/jquery-1.7.1.js',
             '/floxim/lib/js/lang-load.js',
             '/floxim/lib/js/fx-lang.js',
             '/floxim/lib/js/jquery-ui-1.10.3.custom.min.js',
+            #'/floxim/lib/js/jquery-ui-1.8.21.custom.js',
             '/floxim/lib/js/jquery.nestedSortable.js',
             '/floxim/lib/js/jquery.ba-hashchange.min.js',
             '/floxim/lib/js/jquery.json-2.3.js',

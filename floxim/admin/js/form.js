@@ -335,7 +335,9 @@
                 cont += '<div id="'+settings.form.id+'_'+key+'"></div>'
             });
             $('#fx_tabs', container).append(_ul, cont);
-            $("#fx_tabs", container).tabs().tabs('select', active);
+            $("#fx_tabs", container).tabs({
+                active: active
+            });
                 
             if ( settings.tabs.change_url ) {
                 $('.fx_tab a', container).click(function(){

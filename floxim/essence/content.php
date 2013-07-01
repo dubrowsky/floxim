@@ -128,6 +128,10 @@ class fx_content extends fx_essence {
             if ($cf->type == 'datetime') {
                 $field_meta['value'] = $v;
             }
+            if ($cf->type == 'text') {
+                //dev_log('text field', $cf);
+                $field_meta['html'] = $cf['format']['html'];
+            }
             
             $field_meta = array_merge(array(
                 'var_type' => 'content', 

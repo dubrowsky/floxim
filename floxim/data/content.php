@@ -42,6 +42,9 @@ class fx_data_content extends fx_data {
             }
         }
         foreach ($types as $type => $ids) {
+            if (!$type) {
+                continue;
+            }
             $type_tables = array_reverse(fx::data('content_'.$type)->get_tables());
             $missed_tables = array();
             foreach ($type_tables as $table) {
@@ -105,7 +108,10 @@ class fx_data_content extends fx_data {
         $obj = $this->essence($data);
         
         $obj['created'] = date("Y-m-d H:i:s");
-        $obj['user_id'] = fx::env()->get_user()->get('id');
+        die('crtng');
+        if ( ($user = fx::env()->get_user())) {
+            $obj['user_id'] = $user['id'];
+        }
         $obj['checked'] = 1;
         $component = fx::data('component', $this->component_id);
         $obj['type'] = $component['keyword'];

@@ -6,7 +6,6 @@ fx_front = function () {
     this.mode_menu = new fx_mode_menu();
     this.mode_menu.load();
     
-    //this.bind_actions();
     this.move_down_body();
     
     this.mode_selectable_selector = null;
@@ -83,6 +82,9 @@ fx_front = function () {
 		if (n.is('.fx_infoblock')) {
 			$fx.front.select_infoblock(n);
 		}
+        
+        $fx.front.start_essences_sortable(n.closest('.fx_infoblock'));
+        
 		$fx.front.redraw_add_button(n, $fx.front.mode);
     	return false;
     });
@@ -133,6 +135,7 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
 					action:'select_controller',
 					page_id:$('body').data('fx_page_id'),
 					area:area_meta.id,
+                    admin_mode:$fx.front.mode,
 					fx_admin:true
 				}, function(json) {
 					$fx_dialog.open_dialog(json);
@@ -142,7 +145,6 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
 	}
 	if (buttons.length > 0) {
 		$fx.buttons.bind('add', function() {
-			console.log('btnz', buttons);
 			$fx.buttons.show_pulldown('add', buttons);
 			return false;
 		});
@@ -150,44 +152,6 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
 			$fx.front.redraw_add_button();
 		});
 	}
-	
-	/*
-	$fx.buttons.bind('add', function() {
-        var buttons = [];
-        $('.fx_infoblock').each(function() {
-            var ib_node = this;
-            var cm = $(this).data('fx_controller_meta');
-            
-            if ( cm && cm.accept_content) {
-                for (var i = 0; i < cm.accept_content.length; i++) {
-                    var c_cnt = cm.accept_content[i];
-                    var cb_closure = (function(c_cnt) {
-                        return function() {
-                            $fx.post({
-                               essence:'content',
-                               action:'add_edit',
-                               content_type:c_cnt.type,
-                               infoblock_id:c_cnt.infoblock_id,
-                               parent_id:c_cnt.parent_id
-                            }, function(res) {
-                                $fx_dialog.open_dialog(res, {
-                                    onfinish:function() {
-                                        $fx.front.reload_infoblock(ib_node);
-                                    }
-                                });
-                            });
-                        }
-                    })(c_cnt);
-                    buttons.push({
-                        name:c_cnt.title,
-                        callback:cb_closure
-                    });
-                }
-            }
-        });
-        $fx.buttons.show_pulldown('add', buttons);
-    });
-    */
 }
 
 fx_front.prototype.is_selectable = function(node) {
@@ -397,229 +361,64 @@ fx_front.prototype.set_mode_view = function () {
     
 }
 
+fx_front.prototype.start_essences_sortable = function(container) {
+    var essences = $('.fx_content_essence.fx_hilight', container);
+    
+    essences.each( function() {
+        var cp = $(this).parent();
+        if (
+            cp.hasClass('fx_essence_container_sortable') || 
+            cp.hasClass('fx_not_sortable')
+        ) {
+            return;
+        }
+
+        var essences = $('.fx_content_essence.fx_hilight', cp);
+        if (essences.length < 2) {
+            return;
+        }
+
+        cp.addClass('fx_essence_container_sortable');
+        cp.sortable({
+            items:'>.fx_content_essence',
+            stop:function(e) {
+                var ce = $(e.srcElement).closest('.fx_content_essence');
+                var ce_data = ce.data('fx_content_essence');
+
+                var next_e = ce.next('.fx_content_essence');
+                var next_id = null;
+                if (next_e.length > 0) {
+                    next_id = next_e.data('fx_content_essence').id;
+                }
+
+                $fx.post({
+                    essence:'content',
+                    action:'move',
+                    content_id:ce_data.id,
+                    content_type:ce_data.type,
+                    next_id:next_id
+                }, function(res) {
+
+                });
+                $fx.front.fix();
+            }
+        });
+    });
+}
+
+fx_front.prototype.stop_essences_sortable = function(container) {
+    if (!container.hasClass('fx_essence_container_sortable')) {
+        return;
+    }
+    container.removeClass('fx_essence_container_sortable');
+    container.sortable('destroy');
+};
+
 fx_front.prototype.set_mode_edit = function () {
     $fx.panel.one('fx.startsetmode', function() {
         $('html').off('.fx_edit_mode');
-        //stop_essences_sortable();
     });
-    
-    /*
-    var edit_off = function() {
-        $(this).unbind('fx_deselect');
-        $(this).blur();
-        $(this).removeClass('fx_var_editable');
-        $(this).attr('contenteditable', 'false');
-        //start_essences_sortable();
-    }
-    
-    var restore_var = function() {
-        $(this).html($(this).data('fx_saved_value'));
-    }
-    
-    var edit_att_vars = function() {
-        var var_node = $($fx.front.get_selected_item());
-        var infoblock_meta = var_node.closest('.fx_infoblock').data('fx_infoblock');
-        var fields = [];
-        var vars = {};
-        for( var i in var_node.data()) {
-            if (/^fx_template_var/.test(i)) {
-                var data = var_node.data(i);
-                var field_props = {
-                    name:data.id,
-                    label: data.title || data.name || data.id,
-                    type: data.type || 'string'
-                };
-                if (data.type == 'image') {
-                    field_props.value = data.filetable_id;
-                    field_props.path = data.value;
-                } else {
-                    field_props.value = data.value;
-                }
-                fields.push(field_props);
-                vars[data.id] = data;
-            }
-        }
-        $fx_dialog.open_dialog({fields:fields}, {
-            onsubmit:function(e) {
-                var fields_to_send = [];
-                for(var var_id in vars) {
-                    fields_to_send.push({
-                        'var':vars[var_id],
-                        'value':$('#'+var_id, this).val()
-                    });
-                }
-                $fx.post({
-                    essence:'infoblock',
-                    action:'save_var',
-                    infoblock:infoblock_meta,
-                    'vars': fields_to_send,
-                    fx_admin:true
-                }, function(res) {
-                    $fx.front.reload_infoblock(var_node.closest('.fx_infoblock').get(0));
-                    $fx_dialog.close();
-                });
-                return false;
-            }
-        });
-    }
-    */
-    
-    /*$('html').on('fx_select.fx_edit_mode', '.fx_template_var', var_select);
-    $('html').on('fx_deselect.fx_edit_mode', '.fx_template_var', function() {
-        $fx.buttons.unbind('delete');
-    });
-    
-    
-    $('html').on('fx_select.fx_edit_mode', '.fx_template_var_in_att', function() {
-        $fx.buttons.bind('settings', edit_att_vars);
-        return false;
-    });
-    $('html').on('fx_deselect.fx_edit_mode', '.fx_template_var_in_att', function() {
-        $fx.buttons.unbind('settings', edit_att_vars);
-        return false;
-    })
-    
-    
-    $('html').on('fx_select.fx_edit_mode', '.fx_content_essence', function() {
-        var essence_node = $(this);
-        var essence_meta = $(this).data('fx_content_essence');
-        var ib_node = essence_node.closest('.fx_infoblock').get(0);
-        $fx.buttons.bind('edit', function() {
-            $fx.post({
-                essence:'content',
-                action:'add_edit',
-                content_type:essence_meta.type,
-                content_id:essence_meta.id
-             }, function(res) {
-                 $fx_dialog.open_dialog(res, {
-                     onfinish:function() {
-                         $fx.front.reload_infoblock(ib_node);
-                     }
-                 });
-             });
-        });
-        $fx.buttons.bind('delete', function() {
-           if (confirm("ORLY???")) {
-               $fx.post({
-                   essence:'content',
-                   action:'delete_save',
-                   content_type:essence_meta.type,
-                   content_id:essence_meta.id
-               }, function () {
-                   $fx.front.reload_infoblock(ib_node);
-               });
-           }
-        });
-        return false;
-    });
-    
-    $('html').on('fx_deselect.fx_edit_mode', '.fx_content_essence', function() {
-        $fx.buttons.unbind('edit');
-        $fx.buttons.unbind('delete');
-    });
-    
-    
-    
-    $fx.buttons.bind('add', function() {
-        var buttons = [];
-        $('.fx_infoblock').each(function() {
-            var ib_node = this;
-            var cm = $(this).data('fx_controller_meta');
-            
-            if ( cm && cm.accept_content) {
-                for (var i = 0; i < cm.accept_content.length; i++) {
-                    var c_cnt = cm.accept_content[i];
-                    var cb_closure = (function(c_cnt) {
-                        return function() {
-                            $fx.post({
-                               essence:'content',
-                               action:'add_edit',
-                               content_type:c_cnt.type,
-                               infoblock_id:c_cnt.infoblock_id,
-                               parent_id:c_cnt.parent_id
-                            }, function(res) {
-                                $fx_dialog.open_dialog(res, {
-                                    onfinish:function() {
-                                        $fx.front.reload_infoblock(ib_node);
-                                    }
-                                });
-                            });
-                        }
-                    })(c_cnt);
-                    buttons.push({
-                        name:c_cnt.title,
-                        callback:cb_closure
-                    });
-                }
-            }
-        });
-        $fx.buttons.show_pulldown('add', buttons);
-    });
-    
-   
-    var var_keydown = function(e) {
-        if (e.which == 27) {
-            $(this).unbind('fx_deselect', save_var);
-            $fx.front.deselect_item();
-            restore_var.apply(this);
-            return false;
-        }
-        if (e.which == 13 && e.ctrlKey) {
-            $fx.front.deselect_item();
-            return false;
-        }
-    };
-    $('html').on('keydown.fx_edit_mode', '.fx_var_editable', var_keydown);
-     
-    function start_essences_sortable() {
-        $('.fx_content_essence').each(function() {
-            var cp = $(this).parent();
-            if (cp.hasClass('fx_essence_container_sortable') || cp.hasClass('fx_not_sortable')) {
-                return;
-            }
-            if (cp.find('.fx_content_essence').length < 2) {
-                return;
-            }
-            cp.addClass('fx_essence_container_sortable');
-            cp.sortable({
-                items:'>.fx_content_essence',
-                stop:function(e) {
-                    var ce = $(e.srcElement).closest('.fx_content_essence');
-                    var ce_data = ce.data('fx_content_essence');
-
-                    var next_e = ce.next('.fx_content_essence');
-                    var next_id = null;
-                    if (next_e.length > 0) {
-                        next_id = next_e.data('fx_content_essence').id;
-                    }
-
-                    $fx.post({
-                        essence:'content',
-                        action:'move',
-                        content_id:ce_data.id,
-                        content_type:ce_data.type,
-                        next_id:next_id
-                    }, function(res) {
-
-                    });
-                    $fx.front.fix();
-                }
-            });
-        });
-    }
-    start_essences_sortable();
-    function stop_essences_sortable() {
-        $('.fx_content_essence').each(function() {
-            var cp = $(this).parent();
-            if (!cp.hasClass('fx_essence_container_sortable')) {
-                return;
-            }
-            cp.removeClass('fx_essence_container_sortable');
-            cp.sortable('destroy');
-        });
-    }
-    */
-},
+};
 
 fx_front.prototype.set_mode_design = function() {
 	$fx.panel.one('fx.startsetmode', function() {

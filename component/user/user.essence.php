@@ -37,10 +37,8 @@ class fx_content_user extends fx_content {
         if ($user_result) {
             $data = $user_result[0];
             $user_id = $data['id'];
-            //$user = new fx_content_user(array('data' => $data, 'finder' => fx::data('content_user')));
-            $user = fx::data('content_user')->create($data);
+            $user = fx::data('content_user', $user_id);
             $user->create_session('attempt');
-
             fx::env()->set_user($user);
         } elseif ($session_id) {
         	self::drop_session_cookie();
