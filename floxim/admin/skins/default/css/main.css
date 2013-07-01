@@ -95,6 +95,10 @@ input.ui-button {
     color: #333;
 }
 
+.ui-tabs-active .fx_tab .fx_tab_corner {
+    visibility: visible;
+}
+
 .ui-timepicker-div .ui-widget-header {
     margin-bottom: 8px;
 }
@@ -1161,6 +1165,10 @@ div.CodeMirror-selected {
     background: #d7d4f0;
 }
 
+.CodeMirror-focused pre.CodeMirror-cursor {
+    visibility: visible;
+}
+
 .CodeMirror-searching {
     background: rgba(255, 255, 0, .4);
 }
@@ -1338,6 +1346,11 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
 
 .fx_list_buttons {
     visibility: hidden;
+}
+
+.fx_list_row_hover .fx_list_buttons,
+.fx_admin_selected .fx_list_buttons {
+    visibility: visible;
 }
 
 /* JSTREE
@@ -1672,10 +1685,6 @@ body div.fx_overlay, body div.fx_overlay table {
 
 .ui-datepicker-rtl .ui-datepicker-buttonpane button.ui-datepicker-current, .ui-datepicker-rtl .ui-datepicker-group, .fx_dialog_save_button {
     float: right;
-}
-
-.ui-tabs-active .fx_tab .fx_tab_corner, .CodeMirror-focused pre.CodeMirror-cursor, .fx_list_row_hover .fx_list_buttons, .fx_admin_selected .fx_list_buttons {
-    visibility: visible;
 }
 
 .ui-button-text, #fx_admin_main_menu a.fx_admin_main_menu_active, #fx_admin_page_modes a.fx_admin_page_modes_active {
