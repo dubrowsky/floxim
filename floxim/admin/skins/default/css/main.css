@@ -1,88 +1,123 @@
 /* ----------------- jQuery UI styles overrides ----------------------------- */
 
-/* Extracted from old css */
+/* Extracted from the old (modified) jqueryui css */
 .ui-widget-overlay {
-	z-index:16777268;
-	background:#666;
-	opacity:.25;
-	filter:Alpha(Opacity=25);
+    z-index: 16777268;
+    background: #666;
+    opacity: .25;
+    filter: Alpha(Opacity=25);
 }
 .ui-button-text-only .ui-button-text {
-	padding:0 5px;
+    padding: 0 5px;
 }
 input.ui-button {
-	padding:.4em 1em;
+    padding: .4em 1em;
+    
 }
 .ui-dialog * {
-	color:#595959;
+    color: #595959;
 }
 .ui-dialog {
-	background:#FFF;
-	border:1px solid #4c5051;
+    background: #FFF;
+    border: 1px solid #4c5051;
+    z-index:  50000;
+    padding: 0;
 }
 .ui-dialog .ui-dialog-titlebar {
-	height:30px;
-	background:#272729;
-	padding:0 1em;
+    height: 30px;
+    background: #272729;
+    padding: 0 1em;
+    border: none;
 }
 .ui-dialog .ui-dialog-title {
-	margin-top:2px;
-	color:#AAAFB0;
+    margin-top: 2px;
+    color: #AAAFB0;
+    font-weight: normal;
 }
 .ui-dialog .ui-dialog-content {
-	border-top:1px solid #fff;
-	clear:both;
+    border-top: 1px solid #fff;
+    clear: both;
 }
 .ui-dialog .ui-dialog-buttonpane {
-	background:#eff0f0;
-	overflow:hidden;
-	margin:0;
-	padding:5px;
+    background: #eff0f0;
+    overflow: hidden;
+    margin: 0;
+    padding: 5px;
+    border: none;
 }
-.ui-tabs {
-	padding:0;
-}
-.ui-tabs .ui-tabs-nav li {
-	margin:0 10px 1px 0;
+.ui-tabs, .ui-tabs .ui-tabs-nav, .ui-tabs .ui-tabs-panel {
+    padding: 0;
 }
 .ui-tabs .ui-tabs-panel {
-	padding-top:1em;
+    margin-top: -5px;
 }
+
+.ui-tabs .ui-tabs-nav li {
+    margin: 0 10px 1px 0;
+}
+.ui-tabs .ui-tabs-nav li.ui-tabs-selected{
+	padding-bottom:0;
+}
+
 .ui-timepicker-div .ui-widget-header {
-	margin-bottom:8px;
+    margin-bottom: 8px;
 }
 .ui-timepicker-div dl {
-	text-align:left;
+    text-align: left;
 }
 .ui-timepicker-div dl dt {
-	height:25px;
-	margin-bottom:-25px;
+    height: 25px;
+    margin-bottom: -25px;
 }
 .ui-timepicker-div dl dd {
-	margin:0 10px 10px 65px;
+    margin: 0 10px 10px 65px;
 }
 .ui-timepicker-div td {
-	font-size:90%;
+    font-size: 90%;
 }
 .ui-tpicker-grid-label {
-	background:none;
-	border:none;
-	margin:0;
-	padding:0;
+    background: none;
+    border: none;
+    margin: 0;
+    padding: 0;
 }
 .ui-datepicker-rtl .ui-datepicker-buttonpane button.ui-datepicker-current,.ui-datepicker-rtl .ui-datepicker-group {
-	float:right;
+    float: right;
 }
 
 /* end of extracted portion */
 
+/* -------------------------------------------------------------------------- */
+.fx_overlay .ui-widget, .fx_overlay .ui-widget-header {
+    border-radius: 0 !important;
+}
+
+.fx_overlay .ui-dialog-titlebar button {
+    background: none !important;
+    border: 0 !important;
+}
+
+.ui-tabs {
+    border: none;
+}
+
+.ui-tabs-nav {
+    background: none;
+}
+
+.ui-tabs .ui-tabs-nav li {
+    border: none;
+}
+
+/* -------------------------------------------------------------------------- */
+
 .ui-tabs .ui-tabs-nav li span { float:left; cursor:pointer; }
 
-.ui-tabs-selected .fx_tab .fx_tab_corner {
+.ui-tabs-active .fx_tab .fx_tab_corner {
 	visibility:visible;
 }
 
-.ui-tabs-selected .fx_tab a {
+.ui-tabs-active .fx_tab a {
 	background:#e8f0f1;
 	color:#333;
 }
@@ -101,14 +136,9 @@ input.ui-button {
     color:#fff !important;
 }
 
-.ui-dialog {
-    z-index: 50000;
-}
-
 .ui-dialog .ui-dialog-buttonpane .fx_dialog_button {
 	background:#3FB7DE;
     cursor: pointer;
-    float: left;
     height: 25px;
     line-height: 24px;
     margin: 0 10px 0 0;
@@ -143,8 +173,6 @@ input.ui-button {
 .ui-tabs-nav .ui-state-default {
     background: none !important;
 }
-
-/* -------------------------------------------------------------------------- */
 
 
 /* Разные полезные стили */
@@ -760,11 +788,22 @@ input.ui-button {
     padding:20px;
 }
 
-.fx_admin_form a {
+.fx_admin_form a, .fx_admin_form .ui-state-default a {
 	color:#28abd0;
 }
 
-.fx_admin_form * { font-size:13px;  font-family:Tahoma;}
+.fx_admin_form .ui-state-active a {
+    color: #333;
+}
+
+.fx_admin_form *,
+.fx_admin_form .ui-widget input,
+.fx_admin_form .ui-widget select,
+.fx_admin_form .ui-widget textarea,
+.fx_admin_form .ui-widget button {
+    font-size: 13px;
+    font-family: Tahoma;
+}
 .fx_admin_form label { font-size:14px; color:#333; }
 .fx_admin_form label, .fx_admin_form input, .fx_admin_form select, .fx_admin_form textarea { display:block; margin: 7px 0 0 0;}
 .fx_admin_form input[type="text"], .fx_admin_form select { width: 50%;}
@@ -1003,7 +1042,6 @@ div[id^='fx_fieldset_'] .fx_fieldset_add {
 }
 
 .fx_list_table td {
-	padding:0;
 	padding:10px;
 	vertical-align:top;
 }
@@ -1011,7 +1049,7 @@ div[id^='fx_fieldset_'] .fx_fieldset_add {
 .fx_list_row {
     border-bottom:1px solid #efefef;
     font-size:13pt;
-    font-family:Tahoma;
+    font-family:Tahoma, sans-serif;
 }
 
 .fx_list_image {
@@ -1080,7 +1118,6 @@ span.fx_admin_current {
 }
 
 #fx_admin_main table {
-    width:80%;
     text-align: left;
     margin-left: 20px; 
     width: 90%;
@@ -1246,9 +1283,6 @@ span.fx_admin_current {
 }
 
 .CodeMirror pre {
-    -moz-border-radius: 0;
-    -webkit-border-radius: 0;
-    -o-border-radius: 0;
     border-radius: 0;
     border-width: 0; margin: 0; padding: 0; background: transparent;
     font-family: inherit;
@@ -1721,6 +1755,7 @@ body div.fx_overlay, body div.fx_overlay table {
     font-size:12px;
     line-height: normal;
     color:#000;
+    border-radius: 0;
 }
 
 /* LiveSearch */
@@ -1740,8 +1775,6 @@ body div.fx_overlay, body div.fx_overlay table {
 
 .livesearch_has_value .livesearch_items {
 	cursor:pointer;
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
 	border-radius: 3px;
 	background:#EFEFEF;
 	border:1px solid #E0E0E0;
@@ -1790,8 +1823,6 @@ body div.fx_overlay, body div.fx_overlay table {
 
 .livesearch_item {
 	cursor:pointer;
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
 	border-radius: 3px;
 	background:#EFEFEF;
 	border:1px solid #E0E0E0;
