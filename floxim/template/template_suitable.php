@@ -117,7 +117,7 @@ class fx_template_suitable {
                     return;
                 }
             }
-            echo fen_debug($template_variants, $source_layout_id);
+            echo fx_debug($template_variants, $source_layout_id);
             die();
         }
         

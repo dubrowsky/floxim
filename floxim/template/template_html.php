@@ -270,7 +270,7 @@ class fx_template_html {
                     $stack_last = end($stack);
                     if (!$stack_last) {
                         dev_log("fx_template_html tree error", $tokens, $root);
-                        echo fen_debug(
+                        echo fx_debug(
                                 "fx_template_html error: stack empty, trying to add: ",
                                 '#'.$token_index,
                                 $token,
