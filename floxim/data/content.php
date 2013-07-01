@@ -108,7 +108,6 @@ class fx_data_content extends fx_data {
         $obj = $this->essence($data);
         
         $obj['created'] = date("Y-m-d H:i:s");
-        die('crtng');
         if ( ($user = fx::env()->get_user())) {
             $obj['user_id'] = $user['id'];
         }

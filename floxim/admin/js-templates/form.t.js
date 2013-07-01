@@ -839,7 +839,7 @@ inp.datepicker({
 		firstDay:1,
 		dateFormat: show_format,
 		onSelect:function(dateText, datepicker) {
-			//$(this).datepicker('option', 'buttonText', dateText);
+			inp.focus();
 		}
 });
 inp.datepicker('widget').addClass('fx_overlay');

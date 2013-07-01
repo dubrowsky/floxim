@@ -16,6 +16,16 @@ function fx_edit_in_place( node ) {
     this.is_content_editable = false;
     
     this.ib_meta = node.closest('.fx_infoblock').data('fx_infoblock');
+    
+    var eip = this;
+    
+    this.node.on('keydown.edit_in_place', function(e) {
+        eip.handle_keydown(e);
+    });
+    $('html').on('keydown.edit_in_place', function(e) {
+       eip.handle_keydown(e);
+    });
+    
     // редактировать нужно содержимое узла
     if (this.node.data('fx_var')) {
 		this.meta = node.data('fx_var');
@@ -30,6 +40,22 @@ function fx_edit_in_place( node ) {
 		meta.is_att = true;
 		this.start(meta);
 	}
+}
+
+fx_edit_in_place.prototype.handle_keydown = function(e) {
+    if (e.which == 27) {
+        this.stop();
+        this.restore();
+        $fx.front.deselect_item();
+        return false;
+    }
+    if (e.which == 13 && (!this.is_wysiwyg || e.ctrlKey)) {
+        this.save().stop();
+        $fx.front.deselect_item();
+        // dirty hack for redactor.js not to add extra linebreak
+        e.which = 666;
+        return false;
+    }
 }
 
 fx_edit_in_place.prototype.start = function(meta) {
@@ -69,13 +95,8 @@ fx_edit_in_place.prototype.start = function(meta) {
 			}
 			break;
 	}
-	this.node.closest('.fx_selected').one('fx_deselect', function() {
-		//var eip = $(this).data('edit_in_place');
-        //console.log('desel');
-		//if (eip) {
-            //console.log('stops-v');
-			edit_in_place.save().stop();
-		//}
+	this.node.closest('.fx_selected').one('fx_deselect.edit_in_place', function() {
+		edit_in_place.save().stop();
 	});
 }
 
@@ -99,6 +120,7 @@ fx_edit_in_place.prototype.stop = function() {
     if (this.is_content_editable && this.is_wysiwyg) {
         this.destroy_wysiwyg();
     }
+    $('*').off('.edit_in_place');
 	return this;
 }
 
@@ -132,8 +154,8 @@ fx_edit_in_place.prototype.save = function() {
 	if (vars.length == 0) {
 		return this;
 	}
-    console.log('vars to change', vars);
-	$fx.post({
+    
+    $fx.post({
 		essence:'infoblock',
 		action:'save_var',
 		infoblock:this.ib_meta,
@@ -147,6 +169,16 @@ fx_edit_in_place.prototype.save = function() {
 		$fx.front.reload_infoblock(node.closest('.fx_infoblock').get(0));
 	});
 	return this;
+}
+
+fx_edit_in_place.prototype.restore = function() {
+    if (!this.is_content_editable) {
+        return this;
+    }
+    var saved = this.node.data('fx_saved_value');
+    
+    this.node.html(saved);
+    return this;
 }
 
 fx_edit_in_place.prototype.make_wysiwyg = function () {
