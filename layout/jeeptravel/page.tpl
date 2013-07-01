@@ -1,4 +1,6 @@
-<html fx:template="page" fx:name="Внутренняя">
+{template id="page" name="Внутренняя"}
+<!DOCTYPE HTML>
+<html>
     <head>
     {js}
         FX_JQUERY_PATH
@@ -204,17 +206,18 @@
         </section>
     </body>
 </html>
+{/template}
 
-<span fx:template="index" fx:name="Главная" fx:omit="true">
+{template id="index" name="Главная"}
     {call id="page"}
         {$index_areas select="true"}
         {$full_content select="true"}
     {/call}
-</span>
+{/template}
 
-<span fx:template="full" fx:name="Во всю ширину" fx:omit="true">
+{template id="full" name="Во всю ширину"}
     {call id="page"}
         {$index_areas select="false"}
         {$skip_sidebar select="true"}
     {/call}
-</span>
+{/template}

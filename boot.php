@@ -19,7 +19,7 @@ $db_config = array(
 $config = $db_config['ilya_local'];
 
 $SYSTEM_FOLDER = dirname(__FILE__) . (isset($config['HTTP_ROOT_PATH']) ? $config['HTTP_ROOT_PATH'] : '/floxim/') . 'system/';
-define("FX_JQUERY_PATH", '/floxim/lib/js/jquery-1.8.3.min.js');
+define("FX_JQUERY_PATH", '/floxim/lib/js/jquery-1.9.1.js');
 
 require_once $SYSTEM_FOLDER.'config.php';
 require_once $SYSTEM_FOLDER.'fx.php';

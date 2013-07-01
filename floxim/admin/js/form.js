@@ -471,7 +471,6 @@
                         pexp = 'regexp';
                     }
                     var par_inp = $(':input[name="'+pkey+'"]');
-                    console.log('chps', pkey, pval, par_inp);
                     if (par_inp.length == 0) {
                         return;
                     }
@@ -510,7 +509,6 @@
                 } else {
                     _el.hide();
                 }
-                console.log(do_show ? 'showd' : 'hidd');
                 _el.find(':input').trigger('change');
             };
 

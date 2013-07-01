@@ -7,7 +7,6 @@ class fx_template_processor {
      * @return string php-код
      */
     public function process($source, $code) {
-        //dev_log('processing fx tpl');
         $source = str_replace("{php}", '<?', $source);
         $source = str_replace("{/php}", '?>', $source);
         

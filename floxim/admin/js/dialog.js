@@ -6,7 +6,9 @@
             width: '70%',
             modal: true,
             title: '',
-            zIndex: 78887
+            zIndex: 78887,
+            resizable:false,
+            draggable:true
         },
         steps: [],
 
@@ -26,12 +28,12 @@
             if ( data.dialog_not_auto_open ) {
                 $fx_dialog.settings.autoOpen = false;
             }
-
+            
             $fx_dialog.settings.open = $fx_dialog.open_listener;
             $fx_dialog.settings.close = $fx_dialog.close_listener;
 
             $fx_dialog.main.dialog($fx_dialog.settings);
-
+            
             $fx_dialog.main.closest('.ui-dialog').addClass('fx_overlay');
 
             $fx_dialog.main.dialog("option", "buttons", []);
@@ -42,7 +44,7 @@
             if ( data.dialog_title ) {
                 $fx_dialog.set_title(data.dialog_title);
             }
-
+            
             $fx_dialog.main.fx_create_form(data);
 
             $('form', $fx_dialog.main).submit( $fx_dialog.settings.onsubmit );
