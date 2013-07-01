@@ -34,7 +34,7 @@ input.ui-button {
 .ui-dialog .ui-dialog-title {
     margin-top: 2px;
     color: #AAAFB0;
-    font-weight: 400;
+    font-weight: normal;
 }
 
 .ui-dialog .ui-dialog-content {
@@ -50,12 +50,18 @@ input.ui-button {
     padding: 5px;
 }
 
-.ui-tabs,.ui-tabs .ui-tabs-nav,.ui-tabs .ui-tabs-panel {
+.ui-tabs, .ui-tabs .ui-tabs-nav, .ui-tabs .ui-tabs-panel {
     padding: 0;
 }
 
-.ui-tabs .ui-tabs-panel {
-    margin-top: -5px;
+.ui-tabs {
+    border: none;
+}
+
+.ui-tabs .ui-tabs-nav {
+    background: none;
+    border: none !important;
+    height: 29px;
 }
 
 .ui-tabs .ui-tabs-nav li {
@@ -65,6 +71,28 @@ input.ui-button {
 
 .ui-tabs .ui-tabs-nav li.ui-tabs-selected {
     padding-bottom: 0;
+}
+
+.ui-tabs .ui-tabs-nav li span {
+    float: left;
+    cursor: pointer;
+}
+
+.ui-tabs .ui-tabs-nav li a {
+    font-weight: bold;
+    font-variant: small-caps;
+    text-transform: lowercase;
+    font-size: 14px;
+    padding: 5px 7px;
+}
+
+.ui-tabs-nav .ui-state-default {
+    background: none !important;
+}
+
+.ui-tabs .ui-tabs-active .fx_tab a {
+    background: #e8f0f1;
+    color: #333;
 }
 
 .ui-timepicker-div .ui-widget-header {
@@ -95,40 +123,13 @@ input.ui-button {
     padding: 0;
 }
 
-.fx_overlay .ui-widget,.fx_overlay .ui-widget-header {
-    border-radius: 0!important;
+.ui-widget, .fx_overlay .ui-widget-header {
+    border-radius: 0 !important;
 }
 
-.fx_overlay .ui-dialog-titlebar button {
-    background: none!important;
-    border: 0!important;
-}
-
-.ui-tabs {
-    border: none;
-}
-
-.ui-tabs-nav {
-    background: none;
-    border: none!important;
-}
-
-.ui-tabs .ui-tabs-nav li span {
-    float: left;
-    cursor: pointer;
-}
-
-.ui-tabs-active .fx_tab a {
-    background: #e8f0f1;
-    color: #333;
-}
-
-.ui-tabs .ui-tabs-nav li a {
-    font-weight: 700;
-    font-variant: small-caps;
-    text-transform: lowercase;
-    font-size: 14px;
-    padding: 5px 7px;
+.ui-dialog-titlebar button {
+    background: none !important;
+    border: 0 !important;
 }
 
 .ui-datepicker {
@@ -148,7 +149,7 @@ input.ui-button {
 
 .ui-dialog .ui-dialog-buttonpane .fx_dialog_button .ui-button-text {
     font-size: 12px;
-    font-weight: 700;
+    font-weight: bold;
     text-transform: lowercase;
     font-variant: small-caps;
 }
@@ -158,16 +159,19 @@ input.ui-button {
 }
 
 .ui-dialog .ui-dialog-buttonpane .fx_dialog_cancel_button .ui-button-text {
-    color: #3FB7DE!important;
+    color: #3FB7DE !important;
 }
 
 .ui-icon-closethick {
-    background: url(../images/images.png) no-repeat -261px -5px!important;
+    background: url(../images/images.png) no-repeat -261px -5px !important;
 }
 
-.ui-tabs-nav .ui-state-default {
-    background: none!important;
+
+.fx_admin_clear {
+    clear: both;
 }
+
+/* Верхняя панель */
 
 #fx_admin_panel {
     position: fixed;
@@ -189,7 +193,7 @@ input.ui-button {
 }
 
 #fx_admin_main_menu {
-    font-family: 'Myriad Pro Light','Myriad Pro', sans-serif;
+    font-family: 'Myriad Pro Light', 'Myriad Pro', sans-serif;
     font-size: 18px;
     float: left;
     height: 34px;
@@ -199,7 +203,7 @@ input.ui-button {
 
 #fx_admin_main_menu a {
     text-decoration: none;
-    color: #aaafb0!important;
+    color: #aaafb0 !important;
     margin: 0 15px;
 }
 
@@ -222,7 +226,7 @@ input.ui-button {
 #fx_admin_page_modes a {
     color: #aaafb0;
     text-decoration: none;
-    font-family: Tahoma;
+    font-family: Tahoma, sans-serif;
     font-size: 12px;
     font-variant: small-caps;
     text-transform: lowercase;
@@ -276,8 +280,8 @@ input.ui-button {
     background: url(../images/images.png) -218px -8px;
 }
 
-#fx_admin_more_menu div > span,#fx_admin_more_menu span.fx_admin_more_menu_button {
-    font-family: Tahoma;
+#fx_admin_more_menu div > span, #fx_admin_more_menu span.fx_admin_more_menu_button {
+    font-family: Tahoma, sans-serif;
     font-size: 12px;
     font-variant: small-caps;
     text-transform: lowercase;
@@ -301,7 +305,7 @@ input.ui-button {
     display: block;
     height: 24px;
     line-height: 24px;
-    font-family: Tahoma;
+    font-family: Tahoma, sans-serif;
     font-size: 12px;
     font-variant: small-caps;
     text-transform: lowercase;
@@ -332,13 +336,15 @@ input.ui-button {
 #fx_admin_additional_menu a {
     color: #a0a4a5;
     text-decoration: none;
-    font-family: Tahoma;
+    font-family: Tahoma, sans-serif;
     font-size: 14px;
     position: absolute;
     right: 10px;
     top: 9px;
     line-height: 14px;
 }
+
+/* Панель с кнопками */
 
 #fx_admin_control {
     width: 100%;
@@ -364,6 +370,8 @@ input.ui-button {
     color: red;
 }
 
+/* Админка */
+
 .fx_admin_html body {
     margin: 34px 0 0;
     padding: 0;
@@ -383,7 +391,7 @@ input.ui-button {
 }
 
 #fx_admin_control.fx_admin_control_admin {
-    position: relative!important;
+    position: relative !important;
     left: auto;
     top: auto;
     height: 31px;
@@ -419,7 +427,7 @@ input.ui-button {
 }
 
 #fx_admin_submenu .fx_admin_submenu_level1 a {
-    font-family: Tahoma;
+    font-family: Tahoma, sans-serif;
     color: #aaafb0;
     font-variant: small-caps;
     font-size: 14px;
@@ -427,6 +435,7 @@ input.ui-button {
     padding: 3px 0 3px 17px;
 }
 
+/* Dummy two-level submenu - e.g. dev / templates / template 1 */
 #fx_admin_submenu .fx_admin_submenu_items_full a.fx_admin_submenu_child {
     display: block;
     height: 20px;
@@ -440,7 +449,7 @@ input.ui-button {
 #fx_admin_submenu h2 {
     font-family: 'Myriad Pro', sans-serif;
     font-size: 18px;
-    font-weight: 700;
+    font-weight: bold;
     color: #fff;
     text-transform: lowercase;
     line-height: 20px;
@@ -450,7 +459,7 @@ input.ui-button {
 }
 
 #fx_admin_submenu .fx_admin_submenu_items_full a {
-    font-family: Tahoma;
+    font-family: Tahoma, sans-serif;
     font-size: 12px;
     font-variant: small-caps;
     color: #aaafb0;
@@ -458,7 +467,7 @@ input.ui-button {
     margin: 4px 0;
 }
 
-#fx_admin_submenu a:hover,#fx_admin_submenu a.fx_admin_submenu_active {
+#fx_admin_submenu a:hover, #fx_admin_submenu a.fx_admin_submenu_active {
     color: #fff;
     border-left: 3px #7ecf00 solid;
 }
@@ -467,23 +476,22 @@ input.ui-button {
     background: #7ecf00;
 }
 
-#fx_admin_submenu a.fx_admin_submenu_backlink,#fx_admin_submenu a.fx_admin_submenu_backlink:hover {
-    background: url(../images/images.png) -228px 0;
+#fx_admin_submenu a.fx_admin_submenu_backlink, #fx_admin_submenu a.fx_admin_submenu_backlink:hover {
+    background: #69ad00 url(../images/images.png) no-repeat -228px 0;
     width: 15px;
     height: 18px;
-    background-repeat: no-repeat;
-    background-color: #69ad00;
     border: none;
     margin: 11px 0 0 3px;
     padding: 0 10px 7px 0;
 }
 
+/* Хлебные крошки */
 #fx_admin_breadcrumb {
     padding: 10px 0 0 30px;
 }
 
-#fx_admin_breadcrumb a,#fx_admin_breadcrumb span {
-    font-family: Tahoma;
+#fx_admin_breadcrumb a, #fx_admin_breadcrumb span {
+    font-family: Tahoma, sans-serif;
     font-size: 18px;
     color: #c0c2c2;
     text-transform: lowercase;
@@ -493,9 +501,9 @@ input.ui-button {
     margin: 0 5px;
 }
 
+/* Кнопки */
 .fx_admin_button {
-    background-image: url(../images/images.png);
-    background-repeat: no-repeat;
+    background: url(../images/images.png) no-repeat;
     float: left;
     cursor: pointer;
     margin: 0 14px 0 0;
@@ -511,9 +519,9 @@ input.ui-button {
 }
 
 .fx_admin_button_text span {
-    font-family: Tahoma;
+    font-family: Tahoma, sans-serif;
     font-size: 12px;
-    font-weight: 700;
+    font-weight: bold;
     color: #fff;
     text-transform: lowercase;
     margin: 0 8px;
@@ -579,11 +587,12 @@ input.ui-button {
     margin-top: 1px;
 }
 
-.fx_admin_button.fx_admin_notavailable,.fx_admin_button_text.fx_admin_notavailable {
+.fx_admin_button.fx_admin_notavailable, .fx_admin_button_text.fx_admin_notavailable {
     opacity: .16;
     filter: progid: DXImageTransform.Microsoft.Alpha(opacity=16);
 }
 
+/* выпадающее меню*/
 #fx_admin_control .fx_admin_pull_down_menu {
     z-index: 16777272;
     position: fixed;
@@ -594,7 +603,7 @@ input.ui-button {
     display: block;
     height: 24px;
     line-height: 24px;
-    font-family: Tahoma;
+    font-family: Tahoma, sans-serif;
     font-size: 12px;
     font-variant: small-caps;
     text-transform: lowercase;
@@ -613,7 +622,7 @@ input.ui-button {
     height: 21px;
     border: 2px solid #40b8df;
     cursor: pointer;
-    font-family: Tahoma;
+    font-family: Tahoma, sans-serif;
     font-variant: small-caps;
     font-size: 14px;
     line-height: 21px;
@@ -637,23 +646,26 @@ input.ui-button {
 }
 
 .fx_page_block {
-    margin: 2px!important;
+    margin: 2px !important;
 }
 
 .fx_admin_selected {
-    outline: 1pt #000 solid!important;
+    outline: 1pt #000 solid !important;
 }
 
 .fx_admin_html {
     overflow-y: hidden;
 }
 
+/* ДАЛЬШЕ ИДЕТ СТАРЫЙ */
+
 #fx_tree_map a {
     width: 90%;
 }
 
+
 .nc_editor textarea {
-    min-width: 110px!important;
+    min-width: 110px !important;
     border: 0;
     padding: 0;
 }
@@ -679,7 +691,7 @@ input.ui-button {
     padding: 20px;
 }
 
-.fx_admin_form a,.fx_admin_form .ui-state-default a {
+.fx_admin_form a, .fx_admin_form .ui-state-default a {
     color: #28abd0;
 }
 
@@ -687,9 +699,13 @@ input.ui-button {
     color: #333;
 }
 
-.fx_admin_form *,.fx_admin_form .ui-widget input,.fx_admin_form .ui-widget select,.fx_admin_form .ui-widget textarea,.fx_admin_form .ui-widget button {
+.fx_admin_form *, .fx_admin_form .ui-widget input, .fx_admin_form .ui-widget select, .fx_admin_form .ui-widget textarea, .fx_admin_form .ui-widget button {
     font-size: 13px;
-    font-family: Tahoma;
+    font-family: Tahoma, sans-serif;
+}
+
+.fx_admin_form .field {
+	clear: both;
 }
 
 .fx_admin_form label {
@@ -697,12 +713,12 @@ input.ui-button {
     color: #333;
 }
 
-.fx_admin_form label,.fx_admin_form input,.fx_admin_form select,.fx_admin_form textarea {
+.fx_admin_form label, .fx_admin_form input, .fx_admin_form select, .fx_admin_form textarea {
     display: block;
     margin: 7px 0 0;
 }
 
-.fx_admin_form input[type=text],.fx_admin_form select {
+.fx_admin_form input[type=text], .fx_admin_form select {
     width: 50%;
 }
 
@@ -716,21 +732,21 @@ input.ui-button {
 }
 
 .fx_admin_form .el-rte .toolbar .panel-format li label {
-    margin: 0!important;
+    margin: 0 !important;
 }
 
 .fx_admin_form #colorpickerHolder2 input {
-    border: 0!important;
-    margin: 0!important;
-    padding: 0!important;
+    border: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
-.fx_admin_form label input[type=checkbox],.fx_admin_form label input[type=radio] {
-    display: inline!important;
+.fx_admin_form label input[type=checkbox], .fx_admin_form label input[type=radio] {
+    display: inline !important;
     margin: 0 5px 0 0;
 }
 
-.fx_admin_form input,.fx_admin_form textarea {
+.fx_admin_form input, .fx_admin_form textarea {
     margin-bottom: 10px;
     padding: .4em;
 }
@@ -741,10 +757,10 @@ input.ui-button {
 }
 
 .fx_admin_form .fx_file_list .fx_itemselect_item {
-    float: left!important;
-    height: 200px!important;
-    width: 200px!important;
-    padding: 10px!important;
+    float: left !important;
+    height: 200px !important;
+    width: 200px !important;
+    padding: 10px !important;
 }
 
 .fx_admin_user_edit_form {
@@ -795,12 +811,16 @@ input.ui-button {
 
 .fx_iconselect .name {
     height: 32px;
-    font-weight: 700;
+    font-weight: bold;
     line-height: 27px;
 }
 
 .fx_iconselect .selected {
     background: #ccc;
+}
+
+.fx_iconselect .divider {
+    clear: both;
 }
 
 .fx_iconselect .fx_iconselect_filter input {
@@ -809,7 +829,7 @@ input.ui-button {
     background: url(../images/search_icon.png) no-repeat scroll 0 0 transparent;
     background-position: right;
     background-color: #FFF;
-    padding: 2px 5px!important;
+    padding: 2px 5px !important;
 }
 
 .fx_list_filter {
@@ -819,8 +839,8 @@ input.ui-button {
     margin: 30px 0 20px;
 }
 
-.fx_list_filter label,.fx_list_filter label input {
-    margin: 2px 0 0 10px!important;
+.fx_list_filter label, .fx_list_filter label input {
+    margin: 2px 0 0 10px !important;
 }
 
 .fx_list_filter .fx_list_search {
@@ -829,7 +849,7 @@ input.ui-button {
 }
 
 .fx_list_filter .fx_list_search input {
-    height: 8px!important;
+    height: 8px !important;
 }
 
 .fx_list_filter .fx_list_group {
@@ -878,13 +898,13 @@ div[id^=fx_fieldset_] .fx_fieldset_row {
     margin: 10px 0;
 }
 
-div[id^=fx_fieldset_] .fx_fieldset_row *,div[id^=fx_fieldset_] .fx_fieldset_label * {
+div[id^=fx_fieldset_] .fx_fieldset_row *, div[id^=fx_fieldset_] .fx_fieldset_label * {
     float: left;
-    width: 200px!important;
-    margin: 0 10px 0 0!important;
+    width: 200px !important;
+    margin: 0 10px 0 0 !important;
 }
 
-div[id^=fx_fieldset_] .fx_fieldset_remove,div[id^=fx_fieldset_] .fx_fieldset_add {
+div[id^=fx_fieldset_] .fx_fieldset_remove, div[id^=fx_fieldset_] .fx_fieldset_add {
     border-bottom: 1px dashed #2A6DA0;
     color: #2A6DA0;
     cursor: pointer;
@@ -945,8 +965,12 @@ div[id^=fx_fieldset_] .fx_fieldset_add {
     width: 40%;
 }
 
+label[id^=nc_form_field_] {
+    clear: both;
+}
+
 span.fx_admin_current {
-    font-weight: 400!important;
+    font-weight: normal !important;
 }
 
 .fx_current {
@@ -955,7 +979,7 @@ span.fx_admin_current {
 }
 
 .fx_current span {
-    font-weight: 700;
+    font-weight: bold;
     margin: 0 0 0 5px;
 }
 
@@ -972,7 +996,7 @@ span.fx_admin_current {
     border-collapse: collapse;
 }
 
-#fx_admin_main table td,#fx_admin_main table th {
+#fx_admin_main table td, #fx_admin_main table th {
     border: 1pt solid #C6C7C3;
 }
 
@@ -987,7 +1011,7 @@ span.fx_admin_current {
 }
 
 .fx_admin_radio_facet span.fx_admin_radio_facet_current {
-    font-weight: 700;
+    font-weight: bold;
     border-bottom: none;
     cursor: auto;
 }
@@ -1020,9 +1044,9 @@ span.fx_admin_current {
 }
 
 .fx_dialog_back_button {
-    border: 1px solid #A2ADB3!important;
-    background: #A9B4B9!important;
-    text-shadow: 0 1px 0 rgba(102,108,112,0.8)!important;
+    border: 1px solid #A2ADB3 !important;
+    background: #A9B4B9 !important;
+    text-shadow: 0 1px 0 rgba(102, 108, 112, 0.8) !important;
     float: left;
 }
 
@@ -1037,8 +1061,8 @@ span.fx_admin_current {
 }
 
 #fx_admin_content .ui-tabs-nav {
-    border: none!important;
-    background: #FFF!important;
+    border: none !important;
+    background: #FFF !important;
     overflow-y: auto;
 }
 
@@ -1053,9 +1077,9 @@ span.fx_admin_current {
     cursor: pointer;
 }
 
-.fx_admin_form .fx_admin_radio_label,.fx_admin_form .fx_admin_checkbox_label {
-    font-weight: 400!important;
-    font-size: 12px!important;
+.fx_admin_form .fx_admin_radio_label, .fx_admin_form .fx_admin_checkbox_label {
+    font-weight: normal !important;
+    font-size: 12px !important;
 }
 
 .fx_admin_child_fields {
@@ -1070,6 +1094,8 @@ span.fx_admin_current {
 .CodeMirror-scroll {
     overflow: auto;
     height: 300px;
+    /* This is needed to prevent an IE[67] bug where the scrolled content
+       is visible outside of the scrolling box. */
     position: relative;
 }
 
@@ -1087,7 +1113,7 @@ span.fx_admin_current {
 .CodeMirror-gutter-text {
     color: #aaa;
     text-align: right;
-    white-space: pre!important;
+    white-space: pre !important;
     padding: .4em .2em .4em .4em;
 }
 
@@ -1117,7 +1143,7 @@ span.fx_admin_current {
 }
 
 .CodeMirror textarea {
-    outline: none!important;
+    outline: none !important;
 }
 
 .CodeMirror pre.CodeMirror-cursor {
@@ -1136,92 +1162,50 @@ div.CodeMirror-selected {
 }
 
 .CodeMirror-searching {
-    background: rgba(255,255,0,.4);
+    background: rgba(255, 255, 0, .4);
 }
 
-.cm-s-default span.cm-keyword {
-    color: #708;
+/* Default theme */
+
+.cm-s-default span.cm-keyword {color: #708;}
+.cm-s-default span.cm-atom {color: #219;}
+.cm-s-default span.cm-number {color: #164;}
+.cm-s-default span.cm-def {color: #00f;}
+.cm-s-default span.cm-variable {color: black;}
+.cm-s-default span.cm-variable-2 {color: #05a;}
+.cm-s-default span.cm-variable-3 {color: #085;}
+.cm-s-default span.cm-property {color: black;}
+.cm-s-default span.cm-operator {color: black;}
+.cm-s-default span.cm-comment {color: #a50;}
+.cm-s-default span.cm-string {color: #a11;}
+.cm-s-default span.cm-string-2 {color: #f50;}
+.cm-s-default span.cm-meta {color: #555;}
+.cm-s-default span.cm-error {color: #f00;}
+.cm-s-default span.cm-qualifier {color: #555;}
+.cm-s-default span.cm-builtin {color: #30a;}
+.cm-s-default span.cm-bracket {color: #cc7;}
+.cm-s-default span.cm-tag {color: #170;}
+.cm-s-default span.cm-attribute {color: #00c;}
+.cm-s-default span.cm-header {color: #a0a;}
+.cm-s-default span.cm-quote {color: #090;}
+.cm-s-default span.cm-hr {color: #999;}
+.cm-s-default span.cm-link {color: #00c;}
+
+span.cm-header, span.cm-strong {font-weight: bold;}
+span.cm-em {font-style: italic;}
+span.cm-emstrong {font-style: italic; font-weight: bold;}
+span.cm-link {text-decoration: underline;}
+
+div.CodeMirror span.CodeMirror-matchingbracket {color: #0f0;}
+div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
+
+
+.fx_admin_colorbasic {
+	clear: both;
 }
 
-.cm-s-default span.cm-atom {
-    color: #219;
-}
-
-.cm-s-default span.cm-number {
-    color: #164;
-}
-
-.cm-s-default span.cm-def {
-    color: #00f;
-}
-
-.cm-s-default span.cm-variable-2 {
-    color: #05a;
-}
-
-.cm-s-default span.cm-variable-3 {
-    color: #085;
-}
-
-.cm-s-default span.cm-comment {
-    color: #a50;
-}
-
-.cm-s-default span.cm-string {
-    color: #a11;
-}
-
-.cm-s-default span.cm-string-2 {
-    color: #f50;
-}
-
-.cm-s-default span.cm-builtin {
-    color: #30a;
-}
-
-.cm-s-default span.cm-bracket {
-    color: #cc7;
-}
-
-.cm-s-default span.cm-tag {
-    color: #170;
-}
-
-.cm-s-default span.cm-header {
-    color: #a0a;
-}
-
-.cm-s-default span.cm-quote {
-    color: #090;
-}
-
-.cm-s-default span.cm-hr {
-    color: #999;
-}
-
-span.cm-header,span.cm-strong {
-    font-weight: 700;
-}
-
-span.cm-em {
-    font-style: italic;
-}
-
-span.cm-emstrong {
-    font-style: italic;
-    font-weight: 700;
-}
-
-span.cm-link {
-    text-decoration: underline;
-}
-
-div.CodeMirror span.CodeMirror-matchingbracket {
-    color: #0f0;
-}
-
-div.CodeMirror span.CodeMirror-nonmatchingbracket {
-    color: #f22;
+.fx_admin_colorbasic div {
+    float: left;
 }
 
 .fx_admin_colorbasic span {
@@ -1230,6 +1214,8 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {
     display: block;
     margin: 3px;
 }
+
+/* TipTip CSS - Version 1.2 */
 
 #tiptip_holder {
     display: none;
@@ -1260,13 +1246,13 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {
     color: #fff;
     text-shadow: 0 0 2px #000;
     padding: 4px 8px;
-    border: 1px solid rgba(255,255,255,0.25);
-    background-color: rgb(25,25,25);
-    background-color: rgba(25,25,25,0.92);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background-color: rgb(25, 25, 25);
+    background-color: rgba(25, 25, 25, 0.92);
     background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(transparent), to(#000));
 }
 
-#tiptip_arrow,#tiptip_arrow_inner {
+#tiptip_arrow, #tiptip_arrow_inner {
     position: absolute;
     height: 0;
     width: 0;
@@ -1276,52 +1262,69 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {
 }
 
 #tiptip_holder.tip_top #tiptip_arrow {
-    border-top-color: rgba(255,255,255,0.35);
+    border-top-color: rgba(255, 255, 255, 0.35);
 }
 
 #tiptip_holder.tip_bottom #tiptip_arrow {
-    border-bottom-color: rgba(255,255,255,0.35);
+    border-bottom-color: rgba(255, 255, 255, 0.35);
 }
 
 #tiptip_holder.tip_right #tiptip_arrow {
-    border-right-color: rgba(255,255,255,0.35);
+    border-right-color: rgba(255, 255, 255, 0.35);
 }
 
 #tiptip_holder.tip_left #tiptip_arrow {
-    border-left-color: rgba(255,255,255,0.35);
+    border-left-color: rgba(255, 255, 255, 0.35);
 }
 
 #tiptip_holder.tip_top #tiptip_arrow_inner {
     margin-top: -7px;
     margin-left: -6px;
-    border-top-color: rgba(25,25,25,0.92);
+    border-top-color: rgba(25, 25, 25, 0.92);
 }
 
 #tiptip_holder.tip_bottom #tiptip_arrow_inner {
     margin-top: -5px;
     margin-left: -6px;
-    border-bottom-color: rgba(25,25,25,0.92);
+    border-bottom-color: rgba(25, 25, 25, 0.92);
 }
 
 #tiptip_holder.tip_right #tiptip_arrow_inner {
     margin-top: -6px;
     margin-left: -5px;
-    border-right-color: rgba(25,25,25,0.92);
+    border-right-color: rgba(25, 25, 25, 0.92);
 }
 
 #tiptip_holder.tip_left #tiptip_arrow_inner {
     margin-top: -6px;
     margin-left: -7px;
-    border-left-color: rgba(25,25,25,0.92);
+    border-left-color: rgba(25, 25, 25, 0.92);
 }
 
-#fx_admin_control form .field,#fx_admin_control form>div,#fx_admin_control form>button {
+/* Webkit Hacks  */
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+    #tiptip_content {
+        background-color: rgba(45, 45, 45, 0.88);
+        padding: 4px 8px 5px;
+    }
+
+    #tiptip_holder.tip_bottom #tiptip_arrow_inner {
+        border-bottom-color: rgba(45, 45, 45, 0.88);
+    }
+
+    #tiptip_holder.tip_top #tiptip_arrow_inner {
+        border-top-color: rgba(20, 20, 20, 0.92);
+    }
+}
+
+
+#fx_admin_control form .field, #fx_admin_control form>div, #fx_admin_control form>button {
     display: inline-block;
     vertical-align: top;
     margin-right: 15px;
 }
 
-#fx_admin_control .fx_admin_form .form_label,#fx_admin_control .fx_admin_form label,#fx_admin_control .fx_admin_form input,#fx_admin_control .fx_admin_form select,#fx_admin_control .fx_admin_form textarea {
+#fx_admin_control .fx_admin_form .form_label, #fx_admin_control .fx_admin_form label, #fx_admin_control .fx_admin_form input, #fx_admin_control .fx_admin_form select, #fx_admin_control .fx_admin_form textarea {
     display: inline;
     font-size: 11px;
     width: auto;
@@ -1337,22 +1340,32 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {
     visibility: hidden;
 }
 
+/* JSTREE
+часть CSS-когда вшита в JS библиотеки
+*/
+
 #fx_tree_map {
     width: 600px;
 }
 
-.jstree li {
-    padding-left: 23px!important;
-    margin: 5px 0!important;
+.jstree-default li {
+    clear: both;
 }
 
+.jstree li {
+    padding-left: 23px !important;
+    margin: 5px 0 !important;
+}
+
+/* НАША РЕАЛИЗАЦИЯ ДЕРЕВА */
+
 .fx_tree {
-    font-family: Tahoma;
+    font-family: Tahoma, sans-serif;
     font-size: 12px;
     margin-left: -25px;
 }
 
-.fx_tree ul,.fx_tree li {
+.fx_tree ul, .fx_tree li {
     list-style-type: none;
 }
 
@@ -1373,8 +1386,8 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {
     font-size: 13px;
     cursor: pointer;
     text-decoration: none;
-    color: #333!important;
-    font-weight: 700;
+    color: #333 !important;
+    font-weight: bold;
 }
 
 .fx_tree_label {
@@ -1434,9 +1447,10 @@ li ul .fx_tree_label {
 }
 
 li ul .fx_tree_label .fx_tree_title {
-    font-weight: 400;
+    font-weight: normal;
 }
 
+/* INLINE RADIO LIST */
 .inline .fx_admin_radio_label {
     display: inline;
     padding-right: 12px;
@@ -1463,7 +1477,7 @@ li ul .fx_tree_label .fx_tree_title {
 }
 
 .fx_hilight {
-    outline: 1px dotted rgba(0,255,0,0.8);
+    outline: 1px dotted rgba(0, 255, 0, 0.8);
     outline-offset: -1px;
 }
 
@@ -1475,8 +1489,8 @@ li ul .fx_tree_label .fx_tree_title {
     outline-offset: -3px;
 }
 
-.fx_area.fx_hilight,.fx_infoblock.fx_hilight {
-    outline: 1px dotted rgba(0,0,255,0.8);
+.fx_area.fx_hilight, .fx_infoblock.fx_hilight {
+    outline: 1px dotted rgba(0, 0, 255, 0.8);
 }
 
 img.fx_hilight {
@@ -1485,8 +1499,8 @@ img.fx_hilight {
 }
 
 .fx_selected {
-    outline: 4px solid rgba(255,255,0,0.5)!important;
-    outline-offset: -4px!important;
+    outline: 4px solid rgba(255, 255, 0, 0.5) !important;
+    outline-offset: -4px !important;
 }
 
 .fx_empty_infoblock {
@@ -1494,7 +1508,7 @@ img.fx_hilight {
     color: #999;
     background: #FFF;
     font-size: 12px;
-    font-family: Tahoma;
+    font-family: Tahoma, sans-serif;
     padding: 5px 8px;
 }
 
@@ -1503,21 +1517,21 @@ img.fx_hilight {
 }
 
 .fx_area_target {
-    display: block!important;
+    display: block !important;
     min-height: 100px;
     min-width: 100px;
     background: #FAA;
 }
 
-body div.fx_overlay,body div.fx_overlay table {
-    font-family: Tahoma;
+body div.fx_overlay, body div.fx_overlay table {
+    font-family: Tahoma, sans-serif;
     font-size: 12px;
     line-height: normal;
     color: #000;
     border-radius: 0;
 }
 
-.livesearch_items,.livesearch_items li {
+.livesearch_items, .livesearch_items li {
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -1551,7 +1565,7 @@ body div.fx_overlay,body div.fx_overlay table {
     width: 220px;
 }
 
-.livesearch_items li span,.livesearch_items li input {
+.livesearch_items li span, .livesearch_items li input {
     vertical-align: middle;
     height: 15px;
     display: inline-block;
@@ -1574,7 +1588,6 @@ body div.fx_overlay,body div.fx_overlay table {
     border: none;
     outline: 0;
     -webkit-box-shadow: none;
-    -moz-box-shadow: none;
     box-shadow: none;
 }
 
@@ -1593,6 +1606,7 @@ body div.fx_overlay,body div.fx_overlay table {
     color: red;
 }
 
+/* Suggests */
 .fx_suggest_box {
     background: #FFF;
     border: 2px solid #9CD;
@@ -1613,6 +1627,11 @@ body div.fx_overlay,body div.fx_overlay table {
 .fx_suggest_box .search_item_active {
     background: #FFA;
 }
+
+.fx_suggest_box div.add_item {
+    color: red;
+}
+
 
 #fx_admin_fields .field {
     float: left;
@@ -1651,118 +1670,84 @@ body div.fx_overlay,body div.fx_overlay table {
     word-wrap: normal;
 }
 
-.ui-datepicker-rtl .ui-datepicker-buttonpane button.ui-datepicker-current,.ui-datepicker-rtl .ui-datepicker-group,.fx_dialog_save_button {
+.ui-datepicker-rtl .ui-datepicker-buttonpane button.ui-datepicker-current, .ui-datepicker-rtl .ui-datepicker-group, .fx_dialog_save_button {
     float: right;
 }
 
-.ui-tabs-active .fx_tab .fx_tab_corner,.CodeMirror-focused pre.CodeMirror-cursor,.fx_list_row_hover .fx_list_buttons,.fx_admin_selected .fx_list_buttons {
+.ui-tabs-active .fx_tab .fx_tab_corner, .CodeMirror-focused pre.CodeMirror-cursor, .fx_list_row_hover .fx_list_buttons, .fx_admin_selected .fx_list_buttons {
     visibility: visible;
 }
 
-.ui-button-text,#fx_admin_main_menu a.fx_admin_main_menu_active,#fx_admin_page_modes a.fx_admin_page_modes_active {
-    color: #fff!important;
+.ui-button-text, #fx_admin_main_menu a.fx_admin_main_menu_active, #fx_admin_page_modes a.fx_admin_page_modes_active {
+    color: #fff !important;
 }
 
-.fx_admin_clear,.fx_iconselect .divider,label[id^=nc_form_field_],.fx_admin_colorbasic,.fx_admin_form .field,.jstree-default li {
-    clear: both;
-}
-
-#fx_admin_more_menu div > span:hover,#fx_admin_control .fx_admin_pull_down_menu span:hover {
+#fx_admin_more_menu div > span:hover, #fx_admin_control .fx_admin_pull_down_menu span:hover {
     background: #69ad00;
     color: #fff;
 }
 
-#fx_admin_control #fx_admin_additionl_text,#fx_admin_statustext {
+#fx_admin_control #fx_admin_additionl_text, #fx_admin_statustext {
     display: none;
     float: right;
     margin: 7px 30px 5px 0;
 }
 
-#fx_admin_control #fx_admin_additionl_text a,#fx_dialog_file_existing img {
+#fx_admin_control #fx_admin_additionl_text a, #fx_dialog_file_existing img {
     cursor: pointer;
 }
 
-#fx_admin_control #fx_admin_statustext.ok,#fx_admin_control #fx_admin_statustext.wait {
+#fx_admin_control #fx_admin_statustext.ok, #fx_admin_control #fx_admin_statustext.wait {
     border: 1px solid green;
     color: green;
 }
 
-#fx_admin_submenu .fx_admin_submenu_items_full a.fx_admin_submenu_parent,.fx_admin_form .fx_admin_multi_checkbox input {
+#fx_admin_submenu .fx_admin_submenu_items_full a.fx_admin_submenu_parent,
+.fx_admin_form .fx_admin_multi_checkbox input {
     margin-bottom: 0;
 }
 
-#nc_upload_target,.fx_admin_form .fx_file_list {
+#nc_upload_target, .fx_admin_form .fx_file_list {
     display: none;
 }
 
-.fx_admin_form .fx_file_choice span,.fx_layer_name span {
+.fx_admin_form .fx_file_choice span, .fx_layer_name span {
     border-bottom: 1px dashed #2A6DA0;
     color: #2A6DA0;
     cursor: pointer;
 }
 
-.fx_admin_form_datetime input,.fx_admin_form .fx_admin_checkbox_label {
+.fx_admin_form_datetime input, .fx_admin_form .fx_admin_checkbox_label {
     display: inline;
 }
 
-.fx_iconselect .fx_iconselect_filter select,.fx_admin_colorbasic div {
+.fx_iconselect .fx_iconselect_filter select, .fx_admin_colorbasic div {
     float: left;
 }
 
-.fx_list_filter label input,.fx_list_filter .fx_list_search *,.fx_list_filter .fx_list_group * {
-    display: inline!important;
+.fx_list_filter label input, .fx_list_filter .fx_list_search *, .fx_list_filter .fx_list_group * {
+    display: inline !important;
 }
 
-.fx_list .fx_admin_selected,.fx_tree .fx_admin_selected {
+.fx_list .fx_admin_selected, .fx_tree .fx_admin_selected {
     background: #edf3f5;
-    outline: none!important;
+    outline: none !important;
 }
 
-.fx_admin_store_item h2,.fx_admin_store_item h3,.fx_admin_store_item p {
+.fx_admin_store_item h2, .fx_admin_store_item h3, .fx_admin_store_item p {
     margin: 0 0 0 60px;
 }
 
-.fx_dialog_store_button,.fx_dialog_edit_button,.fx_dialog_upload_button {
-    background: #9ED345!important;
-    border: 1px solid #A2ADB3!important;
-    text-shadow: 0 1px 0 rgba(83,124,35,0.8)!important;
+.fx_dialog_store_button, .fx_dialog_edit_button, .fx_dialog_upload_button {
+    background: #9ED345 !important;
+    border: 1px solid #A2ADB3 !important;
+    text-shadow: 0 1px 0 rgba(83, 124, 35, 0.8) !important;
 }
 
-.fx_preview_placeholder_hover,.fx_overlay .ui-datepicker-today {
+.fx_preview_placeholder_hover, .fx_overlay .ui-datepicker-today {
     border: 1px solid red;
 }
 
-.cm-s-default span.cm-variable,.cm-s-default span.cm-property,.cm-s-default span.cm-operator {
-    color: #000;
-}
-
-.cm-s-default span.cm-meta,.cm-s-default span.cm-qualifier {
-    color: #555;
-}
-
-.cm-s-default span.cm-error,.fx_suggest_box div.add_item {
-    color: red;
-}
-
-.cm-s-default span.cm-attribute,.cm-s-default span.cm-link {
-    color: #00c;
-}
-
-.fx_dialog_file_selected,.fx_admin_colorbasic_selected {
+.fx_dialog_file_selected, .fx_admin_colorbasic_selected {
     border: 1pt solid #000;
-}
-
-@media screen and (-webkit-min-device-pixel-ratio:0) {
-    #tiptip_content {
-        background-color: rgba(45,45,45,0.88);
-        padding: 4px 8px 5px;
-    }
-
-    #tiptip_holder.tip_bottom #tiptip_arrow_inner {
-        border-bottom-color: rgba(45,45,45,0.88);
-    }
-
-    #tiptip_holder.tip_top #tiptip_arrow_inner {
-        border-top-color: rgba(20,20,20,0.92);
-    }
 }
