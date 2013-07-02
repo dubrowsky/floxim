@@ -104,7 +104,8 @@ var $t = {
 	},
 	jQuery: function(name, obj, options) {
 		var tpl = $t.find(name);
-		var html = $(tpl(obj,options));
+        var res = tpl(obj,options).replace(/^\s+|\s+$/, '');
+        var html = $(res);
 		if (typeof tpl.jquery == 'function') {
 			tpl.jquery(html, obj, options);
 		}

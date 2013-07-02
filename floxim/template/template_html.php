@@ -47,7 +47,6 @@ class fx_template_html {
     }
     
     public function transform_to_floxim() {
-        
         $tree = $this->make_tree($this->tokenize());
         
         $unnamed_replaces = array();
@@ -655,6 +654,9 @@ class fx_html_tokenizer {
 			}
 			$this->stack .= $ch;
 		}
+        if (!empty($this->stack)) {
+            $this->text_to_tag('');
+        }
 		return $this->res;
 	}
 	
