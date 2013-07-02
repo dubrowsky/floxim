@@ -1,4 +1,4 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
     <head>
         <meta fx:layout="page" fx:name="Внутренняя" content="sidebar" />
