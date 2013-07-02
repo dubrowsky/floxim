@@ -32,6 +32,21 @@
 
             $fx_dialog.main.dialog($fx_dialog.settings);
 
+            var widget = $fx_dialog.main.dialog("widget"),
+                widget_width = widget.width(),
+                $window = $(window),
+                min_gap = 50;
+
+            widget.draggable("option",
+                             "containment",    // set to "window" to prevent dragging outside the screen borders
+                             [
+                                 -widget_width + min_gap,
+                                 0,
+                                 $window.width() - min_gap,
+                                 $window.height() - min_gap
+                             ])
+                  .draggable("option", "scroll", false);
+
             $fx_dialog.main.closest('.ui-dialog').addClass('fx_overlay');
 
             $fx_dialog.main.dialog("option", "buttons", []);

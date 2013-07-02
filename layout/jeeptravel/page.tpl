@@ -1,4 +1,6 @@
-<html fx:template="page" fx:name="Внутренняя">
+{template id="page" name="Внутренняя"}
+<!DOCTYPE html>
+<html>
     <head>
     {js}
         FX_JQUERY_PATH
@@ -218,3 +220,4 @@
         {$skip_sidebar select="true"}
     {/call}
 </span>
+{/template}

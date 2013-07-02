@@ -22,6 +22,7 @@ input.ui-button {
     border: 1px solid #4c5051;
     z-index: 50000;
     padding: 0;
+    position: fixed;
 }
 
 .ui-dialog .ui-dialog-titlebar {
@@ -48,6 +49,10 @@ input.ui-button {
     border: none;
     margin: 0;
     padding: 5px;
+}
+
+.ui-button, .ui-tabs-nav li, .ui-tabs-nav a {
+    outline: none;
 }
 
 .ui-tabs, .ui-tabs .ui-tabs-nav, .ui-tabs .ui-tabs-panel {
