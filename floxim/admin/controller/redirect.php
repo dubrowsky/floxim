@@ -3,6 +3,7 @@
 class fx_controller_admin_redirect extends fx_controller_admin {
     
     public function all($input) {
+        /*
         $items = fx::data('redirect')->get_all();
 
         $ar = array('type' => 'list', 'filter' => true, 'sortable' => true);
@@ -18,7 +19,7 @@ class fx_controller_admin_redirect extends fx_controller_admin {
 
         $buttons = array("add", "edit", "on", "off", "delete");
         $result = array('fields' => $fields, 'buttons' => $buttons);
-
+        */
         $this->response->submenu->set_menu('tools')->set_subactive('redirect');
         return $result;
     }

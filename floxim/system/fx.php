@@ -244,6 +244,9 @@ class fx {
     }
     
     public static function dig_set(&$collection, $var_path, $var_value, $merge = false) {
+        //static $cnt = 0;
+        //$cnt++;
+        //echo fx_debug($var_path, $var_value, $cnt);
         $var_path = explode('.', $var_path);
         $arr =& $collection;
         foreach ($var_path as $pp) {

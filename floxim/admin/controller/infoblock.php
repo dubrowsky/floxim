@@ -360,11 +360,21 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             'parent' => array('page_id' => '!=0')
         );
         
+        $page_types = array();
+        $page_types []= array('', fx::lang('Любой', 'system'));
+        $coms = fx::data('component')->get_select_values('page');
+        foreach ($coms as $com) {
+            $com = fx::data('component', $com[0]);
+            $page_types []= array($com['keyword'], $com['item_name']);
+        }
+        
         $fields []= array(
             'name' => 'page_type',
-            'label' => fx::lang('Если тип страницы (пусто - любой)','system'),
+            'label' => fx::lang('Только на страницах типа','system'),
             'value' => fx::dig($infoblock, 'scope.page_type'),
-            'parent' => array('pages' => '!=this')
+            'parent' => array('pages' => '!=this'),
+            'type' => 'select',
+            'values' => $page_types
         );
         // dev_log('scope fields', $fields, $infoblock, $c_page);
         return $fields;

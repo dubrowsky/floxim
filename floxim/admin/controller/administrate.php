@@ -4,6 +4,7 @@ class fx_controller_admin_administrate extends fx_controller_admin {
 
 
     public function module() {
+        /*
         $fx_core = fx_core::get_object();
 
         $all_modules = $fx_core->modules->get_data();
@@ -20,7 +21,7 @@ class fx_controller_admin_administrate extends fx_controller_admin {
 
         
         $result =array('fields' => $fields);
-        
+        */
         $this->response->submenu->set_menu('administrate')->set_subactive('module');
         return $result;
     }

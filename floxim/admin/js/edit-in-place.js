@@ -88,7 +88,7 @@ fx_edit_in_place.prototype.start = function(meta) {
 					.attr('contenteditable', 'true')
 					.data('fx_saved_value', this.node.html())
 					.focus();
-                if (meta.type == 'text' && meta.html) {
+                if ( (meta.type == 'text' && meta.html) || meta.type == 'html') {
                     this.is_wysiwyg = true;
                     this.make_wysiwyg();
                 }
@@ -101,9 +101,13 @@ fx_edit_in_place.prototype.start = function(meta) {
 }
 
 fx_edit_in_place.prototype.add_panel_field = function(meta) {
+    meta = $.extend({}, meta);
 	if (meta.var_type == 'visual') {
 		meta.name = meta.id;
 	}
+    if (!meta.type) {
+        meta.type = 'string';
+    }
 	var field = $fx.front.add_panel_field(meta);
 	field.data('meta', meta);
 	this.panel_fields.push(field);

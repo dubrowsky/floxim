@@ -21,6 +21,7 @@ fx_front = function () {
     });
     
     $('html').on('click', function(e) {
+        
         if ($fx.front.mode == 'view') {
             return;
         }

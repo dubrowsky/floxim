@@ -62,10 +62,18 @@ class fx_template_processor {
             }
             
             if (!preg_match("~^{template~", $file_data)) {
-                $file_tpl_name = null;
-                preg_match("~/([^/]+)\.tpl~", $file, $file_tpl_name);
+                $is_layout = $this->_controller_type == 'layout';
+                if ($is_layout) {
+                    $auto_tpl_name = '_layout_body';
+                } else {
+                    $file_tpl_name = null;
+                    preg_match("~/([^/]+)\.tpl~", $file, $file_tpl_name);
+                    $auto_tpl_name = $file_tpl_name[1];
+                }
                 $file_data = 
-                    '{template id="'.$file_tpl_name[1].'"}'.
+                    '{template id="'.$auto_tpl_name.'"'.
+                        ($is_layout ? ' of="false" ' : '').
+                    '}'.
                        trim($file_data).
                     '{/template}';
             }
@@ -439,6 +447,16 @@ class fx_template_processor {
             $code .= "}\n";
         }
         if ($token->get_prop('var_type') == 'visual' && !($token->get_prop('editable') == 'false')) {
+            if (!$token->get_prop('type')) {
+                $token_type = 'string';
+                foreach ($token->get_children() as $child) {
+                    if (preg_match("~<[a-z]+.*?>~", $child->get_prop('value'))) {
+                        $token_type = 'html';
+                        break;
+                    }
+                }
+                $token->set_prop('type', $token_type);
+            }
             $code .= 'if (fx::is_admin() && !('.$var_tmp." instanceof fx_template_field)) {\n";
             $code .= "\t".$var_tmp." = new fx_template_field(".$var_tmp.", ";
             $code .= 'array("id" => "'.$var_id.'", ';

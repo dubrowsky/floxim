@@ -19,14 +19,14 @@ class fx_controller_admin_site extends fx_controller_admin {
             if ($v['type'] == 'mobile') $text .= "<br/>" . fx::lang('для мобильный устройств','system');
             $r = array(
                     'id' => $v['id'],
-                    'img' => '/floxim/admin/skins/default/images/site1.png',
-                    'header' => array('name' => $v['name'], 'url' => 'site.map('.$v['id'].')'),
+                    //'img' => '/floxim/admin/skins/default/images/site1.png',
+                    'header' => array('name' => $v['name'], 'url' => 'site.settings('.$v['id'].')'),
                     'text' => $text,
                     'buttons' => array(
-                    	array('url' => 'site.map('.$v['id'].')', 'label' => fx::lang('Карта сайта','system')),
+                    	//array('url' => 'site.map('.$v['id'].')', 'label' => fx::lang('Карта сайта','system')),
                     	array('url' => 'site.settings('.$v['id'].')', 'label' => fx::lang('Настройки','system')),
                     	array('url' => 'site.design('.$v['id'].')', 'label' => fx::lang('Дизайн','system')),
-                    	array('label' => fx::lang('Экспорт','system'), array('essence' => 'site', 'action' => 'export', 'id' => $v['id']))
+                    	//array('label' => fx::lang('Экспорт','system'), array('essence' => 'site', 'action' => 'export', 'id' => $v['id']))
                     )
             );
             $list['values'][] = $r;

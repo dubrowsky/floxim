@@ -58,7 +58,26 @@ class fx_template_html {
             if (preg_match("~\{\%~", $n->source)) {
                 $n->source = fx_template_html::parse_floxim_vars_in_atts($n->source);
             }
-            
+            if ($n->name == 'meta' && ($layout_id = $n->get_attribute('fx:layout'))) {
+                $layout_name = $n->get_attribute('fx:name');
+                $tpl_tag = '{template id="'.$layout_id.'" name="'.$layout_name.'"}';
+                $tpl_tag .= '{call id="_layout_body"}';
+                $content = $n->get_attribute('content');
+                $vars = explode(",", $content);
+                foreach ($vars as $var) {
+                    $var = trim($var);
+                    $negative = false;
+                    if (preg_match("~^!~", $var)) {
+                        $negative = true;
+                        $var = preg_replace("~^!~", '', $var);
+                    }
+                    $tpl_tag .= '{$'.$var.' select="'.($negative ? 'false' : 'true').'" /}';
+                }
+                $tpl_tag .= '{/call}{/template}';
+                $n->parent->add_child_before(fx_html_token::create($tpl_tag), $n);
+                $n->remove();
+                return;
+            }
             if ( ($fx_replace = $n->get_attribute('fx:replace')) ){
                 $replace_atts = explode(",", $fx_replace);
                 foreach ($replace_atts as $replace_att) {
@@ -343,6 +362,15 @@ class fx_html_token {
         $token = self::create($source);
         $token->type = 'standalone';
         return $token;
+    }
+    
+    public function remove() {
+        foreach ($this->parent->children as $child_index => $child) {
+            if ($child == $this) {
+                unset($this->parent->children[$child_index]);
+                break;
+            }
+        }
     }
     
     public function add_child(fx_html_token $token, $before_index = null) {

@@ -141,21 +141,24 @@ class fx_admin_submenu {
     }
 
     protected function init_manage() {
-        $fx_core = fx_core::get_object();
+        //$fx_core = fx_core::get_object();
         //$modules = $fx_core->modules->get_data();
         
         $this->menu[] = $node_site = $this->add_node('site', fx::lang('Список сайтов','system'), 'site.all');
-
+        /*
         $this->menu[] = $node_administrate = $this->add_node('administrate', fx::lang('Администрирование','system'), 'administrate.module');
         $this->menu[] = $this->add_node('module', fx::lang('Модули','system'), 'administrate.module', $node_administrate);
         
         $this->menu[] = $node_tools = $this->add_node('tools', fx::lang('Инструменты','system'), 'redirect.all');
+        $this->menu[] = $this->add_node('module', fx::lang('Модули','system'), 'administrate.module', $node_administrate);
         
         $this->menu[] = $node_users = $this->add_node('user', fx::lang('Пользователи','system'), 'user.all');
         $this->menu[] = $this->add_node('user', 'Список пользователей', 'user.all', $node_users);
         $this->menu[] = $this->add_node('group', 'Группы', 'group.all', $node_users);
 
         $this->menu[] = $node_settings = $this->add_node('settings', fx::lang('Настройки','system'), 'settings.system');
+         * 
+         */
     }
 
     protected function init_menu_component($id) {
@@ -242,7 +245,7 @@ class fx_admin_submenu {
             $this->title = $site['name'];
             $this->backlink = 'site.all';
 
-            $this->menu[] = $this->add_node('sitemap-'.$site['id'], fx::lang('Карта сайта','system'), 'site.map('.$site['id'].')');
+            //$this->menu[] = $this->add_node('sitemap-'.$site['id'], fx::lang('Карта сайта','system'), 'site.map('.$site['id'].')');
             $this->menu[] = $this->add_node('sitesettings-'.$site['id'], fx::lang('Настройки','system'), 'site.settings('.$site['id'].')');
             $this->menu[] = $this->add_node('sitedesign-'.$site['id'], fx::lang('Дизайн','system'), 'site.design('.$site['id'].')');
         }

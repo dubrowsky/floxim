@@ -219,8 +219,6 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
     }
 
     public function add($input) {
-        $fx_core = fx_core::get_object();
-
         $fields[] = array(
             'type' => 'select',
             'name' => 'type',

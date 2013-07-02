@@ -1067,7 +1067,7 @@ span.fx_admin_current {
 #fx_admin_content .ui-tabs-nav {
     border: none !important;
     background: #FFF !important;
-    overflow-y: auto;
+    /*overflow-y: auto;*/
 }
 
 .fx_sortable_placeholder {
