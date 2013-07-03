@@ -12,6 +12,9 @@ function fx_debug_start() {
 function dev_log() {
 	static $fh = false;
 	if (!$fh) {
+		if (!is_dir(DEV_LOG_PATH)) {
+			mkdir(DEV_LOG_PATH);
+		}
 		$fh = fopen(DEV_LOG_PATH.'/log_'.md5(microtime().rand(0, 10000)).".html", 'w');
 		
 		$log_header = array(

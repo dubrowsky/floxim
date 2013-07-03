@@ -83,6 +83,9 @@ class fx_template_processor {
         $source .= '{/templates}';
         $code = $this->process($source, $tpl_name);
         $tpl_dir = fx::config()->COMPILED_TEMPLATES_FOLDER;
+        if (!is_dir($tpl_dir)) {
+        	mkdir($tpl_dir);
+        }
         if ( !is_writable($tpl_dir) ) {
             die ('Can not write to directory' . fx::config()->COMPILED_TEMPLATES_FOLDER);
         }
