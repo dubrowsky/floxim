@@ -167,7 +167,7 @@
                     </div>
                     <div class="center">
                         {area id="index_center" /}
-                        <div fx:template="block_titled" fx:of="block" fx:omit="true">
+                        <div fx:template="block_titled" fx:of="block" class="block_titled">
                             <h2>{%header}Заголовок{/%}</h2>
                             {$content}
                         </div>

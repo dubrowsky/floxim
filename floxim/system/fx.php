@@ -313,7 +313,7 @@ class fx {
         $db_str = $db_str[0];
         if ( empty($db_str) ) {
             fx::db('INSERT INTO {{dictionary}} (dict_key,lang_string) VALUES ("' . $dc . '","' . $str .'")');
-            unlink($dict_file);
+            @unlink($dict_file);
         }
         return empty($db_str['lang_'.$cur_lang]) ? $string : $db_str['lang_'.$cur_lang];
     }

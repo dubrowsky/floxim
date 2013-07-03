@@ -3,6 +3,9 @@
         FX_JQUERY_PATH
         calendar.js
     {/js}
+    {css}
+        calendar.css
+    {/css}
     <h2 fx:if="$show_header">{%header}Посты по месяцам:{/%}</h2>
     <?
     $month_names = array(

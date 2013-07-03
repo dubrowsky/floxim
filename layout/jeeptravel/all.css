@@ -395,6 +395,14 @@ a.calendar {
     margin-top:0;
 }
 
+.block_titled {
+    margin-bottom:50px;
+}
+
+.block_titled h2 {
+    margin:0 0 20px 0;
+}
+
 .sidebar {
     float: right;
     width: 280px;
@@ -403,7 +411,6 @@ a.calendar {
 }
 .sidebar h2 {
     font-size: 30px;
-    padding: 0 0 15px;
 }
 .sidebar p { margin: 0 0 15px; }
 .sidebar ul {
@@ -704,4 +711,22 @@ section.footer {
 
 .photo_anounces a {
     display:block;
+}
+
+.post_list  .post {
+    margin-bottom:45px;
+}
+
+.post_list .post h2 {
+    margin-bottom:10px;
+}
+
+.post_list p {
+    margin:15px 0;
+}
+
+.post_list .tags, .post_list .tags a, .post_list .date {
+    font-size:19px;
+    font-style:normal;
+    font-weight: normal;
 }
