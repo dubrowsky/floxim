@@ -32,19 +32,23 @@
 
             $fx_dialog.main.dialog($fx_dialog.settings);
 
-            var widget = $fx_dialog.main.dialog("widget"),
-                widget_width = widget.width(),
-                $window = $(window),
-                min_gap = 50;
+//            var widget = $fx_dialog.main.dialog("widget"),
+//                widget_width = widget.width(),
+//                $window = $(window),
+//                min_gap = 50;
+//
+//            widget.draggable("option",
+//                             "containment",    // set to "window" to prevent dragging outside the screen borders
+//                             [
+//                                 -widget_width + min_gap,
+//                                 0,
+//                                 $window.width() - min_gap,
+//                                 $window.height() - min_gap
+//                             ])
+//                  .draggable("option", "scroll", false);
 
-            widget.draggable("option",
-                             "containment",    // set to "window" to prevent dragging outside the screen borders
-                             [
-                                 -widget_width + min_gap,
-                                 0,
-                                 $window.width() - min_gap,
-                                 $window.height() - min_gap
-                             ])
+            $fx_dialog.main.dialog("widget")
+                  .draggable("option", "containment", "window")
                   .draggable("option", "scroll", false);
 
             $fx_dialog.main.closest('.ui-dialog').addClass('fx_overlay');
@@ -136,6 +140,8 @@
                 $fx_dialog.button_disable('save');
             }
             $('.ui-widget-overlay').css('z-index', 10001);
+            // move focus to the dialog so it could be closed with an ESC key
+            $('.ui-dialog').focus();
         },
 
         close_listener: function () {
