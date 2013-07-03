@@ -4,39 +4,44 @@ function fx_call_user_func (fn, options) {
     return oFunction(options);  
 }
 
-
-// jQuery plugin: PutCursorAtEnd 1.0
-// http://plugins.jquery.com/project/PutCursorAtEnd
-// by teedyay
-//
-// Puts the cursor at the end of a textbox/ textarea
-
-// codesnippet: 691e18b1-f4f9-41b4-8fe8-bc8ee51b48d4
 (function($)
 {
-    jQuery.fn.putCursorAtEnd = function()
-    {
-        return this.each(function()
-        {
+    $.fn.generate_selector = function(parent) {
+        if (this.length == 0) {
+            return false;
+        }
+        if (typeof(parent) == 'undefined') {
+            parent = document;
+        } else if (parent instanceof $) {
+            parent = parent.get(0);
+        }
+        var selector = [];
+        var node = this.first();
+        while (node.length > 0 && node.get(0) !== parent) {
+            selector.unshift(':nth-child(' + (node.index() + 1)+ ')');
+            node = node.parent();
+        }
+        return '>'+selector.join('>'); 
+    };
+    $.fn.descendant_or_self = function(selector) {
+        return this.find(selector).add( this.filter(selector));
+    };
+    jQuery.fn.putCursorAtEnd = function() {
+        return this.each(function() {
             $(this).focus()
-
             // If this function exists...
-            if (this.setSelectionRange)
-            {
+            if (this.setSelectionRange) {
                 // ... then use it
                 // (Doesn't work in IE)
 
                 // Double the length because Opera is inconsistent about whether a carriage return is one character or two. Sigh.
                 var len = $(this).val().length * 2;
                 this.setSelectionRange(len, len);
-            }
-            else
-            {
+            } else {
                 // ... otherwise replace the contents with itself
                 // (Doesn't work in Google Chrome)
                 $(this).val($(this).val());
             }
-
             // Scroll to the bottom, in case we're in a tall textarea
             // (Necessary for Firefox and Google Chrome)
             this.scrollTop = 999999;

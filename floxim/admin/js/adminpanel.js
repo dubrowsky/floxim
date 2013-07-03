@@ -4,10 +4,7 @@ fx_adminpanel = {
     KEYCODE_ESC: 27,
         
     init: function(options) {
-        $fx.settings = options;
-        $fx.settings['elrte_toolbar'] = ['style', 'colors', 'alignment', 'links'];
-        $fx.settings['elrte_maxi_toolbar'] = ['copypaste', 'undoredo', 'elfinder', 'style', 'alignment', 'direction', 'colors', 'format', 'indent', 'lists', 'media', 'tables'];
-            
+        $fx.settings = options;    
         $fx.buttons_map = options.buttons.map;
         $fx.history = options.history;
         $fx.panel = $('#fx_admin_panel');
@@ -15,11 +12,6 @@ fx_adminpanel = {
         $fx.init_form_function();
             
         $(function () {
-            //elRTE.prototype.options.panels.nc_panel = ['horizontalrule', 'blockquote', 'stopfloat', 'smiley'];
-            //elRTE.prototype.options.toolbars.fx_einp_toolbar = $fx.settings.elrte_toolbar;
-            //elRTE.prototype.options.toolbars.nc_maxi_toolbar = ['copypaste', 'undoredo', 'elfinder', 'style', 'alignment', 'direction', 'colors', 'format', 'indent', 'lists', 'media', 'tables', 'nc_panel'];
-                            
-            
             $fx.admin = false;
             $fx.buttons = new fx_buttons($fx.settings.buttons.source);
                 
@@ -56,26 +48,6 @@ fx_adminpanel = {
         $('html').click(function(){
             $fx.panel.trigger('fx.click', 'main');
         });
-        $.fn.generate_selector = function(parent) {
-            if (this.length == 0) {
-                return false;
-            }
-            if (typeof(parent) == 'undefined') {
-                parent = document;
-            } else if (parent instanceof $) {
-                parent = parent.get(0);
-            }
-            var selector = [];
-            var node = this.first();
-            while (node.length > 0 && node.get(0) !== parent) {
-                selector.unshift(':nth-child(' + (node.index() + 1)+ ')');
-                node = node.parent();
-            }
-            return '>'+selector.join('>'); 
-        };
-        $.fn.descendant_or_self = function(selector) {
-            return this.find(selector).add( this.filter(selector));
-        };
     },
 
     set_mode: function() {
