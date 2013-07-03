@@ -1090,7 +1090,6 @@ $.fn.position = function( options ) {
 	if ( !options || !options.of ) {
 		return _position.apply( this, arguments );
 	}
-	console.log(this, options);
 	// make a copy, we don't want to modify arguments
 	options = $.extend( {}, options );
 
@@ -1102,7 +1101,6 @@ $.fn.position = function( options ) {
 		offsets = {};
 
 	dimensions = getDimensions( target );
-	console.log(dimensions);
 	if ( target[0].preventDefault ) {
 		// force left top to allow flipping
 		options.at = "left top";

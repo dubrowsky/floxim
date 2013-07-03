@@ -44,6 +44,9 @@ function fx_edit_in_place( node ) {
 
 fx_edit_in_place.prototype.handle_keydown = function(e) {
     if (e.which == 27) {
+        if (e.isDefaultPrevented && e.isDefaultPrevented()) {
+            return;
+        }
         this.stop();
         this.restore();
         $fx.front.deselect_item();
@@ -121,6 +124,7 @@ fx_edit_in_place.prototype.stop = function() {
 	this.panel_fields = [];
 	this.node.data('edit_in_place', null);
     this.node.attr('contenteditable', null);
+    this.node.removeClass('fx_var_editable');
     if (this.is_content_editable && this.is_wysiwyg) {
         this.destroy_wysiwyg();
     }
@@ -200,8 +204,6 @@ fx_edit_in_place.prototype.make_wysiwyg = function () {
                 'fontcolor', 'backcolor', '|', 'alignment', '|', 'horizontalrule']
 
     });
-    //this.node.removeClass('redactor_editor');
-    //this.node.parent().removeClass('redactor_box');
 }
 
 fx_edit_in_place.prototype.destroy_wysiwyg = function() {
