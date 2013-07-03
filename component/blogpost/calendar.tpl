@@ -18,8 +18,7 @@
             <div fx:template="item">
                 <a fx:omit="!$active" href="{$url}">
                     {%month_$month}<?=$month_names[ (int) $month]?>{/%}
-                </a> 
-                ({$count})
+                </a>&nbsp;<sup class="counter">{$count}</sup>
             </div>
         </div>
     </div>

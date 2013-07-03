@@ -5,6 +5,7 @@
 .blog_calendar .months {
     display: none;
     padding-left:15pt;
+    padding-bottom:5pt;
 }
 
 .blog_calendar .year_active .months {
