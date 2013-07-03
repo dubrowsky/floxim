@@ -178,4 +178,5 @@ pip-log.txt
 /nbproject/private/
 /_test/*
 /floxim_files/compiled_templates/*
-/config.php
+!/floxim_files/compiled_templates/
+config.php

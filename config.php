@@ -1,5 +1,4 @@
 <?php
-
 define("FX_JQUERY_PATH", '/floxim/lib/js/jquery-1.9.1.js');
 $db_config = array(
     'default' =>  array(
