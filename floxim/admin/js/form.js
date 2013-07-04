@@ -53,7 +53,7 @@
             $fx_form.to_change = $();
 
             $.each(settings.fields, function(i, json){
-                var _el = $fx_form.draw_field(json, container);
+                var _el = $fx_form.draw_field(json /*, container */);
                 
                 
                 if ( json.name == 'posting' && json.value == 1 || settings.step ) {
@@ -523,7 +523,7 @@
 
             setTimeout(function() {
                 check_parent_state.apply($(parent_selector).get(0));
-            }, 50);
+            }, 1);
         },
  
         init_parent_change: function () {  

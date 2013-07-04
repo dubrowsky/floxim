@@ -171,6 +171,15 @@ input.ui-button {
     color: #3FB7DE !important;
 }
 
+.fx_overlay.ui-dialog {
+    visibility: hidden;
+}
+
+.fx_overlay.ui-dialog.fx_dialog_opened {
+    visibility: visible;
+}
+
+
 .ui-icon-closethick {
     background: url(../images/images.png) no-repeat -261px -5px !important;
 }

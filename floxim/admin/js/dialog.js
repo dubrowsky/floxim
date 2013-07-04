@@ -2,11 +2,13 @@
     fx_dialog = {
 
         settings: {
-            height: 430, //'auto',
+            height: 430, // this is the minimum height when there's enough space on the screen
+            minHeight: 200, // this is the minimum height on a small screen
             width: '70%',
             modal: true,
             title: '',
-            zIndex: 78887
+            zIndex: 78887,
+            resizable: false
         },
         steps: [],
 
@@ -19,9 +21,14 @@
                 onfinish:null
             }, settings);
             $fx_dialog.settings = $.extend($fx_dialog.settings, settings);
-            main_cont = '#fx_dialog';
+            var main_cont = '#fx_dialog';
             $fx_dialog.main = $(main_cont);
             $fx_dialog.steps = [];
+
+            // Dialog container is invisible (visibility: hidden) when it opens;
+            // it becomes visible when it has 'fx_dialog_opened' class (visibility: visible).
+            // That class is assigned to the dialog container in $fx_dialog.on_ready().
+            // This is done to prevent flicker due to auto-size calculation.
 
             if ( data.dialog_not_auto_open ) {
                 $fx_dialog.settings.autoOpen = false;
@@ -31,21 +38,6 @@
             $fx_dialog.settings.close = $fx_dialog.close_listener;
 
             $fx_dialog.main.dialog($fx_dialog.settings);
-
-//            var widget = $fx_dialog.main.dialog("widget"),
-//                widget_width = widget.width(),
-//                $window = $(window),
-//                min_gap = 50;
-//
-//            widget.draggable("option",
-//                             "containment",    // set to "window" to prevent dragging outside the screen borders
-//                             [
-//                                 -widget_width + min_gap,
-//                                 0,
-//                                 $window.width() - min_gap,
-//                                 $window.height() - min_gap
-//                             ])
-//                  .draggable("option", "scroll", false);
 
             $fx_dialog.main.dialog("widget")
                   .draggable("option", "containment", "window")
@@ -67,6 +59,8 @@
             $('form', $fx_dialog.main).submit( $fx_dialog.settings.onsubmit );
 
             $("#nc_tabs", $fx_dialog.main).tabs();
+
+            $fx_dialog.resize();
         },
 
         close: function() {
@@ -84,6 +78,40 @@
             $('form', $fx_dialog.main).trigger('fx_form_submit');
             $('form', $fx_dialog.main).ajaxSubmit( $fx_dialog.form_sent );
             return false;
+        },
+
+        resize: function() {
+            var dialog_content = $fx_dialog.main,
+                max_height = $(window).height() - 40;
+
+            dialog_content.dialog("option", {
+                height: "auto",         // let the jQuery UI do the height calculation
+                maxHeight: max_height   // need this when this method is used as the window resize handler
+            });
+
+            setTimeout(function() {
+                var settings = $fx_dialog.settings,
+                    height = Math.max(settings.minHeight,
+                                      Math.min(max_height,
+                                               Math.max(dialog_content.dialog("widget").outerHeight() + 1,
+                                                        settings.height)));
+
+                // set fixed height and center the dialog
+                dialog_content.dialog("option", { height: height, position: "center" });
+                // ok, we can show the dialog now
+                $fx_dialog.on_ready();
+            }, 1); // there’s a cohesion with fx_form.add_parent_condition()   :(
+        },
+
+        // Dialog is "ready" to be shown after it's size was calculated in resize()
+        on_ready: function() {
+            var widget = $fx_dialog.main.dialog("widget");
+            if (!widget.hasClass("fx_dialog_opened")) {
+                // show the dialog container
+                widget.addClass("fx_dialog_opened");
+                // move focus to the dialog so it could be closed with an ESC key
+                $('.ui-dialog').focus();
+            }
         },
 
         form_sent: function(data) {
@@ -140,8 +168,7 @@
                 $fx_dialog.button_disable('save');
             }
             $('.ui-widget-overlay').css('z-index', 10001);
-            // move focus to the dialog so it could be closed with an ESC key
-            $('.ui-dialog').focus();
+            $(window).on("resize.fx_dialog", $fx_dialog.resize);
         },
 
         close_listener: function () {
@@ -150,6 +177,8 @@
             if (typeof $fx_dialog.settings.onclose  === 'function') {
                 $fx_dialog.settings.onclose();
             }
+            $fx_dialog.main.dialog("widget").removeClass("fx_dialog_opened");
+            $(window).off("resize.fx_dialog");
         },
 
         button_disable: function (button) {
@@ -177,7 +206,7 @@
             var buttons = $fx_dialog.main.dialog( "option", "buttons" );
             if ( !buttons || !buttons.length ) buttons = [];
 
-            button = {
+            var button = {
                 text: text
             };
             button['class'] = "fx_dialog_"+key+"_button fx_dialog_button";
