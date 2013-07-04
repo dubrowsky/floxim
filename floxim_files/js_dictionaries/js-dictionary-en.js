@@ -1,4 +1,4 @@
-{
+fx_lang.dictionary = {
     "Найдено: ": "Was found: ",
     "бесплатно": "free",
     "посмотреть описание на сайте": "see the description on the website",
@@ -37,4 +37,4 @@
     "разработка": "Development",
     "сайт": "Site",
     "Ошибка сервера:": "Server Error:"
-}
+};
