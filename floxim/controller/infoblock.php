@@ -82,7 +82,6 @@ class fx_controller_infoblock extends fx_controller {
         
         if (fx::env('is_admin')) {
             if (!preg_match("~[^\s+]~", $output)) {
-                //dev_log('ib empty', htmlspecialchars($output), strip_tags($output));
                 $output .= '<span class="fx_empty_infoblock">[empty: '.self::_get_infoblock_sign($infoblock).']</span>';
             }
         }
@@ -155,7 +154,6 @@ class fx_controller_infoblock extends fx_controller {
                 $html_result
             );
         } else {
-            //dev_log('adding meta', htmlspecialchars($html_result));
             $subroot_found = false;
             $html_result = preg_replace_callback(
                 "~^(\s*?)(<[^>]+fx:is_sub_root[^>]+>)~", 

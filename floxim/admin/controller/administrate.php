@@ -23,7 +23,7 @@ class fx_controller_admin_administrate extends fx_controller_admin {
         $result =array('fields' => $fields);
         */
         $this->response->submenu->set_menu('administrate')->set_subactive('module');
-        return $result;
+        //return $result;
     }
 }
 

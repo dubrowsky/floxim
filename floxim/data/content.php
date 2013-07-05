@@ -216,7 +216,6 @@ class fx_data_content extends fx_data {
             throw  new Exception('Can not save essence with no type specified');
         }
         $set = $this->_set_statement($data);
-        dev_log('saving', $set,$data);
         
         $tables = $this->get_tables();
         
@@ -282,7 +281,6 @@ class fx_data_content extends fx_data {
             $table_cols = $this->_get_columns($table_name);
             foreach ($field_names as $field_name) {
                 if (!in_array($field_name, $table_cols)) {
-                    //dev_log('skip field', $field_name, $table_cols);
                     continue;
                 }
                 

@@ -35,8 +35,6 @@ class fx_controller_admin_field extends fx_controller_admin {
             'essence' => 'field',
             'action' => 'add'
         );
-        //$result['buttons_action']['add']['options']['to_essence'] = $essence_code;
-        //$result['buttons_action']['add']['options']['to_id'] = $essence['id'];
         $result['fields'] = $fields;
         $result['essence'] = 'field';
         return $result;
@@ -149,7 +147,6 @@ class fx_controller_admin_field extends fx_controller_admin {
         }
         else {
             $result = array('status' => 'ok');
-            dev_log('saving field', $field);
             $field->save();
         }
         
@@ -161,12 +158,26 @@ class fx_controller_admin_field extends fx_controller_admin {
         
         $input['id'] = intval($input['id']);
         if ( $input['id'] ) {
-            $field = fx::data('field')->get_by_id($input['id']);
+            $field = fx::data('field', $input['id']);
         }
         
         if ( !$input['id'] || $field['type'] != $input['type'] ) {
+            if ($field['type'] != $input['type']) {
+                $to_key = null;
+                $to_val = null;
+                foreach ($field->get() as $ffk => $ffv) {
+                    if ($ffv && in_array($ffk, array('component_id', 'widget_id', 'system_table_id'))) {
+                        $to_key = $ffk;
+                        $to_val = $ffv;
+                        break;
+                    }
+                }
+            } else {
+                $to_key = $input['to_essence'].'_id';
+                $to_val = $input['to_id'];
+            }
             $field = fx::data('field')->create( array('type' => $input['type']));
-            $field[$input['to_essence'].'_id'] = $input['to_id'];
+            $field[$to_key] = $to_val;
         }
        
         $datatype = fx_data::optional('datatype')->get_by_id($input['type']);

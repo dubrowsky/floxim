@@ -17,7 +17,7 @@ class fx_controller_admin_component extends fx_controller_admin {
         }
 
         $field = array('type' => 'list', 'filter' => true);
-        $field['labels'] = array('name' => FX_ADMIN_NAME, 'buttons' => array('type' => 'buttons'));
+        $field['labels'] = array('name' => fx::lang('Название', 'system'), 'buttons' => array('type' => 'buttons'));
         $field['values'] = array();
         foreach ($components as $v) {
         	

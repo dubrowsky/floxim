@@ -76,7 +76,6 @@ class fx_content_user extends fx_content {
     }
 
     public function create_session($auth_phase = 'authorize', $login_save = 0, $auth_type = 1) {
-        $fx_core = fx_core::get_object();
         $db = fx::db();
         $user_id = $this['id'];
 
@@ -89,7 +88,9 @@ class fx_content_user extends fx_content {
         
         $UserIP = sprintf("%u", ip2long($_SERVER['REMOTE_ADDR']));
         $session_id = fx::input()->fetch_cookie('fx_sid');
-        if (!$session_id) $session_id = md5(rand(0, 1000).$user_id.$UserIP);
+        if (!$session_id) {
+            $session_id = md5(rand(0, 1000).$user_id.$UserIP);
+        }
         $session_id = $db->escape($session_id);
 
         $SessionStart = time();

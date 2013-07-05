@@ -3,16 +3,14 @@
 class fx_controller_module_auth extends fx_controller_module {
 
     public function auth($input) {
-
-        $fx_core = fx_core::get_object();
-        $db = $fx_core->db;
+        $db = fx::db();
         $AUTH_USER = $input['AUTH_USER'];
         $AUTH_PW = $input['AUTH_PW'];
 
         // попытка авторизации
-        $user = fx::data('user')->get("`" . fx::config()->AUTHORIZE_BY . "` = '" . $db->escape($AUTH_USER) . "'
-        AND `password` = " . fx::config()->DB_ENCRYPT . "('" . $db->escape($AUTH_PW) . "')
-        AND `checked` = 1");
+        $user = fx::data('content_user')->
+                get("`" . fx::config()->AUTHORIZE_BY . "` = '" . $db->escape($AUTH_USER) . "'
+                AND `password` = " . fx::config()->DB_ENCRYPT . "('" . $db->escape($AUTH_PW) . "')");
         if ($user) {
             $fx_sid = $user->authorize();
             if ($user->perm()->is_supervisor()) {
@@ -27,10 +25,9 @@ class fx_controller_module_auth extends fx_controller_module {
         $this->redirect();
     }
 
-    protected static function _cross_site_forms($fields) {
-    	$fx_core = fx_core::get_object();
+    public static function _cross_site_forms($fields) {
     	$sites = fx::data('site')->get_all();
-		$current_site = $fx_core->env->get_site();
+		$current_site = fx::env('site');
 		foreach ($sites as $site) {
 
 			if ($site['id'] == $current_site['id']) {
@@ -38,12 +35,12 @@ class fx_controller_module_auth extends fx_controller_module {
 			}
 
 			?>
-			<form method="POST" action="http://<?=$site['domain']?>/floxim/" target="ifr_<?=$site['id']?>" style="width:300px; height:100px; overflow:hidden;">
+			<form method="POST" action="http://<?=$site['domain']?>/floxim/" target="ifr_<?=$site['id']?>" style="width:5px; height:5px; overflow:hidden;">
 				<?foreach ($fields as $k => $v) {?>
-					<input type="text" name="<?=$k?>" value="<?=$v?>" />
+					<input type="hidden" name="<?=$k?>" value="<?=$v?>" />
 				<?}?>
-				<input type="submit" value="Go" />
-				<iframe name="ifr_<?=$site['id']?>" id="ifr_<?=$site['id']?>"></iframe>
+				<input type="submit" value="Go" style="position:relative; left:100px;" />
+				<iframe style="border:0;" name="ifr_<?=$site['id']?>" id="ifr_<?=$site['id']?>"></iframe>
 			</form>
 			<?
 		}
@@ -71,9 +68,8 @@ class fx_controller_module_auth extends fx_controller_module {
     }
 
     public function init_session($input) {
-    	$fx_core = fx_core::get_object();
-    	$fx_core->input->_COOKIE['fx_sid'] = $input['sid'];
-    	$u = new fx_user();
+    	fx::input()->_COOKIE['fx_sid'] = $input['sid'];
+    	$u = new fx_content_user();
     	$u->create_session('cross_authorize', 0, 1);
     	die();
     }

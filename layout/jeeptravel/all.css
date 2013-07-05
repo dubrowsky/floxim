@@ -627,32 +627,6 @@ section.footer {
     padding: 10px 0;
 }
 
-.footer .contact {
-    font: 24px/22px 'CalibriLight', Arial, sans-serif;
-}
-.footer .contact>span {
-    display: block;
-    margin: 0 0 5px;
-}
-.footer .contact .phone {
-    display: block;
-    font-size: 30px;
-}
-.footer .contact>a {
-    font-size: 18px;
-    color: #e9a502;
-}
-.footer .contact .copy {
-    display: block;
-    margin: 20px 0 15px;
-    font-size: 12px;
-    line-height: 11px;
-    color: #5d5d5d;
-}
-.footer .contact .copy a {
-    color: #5d5d5d;
-}
-
 .section_inner {
     min-height:900px;
 }
@@ -729,4 +703,38 @@ section.footer {
     font-size:19px;
     font-style:normal;
     font-weight: normal;
+}
+
+.footer .contact {
+    float:left;
+}
+
+.footer .copy {
+    float:right;
+}
+
+.footer .contact, .footer .copy {
+    font: 24px/22px 'CalibriLight', Arial, sans-serif;
+}
+.footer .contact>span {
+    display: block;
+    margin: 0 0 5px;
+}
+.footer .contact .phone {
+    display: block;
+    font-size: 30px;
+}
+.footer .contact>a {
+    font-size: 18px;
+    color: #e9a502;
+}
+.footer .contact .copy {
+    display: block;
+    margin: 20px 0 15px;
+    font-size: 12px;
+    line-height: 11px;
+    color: #5d5d5d;
+}
+.footer .contact .copy a {
+    color: #5d5d5d;
 }

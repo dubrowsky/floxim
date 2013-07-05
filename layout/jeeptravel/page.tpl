@@ -74,7 +74,7 @@
                             alt="" />
                         <div class="slide-text active">
                             <div class="slide-holder">
-                                <h1>{%header_$id}<?=$item['name']?>{/%}</h1>
+                                <h1>{%header_$id type="html"}<?=$item['name']?>{/%}</h1>
                                 <span class="date">
                                     {%date_$id}14 мая — 10 июня 2013<br />Экспедиция{/%}
                                 </span>
@@ -192,11 +192,11 @@
                         <span class="phone">{%phone}+7 (495) 440 72 72{/%}</span>
                     </span>
                     <a href="mailto:{%mail editable="false"}info@jt.ru{/%}">{%mail}info@jt.ru{/%}</a>
-                    <div class="copy">
-                        {%copy}&copy; JT, <?=date('Y')?><br />
-                        Автор фото: <a href="http://yandex.ru/">Lee Cannon</a>. <a href="#">Лицензия</a>
-                        {/%}
-                    </div>
+                </div>
+                <div class="copy">
+                    {%copy}&copy; JT, <?=date('Y')?><br />
+                    Автор фото: <a href="http://yandex.ru/">Lee Cannon</a>. <a href="#">Лицензия</a>
+                    {/%}
                 </div>
             </div>
         </section>

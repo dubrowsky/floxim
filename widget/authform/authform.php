@@ -4,6 +4,7 @@ class fx_controller_widget_authform extends fx_controller_widget {
         if (fx::user()) {
             return array('_meta' => array('disabled' => true));
         }
+        return;
         if (count($_POST) > 0) {
             $login = $_POST['login'];
             $password = $_POST['password'];

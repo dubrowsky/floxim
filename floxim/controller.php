@@ -88,6 +88,9 @@ class fx_controller {
      * Вызывать после инициализации контроллера (с экшном)
      */
     public function get_available_templates( $layout_name = null ) {
+        if (is_numeric($layout_name)) {
+            $layout_name = fx::data('layout', $layout_name)->get('keyword');
+        }
         // получаем допустимые варианты контроллера
         $controller_variants = $this->_get_controller_variants();
         $template_variants = array();

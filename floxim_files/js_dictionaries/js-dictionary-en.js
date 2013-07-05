@@ -36,5 +36,8 @@ fx_lang.dictionary = {
     "управление": "Сontrol",
     "разработка": "Development",
     "сайт": "Site",
-    "Ошибка сервера:": "Server Error:"
+    "Ошибка сервера:": "Server Error:",
+    "выход" : "Sign out",
+    "Найти" : "Find",
+    "Вы уверены?" : "Are you sure?"
 };

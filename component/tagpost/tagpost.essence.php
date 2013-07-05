@@ -15,7 +15,6 @@ class fx_content_tagpost extends fx_content {
             return;
         }
         $tag['counter'] = $tag['counter']+1;
-        dev_log('saving tag', $tag);
         $tag->save();
     }
     
@@ -25,7 +24,6 @@ class fx_content_tagpost extends fx_content {
             return;
         }
         $tag['counter'] = $tag['counter']-1;
-        dev_log('saving tag', $tag);
         $tag->save();
     }
 }

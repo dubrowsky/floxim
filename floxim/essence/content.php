@@ -18,12 +18,14 @@ class fx_content extends fx_essence {
      * А если $full = false - вида "page"
      */
     public function get_type($full = true) {
+        if (!$this->component_id) {
+            return parent::get_type($full);
+        }
         return ($full ? 'content_' : '').fx::data('component', $this->component_id)->get('keyword');
     }
     
     public function set_component_id($component_id) {
         if ($this->component_id && $component_id != $this->component_id) {
-            dev_log('was-is', $this->component_id, $component_id, debug_backtrace());
             throw new fx_Exception_content("Component id can not be changed");
         }
         $this->component_id = intval($component_id);
@@ -129,7 +131,6 @@ class fx_content extends fx_essence {
                 $field_meta['value'] = $v;
             }
             if ($cf->type == 'text') {
-                //dev_log('text field', $cf);
                 $field_meta['html'] = $cf['format']['html'];
             }
             

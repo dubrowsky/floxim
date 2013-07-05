@@ -55,8 +55,8 @@ fx_edit_in_place.prototype.handle_keydown = function(e) {
     if (e.which == 13 && (!this.is_wysiwyg || e.ctrlKey)) {
         this.save().stop();
         $fx.front.deselect_item();
-        // dirty hack for redactor.js not to add extra linebreak
         e.which = 666;
+        $(this.node).closest('a').blur();
         return false;
     }
 }
@@ -138,6 +138,9 @@ fx_edit_in_place.prototype.save = function() {
 	// редактируем текст узла
     var is_content_editable = this.is_content_editable;
 	if (is_content_editable) {
+        if (this.is_wysiwyg && this.source_area.is(':visible')) {
+            this.node.redactor('toggle');
+        }
         var val = this.is_wysiwyg ? node.html() : node.text();
 		if (val != node.data('fx_saved_value') ) {
 			vars.push({
@@ -194,8 +197,10 @@ fx_edit_in_place.prototype.make_wysiwyg = function () {
         this.node.attr('id', 'stub'+Math.round(Math.random()*1000));
     }
     $('#fx_admin_control').append('<div class="editor_panel" />');
+    var linebreaks = this.meta.var_type == 'visual';
     this.node.redactor({
         focus:true,
+        linebreaks:linebreaks,
         toolbarExternal: '.editor_panel',
         imageUpload : '/floxim/admin/controller/redactor-upload.php',
         buttons: ['html', '|', 'formatting', '|', 'bold', 'italic', 'deleted', '|',
@@ -203,6 +208,13 @@ fx_edit_in_place.prototype.make_wysiwyg = function () {
                 'image', 'video', 'file', 'table', 'link', '|',
                 'fontcolor', 'backcolor', '|', 'alignment', '|', 'horizontalrule']
 
+    });
+    this.source_area = $('textarea[name="'+ this.node.attr('id')+'"]');
+    this.source_area.addClass('fx_overlay');
+    this.source_area.css({
+        position:'relative',
+        top:'0px',
+        left:'0px'
     });
 }
 

@@ -31,6 +31,8 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             'values' => array()
         );
         
+        fx::env('page', $input['page_id']);
+        
         $controllers = fx::data('component')->all();
         $controllers->concat(fx::data('widget')->all());
         
@@ -46,7 +48,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             $actions = $ctrl->get_actions();
             foreach ($actions as $action_code => $action_info) {
                 $act_ctr = fx::controller($controller_name.'.'.$action_code);
-                $act_templates = $act_ctr->get_available_templates();
+                $act_templates = $act_ctr->get_available_templates(fx::env('layout'));
                 if (count($act_templates) == 0) {
                     continue;
                 }
@@ -63,7 +65,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             'fields' => $fields,
             'dialog_title' => fx::lang('Добавление инфоблока','system'),
             'dialog_button' => array(
-                array('key' => 'store', 'text' => fx::lang('Установить с Store','system')),
+                //array('key' => 'store', 'text' => fx::lang('Установить с Store','system')),
                 array('key' => 'save', 'text' => fx::lang('Продолжить','system'))
             )
     	);
@@ -376,7 +378,6 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             'type' => 'select',
             'values' => $page_types
         );
-        // dev_log('scope fields', $fields, $infoblock, $c_page);
         return $fields;
     }
     
@@ -452,7 +453,6 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         if ($ib->get_prop_inherited('controller') == 'layout') {
             $root_ib = $ib->get_root_infoblock();
             $ib_visual = $root_ib->get_visual();
-            dev_log('saving lay ib', $root_ib, $ib_visual);
         } elseif ( ($visual_id = fx::dig($input, 'infoblock.visual_id')) ) {
             $ib_visual = fx::data('infoblock_visual', $visual_id);
         } else {
@@ -551,8 +551,6 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
     }
     
     public function move($input) {
-        // dev_log("MOVING IB", $input);
-        
         if (!isset($input['visual_id']) || !isset($input['area'])) {
             return;
         }
@@ -599,10 +597,8 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                 continue;
             }
             if ($ctv['id'] == $next_visual_id) {
-                //$priorities [$vis['id']] = $cpos;
                 $new_priority = $cpos;
                 $cpos++;
-                // dev_log('new prior', $new_priority);
             }
             if ($ctv['priority'] != $cpos) {
                 fx::db()->query(
@@ -610,13 +606,11 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                     SET priority = '".$cpos."'
                     WHERE id = '".$ctv['id']."'"
                 );
-                // dev_log($ctv['id'].' -- '.$cpos);
             }
             $cpos++;
         }
         if (!$new_priority) {
             $new_priority = $cpos;
-            // dev_log('new prior last', $new_priority);
         }
         
         fx::db()->query(
@@ -624,8 +618,6 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             SET priority = '".$new_priority."', area = '".$input['area']."'
             WHERE id = '".$vis['id']."'"
         );
-        
-        // dev_log($target_vis);
         
         return array('status' => 'ok');
         

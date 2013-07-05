@@ -169,7 +169,6 @@ class fx {
             $controller_instance = new $c_class($input, $action);
             return $controller_instance;
     	} catch (Exception $e) {
-            //dev_log('controller class not loaded', $c_class);
             if (preg_match("~^(component|widget|layout)_(.+)$~", $controller, $c_parts)) {
                 $ctr_type = $c_parts[1];
                 $ctr_name = $c_parts[2];
@@ -207,11 +206,7 @@ class fx {
         try {
             return new $class_name($action, $data);
         } catch (Exception $e) {
-            //dev_log('template class not found', $class_name, func_get_args(), debug_backtrace());
             return new fx_template($action, $data);
-            return false;
-            /*die();
-            return new fx_template($action, $data);*/
         }
     }
     
@@ -236,7 +231,6 @@ class fx {
                 }
                 $arr = $arr[$pp];
             } else {
-                //dev_log('dig not an arr', $collection, $arr, $pp, debug_backtrace());
                 return null;
             }
         }
@@ -312,7 +306,8 @@ class fx {
         $db_str = fx::db()->get_results('SELECT * FROM {{dictionary}} WHERE lang_string = "' . $str . '" AND dict_key = "' . $dc . '"');
         $db_str = $db_str[0];
         if ( empty($db_str) ) {
-            fx::db('INSERT INTO {{dictionary}} (dict_key,lang_string) VALUES ("' . $dc . '","' . $str .'")');
+            $q = 'INSERT INTO {{dictionary}} (dict_key,lang_string) VALUES ("' . $dc . '","' . $str .'")';
+            fx::db()->query($q);
             @unlink($dict_file);
         }
         return empty($db_str['lang_'.$cur_lang]) ? $string : $db_str['lang_'.$cur_lang];
@@ -323,7 +318,6 @@ class fx {
         try {
             require_once($dict_file);
         } catch (Exception $e) {
-            dev_log($e);
             return false;
         }
         $string = addslashes($string);

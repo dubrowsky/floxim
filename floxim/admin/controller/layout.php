@@ -193,8 +193,6 @@ class fx_controller_admin_layout extends fx_controller_admin {
         	$result = call_user_func(array($this, $action), $layout);
         }
 
-        // dev_log('response', $this->response);
-
         $this->response->submenu->set_menu('layout-'.$layout['id'])->set_subactive($action);
         return $result;
     }

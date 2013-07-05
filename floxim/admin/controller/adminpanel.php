@@ -57,6 +57,7 @@ class fx_controller_admin_adminpanel extends fx_controller_admin {
         );
         //$more_menu[] = array('name' => 'Настройки дизайна', 'button' => 'design_settings');
         //$more_menu[] = array('name' => 'Настройки прав', 'button' => 'page_rights');
+        /*
         $more_menu[] = array(
         	'name' => fx::lang('Сменить макет сайта','system'),
         	'button' => array(
@@ -65,6 +66,8 @@ class fx_controller_admin_adminpanel extends fx_controller_admin {
         		'panel_mode' => true
         	)
 		);
+         * 
+         */
         return $more_menu;
     }
 

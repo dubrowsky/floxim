@@ -46,11 +46,11 @@ class fx_field_link extends fx_field_baze {
             'id' => 'format[render_type]',
             'name' => 'format[render_type]',
 
-            'label' => fx::lang('Способ отображения','system'),
+            'label' => fx::lang('Render type','system'),
             'type' => 'select',
             'values' => array(
-                'select' => fx::lang('Выпадающий список','system'), 
-                'livesearch' => fx::lang('Live Search','system')
+                'livesearch' => fx::lang('Live search','system'),
+                'select' => fx::lang('Simple select','system')
             ),
             'value' => $this['format']['render_type']
         );
@@ -85,10 +85,8 @@ class fx_field_link extends fx_field_baze {
                     );
                 }
             }
-            dev_log('link fld', $this, $content);
             return $this->_js_field;
         }
-        // else:
         
         $this->_js_field['type'] = 'select';
         

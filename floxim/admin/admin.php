@@ -32,8 +32,7 @@ class fx_controller_admin extends fx_controller {
         $action = $this->action;
         
         if (!fx::env('is_admin')) {
-            $result = $this->admin_auth($input);
-            
+            $result = $this->admin_office($input);
             if (is_string($result)) {
                 return $result;
             }    
@@ -114,7 +113,6 @@ class fx_controller_admin extends fx_controller {
     public static function add_admin_files() {
         $js_files = array(
             FX_JQUERY_PATH,
-            //'/floxim/lib/js/lang-load.js',
             '/floxim/lib/js/fx-lang.js',
             '/floxim_files/js_dictionaries/js-dictionary-'.fx::config()->LANGUAGE.'.js',
             '/floxim/lib/js/jquery-ui-1.10.3.custom.js',
@@ -199,12 +197,27 @@ class fx_controller_admin extends fx_controller {
             <div id="fx_dialog_file"></div>';
             $page->set_after_body($panel);
         } else {
-            $auth_form = '<div>
+            $auth_form = '
+                <div id="fx_admin_panel">
+                    <div id="fx_admin_panel_logo"></div>
+                    <div id="fx_admin_main_menu">
+                        <a class="fx_admin_main_menu_active">
+                            '.fx::lang('Welcome to Floxim.CMS, please sign in', 'system').'
+                        </a>
+                    </div>
+                </div>
+                <div class="fx_overlay fx_backend_login">
                 <form method="post" action="/floxim/">
-                <input type="hidden" name="action" value="admin_auth" />
-                <input type="hidden" name="essence" value="admin" />
-                <input name="AUTH_USER" />
-                <input type="password" name="AUTH_PW" />
+                <input type="hidden" name="essence" value="module_auth" />
+                <input type="hidden" name="action" value="auth" />
+                <div class="group">
+                    <label for="inp_user">'.fx::lang('Логин', 'system').'</label>
+                    <input name="AUTH_USER" id="inp_user" />
+                </div>
+                <div class="group">
+                    <label for="inp_password">'.fx::lang('Пароль', 'system').'</label>
+                    <input type="password" name="AUTH_PW" id="inp_password" />
+                </div>
                 <input type="submit" value="' . fx::lang('Вход','system') . '" class="auth_submit">
                 </form></div>';
         }
@@ -222,28 +235,6 @@ class fx_controller_admin extends fx_controller {
         return $html;
     }
     
-    /**
-     * Авторизовывает и делает admin_office()
-     * @return string
-     */
-    public function admin_auth($input) {
-        
-        $db = fx::db();
-        $AUTH_USER = $input['AUTH_USER'];
-        $AUTH_PW = $input['AUTH_PW'];
-
-        // попытка авторизации
-        $user = fx::data('content_user')->get(
-                "`".fx::config()->AUTHORIZE_BY."` = '".$db->escape($AUTH_USER)."'
-        AND `password` = ".fx::config()->DB_ENCRYPT."('".$db->escape($AUTH_PW)."')"
-        );
-        
-        
-        if ($user) {
-            $user->authorize();
-        }
-        return $this->admin_office();
-    }
     
     public function move_save($input) {
         

@@ -71,7 +71,6 @@ fx_front = function () {
     $('html').on('fx_select', function(e) {
 		var n = $(e.target);
 		if (n.is('.fx_content_essence')) {
-            console.log('ess');
 			$fx.front.select_content_essence(n);
             var tvs = $('.fx_template_var, .fx_template_var_in_att', n);
             if (tvs.length == 1) {
@@ -79,8 +78,11 @@ fx_front = function () {
             }
 		}
 		if (n.is('.fx_template_var, .fx_template_var_in_att')) {
-            console.log('eip');
 			n.edit_in_place();
+            var container_essence = n.closest('.fx_content_essence');
+            if (container_essence !== n) {
+                container_essence.trigger('fx_select');
+            }
 		}
 		if (n.is('.fx_infoblock')) {
 			$fx.front.select_infoblock(n);
@@ -141,7 +143,14 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
                     admin_mode:$fx.front.mode,
 					fx_admin:true
 				}, function(json) {
-					$fx_dialog.open_dialog(json);
+					$fx_dialog.open_dialog(
+                        json,
+                        {
+                            onfinish:function() {
+                                $fx.front.reload_layout();
+                            }
+                        }
+                    );
 				});
 			}
 		});
@@ -261,13 +270,17 @@ fx_front.prototype.select_level_up = function() {
 
 fx_front.prototype.hilight = function() {
 	var items = $('.fx_template_var, .fx_area, .fx_template_var_in_att, .fx_content_essence, .fx_infoblock').not('.fx_unselectable');
-	items.removeClass('fx_hilight');
+	items.removeClass('fx_hilight').removeClass('fx_hilight_empty');
 	if ($fx.front.mode == 'view') {
 		return;
 	}
 	items.each(function(index, item) {
 		if ($fx.front.is_selectable(item)) {
-			$(item).addClass('fx_hilight');
+            var i = $(item);
+			i.addClass('fx_hilight');
+            if (i.width() == 0 || i.height() == 0) {
+                i.addClass('fx_hilight_empty');
+            }
 		}
 	});
 }
@@ -322,7 +335,7 @@ fx_front.prototype.select_content_essence = function(n) {
 		 });
 	});
 	$fx.buttons.bind('delete', function() {
-	   if (confirm("ORLY???")) {
+	   if (confirm(fx_lang("Вы уверены?"))) {
 		   $fx.post({
 			   essence:'content',
 			   action:'delete_save',
@@ -364,6 +377,32 @@ fx_front.prototype.select_infoblock = function(n) {
 			);
         });
     });
+    
+    $fx.buttons.bind('delete', function() {
+        var ib_node = $fx.front.get_selected_item();
+        if (!ib_node) {
+            return;
+        }
+        var ib = $(ib_node).data('fx_infoblock');
+        if (!ib) {
+            return;
+        }
+        $fx.post({
+           essence:'infoblock',
+           action:'delete_infoblock',
+           id:ib.id,
+           fx_admin:true
+        }, function(json) {
+            $fx_dialog.open_dialog(
+                json, {
+            		onfinish:function() {
+                        $fx.front.reload_layout();
+					}
+                }
+            );
+        });
+    });
+    
     $('html').one('fx_deselect', function() {
     	$fx.buttons.unbind('settings');	
     });
@@ -484,7 +523,7 @@ fx_front.prototype.set_mode_design = function() {
         });
     }
     start_areas_sortable();
-    
+    /*
     var add_infoblock = function() {
         var area = $(this).closest('.fx_area').data('fx_area');
         $fx.post({
@@ -497,26 +536,8 @@ fx_front.prototype.set_mode_design = function() {
             $fx_dialog.open_dialog(json);
         });
     }
-    
-    var delete_infoblock = function() {
-        var ib_node = $fx.front.get_selected_item();
-        if (!ib_node) {
-            return;
-        }
-        var ib = $(ib_node).data('fx_infoblock');
-        if (!ib) {
-            return;
-        }
-        $fx.post({
-           essence:'infoblock',
-           action:'delete_infoblock',
-           id:ib.id,
-           fx_admin:true
-        }, function(json) {
-            $fx_dialog.open_dialog(json);
-        });
-    }
-    
+    */
+   
     /*
     $('html').on('fx_select.fx_design_mode', '.fx_infoblock', function(e) {
         $fx.buttons.bind('settings', configure_infoblock);
@@ -571,6 +592,10 @@ fx_front.prototype.reload_infoblock = function(infoblock_node) {
            $fx.front.hilight();
        }
     });
+}
+
+fx_front.prototype.reload_layout = function() {
+   $fx.front.reload_infoblock($('body').get(0));
 }
 
 fx_front.prototype.move_down_body =function () {

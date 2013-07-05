@@ -177,9 +177,7 @@ class fx_core extends fx_system {
     }
     
     public function __get($name) {
-    	// dev_log($name, debug_backtrace());
-    	// die();
-        // объект загружен
+    	// объект загружен
         if (isset($this->data_classes[$name])) {
             return $this->data_classes[$name];
         }
@@ -302,13 +300,11 @@ class fx_core extends fx_system {
                     $processor = new fx_template_processor();
                     $processor->process_dir($source_dir);
                     $file = $tpl_file;
-                    // dev_log('endrec');
                     break;
                 }
             }
             
             if (in_array($classname, $essences)) {
-                //$file = $root."essence/".str_replace('_', '/', $classname);
                 $file = $root."essence/".$classname;
                 break;
             }

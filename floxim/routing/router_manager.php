@@ -38,23 +38,6 @@ class fx_router_manager {
         }
     }
 
-    /*public function register_system() {
-        foreach (array('admin', 'front', 'infoblock') as $r_name) {
-            try {
-                $classname = 'fx_router_'.$r_name;
-                if (class_exists($classname)) {
-                    
-                    $router = new $classname;
-                    $this->register($router);
-                }
-            } catch (Exception $e) {
-                // no file
-            }
-        }
-        
-        dev_log('router registered', $this->routers);
-    }*/
-
     protected function _reorder_routers() {
         uasort($this->routers, function($a, $b) {
             return $a['priority'] - $b['priority'];

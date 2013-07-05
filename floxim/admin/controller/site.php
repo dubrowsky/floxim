@@ -19,7 +19,6 @@ class fx_controller_admin_site extends fx_controller_admin {
             if ($v['type'] == 'mobile') $text .= "<br/>" . fx::lang('для мобильный устройств','system');
             $r = array(
                     'id' => $v['id'],
-                    //'img' => '/floxim/admin/skins/default/images/site1.png',
                     'header' => array('name' => $v['name'], 'url' => 'site.settings('.$v['id'].')'),
                     'text' => $text,
                     'buttons' => array(
@@ -119,16 +118,12 @@ class fx_controller_admin_site extends fx_controller_admin {
         $site['layout_id'] = $layout_id;
         $site['checked'] = 1;
         $site->save();
-        
-        //dev_log('site saved', $site, $site['id']);
 
         $index_page = fx::data('content_page')->create(array(
             'name' => fx::lang('Титульная страница','system'),
             'url' => '/',
             'site_id' => $site['id']
         ))->save();
-        
-        //dev_log('index saved', $index_page);
         
         $error_page = fx::data('content_page')->create(array(
             'name' => fx::lang('Страница не найдена','system'),
@@ -145,11 +140,6 @@ class fx_controller_admin_site extends fx_controller_admin {
                     'site_id' => $site['id']
                 )
         )->save();
-        /*
-        $layout_infoblock_visual = fx::data('infoblock_visual')->create(array(
-                'template' => 'layout_'.$layout['key']
-        ))->save();*/
-
         $site->save();
         return $result;
     }
@@ -295,6 +285,7 @@ class fx_controller_admin_site extends fx_controller_admin {
         
         $site = fx::data('site', $site_id);
 
+        /*
         // используются content_pages
         $content_pages_list = array();
         $content_pages = fx::data('content_page')->where('site_id', $site_id)->all();
@@ -302,20 +293,23 @@ class fx_controller_admin_site extends fx_controller_admin {
         {
             $content_pages_list[$page['id']] = $page['url'];
         }
+         * 
+         */
 
-        $this->response->add_tab('main', fx::lang('Основные','system'));
+        //$this->response->add_tab('main', fx::lang('Основные','system'));
 		//$this->response->add_tab('design', fx::lang('Дизайн','system'));
-        $this->response->add_tab('seo', 'SEO');
-        $this->response->add_tab('system', fx::lang('Системные','system'));
+        //$this->response->add_tab('seo', 'SEO');
+        //$this->response->add_tab('system', fx::lang('Системные','system'));
 
         $main_fields = array();
-        $main_fields[] = $this->ui->checkbox('checked', fx::lang('Включен','system'), null, $site['checked']);
+        //$main_fields[] = $this->ui->checkbox('checked', fx::lang('Включен','system'), null, $site['checked']);
         $main_fields[] = $this->ui->input('name', fx::lang('Название сайта','system'), $site['name']);
         $main_fields[] = $this->ui->input('domain', fx::lang('Домен','system'), $site['domain']);
         $main_fields[] = $this->ui->input('mirrors', fx::lang('Зеркала','system'), $site['mirrors']);
         $main_fields[] = $this->ui->input('language', fx::lang('Язык сайта','system'), $site['language']);
-        $this->response->add_fields($main_fields, 'main');
+        $this->response->add_fields($main_fields); //, 'main');
 
+        /*
         $seo_fields = array();
         $seo_fields[] = $this->ui->text('robots', fx::lang('Содержимое robots.txt','system'), $site['robots']);
         $seo_fields[] = $this->ui->checkbox('disallow_indexing', fx::lang('Запретить индексирование','system'), null, $site['disallow_indexing']);
@@ -332,7 +326,8 @@ class fx_controller_admin_site extends fx_controller_admin {
 		);
         $system_fields[] = array('name' => 'offline_text', 'type' => 'textarea', 'value' => $site['offline_text'], 'label' => fx::lang('Показывать, когда сайт выключен','system'));
         $this->response->add_fields($system_fields, 'system');
-
+         * 
+         */
         $fields = array();
         $fields[] = $this->ui->hidden('essence', 'site');
         $fields[] = $this->ui->hidden('action', 'settings');
@@ -354,23 +349,24 @@ class fx_controller_admin_site extends fx_controller_admin {
                 $site[$v] = $input[$v];
             }
         }
-
+        /*
         $params = array('checked', 'disallow_indexing');
         foreach ($params as $v) {
             $site[$v] = intval($input[$v]);
         }
+         * 
+         */
         
         $site->save();
         return $result;
     }
     
     public function design($input) {
-      	$site_id = $input['params'][0]; //isset($input['id']) ? $input['id'] : isset($input['params'][0]) ? $input['params'][0] : null;
+      	$site_id = $input['params'][0];
         $site = fx::data('site')->get_by_id($site_id);
         $layouts = fx::data('layout')->all();
         $layouts_select = array();
-        foreach ( $layouts  as $layout )
-        {
+        foreach ( $layouts  as $layout ) {
             $layouts_select[] = array($layout['id'], $layout['name']);
         }
 
@@ -408,8 +404,7 @@ class fx_controller_admin_site extends fx_controller_admin {
                     );
                 }
             }
-        */
-        
+         
         $fields []= array(
         	'type' => 'button',
         	'label' => fx::lang('Превью','system'),
@@ -421,7 +416,6 @@ class fx_controller_admin_site extends fx_controller_admin {
         	)
         );
 
-        /*
         $fields []= array(
             'type' => 'button',
             'label' => 'Создать',

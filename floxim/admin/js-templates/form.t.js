@@ -525,7 +525,7 @@ html.find('.fx_button').add(html.filter('.fx_button')).click(function() {
 <!--[input]-->
 <div class="fx_list<?=_c.className ? ' '+_c.className : ''?>">
 <?if (_c.filter && _c.values && _c.values.length > 10) {?>
-	<div class="fx_list_filter"><label>Найти:<input type="text" /></label></div>
+	<div class="fx_list_filter"><label><?=fx_lang('Найти')?>:<input type="text" /></label></div>
 <?}
 ?>
 <input type="hidden" <?=$t.field_id_name(_c)?> class="list_value_input"/>

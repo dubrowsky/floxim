@@ -1516,6 +1516,11 @@ li ul .fx_tree_label .fx_tree_title {
     outline-offset: -3px;
 }
 
+.fx_template_var.fx_hilight_empty {
+    min-width: 15px;
+    min-height: 15px;
+}
+
 .fx_area.fx_hilight, .fx_infoblock.fx_hilight {
     outline: 1px dotted rgba(0, 0, 255, 0.8);
 }
@@ -1773,4 +1778,40 @@ body div.fx_overlay, body div.fx_overlay table {
 
 .fx_dialog_file_selected, .fx_admin_colorbasic_selected {
     border: 1pt solid #000;
+}
+
+/* Admin's auth form' */
+.fx_backend_login {
+    min-width: 100%;
+    min-height: 100%;
+    background: #4C5051;
+}
+
+.fx_backend_login form {
+    width:450px;
+    padding-top:35px;
+    padding-left:35px;
+}
+
+.fx_backend_login input, .fx_backend_login label {
+    display:block;
+}
+
+.fx_backend_login .group {
+    margin:20px 0;
+}
+
+.fx_backend_login label {
+    color:#FFF;
+    font-size:22px;
+}
+
+.fx_backend_login input {
+    font-size:22px;
+}
+
+.fx_admin_html, .fx_admin_html body {
+    min-height: 100%;
+    height: 100%;
+    position: relative;
 }
