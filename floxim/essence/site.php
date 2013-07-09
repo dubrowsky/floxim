@@ -1,32 +1,12 @@
 <?php
-
-/* $Id: site.php 8536 2012-12-17 10:55:01Z myasin $ */
-defined("FLOXIM") || die("Unable to load file.");
-
 class fx_site extends fx_essence {
-
-    public function get_title_sub_id() {
-        return $this->data['title_sub_id'];
-    }
-
-    public function get_404_sub() {
-        $id = $this->data['e404_sub_id'];
-        return fx::data('subdivision')->get_by_id($id);
-    }
 
     public function validate() {
         $res = true;
-
         if (!$this['name']) {
             $this->validate_errors[] = array('field' => 'name', 'text' => fx::lang('Укажите название сайта','system'));
             $res = false;
         }
-
-        /*if (!$this['domain']) {
-            $this->validate_errors[] = array('field' => 'domain', 'text' => 'Укажите домен');
-            $res = false;
-        }*/
-
         return $res;
     }
     

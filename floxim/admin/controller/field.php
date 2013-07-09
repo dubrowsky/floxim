@@ -162,7 +162,7 @@ class fx_controller_admin_field extends fx_controller_admin {
         }
         
         if ( !$input['id'] || $field['type'] != $input['type'] ) {
-            if ($field['type'] != $input['type']) {
+            if ($field && $field['type'] != $input['type']) {
                 $to_key = null;
                 $to_val = null;
                 foreach ($field->get() as $ffk => $ffv) {

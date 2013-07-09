@@ -26,6 +26,7 @@ abstract class fx_essence implements ArrayAccess {
     public function save($dont_log = false, $action = 'update') {
         $this->_before_save();
         $pk = $this->_get_pk();
+        dev_log('saving', $this, $action);
         // update
         if ($this->data[$pk] && $action === 'update') {
             $this->_before_update();
@@ -188,7 +189,7 @@ abstract class fx_essence implements ArrayAccess {
     public function offsetSet($offset, $value) {
         // ставим modified | modified_data только если существовал ключик
         // чтобы при первой догрузке полей-связей они не помечались как обновленные
-        if (array_key_exists($offset, $this->data)) {
+        if (!is_object($value) || array_key_exists($offset, $this->data)) {
             if (!isset($this->modified_data[$offset])) {
                 $this->modified_data[$offset] = $this->data[$offset];
             }

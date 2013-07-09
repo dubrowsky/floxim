@@ -43,14 +43,11 @@ class fx_data_site extends fx_data {
     }
 
     public function create($data = array()) {
-        //$obj = new $this->classname(array('data' => $data, 'finder' => $this));
         $obj = parent::create($data);
         $obj['created'] = date("Y-m-d H:i:s");
         $obj['priority'] = $this->next_priority();
-
         return $obj;
     }
-
 }
 
 ?>

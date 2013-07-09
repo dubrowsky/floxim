@@ -20,9 +20,6 @@ class fx_field_multilink extends fx_field_baze {
             }
         }
         return $this->_js_field;
-        $this->_js_field['type'] = 'select';
-        $this->_js_field['multiple'] = true;
-        return $this->_js_field;
     }
     
     public function format_settings() {

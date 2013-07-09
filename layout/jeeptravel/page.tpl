@@ -35,7 +35,7 @@
             </div>
         </header>
         <?
-        $bg_color = '#FFF';
+        $bg_color = '#000';
         $bg_image = '';
         
         foreach($path as $path_page) {
@@ -117,7 +117,7 @@
                         </div>
                         <div class="img-slider" fx:template="$items">
                             <div fx:template="item" class="preview{if $item_is_first} preview-active{/if}">
-                                <img src="{$photo}" style="height:100px;" />
+                                <img src="{$photo|'h:100'}" />
                             </div>
                         </div>
                     </div>
@@ -135,8 +135,8 @@
                             <ul fx:template="$pages">
                                 <li fx:template="item">
                                     <a href="{$url}">{$name}</a>
-                                    <div fx:if="$cover && $cover->get_value()">
-                                    <img src="{$cover}" alt="" style="height:50px;" />
+                                    <div fx:if="$cover">
+                                        <img src="{$cover|'w:110'}" alt="" />
                                     </div>
                                 </li>
                             </ul>
@@ -160,7 +160,7 @@
                                 $parent = fx::data('content_page', $item['parent_id']);
                                 extract($parent->get_fields_to_show());
                                 ?>
-                                <a href="{$url}"><img src="{$photo}" alt="" /></a>
+                                <a href="{$url}"><img src="{$photo | 'w:140,h:105'}" alt="" /></a>
                                 <span>{$description}</span>
                             </li>
                         </ul>

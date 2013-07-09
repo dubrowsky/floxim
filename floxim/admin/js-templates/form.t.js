@@ -9,7 +9,7 @@ if ( (_c.type == 'checkbox' || _c.type == 'bool') && typeof _c.values == 'undefi
 <?
 } else if ((_c.type == 'select' || _c.type == 'radio') && _c.hidden_on_one_value && !_c.extendable && _c.values && fx_object_length(_c.values) == 1) {
 	print($t.input({type:'hidden', name:_c.name,value:fx_object_get_first_key(_c.values)}));
-} else if (_c.type == 'hidden' || _c.type == 'button' || _c.type == 'list' || _c.type == 'iconselect') {
+} else if (_c.type == 'hidden' || _c.type == 'button' || _c.type == 'list') {
 	print($t.input(_c));
 } else {
 ?>
@@ -18,9 +18,6 @@ if ( (_c.type == 'checkbox' || _c.type == 'bool') && typeof _c.values == 'undefi
 	<?=$t.input(_c)?>
 </div>
 <?}?>
-
-
-
 
 <!--[data_input]-->
 <input type="hidden" value="<?=$t.clear($.toJSON(_c))?>" class="data_input" />
@@ -306,132 +303,46 @@ html.find('.field_colorpicker').each(function() {
 	});
 });
 
-
 <!--[input]-->
-<div class="fx_iconselect">
-	<div class="fx_iconselect_filter">
-		<select>
-			<option value="">Все</option><?
-			var groups = {}, c_val, group_index = 0;
-			
-			for(var vk in _c.values) {
-				var v = _c.values[vk];
-				
-				if (_c.value && _c.value == v.id ) {
-					c_val = v.id !== undefined ? v.id : vk;
-				}
-				
-				if (v.group !== undefined && groups[v.group] === undefined) {
-					group_index++;
-					groups[v.group] = group_index;
-					?><option value="<?=group_index?>" <?=_c.group == v.group ? ' selected="selected"' : ''?>><?=v.group?></option><?
-				}
-			}
-			?>
-		</select>
-		<div style="clear:both;"></div>
-		<input type="hidden" class="iconselect_value" <?=$t.field_id_name(_c)?> value="<?=c_val?>" />
-		<div class="items"><?
-		for (var vk in _c.values) {
-			var v = _c.values[vk];
-			?><div class="item group_<?=groups[v.group]?> <?=c_val == v.id ? ' selected' : ''?>">
-			<?=$t.data_input({filter_string: v.name.toLowerCase(), value:v.id,key:vk})?>
-				<img src="<?=v.icon?>" /><div class="name"><?=v.name?></div>
-			</div><?
-		}?>
-		</div>
-	</div>
-</div>
-<!--test-->
-_c.type == 'iconselect'
-
-<!--jquery:form_row-->
-html.find('.item').click(function() {
-	var i = $(this);
-	var par = i.closest('.fx_iconselect');
-	var data = $t.inline_data(i);
-	$('.selected', par).removeClass('selected');
-	i.addClass('selected');
-	par.find('input.iconselect_value').val(data.value !== undefined ? data.value : data.key).change();
-});
-
-html.find('select').change( function(){
-	var sel = $(this);
-	var groupval = $("option:selected", sel).val();
-	var is = sel.closest('.fx_iconselect');
-	
-	if (groupval == '') {
-		$('.item', is).show();
-	} else {
-		$('.item', is).hide();
-		setTimeout(function(){$('.group_'+groupval, is).show();},50);
-	}
-});
-
-<!--[input]-->
-<div class="fx_itemselect">
-<?for (var vk in _c.values) {?>
-	<div class="fx_itemselect_item value_<?=vk?> <?=_c.value && _c.value.contains(vk) ? 'selected' : ''?>">
-		<?=_c.values[vk]?>
-	</div>
-<?}?>
-<br style="clear:both;" />
-</div>
-<!--test-->
-_c.type == 'itemselect'
-
-<!--jquery:form_row-->
-html.find('.fx_itemselect').each( function() {
-	var is = $(this); 
-	is.update_value = function() {
-		$('input', is).remove();
-		$('.selected', is).each( function() {
-			var id = this.className.match(/value_([^\s]+)/)[1];
-			var name = _c.name +( _c.multiple ? '[]' : '' );
-			is.append('<input type="hidden" name="'+name+'" value="'+id+'" />');
-		});
-	};
-	$('.fx_itemselect_item', is).click(function(e){
-		if (_c.multiple && (e.metaKey || e.ctrlKey)) {
-			$(this).toggleClass('selected');
-		} else {
-			$('.selected', is).removeClass('selected');
-			$(this).addClass('selected');
-		}
-		is.update_value();
-	});
-	is.update_value();
-});
-
-<!--[input]-->
-<div class="fx_fieldset" id="fx_fieldset_<?=_c.name?>">
-	<div class="fx_fieldset_label">
-	<?for(var i = 0; i < _c.labels.length; i++) {
-		if (typeof _c.labels[i] != 'string') {continue;}?>
-		<td><label><?=_c.labels[i]?></label></td>
-	<?}?>
-	</div>
-	<div class="fx_fieldset_rows">
-	<?
-	if (!_c.values) {
-		_c.values = [];
-	}
-	for (var row = 0; row < _c.values.length; row++) {
-		var val_num = 0;
-		var inputs = [];
-		for (var  val_key in _c.values[row]) {
-			inputs.push($.extend( {}, _c.tpl[val_num], {
-				name:_c.name+'['+val_key+']['+val_num+']',
-				value:_c.values[row][val_key]
-			}));
-			val_num++;
-		}
-		print($t.fieldset_row(inputs, {index:row}));
-		?>
-	<?}?>
-	</div>
+<div class="fx_fieldset">
+    <table id="fx_fieldset_<?=_c.name?>">
+        <thead>
+            <tr class="fx_fieldset_label">
+            <?for(var i = 0; i < _c.labels.length; i++) {
+                if (typeof _c.labels[i] != 'string') {
+                    continue;
+                }
+                ?><td><label><?=_c.labels[i]?></label></td><?
+            }?>
+            </tr>
+        </thead>
+        <tbody class="fx_fieldset_rows">
+        <?
+        if (!_c.values) {
+            _c.values = [];
+        }
+        $.each(_c.values, function(row, val) {
+            var val_num = 0;
+            var inputs = [];
+            $.each(_c.tpl, function(tpl_index, tpl_props) {
+                inputs.push(
+                    $.extend(
+                        {}, 
+                        tpl_props, 
+                        {
+                            name:_c.name+'['+row+']['+tpl_props.name+']',
+                            value:val[tpl_props.name]
+                        }
+                    )
+                );
+            });
+            print($t.fieldset_row(inputs, {index:row}));
+        });
+        ?>
+        </tbody>
+    </table>
 	<?if ( _c.without_add === undefined ) {?>
-		<span class="fx_fieldset_add">Добавить</span>
+		<a class="fx_fieldset_add"><?=fx_lang('Добавить')?></a>
 	<?}?>
 	<br style="clear:both;" />
 </div>
@@ -448,19 +359,29 @@ html.find('.fx_fieldset').each(function() {
 		var inputs = [];
 		var index = $('.fx_fieldset_row', fs).length > 0 ? $('.fx_fieldset_row', fs).last().get(0).className.match(/row_(\d+)/)[1]*1 + 1 : 1;
 		for (var i = 0; i < _c.tpl.length; i++) {
-			inputs.push( $.extend({}, _c.tpl, {name:_c.name+'['+_c.tpl[i].name+']['+index+']'}));
+			inputs.push( 
+                $.extend({}, _c.tpl, {
+                    name:_c.name+'['+index+']['+_c.tpl[i].name+']'
+                })
+            );
 		}
-		$('.fx_fieldset_rows', fs).append($t.jQuery('fieldset_row', inputs, {index:index}));
+        var new_row = $t.jQuery('fieldset_row', inputs, {index:index});
+        console.log(new_row);
+		$('.fx_fieldset_rows', fs).append(new_row);
 	});
 });
 
 <!--[fieldset_row]-->
-<div class="fx_fieldset_row row_<?=_o.index?>">
+<tr class="fx_fieldset_row row_<?=_o.index?>">
 	<?for (var i = 0; i< _c.length; i++) {
-		print($t.input(_c[i]));
+        ?><td><?
+            print($t.input(_c[i]));
+        ?></td><?
 	}?>
-	<span class="fx_fieldset_remove">Удалить</span>
-</div>
+	<td>
+        <a class="fx_fieldset_remove"><?=fx_lang('Удалить')?></a>
+    </td>
+</tr>
 
 <!--[input]-->
 <table>

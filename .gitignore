@@ -179,3 +179,4 @@ pip-log.txt
 /_test/*
 /floxim_files/compiled_templates/*
 /config.php
+/floxim_files/fx_thumb/*

@@ -8,6 +8,12 @@ class fx_template_field  {
 		}
 		return date($format, $value);
 	}
+    
+    public static function format_image($value, $format) {
+        $thumber = new fx_thumb($value, $format);
+        $value = $thumber->get_result_path();
+        return $value;
+    }
 	
     protected $_value = null;
     

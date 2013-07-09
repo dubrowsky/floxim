@@ -33,7 +33,7 @@ class fx_controller_admin_site extends fx_controller_admin {
 
         $this->response->add_field($list);
 
-        $this->response->add_pulldown_item('add', fx::lang('Новый','system'), 'source=new');
+        $this->response->add_pulldown_item('add', fx::lang('Новый сайт','system'), 'source=new');
         
         $this->response->add_buttons("add,delete");//settings,
         $this->response->breadcrumb->add_item( fx::lang('Сайты','system') );
@@ -128,17 +128,21 @@ class fx_controller_admin_site extends fx_controller_admin {
         $error_page = fx::data('content_page')->create(array(
             'name' => fx::lang('Страница не найдена','system'),
             'url' => '/404', 
-            'site_id' => $site['id']
+            'site_id' => $site['id'],
+            'parent_id' => $index_page['id']
         ))->save();
-        $site['e404_sub_id'] = $error_page['id'];
         
-        $layout_infoblock = fx::data('infoblock')->create(
-                array(
-                    'controller' => 'layout',
-                    'action' => 'show',
-                    'name' => 'Layout',
-                    'site_id' => $site['id']
-                )
+        $site['error_page_id'] = $error_page['id'];
+        $site['index_page_id'] = $index_page['id'];
+        dev_log('site to add', $site);
+        
+        fx::data('infoblock')->create(
+            array(
+                'controller' => 'layout',
+                'action' => 'show',
+                'name' => 'Layout',
+                'site_id' => $site['id']
+            )
         )->save();
         $site->save();
         return $result;
@@ -215,119 +219,18 @@ class fx_controller_admin_site extends fx_controller_admin {
         return $result;
     }
 
-    public function export($input) {
-        $configure = new fx_admin_configure();
-        $reqs = $configure->get_requirements($input['id']);
-
-
-        foreach ($reqs as $i => $page) {
-            $page_type = $page['type'];
-            $fields[] = $this->ui->hidden("requirements[$i][type]", $page_type);
-            $blocks = $menu = array('type' => 'set',
-                    'without_add' => true,
-                    'name' => "requirements[$i][units]",
-                    'label' => fx::lang('Блоки','system') . ' ' . $page_type,
-                    'labels' => array( fx::lang('Блок','system'), fx::lang('Обязательный','system')),
-                    'tpl' => array(
-                            array('type' => 'label', 'name' => 'name'),
-                            array('type' => 'select', 'values' => array('yes' => 'yes', 0 => 'no'), 'name' => 'nessesary'),
-                            array('type' => 'hidden', 'name' => 'id'),
-                            array('type' => 'hidden', 'name' => 'type'),
-                            array('type' => 'hidden', 'name' => 'embed'),
-                    ));
-            $menu = $menu = array('type' => 'set',
-                    'name' => "requirements[$i][units]",
-                    'without_add' => true,
-                    'label' => fx::lang('Меню','system') . ' ' . $page_type,
-                    'labels' => array( fx::lang('Меню','system'), fx::lang('Направление','system'), fx::lang('Обязательный','system')),
-                    'tpl' => array(
-                            array('type' => 'label', 'name' => 'name'),
-                            array('type' => 'select', 'values' => array(0 => fx::lang('любое','system'), 'vertical' => fx::lang('вертикальное','system')), 'name' => 'direct'),
-                            array('type' => 'select', 'values' => array('yes' => 'yes', 0 => 'no'), 'name' => 'nessesary'),
-                            array('type' => 'hidden', 'name' => 'id'),
-                            array('type' => 'hidden', 'name' => 'type'),
-                            array('type' => 'hidden', 'name' => 'keyword')
-                    ));
-            if ($page['units']) {
-                foreach ($page['units'] as $j => $unit) {
-                    $type = $unit['type'];
-                    if ($type == 'infoblock') {
-                        $blocks['values'][$j] = array('name' => $unit['id'], 'nessesary' => 'yes', 'id' => $unit['id'], 'type' => 'infoblock', 'embed' => $unit['embed']);
-                    } else {
-                        $menu['values'][$j] = array('name' => 'menu '.$unit['keyword'], 'direct' => $unit['direct'], 'nessesary' => 1, 'id' => $unit['id'], 'type' => 'menu', 'keyword' => $unit['keyword']);
-                    }
-                }
-            }
-
-            $fields[] = $blocks;
-            $fields[] = $menu;
-        }
-
-        $fields[] = $this->ui->hidden('id', $input['id']);
-        $fields[] = $this->ui->hidden('essence', 'site');
-        $fields[] = $this->ui->hidden('action', 'export');
-        $fields[] = $this->ui->hidden('posting');
-        $result = array('fields' => $fields);
-
-        return $result;
-    }
-
-    public function export_save($input) {
-        $site = fx::data('site')->get_by_id($input['id']);
-        $requirements = $input['requirements'];
-
-        $export = new fx_export();
-        $export->export_configure(array($site), $requirements);
-    }
-
     public function settings($input) {
         $site_id = isset($input['id']) ? $input['id'] : isset($input['params'][0]) ? $input['params'][0] : null;
         
         $site = fx::data('site', $site_id);
 
-        /*
-        // используются content_pages
-        $content_pages_list = array();
-        $content_pages = fx::data('content_page')->where('site_id', $site_id)->all();
-        foreach ($content_pages as $page)
-        {
-            $content_pages_list[$page['id']] = $page['url'];
-        }
-         * 
-         */
-
-        //$this->response->add_tab('main', fx::lang('Основные','system'));
-		//$this->response->add_tab('design', fx::lang('Дизайн','system'));
-        //$this->response->add_tab('seo', 'SEO');
-        //$this->response->add_tab('system', fx::lang('Системные','system'));
-
         $main_fields = array();
-        //$main_fields[] = $this->ui->checkbox('checked', fx::lang('Включен','system'), null, $site['checked']);
         $main_fields[] = $this->ui->input('name', fx::lang('Название сайта','system'), $site['name']);
         $main_fields[] = $this->ui->input('domain', fx::lang('Домен','system'), $site['domain']);
         $main_fields[] = $this->ui->input('mirrors', fx::lang('Зеркала','system'), $site['mirrors']);
         $main_fields[] = $this->ui->input('language', fx::lang('Язык сайта','system'), $site['language']);
-        $this->response->add_fields($main_fields); //, 'main');
+        $this->response->add_fields($main_fields);
 
-        /*
-        $seo_fields = array();
-        $seo_fields[] = $this->ui->text('robots', fx::lang('Содержимое robots.txt','system'), $site['robots']);
-        $seo_fields[] = $this->ui->checkbox('disallow_indexing', fx::lang('Запретить индексирование','system'), null, $site['disallow_indexing']);
-        $this->response->add_fields($seo_fields, 'seo');
-
-        $system_fields = array();
-        $system_fields[] = array('name' => 'title_sub_id', 'type' => 'select', 'values' => $content_pages_list, 'value' => $site['title_sub_id'], 'label' => fx::lang('Титульная страница','system'));
-        $system_fields[] = array(
-			'name' => 'e404_sub_id',
-			'type' => 'select',
-			'values' => $content_pages_list,
-			'value' => $site['e404_sub_id'],
-			'label' => fx::lang('Страница не найдена (ошибка 404)','system')
-		);
-        $system_fields[] = array('name' => 'offline_text', 'type' => 'textarea', 'value' => $site['offline_text'], 'label' => fx::lang('Показывать, когда сайт выключен','system'));
-        $this->response->add_fields($system_fields, 'system');
-         * 
-         */
         $fields = array();
         $fields[] = $this->ui->hidden('essence', 'site');
         $fields[] = $this->ui->hidden('action', 'settings');
@@ -342,7 +245,7 @@ class fx_controller_admin_site extends fx_controller_admin {
         
         $site = fx::data('site')->get_by_id($input['id']);
         $result = array('status' => 'ok');
-        $params = array('name', 'domain', 'mirrors', 'language', 'robots', 'language', 'robots', 'title_sub_id', 'e404_sub_id', 'offline_text');
+        $params = array('name', 'domain', 'mirrors', 'language', 'robots', 'language', 'robots', 'index_page_id', 'error_page_id', 'offline_text');
 
         foreach ($params as $v) {
             if (isset($input[$v])) {

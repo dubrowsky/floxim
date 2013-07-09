@@ -1,8 +1,4 @@
 <?php
-
-/**
- *@todo перенести часть методов в fx_admin_configjs 
- */
 class fx_system_page extends fx_system {
 
     // title, keywords, description

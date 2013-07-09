@@ -27,7 +27,7 @@ class fx_field_link extends fx_field_baze {
             'label' => fx::lang('Куда ссылается','system'),
             'type' => 'select',
             'values' => $comp_values,
-            'value' => $this['format']['target'] ? $this['format']['target'] : 'classificator'
+            'value' => $this['format']['target'] ? $this['format']['target'] : ''
         );
         $fields[] = array(
             'id' => 'format[prop_name]',

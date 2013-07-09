@@ -224,9 +224,6 @@ class fx_controller_admin extends fx_controller {
 
         if (fx::env('is_admin')) {
             $js_config = new fx_admin_configjs();
-            $js_config->add_main_menu(fx_controller_admin_adminpanel::get_main_menu());
-            $js_config->add_more_menu(fx_controller_admin_adminpanel::get_more_menu());
-            $js_config->add_buttons(fx_controller_admin_adminpanel::get_buttons());
             $page->add_js_text("fx_adminpanel.init(".$js_config->get_config().");");
         }
         
@@ -300,20 +297,20 @@ class fx_controller_admin extends fx_controller {
         $result = array('status' => 'ok');
 
         $ids = $input['id'];
-        if (!is_array($ids)) $ids = array($ids);
+        if (!is_array($ids)) {
+            $ids = array($ids);
+        }
 
         foreach ($ids as $id) {
             try {
-                fx::data($es)->get_by_id($id)->delete();
+                fx::data($es, $id)->delete();
             } catch (Exception $e) {
                 $result['status'] = 'error';
                 $result['text'][] = $e->getMessage();
             }
         }
-
         return $result;
     }
-    
 }
 
 class fx_controller_admin_module extends fx_controller_admin {

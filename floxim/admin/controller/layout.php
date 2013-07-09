@@ -71,15 +71,6 @@ class fx_controller_admin_layout extends fx_controller_admin {
                 $result['dialog_title'] = fx::lang('Импорт макета дизайна','system');
                 $fields[] = $this->ui->hidden('action', 'import');
                 break;
-            case 'store' :
-
-                $configure = new fx_admin_configure();
-                $filter = $configure->get_requirements(1);
-                $fields[] = $this->ui->store('template', array('configure' => $filter));
-                $fields[] = $this->ui->hidden('action', 'store');
-                break;
-
-                break;
             default :
                 $input['source'] = 'new';
                 $fields[] = $this->ui->hidden('action', 'add');
@@ -96,51 +87,6 @@ class fx_controller_admin_layout extends fx_controller_admin {
         return $result;
     }
     
-    public function import_save($input) {
-        $file = $input['importfile'];
-        if (!$file) {
-            $result = array('status' => 'error');
-            $result['text'][] = fx::lang('Ошибка при создании временного файла','system');
-        }
-
-        $result = array('status' => 'ok');
-        try {
-            $imex = new fx_import();
-            $imex->import_by_file($file['tmp_name']);
-        } catch (Exception $e) {
-            $result = array('status' => 'ok');
-            $result['text'][] = $e->getMessage();
-        }
-
-        return $result;
-    }
-    
-
-    public function store($input) {
-        $configure = new fx_admin_configure();
-        $conf = array('configure' => $configure->get_requirements(1));
-        $filter = array_merge($input['filter'], $conf);
-
-        return $this->ui->store('design', $filter, $input['reason'], $input['position']);
-    }
-    
-    
-     public function store_save($input) {
-        $store = new fx_admin_store();
-        $file = $store->get_file($input['store_id']);
-
-        $result = array('status' => 'ok');
-                 
-        try {
-            $imex = new fx_import();
-            $imex->import_by_content($file);
-        } catch (Exception $e) {
-            $result = array('status' => 'error');
-            $result['text'][] = $e->getMessage();
-        }
-
-        return $result;
-    }
 
     public function add_save($input) {
         $result = array('status' => 'ok');
@@ -464,25 +410,5 @@ class fx_controller_admin_layout extends fx_controller_admin {
         $fields []= array('type' => 'button', 'label' => fx::lang('Выход','system'), 'post' => array('essence' => 'template', 'action' => 'exit_preview'));
         $this->response->add_fields($fields);
     }
-
-    public function export($input) {
-        $widget = fx::data('template')->get_by_id($input['id']);
-
-        $fx_export = new fx_export();
-        $fx_export->export_essence($widget);
-    }
-
-    protected function _get_index_tpl() {
-        return '<html><head><title>' . fx::lang('Макет титульной страницы','system') . '</title></head><body>' . fx::lang('Макет титульной страницы','system') . '</body></html>';
-    }
-
-    protected function _get_inner_tpl() {
-        return '<html><head><title>' . fx::lang('Макет внутренней страницы','system') . '</title></head><body>' . fx::lang('Макет внутренней страницы','system') . '</body></html>';
-    }
-    
-    protected function _get_other_tpl() {
-        return '<html><head><title>' . fx::lang('Макет','system') . '</title></head><body>' . fx::lang('Макет','system') . '</body></html>';
-    }
-
 }
 ?>

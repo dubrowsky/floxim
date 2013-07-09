@@ -16,9 +16,9 @@ class fx_field extends fx_essence {
     const FIELD_FLOAT = 7;
     const FIELD_DATETIME = 8;
     const FIELD_COLOR = 9;
-    const FIELD_INFOBLOCK = 10;
+    #const FIELD_INFOBLOCK = 10;
     const FIELD_IMAGE = 11;
-    const FIELD_MULTISELECT = 12;
+    #const FIELD_MULTISELECT = 12;
     const FIELD_LINK = 13;
     const FIELD_MULTILINK = 14;
     

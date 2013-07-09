@@ -14,24 +14,7 @@ fx_adminpanel = {
         $(function () {
             $fx.admin = false;
             $fx.buttons = new fx_buttons($fx.settings.buttons.source);
-                
-            $fx.settings.mainmenu = {
-                manage: {
-                    name: fx_lang('управление'),
-                    key: 'manage',
-                    href: '/floxim/#admin.administrate.site.all'
-                }, 
-                develop : {
-                    name: fx_lang('разработка'),
-                    key :'develop',
-                    href: '/floxim/#admin.component.group'
-                }, 
-                site : {
-                    name: fx_lang('сайт'),
-                    key: 'site',
-                    href: '/'
-                }
-            };
+            
             $fx.main_menu = new fx_main_menu($fx.settings.mainmenu);
             $fx.main_menu.load();
                 

@@ -227,12 +227,6 @@ class fx_admin_submenu {
             foreach ($items as $item) {
             	$this->menu []= $this->add_node($item['code'], $item['title'], $item['url']);
             }
-            
-            $cid = $widget['id'];
-
-            foreach ($widget->fields() as $v) {
-                $this->menu[] = $this->add_node('field-'.$v['id'], $v['name'], 'widget.edit('.$cid.',edit_field,'.$v['id'].')', 'fields');
-            }
         }
     }
 

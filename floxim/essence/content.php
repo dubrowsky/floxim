@@ -108,19 +108,33 @@ class fx_content extends fx_essence {
         $is_admin = fx::is_admin();
         
         foreach ($this->data as $fkey => $v) {
+            $field_meta = array();
             $cf = $com_fields[$fkey];
             // не-поля и поля-мультилинки - всегда возращаем просто значение
             if (!$cf || $cf->type == 'multilink' || $cf['type_of_edit'] == fx_field::EDIT_NONE) {
                 $fields_to_show[$fkey] = $v;
                 continue;
             }
+            
+            // поле-селект
+            if ($cf->type == 'select') {
+                $jsf = $cf->get_js_field($this);
+                $field_meta['display_value'] = $v ? $jsf['values'][$v] : '';
+                // для не админов показываем название варианта
+                if (!$is_admin) {
+                    $fields_to_show[$fkey] = $field_meta['display_value'];
+                    continue;;
+                }
+                $field_meta['values'] = $jsf['values'];
+                $field_meta['value'] = $v;
+            }
+            
             // простое поле для не-админа - возвращаем значение
             if (!in_array($cf->type, array('image', 'file', 'datetime')) && !$is_admin) {
                 $fields_to_show[$fkey] = $v;
                 continue;
             }
             
-            $field_meta = array();
             if ($cf->type == 'image' || $cf->type == 'file') {
                 if ($v && is_numeric($v) && ($file_obj = fx::data('filetable', $v)) ) {
                     $field_meta['filetable_id'] = $v;

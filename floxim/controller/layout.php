@@ -67,12 +67,8 @@ class fx_controller_layout extends fx_controller {
         }
         // инициализация админ панели
         
-        $js_config = new fx_admin_configjs();
-        $js_config->add_main_menu(fx_controller_admin_adminpanel::get_main_menu());
-        $js_config->add_more_menu(fx_controller_admin_adminpanel::get_more_menu());
-        $js_config->add_buttons(fx_controller_admin_adminpanel::get_buttons());
-        
         $p = fx::page();
+        $js_config = new fx_admin_configjs();
         $p->add_js_text("fx_adminpanel.init(".$js_config->get_config().");");
         
         fx_controller_admin::add_admin_files();
@@ -86,5 +82,4 @@ class fx_controller_layout extends fx_controller {
     }
 
 }
-
 ?>

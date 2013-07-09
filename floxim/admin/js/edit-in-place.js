@@ -1,12 +1,13 @@
 (function($){
     $.fn.edit_in_place = function() {
-        var editor = new fx_edit_in_place(this);
+        if (!this.data('edit_in_place')) {
+            this.data('edit_in_place', new fx_edit_in_place(this));
+        }
     }
 })(jQuery);
 
 function fx_edit_in_place( node ) { 
     this.node = node;
-    this.node.data('edit_in_place', this);
     this.panel_fields = [];
     this.config_elrte = {
         toolbar: 'fx_einp_toolbar',
@@ -80,8 +81,12 @@ fx_edit_in_place.prototype.start = function(meta) {
 			});
 			break;
 		case 'color':
-			var field = this.add_panel_field(meta);
+			this.add_panel_field(meta);
 			break;
+        case 'select':
+            console.log(meta);
+            this.add_panel_field(meta);
+            break;
 		case 'string': case 'html': case '': case 'text':
 			if (meta.is_att) {
 				this.add_panel_field(meta);

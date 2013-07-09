@@ -39,5 +39,7 @@ fx_lang.dictionary = {
     "Ошибка сервера:": "Server Error:",
     "выход" : "Sign out",
     "Найти" : "Find",
-    "Вы уверены?" : "Are you sure?"
+    "Вы уверены?" : "Are you sure?",
+    'Добавить' : 'Add',
+    'Удалить' : 'Delete'
 };

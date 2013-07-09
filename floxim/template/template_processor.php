@@ -626,7 +626,28 @@ class fx_template_processor {
     
     protected function _token_if_to_code($token) {
         $code  = '<?';
-        $code .= 'if ('.$token->get_prop('test').") {\n";
+        $cond = $token->get_prop('test');
+        $cond = trim($cond);
+        
+        $var_rex = '~(\$[a-z0-9_]+)~i';
+        $parts = preg_split(
+                $var_rex, 
+                $cond, 
+                -1, 
+                PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY
+        );
+        $cond = '';
+        foreach ($parts as $pi => $p) {
+            if (
+                    preg_match($var_rex, $p) && 
+                    ( !isset($parts[$pi+1]) || !preg_match("~^(\[|\->)~", $parts[$pi+1]) )
+                ) {
+                $p = "(".$p." instanceof fx_template_field ? ".$p."->get_value() : ".$p.")";
+            }
+            $cond .= $p;
+        }
+        
+        $code .= 'if ('.$cond.") {\n";
         $code .= $this->_token_to_code($token)."\n";
         $code .= "}\n?>";
         return $code;

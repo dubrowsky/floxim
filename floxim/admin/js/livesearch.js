@@ -46,7 +46,15 @@ function fx_livesearch(node) {
 				params.skip_ids = vals;
 			}
 		}
-        return  '/_test/livesearch.php?term=%s'
+        return  {
+            url: '/floxim/index.php',
+            data:{
+                essence:'content',
+                action:'livesearch',
+                term:'%s',
+                fx_admin:'true'
+            }
+        }
 	};
 	
 	this.getValues = function() {
@@ -75,6 +83,7 @@ function fx_livesearch(node) {
 		var id = n.data('id');
 		var name = n.data('name');
 		if (n.hasClass('add_item')){
+            /*
 			var c_term = livesearch.Suggest.getTerm();
 			show_adder_window({
 				url:n.data('url'),
@@ -83,11 +92,11 @@ function fx_livesearch(node) {
 					livesearch.loadValues(new_item_id);
 				},
 				load: function(form_container) {
-					
 					form_container.find('.row_name input').first().val(c_term).focus().trigger('change');
 				}
 			});
 			livesearch.Suggest.hideBox();
+            */
 			return;
 		}
 		livesearch.addValue(id, name);
@@ -285,6 +294,7 @@ function fx_livesearch(node) {
 		});
 		
 		function edit_item(item_node) {
+            /*
 			var id = item_node.find('input').val();
 			if (!id) {
 				return false;
@@ -296,6 +306,7 @@ function fx_livesearch(node) {
 						livesearch.loadValues(id);
 					}
 			});
+            */
 		}
 		
 		this.n.on('focus', '.livesearch_input input', function() {
@@ -368,10 +379,6 @@ function fx_suggest (params) {
 		this.input.attr('autocomplete', 'off');
 		this.input.keyup( function(e) {
 			switch (e.which) {
-				// escape
-				case 27:
-					Suggest.hideBox();
-					return;
 				// up & down & enter
 				case 38: case 40: case 13:
 					return false;
@@ -387,6 +394,10 @@ function fx_suggest (params) {
 		});
 		this.input.keydown( function(e) {
 			switch (e.which) {
+                // escape
+				case 27:
+					Suggest.hideBox();
+					return false;
 				// enter
 				case 13:
 					var csi = Suggest.box.find('.search_item_active');
@@ -451,28 +462,48 @@ function fx_suggest (params) {
 	}
 	
 	this.getResults = function(term) {
-		var url = this.url.replace(/\%s/, encodeURIComponent(term));
-		if (fx_suggest.cache[url]) {
+        var request_params = {
+            dataType:Suggest.resultType,
+            success:function(res) {
+                // запрос успел измениться, пока грузили саджесты
+                if (term != Suggest.getTerm()) {
+                    return;
+                }
+                Suggest.showBox();
+                if (Suggest.resultType != 'html') {
+                    res = Suggest.renderResults(res);
+                }
+                Suggest.box.html(res);
+                fx_suggest.cache[url] = res;
+            }
+        };
+        var url, url_cache_key;
+        if (typeof this.url == 'string') {
+            url = this.url.replace(/\%s/, encodeURIComponent(term));
+            url_cache_key = url;
+            request_params.url = url;
+        } else {
+            //console.log('complex url', this);
+            url = this.url.url;
+            url = url.replace(/\%s/, encodeURIComponent(term));
+            request_params.url = url;
+            var data = this.url.data;
+            if (typeof data != 'string') {
+                data = $.param(data);
+                data = data.replace(/\%25/, '%');
+            }
+            data = data.replace(/\%s/, encodeURIComponent(term));
+            url_cache_key = url+data;
+            request_params.type = 'POST';
+            request_params.data = data;
+        }
+        
+		if (fx_suggest.cache[url_cache_key]) {
 			Suggest.showBox();
 			Suggest.box.html(fx_suggest.cache[url]);
 			return;
 		}
-		$.ajax({
-				dataType:Suggest.resultType,
-				url:url,
-				success:function(res) {
-					// запрос успел измениться, пока грузили саджесты
-					if (term != Suggest.getTerm()) {
-						return;
-					}
-					Suggest.showBox();
-					if (Suggest.resultType != 'html') {
-						res = Suggest.renderResults(res);
-					}
-					Suggest.box.html(res);
-					fx_suggest.cache[url] = res;
-				}
-		});
+		$.ajax(request_params);
 	}
 	
 	this.renderResults = function(res) {

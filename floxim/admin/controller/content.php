@@ -98,6 +98,31 @@ class fx_controller_admin_content extends fx_controller_admin {
         return array('status' => 'ok');
     }
     
+    public function livesearch($input) {
+        dev_log('liveserching', $input);
+        $content_type = 'tag';
+        $finder = fx::data('content_'.$content_type)->where('site_id', fx::env('site')->get('id'));
+
+        $term = $_POST['term'];
+        $term = explode(" ", $term);
+        if (count($term) > 0) {
+            foreach ($term as $tp) {
+                $finder->where('name', '%'.$tp.'%', 'LIKE');
+            }
+        }
+
+        $items = $finder->all();
+        $res = array('meta' => array(), 'results' => array());
+        foreach ($items as $i) {
+            $res['results'][]= array(
+                'name' => $i['name'],
+                'id' => $i['id']
+            );
+        }
+        echo json_encode($res);
+        die();
+    }
+    
     /*
      * Переместить контент-запись среди соседей внутри одного родителя и одного инфоблока
      * В инпуте должны быть content_type и content_id

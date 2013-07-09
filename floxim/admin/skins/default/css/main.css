@@ -219,13 +219,17 @@ input.ui-button {
     margin: 0 0 0 50px;
 }
 
+.fx_admin_main_menu_item {
+    margin: 0 15px;
+    display: inline;
+}
+
 #fx_admin_main_menu a {
     text-decoration: none;
     color: #aaafb0 !important;
-    margin: 0 15px;
 }
 
-#fx_admin_main_menu span {
+#fx_admin_main_menu span.fx_main_menu_separator {
     width: 1px;
     height: 14px;
     background-color: #4e4e50;
@@ -286,16 +290,35 @@ input.ui-button {
     margin: 8px 0 0;
 }
 
-#fx_admin_more_menu .fx_admin_more_menu_after {
+.fx_admin_more_menu_after {
     width: 10px;
     height: 7px;
     display: inline-block;
-    background: url(../images/images.png) -218px 0;
+    background: url('../images/images.png') -218px 0;
     margin: 0 10px 0 0;
 }
 
-#fx_admin_more_menu .fx_admin_more_menu_after_active {
-    background: url(../images/images.png) -218px -8px;
+.fx_admin_main_menu_item .fx_admin_more_menu_after_container {
+    margin-left:3px;
+    padding-left:7px;
+    cursor:pointer;
+}
+
+.fx_main_submenu {
+    display:none;
+    position: absolute;
+    background: #272729;
+    padding:8px 15px;
+    margin-left:-15px;
+    z-index:2;
+}
+
+.fx_main_subitem {
+    line-height: 30px;
+}
+
+.fx_admin_more_menu_after_active {
+    background: url('../images/images.png') -218px -8px;
 }
 
 #fx_admin_more_menu div > span, #fx_admin_more_menu span.fx_admin_more_menu_button {
@@ -650,19 +673,6 @@ input.ui-button {
     padding: 2px 7px 3px;
 }
 
-.fx_admin_unchecked {
-    opacity: .3;
-    filter: progid: DXImageTransform.Microsoft.Alpha(opacity=30);
-}
-
-.fx_admin_blockedit {
-    z-index: 2000;
-    position: relative;
-    outline: 1pt #ccc dashed;
-    min-height: 10px;
-    cursor: pointer;
-}
-
 .fx_page_block {
     margin: 2px !important;
 }
@@ -731,7 +741,7 @@ input.ui-button {
     color: #333;
 }
 
-.fx_admin_form label, .fx_admin_form input, .fx_admin_form select, .fx_admin_form textarea {
+.fx_admin_form input, .fx_admin_form select, .fx_admin_form textarea {
     display: block;
     margin: 7px 0 0;
 }
@@ -906,32 +916,7 @@ input.ui-button {
 .fx_ajax_loader {
     width: 128px;
     height: 15px;
-    background: url(../images/loader.gif);
-}
-
-div[id^=fx_fieldset_] .fx_fieldset_row {
-    width: 100%;
-    height: 20px;
-    clear: both;
-    margin: 10px 0;
-}
-
-div[id^=fx_fieldset_] .fx_fieldset_row *, div[id^=fx_fieldset_] .fx_fieldset_label * {
-    float: left;
-    width: 200px !important;
-    margin: 0 10px 0 0 !important;
-}
-
-div[id^=fx_fieldset_] .fx_fieldset_remove, div[id^=fx_fieldset_] .fx_fieldset_add {
-    border-bottom: 1px dashed #2A6DA0;
-    color: #2A6DA0;
-    cursor: pointer;
-    width: auto;
-}
-
-div[id^=fx_fieldset_] .fx_fieldset_add {
-    clear: both;
-    float: left;
+    background: url('../images/loader.gif');
 }
 
 .fx_list_table {
@@ -1438,7 +1423,7 @@ ul.fx_tree_children_expanded {
 }
 
 .fx_tree_expander span {
-    background: url(../images/images.png) no-repeat -287px -1px;
+    background: url('../images/images.png') no-repeat -287px -1px;
     width: 12px;
     height: 12px;
     display: inline-block;
@@ -1516,7 +1501,7 @@ li ul .fx_tree_label .fx_tree_title {
     outline-offset: -3px;
 }
 
-.fx_template_var.fx_hilight_empty {
+.fx_hilight_empty {
     min-width: 15px;
     min-height: 15px;
 }
@@ -1682,11 +1667,6 @@ body div.fx_overlay, body div.fx_overlay table {
     color: red;
 }
 
-.fx_overlay .date_field {
-    color: #00C;
-    cursor: pointer;
-}
-
 .fx_overlay .ui-datepicker-current-day {
     background: #FF0;
 }
@@ -1814,4 +1794,11 @@ body div.fx_overlay, body div.fx_overlay table {
     min-height: 100%;
     height: 100%;
     position: relative;
+}
+
+.fx_admin_form .fx_fieldset input[type="text"], 
+.fx_admin_form .fx_fieldset select,
+.fx_admin_form .fx_fieldset textarea {
+    width:100%;
+    margin:0;
 }

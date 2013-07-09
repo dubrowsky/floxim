@@ -80,7 +80,7 @@ fx_front = function () {
 		if (n.is('.fx_template_var, .fx_template_var_in_att')) {
 			n.edit_in_place();
             var container_essence = n.closest('.fx_content_essence');
-            if (container_essence !== n) {
+            if (container_essence.get(0) !== n.get(0)) {
                 container_essence.trigger('fx_select');
             }
 		}
@@ -405,6 +405,7 @@ fx_front.prototype.select_infoblock = function(n) {
     
     $('html').one('fx_deselect', function() {
     	$fx.buttons.unbind('settings');	
+        $fx.buttons.unbind('delete');	
     });
 }
 

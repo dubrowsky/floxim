@@ -81,7 +81,6 @@ class fx_controller_admin_component extends fx_controller_admin {
 				'settings' => fx::lang('Настройки','system')
 			), 
 			'widget' => array(
-				'fields' => fx::lang('Поля','system'),
 				'settings' => fx::lang('Настройки','system')
 			)
 		);
@@ -168,12 +167,6 @@ class fx_controller_admin_component extends fx_controller_admin {
     }
     
 
-    // пропертю в метод
-    /* protected static $_essence_types = array(
-    	'widget' => 'Виджеты',
-    	'component' => 'Компоненты'
-	);*/
-
     protected static function _essence_types( $key = null ) {
         $arr = array (
             'widget' => fx::lang('Виджеты','system'),
@@ -192,13 +185,6 @@ class fx_controller_admin_component extends fx_controller_admin {
         if (isset($submenu[$action])) {
 			$breadcrumb->add_item($submenu[$action]['title'], $submenu[$action]['url']);
         }
-    }
-
-    public function export($input) {
-        $fx_core = fx_core::get_object();
-        $widget = fx::data('component')->get_by_id($input['id']);
-        $fx_export = new fx_export();
-        $fx_export->export_essence($widget);
     }
 
     public function add_save($input) {
@@ -223,15 +209,7 @@ class fx_controller_admin_component extends fx_controller_admin {
         }
 
         try {
-            //$component->create_dir();
             $component->save();
-            /*
-            $ctpl_data = array('component_id' => $component['id'], 'keyword' => 'main', 'name' => $component['name']);
-            $ctpl = fx::data('ctpl')->create($ctpl_data);
-            $ctpl->create_file();
-            $ctpl->save();
-             * 
-             */
         } catch (Exception $e) {
             $result['status'] = 'error';
             $result['text'][] = $e->getMessage();
@@ -280,33 +258,6 @@ class fx_controller_admin_component extends fx_controller_admin {
         }
 
         return $result;
-    }
-
-    public function ctpl($component) {
-        $fx_core = fx_core::get_object();
-        $ctpls = fx::data('ctpl')->get_by_component($component['id']);
-
-        $ar = array('type' => 'list', 'filter' => true, 'tab' => 'ctpl');
-        $ar['labels'] = array('name' => FX_ADMIN_NAME);
-
-        $ar['values'] = array();
-        foreach ($ctpls as $v) {
-            $r = array(
-                    'id' => $v['id'],
-                    'name' => array('name' => $v['name'], 'url' => 'ctpl.edit('.$v['id'].')'),
-            );
-            if ( $v->is_default() ) {
-                $r['name']['name'] .= " " . fx::lang('по умолчанию','system');
-                $r['fx_not_available_buttons'] = array('delete');
-            }
-            
-            $ar['values'][] = $r;
-        }
-        $fields[] = $ar;
-        $buttons = array("add", "delete");
-        $buttons_action['add']['options']['component_id'] = $component['id'];
-        $this->response->submenu->set_subactive('ctpl-'.$component['id']);
-        return array('essence' => 'ctpl', 'fields' => $fields, 'buttons' => $buttons, 'buttons_action' => $buttons_action);
     }
 
     public function fields($component) {
