@@ -542,9 +542,13 @@ input.ui-button {
     margin: 0 5px;
 }
 
+#fx_admin_breadcrumb a.last, #fx_admin_breadcrumb span.last {
+    color:#000;
+}
+
 /* Кнопки */
 .fx_admin_button {
-    background: url(../images/images.png) no-repeat;
+    background: url('../images/images.png') no-repeat;
     float: left;
     cursor: pointer;
     margin: 0 14px 0 0;
@@ -1343,6 +1347,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
     margin-right: 5px;
 }
 
+/*
 .fx_list_buttons {
     visibility: hidden;
 }
@@ -1351,6 +1356,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
 .fx_admin_selected .fx_list_buttons {
     visibility: visible;
 }
+*/
 
 /* JSTREE
 часть CSS-когда вшита в JS библиотеки

@@ -10,7 +10,6 @@ class JSTX {
 				'use_with' => true,
 				'js_xjst_var' => '$t',
 				'tpl_file_regexp' => "~^[^_].+?\.jst~"
-                //'tpl_file_regexp' => "~^form\.jst~"
 			), $options
 		);
 	}
@@ -134,21 +133,19 @@ class JSTX {
 		
 		ksort($templates);
 		
-        echo "(function() {\nvar f;\n";
 		foreach ($templates as $tpl_name => $tpl_vars) {
-			echo "// ".$tpl_name."\n";
+			
 			foreach ($tpl_vars as $tpl) {
-				echo "f = function(_c, _o) {".$this->compileTemplate($tpl['template'])."};\n";
+				echo "(function() {var f = function(_c, _o) {".$this->compileTemplate($tpl['template'])."};";
 				if (isset($tpl['jquery'])) {
-					echo "f.jquery = function(html, _c, _o) {".$tpl['jquery']."};\n";
+					echo "f.jquery = function(html, _c, _o) {".$tpl['jquery']."};";
 				}
 				if (isset($tpl['test'])) {
-					echo "f._test = function(_c, _o) {return ".$tpl['test']."};\n";
+					echo "f._test = function(_c, _o) {return ".$tpl['test']."};";
 				}
-				echo "\$t.add('".$tpl_name."', f);\n\n";
+				echo "\$t.add('".$tpl_name."', f);})();\n";
 			}
 		}
-        echo "})();\n";
 	}
 	
 	public function parseDir($dir = '.', $regexp = false) {

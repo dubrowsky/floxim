@@ -33,7 +33,11 @@ class fx_template_processor {
             $tpl_name = $tpl_name_parts[1].'_'.$tpl_name_parts[2];
         }
         $source = '{templates source="'.$source_dir.'"}';
-        foreach (glob($source_dir.'/*.tpl') as $file) {
+        $tpl_files = glob($source_dir.'/*.tpl');
+        if (!$tpl_files) {
+            $tpl_files = array();
+        }
+        foreach ($tpl_files as $file) {
             // Не включаем файлы шаблонов, начинающиеся на "_"
             if (preg_match("~/_[^/]+$~", $file)) {
                 continue;

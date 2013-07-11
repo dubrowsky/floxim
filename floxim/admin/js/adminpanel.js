@@ -23,7 +23,7 @@ fx_adminpanel = {
                               
             $(window).hashchange($fx.set_mode);
             $(window).hashchange();
-
+            $('html').on('click', '.fx_button', $fx.buttons.form_button_click);
         });
 
         $(document).bind('keydown',$fx.key_down);
@@ -274,7 +274,6 @@ fx_adminpanel = {
     store_hide_button: function () {
         $fx_dialog.hide_button(['save','store']);
         $fx.panel.unbind("fx.fielddrawn", $fx.store_hide_button); 
-            
     },
         
     store_after_install: function ( store_id ) {

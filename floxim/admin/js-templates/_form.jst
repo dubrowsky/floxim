@@ -1,23 +1,24 @@
 <!--[form_row]-->
-<?
-if ( (_c.type == 'checkbox' || _c.type == 'bool') && typeof _c.values == 'undefined') {
-?>
-<div class="field field_checkbox">
-	<?=$t.input(_c)?>
-	<label style="display:inline;" for="<?=_c.name?>"><?=_c.label?></label>
-</div>
-<?
-} else if ((_c.type == 'select' || _c.type == 'radio') && _c.hidden_on_one_value && !_c.extendable && _c.values && fx_object_length(_c.values) == 1) {
-	print($t.input({type:'hidden', name:_c.name,value:fx_object_get_first_key(_c.values)}));
-} else if (_c.type == 'hidden' || _c.type == 'button' || _c.type == 'list') {
-	print($t.input(_c));
-} else {
-?>
 <div class="field<?=_c.className ? ' '+_c.className : ''?>">
 	<?=$t.label(_c)?>
 	<?=$t.input(_c)?>
 </div>
-<?}?>
+
+<!--[form_row ? (_c.type == 'checkbox' || _c.type == 'bool') && typeof _c.values == 'undefined']-->
+<div class="field field_checkbox">
+	<?=$t.input(_c)?>
+	<label style="display:inline;" for="<?=_c.name?>"><?=_c.label?></label>
+</div>
+
+<!--[form_row ? (_c.type == 'select' || _c.type == 'radio') && _c.hidden_on_one_value && !_c.extendable && _c.values && fx_object_length(_c.values) == 1]-->
+<?
+	print($t.input({type:'hidden', name:_c.name,value:fx_object_get_first_key(_c.values)}));
+?>
+
+<!--[form_row ? _c.type == 'hidden' || _c.type == 'button' || _c.type == 'list']-->
+<?
+	print($t.input(_c));
+?>
 
 <!--[data_input]-->
 <input type="hidden" value="<?=$t.clear($.toJSON(_c))?>" class="data_input" />
@@ -49,12 +50,10 @@ name="<?=_c.name?>" id="<?=_c.name?>"
 		<?=$t.field_id_name(_c)?> 
 		value="<?=$t.clear(_c.value || '')?>" />
 
-<!--[input]-->
+<!--[input ? _c.type == 'hidden']-->
 <input <?=$t.field_id_name(_c)?> value="<?=$t.clear(_c.value)?>" type="hidden" />
-<!--test-->
-_c.type == 'hidden'
 
-<!--[input]-->
+<!--[input ? _c.type == 'image']-->
 <div class="image_field">
     <div class="file_input" style="display:<?=(_c.path ? 'none' : 'block')?>">
     	<input type="file" name="file" id="image_file" />
@@ -65,8 +64,7 @@ _c.type == 'hidden'
         <a class="killer" style="display:<?=(_c.path ? 'block' : 'none')?>">&times;</a>
     </div>
 </div>
-<!--test-->
-_c.type == 'image'
+
 <!--jquery:form_row-->
 
 html.on('change', '.image_field', function(){
@@ -98,7 +96,7 @@ html.on('click', '.killer', function() {
    $(this).hide();
 });
 
-<!--[input]-->
+<!--[input ? _c.field_type == 'textarea']-->
 <?
 var c_val = _c.value || '';
 c_val = $t.clear(c_val);
@@ -107,8 +105,6 @@ c_val = $t.clear(c_val);
 	style="height:190px; margin-bottom:40px;"
 	<?=$t.field_id_name(_c)?>
 	class="<?=_c.wysiwyg ? 'fx_wysiwyg' : ''?> <?=_c.code ? 'fx_code fx_code_'+_c.code : ''?>"><?=c_val?></textarea>
-<!--test-->
-_c.field_type == 'textarea'
 
 <!--jquery:form_row-->
 html.find('textarea.fx_code').each( function(){
@@ -154,7 +150,7 @@ html.find('textarea.fx_code').each( function(){
 	$(document.body).off('fx_form_submit.save_cm_fields').on('fx_form_submit.save_cm_fields', 'form', save_cm_fields);
 });
 
-<!--[input]-->
+<!--[input ? _c.type == 'select']-->
 <?
 if (_c.extendable) {
 	_c.values.fx_new = _c.extendable === true ? 'Add...' : _c.extendable;
@@ -184,15 +180,14 @@ if (_c.extendable) {
 	<?if (_c.extendable){?>
 		<input type="text" name="fx_new_<?=_c.name?>" class="new" style="display:none;" />
 	<?}?>
-<!--test-->
-_c.type == 'select'
+
 <!--jquery:form_row-->
 html.find('select.extendable').change(function() {
 	var new_inp = $(this).parent().find('input.new');
 	$(this).val() === 'fx_new' ? new_inp.show().focus() : new_inp.hide();
 });
 
-<!--[input]-->
+<!--[input ? _c.type == 'radio']-->
 <div class="fx_admin_group">
 	<?for (var vk in _c.values) {
 		var i = 0;
@@ -212,10 +207,8 @@ html.find('select.extendable').change(function() {
 		}
 	}?>
 </div>
-<!--test-->
-_c.type == 'radio'
 
-<!--[input]-->
+<!--[input ? _c.type == 'radio_facet']-->
 <?
 var c_val = _c.value !== undefined ? _c.value : fx_object_get_first_key(_c.values);
 ?>
@@ -225,8 +218,7 @@ var c_val = _c.value !== undefined ? _c.value : fx_object_get_first_key(_c.value
 		<span class="val_<?=vk?> <?=vk == c_val ? 'fx_admin_radio_facet_current' : ''?>"><?=_c.values[vk]?></span>
 	<?}?>
 </div>
-<!--test-->
-_c.type == 'radio_facet'
+
 <!--jquery:form_row-->
 html.find('.fx_admin_radio_facet span').click(function () {
 	var par = $(this).parent();
@@ -235,13 +227,11 @@ html.find('.fx_admin_radio_facet span').click(function () {
 	par.find('input').val(this.className.match(/val_([^\s]+)/)[1]).change();
 });
 
-<!--[input]-->
+<!--[input ? (_c.type == 'checkbox' || _c.type == 'bool') && typeof _c.values == 'undefined']-->
 <input type="checkbox" style="display:inline;" <?=$t.field_id_name(_c)?> value="1" <?=_c.value && _c.value !== '0' ? ' checked="checked"' : ''?> />
 
-<!--test-->
-(_c.type == 'checkbox' || _c.type == 'bool') && typeof _c.values == 'undefined'
 
-<!--[input]-->
+<!--[input ? _c.type == 'checkbox' && typeof _c.values != 'undefined' ]-->
 <div class="fx_admin_group fx_admin_multi_checkbox">
 	<?
 	for (var vk in _c.values) {
@@ -259,10 +249,8 @@ html.find('.fx_admin_radio_facet span').click(function () {
 		</div>
 	<?}?>
 </div>
-<!--test-->
-_c.type == 'checkbox' && typeof _c.values != 'undefined' 
 
-<!--[input]-->
+<!--[input ? _c.type == 'color']-->
 <?_c.value = _c.value || '#00ff00';?>
 <div class="field_colorpicker">
 	<input <?=$t.field_id_name(_c)?> value="<?=_c.value?>" type="hidden" />
@@ -271,8 +259,7 @@ _c.type == 'checkbox' && typeof _c.values != 'undefined'
 		<div class="colorpickerHolder2"></div>
 	</div>
 </div>
-<!--test-->
-_c.type == 'color'
+
 <!--jquery:form_row-->
 html.find('.field_colorpicker').each(function() {
 	$('head').append('<link rel="stylesheet" media="screen" type="text/css" href="/floxim/lib/colorpicker/css/colorpicker.css" />'+
@@ -303,7 +290,7 @@ html.find('.field_colorpicker').each(function() {
 	});
 });
 
-<!--[input]-->
+<!--[input ? _c.type == 'set']-->
 <div class="fx_fieldset">
     <table id="fx_fieldset_<?=_c.name?>">
         <thead>
@@ -346,8 +333,6 @@ html.find('.field_colorpicker').each(function() {
 	<?}?>
 	<br style="clear:both;" />
 </div>
-<!--test-->
-_c.type == 'set'
 
 <!--jquery:form_row-->
 html.find('.fx_fieldset').each(function() {
@@ -382,7 +367,7 @@ html.find('.fx_fieldset').each(function() {
     </td>
 </tr>
 
-<!--[input]-->
+<!--[input ? _c.type == 'table']-->
 <table>
 	<?if (_c.labels) {?>
 		<tr>
@@ -401,15 +386,11 @@ html.find('.fx_fieldset').each(function() {
 		});
 	}?>
 </table>
-<!--test-->
-_c.type == 'table'
 
-<!--[input]-->
+<!--[input ? _c.type == 'button']-->
 	<button class="fx_button" <?=$t.data_attr(_c)?>>
 		<?=_c.label || ''?>
 	</button>
-<!--test-->
-_c.type == 'button'
 
 <!--jquery:form_row-->
 html.find('.fx_button').add(html.filter('.fx_button')).click(function() {
@@ -442,7 +423,7 @@ html.find('.fx_button').add(html.filter('.fx_button')).click(function() {
 	return false;
 });
 
-<!--[input]-->
+<!--[input ? _c.type == 'list']-->
 <div class="fx_list<?=_c.className ? ' '+_c.className : ''?>">
 <?if (_c.filter && _c.values && _c.values.length > 10) {?>
 	<div class="fx_list_filter"><label><?=fx_lang('Найти')?>:<input type="text" /></label></div>
@@ -492,9 +473,6 @@ if (_c.values) {
 ?>
 </table>
 </div>
-
-<!--test-->
-_c.type == 'list'
 
 <!--jquery:form_row-->
 html.filter('.fx_list').each( function() {
@@ -609,7 +587,7 @@ $.each(_o.labels, function(label_key, label) {
 });
 ?>
 
-<!--[list_field_row]-->
+<!--[list_field_row ? _o.labels === undefined || _o.labels.length == 0]-->
 <?if (_c.img) {?>
 	<td class="fx_list_cell fx_list_cell_image"><?=$t.list_field_cell(_c.img,{type:'image'})?></td>
 <?}?>
@@ -630,44 +608,31 @@ $.each(_o.labels, function(label_key, label) {
 	?>
 </td>
 
-<!--test-->
-_o.labels === undefined || _o.labels.length == 0
-
 <!--[list_field_cell]-->
 <?=_c?>
 
-<!--[list_field_cell]-->
+<!--[list_field_cell ? _c && _c.url !== undefined]-->
 <?
 var url = _c.url == null ? null : (/^#/.test(_c.url) ? _c.url : '#' + $fx.mode + '.' + _c.url);
 ?>
 <a <?=url == null ? '' : 'href="'+url+'"'?>><?=_c.name?></a>
 
-<!--test-->
-_c && _c.url !== undefined
 
-
-<!--[list_field_cell]-->
+<!--[list_field_cell ? _c && _c.button !== undefined]-->
 <?=$t.input({type:'button',post:_c.button, label:_c.name})?>
-<!--test-->
-_c && _c.button !== undefined
 
-<!--[list_field_cell]-->
+<!--[list_field_cell ? _o && (_o.type == 'buttons' || _o.label && _o.label.type == 'buttons')]-->
 <div class="fx_list_buttons">
 	<?$.each(_c, function(i, button) {
 		?><span><?=$t.input($.extend(button, {type:'button'}))?></span><?
 	});?>
 </div>
 
-<!--test-->
-_o && (_o.type == 'buttons' || _o.label && _o.label.type == 'buttons')
-
-<!--[list_field_cell]-->
+<!--[list_field_cell ? _o && (_o.label && _o.label.type == 'image' || _o.type == 'image') ]-->
 <img src="<?=_c?>" class="fx_list_image" />
 
-<!--test-->
-_o && (_o.label && _o.label.type == 'image' || _o.type == 'image') 
 
-<!--[list_field_row]-->
+<!--[list_field_row ? _o.template == 'imgh']-->
 <div class="fx_list_row_item"><img style="width:130px;" src="<?=_c.img?>" /></div>
 <div class="fx_list_row_item" style="width:600px;">
 	<h2><?
@@ -678,10 +643,8 @@ _o && (_o.label && _o.label.type == 'image' || _o.type == 'image')
 	}?></h2>
 	<?=_c.text?>
 </div>
-<!--test-->
-_o.template == 'imgh'
 
-<!--[input]-->
+<!--[input ? _c.type == 'colorbasic']-->
 <?
 var colors = {
 	red: ['#ff0000', 'Red'],
@@ -701,8 +664,7 @@ $.each(colors, function (key, val) {
 	?><div><span style="background-color:<?=val[0]?>;" class="color <?=key == _c.value ? 'fx_admin_colorbasic_selected' : ''?>" <?=$t.data_attr(val)?>></span></div><?
 });
 ?></div>
-<!--test-->
-_c.type == 'colorbasic'
+
 
 <!--jquery:form_row-->
 $('.fx_admin_colorbasic', html).each( function() {
@@ -715,7 +677,7 @@ $('.fx_admin_colorbasic', html).each( function() {
 	});
 });
 
-<!--[input]-->
+<!--[input ? _c.type == 'livesearch']-->
 <div class="livesearch" 
     data-params="<?=$t.json_att(_c.params)?>" 
     data-prototype_name="<?=_c.name?>[prototype]"
@@ -745,15 +707,11 @@ $('.fx_admin_colorbasic', html).each( function() {
     <div class="livesearch_results">
     </div>
 </div>
-<!--test-->
-_c.type == 'livesearch'
 
-<!--[input]-->
+<!--[input ? _c.type == 'datetime']-->
 	<div class="date_field">
 		<input type="text" class="date_input" value="<?=_c.value.replace(/\s.*$/, '')?>" <?=$t.field_id_name(_c)?> />
 	</div>
-<!--test-->
-_c.type == 'datetime'
 
 <!--jquery:form_row-->
 var inp  = $('input.date_input', html);
@@ -772,13 +730,12 @@ inp.datepicker('widget').addClass('fx_overlay');
 //handler.on('click', function() {$(this).datepicker('show');});
 
 	
-<!--[input]-->
+<!--[input ? _c.type =='tree']-->
 <div class="fx_tree">
 <input type="hidden" <?=$t.field_id_name(_c)?> class="tree_value_input"/>
 <?=$t.tree_children(_c,{is_expanded:true})?>
 </div>
-<!--test-->
-_c.type =='tree'
+
 
 <!--jquery:form_row-->
 

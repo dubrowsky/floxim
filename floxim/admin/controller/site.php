@@ -171,7 +171,7 @@ class fx_controller_admin_site extends fx_controller_admin {
     		'design' => fx::lang('Дизайн','system')
 		);
     	$this->response->breadcrumb->add_item( fx::lang('Сайты','system'), '#admin.site.all');
-        $this->response->breadcrumb->add_item($site['name'], '#admin.site.map('.$site['id'].')');
+        $this->response->breadcrumb->add_item($site['name'], '#admin.site.settings('.$site['id'].')');
         $this->response->breadcrumb->add_item($titles[$section]);
         $this->response->submenu->set_menu('site-'.$site['id'])->set_subactive('site'.$section.'-'.$site['id']);
     }
