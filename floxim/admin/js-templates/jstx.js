@@ -104,7 +104,11 @@ var $t = {
 	},
 	jQuery: function(name, obj, options) {
 		var tpl = $t.find(name);
-        var res = tpl(obj,options).replace(/^\s+|\s+$/, '');
+        var res = tpl(obj,options);
+        if (!res) {
+            return '';
+        }
+        res = res.replace(/^\s+|\s+$/, '');
         var html = $(res);
 		if (typeof tpl.jquery == 'function') {
 			tpl.jquery(html, obj, options);
@@ -127,6 +131,14 @@ var $t = {
     	var res = $t.htmlEntities(s);
     	res = res.replace(/\"/g, '&quot;');
     	return res;
+    },
+    json_att: function(obj) {
+        if (!obj) {
+            return '';
+        }
+        var str = (typeof obj == 'string') ? obj : $.toJSON(obj);
+        str = this.clear(str);
+        return str;
     },
     inline_data: function(n) {
     	var c_data = n.data('inline_data');

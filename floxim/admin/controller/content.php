@@ -40,7 +40,14 @@ class fx_controller_admin_content extends fx_controller_admin {
             $content->set_field_values($input['content']);
             $content->save();
         }
-        return array('status' => 'ok', 'dialog_title' => fx::lang('Редактирование контента','system'));
+        return array(
+            'status' => 'ok', 
+            'dialog_title' => 
+                fx::lang(
+                    $input['content_id'] ? 'Editing ' : 'Adding new ',
+                    'system'
+                ). ' '.fx::data('component', $content_type)->get('item_name')
+        );
     }
 
     public function checked_save($input) {
@@ -99,10 +106,14 @@ class fx_controller_admin_content extends fx_controller_admin {
     }
     
     public function livesearch($input) {
-        dev_log('liveserching', $input);
-        $content_type = 'tag';
-        $finder = fx::data('content_'.$content_type)->where('site_id', fx::env('site')->get('id'));
-
+        //dev_log('liveserching', $input);
+        if (!isset($input['content_type'])) {
+            return;
+        }
+        $finder = fx::data($input['content_type'])->where('site_id', fx::env('site')->get('id'));
+        if (isset($input['skip_ids']) && is_array($input['skip_ids'])) {
+            $finder->where('id', $input['skip_ids'], 'NOT IN');
+        }
         $term = $_POST['term'];
         $term = explode(" ", $term);
         if (count($term) > 0) {

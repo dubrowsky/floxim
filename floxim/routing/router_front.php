@@ -2,24 +2,27 @@
 class fx_router_front extends fx_router {
 
     public function route($url = null, $context = null) {
-        if (!$url) {
-            $url = $_GET['REQUEST_URI'];
-        }
+        /*
         if (!preg_match("~^/~", $url)) {
             $url = '/'.$url;
+        }*/
+        
+        $url_variants = array($url);
+        
+        $url_with_no_params = preg_replace("~\?.+$~", '', $url);
+        
+        $url_variants []= 
+            preg_match("~/$~", $url_with_no_params) ? 
+            preg_replace("~/$~", '', $url_with_no_params) : 
+            $url_with_no_params . '/';
+        
+        if ($url_with_no_params != $url) {
+            $url_variants []= $url_with_no_params;
         }
-        $url = array($url);
         $site = fx::data('site', $context['site_id']);
 
-        if ( !empty($url) ) {
-            if ( substr($url[0], -1) != '/' ) {
-                $url[1] = $url[0] . '/';
-            } else {
-                $url[1] = substr($url[0], 0, strlen($url[0])-1);
-            }
-        }
         $page = fx::data('content_page')->
-            where('url', $url)->
+            where('url', $url_variants)->
             where('site_id', $site['id'])->
             one();
         if (!$page) {

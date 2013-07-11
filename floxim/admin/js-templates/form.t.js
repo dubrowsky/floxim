@@ -360,13 +360,12 @@ html.find('.fx_fieldset').each(function() {
 		var index = $('.fx_fieldset_row', fs).length > 0 ? $('.fx_fieldset_row', fs).last().get(0).className.match(/row_(\d+)/)[1]*1 + 1 : 1;
 		for (var i = 0; i < _c.tpl.length; i++) {
 			inputs.push( 
-                $.extend({}, _c.tpl, {
+                $.extend({}, _c.tpl[i], {
                     name:_c.name+'['+index+']['+_c.tpl[i].name+']'
                 })
             );
 		}
         var new_row = $t.jQuery('fieldset_row', inputs, {index:index});
-        console.log(new_row);
 		$('.fx_fieldset_rows', fs).append(new_row);
 	});
 });
@@ -717,7 +716,10 @@ $('.fx_admin_colorbasic', html).each( function() {
 });
 
 <!--[input]-->
-<div class="livesearch" data-params="" data-prototype_name="<?=_c.name?>[prototype]" data-is_multiple="<?=(_c.is_multiple ? 'Y' : 'N')?>">
+<div class="livesearch" 
+    data-params="<?=$t.json_att(_c.params)?>" 
+    data-prototype_name="<?=_c.name?>[prototype]"
+    data-is_multiple="<?=(_c.is_multiple ? 'Y' : 'N')?>">
     <?
     if (_c.is_multiple) {
         $.each(_c.value, function(vi, vv) {

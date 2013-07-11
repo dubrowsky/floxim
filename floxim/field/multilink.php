@@ -6,18 +6,44 @@ class fx_field_multilink extends fx_field_baze {
     
     public function get_js_field($content, $tname = 'f_%name%', $layer = '', $tab = '') {
         parent::get_js_field($content, $tname, $layer, $tab);
-        $this->_js_field['type'] = 'livesearch';
-        $this->_js_field['is_multiple'] = true;
-        if (isset($content[$this['name']])) {
-            $this->_js_field['value'] = array();
-            $linker_ids = array_keys($content[$this['name']]->linker_map);
-            foreach ($content[$this['name']] as $num => $v) {
-                $this->_js_field['value'] []= array(
-                    'id' => $v['id'], 
-                    'name' => $v['name'], 
-                    'value_id' => $linker_ids[$num]
-                );
+        $render_type = $this['format']['render_type'];
+        if ($render_type == 'livesearch') {
+            $this->_js_field['type'] = 'livesearch';
+            $this->_js_field['is_multiple'] = true;
+            $this->_js_field['params'] = array(
+                'content_type' => $this->get_end_data_type()
+            );
+            if (isset($content[$this['name']])) {
+                $this->_js_field['value'] = array();
+                $linker_ids = array_keys($content[$this['name']]->linker_map);
+                foreach ($content[$this['name']] as $num => $v) {
+                    $this->_js_field['value'] []= array(
+                        'id' => $v['id'], 
+                        'name' => $v['name'], 
+                        'value_id' => $linker_ids[$num]
+                    );
+                }
             }
+        } elseif ($render_type == 'table') {
+            $rel = $this->get_relation();
+            $essence = fx::data($rel[1])->create();
+            $essence_fields = $essence->get_form_fields();
+            $this->_js_field['tpl'] = array();
+            $this->_js_field['labels'] = array();
+            foreach ($essence_fields as $ef) {
+                $this->_js_field['tpl'] []= $ef;
+                $this->_js_field['labels'] []= $ef['label'];
+            }
+            dev_log($rel, $essence_fields);
+            $this->_js_field['type'] = 'set';
+            /*
+                array('name' => 'id', 'type' => 'string'),
+                array('name' => 'value', 'type' => 'string')
+            );
+            //'values' => $this['format']['values'] ? $this['format']['values'] : array(),
+            $this->_js_field['labels'] = array('olo id', 'trolo value');
+             * 
+             */
         }
         return $this->_js_field;
     }
@@ -66,6 +92,17 @@ class fx_field_multilink extends fx_field_baze {
             'values' => $linking_types,
             'value' => $this['format']['target']
         );
+        $fields[]= array(
+            'id' => 'format[render_type]',
+            'name' => 'format[render_type]',
+            'label' => fx::lang('Render type', 'system'),
+            'type' => 'select',
+            'values' => array(
+                'livesearch' => fx::lang('Live search','system'),
+                'table' => fx::lang('Fields table','system')
+            ),
+            'value' => $this['format']['render_type']
+        );
         return $fields;
     }
     
@@ -78,15 +115,11 @@ class fx_field_multilink extends fx_field_baze {
      * Кажется, пока заточен только под MANY_MANY
      */
     public function get_savestring($content) {
-        //echo fen_debug('getting svstr', $this, $content);
         // дергаем предыдущее значение,
         // чтобы заполнить его
         $content->get($this['name']);
         
-        // связь, генерируемая этим полем
-        $relation = $this->get_relation();
-        $related_relation = fx::data($relation[1])->relations();
-        $end_data_type = $related_relation[$relation[3]][1];
+        $end_data_type = $this->get_end_data_type();
         
         // айдишники объектов, которые будут привязаны
         $new_rel_ids = array();
@@ -101,6 +134,14 @@ class fx_field_multilink extends fx_field_baze {
         }
         $new_value = fx::data($end_data_type, $new_rel_ids);
         return $new_value;
+    }
+    
+    public function get_end_data_type() {
+        // связь, генерируемая этим полем
+        $relation = $this->get_relation();
+        $related_relation = fx::data($relation[1])->relations();
+        $end_data_type = $related_relation[$relation[3]][1];
+        return $end_data_type;
     }
     
     public function get_relation() {

@@ -75,7 +75,7 @@ class fx_field_link extends fx_field_baze {
         
         if ($this['format']['render_type'] == 'livesearch') {
             $this->_js_field['type'] = 'livesearch';
-            $this->_js_field['datatype'] = $target_content;
+            $this->_js_field['params'] = array('content_type' => $target_content);
             if ( ($c_val = $content[$this->name])) {
                 $c_val_obj = $finder->where('id', $c_val)->one();
                 if ($c_val_obj) {

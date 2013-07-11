@@ -33,7 +33,7 @@ input.ui-button {
 }
 
 .ui-dialog .ui-dialog-title {
-    margin-top: 2px;
+    margin-top: 7px;
     color: #AAAFB0;
     font-weight: normal;
 }
@@ -1799,6 +1799,6 @@ body div.fx_overlay, body div.fx_overlay table {
 .fx_admin_form .fx_fieldset input[type="text"], 
 .fx_admin_form .fx_fieldset select,
 .fx_admin_form .fx_fieldset textarea {
-    width:100%;
+    width:auto;
     margin:0;
 }

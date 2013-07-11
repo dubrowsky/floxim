@@ -126,12 +126,14 @@ class fx_data {
                 } else {
                     $field = '`'.$field.'`';
                 }
-                if (is_array($value) && $type = '=') {
+                if (is_array($value)) {
                     if (count($value) == 0) {
                         $conds []= 'FALSE';
                         continue;
                     }
-                    $type = 'IN';
+                    if ($type == '=') {
+                        $type = 'IN';
+                    }
                     $value = " ('".join("', '", $value)."') ";
                 } else {
                     $value = "'".$value."'";
