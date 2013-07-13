@@ -22,6 +22,12 @@ class fx_data_content extends fx_data {
         return $relations;
     }
     
+    protected function _get_default_relation_finder($rel) {
+        $finder = parent::_get_default_relation_finder($rel);
+        $finder->order('priority');
+        return $finder;
+    }
+    
     public function get_data() {
         $data = parent::get_data();
         $types_by_id = $data->get_values('type', 'id');

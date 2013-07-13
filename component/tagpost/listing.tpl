@@ -1,6 +1,7 @@
 <div class="posttags">
-    Метки:
+    {%tags_label}Tags:{/%}
     <span fx:template="item">
+        <span fx:if="!$tag">???</span>
         <a fx:each="$tag" href="{$url}">{$name}</a>
         <span fx:if="$comment">({$comment})</span>
     </span>

@@ -6,6 +6,9 @@ class fx_field_link extends fx_field_baze {
         if (!parent::validate_value($value)) {
             return false;
         }
+        if (is_array($value) && isset($value['title']) && $value['title'] != '') {
+            return true;
+        }
         if ($value && ($value != strval(intval($value)))) {
             $this->error = sprintf(FX_FRONT_FIELD_INT_ENTER_INTEGER, $this->get_description());
             return false;
@@ -105,6 +108,39 @@ class fx_field_link extends fx_field_baze {
             'content_'.fx::data('component', $this['format']['target'])->get('keyword'),
             $this['name']
         );
+    }
+    
+    /*
+     * Получить компонент, на который ссылается поле
+     */
+    public function get_related_component() {
+        $rel = $this->get_relation();
+        return fx::data(
+                'component', 
+                preg_replace("~^content_~", '', $rel[1])
+        );
+    }
+    
+    public function get_savestring($content) {
+        if (is_array($this->value) && isset($this->value['title'])) {
+            $title = $this->value['title'];
+            $entity_infoblock_id = $content->get_link_field_infoblock($this['id']);
+            $entity_infoblock = fx::data('infoblock', $entity_infoblock_id);
+            $rel = $this->get_relation();
+            $entity_params = array(
+                'name' => $title,
+                'infoblock_id' => $entity_infoblock_id,
+                'parent_id' => $entity_infoblock['page_id']
+            );
+            $entity = fx::data($rel[1])->create($entity_params);
+            $entity_prop_name = $this['format']['prop_name'];
+            $content[$entity_prop_name] = $entity;
+            //dev_log('entity created', $entity, $content, $this);
+            //$rel = $this->get_relation();
+            //dev_log('from titl', $title, $entity_infoblock_id, $rel);
+            return false;
+        }
+        return parent::get_savestring();
     }
 }
 

@@ -1499,6 +1499,11 @@ li ul .fx_tree_label .fx_tree_title {
     outline-offset: -1px;
 }
 
+.fx_no_hilight {
+    opacity:0.3;
+}
+
+/*
 .fx_hilight .fx_hilight {
     outline-offset: -2px;
 }
@@ -1506,6 +1511,7 @@ li ul .fx_tree_label .fx_tree_title {
 .fx_hilight .fx_hilight .fx_hilight {
     outline-offset: -3px;
 }
+*/
 
 .fx_hilight_empty {
     min-width: 15px;
@@ -1541,9 +1547,9 @@ img.fx_hilight {
 
 .fx_area_target {
     display: block !important;
-    min-height: 100px;
+    min-height: 30px;
     min-width: 100px;
-    background: #FAA;
+    background: #DFD;
 }
 
 body div.fx_overlay, body div.fx_overlay table {
@@ -1552,6 +1558,10 @@ body div.fx_overlay, body div.fx_overlay table {
     line-height: normal;
     color: #000;
     border-radius: 0;
+}
+
+.fx_fieldset .livesearch {
+    min-width: 200px;
 }
 
 .livesearch_items, .livesearch_items li {
@@ -1807,4 +1817,40 @@ body div.fx_overlay, body div.fx_overlay table {
 .fx_admin_form .fx_fieldset textarea {
     width:auto;
     margin:0;
+}
+
+#fx_admin_control .redactor_toolbar {
+    background: #FFF !important;
+    border:none !important;
+    top:2px;
+    left:10px;
+}
+
+#fx_admin_control .redactor_toolbar .redactor_separator {
+    
+}
+
+.fx_infoblock_placeholder {
+    min-height: 5px;
+    min-width: 50px;
+    background: #FFF;
+    border:3px solid #000;
+}
+
+.fx_essence_placeholder {
+    min-height: 5px;
+    min-width: 50px;
+    background: #FFF;
+    border:3px solid #000;
+}
+
+.fx_essence_placeholder_inline {
+    display:inline-block;
+}
+
+.fx_infoblock.ui-sortable-helper {
+    max-width:500px;
+    max-height:150px;
+    overflow:hidden;
+    opacity:0.5;
 }

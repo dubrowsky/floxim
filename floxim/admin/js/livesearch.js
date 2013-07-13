@@ -148,12 +148,13 @@ function fx_livesearch(node) {
 		var res_value = id;
 		if (!id || (id*1 == 0) ) {
 			id = false;
-			input_name = this.n.closest('form').attr('id')+'_'+(input_name.replace(/[\[\]]+/g, '_')+'_title').replace(/__/, '_');
+			//input_name = this.n.closest('form').attr('id')+'_'+(input_name.replace(/[\[\]]+/g, '_')+'_title').replace(/__/, '_');
+            input_name = input_name+'[title]';
 			res_value = name;
 		}
 		
 		var node = $('<li class="livesearch_item'+ (!id ? ' livesearch_item_empty' : '')+'">'+
-			(this.isMultiple || true ? '<span class="killer">&times;</span>' : '')+
+			(this.isMultiple ? '<span class="killer">&times;</span>' : '')+
 			'<input type="hidden" name="'+input_name+'" value="'+res_value+'" />'+
 			'<span class="title">'+name+'</span>'+
 			'</li>');
@@ -255,6 +256,10 @@ function fx_livesearch(node) {
 				n.find('.killer').last().click();
                 livesearch.Suggest.hideBox();
 			}
+            if (e.which == 27 && !livesearch.isMultiple) {
+                $(this).trigger('blur');
+                return false;
+            }
 			if (e.which == 90 && e.ctrlKey && livesearch.lastRemovedValue) {
 				livesearch.loadValues(livesearch.lastRemovedValue);
 				livesearch.lastRemovedValue = null;

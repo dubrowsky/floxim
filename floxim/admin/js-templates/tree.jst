@@ -157,9 +157,7 @@ function fx_tree_refresh(root) {
 		}
 	});
 }
-if ($('.fx_tree',html).length > 0) {
-	fx_tree_render(html);
-}
+fx_tree_render(html);
 
 <!--[tree_children]-->
 <ul class="fx_tree_children<?=_o && _o.is_expanded ? ' fx_tree_children_expanded' : ''?>">

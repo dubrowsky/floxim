@@ -4,17 +4,23 @@
         <div class="date">
         	<span>{$publish_date | 'd.m.Y'}</span>
 		</div>
+        
+        <div fx:if="$image" class="pic">
+            <img src="{$image | 'w:100,h:100'}" alt="{$name}" />
+        </div>
+        
         <div class="anounce">{$anounce}</div>
         
         <div fx:template="$tags" class="tags">
-            {%tags_label}Метки:{/%} 
+            {%tags_label}Tags:{/%} 
             <a fx:template="item" href="{$url}">
                  {$name}
             </a>
             <span fx:template="separator">, </span>
         </div>
     </div>
-    <div class="pagination" fx:template="$pagination">
+
+    <div fx:template="$pagination" class="pagination">
         <a fx:template="inactive" href="{$url}">{$page}</a>
         <b fx:template="active">{$page}</b>
         <span fx:template="separator"> | </span>

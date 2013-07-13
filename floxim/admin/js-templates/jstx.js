@@ -56,6 +56,9 @@ var $t = {
 	},
 	
 	sortVariants: 	function(vars) {
+        if (!vars) {
+            
+        }
 		if (typeof vars._is_sorted != 'undefined' && vars._is_sorted) {
 			return;
 		}
@@ -100,7 +103,7 @@ var $t = {
 	},
     findFor: function(template_name, obj, options) {
         var tpl = $t.find(template_name);
-        if (tpl._variants !== 'undefined') {
+        if (typeof tpl._variants !== 'undefined') {
             tpl = $t.findVariant(tpl._variants, obj, options);
         }
         return tpl;

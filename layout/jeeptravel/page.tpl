@@ -38,7 +38,10 @@
         $bg_color = '#000';
         $bg_image = '';
         
-        foreach($path as $path_page) {
+        foreach($path as $path_level => $path_page) {
+            if (count($path) > 1 && $path_level == 0) {
+                continue;
+            }
             $path_page_id = $path_page['id'];
             if (isset(${"page_bg_color_$path_page_id"})) {
                 if (empty(${"page_bg_color_$path_page_id"})) {
@@ -110,7 +113,7 @@
                     <div class="img-list" fx:template="photo_listing" fx:of="component_photo.listing">
                         <div class="images fx_not_sortable" fx:template="$items">
                             <div fx:template="item" class="img-block {if $item_is_first}img-block-active{/if}">
-                                <img src="{$photo}" alt="{$description}" />
+                                <img src="{$photo}" alt="{$description editable="false"}" />
                                 <span class="left">{$description}</span>
                                 <span class="right" fx:if="$copy">© {$copy}</span>
                             </div>

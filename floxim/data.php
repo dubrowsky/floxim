@@ -135,6 +135,8 @@ class fx_data {
                         $type = 'IN';
                     }
                     $value = " ('".join("', '", $value)."') ";
+                } elseif (in_array(strtolower($type), array('is null', 'is not null'))) {
+                    $value = '';
                 } else {
                     $value = "'".$value."'";
                 }
@@ -183,7 +185,16 @@ class fx_data {
             }
             $objs[] = $v;
         }
-        return new fx_collection($objs);
+        $collection = new fx_collection($objs);
+        if (is_array($this->order)) {
+            $sorting = strtolower(trim(join("", $this->order)));
+            $sorting = str_replace("asc", '', $sorting);
+            $sorting = str_replace("`", '', $sorting);
+            $sorting = trim($sorting);
+            $collection->is_sortable = $sorting == 'priority';
+            //$collection->sorting = $sorting;
+        }
+        return $collection;
     }
     
     /*
@@ -199,6 +210,10 @@ class fx_data {
         return $data;
     }
     
+    protected function _get_default_relation_finder($rel) {
+        return fx::data($rel[1]);
+    }
+    
     public function add_related($rel_name, $essences, $rel_finder = null) {
         $relations = $this->relations();
         if (!isset($relations[$rel_name])) {
@@ -208,7 +223,7 @@ class fx_data {
         list($rel_type, $rel_datatype, $rel_field) = $rel;
 
         if (!$rel_finder){
-            $rel_finder = fx::data($rel_datatype);
+            $rel_finder = $this->_get_default_relation_finder($rel);//fx::data($rel_datatype);
         }
 
         // e.g. $rel = array(fx_data::HAS_MANY, 'field', 'component_id');
@@ -234,10 +249,6 @@ class fx_data {
                     $rel_finder->where($end_rel_field, 0, '!=');
                 }
                 $rel_items = $rel_finder->all();
-                /*
-                foreach ($rel_items as $rel_item) {
-                    $rel_item[$end_rel]['_linker_id'] = $rel_item['id'];
-                }*/
                 $essences->attache_many($rel_items, $rel_field, $rel_name, 'id', $end_rel);
                 break;
         }

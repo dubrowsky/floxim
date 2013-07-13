@@ -58,6 +58,7 @@ class fx_content extends fx_essence {
         
         $fields = fx::data('component', $this->component_id)->all_fields();
         $result = array('status' => 'ok');
+        dev_log('svf', $fields, $values);
 
         foreach ($fields as $field) {
             $field_name = $field->get_name();
@@ -85,7 +86,6 @@ class fx_content extends fx_essence {
                 $result['fields'][] = 'f_'.$field_name;
             }
         }
-
         return $result;
     }
     
@@ -123,7 +123,7 @@ class fx_content extends fx_essence {
                 // для не админов показываем название варианта
                 if (!$is_admin) {
                     $fields_to_show[$fkey] = $field_meta['display_value'];
-                    continue;;
+                    continue;
                 }
                 $field_meta['values'] = $jsf['values'];
                 $field_meta['value'] = $v;
@@ -134,12 +134,13 @@ class fx_content extends fx_essence {
                 $fields_to_show[$fkey] = $v;
                 continue;
             }
-            
             if ($cf->type == 'image' || $cf->type == 'file') {
                 if ($v && is_numeric($v) && ($file_obj = fx::data('filetable', $v)) ) {
                     $field_meta['filetable_id'] = $v;
                     $v = fx::config()->HTTP_FILES_PATH.$file_obj['path'];
-                }
+                }/* elseif ($cf->type == 'image' && $is_admin) {
+                    $v = '/floxim/admin/images/0.gif';
+                }*/
             }
             if ($cf->type == 'datetime') {
                 $field_meta['value'] = $v;
@@ -182,24 +183,65 @@ class fx_content extends fx_essence {
         return $form_fields;
     }
     
-    public function add_template_record_meta($html) {
-        $proc = new fx_template_html($html);
-        $html = $proc->add_meta(array(
-            'data-fx_content_essence' => array(
-                'id' => $this->get('id'),
-                'type' => $this->get_type(false)
-            ), 
-            'class' => 'fx_content_essence'
-        ));
+    public function add_template_record_meta($html, $collection, $index, $is_subroot) {
+        $essence_meta = array(
+            'id' => $this->get('id'),
+            'type' => $this->get_type(false)
+        );
+        if ($collection->linker_map && isset($collection->linker_map[$index])) {
+            $linker = $collection->linker_map[$index];
+            $essence_meta['linker_id'] = $linker['id'];
+            $essence_meta['linker_type'] = $linker['type'];
+        }
+        $essence_atts = array(
+            'data-fx_content_essence' => $essence_meta, 
+            'class' => 'fx_content_essence'. ($collection->is_sortable ? '' : ' fx_not_sortable')
+        );
+        if ($is_subroot) {
+            $html = preg_replace_callback(
+                "~^(\s*?)(<[^>]+>)~", 
+                function($matches) use ($essence_atts) {
+                    $tag = fx_html_token::create_standalone($matches[2]);
+                    $tag->add_meta($essence_atts);
+                    return $matches[1].$tag->serialize();
+                }, 
+                $html
+            );
+            return $html;
+        } else {
+            $proc = new fx_template_html($html);
+            $html = $proc->add_meta($essence_atts);
+        }
         return $html;
     }
     
     protected function _before_save() {
+        
         $component = fx::data('component', $this->component_id);
         $link_fields = $component->fields()->find('type', fx_field::FIELD_LINK);
         foreach ($link_fields as $lf) {
+            // сохраняем случаи типа $tagpost['tag'] -> $tagpost['tag_id']
+            $lf_prop = $lf['format']['prop_name'];
+            if (
+                    isset($this[$lf_prop]) && 
+                    $this[$lf_prop] instanceof fx_content && 
+                    empty($this[$lf['name']])
+                ) {
+                if (!$this[$lf_prop]['id']) {
+                    $this[$lf_prop]->save();
+                }
+                $this[$lf['name']] = $this[$lf_prop]['id'];
+            }
+            // синхронизируем поля, привязанные к родителю
             if ($lf['format']['is_parent']) {
-                $this[$lf['name']] = $this['parent_id'];
+                $lfv = $this[$lf['name']];
+                if ($lfv != $this['parent_id']) {
+                    if (!$this['parent_id'] && $lfv) {
+                        $this['parent_id'] = $lfv;
+                    } elseif ($lfv != $this['parent_id']) {
+                        $this[$lf['name']] = $this['parent_id'];
+                    }
+                }
             }
         }
         parent::_before_save();
@@ -216,45 +258,54 @@ class fx_content extends fx_essence {
         foreach ($link_fields as $link_field) {
             $val = $this[$link_field['name']];
             $relation = $link_field->get_relation();
-            $related_data_type = $relation[1];
+            //$related_data_type = $relation[1];
             $related_field_name = $relation[2];
             // получаем компонент, управляющий связанной сущностью
-            $related_component = fx::data(
-                    'component', 
-                    preg_replace("~^content_~", '', $related_data_type)
-            );
-            $related_component_fields = $related_component->all_fields();
+            //$related_component = $link_field->get_related_component();
+            //$related_component_fields = $related_component->all_fields();
             // и поле сущности, которое ссылается на нас
-            $related_field = $related_component_fields->find_one('name', $related_field_name);
+            //$related_field = $related_component_fields->find_one('name', $related_field_name);
             // если оно привязано к родителю, будем сохранять порядок (сортировку)
-            $related_is_child = $related_field['format']['is_parent'];
-            $old_linker_map = isset($this->modified_data[$link_field['name']]->linker_map) ? 
-                        $this->modified_data[$link_field['name']]->linker_map : 
-                        array();
+            //$related_is_child = $related_field['format']['is_parent'];
+            
             
             switch ($relation[0]) {
                 case fx_data::HAS_MANY:
                     break;
                 case fx_data::MANY_MANY:
-                    $priority = 0;
-                    // получаем релейшны сущности-связки (tagpost например)
-                    // чтобы достать оттуда $end_field
-                    $related_relations = fx::data($related_data_type)->relations();
-                    $end_field = $related_relations[$relation[3]][2];
-                    $actual_linker_ids = array();
-                    $linker_infoblock_id = null;
-                    foreach ($val as $rel_obj) {
+                    $old_linkers = isset($this->modified_data[$link_field['name']]->linker_map) ? 
+                        $this->modified_data[$link_field['name']]->linker_map : 
+                        new fx_collection();
+                    
+                    // новые линкеры
+                    // обязательно должны быть установлены
+                    // @todo потом сделаем хитрое вычисление
+                    if (!isset($val->linker_map) || count($val->linker_map) != count($val)) {
+                        throw new Exception('Wrong linker map');
+                    }
+                    foreach ($val->linker_map as $linker_obj) {
+                        $linker_obj[$related_field_name] = $this['id'];
+                        //dev_log($related_field_name, $this['id'], $linker_obj);
+                        $linker_obj->save();
+                    }
+                    
+                    $old_linkers->find_remove('id', $val->linker_map->get_values('id'));
+                    $old_linkers->apply(function ($i) {
+                        $i->delete();
+                    });
+                    //dev_log('dropped linkers', $old_linkers);
+                    /*
+                    foreach ($val as $rel_obj_index => $rel_obj) {
                         // $rel_obj - тэг например
                         // $end_field - конечное поле мультисвязи, tag например
                         // $linker_id - id тагпоста
                         
                         // если у конечного объекта нет id (новый) - сохраняем
                         if (!$rel_obj['id']) {
-                            $rel_obj->save();
+                            //$rel_obj->save();
                         }
                         
                         // находим id линкера для текущего значения
-                        // и удаляем его из старой карты линкеров
                         $found_linkers = array_keys($old_linker_map, $rel_obj['id']);
                         if (count($found_linkers) > 0) {
                             $linker_id = $found_linkers[0];
@@ -262,27 +313,7 @@ class fx_content extends fx_essence {
                             $linker_obj  = fx::data($related_data_type, $linker_id);
                         } else {
                             // выясняем, к какому инфоблоку прикреплять новую сущность-связь
-                            if (is_null($linker_infoblock_id)) {
-                                // инфоблок, где живем мы сами
-                                $our_infoblock = fx::data('infoblock', $this['infoblock_id']);
-                                
-                                // достаем значение поля настроек листинга "инфоблок для поля тагпосты"
-                                $c_infoblock_id = $our_infoblock['params']['field_'.$link_field['id'].'_infoblock'];
-                                if ($c_infoblock_id) {
-                                    $linker_infoblock_id = $c_infoblock_id;
-                                } 
-                                // если такого нет, используем первый попавшийся инфоблок, 
-                                // содержащий объекты нашего типа
-                                else {
-                                    $related_container_infoblock = fx::data('infoblock')->
-                                            where('site_id', $this['site_id'])->
-                                            get_content_infoblocks($related_component['keyword'])->
-                                            first();
-                                    if ($related_container_infoblock) {
-                                        $linker_infoblock_id = $related_container_infoblock['id'];
-                                    }
-                                }
-                            }
+                            $linker_infoblock_id = $this->get_link_field_infoblock($link_field['id']);
                             $linker_params = array(
                                 $relation[2] => $this['id'],
                                 $end_field => $rel_obj['id'],
@@ -298,8 +329,7 @@ class fx_content extends fx_essence {
                         if ($related_is_child) {
                             $linker_obj['priority'] = $priority;
                         }
-                        //echo fen_debug('let-s save', $linker_obj);
-                        $linker_obj->save();
+                        //$linker_obj->save();
                         $actual_linker_ids []= $linker_obj['id'];
                     }
                     // теперь удаляем старые связи
@@ -307,17 +337,47 @@ class fx_content extends fx_essence {
                     if (!isset($this->modified_data[$link_field['name']]->linker_map)) {
                         break;
                     }
+                    
                     foreach ($this->modified_data[$link_field['name']]->linker_map as $old_linker_id => $old_rel_id) {
                         if (!in_array($old_linker_id, $actual_linker_ids)) {
                             $old_linker = fx::data($related_data_type, $old_linker_id);
                             $old_linker->delete();
                         }
-                    }
+                    }*/
                     break;
             }
         }
     }
 
+    /*
+     * Получить id инфоблока, куда добавлять новые связанные объекты по полю $link_field
+     */
+    public function get_link_field_infoblock($link_field_id) {
+        $linker_infoblock_id = null;
+        $link_field = fx::data('field', $link_field_id);
+        $related_component = $link_field->get_related_component();
+        
+        // инфоблок, где живем мы сами
+        $our_infoblock = fx::data('infoblock', $this['infoblock_id']);
+
+        // достаем значение поля настроек листинга "инфоблок для поля тагпосты"
+        $c_infoblock_id = $our_infoblock['params']['field_'.$link_field['id'].'_infoblock'];
+        if ($c_infoblock_id) {
+            $linker_infoblock_id = $c_infoblock_id;
+        } 
+        // если такого нет, используем первый попавшийся инфоблок, 
+        // содержащий объекты нашего типа
+        else {
+            $related_container_infoblock = fx::data('infoblock')->
+                    where('site_id', $this['site_id'])->
+                    get_content_infoblocks($related_component['keyword'])->
+                    first();
+            if ($related_container_infoblock) {
+                $linker_infoblock_id = $related_container_infoblock['id'];
+            }
+        }
+        return $linker_infoblock_id;
+    }
 }
 
 class fx_Exception_content extends Exception {

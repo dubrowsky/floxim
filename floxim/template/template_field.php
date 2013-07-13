@@ -10,8 +10,13 @@ class fx_template_field  {
 	}
     
     public static function format_image($value, $format) {
-        $thumber = new fx_thumb($value, $format);
-        $value = $thumber->get_result_path();
+        try {
+            $thumber = new fx_thumb($value, $format);
+            $value = $thumber->get_result_path();
+        } catch (Exception $e) {
+            //dev_log($e);
+            $value = '';
+        }
         return $value;
     }
 	

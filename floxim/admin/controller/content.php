@@ -37,7 +37,9 @@ class fx_controller_admin_content extends fx_controller_admin {
         $this->response->add_fields($content->get_form_fields(), false, 'content');
 
         if ($input['data_sent']) {
+            dev_log('content original', $content);
             $content->set_field_values($input['content']);
+            dev_log('content filled', $content, $input['content']);
             $content->save();
         }
         return array(
@@ -142,14 +144,24 @@ class fx_controller_admin_content extends fx_controller_admin {
      */
     public function move($input) {
         $content_type = 'content_'.$input['content_type'];
-        $content = fx::data($content_type, $input['content_id']);
+        //$content = fx::data($content_type, $input['content_id']);
+        $content = fx::data($content_type)->with('tag')->where('id', $input['content_id'])->one();
         $next_id = isset($input['next_id']) ? $input['next_id'] : false;
         
         $neighbours = fx::data($content_type)->
                         where('parent_id', $content['parent_id'])->
                         where('infoblock_id', $content['infoblock_id'])->
                         where('id', $content['id'], '!=')->
+                        with('tag')->
                         order('priority')->all();
+        $nn = $neighbours->find('id', $next_id);
+        
+        dev_log(
+                'sorting', 
+                $input, 
+                $content['tag']['name'] . ($nn ? 'before '.$nn['tag']['name'] : 'after all'), 
+                $neighbours
+        );
         
         $c_priority = 1;
         $next_found = false;

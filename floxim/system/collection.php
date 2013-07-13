@@ -253,12 +253,14 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
         // cond_field = 'author'
         // res_field = 'posts'
         $res_index = array();
+        $col_sortable = $what->is_sortable;
         foreach ($what as $what_item) {
             $index_key = $what_item[$cond_field];
             if (!isset($res_index[$index_key])) {
                 $res_index[$index_key] = new fx_collection();
+                $res_index[$index_key]->is_sortable = $col_sortable;
                 if ($extract_field) {
-                    $res_index[$index_key]->linker_map = array();
+                    $res_index[$index_key]->linker_map = new fx_collection();
                 }
             }
             if (!$extract_field) {
@@ -266,7 +268,7 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
             } else {
                 $end_value = $what_item[$extract_field];
                 $res_index[$index_key][]= $end_value;
-                $res_index[$index_key]->linker_map[$what_item['id']] = $end_value['id'];
+                $res_index[$index_key]->linker_map[]= $what_item;
             }
             //$res_index[$index_key][]= $extract_field ? $what_item[$extract_field] : $what_item;
         }
