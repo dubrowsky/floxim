@@ -1,0 +1,78 @@
+<!--[input ? _c.type == 'set']-->
+<div class="fx_fieldset">
+    <table id="fx_fieldset_<?=_c.name?>">
+        <thead>
+            <tr class="fx_fieldset_label">
+            <?for(var i = 0; i < _c.labels.length; i++) {
+                if (typeof _c.labels[i] != 'string') {
+                    continue;
+                }
+                ?><td><label><?=_c.labels[i]?></label></td><?
+            }?>
+            </tr>
+        </thead>
+        <tbody class="fx_fieldset_rows">
+        
+        </tbody>
+    </table>
+	<?if ( _c.without_add === undefined ) {?>
+		<a class="fx_fieldset_add"><?=fx_lang('Добавить')?></a>
+	<?}?>
+	<br style="clear:both;" />
+</div>
+
+<!--jquery-->
+var fs = html;
+
+if (!_c.values) {
+    _c.values = [];
+}
+$.each(_c.values, function(row, val) {
+    var val_num = 0;
+    var inputs = [];
+    var row_index = val._index || row;
+    $.each(_c.tpl, function(tpl_index, tpl_props) {
+        inputs.push(
+            $.extend(
+                {}, 
+                tpl_props, 
+                {
+                    name:_c.name+'['+row_index+']['+tpl_props.name+']',
+                    value:val[tpl_props.name]
+                }
+            )
+        );
+    });
+    $('.fx_fieldset_rows', html).append($t.jQuery('fieldset_row', inputs, {index:row}));
+});
+
+fs.on('click', '.fx_fieldset_remove', function() {
+	$(this).parents('.fx_fieldset_row').remove();	
+});
+$('.fx_fieldset_add', fs).click( function() {
+	var inputs = [];
+	var index = $('.fx_fieldset_row', fs).length > 0 ? $('.fx_fieldset_row', fs).last().get(0).className.match(/row_(\d+)/)[1]*1 + 1 : 1;
+	for (var i = 0; i < _c.tpl.length; i++) {
+		inputs.push( 
+			$.extend({}, _c.tpl[i], {
+				name:_c.name+'[new_'+index+']['+_c.tpl[i].name+']'
+			})
+		);
+	}
+	var new_row = $t.jQuery('fieldset_row', inputs, {index:index});
+	$('.fx_fieldset_rows', fs).append(new_row);
+});
+
+<!--[fieldset_row]-->
+<tr class="fx_fieldset_row row_<?=_o.index?>">
+	<?for (var i = 0; i< _c.length; i++) {
+        ?><td class="input_cell_<?=i?>"></td><?
+	}?>
+	<td>
+        <a class="fx_fieldset_remove"><?=fx_lang('Удалить')?></a>
+    </td>
+</tr>
+<!--jquery-->
+for (var i = 0; i< _c.length; i++) {
+	$('.input_cell_'+i, html).append( $t.jQuery('input', _c[i]) );
+}

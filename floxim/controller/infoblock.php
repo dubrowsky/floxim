@@ -79,12 +79,7 @@ class fx_controller_infoblock extends fx_controller {
 
         $tpl_params['infoblock'] = $infoblock;
         $output = $tpl->render($tpl_params);
-        
-        if (fx::env('is_admin')) {
-            if (!preg_match("~[^\s+]~", $output)) {
-                $output .= '<span class="fx_empty_infoblock">[empty: '.self::_get_infoblock_sign($infoblock).']</span>';
-            }
-        }
+        $is_subroot = $tpl->is_subroot;
         
         $wrapper = $infoblock->get_prop_inherited('visual.wrapper');
         
@@ -99,10 +94,11 @@ class fx_controller_infoblock extends fx_controller {
             $tpl_wrap->set_var('content', $output);
             $tpl_wrap->set_var('infoblock', $infoblock);
             $output = $tpl_wrap->render();
+            $is_subroot = $tpl_wrap->is_subroot;
         }
         
         if (fx::env('is_admin')) {
-            $output = $this->_add_infoblock_meta($output, $infoblock, $controller_meta);
+            $output = $this->_add_infoblock_meta($output, $infoblock, $controller_meta, $is_subroot);
         }
         $output = $controller->postprocess($output);
         return $output;
@@ -120,7 +116,7 @@ class fx_controller_infoblock extends fx_controller {
                 'template: <b>'.$infoblock->get_prop_inherited('visual.template').'</b>';
     }
     
-    protected function _add_infoblock_meta($html_result, $infoblock, $controller_meta = null) {
+    protected function _add_infoblock_meta($html_result, $infoblock, $controller_meta = null, $is_subroot = false) {
         $ib_info = array('id' => $infoblock['id']);
         if (($vis = $infoblock->get_visual()) && $vis['id']) {
             $ib_info['visual_id'] = $vis['id'];
@@ -153,23 +149,19 @@ class fx_controller_infoblock extends fx_controller {
                 }, 
                 $html_result
             );
-        } else {
-            $subroot_found = false;
+        } elseif ($is_subroot) {
             $html_result = preg_replace_callback(
-                "~^(\s*?)(<[^>]+fx:is_sub_root[^>]+>)~", 
-                function($matches) use (&$subroot_found, $meta) {
-                    $subroot_found = true;
+                "~^(\s*?)(<[^>]+?>)~", 
+                function($matches) use ($meta) {
                     $tag = fx_html_token::create_standalone($matches[2]);
                     $tag->add_meta($meta);
-                    $tag->remove_attribute('fx:is_sub_root');
                     return $matches[1].$tag->serialize();
                 }, 
                 $html_result
             );
-            if (!$subroot_found) {
-                $html_proc = new fx_template_html($html_result);
-                $html_result = $html_proc->add_meta($meta, true);
-            }
+        } else {
+            $html_proc = new fx_template_html($html_result);
+            $html_result = $html_proc->add_meta($meta, true);
         }
         return $html_result;
     }

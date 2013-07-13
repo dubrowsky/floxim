@@ -111,7 +111,7 @@ class fx_template_html {
                 $n->remove_attribute('fx:var');
             }
             if ( ($tpl_id = $n->get_attribute('fx:template'))) {
-                $tpl_macro_tag = '{template id="'.$tpl_id.'"';
+                $tpl_macro_tag = '{template subroot="true" id="'.$tpl_id.'"';
                 if ( ($tpl_for = $n->get_attribute('fx:of')) ) {
                     $tpl_macro_tag .= ' of="'.$tpl_for.'"';
                     $n->remove_attribute('fx:of');
@@ -124,15 +124,18 @@ class fx_template_html {
                 $n->parent->add_child_before(fx_html_token::create($tpl_macro_tag), $n);
                 $n->parent->add_child_after(fx_html_token::create('{/template}'), $n);
                 $n->remove_attribute('fx:template');
+                /*
                 if (
                     !in_array($tpl_id, array('item', 'active', 'inactive', 'separator')) &&
                     !preg_match('~^\$~', $tpl_id)
                     ) {
-                        $n->set_attribute('fx:is_sub_root', $tpl_id);
-                }
+                        $n->set_attribute('fx:is_tpl_root', $tpl_id);
+                } else {
+                    $n->set_attribute('fx:is_record_root', '1');
+                }*/
             }
             if ( ($each_id = $n->get_attribute('fx:each')) ) {
-                $each_macro_tag = '{each';
+                $each_macro_tag = '{each subroot="true"';
                 if (!empty($each_id)) {
                     $each_macro_tag .= ' select="'.$each_id.'"';
                 }
@@ -148,6 +151,7 @@ class fx_template_html {
                 $n->parent->add_child_before(fx_html_token::create($each_macro_tag), $n);
                 $n->parent->add_child_after(fx_html_token::create('{/each}'), $n);
                 $n->remove_attribute('fx:each');
+                //$n->set_attribute('fx:is_record_root', '1');
             }
             if ( ($area_id = $n->get_attribute('fx:area'))) {
                 $n->remove_attribute('fx:area');
@@ -653,8 +657,13 @@ class fx_html_tokenizer {
 	protected $stack = '';
 	
     public function parse($string) {
-		$this->position = 0;
-        $parts = preg_split("~(<[a-z0-9\/\?]+|>|<\?|\?>|[\{\}]|=[\'\"]?|[\'\"]|\s+)~", $string, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+        $this->position = 0;
+        $parts = preg_split(
+                "~(<[a-z0-9\/\?]+|>|<\?|\?>|[\{\}]|=[\'\"]?|[\'\"]|\s+)~", 
+                $string, 
+                -1, 
+                PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY
+        );
         foreach ($parts as $ch) {
 			foreach($this->rules as $rule) {
 				list($old_state, $r_char, $new_state, $callback, $r_first, $test_length) = $rule;

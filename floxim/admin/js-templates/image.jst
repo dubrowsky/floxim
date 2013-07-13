@@ -1,0 +1,42 @@
+<!--[input ? _c.type == 'image']-->
+<div class="image_field">
+    <div class="file_input" style="display:<?=(_c.path ? 'none' : 'block')?>">
+    	<input type="file" name="file" id="image_file" />
+	</div>
+    <input type="hidden" <?=$t.field_id_name(_c)?> class="real_value" value="<?=_c.value?>" />
+    <div class="preview">
+        <img <?=(_c.path ? 'src="'+_c.path+'"' : '')?> style="max-height:100px; max-width:100px; border:1px solid #CCC;" />
+        <a class="killer" style="display:<?=(_c.path ? 'block' : 'none')?>">&times;</a>
+    </div>
+</div>
+
+<!--jquery-->
+
+html.on('change', function(){
+    var field = $(this);
+    var res_inp = $('.real_value', field);
+    $.ajaxFileUpload({
+        url:'/floxim/index.php',
+        secureuri:false,
+        fileElementId:'image_file',
+        dataType: 'json',
+        data: { essence:'file', fx_admin:1, action:'upload_save' },
+        success: function ( data, status ) {
+            res_inp.val(data.id);
+            $('.preview img', field).attr('src', data.path).show();
+            $('.killer', field).show();
+            $('.file_input', field).hide();
+            res_inp.trigger('fx_change_file');
+        },
+        error: function (data, status, e) {
+        	console.log('error uploda', e);
+        }
+    });
+});
+html.on('click', '.killer', function() {
+   var field = $(this).closest('.image_field'); 
+   $('.preview img', field).hide();
+   $('.real_value', field).val('');
+   $('.file_input', field).show();
+   $(this).hide();
+});

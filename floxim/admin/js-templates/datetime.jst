@@ -1,0 +1,19 @@
+<!--[input ? _c.type == 'datetime']-->
+	<div class="date_field">
+		<input type="text" class="date_input" value="<?=_c.value.replace(/\s.*$/, '')?>" <?=$t.field_id_name(_c)?> />
+	</div>
+
+<!--jquery-->
+var inp  = $('input.date_input', html);
+var show_format = 'yy-mm-dd';
+var store_format = 'yy-mm-dd';
+inp.datepicker({
+		changeMonth: true,
+		changeYear: true,
+		firstDay:1,
+		dateFormat: show_format,
+		onSelect:function(dateText, datepicker) {
+			inp.focus();
+		}
+});
+inp.datepicker('widget').addClass('fx_overlay');

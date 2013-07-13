@@ -20,16 +20,11 @@ fx_breadcrumb.prototype.load = function (data) {
             		element.attr('href', href);
             	}
             }
-        
-            /*if ( item.url || item.absolute_hash ) {
-            if ( window.location.hash.replace('#admin.', '') != item.url ) {
-                element.addClass('fx_admin_underlined');
+            
+            if (is_last) {
+                element.addClass('last');
             }
-            element.click( function() {
-                window.location.hash = item.absolute_hash  ? item.absolute_hash  :( $fx.mode + '.' + item.url);
-                return false;
-            });
-        }*/
+            
             self.container.append(element);
             if (!is_last) {
                 self.container.append('<span>/</span>');

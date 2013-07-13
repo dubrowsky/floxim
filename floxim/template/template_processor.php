@@ -33,7 +33,11 @@ class fx_template_processor {
             $tpl_name = $tpl_name_parts[1].'_'.$tpl_name_parts[2];
         }
         $source = '{templates source="'.$source_dir.'"}';
-        foreach (glob($source_dir.'/*.tpl') as $file) {
+        $tpl_files = glob($source_dir.'/*.tpl');
+        if (!$tpl_files) {
+            $tpl_files = array();
+        }
+        foreach ($tpl_files as $file) {
             // Не включаем файлы шаблонов, начинающиеся на "_"
             if (preg_match("~/_[^/]+$~", $file)) {
                 continue;
@@ -243,6 +247,7 @@ class fx_template_processor {
             $token->set_prop('test', $tpl_id);
             $each_select = $tpl_id;
         }
+        $is_subroot = true;
         foreach ($children as $child_num => $child) {
             if (
                     $child->name == 'template' && 
@@ -255,6 +260,9 @@ class fx_template_processor {
                     ))
                 ) {
                 $subtemplates[$child->get_prop('id')] = $child;
+                if (!$child->get_prop('subroot')) {
+                    $is_subroot = false;
+                }
                 if (!$each_token) {
                     $each_token = new fx_template_token('each', 'open', array('select' => $each_select));
                     $token->set_child($each_token, $child_num);
@@ -265,6 +273,9 @@ class fx_template_processor {
         }
         if (count($subtemplates) == 0) {
             return;
+        }
+        if ($is_subroot){
+            $each_token->set_prop('subroot', true);
         }
         
         //echo fen_debug($subtemplates, $each_token);
@@ -460,7 +471,7 @@ class fx_template_processor {
                 }
                 $token->set_prop('type', $token_type);
             }
-            $code .= 'if (fx::is_admin() && !('.$var_tmp." instanceof fx_template_field)) {\n";
+            $code .= 'if ($_is_admin && !('.$var_tmp." instanceof fx_template_field)) {\n";
             $code .= "\t".$var_tmp." = new fx_template_field(".$var_tmp.", ";
             $code .= 'array("id" => "'.$var_id.'", ';
             $code .= '"var_type" => "visual", ';
@@ -477,47 +488,58 @@ class fx_template_processor {
             $code .= "}\n";
         }
         if ( ( $modifiers = $token->get_prop('modifiers') ) ) {
-        	//$code .= $var_tmp.' = $this->_apply_modifiers('.$var_tmp.', '.var_export($modifiers,1).");\n";
         	$code .= '$val = '.$var_tmp.' instanceof fx_template_field ? '.$var_tmp.'->get_value() : '.$var_tmp.";\n";
         	foreach ($modifiers as $mod) {
         		$callback = array_shift($mod);
-        		//$code .= 'if (is_callable("'.$callback.'")) {'."\n"; 		// test callable
-        			if ($callback == 'fx_default') {
-        				$code .= 'if ('.$var_tmp.' instanceof fx_template_field) {'."\n";
-        				$code .= 'switch ('.$var_tmp.'->get_meta("type")) {'."\n";
-        				$code .= "case 'datetime':\n";
-        				$code .= '$callback = "fx_template_field::format_date";'."\nbreak;\n";
-        				$code .= "case 'image':\n";
-        				$code .= '$callback = "fx_template_field::format_image";'."\nbreak;\n";
-        				$code .= "}\n";
-        				$code .= "}\n";
-        			} else {
-						if (!is_callable($callback)) {
-							continue;
-						}
-					}
-					$self_key = array_keys($mod, "self");
-					if (isset($self_key[0])) {
-						$mod[$self_key[0]] = '$val';
-					} else {
-						array_unshift($mod, '$val');
-					}
-					if ($callback == 'fx_default') {
-						$code .= '$val = call_user_func($callback, ';
-					} else {
-						$code .= '$val = '.$callback.'(';
-					}
-					$code .= join(", ", $mod);
-					$code .= ");\n";
-				//$code .= "}\n";											// end test callable
+                if ($callback == 'fx_default') {
+                    $code .= 'if ('.$var_tmp.' instanceof fx_template_field) {'."\n";
+                    $code .= 'switch ('.$var_tmp.'->get_meta("type")) {'."\n";
+                    $code .= "case 'datetime':\n";
+                    $code .= '$callback = "fx_template_field::format_date";'."\nbreak;\n";
+                    $code .= "case 'image':\n";
+                    $code .= '$callback = "fx_template_field::format_image";'."\nbreak;\n";
+                    $code .= "}\n";
+                    $code .= "}\n";
+                } else {
+                    if (!is_callable($callback)) {
+                        continue;
+                    }
+                }
+                $self_key = array_keys($mod, "self");
+                if (isset($self_key[0])) {
+                    $mod[$self_key[0]] = '$val';
+                } else {
+                    array_unshift($mod, '$val');
+                }
+                if ($callback == 'fx_default') {
+                    $code .= '$val = call_user_func($callback, ';
+                } else {
+                    $code .= '$val = '.$callback.'(';
+                }
+                $code .= join(", ", $mod);
+                $code .= ");\n";
         	}
         	$code .= 'if ('.$var_tmp.' instanceof fx_template_field) {'."\n";
-			$code .= $var_tmp.'->set_meta("display_value", $val)'.";\n";
+            $code .= $var_tmp.'->set_meta("display_value", $val)'.";\n";
 			$code .= "} else {\n";
 			$code .= $var_tmp.' = $val'.";\n";
 			$code .= "}\n";
         }
+        $restore_editable = false;
+        if ($token->get_prop('editable') == 'false') {
+            $restore_editable = true;
+            $code .= 'if ('.$var_tmp.' instanceof fx_template_field) {'."\n";
+            $code .= "\$stored_editable = ".$var_tmp."->get_meta('editable');\n";
+            $code .= $var_tmp."->set_meta('editable', false);\n";
+            $code .= "}\n";
+        }
         $code .= "\necho ".$var_tmp.";\n";
+        if ($restore_editable) {
+            $code .= "if (isset(\$stored_editable)) {\n";
+            $code .= $var_tmp."->set_meta('editable', \$stored_editable);\n";
+            $code .= "unset(\$stored_editable);\n";
+            $code .= "}\n";
+        }
         $code .= "unset(".$var_tmp.");\n";
         $code .= "\n?>";
         return $code;
@@ -576,26 +598,35 @@ class fx_template_processor {
         $code .= "if (is_array(".$arr_id.") || ".$arr_id." instanceof Traversable) {\n";
         $code .= $counter_id." = 0;\n";
         $code .= $item_alias."_total = count(".$arr_id.");\n";
-        $code .= "\$_is_admin = fx::is_admin();\n";
         $code .= "\nforeach (".$arr_id." as ".$item_key." => ".$item_alias.") {\n";
         $code .= $counter_id."++;\n";
         $code .= $item_alias."_is_first = ".$counter_id." === 1;\n";
         $code .= $item_alias."_is_last = ".$item_alias."_total == ".$counter_id.";\n";
-        $code .= $item_alias."_is_odd = ".$counter_id." % 2 != 0;\n";
+        $is_essence = $item_alias."_is_essence";
+        $code .=  $is_essence ." = ".$item_alias." instanceof fx_essence;\n";
+        //$code .= $item_alias."_is_odd = ".$counter_id." % 2 != 0;\n";
         if ($extract) {
-            $code .= "\tif (is_array(".$item_alias.")) {\n";
+            $code .= "\tif (".$is_essence.") {\n";
+            $code .= "\t\textract(".$item_alias."->get_fields_to_show());\n";
+            $code .= "} elseif (is_array(".$item_alias.")) {\n";
             $code .= "\t\textract(".$item_alias.");\n";
             $code .= "\t} elseif (is_object(".$item_alias.")) {\n";
-            $code .= "\t\textract(".$item_alias." instanceof fx_content ? ".$item_alias."->get_fields_to_show() : get_object_vars(".$item_alias."));\n";
+            $code .= "\t\textract(get_object_vars(".$item_alias."));\n";
             $code .= "\t}\n";
         }
-        $meta_test = "\tif (\$_is_admin && (".$item_alias." instanceof fx_essence) ) {\n";
+        $meta_test = "\tif (\$_is_admin && ".$is_essence." ) {\n";
         $code .= $meta_test;
         $code .= "\t\tob_start();\n";
         $code .= "\t}\n";
         $code .= $this->_token_to_code($token);
         $code .= $meta_test;
-        $code .= "\t\techo ".$item_alias."->add_template_record_meta(ob_get_clean());\n";
+        $code .= "\t\techo ".$item_alias."->add_template_record_meta(".
+                    "ob_get_clean(), ".
+                    $arr_id.", ".
+                    $counter_id." - 1, ".
+                    ($token->get_prop('subroot') ? 'true' : 'false').
+                ");\n";
+        //$code .= "echo ob_get_clean();\n";
         $code .= "\t}\n";
         if ($separator) {
             $code .= 'if (!'.$item_alias."_is_last) {\n";
@@ -713,7 +744,10 @@ class fx_template_processor {
         }
         $this->_template_stack []= $token->get_prop('id');
         $this->templates [$token->get_prop('id')]= array('id' => $token->get_prop('id'));
-        $code = $this->_token_to_code($token);
+        
+        $is_subroot = $token->get_prop('subroot') ? 'true' : 'false';
+        $code = "\t\$this->is_subroot = ".($is_subroot).";\n";
+        $code .= $this->_token_to_code($token);
         if ( !($name = $token->get_prop('name'))) {
             $name = $token->get_prop('id');
         }
@@ -756,6 +790,7 @@ class fx_template_processor {
             if (isset($template_dir)) {
                 echo $this->pad(2)."\$template_dir = '".$template_dir."';\n";
             }
+            echo "\$_is_admin = fx::is_admin();\n";
             echo $this->pad(2).'extract($this->data);'."\n";
             echo $this->pad(2).$tpl["code"];
             echo "\n".$this->pad()."}\n";

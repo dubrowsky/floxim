@@ -8,7 +8,7 @@ class fx_thumb {
         $doc_root = fx::config()->DOCUMENT_ROOT;
         $source_path = $doc_root.'/'.preg_replace('~^[\\/]~', '', $source_http_path);
         if (!file_exists($source_path)) {
-            die("NO FILE");
+            throw new Exception('File not found: '.$source_path);
         }
         $source_path = realpath($source_path);
         $this->source_path = $source_path;

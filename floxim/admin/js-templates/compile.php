@@ -9,7 +9,8 @@ class JSTX {
 				'context_name' => '_c',
 				'use_with' => true,
 				'js_xjst_var' => '$t',
-				'tpl_file_regexp' => "~^[^_].+?\.t\.js~"
+				'tpl_file_regexp' => "~^[^_].+?\.jst~"
+                //'tpl_file_regexp' => "~^form\.jst~"
 			), $options
 		);
 	}
@@ -74,8 +75,6 @@ class JSTX {
 		// удаляем однострочные комментарии
 		$tpls = preg_replace_callback(
 			"~//.*?([\n\r])~", function($matches) {
-				//echo "<pre>".htmlspecialchars(print_r($matches,1))."</pre>";
-				//die();
 				return $matches[1];
 			}, 
 			$tpls
@@ -89,9 +88,15 @@ class JSTX {
 			if (!is_array($tpl)) {
 				$tpl = array($tpl);
 			}
+            
+            if (preg_match("~\?~", $k)) {
+                $key_parts = explode("?", $k, 2);
+                $k = trim($key_parts[0]);
+                $tpl[0].= "\n<!--test-->\n".trim($key_parts[1]);
+            }
 			
-			foreach ($tpl as $tpl_key => $tpl_data) {
-				$tpl_parts =  $this->_groupSplit("<!--template-->".$tpl_data, "~<!--(.+?)-->~");
+			foreach ($tpl as $tpl_num => $tpl_data) {
+                $tpl_parts =  $this->_groupSplit("<!--template-->".$tpl_data, "~<!--(.+?)-->~");
 				foreach ($tpl_parts as $part_key => $part_data) {
 					if (preg_match("~^jquery~", $part_key)) {
 						$part_data = preg_replace("~\s+~", ' ', preg_replace("~[\r\n]~", ' ', $part_data));
@@ -105,12 +110,16 @@ class JSTX {
 							$tpl_parts[$part_key] = $part_data;
 						}
 					}
-				}
-				$tpl[$tpl_key] = $tpl_parts;
+                }
+                $tpl[$tpl_num] = $tpl_parts;
 			}
-			$templates[$k] = $tpl;
+            if (!isset($templates[$k])) {
+                $templates[$k] = $tpl;
+            } else {
+                $templates[$k] = array_merge($templates[$k], $tpl);
+            }
 		}
-		
+        
 		foreach ($delegated_jquery as $tpl_name => $jquery_code) {
 			if (!isset($templates[$tpl_name])) {
 				continue;
@@ -125,19 +134,21 @@ class JSTX {
 		
 		ksort($templates);
 		
+        echo "(function() {\nvar f;\n";
 		foreach ($templates as $tpl_name => $tpl_vars) {
-			
+			echo "// ".$tpl_name."\n";
 			foreach ($tpl_vars as $tpl) {
-				echo "(function() {var f = function(_c, _o) {".$this->compileTemplate($tpl['template'])."};";
+				echo "f = function(_c, _o) {".$this->compileTemplate($tpl['template'])."};\n";
 				if (isset($tpl['jquery'])) {
-					echo "f.jquery = function(html, _c, _o) {".$tpl['jquery']."};";
+					echo "f.jquery = function(html, _c, _o) {".$tpl['jquery']."};\n";
 				}
 				if (isset($tpl['test'])) {
-					echo "f._test = function(_c, _o) {return ".$tpl['test']."};";
+					echo "f._test = function(_c, _o) {return ".$tpl['test']."};\n";
 				}
-				echo "\$t.add('".$tpl_name."', f);})();\n";
+				echo "\$t.add('".$tpl_name."', f);\n\n";
 			}
 		}
+        echo "})();\n";
 	}
 	
 	public function parseDir($dir = '.', $regexp = false) {

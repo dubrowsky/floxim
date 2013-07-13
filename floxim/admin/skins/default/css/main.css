@@ -33,7 +33,7 @@ input.ui-button {
 }
 
 .ui-dialog .ui-dialog-title {
-    margin-top: 2px;
+    margin-top: 7px;
     color: #AAAFB0;
     font-weight: normal;
 }
@@ -542,9 +542,13 @@ input.ui-button {
     margin: 0 5px;
 }
 
+#fx_admin_breadcrumb a.last, #fx_admin_breadcrumb span.last {
+    color:#000;
+}
+
 /* Кнопки */
 .fx_admin_button {
-    background: url(../images/images.png) no-repeat;
+    background: url('../images/images.png') no-repeat;
     float: left;
     cursor: pointer;
     margin: 0 14px 0 0;
@@ -1343,6 +1347,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
     margin-right: 5px;
 }
 
+/*
 .fx_list_buttons {
     visibility: hidden;
 }
@@ -1351,6 +1356,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
 .fx_admin_selected .fx_list_buttons {
     visibility: visible;
 }
+*/
 
 /* JSTREE
 часть CSS-когда вшита в JS библиотеки
@@ -1493,6 +1499,11 @@ li ul .fx_tree_label .fx_tree_title {
     outline-offset: -1px;
 }
 
+.fx_no_hilight {
+    opacity:0.3;
+}
+
+/*
 .fx_hilight .fx_hilight {
     outline-offset: -2px;
 }
@@ -1500,6 +1511,7 @@ li ul .fx_tree_label .fx_tree_title {
 .fx_hilight .fx_hilight .fx_hilight {
     outline-offset: -3px;
 }
+*/
 
 .fx_hilight_empty {
     min-width: 15px;
@@ -1535,9 +1547,9 @@ img.fx_hilight {
 
 .fx_area_target {
     display: block !important;
-    min-height: 100px;
+    min-height: 30px;
     min-width: 100px;
-    background: #FAA;
+    background: #DFD;
 }
 
 body div.fx_overlay, body div.fx_overlay table {
@@ -1546,6 +1558,10 @@ body div.fx_overlay, body div.fx_overlay table {
     line-height: normal;
     color: #000;
     border-radius: 0;
+}
+
+.fx_fieldset .livesearch {
+    min-width: 200px;
 }
 
 .livesearch_items, .livesearch_items li {
@@ -1799,6 +1815,42 @@ body div.fx_overlay, body div.fx_overlay table {
 .fx_admin_form .fx_fieldset input[type="text"], 
 .fx_admin_form .fx_fieldset select,
 .fx_admin_form .fx_fieldset textarea {
-    width:100%;
+    width:auto;
     margin:0;
+}
+
+#fx_admin_control .redactor_toolbar {
+    background: #FFF !important;
+    border:none !important;
+    top:2px;
+    left:10px;
+}
+
+#fx_admin_control .redactor_toolbar .redactor_separator {
+    
+}
+
+.fx_infoblock_placeholder {
+    min-height: 5px;
+    min-width: 50px;
+    background: #FFF;
+    border:3px solid #000;
+}
+
+.fx_essence_placeholder {
+    min-height: 5px;
+    min-width: 50px;
+    background: #FFF;
+    border:3px solid #000;
+}
+
+.fx_essence_placeholder_inline {
+    display:inline-block;
+}
+
+.fx_infoblock.ui-sortable-helper {
+    max-width:500px;
+    max-height:150px;
+    overflow:hidden;
+    opacity:0.5;
 }

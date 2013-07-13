@@ -1,0 +1,33 @@
+<!--[input ? _c.type == 'livesearch']-->
+<div class="livesearch" 
+    data-params="<?=$t.json_att(_c.params)?>" 
+    data-prototype_name="<?=_c.name?>[prototype][<?=_c.name_postfix?>]"
+    data-is_multiple="<?=(_c.is_multiple ? 'Y' : 'N')?>">
+    <?
+    if (_c.is_multiple) {
+        $.each(_c.value, function(vi, vv) {
+            ?><input class="preset_value" type="hidden" 
+                name="<?=_c.name?>[<?=vv.value_id?>][<?=_c.name_postfix?>]"
+                value="<?=vv.id?>"
+                data-name="<?=vv.name?>" /><?
+        });
+    } else {
+        ?><input class="preset_value" type="hidden" <?=$t.field_id_name(_c)?>
+                <?if (_c.value) {?>
+                value="<?=_c.value.id?>" 
+                data-name="<?=_c.value.name?>" 
+                <?}?>/><?
+                    
+    }
+    ?>
+    <ul class="livesearch_items">
+        <li class="livesearch_input">
+            <input type="text" name="livesearch_input" style="width:3px;" />
+        </li>
+    </ul>
+    <div class="livesearch_results">
+    </div>
+</div>
+
+<!--jquery-->
+html.data('livesearch', new fx_livesearch(html));

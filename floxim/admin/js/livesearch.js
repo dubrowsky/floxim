@@ -2,13 +2,12 @@ function fx_livesearch(node) {
 	this.n = $(node);
 	var n = this.n;
 	n.data('livesearch', this);
-	
 	var data_params = n.data('params');
 	if (data_params) {
-		this.datatype = data_params.datatype;
+		this.datatype = data_params.content_type;
 		this.conditions = data_params.conditions;
 	} else {
-		this.datatype = n.data('datatype');
+		this.datatype = n.data('content_type');
 	}
 	this.inputNameTpl = n.data('prototype_name');
 	
@@ -31,30 +30,22 @@ function fx_livesearch(node) {
 		return this.inputName;
 	}
 	
-	this.getUrl = function(ids) {
-		var params = {
-			datatype:this.datatype,
-			content_type:'json',
-			with_meta:"Y"
-		}
-		if (ids) {
-			params.ids = ids;
-		} else {
-			params.term ='%s';
-			var vals = this.getValues();
-			if(vals.length >0) {
-				params.skip_ids = vals;
-			}
-		}
-        return  {
+	this.getUrl = function() {
+        var params = {
             url: '/floxim/index.php',
             data:{
                 essence:'content',
                 action:'livesearch',
+                content_type:this.datatype,
                 term:'%s',
                 fx_admin:'true'
             }
+        };
+        var vals = this.getValues();
+        if (vals.length > 0) {
+            params.data.skip_ids = vals;
         }
+        return params;
 	};
 	
 	this.getValues = function() {
@@ -157,12 +148,13 @@ function fx_livesearch(node) {
 		var res_value = id;
 		if (!id || (id*1 == 0) ) {
 			id = false;
-			input_name = this.n.closest('form').attr('id')+'_'+(input_name.replace(/[\[\]]+/g, '_')+'_title').replace(/__/, '_');
+			//input_name = this.n.closest('form').attr('id')+'_'+(input_name.replace(/[\[\]]+/g, '_')+'_title').replace(/__/, '_');
+            input_name = input_name+'[title]';
 			res_value = name;
 		}
 		
 		var node = $('<li class="livesearch_item'+ (!id ? ' livesearch_item_empty' : '')+'">'+
-			(this.isMultiple || true ? '<span class="killer">&times;</span>' : '')+
+			(this.isMultiple ? '<span class="killer">&times;</span>' : '')+
 			'<input type="hidden" name="'+input_name+'" value="'+res_value+'" />'+
 			'<span class="title">'+name+'</span>'+
 			'</li>');
@@ -262,7 +254,12 @@ function fx_livesearch(node) {
 			var v = $(this).val();
 			if (e.which == 8 && v == '') {
 				n.find('.killer').last().click();
+                livesearch.Suggest.hideBox();
 			}
+            if (e.which == 27 && !livesearch.isMultiple) {
+                $(this).trigger('blur');
+                return false;
+            }
 			if (e.which == 90 && e.ctrlKey && livesearch.lastRemovedValue) {
 				livesearch.loadValues(livesearch.lastRemovedValue);
 				livesearch.lastRemovedValue = null;
@@ -386,8 +383,8 @@ function fx_suggest (params) {
 				// anything
 				default:
 					var term = Suggest.getTerm();
-					if (term != '') {
-						Suggest.Search(Suggest.getTerm());
+					if (term != '' || e.which == 8) {
+						Suggest.Search(term);
 					}
 					break;
 			}
@@ -396,8 +393,11 @@ function fx_suggest (params) {
 			switch (e.which) {
                 // escape
 				case 27:
-					Suggest.hideBox();
-					return false;
+                    if (Suggest.boxVisible) {
+                        Suggest.hideBox();
+                        return false;
+                    }
+                    break;
 				// enter
 				case 13:
 					var csi = Suggest.box.find('.search_item_active');
@@ -463,19 +463,7 @@ function fx_suggest (params) {
 	
 	this.getResults = function(term) {
         var request_params = {
-            dataType:Suggest.resultType,
-            success:function(res) {
-                // запрос успел измениться, пока грузили саджесты
-                if (term != Suggest.getTerm()) {
-                    return;
-                }
-                Suggest.showBox();
-                if (Suggest.resultType != 'html') {
-                    res = Suggest.renderResults(res);
-                }
-                Suggest.box.html(res);
-                fx_suggest.cache[url] = res;
-            }
+            dataType:Suggest.resultType
         };
         var url, url_cache_key;
         if (typeof this.url == 'string') {
@@ -498,11 +486,36 @@ function fx_suggest (params) {
             request_params.data = data;
         }
         
-		if (fx_suggest.cache[url_cache_key]) {
-			Suggest.showBox();
-			Suggest.box.html(fx_suggest.cache[url]);
+		if (typeof fx_suggest.cache[url_cache_key] != 'undefined') {
+            var res = fx_suggest.cache[url_cache_key];
+            if (res) {
+                Suggest.showBox();
+                Suggest.box.html(res);
+            } else {
+                Suggest.hideBox(false);
+            }
 			return;
 		}
+        
+        
+        request_params.success = function(res) {
+            // запрос успел измениться, пока грузили саджесты
+            if (term != Suggest.getTerm()) {
+                return;
+            }
+            //Suggest.showBox();
+            if (Suggest.resultType != 'html') {
+                res = Suggest.renderResults(res);
+            }
+            if (res) {
+                Suggest.showBox();
+                Suggest.box.html(res);
+            } else {
+                Suggest.hideBox(false);
+            }
+            fx_suggest.cache[url_cache_key] = res;
+        }
+        
 		$.ajax(request_params);
 	}
 	
@@ -542,11 +555,16 @@ function fx_suggest (params) {
 	
 	
 	
-	this.hideBox = function() {
+	this.hideBox = function(clear_input) {
+        if (typeof clear_input == 'undefined') {
+            clear_input = true;
+        }
         this.boxVisible = false;
 		this.box.hide();
 		this.lastTerm = null;
-		this.input.val('');
+        if (clear_input) {
+            this.input.val('');
+        }
 		$('html').off('mousedown.suggest_clickout');
 	}
 	

@@ -214,3 +214,36 @@ fx_buttons.prototype.show_pulldown = function ( button, data ) {
 fx_buttons.prototype.hide_pulldown = function () {
 	$('.fx_admin_pull_down_menu').remove();
 }
+
+/*
+ * Обработчик клика на кнопках в формах - списки, отдельный инпут
+ */
+fx_buttons.prototype.form_button_click = function() {
+	var data = $t.inline_data($(this));
+	if ( data.postdata || data.post ) {
+		var postdata = data.postdata || data.post;
+		if (data.send_form) {
+			var form = $(this).closest('form');
+			var formdata = {};
+			$.each(form.serializeArray(), function(num, field) {
+				formdata[field.name] = field.value;
+			});
+			postdata = $.extend(formdata, postdata);
+		}
+		$fx.post(postdata);
+		return false;
+	}
+	if (data.func) {
+		fx_call_user_func(json.func);
+	}
+	if (data.dialog) {
+		$fx.post(data.dialog, function(res){
+			 $fx_dialog.open_dialog(res);
+		});
+		return false;
+	}
+	if (data.url) {
+		document.location.hash = $fx.mode + '.' + data.url.replace(/^#/, '');
+	}
+	return false;
+}

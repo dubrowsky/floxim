@@ -1,5 +1,5 @@
 $(function(){
-    $('.gallery .switcher A').on('click', function(){
+    $('html').on('click', '.gallery .switcher A', function(e){
         var $this = $(this);
         var $li = $this.closest('LI');
 
@@ -11,11 +11,10 @@ $(function(){
             $slides.filter(':visible').stop().fadeOut();
             $slides.eq(index).fadeIn();
         }
-
-        return false;
+        e.preventDefault();
     });
 
-    $('.gallery .btn-prev, .gallery .btn-next').on('click', function(){
+    $('html').on('click', '.gallery .btn-prev, .gallery .btn-next', function(){
         var $this = $(this);
         var $dots = $('.gallery .switcher LI');
         var index = $dots.filter('.active').index('.gallery .switcher LI');
@@ -31,8 +30,7 @@ $(function(){
                 index = 0;
             }
         }
-        console.log('index', index, this.className);
-        $dots.eq(index).find('A').triggerHandler('click');
+        $dots.eq(index).find('A').trigger('click');
 
         return false;
     });
@@ -61,7 +59,7 @@ $(function(){
         return false;
     });
     
-    $('.img-slider').on('click', '.preview', function() {
+    $('html').on('click', '.img-slider .preview', function() {
         if (!$(this).hasClass('active')) {
             var previews = $(this).closest('.img-slider').find('.preview');
             var index = previews.index(this);
@@ -69,6 +67,6 @@ $(function(){
             images.filter(':visible').stop().fadeOut();
             images.eq(index).fadeIn();
         }
-        return false;
+        //return false;
     });
 });

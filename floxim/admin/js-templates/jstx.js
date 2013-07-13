@@ -35,23 +35,19 @@ var $t = {
 			var old_func = c[func_name]; // то, что уже сидит в form.fields.text
 			
 			if ( c_type != 'function' ) { // объект-заглушка
-				for (var i in old_func) { // переносим свойства в новую функцию
+                for (var i in old_func) { // переносим свойства в новую функцию
 					tpl[i] = old_func[i];
 					delete old_func[i];
 				}
 				// и устанавливаем новую ф-цию на место заглушки
 				c[func_name] = tpl;
 			} else if ( typeof old_func._variants != 'undefined') { // функция-с-вариантами, просто добавляем новую в качестве варианта
-				old_func._variants.push( tpl );
+                old_func._variants.push( tpl );
 				old_func._variants._is_sorted = false;
 			} else { // функция-без-вариантов, ее надо заменить	
-				var var_func = function(obj, options) {
+                var var_func = function(obj, options) {
 					var res_func = $t.findVariant( arguments.callee._variants, obj, options );
 					return res_func (obj, options);
-				}
-				for (var i in old_func) { // переносим свойства в новую функцию
-					var_func[i] = old_func[i];
-					delete old_func[i];
 				}
 				var_func._variants = [old_func, tpl];
 				c[func_name] = var_func;
@@ -60,6 +56,9 @@ var $t = {
 	},
 	
 	sortVariants: 	function(vars) {
+        if (!vars) {
+            
+        }
 		if (typeof vars._is_sorted != 'undefined' && vars._is_sorted) {
 			return;
 		}
@@ -102,9 +101,20 @@ var $t = {
 		}
 		return c;
 	},
+    findFor: function(template_name, obj, options) {
+        var tpl = $t.find(template_name);
+        if (typeof tpl._variants !== 'undefined') {
+            tpl = $t.findVariant(tpl._variants, obj, options);
+        }
+        return tpl;
+    },
 	jQuery: function(name, obj, options) {
-		var tpl = $t.find(name);
-        var res = tpl(obj,options).replace(/^\s+|\s+$/, '');
+		var tpl = $t.findFor(name, obj, options);
+        var res = tpl(obj,options);
+        if (!res) {
+            return '';
+        }
+        res = res.replace(/^\s+|\s+$/, '');
         var html = $(res);
 		if (typeof tpl.jquery == 'function') {
 			tpl.jquery(html, obj, options);
@@ -127,6 +137,14 @@ var $t = {
     	var res = $t.htmlEntities(s);
     	res = res.replace(/\"/g, '&quot;');
     	return res;
+    },
+    json_att: function(obj) {
+        if (!obj) {
+            return '';
+        }
+        var str = (typeof obj == 'string') ? obj : $.toJSON(obj);
+        str = this.clear(str);
+        return str;
     },
     inline_data: function(n) {
     	var c_data = n.data('inline_data');
