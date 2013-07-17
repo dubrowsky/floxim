@@ -51,6 +51,7 @@ name="<?=_c.name?>" id="<?=_c.name?>"
 <!--[input]-->
 	<input 
 		type="<?=_c.password ? 'password' : 'text'?>" 
+        class="fx_input" 
 		<?=$t.field_id_name(_c)?> 
 		value="<?=$t.clear(_c.value || '')?>" />
 
@@ -64,9 +65,8 @@ var c_val = _c.value || '';
 c_val = $t.clear(c_val);
 ?>
 <textarea 
-	style="height:190px; margin-bottom:40px;"
 	<?=$t.field_id_name(_c)?>
-	class="<?=_c.wysiwyg ? 'fx_wysiwyg' : ''?> <?=_c.code ? 'fx_code fx_code_'+_c.code : ''?>"><?=c_val?></textarea>
+	class="<?=_c.wysiwyg ? 'fx_wysiwyg' : 'fx_input'?> <?=_c.code ? 'fx_code fx_code_'+_c.code : ''?>"><?=c_val?></textarea>
 
 <!--jquery-->
 html.find('textarea.fx_code').each( function(){
@@ -121,7 +121,7 @@ if (_c.extendable) {
 	<select 
 		id="<?=_c.id? _c.id : _c.name?>"
 		name="<?=_c.name+(_c.multiple? '[]' : '')?>"
-		class="<?=_c.inline ? 'inline' : ''?> <?=_c.extendable ? ' extendable' : ''?>"
+		class="fx_input<?=_c.inline ? ' inline' : ''?> <?=_c.extendable ? ' extendable' : ''?>"
 		<?=_c.multiple ? ' multiple="multiple"' : ''?>>
 		<?for (var vk in _c.values) {
             var val = _c.values[vk], opt_name = null;

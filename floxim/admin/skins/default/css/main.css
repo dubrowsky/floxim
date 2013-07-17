@@ -202,12 +202,19 @@ input.ui-button {
 }
 
 #fx_admin_panel_logo {
-    background: url(../images/images.png);
+    background: url('../images/images.png');
     width: 24px;
     height: 17px;
     position: absolute;
     left: 10px;
     top: 9px;
+}
+
+#fx_admin_panel_logo .fx_preloader {
+    width:24px;
+    height:17px;
+    background-image:url('../images/loader-arrow.gif');
+    visibility: hidden;
 }
 
 #fx_admin_main_menu {
@@ -731,7 +738,7 @@ input.ui-button {
     color: #333;
 }
 
-.fx_admin_form *, .fx_admin_form .ui-widget input, .fx_admin_form .ui-widget select, .fx_admin_form .ui-widget textarea, .fx_admin_form .ui-widget button {
+.fx_admin_form, .fx_admin_form .ui-widget input, .fx_admin_form .ui-widget select.fx_input, .fx_admin_form .ui-widget textarea.fx_input, .fx_admin_form .ui-widget button {
     font-size: 13px;
     font-family: Tahoma, sans-serif;
 }
@@ -745,26 +752,22 @@ input.ui-button {
     color: #333;
 }
 
-.fx_admin_form input, .fx_admin_form select, .fx_admin_form textarea {
+.fx_admin_form input.fx_input, .fx_admin_form select.fx_input, .fx_admin_form textarea.fx_input {
     display: block;
     margin: 7px 0 0;
 }
 
-.fx_admin_form input[type=text], .fx_admin_form select {
+.fx_admin_form input[type=text].fx_input, .fx_admin_form select.fx_input {
     width: 50%;
 }
 
-.fx_admin_form select {
+.fx_admin_form select.fx_input {
     margin-bottom: 12px;
     padding: 0;
 }
 
-.fx_admin_form textarea {
+.fx_admin_form textarea.fx_input {
     width: 95%;
-}
-
-.fx_admin_form .el-rte .toolbar .panel-format li label {
-    margin: 0 !important;
 }
 
 .fx_admin_form #colorpickerHolder2 input {
@@ -778,7 +781,7 @@ input.ui-button {
     margin: 0 5px 0 0;
 }
 
-.fx_admin_form input, .fx_admin_form textarea {
+.fx_admin_form input.fx_input, .fx_admin_form textarea.fx_input {
     margin-bottom: 10px;
     padding: .4em;
 }
@@ -1810,6 +1813,10 @@ body div.fx_overlay, body div.fx_overlay table {
     min-height: 100%;
     height: 100%;
     position: relative;
+}
+
+.fx_admin_form .fx_fieldset .fx_fieldset_label label {
+    font-size:12px;
 }
 
 .fx_admin_form .fx_fieldset input[type="text"], 

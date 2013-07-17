@@ -114,7 +114,7 @@ a.dashed:hover {
 	color:blue;
 }
 .pwd_create {
-	padding:20pt 0;
+	padding-bottom:20pt;
 }
 #pwd_gen {
 	color:blue;

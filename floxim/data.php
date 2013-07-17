@@ -53,6 +53,11 @@ class fx_data {
     }
     
     public function order($field, $direction = 'ASC') {
+        // clear order by passing null
+        if ($field === null) {
+            $this->order = array();
+            return $this;
+        }
         if (!preg_match("~asc|desc~i", $direction)) {
             $direction = 'ASC';
         }

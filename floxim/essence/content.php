@@ -285,7 +285,6 @@ class fx_content extends fx_essence {
                     }
                     foreach ($val->linker_map as $linker_obj) {
                         $linker_obj[$related_field_name] = $this['id'];
-                        //dev_log($related_field_name, $this['id'], $linker_obj);
                         $linker_obj->save();
                     }
                     
@@ -293,57 +292,6 @@ class fx_content extends fx_essence {
                     $old_linkers->apply(function ($i) {
                         $i->delete();
                     });
-                    //dev_log('dropped linkers', $old_linkers);
-                    /*
-                    foreach ($val as $rel_obj_index => $rel_obj) {
-                        // $rel_obj - тэг например
-                        // $end_field - конечное поле мультисвязи, tag например
-                        // $linker_id - id тагпоста
-                        
-                        // если у конечного объекта нет id (новый) - сохраняем
-                        if (!$rel_obj['id']) {
-                            //$rel_obj->save();
-                        }
-                        
-                        // находим id линкера для текущего значения
-                        $found_linkers = array_keys($old_linker_map, $rel_obj['id']);
-                        if (count($found_linkers) > 0) {
-                            $linker_id = $found_linkers[0];
-                            unset($old_linker_map[$linker_id]);
-                            $linker_obj  = fx::data($related_data_type, $linker_id);
-                        } else {
-                            // выясняем, к какому инфоблоку прикреплять новую сущность-связь
-                            $linker_infoblock_id = $this->get_link_field_infoblock($link_field['id']);
-                            $linker_params = array(
-                                $relation[2] => $this['id'],
-                                $end_field => $rel_obj['id'],
-                                'infoblock_id' => $linker_infoblock_id,
-                                'site_id' => $this['site_id']
-                            );
-                            if ($related_is_child) {
-                                $linker_params['parent_id'] = $this['id'];
-                            }
-                            $linker_obj = fx::data($related_data_type)->create($linker_params);
-                        }
-                        $priority++;
-                        if ($related_is_child) {
-                            $linker_obj['priority'] = $priority;
-                        }
-                        //$linker_obj->save();
-                        $actual_linker_ids []= $linker_obj['id'];
-                    }
-                    // теперь удаляем старые связи
-                    // если были
-                    if (!isset($this->modified_data[$link_field['name']]->linker_map)) {
-                        break;
-                    }
-                    
-                    foreach ($this->modified_data[$link_field['name']]->linker_map as $old_linker_id => $old_rel_id) {
-                        if (!in_array($old_linker_id, $actual_linker_ids)) {
-                            $old_linker = fx::data($related_data_type, $old_linker_id);
-                            $old_linker->delete();
-                        }
-                    }*/
                     break;
             }
         }

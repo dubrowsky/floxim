@@ -1,10 +1,4 @@
 <?php
-
-/**
- * Description of router_admin
- *
- * @author Nikita Dezzpil Orlov <n.dezz.orlov@gmail.com>
- */
 class fx_router_admin extends fx_router {
     
     public function route($url = null, $context = null) {
@@ -13,7 +7,6 @@ class fx_router_admin extends fx_router {
         if (!preg_match($regexp, $url)) {
             return null;
         }
-        //$fx_core->modules->load_env(); ???
         $input = fx::input()->make_input();
         
         if (empty($_REQUEST))

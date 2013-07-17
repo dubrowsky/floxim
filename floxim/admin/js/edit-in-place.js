@@ -174,7 +174,7 @@ fx_edit_in_place.prototype.save = function() {
 	if (vars.length == 0) {
 		return this;
 	}
-    
+    $fx.front.disable_infoblock(node.closest('.fx_infoblock'));
     $fx.post({
 		essence:'infoblock',
 		action:'save_var',

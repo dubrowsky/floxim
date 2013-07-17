@@ -2,11 +2,6 @@
 class fx_router_front extends fx_router {
 
     public function route($url = null, $context = null) {
-        /*
-        if (!preg_match("~^/~", $url)) {
-            $url = '/'.$url;
-        }*/
-        
         $url_variants = array($url);
         
         $url_with_no_params = preg_replace("~\?.+$~", '', $url);

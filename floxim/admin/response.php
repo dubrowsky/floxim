@@ -11,6 +11,7 @@ class fx_admin_response {
     
     protected $buttons = array(), $buttons_pulldown = array(), $fields = array(), $tabs = array(), $form_buttons = array();
     protected $essence;
+    protected $props = array();
     
     protected $status, $status_text, $error_fields, $reload;
     
@@ -81,6 +82,10 @@ class fx_admin_response {
             if ( $this->error_fields ) {
                 $result['fields'] = $this->error_fields;
             }
+        }
+        
+        if ($this->props) {
+            $result['props'] = $this->props;
         }
 
         return $result;
@@ -179,6 +184,10 @@ class fx_admin_response {
     
     public function set_reload($reload = true) {
         $this->reload = $reload;
+    }
+    
+    public function set_prop($prop, $value) {
+        $this->props[$prop] = $value;
     }
     
 

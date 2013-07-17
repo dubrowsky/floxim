@@ -5,7 +5,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta fx:layout="inner" content="" />
     <meta fx:layout="index" content="index" />
-    {css}main.css{/css}
+    {css}
+        main.css
+        color.css
+    {/css}
 </head>
 <body>
 <div id="main">

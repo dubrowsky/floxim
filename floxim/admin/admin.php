@@ -177,7 +177,7 @@ class fx_controller_admin extends fx_controller {
         if (fx::env('is_admin')) {
             $panel = '
             <div id="fx_admin_panel">
-                <div id="fx_admin_panel_logo"></div>
+                <div id="fx_admin_panel_logo"><div class="fx_preloader"></div></div>
                 <div id="fx_admin_main_menu"></div>
                 <div id="fx_admin_additional_menu"></div>
                 <div id="fx_admin_clear"></div>

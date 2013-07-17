@@ -238,6 +238,7 @@ class fx_template_processor {
     
     protected function _template_to_each(fx_template_token $token) {
         $children = $token->get_children();
+        dev_log($this->_controller_name, $token);
         $subtemplates = array();
         $each_token = false;
         $tpl_id = $token->get_prop('id');
@@ -246,6 +247,10 @@ class fx_template_processor {
             $token->name = 'if';
             $token->set_prop('test', $tpl_id);
             $each_select = $tpl_id;
+        }
+        if (count($children) == 1 && $children[0]->name == 'if') {
+            $token = $children[0];
+            $children = $token->get_children();
         }
         $is_subroot = true;
         foreach ($children as $child_num => $child) {
@@ -264,7 +269,11 @@ class fx_template_processor {
                     $is_subroot = false;
                 }
                 if (!$each_token) {
-                    $each_token = new fx_template_token('each', 'open', array('select' => $each_select));
+                    $each_token = new fx_template_token(
+                            'each', 
+                            'open', 
+                            array('select' => $each_select)
+                    );
                     $token->set_child($each_token, $child_num);
                 } else {
                     $token->set_child(NULL, $child_num);

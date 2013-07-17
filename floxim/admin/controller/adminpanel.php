@@ -8,7 +8,7 @@ class fx_controller_admin_adminpanel extends fx_controller_admin {
     static public function panel_html() {
         return '
             <div id="fx_admin_panel" class="fx_overlay">
-                <div id="fx_admin_panel_logo"></div>
+                <div id="fx_admin_panel_logo"><div class="fx_preloader"></div></div>
                 <div id="fx_admin_main_menu"></div>
                 <div id="fx_admin_page_modes"></div>
                 <div id="fx_admin_more_menu"></div>

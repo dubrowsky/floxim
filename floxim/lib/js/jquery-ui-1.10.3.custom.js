@@ -9069,7 +9069,7 @@ $.widget( "ui.dialog", {
 	},
 
 	_keepFocus: function( event ) {
-		function checkFocus() {
+        function checkFocus() {
 			var activeElement = this.document[0].activeElement,
 				isActive = this.uiDialog[0] === activeElement ||
 					$.contains( this.uiDialog[0], activeElement );

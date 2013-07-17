@@ -114,16 +114,24 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
     	} else {
             // Создаем новый, тип и ID контроллера получаем с предыдущего шага
             list($controller, $action) = explode(".", $input['controller']);
+            $site_id = fx::data('content_page', $input['page_id'])->get('site_id');
             $infoblock = fx::data("infoblock")->create(array(
                 'name' => $this->_get_controller_name($input['controller']),
                 'controller' => $controller,
                 'action' => $action,
                 'page_id' => $input['page_id'],
-                'site_id' => fx::data('content_page', $input['page_id'])->get('site_id')
+                'site_id' => $site_id
             ));
+            $last_visual = fx::data('infoblock_visual')->
+                    where('area', $input['area'])->
+                    order(null)->
+                    order('priority', 'desc')->
+                    one();
+            $priority = $last_visual ? $last_visual['priority'] + 1 : 0;
             $i2l = fx::data('infoblock_visual')->create(array(
                 'area' => $input['area'],
-                'layout_id' => fx::env('layout')
+                'layout_id' => fx::env('layout'),
+                'priority' => $priority
             ));
             $infoblock->set_visual($i2l);
     	}
@@ -241,6 +249,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             $i2l['infoblock_id'] = $infoblock['id'];
             $i2l->save();
             $this->response->set_status_ok();
+            $this->response->set_prop('infoblock_id', $infoblock['id']);
             return;
         }
     	

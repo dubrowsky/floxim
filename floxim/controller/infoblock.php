@@ -124,7 +124,7 @@ class fx_controller_infoblock extends fx_controller {
         
         $meta = array(
             'data-fx_infoblock' => htmlentities(json_encode($ib_info)),
-            'class' => 'fx_infoblock'
+            'class' => 'fx_infoblock fx_infoblock_'.$infoblock['id']
         );
         
         // определяем scope/режим правки инфоблока

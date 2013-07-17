@@ -30,10 +30,19 @@ fx_buttons.prototype.bind = function(button_key, callback) {
     var b = $('.fx_admin_button_'+button_key);
     b.show();
     b.data('has_callback', true);
+    b.unbind('click');
     b.click(function() {
     		callback();
     		return false;
     });
+}
+
+fx_buttons.prototype.is_active = function(button_key) {
+    return $('.fx_admin_button_'+button_key).data('has_callback');
+}
+
+fx_buttons.prototype.trigger = function(button_key) {
+    $('.fx_admin_button_'+button_key).trigger('click');
 }
 
 fx_buttons.prototype.unbind = function(button_key, callback) {

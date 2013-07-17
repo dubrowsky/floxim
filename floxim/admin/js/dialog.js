@@ -38,7 +38,7 @@
             $fx_dialog.settings.close = $fx_dialog.close_listener;
 
             $fx_dialog.main.dialog($fx_dialog.settings);
-
+            
             $fx_dialog.main.dialog("widget")
                   .draggable("option", "containment", "window")
                   .draggable("option", "scroll", false);
@@ -91,10 +91,16 @@
 
             setTimeout(function() {
                 var settings = $fx_dialog.settings,
-                    height = Math.max(settings.minHeight,
-                                      Math.min(max_height,
-                                               Math.max(dialog_content.dialog("widget").outerHeight() + 1,
-                                                        settings.height)));
+                    height = Math.max(
+                        settings.minHeight,
+                        Math.min(
+                          max_height,
+                          Math.max(
+                              dialog_content.dialog("widget").outerHeight() + 1,
+                              settings.height
+                          )
+                    )
+                );
 
                 // set fixed height and center the dialog
                 dialog_content.dialog("option", { height: height, position: "center" });
@@ -110,7 +116,8 @@
                 // show the dialog container
                 widget.addClass("fx_dialog_opened");
                 // move focus to the dialog so it could be closed with an ESC key
-                $('.ui-dialog').focus();
+                $('.ui-dialog-content').attr('tabindex', '-2');
+                $('input:visible', $('.ui-dialog-content')).first().focus();
             }
         },
 
