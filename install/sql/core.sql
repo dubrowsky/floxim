@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1
--- Время создания: Июл 22 2013 г., 17:36
+-- Время создания: Июл 29 2013 г., 13:20
 -- Версия сервера: 5.5.25
 -- Версия PHP: 5.3.13
 
@@ -131,7 +131,7 @@ CREATE TABLE IF NOT EXISTS `fx_component` (
   `item_name` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `Class_Group` (`group`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=100 AUTO_INCREMENT=49 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=100 AUTO_INCREMENT=50 ;
 
 --
 -- Дамп данных таблицы `fx_component`
@@ -148,7 +148,8 @@ INSERT INTO `fx_component` (`id`, `keyword`, `name`, `description`, `group`, `ic
 (36, 'content', 'Content', '', 'Basic', '', NULL, 0, 'Content'),
 (46, 'travel_route', 'Tours', '', 'Travel', '', NULL, 23, 'Tour'),
 (47, 'gallery', 'Image galleries', '', 'Gallery', '', NULL, 23, 'Gallery'),
-(48, 'photo', 'Image', '', 'Gallery', '', NULL, 36, 'image');
+(48, 'photo', 'Image', '', 'Gallery', '', NULL, 36, 'image'),
+(49, 'publication', 'Publications', NULL, 'Basic', '', NULL, 23, 'Publication');
 
 -- --------------------------------------------------------
 
@@ -168,7 +169,7 @@ CREATE TABLE IF NOT EXISTS `fx_content` (
   `site_id` int(11) DEFAULT NULL,
   `parent_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=47 AUTO_INCREMENT=2055 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=47 AUTO_INCREMENT=2059 ;
 
 --
 -- Дамп данных таблицы `fx_content`
@@ -179,10 +180,10 @@ INSERT INTO `fx_content` (`id`, `priority`, `checked`, `created`, `last_updated`
 (3, 7, 0, '2012-05-24 12:42:50', '2013-04-29 12:01:11', 0, 'section', 0, 1, 2),
 (16, 5, 1, '2012-05-28 12:27:15', '2013-05-17 21:14:38', 0, 'section', 3, 1, 2),
 (2047, 0, 1, '2013-07-19 20:08:42', '2013-07-19 16:08:42', 99, 'text', 74, 15, 2033),
-(99, 0, 1, '0000-00-00 00:00:00', '2013-04-29 12:01:11', 0, 'user', 0, 1, 0),
+(99, 0, 1, '0000-00-00 00:00:00', '2013-07-26 18:12:18', 0, 'user', 0, 0, 0),
 (112, 0, 1, '2013-04-24 14:12:36', '2013-04-29 12:01:11', 99, 'text', 16, 1, 2),
 (1889, 1, 1, '2013-06-10 02:26:56', '2013-07-14 03:39:35', 99, 'section', 69, 15, 1883),
-(2024, 0, 1, '2013-07-12 16:10:51', '2013-07-12 08:10:51', 99, 'photo', 81, 15, 1912),
+(2058, 8, 1, '2013-07-25 09:36:53', '2013-07-25 05:36:53', 99, 'photo', 121, 15, 1891),
 (1887, 3, 1, '2013-06-10 02:17:40', '2013-07-14 03:19:45', 99, 'section', 69, 15, 1883),
 (1884, 0, 1, '2013-06-08 17:03:02', '2013-07-07 19:31:53', 99, 'page', 0, 15, 1883),
 (1883, 0, 1, '2013-06-08 17:03:02', '2013-06-08 09:03:02', 99, 'page', 0, 15, NULL),
@@ -205,9 +206,6 @@ INSERT INTO `fx_content` (`id`, `priority`, `checked`, `created`, `last_updated`
 (1917, 3, 1, '2013-06-13 05:34:31', '2013-06-12 21:58:48', 99, 'gallery', 79, 15, 1889),
 (2022, 0, 1, '2013-07-12 15:44:26', '2013-07-12 07:44:26', 99, 'photo', 81, 15, 1914),
 (1919, 2, 1, '2013-06-17 04:08:53', '2013-06-16 21:00:18', 99, 'photo', 81, 15, 1916),
-(1920, 4, 1, '2013-06-17 04:24:24', '2013-06-16 22:05:47', 99, 'photo', 81, 15, 1916),
-(1921, 1, 1, '2013-06-17 04:24:51', '2013-06-16 21:00:18', 99, 'photo', 81, 15, 1916),
-(1922, 3, 1, '2013-06-17 04:25:40', '2013-06-16 22:05:47', 99, 'photo', 81, 15, 1916),
 (1923, 5, 1, '2013-06-17 04:26:42', '2013-06-16 21:00:06', 99, 'photo', 81, 15, 1916),
 (1924, 0, 1, '2013-06-17 06:24:59', '2013-06-16 22:24:59', 99, 'text', 74, 15, 1916),
 (1925, 4, 1, '2013-06-17 06:30:30', '2013-07-14 03:19:38', 99, 'section', 69, 15, 1883),
@@ -218,7 +216,7 @@ INSERT INTO `fx_content` (`id`, `priority`, `checked`, `created`, `last_updated`
 (1996, 0, 1, '2013-07-01 16:35:39', '2013-07-01 08:35:39', 99, 'blogpost', 82, 15, 1925),
 (2028, 0, 1, '2013-07-13 17:11:06', '2013-07-13 09:11:06', 99, 'tag', 83, 15, 1925),
 (2034, 2, 1, '2013-07-13 17:14:40', '2013-07-19 20:49:31', 99, 'tagpost', 84, 15, 1968),
-(2049, 0, 1, '2013-07-19 21:09:09', '2013-07-19 17:09:09', 99, 'tagpost', 84, 15, 1996),
+(2049, 2, 1, '2013-07-19 21:09:09', '2013-07-26 08:12:20', 99, 'tagpost', 84, 15, 1996),
 (2033, 0, 1, '2013-07-13 17:14:40', '2013-07-13 09:14:40', 99, 'tag', 83, 15, 1925),
 (2032, 1, 1, '2013-07-13 17:14:40', '2013-07-19 20:49:31', 99, 'tagpost', 84, 15, 1968),
 (2006, 0, 1, '2013-07-08 03:40:33', '2013-07-07 19:40:33', 99, 'text', 74, 15, 1884),
@@ -226,7 +224,7 @@ INSERT INTO `fx_content` (`id`, `priority`, `checked`, `created`, `last_updated`
 (2026, 0, 1, '2013-07-12 16:18:28', '2013-07-12 08:18:28', 99, 'photo', 81, 15, 1917),
 (2027, 0, 1, '2013-07-13 15:39:32', '2013-07-13 07:39:32', 99, 'text', 74, 15, 1890),
 (2039, 0, 1, '2013-07-14 11:20:37', '2013-07-14 03:20:37', 99, 'tag', 83, 15, 1925),
-(2040, 0, 1, '2013-07-14 11:20:37', '2013-07-14 03:20:37', 99, 'tagpost', 84, 15, 1996);
+(2040, 1, 1, '2013-07-14 11:20:37', '2013-07-26 08:12:20', 99, 'tagpost', 84, 15, 1996);
 
 -- --------------------------------------------------------
 
@@ -250,8 +248,8 @@ CREATE TABLE IF NOT EXISTS `fx_content_blogpost` (
 
 INSERT INTO `fx_content_blogpost` (`id`, `anounce`, `text`, `publish_date`, `metatype`, `image`) VALUES
 (1968, '<p class="">\r\n	       Everyone shoud know!\r\n</p>', '<p>\r\n	      They told us this was not logistically possible and a hugely inconsiderate thing to do to a grief stricken family.\r\n</p>\r\n<p>\r\n	      I called them a bunch of a-holes and soccer-kicked the watermelon off the picnic table and into the bushes.\r\n</p>', '2013-06-11 00:00:00', 'article', 383),
-(1976, '<p>\n	 Jeep Travel is here to make you laugh!</p><p>\n	 <img src="/floxim_files/content/1251362341_1243855523_vnedorojnik_21_1.jpg" style="width: 584px;"></p>', '<p>\r\n	 Put your hands up in the air!\r\n</p>', '2012-04-19 00:00:00', 'post', NULL),
-(1996, '<p>\r\n	      Dominicana Republic''s Agro-tourism with a side of beach\r\n</p>', '<p>\n	       On the weekend of Jan 19th, 2013, we left the farm early one morning for Samana via a direct <em>gua-gua</em>.  It left in rising sun at 7 am from nearby Saboneta and arrived there at 10:30 am.</p><p>\n	    It was a very easy trip with one stop on an uncomfortable and overcrowded bus which was exacerbated by the holiday weekend.  Fortunately it was cheap too, only 300 pesos ($7.50 USD).</p><p>\n	    From there we met some friends and went onto Las Galeras which we am sure is one of the more beautiful places on this island.  Very Caribbean with its palm ladden beaches, forested hillsides in the distance, and white sands with colors of the sea you can hardly imagine.</p>', '2013-07-10 00:00:00', '', 379);
+(1976, '<p>​Jeep Travel is here to make you laugh!</p>', '<p>\r\n	 Put your hands up in the air!\r\n</p>', '2012-04-19 00:00:00', 'post', NULL),
+(1996, '<p>\n	      Dominicana Republic''s Agro-tourism with a side of beach!</p>', '<p>\n	       On the weekend of Jan 19th, 2013, we left the farm early one morning for Samana via a direct <em>gua-gua</em>.  It left in rising sun at 7 am from nearby Saboneta and arrived there at 10:30 am.</p><p>\n	    It was a very easy trip with one stop on an uncomfortable and overcrowded bus which was exacerbated by the holiday weekend.  Fortunately it was cheap too, only 300 pesos ($7.50 USD).</p><p>\n	    From there we met some friends and went onto Las Galeras which we am sure is one of the more beautiful places on this island.  Very Caribbean with its palm ladden beaches, forested hillsides in the distance, and white sands with colors of the sea you can hardly imagine.</p>', '2013-07-10 00:00:00', '', 379);
 
 -- --------------------------------------------------------
 
@@ -344,16 +342,28 @@ CREATE TABLE IF NOT EXISTS `fx_content_photo` (
 
 INSERT INTO `fx_content_photo` (`id`, `photo`, `description`, `copy`) VALUES
 (1919, 105, 'Haitian people.', 'Dmitry Medvedev'),
-(1920, 108, 'Airview', NULL),
-(1921, 108, 'Haiti', ''),
 (2026, 374, 'Beautiful evening', ''),
-(1922, 113, 'Our new friends', 'Lost squirrel'),
-(2024, 372, 'Oh no!', ''),
+(2058, 390, '', ''),
 (2025, 373, 'Ukranian steppe', ''),
 (1923, 116, 'Haitian Pussy Riot', NULL),
 (2021, 361, 'Kiev', ''),
 (2022, 367, '', ''),
 (2023, 369, 'Swakopmund', '');
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `fx_content_publication`
+--
+
+CREATE TABLE IF NOT EXISTS `fx_content_publication` (
+  `id` int(11) NOT NULL,
+  `publish_date` datetime DEFAULT NULL,
+  `anounce` text,
+  `image` int(11) DEFAULT NULL,
+  `text` text,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -449,7 +459,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_text` (
 
 INSERT INTO `fx_content_text` (`id`, `text`) VALUES
 (112, '<p>Put your content here!​</p>'),
-(1897, '<p>\n	<strong>Welcome!</strong></p><p>\n	   If you like a bit of sideways action in your car and don’t mind a bit (or a lot) or mud and water then Rally Driving experiences are an absolute blast and huge amounts of fun.</p>'),
+(1897, '<p>\n	<strong>Welcome!</strong></p><p>\n	       If you like a bit of sideways action in your car and don’t mind a bit (or a lot) or mud and water then Rally Driving experiences are an absolute blast and huge amounts of fun.</p>'),
 (1903, '<p>\n	The adventure began back in 1977, when Thierry Sabine got lost on his motorbike in the Libyan desert during the Abidjan-Nice Rally. Saved from the sands in extremis, he returned to France still in thrall to this landscape and promising himself he would share his fascination with as many people as possible. He proceeded to come up with a route starting in Europe, continuing to Algiers and crossing Agadez before eventually finishing at Dakar. The founder coined a motto for his inspiration: "A challenge for those who go. A dream for those who stay behind." Courtesy of his great conviction and that modicum of madness peculiar to all great ideas, the plan quickly became a reality. Since then, the Paris-Dakar, a unique event sparked by the spirit of adventure, open to all riders and carrying a message of friendship between all men, has never failed to challenge, surprise and excite. Over the course of almost thirty years, it has generated innumerable sporting and human stories.</p><p>(c) <a href="http://www.dakar.com">www.dakar.com</a></p>'),
 (1910, '<p class="">\n	Everyone can join our team! Please, feel free to contact us for a details.</p><p>\n	<img src="/floxim_files/content/aborigeny-tozhe_0.jpg" style=""></p>'),
 (2027, '<p>\r\n	Have questions? Need more information?\r\n</p>\r\n<p>\r\n	Send a starter inquiry to <a href="http://mailto:info@jeeptravel.loc">info@jeeptravel.loc</a>\r\n</p>'),
@@ -486,7 +496,6 @@ INSERT INTO `fx_content_travel_route` (`id`, `start_date`, `end_date`) VALUES
 
 CREATE TABLE IF NOT EXISTS `fx_content_user` (
   `id` int(11) NOT NULL,
-  `site_id` int(11) NOT NULL DEFAULT '0',
   `password` varchar(45) NOT NULL,
   `email` char(255) NOT NULL,
   `login` varchar(255) NOT NULL,
@@ -506,8 +515,8 @@ CREATE TABLE IF NOT EXISTS `fx_content_user` (
 -- Дамп данных таблицы `fx_content_user`
 --
 
-INSERT INTO `fx_content_user` (`id`, `site_id`, `password`, `email`, `login`, `name`, `registration_code`, `avatar`, `forum_signature`, `forum_messages`, `pa_balance`, `auth_hash`, `first_name`) VALUES
-(99, 0, '202cb962ac59075b964b07152d234b70', 'dubr.cola@gmail.com', 'admin', 'Adminio', NULL, NULL, NULL, 0, 0, '', NULL);
+INSERT INTO `fx_content_user` (`id`, `password`, `email`, `login`, `name`, `registration_code`, `avatar`, `forum_signature`, `forum_messages`, `pa_balance`, `auth_hash`, `first_name`) VALUES
+(99, '202cb962ac59075b964b07152d234b70', 'dubr.cola@gmail.com', 'admin', 'Adminio', NULL, NULL, NULL, 0, 0, '', NULL);
 
 -- --------------------------------------------------------
 
@@ -590,7 +599,7 @@ CREATE TABLE IF NOT EXISTS `fx_dictionary` (
   `lang_en` text,
   `lang_ru` text,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=397 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=404 ;
 
 --
 -- Дамп данных таблицы `fx_dictionary`
@@ -989,10 +998,17 @@ INSERT INTO `fx_dictionary` (`id`, `dict_key`, `lang_string`, `lang_en`, `lang_r
 (390, 'system', 'Editing ', NULL, NULL),
 (391, 'system', 'Fields table', NULL, NULL),
 (392, 'system', 'Adding new ', NULL, NULL),
-(393, 'controller_component', 'Новый инфоблок', NULL, NULL),
-(394, 'controller_component', 'Инфоблок для поля ', NULL, NULL),
-(395, 'system', 'Название компонента (по-русски)', NULL, NULL),
-(396, 'system', 'Название сущности создаваемой компонентом (по-русски)', NULL, NULL);
+(393, 'controller_component', 'Новый инфоблок', 'New infoblock', NULL),
+(394, 'controller_component', 'Инфоблок для поля ', 'Infoblock for the field', NULL),
+(395, 'system', 'Название компонента (по-русски)', 'Component name', NULL),
+(396, 'system', 'Название сущности создаваемой компонентом (по-русски)', 'Name of an entity created by the component', NULL),
+(397, 'system', 'Component actions', NULL, NULL),
+(398, 'system', 'Templates', NULL, NULL),
+(399, 'system', 'Source', NULL, NULL),
+(400, 'system', 'Action', NULL, NULL),
+(401, 'system', 'File', NULL, NULL),
+(402, 'system', 'Сохранить', NULL, NULL),
+(403, 'system', 'Used', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1025,7 +1041,7 @@ CREATE TABLE IF NOT EXISTS `fx_field` (
   KEY `TypeOfData_ID` (`type`),
   KEY `TypeOfEdit_ID` (`type_of_edit`),
   KEY `Widget_Class_ID` (`widget_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=95 AUTO_INCREMENT=212 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=95 AUTO_INCREMENT=216 ;
 
 --
 -- Дамп данных таблицы `fx_field`
@@ -1059,7 +1075,11 @@ INSERT INTO `fx_field` (`id`, `parent`, `component_id`, `ctpl_id`, `system_table
 (204, NULL, 48, 0, 0, 0, 'description', 'Description', 3, '', 0, 169, 0, '', 0, 1, 1),
 (205, NULL, 48, 0, 0, 0, 'copy', 'Copy', 1, '', 0, 170, 0, '', 0, 1, 1),
 (210, NULL, 32, 0, 0, 0, 'comment', 'Why the tag is relevant', 1, '', 0, 172, 0, '', 0, 1, 1),
-(211, NULL, 30, 0, 0, 0, 'image', 'Image', 11, '', 0, 173, 0, '', 0, 1, 1);
+(211, NULL, 30, 0, 0, 0, 'image', 'Image', 11, '', 0, 173, 0, '', 0, 1, 1),
+(212, NULL, 49, 0, 0, 0, 'publish_date', 'Publish date', 8, '', 0, 174, 0, '', 0, 1, 1),
+(213, NULL, 49, 0, 0, 0, 'anounce', 'Anounce', 3, 'a:1:{s:4:"html";s:1:"1";}', 0, 175, 0, '', 0, 1, 1),
+(214, NULL, 49, 0, 0, 0, 'image', 'Image', 11, '', 0, 176, 0, '', 0, 1, 1),
+(215, NULL, 49, 0, 0, 0, 'text', 'Text', 3, 'a:1:{s:4:"html";s:1:"1";}', 0, 177, 0, '', 0, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -1075,81 +1095,35 @@ CREATE TABLE IF NOT EXISTS `fx_filetable` (
   `size` int(10) unsigned NOT NULL DEFAULT '0',
   `to_delete` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=56 AUTO_INCREMENT=384 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=56 AUTO_INCREMENT=391 ;
 
 --
 -- Дамп данных таблицы `fx_filetable`
 --
 
 INSERT INTO `fx_filetable` (`id`, `real_name`, `path`, `type`, `size`, `to_delete`) VALUES
-(53, 'code-1.png', 'content/code-1_3.png', 'image/png', 30370, 0),
-(54, 'code-2.png', 'content/code-2_0.png', 'image/png', 56576, 0),
-(55, 'new-yandex-index.png', 'content/new-yandex-index_0.png', 'image/png', 214827, 0),
 (56, 'bg-portfolio.jpg', 'content/bg-portfolio_1.jpg', 'image/jpeg', 235261, 0),
-(57, 'arrow02.png', 'content/arrow02_0.png', 'image/png', 1049, 0),
-(58, 'bg-portfolio.jpg', 'content/bg-portfolio_2.jpg', 'image/jpeg', 235261, 0),
-(59, 'bg-company.jpg', 'content/bg-company_1.jpg', 'image/jpeg', 68376, 0),
 (60, 'bg-portfolio.jpg', 'content/bg-portfolio_3.jpg', 'image/jpeg', 235261, 0),
-(61, 'arrow04.png', 'content/arrow04_0.png', 'image/png', 1017, 0),
-(62, 'img01.jpg', 'content/img01_0.jpg', 'image/jpeg', 219265, 0),
-(63, 'bg-contact-holder.gif', 'content/bg-contact-holder_0.gif', 'image/gif', 1165, 0),
 (105, 'portfolio_photo.jpg', 'content/portfolio_photo_0.jpg', 'image/jpeg', 238783, 0),
-(108, '3568885424_243abf3d8b_b.jpg', 'content/3568885424_243abf3d8b_b_0.jpg', 'image/jpeg', 372454, 0),
-(113, 'aborigeny-tozhe.jpg', 'content/aborigeny-tozhe_0.jpg', 'image/jpeg', 123530, 0),
 (116, 'NOMADE-RIDDIM-VOL.031.jpg', 'content/NOMADE-RIDDIM-VOL.031_0.jpg', 'image/jpeg', 422922, 0),
-(163, 'гроза.jpg', 'content/groza_0.jpg', 'image/jpeg', 222559, 0),
 (164, 'гроза.jpg', 'content/groza_1.jpg', 'image/jpeg', 172197, 0),
-(329, 'гроза.jpg', 'content/groza_2.jpg', 'image/jpeg', 172197, 0),
-(330, 'гроза.jpg', 'content/groza_3.jpg', 'image/jpeg', 172197, 0),
-(331, 'гроза.jpg', 'content/groza_4.jpg', 'image/jpeg', 172197, 0),
-(332, 'гроза.jpg', 'content/groza_5.jpg', 'image/jpeg', 172197, 0),
-(333, 'гроза.jpg', 'content/groza_6.jpg', 'image/jpeg', 172197, 0),
-(334, 'гроза.jpg', 'content/groza_7.jpg', 'image/jpeg', 172197, 0),
-(335, 'гроза.jpg', 'content/groza_8.jpg', 'image/jpeg', 172197, 0),
-(336, '3568885424_243abf3d8b_b.jpg', 'content/3568885424_243abf3d8b_b_1.jpg', 'image/jpeg', 372454, 0),
-(363, 'bg-portfolio.jpg', 'content/bg-portfolio_7.jpg', 'image/jpeg', 235261, 0),
-(338, 'гроза.jpg', 'content/groza_9.jpg', 'image/jpeg', 172197, 0),
 (361, 'aborigeny_1.jpg', 'content/aborigeny_1.jpg', 'image/jpeg', 102971, 0),
-(362, 'img05.jpg', 'content/img05_0.jpg', 'image/jpeg', 5717, 0),
-(341, 'aborigeny.jpg', 'content/aborigeny_6.jpg', 'image/jpeg', 102971, 0),
-(342, 'logo.png', 'content/logo_0.png', 'image/png', 5735, 0),
-(343, 'logo.png', 'content/logo_1.png', 'image/png', 5735, 0),
-(344, 'img03.jpg', 'content/img03_0.jpg', 'image/jpeg', 3574, 0),
 (345, 'img01.jpg', 'content/img01_1.jpg', 'image/jpeg', 219265, 0),
 (346, 'bg-portfolio.jpg', 'content/bg-portfolio_4.jpg', 'image/jpeg', 235261, 0),
-(347, 'img01.jpg', 'content/img01_2.jpg', 'image/jpeg', 219265, 0),
-(348, 'bg-portfolio.jpg', 'content/bg-portfolio_5.jpg', 'image/jpeg', 235261, 0),
-(349, 'arrow02.png', 'content/arrow02_1.png', 'image/png', 1049, 0),
-(350, 'logo.png', 'content/logo_2.png', 'image/png', 5735, 0),
-(351, 'arrow02.png', 'content/arrow02_2.png', 'image/png', 1049, 0),
-(352, 'arrow02.png', 'content/arrow02_3.png', 'image/png', 1049, 0),
-(353, 'arrow02.png', 'content/arrow02_4.png', 'image/png', 1049, 0),
-(354, 'arrow02.png', 'content/arrow02_5.png', 'image/png', 1049, 0),
-(355, 'logo.gif', 'content/logo_0.gif', 'image/gif', 1265, 0),
 (356, '_logo.png', 'content/logo_3.png', 'image/png', 2627, 0),
 (357, 'bg-portfolio.jpg', 'content/bg-portfolio_6.jpg', 'image/jpeg', 235261, 0),
 (358, 'bg-company.jpg', 'content/bg-company_2.jpg', 'image/jpeg', 68376, 0),
-(359, 'logo.png', 'content/logo_4.png', 'image/png', 2627, 0),
-(360, 'logo.png', 'content/logo_5.png', 'image/png', 5735, 0),
-(364, 'INFOGRAPHICA_new.jpg', 'content/INFOGRAPHICA_new_0.jpg', 'image/jpeg', 1630738, 0),
-(365, 'foto.jpg', 'content/foto_0.jpg', 'image/jpeg', 47794, 0),
 (366, 'foto.jpg', 'content/foto_1.jpg', 'image/jpeg', 47794, 0),
 (367, 'jeep-safari-2.jpg', 'content/jeep-safari-2_0.jpg', 'image/jpeg', 110257, 0),
 (368, 'jeep-safari-2.jpg', 'content/jeep-safari-2_1.jpg', 'image/jpeg', 110257, 0),
 (369, 'Rickus Vermeulen Jeep.jpg', 'content/Rickus_Vermeulen_Jeep_0.jpg', 'image/jpeg', 46915, 0),
-(370, 'Rickus Vermeulen Jeep.jpg', 'content/Rickus_Vermeulen_Jeep_1.jpg', 'image/jpeg', 46915, 0),
 (371, 'Rickus Vermeulen Jeep.jpg', 'content/Rickus_Vermeulen_Jeep_2.jpg', 'image/jpeg', 46915, 0),
-(372, '1251362341_1243855523_vnedorojnik_21.jpg', 'content/1251362341_1243855523_vnedorojnik_21_0.jpg', 'image/jpeg', 113615, 0),
+(389, 'bg-portfolio.jpg', 'content/bg-portfolio_0.jpg', 'image/jpeg', 235261, 0),
+(390, '7394.jpg', 'content/7394_0.jpg', 'image/jpeg', 8988, 0),
 (373, 'foto.jpg', 'content/foto_2.jpg', 'image/jpeg', 47794, 0),
 (374, '_800_600_90_667819585-IMG_2954.jpg', 'content/800_600_90_667819585-IMG_2954_0.jpg', 'image/jpeg', 39395, 0),
-(375, 'aborigeny-tozhe_0.jpg', 'content/aborigeny-tozhe_0.jpg', 'image/jpeg', 123530, 0),
-(376, '1251362341_1243855523_vnedorojnik_21.jpg', 'content/1251362341_1243855523_vnedorojnik_21_1.jpg', 'image/jpeg', 113615, 0),
-(377, 'logo.gif', 'content/logo_1.gif', 'image/gif', 1265, 0),
 (378, 'logo.png', 'content/logo_6.png', 'image/png', 5735, 0),
 (379, 'img05.jpg', 'content/img05_1.jpg', 'image/jpeg', 5717, 0),
-(380, 'img09.jpg', 'content/img09_1.jpg', 'image/jpeg', 4587, 0),
-(381, 'img10.jpg', 'content/img10_0.jpg', 'image/jpeg', 238783, 0),
-(382, 'img09.jpg', 'content/img09_2.jpg', 'image/jpeg', 4587, 0),
 (383, 'img09.jpg', 'content/img09_3.jpg', 'image/jpeg', 4587, 0);
 
 -- --------------------------------------------------------
@@ -1186,7 +1160,7 @@ CREATE TABLE IF NOT EXISTS `fx_history` (
   `name` text NOT NULL,
   `marker` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=52 COMMENT='История операций' AUTO_INCREMENT=3 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=52 COMMENT='История операций' AUTO_INCREMENT=10 ;
 
 --
 -- Дамп данных таблицы `fx_history`
@@ -1194,7 +1168,14 @@ CREATE TABLE IF NOT EXISTS `fx_history` (
 
 INSERT INTO `fx_history` (`id`, `user_id`, `date`, `name`, `marker`) VALUES
 (1, 1, '2013-07-15 16:16:00', 'FX_HISTORY_ADMIN_COMPONENT_EDIT', 0),
-(2, 1, '2013-07-19 17:54:22', 'FX_HISTORY_ADMIN_FIELD_ADD', 0);
+(2, 1, '2013-07-19 17:54:22', 'FX_HISTORY_ADMIN_FIELD_ADD', 0),
+(3, 1, '2013-07-23 15:38:19', 'FX_HISTORY_ADMIN_COMPONENT_ADD', 0),
+(4, 1, '2013-07-23 15:38:53', 'FX_HISTORY_ADMIN_FIELD_ADD', 0),
+(5, 1, '2013-07-23 15:39:20', 'FX_HISTORY_ADMIN_FIELD_ADD', 0),
+(6, 1, '2013-07-23 15:39:44', 'FX_HISTORY_ADMIN_FIELD_ADD', 0),
+(7, 1, '2013-07-23 15:40:36', 'FX_HISTORY_ADMIN_FIELD_ADD', 0),
+(8, 1, '2013-07-23 15:48:30', 'FX_HISTORY_ADMIN_COMPONENT_EDIT', 0),
+(9, 1, '2013-07-23 15:54:17', 'FX_HISTORY_ADMIN_COMPONENT_EDIT', 0);
 
 -- --------------------------------------------------------
 
@@ -1232,7 +1213,7 @@ CREATE TABLE IF NOT EXISTS `fx_infoblock` (
   `scope` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `page_id` (`page_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=210 AUTO_INCREMENT=121 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=210 AUTO_INCREMENT=122 ;
 
 --
 -- Дамп данных таблицы `fx_infoblock`
@@ -1242,6 +1223,7 @@ INSERT INTO `fx_infoblock` (`id`, `parent_infoblock_id`, `site_id`, `page_id`, `
 (3, 0, 1, 2, 1, 'Main menu', 'component_section', 'listing', 'a:1:{s:7:"submenu";s:3:"all";}', 'a:2:{s:5:"pages";s:11:"descendants";s:9:"page_type";s:0:"";}'),
 (12, 0, 1, 0, 1, '', 'layout', 'show', 'a:0:{}', 'a:2:{s:5:"pages";s:3:"all";s:9:"page_type";s:0:"";}'),
 (16, 0, 1, 2, 1, 'Index text', 'component_text', 'listing', 'a:0:{}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
+(121, 0, 15, 1891, 1, 'Image / List', 'component_photo', 'listing', 'a:6:{s:5:"limit";s:2:"10";s:15:"show_pagination";b:0;s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";s:11:"parent_type";s:15:"current_page_id";s:9:"parent_id";s:0:"";}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
 (43, 0, 1, 2, 1, 'Main Header (via breadcrumbs)', 'component_section', 'breadcrumbs', 'a:2:{s:11:"header_only";s:1:"1";s:13:"hide_on_index";b:0;}', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:0:"";}'),
 (117, 0, 15, 1925, 1, 'Blog / By tag', 'component_blogpost', 'listing_by_tag', 'a:0:{}', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:3:"tag";}'),
 (53, 12, 1, 2, 1, '', '', '', 'a:0:{}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
@@ -1292,7 +1274,7 @@ CREATE TABLE IF NOT EXISTS `fx_infoblock_visual` (
   `priority` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `infoblock_id` (`infoblock_id`,`layout_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=138 AUTO_INCREMENT=192 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=138 AUTO_INCREMENT=193 ;
 
 --
 -- Дамп данных таблицы `fx_infoblock_visual`
@@ -1303,6 +1285,7 @@ INSERT INTO `fx_infoblock_visual` (`id`, `infoblock_id`, `layout_id`, `wrapper`,
 (2, 3, 1, '', 'a:2:{i:163;s:13:"Ус-луги";s:9:"separator";s:5:"• !";}', 'layout_supernova.demo_menu', 'a:3:{s:9:"separator";s:3:"•";s:6:"odd_bg";s:4:"#111";s:9:"odd_color";s:4:"#FF0";}', 'header', 1),
 (56, 54, 1, '', '', 'layout_supernova.index', '', '', 2),
 (14, 12, 1, '', '', 'layout_supernova.inner', 'a:6:{s:4:"logo";s:3:"356";s:7:"company";s:14:"Floxim Company";s:6:"slogan";s:17:"Almost clear site";s:13:"replace_src_0";s:38:"/controllers/layout/supernova/logo.png";s:8:"developa";s:103:"© 2010 Хороший пример \n<br>\nсайтостроения — \n<a href="#">\nWebSite.ru\n</a>\n";s:13:"banner_slogan";s:124:"«Simplicity of sitebuilder, functionality of CMS,\n                        flexibility of framework. <br>​And it''s free!»";}', '', 4),
+(192, 121, 10, '', '', 'layout_jeeptravel.photo_listing', '', 'content', 10),
 (188, 117, 10, '', '', 'component_blogpost.listing', '', 'content', 9),
 (18, 16, 1, 'layout_supernova.wrap_titled', 'a:2:{s:5:"title";s:21:"Don''t miss the chance";s:5:"color";s:7:"#027a02";}', 'component_text.listing', '', 'content', 9),
 (26, 24, 1, 'layout_supernova.wrap_titled', 'a:1:{s:5:"title";s:16:"Have an account?";}', 'widget_authform.show', 'a:3:{s:15:"replace_value_0";s:10:"Войти";s:12:"login_button";s:8:"Sign in!";s:17:"placeholder_login";s:5:"email";}', 'sidebar', 3),
@@ -1312,8 +1295,8 @@ INSERT INTO `fx_infoblock_visual` (`id`, `infoblock_id`, `layout_id`, `wrapper`,
 (109, 16, 8, '', '', 'component_text.listing', '', 'content', 9),
 (108, 53, 8, '', '', 'layout_demo8.index', 'a:3:{s:9:"c1_header";s:31:"Новости | события";s:9:"logo_text";s:27:"Think<span>Different</span>";s:6:"slogan";s:37:"лучшие утюги россии!";}', '', 0),
 (107, 12, 8, '', '', 'layout_demo8.index', 'a:0:{}', '', 0),
-(140, 70, 10, '', '', 'layout_jeeptravel.index_slider', 'a:14:{s:9:"info_1891";s:148:"<dt><strong>Difficulty:</strong>&nbsp;easy<br><strong>Cities:</strong>&nbsp;Gada, Balle, Binji, Wurno<br><strong>Villages:</strong> Kaita, Rimi</dt>";s:14:"more_text_1891";s:12:"Tell me more";s:16:"action_text_1891";s:14:"Gonna b there!";s:9:"date_1891";s:15:"May 12–16<br>";s:11:"header_1891";s:12:"Summer Rally";s:13:"bg_photo_1892";s:3:"357";s:11:"header_1892";s:34:"It''s going to be<br>​Legen-dary!";s:16:"action_text_1892";s:15:"Yes, I''m crazy!";s:14:"more_text_1892";s:12:"Tell me more";s:9:"date_1892";s:16:"January 5 – 19";s:9:"info_1892";s:251:"<dl>\n                                            <dt>Difficulty: </dt>extremely difficult<br>​Period: 2 weeks<br>Cities<strong>: Paris, Dakar</strong><dd></dd><dt>A chance to survive:</dt><dd>~23.5%</dd>\n                                        </dl>";s:13:"bg_photo_1891";s:3:"345";s:15:"action_url_1891";s:0:"";s:15:"action_url_1892";s:0:"";}', 'content', 8),
-(174, 103, 10, '', '', 'auto.auto', '', 'index_right', 0),
+(140, 70, 10, '', '', 'layout_jeeptravel.index_slider', 'a:14:{s:9:"info_1891";s:148:"<dt><strong>Difficulty:</strong>&nbsp;easy<br><strong>Cities:</strong>&nbsp;Gada, Balle, Binji, Wurno<br><strong>Villages:</strong> Kaita, Rimi</dt>";s:14:"more_text_1891";s:12:"Tell me more";s:16:"action_text_1891";s:14:"Gonna b there!";s:9:"date_1891";s:15:"May 12–16<br>";s:11:"header_1891";s:17:"Summer&nbsp;Rally";s:13:"bg_photo_1892";s:3:"357";s:11:"header_1892";s:34:"It''s going to be<br>​Legen-dary!";s:16:"action_text_1892";s:15:"Yes, I''m crazy!";s:14:"more_text_1892";s:12:"Tell me more";s:9:"date_1892";s:16:"January 5 – 19";s:9:"info_1892";s:251:"<dl>\n                                            <dt>Difficulty: </dt>extremely difficult<br>​Period: 2 weeks<br>Cities<strong>: Paris, Dakar</strong><dd></dd><dt>A chance to survive:</dt><dd>~23.5%</dd>\n                                        </dl>";s:13:"bg_photo_1891";s:3:"345";s:15:"action_url_1891";s:0:"";s:15:"action_url_1892";s:0:"";}', 'content', 8),
+(174, 103, 10, '', '', 'auto.auto', '', 'index_right', 1),
 (103, 24, 8, '', '', 'widget_authform.show', '', 'sidebar', 2),
 (101, 43, 8, '', '', 'component_section.breadcrumbs', '', 'content', 1),
 (99, 3, 8, '', '', 'layout_demo8.demo_menu', '', 'header', 1),
@@ -1329,12 +1312,12 @@ INSERT INTO `fx_infoblock_visual` (`id`, `infoblock_id`, `layout_id`, `wrapper`,
 (125, 61, 8, '', '', 'auto.auto', '', 'banner', 0),
 (126, 61, 1, '', '', 'component_text.listing', '', '', 0),
 (134, 67, 1, '', '', 'layout_supernova.index', '', '', 0),
-(137, 67, 10, '', '', 'layout_jeeptravel.page', 'a:30:{s:18:"page_bg_color_1895";s:0:"";s:18:"page_bg_color_1888";s:7:"#E9A502";s:18:"page_bg_image_1888";s:52:"/controllers/layout/jeeptravel/images/bg-company.jpg";s:18:"page_bg_image_1895";s:0:"";s:18:"page_bg_color_1887";s:4:"#000";s:18:"page_bg_image_1887";s:3:"358";s:5:"phone";s:18:"+7 (905) 561 99 72";s:4:"mail";s:19:"info@jeeptravel.loc";s:18:"page_bg_color_1889";s:4:"#000";s:18:"page_bg_image_1889";s:54:"/controllers/layout/jeeptravel/images/bg-portfolio.jpg";s:18:"page_bg_color_1890";s:7:"#E9A502";s:18:"page_bg_image_1890";s:2:"60";s:18:"page_bg_color_1925";s:7:"#060008";s:18:"page_bg_image_1925";s:3:"164";s:18:"page_bg_color_1926";s:7:"#500070";s:18:"page_bg_image_1926";s:3:"326";s:4:"logo";s:3:"378";s:18:"page_bg_image_1891";s:0:"";s:18:"page_bg_image_1968";s:0:"";s:14:"contacts_label";s:8:"Call us:";s:4:"copy";s:99:"© JeepTravel, 2013<br>&nbsp; &nbsp; &nbsp;Photo by: <a href="http://leecannon.com/">Lee Cannon</a>";s:18:"page_bg_image_1883";s:0:"";s:18:"page_bg_image_1996";s:0:"";s:18:"page_bg_image_1884";s:0:"";s:18:"page_bg_color_1883";s:7:"#ffffff";s:18:"page_bg_color_1884";s:7:"#000000";s:18:"page_bg_image_1916";s:0:"";s:18:"page_bg_image_1902";s:0:"";s:18:"page_bg_image_2033";s:0:"";s:5:"email";s:11:"info@jt.com";}', '', 0),
+(137, 67, 10, '', '', 'layout_jeeptravel.page', 'a:30:{s:18:"page_bg_color_1895";s:0:"";s:18:"page_bg_color_1888";s:7:"#E9A502";s:18:"page_bg_image_1888";s:52:"/controllers/layout/jeeptravel/images/bg-company.jpg";s:18:"page_bg_image_1895";s:0:"";s:18:"page_bg_color_1887";s:4:"#000";s:18:"page_bg_image_1887";s:3:"358";s:5:"phone";s:18:"+7 (905) 561 99 72";s:4:"mail";s:19:"info@jeeptravel.loc";s:18:"page_bg_color_1889";s:7:"#c7c1c7";s:18:"page_bg_image_1889";s:3:"389";s:18:"page_bg_color_1890";s:7:"#E9A502";s:18:"page_bg_image_1890";s:2:"60";s:18:"page_bg_color_1925";s:7:"#060008";s:18:"page_bg_image_1925";s:3:"164";s:18:"page_bg_color_1926";s:7:"#500070";s:18:"page_bg_image_1926";s:3:"326";s:4:"logo";s:3:"378";s:18:"page_bg_image_1891";s:0:"";s:18:"page_bg_image_1968";s:0:"";s:14:"contacts_label";s:8:"Call us:";s:4:"copy";s:93:"© JeepTravel, 2013<br>&nbsp; &nbsp; Photo by: <a href="http://leecannon.com/">Lee Cannon</a>";s:18:"page_bg_image_1883";s:0:"";s:18:"page_bg_image_1996";s:0:"";s:18:"page_bg_image_1884";s:0:"";s:18:"page_bg_color_1883";s:7:"#fafafa";s:18:"page_bg_color_1884";s:7:"#000000";s:18:"page_bg_image_1916";s:0:"";s:18:"page_bg_image_1902";s:0:"";s:18:"page_bg_image_2033";s:0:"";s:5:"email";s:11:"info@jt.com";}', '', 0),
 (141, 71, 10, '', '', 'layout_jeeptravel.index', '', '', 0),
-(142, 72, 10, 'layout_jeeptravel.block_titled', 'a:1:{s:6:"header";s:8:"Upcoming";}', 'layout_jeeptravel.index_link_list', '', 'index_center', 2),
+(142, 72, 10, 'layout_jeeptravel.block_titled', 'a:1:{s:6:"header";s:8:"Upcoming";}', 'layout_jeeptravel.index_link_list', '', 'index_center', 1),
 (144, 74, 10, '', '', 'component_text.listing', '', 'content', 7),
-(145, 75, 10, '', '', 'component_text.listing', '', 'index_center', 1),
-(146, 76, 10, 'layout_jeeptravel.block_titled', 'a:1:{s:6:"header";s:9:"Follow us";}', 'layout_jeeptravel.index_link_list', '', 'index_right', 1),
+(145, 75, 10, '', '', 'component_text.listing', '', 'index_center', 2),
+(146, 76, 10, 'layout_jeeptravel.block_titled', 'a:1:{s:6:"header";s:9:"Follow us";}', 'layout_jeeptravel.index_link_list', '', 'index_right', 2),
 (147, 71, 1, '', '', 'layout_supernova.index', '', '', 0),
 (148, 69, 1, '', '', 'layout_supernova.demo_menu', '', 'header', 1),
 (149, 70, 1, '', '', 'component_page.listing', '', 'content', 2),
@@ -1345,9 +1328,9 @@ INSERT INTO `fx_infoblock_visual` (`id`, `infoblock_id`, `layout_id`, `wrapper`,
 (155, 77, 10, 'layout_jeeptravel.block_titled', 'a:1:{s:6:"header";s:13:"Jeep Travels:";}', 'layout_jeeptravel.side_menu', '', 'sidebar', 4),
 (156, 78, 10, '', '', 'component_section.breadcrumbs', '', 'content', 1),
 (157, 79, 10, '', '', 'layout_jeeptravel.pages_by_year', '', 'content', 5),
-(158, 80, 10, '', '', 'layout_jeeptravel.full', 'a:6:{s:18:"page_bg_color_1889";s:7:"#c7c1c7";s:18:"page_bg_image_1889";s:2:"56";s:18:"page_bg_color_1916";s:7:"#706c70";s:18:"page_bg_image_1916";s:0:"";s:14:"contacts_label";s:18:"Для связи:";s:5:"phone";s:18:"+7 (905) 561 99 75";}', '', 0),
+(158, 80, 10, '', '', 'layout_jeeptravel.full', '', '', 0),
 (159, 81, 10, '', '', 'layout_jeeptravel.photo_listing', '', 'content', 6),
-(160, 82, 10, '', '', 'component_blogpost.listing', 'a:6:{s:13:"bg_photo_1976";s:0:"";s:10:"tags_label";s:5:"Tags:";s:12:"posted_under";s:11:"Entry tags:";s:9:"blog_name";s:21:"Jeep Travel blog feed";s:16:"blog_description";s:27:"Our blog is so interesting!";s:16:"rss_posted_under";s:11:"Entry tags:";}', 'content', 2),
+(160, 82, 10, '', '', 'component_blogpost.listing', 'a:6:{s:13:"bg_photo_1976";s:0:"";s:10:"tags_label";s:10:"Post tags:";s:12:"posted_under";s:11:"Entry tags:";s:9:"blog_name";s:21:"Jeep Travel blog feed";s:16:"blog_description";s:27:"Our blog is so interesting!";s:16:"rss_posted_under";s:11:"Entry tags:";}', 'content', 2),
 (161, 83, 10, 'layout_jeeptravel.block_titled', 'a:1:{s:6:"header";s:10:"Tags cloud";}', 'component_tag.listing', '', 'sidebar', 1),
 (162, 84, 10, '', '', 'component_tagpost.listing', '', 'content', 4),
 (163, 85, 10, 'layout_jeeptravel.block_titled', 'a:1:{s:6:"header";s:6:"Photos";}', 'layout_jeeptravel.index_photo_anounces', 'a:2:{s:10:"image_1916";s:0:"";s:10:"image_1913";s:0:"";}', 'index_left', 1),
@@ -1377,8 +1360,6 @@ CREATE TABLE IF NOT EXISTS `fx_layout` (
 
 INSERT INTO `fx_layout` (`id`, `keyword`, `name`) VALUES
 (1, 'supernova', 'Super Nova'),
-(8, 'demo8', 'Demo-8'),
-(6, 'test1', 'Test-1'),
 (9, 'dummy', 'Dummy'),
 (10, 'jeeptravel', 'JeepTravel');
 
@@ -1514,7 +1495,7 @@ CREATE TABLE IF NOT EXISTS `fx_session` (
 --
 
 INSERT INTO `fx_session` (`id`, `user_id`, `session_start`, `session_time`, `ip`, `login_save`, `site_id`, `auth_type`) VALUES
-('3afb326c3bacfbb186e2f61601f670e6', 99, 1374445208, 1374586413, 2130706433, 0, 0, 1);
+('ed575dc6a51cbc2ac077210b8862d991', 99, 1375088800, 1375175888, 2130706433, 0, 0, 1);
 
 -- --------------------------------------------------------
 
