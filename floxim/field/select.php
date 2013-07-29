@@ -12,7 +12,7 @@ class fx_field_select extends fx_field_baze {
         $values = $this->get_values();
         if (!$this->is_not_null() && is_array($values)) {
             $values = array_merge(
-                array('' => fx::lang('-- выберите вариант --', 'system')),
+                array( array('', fx::lang('-- выберите вариант --', 'system'))),
                 $values
             );
         }
@@ -55,7 +55,7 @@ class fx_field_select extends fx_field_baze {
         $values = array();
         if ($this->format['values']) {
             foreach ($this->format['values'] as $v) {
-                $values[$v['id']] = $v['value'];
+                $values[]= array($v['id'], $v['value']);
             }
         }
         return $values;

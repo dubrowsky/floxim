@@ -7,7 +7,10 @@ class fx_admin_configjs {
     $this->options['login'] = 'admin';
     $this->options['action_link'] = fx::config()->HTTP_ACTION_LINK;
 
-    $this->options['history'] = array();
+    /*
+     * 
+     * 
+    $this->options['history'] = array(); 
     $undo = fx_controller_admin_history::get_undo_obj();
     $redo = fx_controller_admin_history::get_redo_obj();
     if ( $undo ) {
@@ -16,6 +19,8 @@ class fx_admin_configjs {
     if ( $redo ) {
         $this->options['history']['redo'] = $redo['name'];
     }
+     * 
+     */
     $this->add_more_menu(fx_controller_admin_adminpanel::get_more_menu());
     $this->add_buttons(fx_controller_admin_adminpanel::get_buttons());
     

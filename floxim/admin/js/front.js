@@ -302,6 +302,7 @@ fx_front.prototype.hilight = function() {
 	items.
         removeClass('fx_hilight').
         removeClass('fx_hilight_empty').
+        removeClass('fx_hilight_empty_inline').
         removeClass('fx_no_hilight').
         removeClass('fx_wrong_mode');
 	if ($fx.front.mode == 'view') {
@@ -313,6 +314,9 @@ fx_front.prototype.hilight = function() {
 			i.addClass('fx_hilight');
             if (i.width() == 0 || i.height() == 0) {
                 i.addClass('fx_hilight_empty');
+                if (i.css('display') == 'inline') {
+                	i.addClass('fx_hilight_empty_inline');
+                }
             }
 		}
 	});

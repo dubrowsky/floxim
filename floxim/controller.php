@@ -24,7 +24,7 @@ class fx_controller {
      * Получить один из параметров по имени
      * @param type $name
      */
-    public function param($name) {
+    public function get_param($name) {
         return isset($this->input[$name]) ? $this->input[$name] : null;
     }
     
@@ -89,14 +89,26 @@ class fx_controller {
      */
     public function get_available_templates( $layout_name = null ) {
         if (is_numeric($layout_name)) {
-            $layout_name = fx::data('layout', $layout_name)->get('keyword');
+            $layout_names = array(fx::data('layout', $layout_name)->get('keyword'));
+        } elseif (is_null($layout_name)) {
+            $layout_names = fx::data('layout')->all()->get_values('keyword');
+        } elseif (is_string($layout_name)) {
+            $layout_names = array($layout_name);
+        } elseif (is_array($layout_name)) {
+            $layout_names = $layout_name;
         }
+        
         // получаем допустимые варианты контроллера
         $controller_variants = $this->_get_controller_variants();
         $template_variants = array();
-        // сначала вытаскиваем все варианты шаблонов из лейаута
-        if ($layout_name && ($layout_tpl = fx::template('layout_'.$layout_name)) ) {
-            $template_variants = $layout_tpl->get_template_variants();
+        // сначала вытаскиваем все варианты шаблонов из лейаутов
+        foreach ($layout_names as $layout_name) {
+            if (($layout_tpl = fx::template('layout_'.$layout_name)) ) {
+                $template_variants = array_merge(
+                    $template_variants, 
+                    $layout_tpl->get_template_variants()
+                );
+            }
         }
         // теперь - все варианты шаблонов из шаблона от контроллера
         foreach ($controller_variants as $controller_variant) {
@@ -142,6 +154,13 @@ class fx_controller {
         return array();
     }
     
+    public function get_action_defaults($action) {
+        if (method_exists($this, 'defaults_'.$action)) {
+            return call_user_func(array($this, 'defaults_'.$action));
+        }
+        return array();
+    }
+    
     public function get_action_info($action) {
         $info_method = 'info_'.$action;
         if (method_exists($this, $info_method)) {
@@ -169,6 +188,8 @@ class fx_controller {
         }
         return $actions;
     }
+    
+    
     
     /*
     public function render() {

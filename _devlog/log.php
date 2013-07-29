@@ -4,7 +4,7 @@ define("DEV_LOG_PATH", dirname(__FILE__).'/log');
 function fx_debug_start() {
 ?>
 	<link type="text/css" href="/_devlog/debug.css" rel="stylesheet" />
-	<script type="text/javascript" src="/floxim/lib/js/jquery-1.7.1.js"></script>
+	<script type="text/javascript" src="/floxim/lib/js/jquery-1.9.1.min.js"></script>
 	<script type="text/javascript" src="/_devlog/debug.js"></script>
 <?
 }
@@ -26,7 +26,7 @@ function dev_log() {
 	}
     $args = func_get_args();
     foreach ($args as &$arg) {
-        if (is_string($arg) && preg_match("~<.+>~", $arg)) {
+        if (is_string($arg) && preg_match("~[<>]~", $arg)) {
             $arg = '<pre>'.htmlspecialchars($arg).'</pre>';
         }
     }

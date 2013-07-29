@@ -37,9 +37,7 @@ class fx_controller_admin_content extends fx_controller_admin {
         $this->response->add_fields($content->get_form_fields(), false, 'content');
 
         if ($input['data_sent']) {
-            dev_log('content original', $content);
             $content->set_field_values($input['content']);
-            dev_log('content filled', $content, $input['content']);
             $content->save();
         }
         return array(

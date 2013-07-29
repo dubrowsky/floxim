@@ -35,6 +35,7 @@ class fx_content extends fx_essence {
         return $this->component_id;
     }
 
+    /*
     protected function _add_history_operation($type, $data = array()) {
         fx_history::add_operation(
             $type, 
@@ -42,6 +43,8 @@ class fx_content extends fx_essence {
             array($this->component_id, $this->data[$this->pk]), $this->modified_data, $data
         );
     }
+     * 
+     */
 
     public function get_upload_folder() {
         return "content/".$this->component_id;
@@ -56,7 +59,7 @@ class fx_content extends fx_essence {
             return;
         }
         
-        $fields = fx::data('component', $this->component_id)->all_fields();
+        $fields = $this->get_fields();
         $result = array('status' => 'ok');
         dev_log('svf', $fields, $values);
 
@@ -97,13 +100,7 @@ class fx_content extends fx_essence {
     public function get_fields_to_show() {
         $fields_to_show = array();
         $com_id = $this->component_id;
-        if (!isset(self::$content_fields_by_component[$com_id])) {
-            self::$content_fields_by_component[$com_id] = array();
-            foreach ( fx::data('component', $com_id)->all_fields()  as $f) {
-                self::$content_fields_by_component[$com_id][$f['name']] = $f;
-            }
-        }
-        $com_fields = self::$content_fields_by_component[$com_id];
+        $com_fields = $this->get_fields();
         
         $is_admin = fx::is_admin();
         
@@ -119,7 +116,7 @@ class fx_content extends fx_essence {
             // поле-селект
             if ($cf->type == 'select') {
                 $jsf = $cf->get_js_field($this);
-                $field_meta['display_value'] = $v ? $jsf['values'][$v] : '';
+                $field_meta['display_value'] = $v ? $jsf['value'] : '';
                 // для не админов показываем название варианта
                 if (!$is_admin) {
                     $fields_to_show[$fkey] = $field_meta['display_value'];
@@ -172,7 +169,7 @@ class fx_content extends fx_essence {
     }
     
     public function get_form_fields() {
-        $all_fields = fx::data('component', $this->component_id)->all_fields();
+        $all_fields = $this->get_fields();
         $form_fields = array();
         foreach ($all_fields as $field) {
             if ($field['type_of_edit'] == fx_field::EDIT_NONE) {
@@ -201,7 +198,7 @@ class fx_content extends fx_essence {
             $html = preg_replace_callback(
                 "~^(\s*?)(<[^>]+>)~", 
                 function($matches) use ($essence_atts) {
-                    $tag = fx_html_token::create_standalone($matches[2]);
+                    $tag = fx_template_html_token::create_standalone($matches[2]);
                     $tag->add_meta($essence_atts);
                     return $matches[1].$tag->serialize();
                 }, 
@@ -251,23 +248,13 @@ class fx_content extends fx_essence {
      */
     protected function _save_multi_links() {
         $link_fields = 
-            fx::data('component', $this->component_id)->
-            all_fields()->
+            $this->get_fields()->
             find('name', $this->modified)->
             find('type', fx_field::FIELD_MULTILINK);
         foreach ($link_fields as $link_field) {
             $val = $this[$link_field['name']];
             $relation = $link_field->get_relation();
-            //$related_data_type = $relation[1];
             $related_field_name = $relation[2];
-            // получаем компонент, управляющий связанной сущностью
-            //$related_component = $link_field->get_related_component();
-            //$related_component_fields = $related_component->all_fields();
-            // и поле сущности, которое ссылается на нас
-            //$related_field = $related_component_fields->find_one('name', $related_field_name);
-            // если оно привязано к родителю, будем сохранять порядок (сортировку)
-            //$related_is_child = $related_field['format']['is_parent'];
-            
             
             switch ($relation[0]) {
                 case fx_data::HAS_MANY:
@@ -326,9 +313,52 @@ class fx_content extends fx_essence {
         }
         return $linker_infoblock_id;
     }
+    
+    public function get_fields() {
+        $com_id= $this->component_id;
+        
+        if (!isset(self::$content_fields_by_component[$com_id])) {
+            $fields = array();
+            foreach ( fx::data('component', $com_id)->all_fields()  as $f) {
+                $fields[$f['name']] = $f;
+            }
+            self::$content_fields_by_component[$com_id] = fx::collection($fields);
+        }
+        return self::$content_fields_by_component[$com_id];
+    }
+    
+    protected function _after_delete() {
+        parent::_after_delete();
+        // delete images when deleting content
+        $image_fields = $this->get_fields()->
+                        find('type', fx_field::FIELD_IMAGE);
+        foreach ($image_fields as $f) {
+            if ( ($field_val = $this[$f['name']]) ) {
+                $file = fx::data('filetable', $field_val);
+                if ($file) {
+                    $file->delete();
+                }
+            }
+        }
+    }
+    
+    protected function _after_update() {
+        parent::_after_update();
+        // modified image fields
+        $image_fields = $this->get_fields()->
+                        find('name', $this->modified)->
+                        find('type', fx_field::FIELD_IMAGE);
+        foreach ($image_fields as $img_field) {
+            if ( ($old_value = $this->modified_data[$img_field['name']]) ) {
+                if ( ($old_file = fx::data('filetable', $old_value)) ) {
+                    $old_file->delete();
+                }
+            }
+        }
+        
+    }
 }
 
 class fx_Exception_content extends Exception {
     
 }
-

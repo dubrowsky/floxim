@@ -78,13 +78,11 @@ class fx_infoblock extends fx_essence {
     }
     
     protected function _after_delete() {
-        $visual = fx::data('infoblock_visual')->get_all('infoblock_id', $this->get('id'));
         $killer = function($cv) {
             $cv->delete();
         };
-        $visual->apply($killer);
-        $inherit = fx::data('infoblock')->get_all('parent_infoblock_id', $this->get('id'));
-        $inherit->apply($killer);
+        fx::data('infoblock_visual')->where('infoblock_id', $this['id'])->all()->apply($killer);
+        fx::data('infoblock')->where('parent_infoblock_id', $this['id'])->all()->apply($killer);
     }
     
     public function get_owned_content() {

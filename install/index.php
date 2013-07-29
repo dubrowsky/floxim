@@ -798,7 +798,7 @@ function fx_exec_sql($file) {
 function fx_get_config($MYSQL_HOST, $MYSQL_USER, $MYSQL_PASSWORD, $MYSQL_DB_NAME) {
     ob_start();
     ?>
-define("FX_JQUERY_PATH", '/floxim/lib/js/jquery-1.9.1.js');
+define("FX_JQUERY_PATH", '/floxim/lib/js/jquery-1.9.1.min.js');
 $db_config = array(
     'default' =>  array(
         'DB_DSN' => 'mysql:dbname=<?=$MYSQL_DB_NAME?>;host=<?=$MYSQL_HOST?>',

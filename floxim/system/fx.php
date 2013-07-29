@@ -37,7 +37,7 @@ class fx {
      * @param mixed [$id] id или массив ids
     */
     public static function data($datatype, $id = null) {
-        if (is_array($datatype)) {
+		if (is_array($datatype)) {
             $datatype = join("_", $datatype);
         }
         if (
@@ -262,6 +262,11 @@ class fx {
             $arr = $var_value;
         }
     }
+    
+    public static function collection($data = array()) {
+        return $data instanceof fx_collection ? $data : new fx_collection($data);
+    }
+    
     /*
      * @return fx_system_input
      */

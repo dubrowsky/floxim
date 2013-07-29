@@ -129,6 +129,9 @@ class fx_data_content extends fx_data {
                 $obj[$f['name']] = $f['default'];
             }
         }
+        if (!isset($obj['priority'])) {
+            $obj['priority'] = $this->next_priority();
+        }
         return $obj;
     }
 

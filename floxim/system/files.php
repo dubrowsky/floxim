@@ -957,7 +957,11 @@ class fx_system_files extends fx_system {
         $full_path = fx::config()->FILES_FOLDER.$dir.$put_file;
         
         if ($type == 1) {
-            move_uploaded_file($file['tmp_name'], $full_path);
+            $res= move_uploaded_file($file['tmp_name'], $full_path);
+            if (!$res) {
+            	dev_log($file, $full_path);
+            	die();
+            }
             //$this->move_uploaded_file($file['tmp_name'], $full_path);
         } else if ( $type == 2 || $type == 3) {
             $content = file_get_contents($link);

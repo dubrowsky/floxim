@@ -234,6 +234,8 @@
                                         $('[name="'+data.fields[i]+'"]').addClass("ui-state-error");
                                     }
                                 }
+                                console.log('changing hash');
+                                $(window).hashchange();
                             }); 
  
                             return false;

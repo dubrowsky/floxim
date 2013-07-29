@@ -270,7 +270,7 @@ class fx_core extends fx_system {
                 $file = $root.'system/collection';
                 break;
             }
-            if (preg_match("~^template(|_processor|_field|_html|_suitable)$~", $classname)) {
+            if (preg_match("~^template(|_processor|_field|_html|_suitable|_html_token|_token|_html_tokenizer)$~", $classname)) {
                 $file = $root.'template/'.$classname;
                 break;
             }
@@ -279,29 +279,10 @@ class fx_core extends fx_system {
                 break;
             }
             if (preg_match("~^template_(.+)$~", $classname, $tpl_name)) {
-                $tpl_name = $tpl_name[1];
-                $tpl_file = fx::config()->COMPILED_TEMPLATES_FOLDER.'/'.$tpl_name;
-                if (false && file_exists($tpl_file.'.php')) {
-                //if (file_exists($tpl_file.'.php')) {
-                    $file = $tpl_file;
-                    break;
-                }
-                
-                if (preg_match("~^(layout|component|widget)_([a-z0-9_]+)$~", $tpl_name, $tpl_name_parts)) {
-                    $ctr_type = $tpl_name_parts[1];
-                    $ctr_name = $tpl_name_parts[2];
-                } else {
-                    $ctr_type = 'other';
-                    $ctr_name = $tpl_name;
-                }
-                
-                $source_dir = $doc_root.$ctr_type.'/'.$ctr_name;
-                if (is_dir($source_dir)) {
-                    $processor = new fx_template_processor();
-                    $processor->process_dir($source_dir);
-                    $file = $tpl_file;
-                    break;
-                }
+                $file = fx_template_processor::get_template_file($tpl_name);
+                break;
+                //echo "<pre>" . htmlspecialchars(print_r($file, 1)) . "</pre>";
+                //die();
             }
             
             if (in_array($classname, $essences)) {

@@ -146,6 +146,8 @@ fx_adminpanel = {
     },
 
     update_history: function () {
+        return;
+        
         if ( $fx.history.undo !== undefined && $fx.history.undo.length > 0 ) {
             $fx.buttons.update_button('undo', {
                 'available' : true,
@@ -211,6 +213,7 @@ fx_adminpanel = {
 					$fx.reload(json.reload);
 					return;
 				}
+                /*
 				if ( json.history !==  undefined && json.history.undo  !==  undefined ) {
 					$fx.history.undo = json.history.undo;
 				}
@@ -218,6 +221,7 @@ fx_adminpanel = {
 					$fx.history.redo = json.history.redo;
 				}
 				$fx.update_history();
+                */
             },
             callback],
             error: function(jqXHR, textStatus, errorThrown) {

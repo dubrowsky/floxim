@@ -2,19 +2,14 @@
 
 class fx_controller_infoblock extends fx_controller {
 
-    /***************************************************
-     * TODO пропертя, в которую будут складываться параметры, с которыми должен быть вызван контроллер, чтобы он ничего не знал о том кто и где его вызывает
-     ****************************************************/
-    private $controller_data = array();
-    
     /*
      * @return fx_infoblock
      */
     protected function _get_infoblock() {
-        if ( ($ib = $this->param('infoblock'))) {
+        if ( ($ib = $this->get_param('infoblock'))) {
             return $ib;
         }
-        if (($infoblock_id = $this->param('infoblock_id'))) {
+        if (($infoblock_id = $this->get_param('infoblock_id'))) {
             return fx::data('infoblock', $infoblock_id);
         }
         return null;
@@ -22,11 +17,11 @@ class fx_controller_infoblock extends fx_controller {
 
 
     public function render() {
-
+        
         $infoblock = $this->_get_infoblock();
         
         if (!$infoblock) {
-            dev_log('no ib to rnd', $this);
+            dev_log('no ib to render', $this);
             die("IB NOT FOUND");
         }
         
@@ -35,25 +30,35 @@ class fx_controller_infoblock extends fx_controller {
         if (!is_array($params)) {
             $params = array();
         }
-        if ( ($override_params = $this->param('override_params'))) {
+        if ( ($override_params = $this->get_param('override_params'))) {
             $params = array_merge($params, $override_params);
         }
         
-        $params['ajax_mode'] = $this->param('ajax_mode');
+        $params['ajax_mode'] = $this->get_param('ajax_mode');
         
         if (!isset($params['infoblock_id'])) {
             $params['infoblock_id'] = $infoblock['id'];
         }
-
+        
         $controller = fx::controller(
             $infoblock->get_prop_inherited('controller'), 
             $params, 
             $infoblock->get_prop_inherited('action')
         );
         
+        
         $result = $controller->process();
+        
+        if (is_string($result)) {
+            if (fx::env('is_admin')) {
+                $result = $this->_add_infoblock_meta($result, $infoblock);
+            }
+            $result = $controller->postprocess($result);
+            return $result;
+        }
+        
         $controller_meta = fx::dig($result, '_meta');
-        if (fx::dig($controller_meta, 'disabled') && !fx::is_admin()) {
+        if (fx::dig($controller_meta, 'disabled')) { // !fx::is_admin()
             return;
         }
         $tpl_params = array();
@@ -96,7 +101,6 @@ class fx_controller_infoblock extends fx_controller {
             $output = $tpl_wrap->render();
             $is_subroot = $tpl_wrap->is_subroot;
         }
-        
         if (fx::env('is_admin')) {
             $output = $this->_add_infoblock_meta($output, $infoblock, $controller_meta, $is_subroot);
         }
@@ -132,8 +136,8 @@ class fx_controller_infoblock extends fx_controller {
         
         
         if ($controller_meta) {
-            if (fx::dig($controller_meta, 'disabled')) {
-                $meta['class'] .= ' fx_infoblock_disabled';
+            if (fx::dig($controller_meta, 'hidden')) {
+                $meta['class'] .= ' fx_infoblock_hidden';
             }
             $meta['data-fx_controller_meta'] = htmlentities(json_encode($controller_meta));
         }
@@ -143,7 +147,7 @@ class fx_controller_infoblock extends fx_controller {
             $html_result = preg_replace_callback(
                 '~<body[^>]*?>~is', 
                 function($matches) use ($meta) {
-                    $body_tag = fx_html_token::create_standalone($matches[0]);
+                    $body_tag = fx_template_html_token::create_standalone($matches[0]);
                     $body_tag->add_meta($meta);
                     return $body_tag->serialize();
                 }, 
@@ -153,7 +157,7 @@ class fx_controller_infoblock extends fx_controller {
             $html_result = preg_replace_callback(
                 "~^(\s*?)(<[^>]+?>)~", 
                 function($matches) use ($meta) {
-                    $tag = fx_html_token::create_standalone($matches[2]);
+                    $tag = fx_template_html_token::create_standalone($matches[2]);
                     $tag->add_meta($meta);
                     return $matches[1].$tag->serialize();
                 }, 
@@ -180,13 +184,14 @@ class fx_controller_infoblock extends fx_controller {
             }
             return 'edit';
         }
+        //dev_log($infoblock['name'], $infoblock, $scope);
         if ($ib_page_id == 0 && !$scope['page_type']) {
             return 'design';
         }
         if ($scope['pages'] != 'descendants') {
             return 'edit';
         }
-        if (fx::data('content_page', $ib_page_id)->get('url') == '/') {
+        if (fx::data('content_page', $ib_page_id)->get('url') == '/' && !$scope['page_type']) {
             return 'design';
         }
         return 'edit';

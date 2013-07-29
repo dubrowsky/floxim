@@ -54,7 +54,10 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                 }
                 $c_item['children'][]= array(
                     'data' => $action_info['name'],
-                    'metadata' => array('id' => 'component_'.$c['keyword'].'.'.$action_code)
+                    'metadata' => array(
+                        'id' => 'component_'.$c['keyword'].'.'.$action_code,
+                        'description' => $action_info['description']
+                    )
                 );
             }
             if (count($c_item['children']) > 0) {
@@ -146,6 +149,8 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             $controller_name = $controller;
             $controller = fx::controller($controller);
             $settings = $controller->get_action_settings($action);
+            $defaults = $controller->get_action_defaults($action);
+            
             foreach ($infoblock['params'] as $ib_param => $ib_param_value) {
                 if (isset($settings[$ib_param])) {
                     $settings[$ib_param]['value'] = $ib_param_value;
@@ -172,7 +177,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         
         
         $c_page = fx::data('content_page', $input['page_id']);
-        $scope_fields = $this->_get_scope_fields($infoblock, $c_page, $input['admin_mode']);
+        $scope_fields = $this->_get_scope_fields($infoblock, $c_page, $input['admin_mode'], $defaults['scope']);
         
         $scope_tab = !$is_layout;
         if ($scope_tab) {
@@ -315,7 +320,16 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
      * @param fx_content_page $c_page - страница, на которой открыли окошко настроек
      */
     
-    protected function _get_scope_fields(fx_infoblock $infoblock, fx_content_page $c_page, $admin_mode) {
+    protected function _get_scope_fields(
+                fx_infoblock $infoblock, 
+                fx_content_page $c_page, 
+                $admin_mode, 
+                $defaults 
+            ) {
+        
+        if (!is_array($defaults)) {
+            $defaults = array();
+        }
         $fields = array();
         
         if ($admin_mode == 'design') {
@@ -336,14 +350,17 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         }
         
         if ( ! ($c_pages_val = fx::dig($infoblock, 'scope.pages')) ) {
-            $c_pages_val = 'all';
+            $c_pages_val = $defaults['pages'] ? $defaults['pages'] : 'all';
         }
-        
         
         if ($c_pages_val == 'all'){
             $c_page_id_val = 0;
         } else {
-            $c_page_id_val = $infoblock['page_id'];
+            if ($infoblock['id'] || !$defaults['page_id']) {
+                $c_page_id_val = $infoblock['page_id'];
+            } else {
+                $c_page_id_val = $defaults['page_id'];
+            }
         }
         
         $fields []= array(
@@ -500,8 +517,10 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                 $content_id = $var['content_id'];
                 $content_type_id = $var['content_type_id'];
                 $content = fx::data(array('content',$content_type_id), $content_id);
-                $content[$var['name']] = $value;
-                $content->save();
+                if ($content) {
+                    $content[$var['name']] = $value;
+                    $content->save();
+                }
             }
         }
     }

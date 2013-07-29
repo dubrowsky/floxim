@@ -1,6 +1,6 @@
 <div 
     fx:template="listing" 
-    fx:name="Стандартное меню"
+    fx:name="Standard menu"
     id="menu" 
     class="std_menu">
     <ul>

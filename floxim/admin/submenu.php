@@ -173,21 +173,12 @@ class fx_admin_submenu {
             // выводим основные разделы
             $submenu_items = fx_controller_admin_component::get_component_submenu($component);
             foreach ($submenu_items as $item) {
-            	$this->menu[] = $this->add_node($item['code'], $item['title'], $item['url']);
-            }
-            
-            /*
-            // добавляем шаблоны
-            $ctpls = fx::data('ctpl')->get_by_component($cid);
-            foreach ($ctpls as $v) {
-                $this->menu[] = $this->add_node('ctpl-'.$v['id'], $v['name'], 'ctpl.edit('.$v['id'].')', 'ctpl');
-            }
-             * 
-             */
-            
-            // и поля
-            foreach ($component->fields() as $v) {
-                $this->menu[] = $this->add_node('field-'.$v['id'], $v['name'], 'component.edit('.$cid.',edit_field,'.$v['id'].')', 'fields');
+            	$this->menu[] = $this->add_node(
+                        $item['code'], 
+                        $item['title'], 
+                        $item['url'], 
+                        $item['parent']
+                );
             }
         }
     }

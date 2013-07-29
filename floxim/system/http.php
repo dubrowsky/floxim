@@ -22,4 +22,8 @@ class fx_http {
     public function refresh() {
         $this->redirect($_SERVER['REQUEST_URI'], 200);
     }
+    
+    public function header($name, $value = null) {
+        header($name.(!is_null($value) ? ": ".$value : ''));
+    }
 }

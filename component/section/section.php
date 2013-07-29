@@ -58,7 +58,7 @@ class fx_controller_component_section extends fx_controller_component {
         $path = fx::data('content_page', $c_page_id)->get_parent_ids();
         $path []= $c_page_id;
         $this->listen('build_query', function($f) use ($controller, $path) {
-            $submenu = $controller->param('submenu');
+            $submenu = $controller->get_param('submenu');
             switch ($submenu) {
                 case 'none':
                     return;
@@ -92,17 +92,17 @@ class fx_controller_component_section extends fx_controller_component {
     }
     
     public function do_breadcrumbs() {
-        if ( !($page_id = $this->param('page_id'))) {
+        if ( !($page_id = $this->get_param('page_id'))) {
             $page_id = fx::env('page');
         }
         $essence_page = fx::data('content_page',$page_id);
         $parents = $essence_page->get_parent_ids();
-        if (count($parents) == 0 && $this->param('hide_on_index')) {
+        if (count($parents) == 0 && $this->get_param('hide_on_index')) {
             $this->_meta['disabled'] = true;
             return array();
         }
         $essence_page['active'] = true;
-        if ($this->param('header_only')) {
+        if ($this->get_param('header_only')) {
             $pages = new fx_collection(array($essence_page));
         } else {
             $pages = fx::data('content_page', $parents);

@@ -6,10 +6,12 @@
     {css}
         calendar.css
     {/css}
-    <h2 fx:if="$show_header">{%header}Посты по месяцам:{/%}</h2>
+    <h2 fx:if="$show_header">{%header}Blog archive:{/%}</h2>
     <?
-    $month_names = array(
-        '', 'январь','февраль','март','апрель','май','июнь','июль','август','сентябрь','октябрь','ноябрь','декабрь'
+    $month_names = explode(
+        ',', 
+        ',January,February,March,April,May,June,'.
+        'July,August,September,October,November,December'
     );
     ?>
     <div fx:template="item" class="year{if $active} year_active{/if}">

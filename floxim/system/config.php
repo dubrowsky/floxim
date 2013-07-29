@@ -105,8 +105,8 @@ class fx_config {
         $this->config['TMP_FOLDER'] = $this->config['ROOT_FOLDER'].'tmp/';
         $this->config['MODULE_FOLDER'] = $this->config['FLOXIM_FOLDER'].$this->config['HTTP_MODULE_PATH'];
         $this->config['ADMIN_FOLDER'] = $this->config['ROOT_FOLDER'].'admin/';
-        $this->config['NC_JQUERY_PATH'] = $this->config['ROOT_FOLDER'].'lib/js/jquery-1.6.min.js';
         $this->config['COMPILED_TEMPLATES_FOLDER'] = $this->config['FILES_FOLDER'].'compiled_templates';
+        $this->config['COMPILED_TEMPLATES_TTL'] = 0;
 
         return $this;
     }

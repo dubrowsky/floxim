@@ -43,7 +43,7 @@ class fx_controller_admin extends fx_controller {
         }
         
         $this->response = new fx_admin_response($input);
-        
+        /*
         if ($this->save_history && $input['posting']) {
             $history = fx::data('history')->create(array('user_id' => 1));
             $history['name'] = $this->get_history_name($action);
@@ -52,6 +52,8 @@ class fx_controller_admin extends fx_controller {
             fx_history::set_history_obj($history);
             fx_history::delete_old();
         }
+         * 
+         */
 
         $result = $this->$action($input);
         if (is_string($result)) {
@@ -60,11 +62,13 @@ class fx_controller_admin extends fx_controller {
 
         if ($input['posting']) {
             if (!$result['text']) $result['text'] = $this->get_status_text();
-
+            /*
             $undo = fx_controller_admin_history::get_undo_obj();
             $redo = fx_controller_admin_history::get_redo_obj();
             if ($undo) $result['history']['undo'] = $undo['name'];
             if ($redo) $result['history']['redo'] = $redo['name'];
+             * 
+             */
         }
 
         if ($this->response) {
@@ -79,6 +83,7 @@ class fx_controller_admin extends fx_controller {
         echo json_encode($result);
     }
 
+    /*
     protected function get_history_name($action) {
         $essence = str_replace('fx_controller_', '', get_class($this));
         $action = str_replace('_save', '', $action);
@@ -86,7 +91,7 @@ class fx_controller_admin extends fx_controller {
 
         return defined($constant) ? constant($constant) : $constant;
     }
-
+    */
     protected function get_status_text() {
         return fx::lang('Сохранено','system');
     }
@@ -115,7 +120,7 @@ class fx_controller_admin extends fx_controller {
             FX_JQUERY_PATH,
             '/floxim/lib/js/fx-lang.js',
             '/floxim_files/js_dictionaries/js-dictionary-'.fx::config()->LANGUAGE.'.js',
-            '/floxim/lib/js/jquery-ui-1.10.3.custom.js',
+            '/floxim/lib/js/jquery-ui-1.10.3.custom.min.js',
             '/floxim/lib/js/jquery.nestedSortable.js',
             '/floxim/lib/js/jquery.ba-hashchange.min.js',
             '/floxim/lib/js/jquery.json-2.3.js',
@@ -142,8 +147,7 @@ class fx_controller_admin extends fx_controller {
             '/floxim/admin/js/menu/breadcrumb.js',
             '/floxim/lib/editors/redactor/redactor.js',
             '/floxim/lib/js/jquery.form.js',
-            '/floxim/lib/js/jquery.jstree.js',
-            '/floxim/lib/js/jquery-gp-gallery.js'
+            '/floxim/lib/js/jquery.jstree.js'
         );
         $page = fx::page();
         foreach ($js_files as $file) {
@@ -191,7 +195,7 @@ class fx_controller_admin extends fx_controller {
                     <div id="fx_admin_status_block"></div>
                  </div>
                  <div id="fx_admin_breadcrumb"></div>
-                 <div id="fx_admin_content">'.$auth_form.'</div>
+                 <div id="fx_admin_content" class="fx_overlay">'.$auth_form.'</div>
             </div>
             <div id="fx_dialog"></div>
             <div id="fx_dialog_file"></div>';
@@ -201,7 +205,7 @@ class fx_controller_admin extends fx_controller {
                 <div id="fx_admin_panel">
                     <div id="fx_admin_panel_logo"></div>
                     <div id="fx_admin_main_menu">
-                        <a class="fx_admin_main_menu_active">
+                        <a class="fx_admin_main_menu_active fx_backend_login_title">
                             '.fx::lang('Welcome to Floxim.CMS, please sign in', 'system').'
                         </a>
                     </div>
@@ -212,13 +216,15 @@ class fx_controller_admin extends fx_controller {
                 <input type="hidden" name="action" value="auth" />
                 <div class="group">
                     <label for="inp_user">'.fx::lang('Логин', 'system').'</label>
-                    <input name="AUTH_USER" id="inp_user" />
+                    <input class="text" name="AUTH_USER" id="inp_user" />
                 </div>
                 <div class="group">
                     <label for="inp_password">'.fx::lang('Пароль', 'system').'</label>
-                    <input type="password" name="AUTH_PW" id="inp_password" />
+                    <input class="text" type="password" name="AUTH_PW" id="inp_password" />
                 </div>
-                <input type="submit" value="' . fx::lang('Вход','system') . '" class="auth_submit">
+                <button type="submit" class="fx_button fx_admin_button_text">
+                    <span>'.fx::lang('Вход','system').'</span>
+                </button>
                 </form></div>';
         }
 
@@ -227,7 +233,7 @@ class fx_controller_admin extends fx_controller {
             $page->add_js_text("fx_adminpanel.init(".$js_config->get_config().");");
         }
         
-        $html = '<html class="fx_admin_html"><head><title>Floxim</title></head><body> '.$auth_form.'</body></html>';
+        $html = '<html class="fx_overlay fx_admin_html"><head><title>Floxim</title></head><body> '.$auth_form.'</body></html>';
         $html = $page->post_process($html);
         return $html;
     }

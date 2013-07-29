@@ -121,6 +121,15 @@ class fx_component extends fx_essence {
     protected function _after_insert() {
         $this->create_content_table();
     }
+    /*
+    protected function _after_update() {
+        parent::_after_update();
+        if ($this->is_modified('parent_id')) {
+            
+        }
+    }
+     * 
+     */
 
     protected function create_content_table() {
         $sql = "DROP TABLE IF  EXISTS `{{content_".$this['keyword']."}}`;

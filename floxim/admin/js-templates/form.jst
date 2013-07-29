@@ -18,7 +18,7 @@ $('.input_container', html).append($t.jQuery('input', _c));
 	print($t.input({type:'hidden', name:_c.name,value:fx_object_get_first_key(_c.values)}));
 ?>
 
-<!--[form_row ? _c.type == 'hidden' || _c.type == 'button' || _c.type == 'list']-->
+<!--[form_row ? _c.type == 'hidden' || _c.type == 'button' || _c.type == 'list' || _c.type == 'tree']-->
 <div></div>
 
 <!--jquery-->
@@ -64,9 +64,14 @@ name="<?=_c.name?>" id="<?=_c.name?>"
 var c_val = _c.value || '';
 c_val = $t.clear(c_val);
 ?>
+<div class="fx_textarea_container">
 <textarea 
 	<?=$t.field_id_name(_c)?>
-	class="<?=_c.wysiwyg ? 'fx_wysiwyg' : 'fx_input'?> <?=_c.code ? 'fx_code fx_code_'+_c.code : ''?>"><?=c_val?></textarea>
+	class="<?=
+        _c.wysiwyg ? 'fx_wysiwyg' : 'fx_input'
+    ?> <?=
+        _c.code ? 'fx_code fx_code_'+_c.code : ''?>"><?=c_val?></textarea>
+</div>
 
 <!--jquery-->
 html.find('textarea.fx_code').each( function(){
@@ -94,7 +99,9 @@ html.find('textarea.fx_code').each( function(){
 		mode:code_type,
 		lineNumbers: true,
 		matchBrackets: true,
-		tabMode: "indent"
+		tabMode: "indent",
+        electricChars: false,
+        smartIndent: false
 	};
 	var cCodeMirror = CodeMirror.fromTextArea(this, config);
 	$(this).data('codemirror', cCodeMirror);

@@ -20,13 +20,11 @@ class fx_controller_admin_site extends fx_controller_admin {
             $r = array(
                     'id' => $v['id'],
                     'header' => array('name' => $v['name'], 'url' => 'site.settings('.$v['id'].')'),
-                    'text' => $text,
+                    'text' => $text/*,
                     'buttons' => array(
-                    	//array('url' => 'site.map('.$v['id'].')', 'label' => fx::lang('Карта сайта','system')),
                     	array('url' => 'site.settings('.$v['id'].')', 'label' => fx::lang('Настройки','system')),
-                    	array('url' => 'site.design('.$v['id'].')', 'label' => fx::lang('Дизайн','system')),
-                    	//array('label' => fx::lang('Экспорт','system'), array('essence' => 'site', 'action' => 'export', 'id' => $v['id']))
-                    )
+                    	array('url' => 'site.design('.$v['id'].')', 'label' => fx::lang('Дизайн','system'))
+                    )*/
             );
             $list['values'][] = $r;
         }

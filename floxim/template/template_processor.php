@@ -15,6 +15,36 @@ class fx_template_processor {
         $code = $this->_make_code($tree, $code);
         return $code;
     }
+    
+    public static function get_template_file($tpl_name) {
+        $tpl_name = $tpl_name[1];
+        $tpl_file = fx::config()->COMPILED_TEMPLATES_FOLDER.'/'.$tpl_name;
+        $tpl_file_full = $tpl_file.'.php';
+        
+        if (
+                file_exists($tpl_file_full) &&
+                (time() - filemtime($tpl_file_full)) < fx::config()->COMPILED_TEMPLATES_TTL
+        ) {
+            return $tpl_file;
+        }
+
+        $tpl_name_parts = null;
+        if (preg_match("~^(layout|component|widget)_([a-z0-9_]+)$~", $tpl_name, $tpl_name_parts)) {
+            $ctr_type = $tpl_name_parts[1];
+            $ctr_name = $tpl_name_parts[2];
+        } else {
+            $ctr_type = 'other';
+            $ctr_name = $tpl_name;
+        }
+
+        $source_dir = fx::config()->DOCUMENT_ROOT.'/'.$ctr_type.'/'.$ctr_name;
+        if (is_dir($source_dir)) {
+            $processor = new fx_template_processor();
+            $processor->process_dir($source_dir);
+            return $tpl_file;
+        }
+        return null;
+    }
     /**
      * Преобразовать директорию с шаблономи в php-код
      * @param string $source_dir путь к директории
@@ -42,7 +72,10 @@ class fx_template_processor {
             if (preg_match("~/_[^/]+$~", $file)) {
                 continue;
             }
-            $file_data = trim(file_get_contents($file));
+            $source .= '{templates source="'.$file.'"}';
+            $file_data = file_get_contents($file);
+            /*
+            $file_data = trim($file_data);
             $file_data = preg_replace("~\{\*.*?\*\}~s", '', $file_data);
             
             // удаляем пробелы в начале строки, 
@@ -58,7 +91,7 @@ class fx_template_processor {
                 '\1',
                 $file_data
             );
-            
+            */
             // Проверяем наличие fx-атрибутов в разметке файла
             if (fx_template_html::has_floxim_atts($file_data)) {
                 $T = new fx_template_html($file_data);
@@ -83,6 +116,7 @@ class fx_template_processor {
             }
             
             $source .= trim($file_data);
+            $source .= '{/templates}';
         }
         $source .= '{/templates}';
         $code = $this->process($source, $tpl_name);
@@ -135,7 +169,7 @@ class fx_template_processor {
         ),
         'templates'=> array(
             'type' => 'double',
-            'contains' => array('template')
+            'contains' => array('template', 'templates')
         ),
         'each' => array(
             'type' => 'both',
@@ -238,7 +272,6 @@ class fx_template_processor {
     
     protected function _template_to_each(fx_template_token $token) {
         $children = $token->get_children();
-        dev_log($this->_controller_name, $token);
         $subtemplates = array();
         $each_token = false;
         $tpl_id = $token->get_prop('id');
@@ -286,8 +319,6 @@ class fx_template_processor {
         if ($is_subroot){
             $each_token->set_prop('subroot', true);
         }
-        
-        //echo fen_debug($subtemplates, $each_token);
         
         // выбираем дефолтный шаблон - либо inactive, либо item
         $basic_tpl = null;
@@ -341,9 +372,6 @@ class fx_template_processor {
         }
         // только один подшаблон
         else {
-            /*foreach ($subtemplates as $subtpl) {
-                $each_token->add_children($subtpl->get_children());
-            }*/
             $each_token->add_children($basic_tpl->get_children());
         }
         
@@ -413,6 +441,7 @@ class fx_template_processor {
                 '".$param_var_token->get_prop('id')."', 
                 ".$value_to_set.");\n";
         }
+        //$code .= 'dev_log($tpl_to_call);'."\n";
         $code .= 'echo $tpl_to_call->render($this->data);?>';
         $current_template =& $this->templates[$this->_get_current_template_id()];
         if (!isset($current_template['calls'])) {
@@ -452,22 +481,39 @@ class fx_template_processor {
         }
         $code .= ";\n";
         $code .= "}\n";
-        /*
-        $code .= "} else {\n";
-        $code .= "\t".$var_tmp.' = fx::dig($this->data, "'.$var_id.'");'."\n";
-        $code .= "}";
-         * 
-         */
+        
         if ($token->get_prop('default') || count($token->get_children()) > 0) {
-            $code .= "\nif (is_null(".$var_tmp.")) {\n";
-            if (!($default = $token->get_prop('default')) ) {
-                $code .= "\tob_start();\n";
-                $code .= "\t".$this->_token_to_code($token);
-                $default = "ob_get_clean()";
+            // default values for template/visual vars
+            if ($token->get_prop('var_type') == 'visual') {
+                $code .= "\nif (is_null(".$var_tmp.")) {\n";
+                if (!($default = $token->get_prop('default')) ) {
+                    $code .= "\tob_start();\n";
+                    $code .= "\t".$this->_token_to_code($token);
+                    $default = "ob_get_clean()";
+                }
+                $code .= "\n\t".$var_tmp .' = '.$default.";\n";
+                $code .= '${"'.$var_parts[0].'"} = '.$var_tmp.";\n";
+                $code .= "}\n";
+            } 
+            // default values for content vars
+            else {
+                $code .= 'if ('.
+                            '!isset('.$var_tmp.') || '.
+                            '('.$var_tmp.' instanceof fx_template_field && '.
+                                '!'.$var_tmp.'->get_value() || !'.$var_tmp.')) {'."\n";
+                
+                if (!($default = $token->get_prop('default')) ) {
+                    $code .= "\tob_start();\n";
+                    $code .= "\t".$this->_token_to_code($token);
+                    $default = "ob_get_clean()";
+                }
+                $code .= "if (".$var_tmp." instanceof fx_template_field) {\n";
+                $code .= $var_tmp."->set_value(".$default.");\n";
+                $code .= "} else {\n";
+                $code .= "\n\t".$var_tmp .' = '.$default.";\n";
+                $code .= "}\n";
+                $code .= "}\n";
             }
-            $code .= "\n\t".$var_tmp .' = '.$default.";\n";
-            $code .= "\tfx::dig_set(\$this->data, \"".$var_id."\", ".$var_tmp.");\n";
-            $code .= "}\n";
         }
         if ($token->get_prop('var_type') == 'visual' && !($token->get_prop('editable') == 'false')) {
             if (!$token->get_prop('type')) {
@@ -498,6 +544,7 @@ class fx_template_processor {
         }
         if ( ( $modifiers = $token->get_prop('modifiers') ) ) {
         	$code .= '$val = '.$var_tmp.' instanceof fx_template_field ? '.$var_tmp.'->get_value() : '.$var_tmp.";\n";
+            $code .= "\$callback = null;\n";
         	foreach ($modifiers as $mod) {
         		$callback = array_shift($mod);
                 if ($callback == 'fx_default') {
@@ -520,6 +567,10 @@ class fx_template_processor {
                 } else {
                     array_unshift($mod, '$val');
                 }
+                // check if we found a real callback for this type
+                if ($callback == 'fx_default') {
+                    $code .= "if (\$callback) {\n";
+                }
                 if ($callback == 'fx_default') {
                     $code .= '$val = call_user_func($callback, ';
                 } else {
@@ -527,6 +578,10 @@ class fx_template_processor {
                 }
                 $code .= join(", ", $mod);
                 $code .= ");\n";
+                // end of callback's if
+                if ($callback == 'fx_default') {
+                    $code .= "}\n";
+                }
         	}
         	$code .= 'if ('.$var_tmp.' instanceof fx_template_field) {'."\n";
             $code .= $var_tmp.'->set_meta("display_value", $val)'.";\n";
@@ -573,11 +628,14 @@ class fx_template_processor {
             }
         }
         if (! $arr_id || $arr_id == '.') {
-            //$arr_id = '$this->get_var("input.items")';
             $arr_id = '$items';
         }
-        $arr_hash_name = '$arr_'.md5($arr_id);
-        $code .= $arr_hash_name .'= '.$arr_id.";\n";
+        if (!preg_match('~^\$[a-z0-9_]+$~', $arr_id)) {
+            $arr_hash_name = '$arr_'.md5($arr_id);
+            $code .= $arr_hash_name .'= '.$arr_id.";\n";
+        } else {
+            $arr_hash_name = $arr_id;
+        }
         $arr_id = $arr_hash_name;
         
         if (!$item_alias && ! ($item_alias = $token->get_prop('as') ) ) {
@@ -615,12 +673,18 @@ class fx_template_processor {
         $code .=  $is_essence ." = ".$item_alias." instanceof fx_essence;\n";
         //$code .= $item_alias."_is_odd = ".$counter_id." % 2 != 0;\n";
         if ($extract) {
+        	if ( ($e_prefix = $token->get_prop('prefix')) ) {
+        		$e_flags = ", EXTR_PREFIX_ALL, '".$e_prefix."'"; 
+        		$code .= 'dev_log("extracting", '.$item_alias.')'.";\n";
+        	} else {
+        		$e_flags = '';
+        	}
             $code .= "\tif (".$is_essence.") {\n";
-            $code .= "\t\textract(".$item_alias."->get_fields_to_show());\n";
+            $code .= "\t\textract(".$item_alias."->get_fields_to_show() ".$e_flags.");\n";
             $code .= "} elseif (is_array(".$item_alias.")) {\n";
-            $code .= "\t\textract(".$item_alias.");\n";
+            $code .= "\t\textract(".$item_alias." ".$e_flags.");\n";
             $code .= "\t} elseif (is_object(".$item_alias.")) {\n";
-            $code .= "\t\textract(get_object_vars(".$item_alias."));\n";
+            $code .= "\t\textract(get_object_vars(".$item_alias.") ".$e_flags.");\n";
             $code .= "\t}\n";
         }
         $meta_test = "\tif (\$_is_admin && ".$is_essence." ) {\n";
@@ -752,7 +816,14 @@ class fx_template_processor {
             return;
         }
         $this->_template_stack []= $token->get_prop('id');
-        $this->templates [$token->get_prop('id')]= array('id' => $token->get_prop('id'));
+        $tpl_props = array(
+            'id' => $token->get_prop('id'),
+            'file' => $this->_c_file
+        );
+        if ( ($offset = $token->get_prop('offset')) ) {
+            $tpl_props['offset'] = $offset;
+        }
+        $this->templates [$token->get_prop('id')]= $tpl_props;
         
         $is_subroot = $token->get_prop('subroot') ? 'true' : 'false';
         $code = "\t\$this->is_subroot = ".($is_subroot).";\n";
@@ -782,8 +853,11 @@ class fx_template_processor {
     protected $_class_code = null;
     protected function  _make_code(fx_template_token $tree, $class_code) {
         $this->_class_code = preg_replace('~[^a-z0-9]+~', '_', $class_code);
-        foreach ($tree->get_children() as $token) {
-            $this->add_template($token);
+        foreach ($tree->get_children() as $templates_token) {
+            $this->_c_file = $templates_token->get_prop('source');
+            foreach ($templates_token->get_children() as $token) {
+                $this->add_template($token);
+            }
         }
         ob_start();
         echo '<'."?\n";
@@ -871,173 +945,101 @@ class fx_template_processor {
 			);
 			
 			if ($name == 'var' && preg_match("~^\s*\|~", $source)) {
-				$source = preg_replace("~^\s*\|~", '', $source);
-				$source = trim($source);
-				$source .= '|';
-				$source = preg_split("~(\s*\|\s*|\s*:\s*|[\'\"])~", $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
-				if (count($source) > 0) {
-					$modifiers = array();
-					$c_modifier = array();
-					$c_state = 'default';
-					$c_arg_quote = '';
-					$c_arg = '';
-					foreach ($source as $chunk_num => $chunk) {
-						$is_separator = preg_match("~^\s*\|\s*$~", $chunk);
-						$is_arg_separator = preg_match("~^\s*:\s*$~", $chunk);
-						if ($c_state == 'default') {
-							// нормальное название модификатора
-							if (preg_match("~^[a-z0-9_-]+$~i", $chunk)) {
-								$c_modifier['name'] = $chunk;
-								$c_state = 'modifier';
-								$c_arg_quote = '';
-								continue;
-							}
-							// вместо модификатора - аргумент в кавычках
-							if ($chunk == '"' || $chunk = "'") {
-								$c_modifier['name'] = 'fx_default';
-								$c_state = 'arg';
-								$c_arg_quote = $chunk;
-								$c_arg = $chunk;
-								continue;
-							}
-						}
-						if ($c_state == 'arg') {
-							if ( $c_arg_quote == '' && ($chunk == '"' || $chunk == "'")) {
-								$c_arg_quote = $chunk;
-								$c_arg .= $chunk;
-								continue;
-							}
-							// закрылась кавычка аргумента
-							if ( $c_arg_quote != '' && $chunk == $c_arg_quote ) {
-								$c_arg .= $chunk;
-								$c_arg_quote = '';
-								continue;
-							}
-							// начался новый аргумент
-							if ($c_arg_quote == '' && $is_arg_separator) {
-								$c_modifier['args'][]= $c_arg;
-								$c_arg = '';
-								continue;
-							}
-							// конец аргумента и модификатора
-							if ($c_arg_quote == '' && $is_separator) {
-								$c_state = 'default';
-								$c_modifier['args'] []= $c_arg;
-								$modifiers []= $c_modifier;
-								$c_modifier = array('args' => array());
-								$c_arg = '';
-								continue;
-							}
-							$c_arg .= $chunk;
-							continue;
-						}
-						// конец модификатора
-						if ($c_state == 'modifier' && $is_separator) {
-							$c_state = 'default';
-							$modifiers []= $c_modifier;
-							$c_modifier = array('args' => array());
-							//echo "Save mod<br />";
-							//echo $c_state.'/'.htmlspecialchars($chunk)."<hr />";
-							continue;
-						}
-						if ($c_state == 'modifier' && $is_arg_separator) {
-							$c_state = 'arg';
-							$c_arg = '';
-							//echo $c_state.'/'.htmlspecialchars($chunk)."<hr />";
-							continue;
-						}
-						
-					}
-					if (count($modifiers) > 0) {
-						$props['modifiers'] = array();
-						foreach ($modifiers as $modifier) {
-							$c_mod = array($modifier['name']);
-							if (isset($modifier['args'])) {
-								$c_mod = array_merge($c_mod, $modifier['args']);
-							}
-							$props['modifiers'] []= $c_mod;
-						}
-					}
-				}
+				$props['modifiers'] = self::_get_var_modifiers($source);
 			}
 		}
         return new fx_template_token($name, $type, $props);   
     }
-}
-
-class fx_template_token {
-    public $name = null;
-    public $type = null;
-    public $props = array();
     
-    /**
-     * 
-     * @param type $name название токена, e.g. "template"
-     * @param type $type тип - open/close/single
-     * @param type $props атрибуты токена
-     */
-    public function __construct($name, $type, $props) {
-        $this->name = $name;
-        $this->type = $type;
-        $this->props = $props;
-    }
-    
-    public function add_child(fx_template_token $token) {
-        if (!isset($this->children)) {
-            $this->children = array();
+    protected function _get_var_modifiers($source) {
+        $source = preg_replace("~^\s*\|~", '', $source);
+        $source = trim($source);
+        $source .= '|';
+        $source = preg_split("~(\s*\|\s*|\s*:\s*|[\'\"])~", $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+        if (count($source) == 0) {
+            return null;
         }
-        $this->children []= $token;
-    }
-    
-    public function add_children(array $children) {
-        foreach ($children as $child) {
-            $this->add_child($child);
+        $modifiers = array();
+        $c_modifier = array();
+        $c_state = 'default';
+        $c_arg_quote = '';
+        $c_arg = '';
+        foreach ($source as $chunk) {
+            $is_separator = preg_match("~^\s*\|\s*$~", $chunk);
+            $is_arg_separator = preg_match("~^\s*:\s*$~", $chunk);
+            if ($c_state == 'default') {
+                // нормальное название модификатора
+                if (preg_match("~^[a-z0-9_-]+$~i", $chunk)) {
+                    $c_modifier['name'] = $chunk;
+                    $c_state = 'modifier';
+                    $c_arg_quote = '';
+                    continue;
+                }
+                // вместо модификатора - аргумент в кавычках
+                if ($chunk == '"' || $chunk = "'") {
+                    $c_modifier['name'] = 'fx_default';
+                    $c_state = 'arg';
+                    $c_arg_quote = $chunk;
+                    $c_arg = $chunk;
+                    continue;
+                }
+            }
+            if ($c_state == 'arg') {
+                if ( $c_arg_quote == '' && ($chunk == '"' || $chunk == "'")) {
+                    $c_arg_quote = $chunk;
+                    $c_arg .= $chunk;
+                    continue;
+                }
+                // закрылась кавычка аргумента
+                if ( $c_arg_quote != '' && $chunk == $c_arg_quote ) {
+                    $c_arg .= $chunk;
+                    $c_arg_quote = '';
+                    continue;
+                }
+                // начался новый аргумент
+                if ($c_arg_quote == '' && $is_arg_separator) {
+                    $c_modifier['args'][]= $c_arg;
+                    $c_arg = '';
+                    continue;
+                }
+                // конец аргумента и модификатора
+                if ($c_arg_quote == '' && $is_separator) {
+                    $c_state = 'default';
+                    $c_modifier['args'] []= $c_arg;
+                    $modifiers []= $c_modifier;
+                    $c_modifier = array('args' => array());
+                    $c_arg = '';
+                    continue;
+                }
+                $c_arg .= $chunk;
+                continue;
+            }
+            // конец модификатора
+            if ($c_state == 'modifier' && $is_separator) {
+                $c_state = 'default';
+                $modifiers []= $c_modifier;
+                $c_modifier = array('args' => array());
+                continue;
+            }
+            if ($c_state == 'modifier' && $is_arg_separator) {
+                $c_state = 'arg';
+                $c_arg = '';
+                continue;
+            }
+
         }
-    }
-
-
-    public function clear_children() {
-        $this->children = array();
-    }
-    
-    public function get_children() {
-        return isset($this->children) ? $this->children : array();
-    }
-    
-    public function has_children() {
-        return isset($this->children) && count($this->children) > 0;
-    }
-    
-    public function set_child($child, $index) {
-        if ($child === null) {
-            unset($this->children[$index]);
-        } else {
-            $this->children[$index] = $child;
+        if (count($modifiers) == 0) {
+            return null;
         }
-    }
-
-
-    public function set_prop($name, $value) {
-        $this->props[$name] = $value;
-    }
-    
-    public function get_prop($name) {
-        return isset($this->props[$name]) ? $this->props[$name] : null;
-    }
-    
-    public function get_all_props() {
-        return $this->props;
-    }
-    
-    public function show() {
-        $r = '['.($this->type == 'close' ? 
-                '/' : 
-                ($this->type == 'unknown' ? '?' : '')).$this->name.' ';
-        foreach ($this->props as $pk => $pv) {
-            $r .= $pk.'="'.$pv.'" ';
+        $res = array();
+        foreach ($modifiers as $modifier) {
+            $c_mod = array($modifier['name']);
+            if (isset($modifier['args'])) {
+                $c_mod = array_merge($c_mod, $modifier['args']);
+            }
+            $res[]= $c_mod;
         }
-        $r .= ']';
-        return $r;
+        return $res;
     }
 }
 ?>

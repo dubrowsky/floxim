@@ -7,6 +7,9 @@ class fx_controller_component extends fx_controller {
 
     public function process() {
         $result = parent::process();
+        if (is_string($result)) {
+            return $result;
+        }
         if (!isset($result['_meta'])) {
             $result['_meta'] = array();
         }
@@ -149,7 +152,7 @@ class fx_controller_component extends fx_controller {
     public function trigger($event, $data = null) {
         if (isset($this->_bound[$event]) && is_array($this->_bound[$event])) {
             foreach ( $this->_bound[$event] as $cb) {
-                call_user_func($cb, $data);
+                call_user_func($cb, $data, $this);
             }
         }
     }
@@ -172,25 +175,36 @@ class fx_controller_component extends fx_controller {
             'description' => fx::lang('Выводит список записей из указанного раздела','controller_component')
         );
     }
+    
+    public function defaults_listing() {
+        return array(
+            'scope' => array(
+                'page_id' => fx::env('page'),
+                'pages' => 'this'
+            )
+        );
+    }
 
     public function do_listing() {
         $f = $this->_get_finder();
         
         $content_type = $this->get_content_type();
-        if ( ($infoblock_id = $this->param('infoblock_id'))) {
+        if ( ($infoblock_id = $this->get_param('infoblock_id'))) {
             $c_ib = fx::data('infoblock', $infoblock_id);
-            $f->where('infoblock_id', $c_ib->get_root_infoblock()->get('id'));
+            if (!$this->get_param('skip_infoblock_filter')) {
+                $f->where('infoblock_id', $c_ib->get_root_infoblock()->get('id'));
+            }
         }
         if ( ($parent_id = $this->_get_parent_id()) ) {
             $f->where('parent_id', $this->_get_parent_id());
         }
         $this->trigger('build_query',$f);
 
-        if ( ($sorting = $this->param('sorting')) ) {
+        if ( ($sorting = $this->get_param('sorting')) ) {
             if ($sorting == 'manual') {
                 $f->order('priority');
             } else {
-                $f->order($sorting, $this->param('sorting_dir'));
+                $f->order($sorting, $this->get_param('sorting_dir'));
             }
         }
         $this->trigger('query_ready', $f);
@@ -207,7 +221,7 @@ class fx_controller_component extends fx_controller {
                 'title' => $adder_title,
                 'parent_id' => $this->_get_parent_id(),
                 'type' => $content_type,
-                'infoblock_id' => $this->param('infoblock_id')
+                'infoblock_id' => $this->get_param('infoblock_id')
             ));
         }
         $res = array('items' => $items);
@@ -220,7 +234,7 @@ class fx_controller_component extends fx_controller {
     public function accept_content($params) {
         $params = array_merge(
             array(
-                'infoblock_id' => $this->param('infoblock_id'),
+                'infoblock_id' => $this->get_param('infoblock_id'),
                 'type' => $this->get_content_type()
             ), $params
         );
@@ -241,14 +255,14 @@ class fx_controller_component extends fx_controller {
     }
 
     protected function _get_pagination() {
-        if (!$this->param('show_pagination')){
+        if (!$this->get_param('show_pagination')){
             return null;
         }
         $total_rows = $this->_get_finder()->get_found_rows();
         if ($total_rows == 0) {
             return null;
         }
-        $limit = $this->param('limit');
+        $limit = $this->get_param('limit');
         if ($limit == 0) {
             return null;
         }
@@ -275,12 +289,12 @@ class fx_controller_component extends fx_controller {
     }
     
     protected function _get_parent_id() {
-        $ib = fx::data('infoblock', $this->param('infoblock_id')); 
+        $ib = fx::data('infoblock', $this->get_param('infoblock_id')); 
         if (!$ib) {
-            return $this->param('parent_id');
+            return $this->get_param('parent_id');
         }
         $parent_id = null;
-        switch($this->param('parent_type')) {
+        switch($this->get_param('parent_type')) {
             case 'mount_page_id':
                 $parent_id = $ib['page_id'];
                 break;
@@ -288,7 +302,7 @@ class fx_controller_component extends fx_controller {
                 $parent_id = fx::env('page');
                 break;
             case 'custom':
-                $parent_id = $this->param('parent_id');
+                $parent_id = $this->get_param('parent_id');
                 break;
         }
         return $parent_id;
@@ -304,16 +318,16 @@ class fx_controller_component extends fx_controller {
     
     public function do_listing_mirror() {
         $f = $this->_get_finder();
-        if ( ($parent_id = $this->param('parent_id')) ) {
+        if ( ($parent_id = $this->get_param('parent_id')) ) {
             $f->where('parent_id', $parent_id);
         }
         $this->trigger('build_query',$f);
 
-        if ( ($sorting = $this->param('sorting')) ) {
+        if ( ($sorting = $this->get_param('sorting')) ) {
             if ($sorting == 'manual') {
                 $f->order('priority');
             } else {
-                $f->order($sorting, $this->param('sorting_dir'));
+                $f->order($sorting, $this->get_param('sorting_dir'));
             }
         }
         $this->trigger('query_ready', $f);
@@ -368,9 +382,9 @@ class fx_controller_component extends fx_controller {
             return $this->_finder;
         }
         $finder = fx::data('content_'.$this->get_content_type());
-        $show_pagination = $this->param('show_pagination');
+        $show_pagination = $this->get_param('show_pagination');
         $c_page = $this->_get_current_page();
-        $limit = $this->param('limit');
+        $limit = $this->get_param('limit');
         if ( $show_pagination && $limit) {
             $finder->calc_found_rows();
         }

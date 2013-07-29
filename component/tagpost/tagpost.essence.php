@@ -24,6 +24,9 @@ class fx_content_tagpost extends fx_content {
             return;
         }
         $tag['counter'] = $tag['counter']-1;
+        if ($tag['counter'] < 0) {
+            $tag['counter'] = 0;
+        }
         $tag->save();
     }
 }

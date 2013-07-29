@@ -12,8 +12,69 @@ class fx_controller_component_blogpost extends fx_controller_component {
                 $query->where('publish_date', $start, '>=');
                 $query->where('publish_date', $end, '<=');
             });
+        };
+        $res = parent::do_listing();
+        if (isset($_GET['rss'])) {
+            return $this->show_rss($res);
         }
-        return parent::do_listing();
+        return $res;
+    }
+    
+    protected function show_rss($data){
+        $data['base_url'] = 'http://'.$_SERVER['HTTP_HOST'];
+        $data['blog'] = $this->_get_blog_page();
+        
+        $template_params = 
+                fx::data('infoblock', $this->get_param('infoblock_id'))->
+                get_prop_inherited('visual.template_visual');
+        if (!$template_params) {
+            $template_params = array();
+        }
+        
+        if (fx::is_admin() && isset($_GET['configure_rss'])) {
+            return fx::template(
+                    'component_blogpost.listing_rss_configurator', 
+                    array_merge(
+                        $template_params,
+                        $data
+                    )
+            )->render();
+        }
+        
+        $rss_template = 
+        $rss = fx::template(
+                'component_blogpost.listing_rss', 
+                array_merge(
+                    $template_params,
+                    $data
+                )
+        )->render();
+        
+        foreach (range(1, ob_get_level()) as $level) {
+            ob_end_clean();
+        }
+        fx::http()->header('Content-Type', 'application/rss+xml');
+        echo $rss;
+        die();
+    }
+    
+    public function do_listing_by_tag() {
+        $this->listen('query_ready', function($query) {
+            $ids = fx::data('content_tagpost')->
+                    where('tag_id', fx::env('page'))->
+                    select('post_id')->
+                    get_data()->get_values('post_id');
+            $query->where('id', $ids);
+        });
+        $this->set_param('skip_infoblock_filter',true);
+        return $this->do_listing();
+    }
+    
+    protected function _get_blog_page() {
+        return fx::data(
+            'content_page', 
+            fx::data('infoblock', $this->get_param('infoblock_id'))->get('page_id')
+        );
     }
 
     public function do_calendar() {
@@ -26,10 +87,7 @@ class fx_controller_component_blogpost extends fx_controller_component {
             group('month')->group('year')->
             get_data();
     
-        $base_url = fx::data(
-                'content_page', 
-                fx::data('infoblock', $this->param('infoblock_id'))->get('page_id')
-        )->get('url');
+        $base_url = $this->_get_blog_page()->get('url');
         
         $years = new fx_collection();
         $c_full_month = isset($_GET['month']) ? $_GET['month'] : null;
@@ -50,5 +108,6 @@ class fx_controller_component_blogpost extends fx_controller_component {
         }
         return array('items' => $years);
     }
+    
 }
 ?>

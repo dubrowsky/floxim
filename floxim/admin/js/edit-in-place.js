@@ -83,10 +83,9 @@ fx_edit_in_place.prototype.start = function(meta) {
 			this.add_panel_field(meta);
 			break;
         case 'select':
-            console.log(meta);
             this.add_panel_field(meta);
             break;
-		case 'string': case 'html': case '': case 'text':
+		case 'string': case 'html': case '': case 'text': case 'int':
 			if (meta.is_att) {
 				this.add_panel_field(meta);
 			} else {

@@ -81,15 +81,7 @@ class fx_template {
         if ($this->data['_idle']) {
             return $result;
         }
-        /*
-        if ( ($tpl_files = glob($this->_source_dir.'/*.{js,css}', GLOB_BRACE)) ) {
-			foreach ($tpl_files as $f) {
-				if (!preg_match("~_[^/]+$~", $f)) {
-					$file_http = str_replace(fx::config()->DOCUMENT_ROOT, '', $f);
-					fx::page()->add_file($file_http);
-				}
-			}
-        }*/
+        
         if (fx::env('is_admin')) {
             $result = fx_template::replace_areas($result);
             $result = fx_template_field::replace_fields($result);
@@ -105,6 +97,17 @@ class fx_template {
         return $this->_templates;
     }
     
+    public function get_info() {
+        if (!$this->action) {
+            throw new Exception('Specify template action/variant before getting info');
+        }
+        foreach ($this->_templates as $tpl) {
+            if ($tpl['id'] == $this->action) {
+                return $tpl;
+            }
+        }
+    }
+    
     public static function replace_areas($html) {
         $html = self::_replace_areas_wrapped_by_tag($html);
         $html = self::_replace_areas_in_text($html);
@@ -115,9 +118,9 @@ class fx_template {
     	$html = preg_replace("~<!--.*?-->~s", '', $html);
     	$html = preg_replace_callback(
     		"~(<[a-z0-9_-]+[^>]*?>)\s*###fxa(\d+)###\s*(</[a-z0-9_-]+>)~s",
-    		function($matches) {
+    		function($matches) use ($html) {
     			$replacement = fx_template::$area_replacements[$matches[2]];
-    			$tag = fx_html_token::create_standalone($matches[1]);
+    			$tag = fx_template_html_token::create_standalone($matches[1]);
                 $tag->add_meta(array(
                     'class' => 'fx_area',
                     'data-fx_area' => $replacement[0]
@@ -138,7 +141,7 @@ class fx_template {
     			$replacement = fx_template::$area_replacements[$matches[1]];
     			//$tag_name = preg_match("~<(?:div|ul|li|table|br|nav)~i", $content) ? 'div' : 'span';
                 $tag_name = 'div';
-    			$tag = fx_html_token::create_standalone('<'.$tag_name.'>');
+    			$tag = fx_template_html_token::create_standalone('<'.$tag_name.'>');
                 $tag->add_meta(array(
                     'class' => 'fx_area',
                     'data-fx_area' => $replacement[0]

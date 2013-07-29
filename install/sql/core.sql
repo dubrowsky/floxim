@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1
--- Время создания: Июл 15 2013 г., 14:56
+-- Время создания: Июл 22 2013 г., 17:36
 -- Версия сервера: 5.5.25
 -- Версия PHP: 5.3.13
 
@@ -66,15 +66,7 @@ CREATE TABLE IF NOT EXISTS `fx_classificator` (
   `sort_direction` enum('asc','desc') NOT NULL DEFAULT 'asc',
   PRIMARY KEY (`id`),
   UNIQUE KEY `Table_Name` (`table`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=200 AUTO_INCREMENT=3 ;
-
---
--- Дамп данных таблицы `fx_classificator`
---
-
-INSERT INTO `fx_classificator` (`id`, `name`, `table`, `checked`, `sort_type`, `sort_direction`) VALUES
-(1, 'Страна', 'Country', 0, 'priority', 'asc'),
-(2, 'Города', 'cities', 1, 'priority', 'asc');
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=200 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -89,18 +81,7 @@ CREATE TABLE IF NOT EXISTS `fx_classificator_cities` (
   `value` text,
   `checked` int(1) DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=36 AUTO_INCREMENT=6 ;
-
---
--- Дамп данных таблицы `fx_classificator_cities`
---
-
-INSERT INTO `fx_classificator_cities` (`id`, `name`, `priority`, `value`, `checked`) VALUES
-(1, 'Москва', NULL, NULL, 1),
-(2, 'Архангельск', NULL, NULL, 1),
-(3, 'Архангельскфыв', NULL, NULL, 1),
-(4, 'Архангельск', NULL, NULL, 1),
-(5, 'Архангельск', NULL, NULL, 1);
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=36 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -115,22 +96,7 @@ CREATE TABLE IF NOT EXISTS `fx_classificator_country` (
   `value` text,
   `checked` int(1) DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=32 AUTO_INCREMENT=10 ;
-
---
--- Дамп данных таблицы `fx_classificator_country`
---
-
-INSERT INTO `fx_classificator_country` (`id`, `name`, `priority`, `value`, `checked`) VALUES
-(1, 'Австралия', 1, NULL, 1),
-(2, 'Австрия', 2, NULL, 1),
-(3, 'Азербайджан', 3, NULL, 1),
-(4, 'Албания', 4, NULL, 1),
-(5, 'Алжир', 5, NULL, 1),
-(6, 'Ангилья', 6, NULL, 1),
-(7, 'Ангола', 7, NULL, 1),
-(8, 'Андорра', 8, NULL, 1),
-(9, 'ККаа', NULL, NULL, 1);
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=32 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -145,42 +111,7 @@ CREATE TABLE IF NOT EXISTS `fx_classificator_region` (
   `value` text,
   `checked` int(1) DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=34 AUTO_INCREMENT=30 ;
-
---
--- Дамп данных таблицы `fx_classificator_region`
---
-
-INSERT INTO `fx_classificator_region` (`id`, `name`, `priority`, `value`, `checked`) VALUES
-(1, 'Москва', 1, NULL, 1),
-(2, 'Санкт-Петербург', 2, NULL, 1),
-(3, 'Абакан', 3, NULL, 1),
-(4, 'Актюбинск', 4, NULL, 1),
-(5, 'Алматы', 5, NULL, 1),
-(6, 'Алейск', 6, NULL, 1),
-(7, 'Альметьевск', 7, NULL, 1),
-(8, 'Анадырь', 8, NULL, 1),
-(9, 'Апатиты', 9, NULL, 1),
-(10, 'Арзамас-16', 10, NULL, 1),
-(11, 'Архангельск', 11, NULL, 1),
-(12, 'Астана', 12, NULL, 1),
-(13, 'Астрахань', 13, NULL, 1),
-(14, 'Ашгабат', 14, NULL, 1),
-(15, 'Баку', 15, NULL, 1),
-(16, 'Барнаул', 16, NULL, 1),
-(17, 'Батуми', 17, NULL, 1),
-(18, 'Бахчисарай', 18, NULL, 1),
-(19, 'Белая Церковь', 19, NULL, 1),
-(20, 'Белгород', 20, NULL, 1),
-(21, 'Бердянск', 21, NULL, 1),
-(22, 'Бийск', 22, NULL, 1),
-(23, 'Бишкек', 23, NULL, 1),
-(24, 'Благовещенка', 24, NULL, 1),
-(25, 'Благовещенск', 25, NULL, 1),
-(26, 'Братск', 26, NULL, 1),
-(27, 'Брест', 27, NULL, 1),
-(28, 'Брянск', 28, NULL, 1),
-(29, 'Бухара', 29, NULL, 1);
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=34 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -210,7 +141,7 @@ INSERT INTO `fx_component` (`id`, `keyword`, `name`, `description`, `group`, `ic
 (1, 'user', 'Users', '', 'Users', '', 'component.user', 0, 'User'),
 (19, 'text', 'Text', '', 'Basic', '', 'component.text', 36, 'text'),
 (23, 'page', 'Pages', '', 'Basic', '', NULL, 36, 'page'),
-(24, 'section', 'Navigation', 'Для меню', 'Basic', '', NULL, 23, 'Section'),
+(24, 'section', 'Navigation', '', 'Basic', '', NULL, 23, 'Section'),
 (32, 'tagpost', 'Tags for entity', '', 'Blog', '', NULL, 36, 'Tag to entity link'),
 (31, 'tag', 'Tags', '', 'Blog', '', NULL, 23, 'Tag'),
 (30, 'blogpost', 'Blog', '', 'Blog', '', NULL, 23, 'Blog post'),
@@ -237,50 +168,27 @@ CREATE TABLE IF NOT EXISTS `fx_content` (
   `site_id` int(11) DEFAULT NULL,
   `parent_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=47 AUTO_INCREMENT=2041 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=47 AUTO_INCREMENT=2055 ;
 
 --
 -- Дамп данных таблицы `fx_content`
 --
 
 INSERT INTO `fx_content` (`id`, `priority`, `checked`, `created`, `last_updated`, `user_id`, `type`, `infoblock_id`, `site_id`, `parent_id`) VALUES
-(1, 1, 1, '2012-05-24 12:42:50', '2013-05-17 21:14:25', 0, 'section', 3, 1, 2),
 (2, 0, 0, '2012-05-24 12:42:50', '2013-04-29 12:01:11', 0, 'section', 0, 1, 0),
 (3, 7, 0, '2012-05-24 12:42:50', '2013-04-29 12:01:11', 0, 'section', 0, 1, 2),
-(4, 1, 1, '2012-08-29 15:00:48', '2013-04-29 12:01:11', 0, 'section', 3, 1, 6),
-(5, 4, 1, '2012-05-24 12:42:50', '2013-06-07 10:03:34', 0, 'section', 3, 1, 2),
-(6, 2, 1, '2012-05-24 12:42:50', '2013-06-07 10:03:34', 0, 'section', 3, 1, 2),
-(7, 1, 0, '2012-05-24 12:42:50', '2013-04-29 12:01:11', 0, 'section', 0, 1, 2),
-(8, 0, 1, '2012-05-24 12:42:50', '2013-04-29 12:01:11', 0, 'section', 0, 1, 8),
-(10, 0, 1, '2012-08-29 15:01:34', '2013-04-29 12:01:11', 0, 'section', 3, 1, 1),
-(11, 3, 1, '2012-05-24 12:42:50', '2013-04-29 12:01:11', 0, 'section', 0, 1, 8),
-(12, 4, 1, '2012-05-24 12:42:50', '2013-04-29 12:01:11', 0, 'section', 0, 1, 8),
-(13, 5, 1, '2012-05-24 12:42:50', '2013-04-29 12:01:11', 0, 'section', 0, 1, 8),
 (16, 5, 1, '2012-05-28 12:27:15', '2013-05-17 21:14:38', 0, 'section', 3, 1, 2),
-(17, 1, 1, '2012-08-29 15:01:51', '2013-04-29 12:01:11', 0, 'section', 3, 1, 1),
-(27, 2, 1, '2012-08-29 15:01:06', '2013-04-29 12:01:11', 0, 'section', 3, 1, 6),
-(37, 0, 1, '2012-08-29 15:00:32', '2013-04-29 12:01:11', 0, 'section', 3, 1, 6),
-(71, 9, 1, '2012-08-22 16:36:40', '2013-04-29 12:01:11', 0, 'text', 16, 1, 6),
-(72, 12, 1, '2012-08-31 12:53:42', '2013-04-29 12:01:11', 0, 'text', 0, 1, 2),
-(73, 10, 1, '2012-08-22 17:02:59', '2013-04-29 12:01:11', 0, 'text', 0, 1, 5),
-(74, 14, 1, '2012-08-31 15:32:09', '2013-04-29 12:01:11', 0, 'text', 0, 1, 23),
-(78, 3, 1, '2013-02-25 15:07:21', '2013-06-07 10:03:34', 3, 'section', 3, 1, 2),
-(82, 8, 1, '2013-02-27 18:41:13', '2013-04-29 12:01:11', 3, 'section', 0, 1, 2),
+(2047, 0, 1, '2013-07-19 20:08:42', '2013-07-19 16:08:42', 99, 'text', 74, 15, 2033),
 (99, 0, 1, '0000-00-00 00:00:00', '2013-04-29 12:01:11', 0, 'user', 0, 1, 0),
-(100, 0, 1, '2012-08-07 19:04:54', '2013-04-29 12:01:11', 0, 'user', 0, 1, 0),
 (112, 0, 1, '2013-04-24 14:12:36', '2013-04-29 12:01:11', 99, 'text', 16, 1, 2),
 (1889, 1, 1, '2013-06-10 02:26:56', '2013-07-14 03:39:35', 99, 'section', 69, 15, 1883),
 (2024, 0, 1, '2013-07-12 16:10:51', '2013-07-12 08:10:51', 99, 'photo', 81, 15, 1912),
-(1868, 0, 1, '2013-06-07 17:42:24', '2013-06-07 09:42:24', 99, 'text', 25, 1, 1),
 (1887, 3, 1, '2013-06-10 02:17:40', '2013-07-14 03:19:45', 99, 'section', 69, 15, 1883),
 (1884, 0, 1, '2013-06-08 17:03:02', '2013-07-07 19:31:53', 99, 'page', 0, 15, 1883),
 (1883, 0, 1, '2013-06-08 17:03:02', '2013-06-08 09:03:02', 99, 'page', 0, 15, NULL),
 (1890, 2, 1, '2013-06-10 02:27:12', '2013-07-14 03:39:35', 99, 'section', 69, 15, 1883),
 (1891, 1, 1, '2013-06-10 11:38:10', '2013-06-24 04:19:49', 99, 'travel_route', 70, 15, 1883),
 (1892, 2, 1, '2013-06-10 12:17:59', '2013-06-24 04:19:49', 99, 'travel_route', 70, 15, 1883),
-(1894, 0, 1, '2013-06-10 16:38:11', '2013-06-10 08:38:11', 99, 'section', 69, 15, 1888),
-(1895, 0, 1, '2013-06-11 11:24:52', '2013-06-11 03:24:52', 99, 'section', 73, 15, 1888),
-(1896, 0, 1, '2013-06-11 11:34:37', '2013-06-11 03:53:05', 99, 'text', 74, 15, 1888),
 (1897, 0, 1, '2013-06-11 13:11:24', '2013-06-11 05:11:24', 99, 'text', 75, 15, 1883),
 (1898, 2, 1, '2013-06-11 13:15:18', '2013-06-12 18:22:37', 99, 'section', 76, 15, 1883),
 (1899, 1, 1, '2013-06-11 13:16:36', '2013-06-12 18:22:37', 99, 'section', 76, 15, 1883),
@@ -304,18 +212,15 @@ INSERT INTO `fx_content` (`id`, `priority`, `checked`, `created`, `last_updated`
 (1924, 0, 1, '2013-06-17 06:24:59', '2013-06-16 22:24:59', 99, 'text', 74, 15, 1916),
 (1925, 4, 1, '2013-06-17 06:30:30', '2013-07-14 03:19:38', 99, 'section', 69, 15, 1883),
 (2029, 0, 1, '2013-07-13 17:11:06', '2013-07-13 09:11:06', 99, 'tagpost', 84, 15, 1976),
-(1929, 1, 1, '2013-06-17 14:24:29', '2013-06-17 06:56:55', 99, 'photo', 81, 15, 1913),
-(1930, 1, 1, '2013-06-17 15:16:09', '2013-07-01 06:18:13', 99, 'tag', 83, 15, 1925),
 (1976, 1, 1, '2013-06-21 14:18:44', '2013-06-24 03:13:17', 99, 'blogpost', 82, 15, 1925),
-(1932, 2, 1, '2013-06-18 16:02:12', '2013-07-01 06:18:13', 99, 'tag', 83, 15, 1925),
 (1933, 4, 1, '2013-06-18 16:02:50', '2013-07-01 06:18:13', 99, 'tag', 83, 15, 1925),
 (1968, 3, 1, '2013-06-21 13:45:59', '2013-06-24 03:13:17', 99, 'blogpost', 82, 15, 1925),
 (1996, 0, 1, '2013-07-01 16:35:39', '2013-07-01 08:35:39', 99, 'blogpost', 82, 15, 1925),
 (2028, 0, 1, '2013-07-13 17:11:06', '2013-07-13 09:11:06', 99, 'tag', 83, 15, 1925),
-(2034, 1, 1, '2013-07-13 17:14:40', '2013-07-13 09:21:56', 99, 'tagpost', 84, 15, 1968),
-(2031, 3, 1, '2013-07-13 17:14:40', '2013-07-13 10:26:57', 99, 'tagpost', 84, 15, 1968),
+(2034, 2, 1, '2013-07-13 17:14:40', '2013-07-19 20:49:31', 99, 'tagpost', 84, 15, 1968),
+(2049, 0, 1, '2013-07-19 21:09:09', '2013-07-19 17:09:09', 99, 'tagpost', 84, 15, 1996),
 (2033, 0, 1, '2013-07-13 17:14:40', '2013-07-13 09:14:40', 99, 'tag', 83, 15, 1925),
-(2032, 2, 1, '2013-07-13 17:14:40', '2013-07-13 10:26:57', 99, 'tagpost', 84, 15, 1968),
+(2032, 1, 1, '2013-07-13 17:14:40', '2013-07-19 20:49:31', 99, 'tagpost', 84, 15, 1968),
 (2006, 0, 1, '2013-07-08 03:40:33', '2013-07-07 19:40:33', 99, 'text', 74, 15, 1884),
 (2025, 0, 1, '2013-07-12 16:13:25', '2013-07-12 08:13:26', 99, 'photo', 81, 15, 1912),
 (2026, 0, 1, '2013-07-12 16:18:28', '2013-07-12 08:18:28', 99, 'photo', 81, 15, 1917),
@@ -335,6 +240,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_blogpost` (
   `text` text,
   `publish_date` datetime DEFAULT NULL,
   `metatype` varchar(255) DEFAULT NULL,
+  `image` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=2824;
 
@@ -342,10 +248,10 @@ CREATE TABLE IF NOT EXISTS `fx_content_blogpost` (
 -- Дамп данных таблицы `fx_content_blogpost`
 --
 
-INSERT INTO `fx_content_blogpost` (`id`, `anounce`, `text`, `publish_date`, `metatype`) VALUES
-(1968, '<p class="">\r\n	    Everyone shoud know!\r\n</p>', '<p>\n	   They told us this was not logistically possible and a hugely inconsiderate thing to do to a grief stricken family.</p><p>\n	   I called them a bunch of a-holes and soccer-kicked the watermelon off the picnic table and into the bushes.</p>', '2013-06-11 00:00:00', 'post'),
-(1976, '<p>\n	 Jeep Travel is here to make you laugh!</p><p>\n	 <img src="/floxim_files/content/1251362341_1243855523_vnedorojnik_21_1.jpg" style="width: 584px;"></p>', '<p>\r\n	 Put your hands up in the air!\r\n</p>', '2012-04-19 00:00:00', 'post'),
-(1996, '<h2><span style="font-weight: normal;">Dominican Republic Agro-tourism with a side of beach</span><a href="http://treeyopermaculture.com/2013/01/23/travel-blog-dominican-republic-agro-toursim-with-a-side-of-beach/"></a></h2>', '<p>\n	   On the weekend of Jan 19th, 2013, we left the farm early one morning for Samana via a direct <em>gua-gua</em>.  It left in rising sun at 7 am from nearby Saboneta and arrived there at 10:30 am.  It was a very easy trip with one stop on an uncomfortable and overcrowded bus which was exacerbated by the holiday weekend.  Fortunately it was cheap too, only 300 pesos ($7.50 USD).  From there we met some friends and went onto Las Galeras which we am sure is one of the more beautiful places on this island.  Very Caribbean with its palm ladden beaches, forested hillsides in the distance, and white sands with colors of the sea you can hardly imagine.</p>', '2013-07-10 00:00:00', 'post');
+INSERT INTO `fx_content_blogpost` (`id`, `anounce`, `text`, `publish_date`, `metatype`, `image`) VALUES
+(1968, '<p class="">\r\n	       Everyone shoud know!\r\n</p>', '<p>\r\n	      They told us this was not logistically possible and a hugely inconsiderate thing to do to a grief stricken family.\r\n</p>\r\n<p>\r\n	      I called them a bunch of a-holes and soccer-kicked the watermelon off the picnic table and into the bushes.\r\n</p>', '2013-06-11 00:00:00', 'article', 383),
+(1976, '<p>\n	 Jeep Travel is here to make you laugh!</p><p>\n	 <img src="/floxim_files/content/1251362341_1243855523_vnedorojnik_21_1.jpg" style="width: 584px;"></p>', '<p>\r\n	 Put your hands up in the air!\r\n</p>', '2012-04-19 00:00:00', 'post', NULL),
+(1996, '<p>\r\n	      Dominicana Republic''s Agro-tourism with a side of beach\r\n</p>', '<p>\n	       On the weekend of Jan 19th, 2013, we left the farm early one morning for Samana via a direct <em>gua-gua</em>.  It left in rising sun at 7 am from nearby Saboneta and arrived there at 10:30 am.</p><p>\n	    It was a very easy trip with one stop on an uncomfortable and overcrowded bus which was exacerbated by the holiday weekend.  Fortunately it was cheap too, only 300 pesos ($7.50 USD).</p><p>\n	    From there we met some friends and went onto Las Galeras which we am sure is one of the more beautiful places on this island.  Very Caribbean with its palm ladden beaches, forested hillsides in the distance, and white sands with colors of the sea you can hardly imagine.</p>', '2013-07-10 00:00:00', '', 379);
 
 -- --------------------------------------------------------
 
@@ -390,37 +296,20 @@ CREATE TABLE IF NOT EXISTS `fx_content_page` (
 --
 
 INSERT INTO `fx_content_page` (`id`, `url`, `name`, `title`) VALUES
-(1, '/goodisse/', 'Товары', NULL),
-(2, '/', 'Главная', NULL),
+(2, '/', 'Main page', ''),
 (3, '/404/', '404', NULL),
-(4, '/about/vacancy/', 'Вакансии', NULL),
-(5, '/services/', '\nСервисы', ''),
-(6, '/about/', 'О &nbsp;нас', 'На этой странице вы найдете все о нас'),
-(7, '/profile/', 'Профиль', NULL),
-(8, '/profile/registration/', 'Регистрация', NULL),
-(10, '/super-utugi', 'Супер-утюги', NULL),
-(11, '/profile/passwd/', 'Изменить пароль', NULL),
-(12, '/profile/recoverpasswd/', 'Восстановление пароля', NULL),
-(13, '/profile/pm/', NULL, NULL),
-(16, '/contacts/', 'Контакты', NULL),
-(17, '/holodilniki', 'Холодильники', NULL),
-(27, '/about/managers/', 'Менеджеры', NULL),
-(37, '/firmnews.html', 'Новости', NULL),
-(78, '/myblog', 'Блог', NULL),
-(82, '/privacy.php', 'Прайваси', ''),
+(16, '/contacts/', 'Contacts', NULL),
 (1889, '/portfolio/', 'Portfolio', NULL),
 (1890, '/contacts/', 'Contacts', NULL),
 (1887, '/about', 'About', NULL),
-(1891, '/contacts', 'Mangyshlak. The Great Step', ''),
-(1883, '/', 'Jeep Travels', 'Jeep Travels: уникальные путешествия на Джипах, скачать бесплатно'),
+(1891, '/summer-rally', 'Mangyshlak. The Great Step', ''),
+(1883, '/', 'Jeep Travels', 'Jeep Travels: super travels!'),
 (1884, '/404', 'Page not found', NULL),
 (1892, '/paris-dakar', 'Argentina – Chile', NULL),
-(1902, '/test', 'Take part in our events:', NULL),
-(1894, '/zakapivanie', 'Закапывание', NULL),
-(1895, '/take-part-in-expedition', '<p>Участие в экспедиции</p>', NULL),
+(1902, '/test', 'Take part in our events', NULL),
 (1898, 'http://facebook.com/', 'Facebook', NULL),
 (1899, 'http://plus.google.com/', 'Google+', NULL),
-(1900, 'http://instagram.com', 'InstagrАМ', NULL),
+(1900, 'http://instagram.com', 'Instagram', NULL),
 (1901, 'http://youtube.com', 'YouTube', NULL),
 (1912, '/Kiev', 'Kiev', ''),
 (1914, '/Dominikanskaya-respublika', 'Dominicana', ''),
@@ -430,12 +319,10 @@ INSERT INTO `fx_content_page` (`id`, `url`, `name`, `title`) VALUES
 (1925, '/Blog', 'Our blog', NULL),
 (2028, '/lulz', '#lulz', NULL),
 (2033, '/funeral-2', 'funeral', NULL),
-(1930, '/Kanibalizm', 'Canibalism', NULL),
-(1932, '/bzshdnst', 'бзсхднст', 'Безысходность Безысходность  Безысходность  Безысходность'),
-(1933, '/tag-ivan-kurochkin', 'John Kurochkin', 'Новости про Ивана Курочкина'),
+(1933, '/tag-ivan-kurochkin', 'John Kurochkin', 'News about John'),
 (1968, '/funeral', 'Our funeral instructions', ''),
 (1976, '/hi', 'Hello world!', ''),
-(1996, '/dominikana', 'Dominikana', '');
+(1996, '/dominikana', 'Dominicana, yeah!', '');
 
 -- --------------------------------------------------------
 
@@ -456,7 +343,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_photo` (
 --
 
 INSERT INTO `fx_content_photo` (`id`, `photo`, `description`, `copy`) VALUES
-(1919, 105, 'Haitian people.', 'Дмитрий Медведев'),
+(1919, 105, 'Haitian people.', 'Dmitry Medvedev'),
 (1920, 108, 'Airview', NULL),
 (1921, 108, 'Haiti', ''),
 (2026, 374, 'Beautiful evening', ''),
@@ -464,7 +351,6 @@ INSERT INTO `fx_content_photo` (`id`, `photo`, `description`, `copy`) VALUES
 (2024, 372, 'Oh no!', ''),
 (2025, 373, 'Ukranian steppe', ''),
 (1923, 116, 'Haitian Pussy Riot', NULL),
-(1929, 361, 'Это жители Санкт-Петербурга', NULL),
 (2021, 361, 'Kiev', ''),
 (2022, 367, '', ''),
 (2023, 369, 'Swakopmund', '');
@@ -485,29 +371,12 @@ CREATE TABLE IF NOT EXISTS `fx_content_section` (
 --
 
 INSERT INTO `fx_content_section` (`id`) VALUES
-(1),
 (2),
 (3),
-(4),
-(5),
-(6),
-(7),
-(8),
-(10),
-(11),
-(12),
-(13),
 (16),
-(17),
-(27),
-(37),
-(78),
-(82),
 (1887),
 (1889),
 (1890),
-(1894),
-(1895),
 (1898),
 (1899),
 (1900),
@@ -532,9 +401,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_tag` (
 --
 
 INSERT INTO `fx_content_tag` (`id`, `counter`) VALUES
-(1930, 0),
-(1932, -1),
-(1933, -2),
+(1933, 1),
 (2028, 2),
 (2033, 1),
 (2039, 1);
@@ -559,10 +426,10 @@ CREATE TABLE IF NOT EXISTS `fx_content_tagpost` (
 
 INSERT INTO `fx_content_tagpost` (`id`, `tag_id`, `post_id`, `comment`) VALUES
 (2029, 2028, 1976, NULL),
-(2031, 1933, 1968, ''),
+(2049, 1933, 1996, ''),
 (2032, 2028, 1968, 'are u happy?'),
 (2034, 2033, 1968, 'noooooooooooooo'),
-(2040, 2039, 1996, NULL);
+(2040, 2039, 1996, '');
 
 -- --------------------------------------------------------
 
@@ -581,19 +448,14 @@ CREATE TABLE IF NOT EXISTS `fx_content_text` (
 --
 
 INSERT INTO `fx_content_text` (`id`, `text`) VALUES
-(71, '<strong>Внимание! АКЦИЯ!!!</strong><div><br><div>Купите <em>что-нибудь</em> <span style="color:#cc3300">сегодня</span>!</div><div><br></div><div>И получите великолепный подарок от нашей фирмы.</div>  </div>  '),
-(72, 'Вчера на наш склад привезли новую партию уникальных японских утюгов.  <div><br></div><div>Спешите, количество ограничено!</div>so it goes...<br />so it goes...<br />so it goes...<br />so it goes...<br />'),
-(73, 'Интернет-магазин <strong>FloxiShop</strong> предлагает большой ассортимент электроники, бытовой \r\nтехники и товаров для автомобилистов по доступным ценам. Мы делаем все \r\nвозможное, чтобы покупки в нашем интернет магазине доставляли вам только\r\n положительные эмоции, и вам захотелось вернуться сюда еще не один раз.<br> <br>Почему нужно покупать в интернет-магазине <strong>FloxiShop</strong>? Почему именно мы, ведь подобных магазинов довольно много?\r\n<ul><li>Во-первых; мы располагаемся непосредственно <strong>в Зеленограде</strong>. Мы, как говорится, местные, и этим сказано если не все, то многое;</li><li>Во–вторых, позвонив нам, Вы можете быть уверенными на все 100%, что Вам ответит <strong>реальный человек</strong>&nbsp;реального интернет-магазина;</li><li>В-третьих, мы <strong>работаем полностью легально</strong>,\r\n у нас есть зеленоградский адрес, директор, персонал, реальные телефоны,\r\n сайт, зарегистрированный в РФ и т.д., мы платим все налоги и полностью \r\nсдаем отчетность;</li><li>В четвертых мы работаем только с \r\nофициальным «белым» товаром, а это означает, что в случае возникновения \r\nнеисправности или выявления брака производителя, Вам товар обменяют или \r\nотремонтируют бесплатно в соответствии с требованиями Закона «О защите \r\nправ потребителей»;</li><li>&nbsp;В-пятых, для нас не проблема отправить любой предварительно оплаченный товар в любую точку России;</li><li>&nbsp;В-шестых, у нас низкие цены на \r\nтехнику. Цены на товары ниже, чем в обычных магазинах электроники в \r\nсвязи с экономией на затратах, связанных с арендой торговых и офисных \r\nпомещений;&nbsp;</li><li>В-седьмых, доставку по Зеленограду \r\nмы в настоящее время осуществляем бесплатно (для товаров весом не более \r\n10 кг.). А если доставка бесплатна, то и нет надобности в пункте \r\nсамовывоза. Доставка в близлежащие населенные пункты обойдется гораздо \r\nдешевле, чем у конкурентов;</li><li>В-восьмых, мы ввели такую услугу, \r\nкак сборка компьютера по вашему заказу. Вам нужно только указать \r\nвыбранную конфигурацию компьютера нашему менеджеру, который просчитав \r\nзаказ, согласует с Вами цены и сроки (обычно 2 рабочих дня) и, \r\nсобственно все;</li><li>В-девятых, мы можем предложить такую услугу, как установка купленной бытовой техники. Подключим, проверим, настроим*;</li><li>И, наконец, заключительное: ошибки \r\nсовершают все, главное их своевременно исправлять и не совершать вновь. У\r\n каждого курьера имеется журнал претензий и замечаний клиента, где Вы \r\nвсегда можете оставить свою запись о том, что не понравилось, что нужно \r\nисправить. Руководство своевременно отреагирует на оставленную запись и \r\nизвестит Вас о принятых мерах.<br></li></ul>'),
-(74, 'Интернет-магазин <strong>FloxiShop</strong> предлагает большой ассортимент электроники, бытовой \r\nтехники и товаров для автомобилистов по доступным !ценам. Мы делаем все \r\nвозможное, чтобы покупки в нашем интернет магазине доставляли вам только\r\n положительные эмоции, и вам захотелось вернуться сюда еще не один раз. <br><br><a>Подробнее об интернет-магазине FloxiShop &gt;&gt;&gt;</a>'),
-(112, '<p>\n	 Участвуйте в нашей акции и выигрывайте призы!</p>'),
-(1868, 'У нас есть много хороших товаров  '),
-(1896, '<h2>Шенгенская виза </h2><p>​</p><p>\n	  Отталкивает праздник</p><p><br></p><p>\n	франкоговорящего ыва&nbsp;<strong>культурного </strong>сообщества, это и есть всемирно известный центр огранки алмазов и торговли бриллиантами. <strong>Круговорот</strong> машин вокруг статуи&nbsp;</p><p>Эроса абсурдно отталкивает крестьянский бахрейнский динар, а <strong>Хайош-Байа</strong> славится красными винами. Расовый состав поывднимает кедровый стланик, что в переводе означает "город ангелов". Коралловый риф неравномерен.</p><p>\n	<strong> Мягкая </strong>зима, куда входят Пик-Дистрикт, Сноудония и другие многочисленные национальные резерваты природы и парки, доступна.</p><p>\n	  Наводнение совершает уличный вулканизм, несмотря на то, что все здесь выстроено в оригинальном славянско-турецком стиле.</p>'),
+(112, '<p>Put your content here!​</p>'),
 (1897, '<p>\n	<strong>Welcome!</strong></p><p>\n	   If you like a bit of sideways action in your car and don’t mind a bit (or a lot) or mud and water then Rally Driving experiences are an absolute blast and huge amounts of fun.</p>'),
 (1903, '<p>\n	The adventure began back in 1977, when Thierry Sabine got lost on his motorbike in the Libyan desert during the Abidjan-Nice Rally. Saved from the sands in extremis, he returned to France still in thrall to this landscape and promising himself he would share his fascination with as many people as possible. He proceeded to come up with a route starting in Europe, continuing to Algiers and crossing Agadez before eventually finishing at Dakar. The founder coined a motto for his inspiration: "A challenge for those who go. A dream for those who stay behind." Courtesy of his great conviction and that modicum of madness peculiar to all great ideas, the plan quickly became a reality. Since then, the Paris-Dakar, a unique event sparked by the spirit of adventure, open to all riders and carrying a message of friendship between all men, has never failed to challenge, surprise and excite. Over the course of almost thirty years, it has generated innumerable sporting and human stories.</p><p>(c) <a href="http://www.dakar.com">www.dakar.com</a></p>'),
 (1910, '<p class="">\n	Everyone can join our team! Please, feel free to contact us for a details.</p><p>\n	<img src="/floxim_files/content/aborigeny-tozhe_0.jpg" style=""></p>'),
 (2027, '<p>\r\n	Have questions? Need more information?\r\n</p>\r\n<p>\r\n	Send a starter inquiry to <a href="http://mailto:info@jeeptravel.loc">info@jeeptravel.loc</a>\r\n</p>'),
 (1924, '<p></p><p>Port-au-Prince, Haiti. Here we are!&nbsp;</p><p></p>'),
-(2006, '<p>\r\n	The page you''ve requested doesn''t exist here ;(\r\n</p>');
+(2006, '<p>\r\n	The page you''ve requested doesn''t exist here ;(\r\n</p>'),
+(2047, '<p>\r\n	We are going to post many sad  but interesting posts under the "funeral" tag. Stay idle.\r\n</p>');
 
 -- --------------------------------------------------------
 
@@ -645,8 +507,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_user` (
 --
 
 INSERT INTO `fx_content_user` (`id`, `site_id`, `password`, `email`, `login`, `name`, `registration_code`, `avatar`, `forum_signature`, `forum_messages`, `pa_balance`, `auth_hash`, `first_name`) VALUES
-(99, 0, '202cb962ac59075b964b07152d234b70', 'dubr.cola@gmail.com', 'admin', 'Adminio', NULL, NULL, NULL, 0, 0, '', NULL),
-(100, 1, '698d51a19d8a121ce581499d7b701668', 'dubrowsky@yandex.ru', 'dubrowsky', 'Dubrowsky', '', '24', 'per aspera ad astra', 0, 0, '', 'Дубровский');
+(99, 0, '202cb962ac59075b964b07152d234b70', 'dubr.cola@gmail.com', 'admin', 'Adminio', NULL, NULL, NULL, 0, 0, '', NULL);
 
 -- --------------------------------------------------------
 
@@ -680,52 +541,7 @@ CREATE TABLE IF NOT EXISTS `fx_crontask` (
   `send_email_type` int(11) NOT NULL DEFAULT '0',
   `email` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=60 AUTO_INCREMENT=2 ;
-
---
--- Дамп данных таблицы `fx_crontask`
---
-
-INSERT INTO `fx_crontask` (`id`, `name`, `every_days`, `every_hours`, `every_minutes`, `path`, `last_launch`, `checked`, `send_email_type`, `email`) VALUES
-(1, 'Пересчет пузомерок', 2, 0, 0, '/puzo.php', 0, 0, 0, '');
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `fx_ctpl`
---
-
-CREATE TABLE IF NOT EXISTS `fx_ctpl` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `parent_id` int(11) NOT NULL DEFAULT '0',
-  `component_id` int(11) NOT NULL,
-  `keyword` varchar(255) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `rec_num` int(11) DEFAULT '20' COMMENT 'Количество записей по умолчанию',
-  `sort` text NOT NULL COMMENT 'Сортировка по умолчанию, все доступные типы сортировок',
-  `action` text NOT NULL COMMENT 'Действие по умолчанию и все доступные действия',
-  `with_list` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Шаблон со списком объектов (иначе можно добавить только один объект)',
-  `with_full` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Шаблон с полным выводом',
-  `type` enum('useful','select') DEFAULT 'useful',
-  `widget` tinyint(1) NOT NULL DEFAULT '1',
-  `notwidget` tinyint(1) NOT NULL DEFAULT '1',
-  `embed` enum('miniblock','narrow','wide','narrow-wide') NOT NULL DEFAULT 'narrow-wide',
-  `access` text NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=117 AUTO_INCREMENT=49 ;
-
---
--- Дамп данных таблицы `fx_ctpl`
---
-
-INSERT INTO `fx_ctpl` (`id`, `parent_id`, `component_id`, `keyword`, `name`, `rec_num`, `sort`, `action`, `with_list`, `with_full`, `type`, `widget`, `notwidget`, `embed`, `access`) VALUES
-(1, 0, 1, 'main', 'Пользователи', 20, 'a:1:{s:4:"type";s:6:"manual";}', 'a:2:{s:7:"default";s:5:"index";s:7:"enabled";a:3:{i:0;s:5:"index";i:1;s:3:"add";i:2;s:6:"search";}}', 1, 1, 'useful', 0, 1, 'narrow-wide', 'a:5:{s:4:"read";s:3:"all";s:3:"add";s:3:"all";s:4:"edit";s:4:"auth";s:7:"checked";s:4:"auth";s:6:"delete";s:4:"auth";}'),
-(32, 0, 19, 'main', 'Текст', 20, 'a:1:{s:4:"type";s:6:"manual";}', 'a:2:{s:7:"default";s:5:"index";s:7:"enabled";a:1:{i:0;s:5:"index";}}', 1, 1, 'useful', 1, 1, 'narrow-wide', 'a:5:{s:4:"read";s:3:"all";s:3:"add";s:4:"auth";s:4:"edit";s:4:"auth";s:7:"checked";s:4:"auth";s:6:"delete";s:4:"auth";}'),
-(40, 0, 23, 'main', 'Страницы', 20, '', '', 1, 1, 'useful', 1, 1, 'narrow-wide', ''),
-(41, 0, 24, 'main', 'Разделы', 20, '', '', 1, 1, 'useful', 1, 1, 'narrow-wide', ''),
-(44, 0, 30, 'main', 'Пост блога', 20, '', '', 1, 1, 'useful', 1, 1, 'narrow-wide', ''),
-(45, 0, 31, 'main', 'Тэг', 20, '', '', 1, 1, 'useful', 1, 1, 'narrow-wide', ''),
-(46, 0, 32, 'main', 'Связь "Тэг-пост"', 20, '', '', 1, 1, 'useful', 1, 1, 'narrow-wide', '');
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=60 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -774,7 +590,7 @@ CREATE TABLE IF NOT EXISTS `fx_dictionary` (
   `lang_en` text,
   `lang_ru` text,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=395 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=397 ;
 
 --
 -- Дамп данных таблицы `fx_dictionary`
@@ -1164,8 +980,8 @@ INSERT INTO `fx_dictionary` (`id`, `dict_key`, `lang_string`, `lang_en`, `lang_r
 (381, 'system', 'Render type', NULL, NULL),
 (382, 'system', 'Live search', NULL, NULL),
 (383, 'system', 'Simple select', NULL, NULL),
-(384, 'system', 'Любой', NULL, NULL),
-(385, 'system', 'Только на страницах типа', NULL, NULL),
+(384, 'system', 'Любой', '-Any-', NULL),
+(385, 'system', 'Только на страницах типа', 'Only on pages of type', NULL),
 (386, 'system', '-- выберите вариант --', '-- choose something --', NULL),
 (387, 'component_section', 'Показывать только заголовок?', NULL, NULL),
 (388, 'component_section', 'Скрыть на главной?', NULL, NULL),
@@ -1174,7 +990,9 @@ INSERT INTO `fx_dictionary` (`id`, `dict_key`, `lang_string`, `lang_en`, `lang_r
 (391, 'system', 'Fields table', NULL, NULL),
 (392, 'system', 'Adding new ', NULL, NULL),
 (393, 'controller_component', 'Новый инфоблок', NULL, NULL),
-(394, 'controller_component', 'Инфоблок для поля ', NULL, NULL);
+(394, 'controller_component', 'Инфоблок для поля ', NULL, NULL),
+(395, 'system', 'Название компонента (по-русски)', NULL, NULL),
+(396, 'system', 'Название сущности создаваемой компонентом (по-русски)', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1207,7 +1025,7 @@ CREATE TABLE IF NOT EXISTS `fx_field` (
   KEY `TypeOfData_ID` (`type`),
   KEY `TypeOfEdit_ID` (`type_of_edit`),
   KEY `Widget_Class_ID` (`widget_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=95 AUTO_INCREMENT=211 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=95 AUTO_INCREMENT=212 ;
 
 --
 -- Дамп данных таблицы `fx_field`
@@ -1240,7 +1058,8 @@ INSERT INTO `fx_field` (`id`, `parent`, `component_id`, `ctpl_id`, `system_table
 (203, NULL, 48, 0, 0, 0, 'photo', 'Image', 11, '', 1, 168, 0, '', 0, 1, 1),
 (204, NULL, 48, 0, 0, 0, 'description', 'Description', 3, '', 0, 169, 0, '', 0, 1, 1),
 (205, NULL, 48, 0, 0, 0, 'copy', 'Copy', 1, '', 0, 170, 0, '', 0, 1, 1),
-(210, NULL, 32, 0, 0, 0, 'comment', 'Why the tag is relevant', 1, '', 0, 172, 0, '', 0, 1, 1);
+(210, NULL, 32, 0, 0, 0, 'comment', 'Why the tag is relevant', 1, '', 0, 172, 0, '', 0, 1, 1),
+(211, NULL, 30, 0, 0, 0, 'image', 'Image', 11, '', 0, 173, 0, '', 0, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -1256,7 +1075,7 @@ CREATE TABLE IF NOT EXISTS `fx_filetable` (
   `size` int(10) unsigned NOT NULL DEFAULT '0',
   `to_delete` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=56 AUTO_INCREMENT=377 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=56 AUTO_INCREMENT=384 ;
 
 --
 -- Дамп данных таблицы `fx_filetable`
@@ -1324,7 +1143,14 @@ INSERT INTO `fx_filetable` (`id`, `real_name`, `path`, `type`, `size`, `to_delet
 (373, 'foto.jpg', 'content/foto_2.jpg', 'image/jpeg', 47794, 0),
 (374, '_800_600_90_667819585-IMG_2954.jpg', 'content/800_600_90_667819585-IMG_2954_0.jpg', 'image/jpeg', 39395, 0),
 (375, 'aborigeny-tozhe_0.jpg', 'content/aborigeny-tozhe_0.jpg', 'image/jpeg', 123530, 0),
-(376, '1251362341_1243855523_vnedorojnik_21.jpg', 'content/1251362341_1243855523_vnedorojnik_21_1.jpg', 'image/jpeg', 113615, 0);
+(376, '1251362341_1243855523_vnedorojnik_21.jpg', 'content/1251362341_1243855523_vnedorojnik_21_1.jpg', 'image/jpeg', 113615, 0),
+(377, 'logo.gif', 'content/logo_1.gif', 'image/gif', 1265, 0),
+(378, 'logo.png', 'content/logo_6.png', 'image/png', 5735, 0),
+(379, 'img05.jpg', 'content/img05_1.jpg', 'image/jpeg', 5717, 0),
+(380, 'img09.jpg', 'content/img09_1.jpg', 'image/jpeg', 4587, 0),
+(381, 'img10.jpg', 'content/img10_0.jpg', 'image/jpeg', 238783, 0),
+(382, 'img09.jpg', 'content/img09_2.jpg', 'image/jpeg', 4587, 0),
+(383, 'img09.jpg', 'content/img09_3.jpg', 'image/jpeg', 4587, 0);
 
 -- --------------------------------------------------------
 
@@ -1360,7 +1186,15 @@ CREATE TABLE IF NOT EXISTS `fx_history` (
   `name` text NOT NULL,
   `marker` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=52 COMMENT='История операций' AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=52 COMMENT='История операций' AUTO_INCREMENT=3 ;
+
+--
+-- Дамп данных таблицы `fx_history`
+--
+
+INSERT INTO `fx_history` (`id`, `user_id`, `date`, `name`, `marker`) VALUES
+(1, 1, '2013-07-15 16:16:00', 'FX_HISTORY_ADMIN_COMPONENT_EDIT', 0),
+(2, 1, '2013-07-19 17:54:22', 'FX_HISTORY_ADMIN_FIELD_ADD', 0);
 
 -- --------------------------------------------------------
 
@@ -1398,56 +1232,47 @@ CREATE TABLE IF NOT EXISTS `fx_infoblock` (
   `scope` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `page_id` (`page_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=210 AUTO_INCREMENT=106 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=210 AUTO_INCREMENT=121 ;
 
 --
 -- Дамп данных таблицы `fx_infoblock`
 --
 
 INSERT INTO `fx_infoblock` (`id`, `parent_infoblock_id`, `site_id`, `page_id`, `checked`, `name`, `controller`, `action`, `params`, `scope`) VALUES
-(3, 0, 1, 2, 1, 'Главное меню', 'component_section', 'listing', 'a:3:{s:11:"parent_type";s:13:"mount_page_id";s:9:"parent_id";s:0:"";s:7:"submenu";s:1:"1";}', 'a:2:{s:5:"pages";s:11:"descendants";s:9:"page_type";s:0:"";}'),
+(3, 0, 1, 2, 1, 'Main menu', 'component_section', 'listing', 'a:1:{s:7:"submenu";s:3:"all";}', 'a:2:{s:5:"pages";s:11:"descendants";s:9:"page_type";s:0:"";}'),
 (12, 0, 1, 0, 1, '', 'layout', 'show', 'a:0:{}', 'a:2:{s:5:"pages";s:3:"all";s:9:"page_type";s:0:"";}'),
-(42, 0, 1, 78, 1, 'Теги поста', 'component_tagpost', 'listing', 'a:5:{s:5:"limit";s:2:"10";s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";s:11:"parent_type";s:15:"current_page_id";s:9:"parent_id";s:0:"";}', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:8:"blogpost";}'),
-(16, 0, 1, 2, 1, 'Доп. текст для главной', 'component_text', 'listing', 'a:5:{s:5:"limit";s:2:"10";s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";s:11:"parent_type";s:13:"mount_page_id";s:9:"parent_id";s:0:"";}', 'a:1:{s:5:"pages";s:4:"this";}'),
-(43, 0, 1, 2, 1, 'Хлебные крошки', 'component_section', 'breadcrumbs', 'a:0:{}', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:0:"";}'),
-(18, 0, 1, 0, 1, '', 'component_section', 'listing_mirror', 'a:5:{s:5:"limit";s:2:"10";s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";s:8:"from_all";b:0;s:9:"parent_id";s:1:"1";}', 'a:2:{s:5:"pages";s:3:"all";s:9:"page_type";s:0:"";}'),
+(16, 0, 1, 2, 1, 'Index text', 'component_text', 'listing', 'a:0:{}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
+(43, 0, 1, 2, 1, 'Main Header (via breadcrumbs)', 'component_section', 'breadcrumbs', 'a:2:{s:11:"header_only";s:1:"1";s:13:"hide_on_index";b:0;}', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:0:"";}'),
+(117, 0, 15, 1925, 1, 'Blog / By tag', 'component_blogpost', 'listing_by_tag', 'a:0:{}', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:3:"tag";}'),
 (53, 12, 1, 2, 1, '', '', '', 'a:0:{}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
 (54, 12, 1, 78, 1, '', '', '', 'a:0:{}', 'a:2:{s:5:"pages";s:11:"descendants";s:9:"page_type";s:0:"";}'),
-(25, 0, 1, 1, 1, 'Раздел продуктов', 'component_text', 'listing', 'a:5:{s:5:"limit";s:2:"10";s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";s:11:"parent_type";s:15:"current_page_id";s:9:"parent_id";s:0:"";}', 'a:1:{s:5:"pages";s:11:"descendants";}'),
 (24, 0, 1, 2, 1, '', 'widget_authform', 'show', 'a:0:{}', 'a:1:{s:5:"pages";s:3:"all";}'),
-(26, 0, 1, 1, 1, 'Текст продуктового раздела', 'component_text', 'listing', 'a:5:{s:5:"limit";s:2:"10";s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";s:11:"parent_type";s:15:"current_page_id";s:9:"parent_id";s:0:"";}', 'a:1:{s:5:"pages";s:8:"children";}'),
-(46, 40, 1, 97, 1, 'Отдельный пост / спец. вывод', '', '', 'a:0:{}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:8:"blogpost";}'),
 (55, 54, 1, 97, 1, '', '', '', 'a:0:{}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
-(40, 0, 1, 78, 1, 'Отдельный пост блога', 'component_blogpost', 'record', 'a:0:{}', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:8:"blogpost";}'),
-(41, 0, 1, 78, 1, 'Тэги', 'component_tag', 'listing', 'a:6:{s:5:"limit";s:0:"";s:15:"show_pagination";b:0;s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";s:11:"parent_type";s:13:"mount_page_id";s:9:"parent_id";s:0:"";}', 'a:2:{s:5:"pages";s:11:"descendants";s:9:"page_type";s:0:"";}'),
-(36, 0, 1, 78, 1, 'Посты блога', 'component_blogpost', 'listing', 'a:6:{s:5:"limit";s:3:"100";s:15:"show_pagination";s:1:"1";s:7:"sorting";s:12:"publish_date";s:11:"sorting_dir";s:4:"desc";s:11:"parent_type";s:15:"current_page_id";s:9:"parent_id";s:0:"";}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
-(69, 0, 15, 1883, 1, 'Главное меню', 'component_section', 'listing', 'a:1:{s:7:"submenu";s:4:"none";}', 'a:2:{s:5:"pages";s:11:"descendants";s:9:"page_type";s:0:"";}'),
+(69, 0, 15, 1883, 1, 'Main menu', 'component_section', 'listing', 'a:1:{s:7:"submenu";s:4:"none";}', 'a:2:{s:5:"pages";s:11:"descendants";s:9:"page_type";s:0:"";}'),
 (71, 67, 15, 1883, 1, '', '', '', 'a:0:{}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
-(70, 0, 15, 1883, 1, 'Маршруты', 'component_travel_route', 'listing', 'a:6:{s:5:"limit";s:2:"10";s:15:"show_pagination";s:1:"1";s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";s:11:"parent_type";s:13:"mount_page_id";s:9:"parent_id";s:0:"";}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
-(60, 0, 1, 78, 1, 'Посты / календарь', 'component_blogpost', 'calendar', 'a:0:{}', 'a:2:{s:5:"pages";s:11:"descendants";s:9:"page_type";s:0:"";}'),
-(61, 0, 1, 2, 1, 'Текст / Список', 'component_text', 'listing', 'a:6:{s:5:"limit";s:2:"10";s:15:"show_pagination";s:1:"1";s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";s:11:"parent_type";s:15:"current_page_id";s:9:"parent_id";s:0:"";}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
+(70, 0, 15, 1883, 1, 'Routes', 'component_travel_route', 'listing', 'a:6:{s:5:"limit";s:2:"10";s:15:"show_pagination";s:1:"1";s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";s:11:"parent_type";s:13:"mount_page_id";s:9:"parent_id";s:0:"";}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
+(61, 0, 1, 2, 1, 'Text / listing', 'component_text', 'listing', 'a:6:{s:5:"limit";s:2:"10";s:15:"show_pagination";s:1:"1";s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";s:11:"parent_type";s:15:"current_page_id";s:9:"parent_id";s:0:"";}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
 (67, 0, 15, 0, 1, 'Layout', 'layout', 'show', '', ''),
-(68, 0, 1, 6, 1, 'Текст / Список', 'component_text', 'listing', 'a:6:{s:5:"limit";s:0:"";s:15:"show_pagination";b:0;s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";s:11:"parent_type";s:15:"current_page_id";s:9:"parent_id";s:0:"";}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
-(72, 0, 15, 1883, 1, 'Starging', 'component_travel_route', 'listing_mirror', 'a:6:{s:5:"limit";s:1:"4";s:15:"show_pagination";b:0;s:7:"sorting";s:10:"start_date";s:11:"sorting_dir";s:4:"desc";s:8:"from_all";s:1:"1";s:9:"parent_id";s:0:"";}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
-(73, 0, 15, 1888, 1, 'Меню услуги', 'component_section', 'listing', 'a:1:{s:7:"submenu";s:4:"none";}', 'a:2:{s:5:"pages";s:11:"descendants";s:9:"page_type";s:0:"";}'),
-(74, 0, 15, 1883, 1, 'Текст страницы', 'component_text', 'listing', 'a:0:{}', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:0:"";}'),
-(75, 0, 15, 1883, 1, 'Текст главной', 'component_text', 'listing', 'a:0:{}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
-(76, 0, 15, 1883, 1, 'Соц. сети', 'component_section', 'listing', 'a:1:{s:7:"submenu";s:4:"none";}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
-(77, 0, 15, 1887, 1, 'Меню о компании', 'component_section', 'listing', 'a:1:{s:7:"submenu";s:4:"none";}', 'a:2:{s:5:"pages";s:11:"descendants";s:9:"page_type";s:0:"";}'),
-(78, 0, 15, 0, 1, 'Хлебные крошки', 'component_section', 'breadcrumbs', 'a:2:{s:11:"header_only";b:0;s:13:"hide_on_index";s:1:"1";}', 'a:2:{s:5:"pages";s:3:"all";s:9:"page_type";s:0:"";}'),
-(79, 0, 15, 1889, 1, 'Галерея работ', 'component_gallery', 'listing', 'a:6:{s:5:"limit";s:1:"0";s:15:"show_pagination";s:1:"1";s:7:"sorting";s:12:"publish_date";s:11:"sorting_dir";s:4:"desc";s:11:"parent_type";s:13:"mount_page_id";s:9:"parent_id";s:0:"";}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
+(72, 0, 15, 1883, 1, 'Starting', 'component_travel_route', 'listing_mirror', 'a:6:{s:5:"limit";s:1:"4";s:15:"show_pagination";b:0;s:7:"sorting";s:10:"start_date";s:11:"sorting_dir";s:4:"desc";s:8:"from_all";s:1:"1";s:9:"parent_id";s:0:"";}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
+(74, 0, 15, 1883, 1, 'Page text', 'component_text', 'listing', 'a:0:{}', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:0:"";}'),
+(75, 0, 15, 1883, 1, 'Index text', 'component_text', 'listing', 'a:0:{}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
+(76, 0, 15, 1883, 1, 'Social networks', 'component_section', 'listing', 'a:1:{s:7:"submenu";s:4:"none";}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
+(77, 0, 15, 1887, 1, 'Menu / About', 'component_section', 'listing', 'a:1:{s:7:"submenu";s:4:"none";}', 'a:2:{s:5:"pages";s:11:"descendants";s:9:"page_type";s:0:"";}'),
+(78, 0, 15, 0, 1, ' Breadcrumbs', 'component_section', 'breadcrumbs', 'a:2:{s:11:"header_only";b:0;s:13:"hide_on_index";s:1:"1";}', 'a:2:{s:5:"pages";s:3:"all";s:9:"page_type";s:0:"";}'),
+(79, 0, 15, 1889, 1, 'Our gallery', 'component_gallery', 'listing', 'a:6:{s:5:"limit";s:1:"0";s:15:"show_pagination";s:1:"1";s:7:"sorting";s:12:"publish_date";s:11:"sorting_dir";s:4:"desc";s:11:"parent_type";s:13:"mount_page_id";s:9:"parent_id";s:0:"";}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
 (80, 67, 15, 1889, 1, '', '', '', 'a:0:{}', 'a:2:{s:5:"pages";s:11:"descendants";s:9:"page_type";s:0:"";}'),
-(81, 0, 15, 1889, 1, 'Фото / Список', 'component_photo', 'listing', 'a:6:{s:5:"limit";s:0:"";s:15:"show_pagination";b:0;s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";s:11:"parent_type";s:15:"current_page_id";s:9:"parent_id";s:0:"";}', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:7:"gallery";}'),
-(82, 0, 15, 1925, 1, 'Посты блога', 'component_blogpost', 'listing', 'a:7:{s:5:"limit";s:2:"10";s:15:"show_pagination";s:1:"1";s:7:"sorting";s:12:"publish_date";s:11:"sorting_dir";s:4:"desc";s:11:"parent_type";s:13:"mount_page_id";s:9:"parent_id";s:0:"";s:19:"field_195_infoblock";s:2:"84";}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
-(83, 0, 15, 1925, 1, 'Облако тегов', 'component_tag', 'listing', 'a:6:{s:5:"limit";s:0:"";s:15:"show_pagination";b:0;s:7:"sorting";s:7:"counter";s:11:"sorting_dir";s:3:"asc";s:11:"parent_type";s:13:"mount_page_id";s:9:"parent_id";s:0:"";}', 'a:2:{s:5:"pages";s:11:"descendants";s:9:"page_type";s:0:"";}'),
-(84, 0, 15, 1925, 1, 'Метки поста', 'component_tagpost', 'listing', 'a:7:{s:5:"limit";s:0:"";s:15:"show_pagination";b:0;s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";s:11:"parent_type";s:15:"current_page_id";s:9:"parent_id";s:0:"";i:0;b:0;}', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:8:"blogpost";}'),
-(85, 0, 15, 1883, 1, 'Фото / ', 'component_photo', 'listing_mirror', 'a:6:{s:5:"limit";s:1:"3";s:15:"show_pagination";s:1:"1";s:7:"sorting";s:7:"created";s:11:"sorting_dir";s:4:"desc";s:8:"from_all";s:1:"1";s:9:"parent_id";s:0:"";}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
-(86, 0, 15, 1925, 1, 'Блог по месяцам', 'component_blogpost', 'calendar', 'a:0:{}', 'a:2:{s:5:"pages";s:11:"descendants";s:9:"page_type";s:0:"";}'),
-(87, 0, 15, 1925, 1, 'Посты / Separate object', 'component_blogpost', 'record', 'a:0:{}', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:8:"blogpost";}'),
+(81, 0, 15, 1889, 1, 'Photo list', 'component_photo', 'listing', 'a:6:{s:5:"limit";s:0:"";s:15:"show_pagination";b:0;s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";s:11:"parent_type";s:15:"current_page_id";s:9:"parent_id";s:0:"";}', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:7:"gallery";}'),
+(82, 0, 15, 1925, 1, 'Blog posts', 'component_blogpost', 'listing', 'a:7:{s:5:"limit";s:2:"10";s:15:"show_pagination";s:1:"1";s:7:"sorting";s:12:"publish_date";s:11:"sorting_dir";s:4:"desc";s:11:"parent_type";s:13:"mount_page_id";s:9:"parent_id";s:0:"";s:19:"field_195_infoblock";s:2:"84";}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
+(83, 0, 15, 1925, 1, 'Tag cloud', 'component_tag', 'listing', 'a:6:{s:5:"limit";s:0:"";s:15:"show_pagination";b:0;s:7:"sorting";s:7:"counter";s:11:"sorting_dir";s:3:"asc";s:11:"parent_type";s:13:"mount_page_id";s:9:"parent_id";s:0:"";}', 'a:2:{s:5:"pages";s:11:"descendants";s:9:"page_type";s:0:"";}'),
+(84, 0, 15, 1925, 1, 'Post tags', 'component_tagpost', 'listing', 'a:7:{s:5:"limit";s:0:"";s:15:"show_pagination";b:0;s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";s:11:"parent_type";s:15:"current_page_id";s:9:"parent_id";s:0:"";i:0;b:0;}', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:8:"blogpost";}'),
+(85, 0, 15, 1883, 1, 'Photo / mirror', 'component_photo', 'listing_mirror', 'a:6:{s:5:"limit";s:1:"3";s:15:"show_pagination";s:1:"1";s:7:"sorting";s:7:"created";s:11:"sorting_dir";s:4:"desc";s:8:"from_all";s:1:"1";s:9:"parent_id";s:0:"";}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
+(86, 0, 15, 1925, 1, 'Blog calendar', 'component_blogpost', 'calendar', 'a:0:{}', 'a:2:{s:5:"pages";s:11:"descendants";s:9:"page_type";s:0:"";}'),
+(87, 0, 15, 1925, 1, 'Separate blog post', 'component_blogpost', 'record', 'a:0:{}', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:8:"blogpost";}'),
 (99, 71, 15, 1883, 1, '', '', '', 'a:0:{}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
 (100, 99, 15, 1883, 1, '', '', '', 'a:0:{}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
 (103, 0, 15, 0, 1, 'Blog / List', 'component_blogpost', 'listing', 'a:7:{s:5:"limit";s:1:"1";s:15:"show_pagination";s:1:"1";s:7:"sorting";s:7:"created";s:11:"sorting_dir";s:3:"asc";s:11:"parent_type";s:15:"current_page_id";s:9:"parent_id";s:0:"";s:19:"field_195_infoblock";s:2:"84";}', 'a:2:{s:5:"pages";s:3:"all";s:9:"page_type";s:0:"";}'),
-(104, 0, 15, 0, 1, 'Text / List', 'component_text', 'listing', 'a:0:{}', 'a:2:{s:5:"pages";s:3:"all";s:9:"page_type";N;}');
+(104, 0, 15, 0, 1, 'Text / List', 'component_text', 'listing', 'a:0:{}', 'a:2:{s:5:"pages";s:3:"all";s:9:"page_type";N;}'),
+(118, 0, 15, 1887, 1, 'Blog / Recent', 'component_blogpost', 'listing_mirror', 'a:6:{s:5:"limit";s:1:"3";s:15:"show_pagination";b:0;s:7:"sorting";s:12:"publish_date";s:11:"sorting_dir";s:4:"desc";s:8:"from_all";s:1:"1";s:9:"parent_id";s:0:"";}', 'a:2:{s:5:"pages";s:11:"descendants";s:9:"page_type";s:0:"";}');
 
 -- --------------------------------------------------------
 
@@ -1467,7 +1292,7 @@ CREATE TABLE IF NOT EXISTS `fx_infoblock_visual` (
   `priority` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `infoblock_id` (`infoblock_id`,`layout_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=138 AUTO_INCREMENT=177 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=138 AUTO_INCREMENT=192 ;
 
 --
 -- Дамп данных таблицы `fx_infoblock_visual`
@@ -1477,56 +1302,36 @@ INSERT INTO `fx_infoblock_visual` (`id`, `infoblock_id`, `layout_id`, `wrapper`,
 (55, 53, 1, '', '', 'layout_supernova.index', '', '', 1),
 (2, 3, 1, '', 'a:2:{i:163;s:13:"Ус-луги";s:9:"separator";s:5:"• !";}', 'layout_supernova.demo_menu', 'a:3:{s:9:"separator";s:3:"•";s:6:"odd_bg";s:4:"#111";s:9:"odd_color";s:4:"#FF0";}', 'header', 1),
 (56, 54, 1, '', '', 'layout_supernova.index', '', '', 2),
-(14, 12, 1, '', '', 'layout_supernova.inner', 'a:5:{s:4:"logo";s:3:"356";s:7:"company";s:14:"Floxim Company";s:6:"slogan";s:37:"лучшие утюги России!";s:13:"replace_src_0";s:38:"/controllers/layout/supernova/logo.png";s:8:"developa";s:103:"© 2010 Хороший пример \n<br>\nсайтостроения — \n<a href="#">\nWebSite.ru\n</a>\n";}', '', 4),
-(44, 42, 1, '', '', 'component_tagpost.listing', '', 'content', 7),
-(20, 18, 1, 'layout_supernova.wrap_simple', '', 'component_page.listing', 'a:2:{s:5:"title";s:34:"Мы умеем продавать";s:10:"menu_title";s:27:"Наша продукция";}', 'sidebar', 2),
-(42, 40, 1, '', '', 'component_blogpost.record', '', 'content', 2),
-(18, 16, 1, 'layout_supernova.wrap_titled', 'a:2:{s:5:"title";s:38:"Акция, не пропустите!";s:5:"color";s:4:"#C00";}', 'component_text.listing', '', 'content', 9),
-(27, 25, 1, '', '', '', '', 'content', 3),
-(26, 24, 1, 'layout_supernova.wrap_titled', 'a:1:{s:5:"title";s:11:"\n\n\nВход";}', 'widget_authform.show', 'a:2:{s:15:"replace_value_0";s:10:"Войти";s:12:"login_button";s:8:"Sign in!";}', 'sidebar', 3),
-(28, 26, 1, '', '', '', '', 'content', 4),
+(14, 12, 1, '', '', 'layout_supernova.inner', 'a:6:{s:4:"logo";s:3:"356";s:7:"company";s:14:"Floxim Company";s:6:"slogan";s:17:"Almost clear site";s:13:"replace_src_0";s:38:"/controllers/layout/supernova/logo.png";s:8:"developa";s:103:"© 2010 Хороший пример \n<br>\nсайтостроения — \n<a href="#">\nWebSite.ru\n</a>\n";s:13:"banner_slogan";s:124:"«Simplicity of sitebuilder, functionality of CMS,\n                        flexibility of framework. <br>​And it''s free!»";}', '', 4),
+(188, 117, 10, '', '', 'component_blogpost.listing', '', 'content', 9),
+(18, 16, 1, 'layout_supernova.wrap_titled', 'a:2:{s:5:"title";s:21:"Don''t miss the chance";s:5:"color";s:7:"#027a02";}', 'component_text.listing', '', 'content', 9),
+(26, 24, 1, 'layout_supernova.wrap_titled', 'a:1:{s:5:"title";s:16:"Have an account?";}', 'widget_authform.show', 'a:3:{s:15:"replace_value_0";s:10:"Войти";s:12:"login_button";s:8:"Sign in!";s:17:"placeholder_login";s:5:"email";}', 'sidebar', 3),
 (57, 55, 1, '', '', 'layout_supernova.inner', '', '', 3),
 (45, 43, 1, '', '', 'component_section.breadcrumbs', 'a:1:{s:9:"separator";s:3:" / ";}', 'content', 1),
-(48, 46, 1, 'layout_supernova.wrap_titled', 'a:2:{s:5:"title";s:61:"У этого поста - специальный вывод!";s:5:"color";s:4:"#D00";}', 'component_blogpost.record', '', 'content', 6),
-(38, 36, 1, '', '', 'auto.auto', '', 'content', 5),
-(43, 41, 1, '', 'a:1:{s:5:"title";s:23:"Облако тэгов";}', 'component_tag.listing', '', 'sidebar', 4),
 (59, 57, 1, 'layout_supernova.wrap_titled', '', 'component_page.listing', '', 'content', 8),
-(110, 36, 8, '', '', 'component_blogpost.listing', 'a:1:{s:10:"tags_label";s:9:"Таги:";}', 'content', 5),
 (109, 16, 8, '', '', 'component_text.listing', '', 'content', 9),
 (108, 53, 8, '', '', 'layout_demo8.index', 'a:3:{s:9:"c1_header";s:31:"Новости | события";s:9:"logo_text";s:27:"Think<span>Different</span>";s:6:"slogan";s:37:"лучшие утюги россии!";}', '', 0),
 (107, 12, 8, '', '', 'layout_demo8.index', 'a:0:{}', '', 0),
-(140, 70, 10, '', '', 'layout_jeeptravel.index_slider', 'a:14:{s:9:"info_1891";s:148:"<dt><strong>Difficulty:</strong>&nbsp;easy<br><strong>Cities:</strong>&nbsp;Gada, Balle, Binji, Wurno<br><strong>Villages:</strong> Kaita, Rimi</dt>";s:14:"more_text_1891";s:12:"Tell me more";s:16:"action_text_1891";s:14:"Gonna b there!";s:9:"date_1891";s:25:"May 12–16 fuck yeah<br>";s:11:"header_1891";s:12:"Summer Rally";s:13:"bg_photo_1892";s:3:"357";s:11:"header_1892";s:34:"It''s going to be<br>​Legen-dary!";s:16:"action_text_1892";s:15:"Yes, I''m crazy!";s:14:"more_text_1892";s:12:"Tell me more";s:9:"date_1892";s:16:"January 5 – 19";s:9:"info_1892";s:251:"<dl>\n                                            <dt>Difficulty: </dt>extremely difficult<br>​Period: 2 weeks<br>Cities<strong>: Paris, Dakar</strong><dd></dd><dt>A chance to survive:</dt><dd>~23.5%</dd>\n                                        </dl>";s:13:"bg_photo_1891";s:3:"345";s:15:"action_url_1891";s:0:"";s:15:"action_url_1892";s:0:"";}', 'content', 8),
+(140, 70, 10, '', '', 'layout_jeeptravel.index_slider', 'a:14:{s:9:"info_1891";s:148:"<dt><strong>Difficulty:</strong>&nbsp;easy<br><strong>Cities:</strong>&nbsp;Gada, Balle, Binji, Wurno<br><strong>Villages:</strong> Kaita, Rimi</dt>";s:14:"more_text_1891";s:12:"Tell me more";s:16:"action_text_1891";s:14:"Gonna b there!";s:9:"date_1891";s:15:"May 12–16<br>";s:11:"header_1891";s:12:"Summer Rally";s:13:"bg_photo_1892";s:3:"357";s:11:"header_1892";s:34:"It''s going to be<br>​Legen-dary!";s:16:"action_text_1892";s:15:"Yes, I''m crazy!";s:14:"more_text_1892";s:12:"Tell me more";s:9:"date_1892";s:16:"January 5 – 19";s:9:"info_1892";s:251:"<dl>\n                                            <dt>Difficulty: </dt>extremely difficult<br>​Period: 2 weeks<br>Cities<strong>: Paris, Dakar</strong><dd></dd><dt>A chance to survive:</dt><dd>~23.5%</dd>\n                                        </dl>";s:13:"bg_photo_1891";s:3:"345";s:15:"action_url_1891";s:0:"";s:15:"action_url_1892";s:0:"";}', 'content', 8),
 (174, 103, 10, '', '', 'auto.auto', '', 'index_right', 0),
-(105, 41, 8, '', '', 'component_tag.listing', '', 'sidebar', 3),
-(104, 40, 8, '', '', 'component_blogpost.record', '', 'content', 2),
 (103, 24, 8, '', '', 'widget_authform.show', '', 'sidebar', 2),
-(102, 18, 8, '', '', 'component_page.listing', '', 'sidebar', 1),
 (101, 43, 8, '', '', 'component_section.breadcrumbs', '', 'content', 1),
-(100, 42, 8, '', '', 'component_tagpost.listing', '', 'content', 7),
 (99, 3, 8, '', '', 'layout_demo8.demo_menu', '', 'header', 1),
 (98, 54, 8, '', '', 'layout_demo8.index', '', '', 0),
 (111, 55, 8, '', '', 'layout_demo8.index', '', '', 0),
-(112, 46, 8, '', '', 'component_blogpost.record', '', 'content', 6),
-(113, 25, 8, '', '', 'component_text.listing', '', 'content', 3),
-(115, 60, 8, '', '', 'component_blogpost.calendar', 'a:4:{s:7:"month_3";s:9:"Das March";s:7:"month_4";s:11:"Das Aprilch";s:6:"header";s:10:"Архив";s:8:"month_03";s:5:"March";}', 'sidebar', 0),
 (116, 53, 9, '', '', 'layout_dummy.2cols', '', '', 0),
 (117, 3, 9, '', '', 'component_section.listing', '', 'header', 1),
 (118, 16, 9, '', '', 'component_text.listing', '', 'content', 9),
-(119, 18, 9, '', '', 'component_page.listing', '', 'left', 1),
 (120, 24, 9, '', '', 'widget_authform.show', '', 'left', 2),
 (139, 69, 10, '', '', 'layout_jeeptravel.top_menu', '', 'header', 1),
 (122, 12, 9, '', '', 'layout_dummy.2cols', '', '', 0),
 (123, 43, 9, '', '', 'component_section.breadcrumbs', '', 'content', 1),
-(124, 25, 9, '', '', 'component_text.listing', '', 'content', 3),
 (125, 61, 8, '', '', 'auto.auto', '', 'banner', 0),
 (126, 61, 1, '', '', 'component_text.listing', '', '', 0),
-(127, 60, 1, '', '', 'component_blogpost.calendar', 'a:1:{s:8:"month_05";s:3:"May";}', 'sidebar', 1),
-(138, 68, 1, '', '', 'component_text.listing', '', 'content', 8),
 (134, 67, 1, '', '', 'layout_supernova.index', '', '', 0),
-(137, 67, 10, '', '', 'layout_jeeptravel.page', 'a:29:{s:18:"page_bg_color_1895";s:0:"";s:18:"page_bg_color_1888";s:7:"#E9A502";s:18:"page_bg_image_1888";s:52:"/controllers/layout/jeeptravel/images/bg-company.jpg";s:18:"page_bg_image_1895";s:0:"";s:18:"page_bg_color_1887";s:4:"#000";s:18:"page_bg_image_1887";s:3:"358";s:5:"phone";s:18:"+7 (905) 561 99 72";s:4:"mail";s:19:"info@jeeptravel.loc";s:18:"page_bg_color_1889";s:4:"#000";s:18:"page_bg_image_1889";s:54:"/controllers/layout/jeeptravel/images/bg-portfolio.jpg";s:18:"page_bg_color_1890";s:7:"#E9A502";s:18:"page_bg_image_1890";s:2:"60";s:18:"page_bg_color_1925";s:7:"#060008";s:18:"page_bg_image_1925";s:3:"164";s:18:"page_bg_color_1926";s:7:"#500070";s:18:"page_bg_image_1926";s:3:"326";s:4:"logo";s:3:"360";s:18:"page_bg_image_1891";s:0:"";s:18:"page_bg_image_1968";s:0:"";s:14:"contacts_label";s:8:"Call us:";s:4:"copy";s:99:"© JeepTravel, 2013<br>&nbsp; &nbsp; &nbsp;Photo by: <a href="http://leecannon.com/">Lee Cannon</a>";s:18:"page_bg_image_1883";s:0:"";s:18:"page_bg_image_1996";s:0:"";s:18:"page_bg_image_1884";s:0:"";s:18:"page_bg_color_1883";s:7:"#ffffff";s:18:"page_bg_color_1884";s:7:"#000000";s:18:"page_bg_image_1916";s:0:"";s:18:"page_bg_image_1902";s:0:"";s:18:"page_bg_image_2033";s:0:"";}', '', 0),
+(137, 67, 10, '', '', 'layout_jeeptravel.page', 'a:30:{s:18:"page_bg_color_1895";s:0:"";s:18:"page_bg_color_1888";s:7:"#E9A502";s:18:"page_bg_image_1888";s:52:"/controllers/layout/jeeptravel/images/bg-company.jpg";s:18:"page_bg_image_1895";s:0:"";s:18:"page_bg_color_1887";s:4:"#000";s:18:"page_bg_image_1887";s:3:"358";s:5:"phone";s:18:"+7 (905) 561 99 72";s:4:"mail";s:19:"info@jeeptravel.loc";s:18:"page_bg_color_1889";s:4:"#000";s:18:"page_bg_image_1889";s:54:"/controllers/layout/jeeptravel/images/bg-portfolio.jpg";s:18:"page_bg_color_1890";s:7:"#E9A502";s:18:"page_bg_image_1890";s:2:"60";s:18:"page_bg_color_1925";s:7:"#060008";s:18:"page_bg_image_1925";s:3:"164";s:18:"page_bg_color_1926";s:7:"#500070";s:18:"page_bg_image_1926";s:3:"326";s:4:"logo";s:3:"378";s:18:"page_bg_image_1891";s:0:"";s:18:"page_bg_image_1968";s:0:"";s:14:"contacts_label";s:8:"Call us:";s:4:"copy";s:99:"© JeepTravel, 2013<br>&nbsp; &nbsp; &nbsp;Photo by: <a href="http://leecannon.com/">Lee Cannon</a>";s:18:"page_bg_image_1883";s:0:"";s:18:"page_bg_image_1996";s:0:"";s:18:"page_bg_image_1884";s:0:"";s:18:"page_bg_color_1883";s:7:"#ffffff";s:18:"page_bg_color_1884";s:7:"#000000";s:18:"page_bg_image_1916";s:0:"";s:18:"page_bg_image_1902";s:0:"";s:18:"page_bg_image_2033";s:0:"";s:5:"email";s:11:"info@jt.com";}', '', 0),
 (141, 71, 10, '', '', 'layout_jeeptravel.index', '', '', 0),
 (142, 72, 10, 'layout_jeeptravel.block_titled', 'a:1:{s:6:"header";s:8:"Upcoming";}', 'layout_jeeptravel.index_link_list', '', 'index_center', 2),
-(143, 73, 10, 'layout_jeeptravel.block_titled', 'a:1:{s:6:"header";s:25:"Мы предлагаем";}', 'layout_jeeptravel.side_menu', '', 'sidebar', 3),
 (144, 74, 10, '', '', 'component_text.listing', '', 'content', 7),
 (145, 75, 10, '', '', 'component_text.listing', '', 'index_center', 1),
 (146, 76, 10, 'layout_jeeptravel.block_titled', 'a:1:{s:6:"header";s:9:"Follow us";}', 'layout_jeeptravel.index_link_list', '', 'index_right', 1),
@@ -1536,14 +1341,13 @@ INSERT INTO `fx_infoblock_visual` (`id`, `infoblock_id`, `layout_id`, `wrapper`,
 (150, 72, 1, '', '', 'component_page.listing', '', 'footer', 2),
 (151, 75, 1, '', '', 'component_text.listing', '', 'footer', 1),
 (152, 76, 1, '', '', 'layout_supernova.demo_menu', '', '', 0),
-(153, 73, 1, '', '', 'layout_supernova.demo_menu', '', '', 0),
 (154, 74, 1, '', '', 'component_text.listing', '', 'content', 1),
 (155, 77, 10, 'layout_jeeptravel.block_titled', 'a:1:{s:6:"header";s:13:"Jeep Travels:";}', 'layout_jeeptravel.side_menu', '', 'sidebar', 4),
 (156, 78, 10, '', '', 'component_section.breadcrumbs', '', 'content', 1),
 (157, 79, 10, '', '', 'layout_jeeptravel.pages_by_year', '', 'content', 5),
 (158, 80, 10, '', '', 'layout_jeeptravel.full', 'a:6:{s:18:"page_bg_color_1889";s:7:"#c7c1c7";s:18:"page_bg_image_1889";s:2:"56";s:18:"page_bg_color_1916";s:7:"#706c70";s:18:"page_bg_image_1916";s:0:"";s:14:"contacts_label";s:18:"Для связи:";s:5:"phone";s:18:"+7 (905) 561 99 75";}', '', 0),
 (159, 81, 10, '', '', 'layout_jeeptravel.photo_listing', '', 'content', 6),
-(160, 82, 10, '', '', 'component_blogpost.listing', 'a:2:{s:13:"bg_photo_1976";s:0:"";s:10:"tags_label";s:5:"Tags:";}', 'content', 2),
+(160, 82, 10, '', '', 'component_blogpost.listing', 'a:6:{s:13:"bg_photo_1976";s:0:"";s:10:"tags_label";s:5:"Tags:";s:12:"posted_under";s:11:"Entry tags:";s:9:"blog_name";s:21:"Jeep Travel blog feed";s:16:"blog_description";s:27:"Our blog is so interesting!";s:16:"rss_posted_under";s:11:"Entry tags:";}', 'content', 2),
 (161, 83, 10, 'layout_jeeptravel.block_titled', 'a:1:{s:6:"header";s:10:"Tags cloud";}', 'component_tag.listing', '', 'sidebar', 1),
 (162, 84, 10, '', '', 'component_tagpost.listing', '', 'content', 4),
 (163, 85, 10, 'layout_jeeptravel.block_titled', 'a:1:{s:6:"header";s:6:"Photos";}', 'layout_jeeptravel.index_photo_anounces', 'a:2:{s:10:"image_1916";s:0:"";s:10:"image_1913";s:0:"";}', 'index_left', 1),
@@ -1551,7 +1355,8 @@ INSERT INTO `fx_infoblock_visual` (`id`, `infoblock_id`, `layout_id`, `wrapper`,
 (165, 87, 10, '', '', 'auto.auto', '', 'content', 3),
 (175, 104, 10, '', '', 'auto.auto', '', 'sidebar', 0),
 (170, 99, 10, '', '', 'layout_jeeptravel.index', '', '', 0),
-(171, 100, 10, '', '', 'layout_jeeptravel.index', '', '', 0);
+(171, 100, 10, '', '', 'layout_jeeptravel.index', '', '', 0),
+(189, 118, 10, 'layout_jeeptravel.block_titled', 'a:1:{s:6:"header";s:19:"Recent blog entries";}', 'component_page.listing', '', 'sidebar', 5);
 
 -- --------------------------------------------------------
 
@@ -1591,36 +1396,7 @@ CREATE TABLE IF NOT EXISTS `fx_mail_template` (
   `html` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `keyword` (`keyword`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=647 AUTO_INCREMENT=5 ;
-
---
--- Дамп данных таблицы `fx_mail_template`
---
-
-INSERT INTO `fx_mail_template` (`id`, `keyword`, `subject`, `body`, `html`) VALUES
-(1, 'auth_register_confirm', 'Подтверждение регистрации на сайте %SITE_NAME', 'Здравствуйте, %USER_NAME<br><br>\nВы успешно зарегистрировались на сайте <a href=''%SITE_URL''>%SITE_NAME</a><br>\nВаш логин: %USER_LOGIN<br>\nВаш пароль: %PASSWORD<br><br>\nЧтобы активировать Ваш аккаунт откройте, пожалуйста, данную ссылку: <a href=''%CONFIRM_LINK''>%CONFIRM_LINK</a><br><br>\nВы получили это сообщение, потому что Ваш e-mail адрес был зарегистрирован на сайте %SITE_URL<br>\nЕсли Вы не регистрировались на этом сайте, пожалуйста, проигнорируйте это письмо.<br><br>\nС наилучшими пожеланиями, администрация сайта <a href=''%SITE_URL''>%SITE_NAME</a>.', 1),
-(2, 'auth_passwd_recovery', 'Восстановление пароля на сайте %SITE_NAME', 'Здравствуйте, %USER_NAME<br><br>\nДля восстановления пароля для пользователя %USER_LOGIN на сайте <a href=''%SITE_URL''>%SITE_NAME</a> откройте, пожалуйста, данную ссылку: <a href=''%CONFIRM_LINK''>%CONFIRM_LINK</a><br><br>\nЕсли Вы не запрашивали восстановление пароля, пожалуйста, проигнорируйте это письмо.<br><br>\nС наилучшими пожеланиями, администрация сайта <a href=''%SITE_URL''>%SITE_NAME</a>.', 1),
-(3, 'auth_register_notify', 'Новый пользователь на сайте %SITE_NAME', 'Здравствуйте, администратор.<br><br>\nНа сайте <a href=''%SITE_URL''>%SITE_NAME</a> зарегистрирован новый пользователь <a href=''%PROFILE_LINK''>%USER_LOGIN</a><br><br>\nС наилучшими пожеланиями, сайт <a href=''%SITE_URL''>%SITE_NAME</a>.', 1),
-(4, 'auth_new_pm', 'Новое личное сообщение на сайте %SITE_NAME', 'Здравствуйте, %USER_NAME<br><br>\nВам пришло новое личное сообщение на сайте <a href=''%SITE_URL''>%SITE_NAME</a>. Вы можете прочитать это сообщение в своем <a href=''%PM_LINK''>личном кабинете</a>.<br><br>\nС наилучшими пожеланиями, администрация сайта <a href=''%SITE_URL''>%SITE_NAME</a>.', 1);
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `fx_menu`
---
-
-CREATE TABLE IF NOT EXISTS `fx_menu` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `keyword` varchar(255) NOT NULL,
-  `site_id` int(11) NOT NULL,
-  `template_id` int(11) NOT NULL DEFAULT '0',
-  `subdivision_id` int(11) NOT NULL DEFAULT '0',
-  `type` enum('level','sub','path','manual') NOT NULL DEFAULT 'level',
-  `settings` text,
-  `deleted` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `keyword` (`keyword`,`subdivision_id`,`type`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=647 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1661,15 +1437,7 @@ CREATE TABLE IF NOT EXISTS `fx_multiselect` (
   `content_id` int(11) NOT NULL,
   `element_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=17 AUTO_INCREMENT=71 ;
-
---
--- Дамп данных таблицы `fx_multiselect`
---
-
-INSERT INTO `fx_multiselect` (`id`, `field_id`, `content_id`, `element_id`) VALUES
-(58, 147, 3, 4),
-(57, 147, 3, 3);
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=17 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1720,14 +1488,7 @@ CREATE TABLE IF NOT EXISTS `fx_redirect` (
   `new_url` varchar(255) NOT NULL DEFAULT '',
   `header` int(3) DEFAULT '301',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=56 AUTO_INCREMENT=2 ;
-
---
--- Дамп данных таблицы `fx_redirect`
---
-
-INSERT INTO `fx_redirect` (`id`, `priority`, `checked`, `old_url`, `new_url`, `header`) VALUES
-(1, 0, 1, 'floxim.org/old_url/', 'floxim.org/new_url/', 301);
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=56 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1753,10 +1514,7 @@ CREATE TABLE IF NOT EXISTS `fx_session` (
 --
 
 INSERT INTO `fx_session` (`id`, `user_id`, `session_start`, `session_time`, `ip`, `login_save`, `site_id`, `auth_type`) VALUES
-('5b2298d7240fb50edf639d7612ea8f6b', 99, 1373714873, 1373960847, 3000072242, 0, 0, 1),
-('973466990b78da1c42bfa8cd64d0a516', 99, 1373881889, 1373968388, 3266983368, 0, 0, 1),
-('dd14280d9f065dec07abaee83de9fae1', 99, 1373883515, 1373970805, 2130706433, 0, 0, 1),
-('3afb326c3bacfbb186e2f61601f670e6', 99, 1373884405, 1373972057, 2130706433, 0, 0, 1);
+('3afb326c3bacfbb186e2f61601f670e6', 99, 1374445208, 1374586413, 2130706433, 0, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -1784,7 +1542,7 @@ INSERT INTO `fx_settings` (`id`, `key`, `value`, `module`, `site_id`) VALUES
 (3, 'last_response', 'a:3:{s:10:"next_patch";s:5:"1.0.0";s:19:"next_patch_fulllink";s:39:"http://floxim.org/update/update_15.html";s:15:"next_patch_link";s:61:"http://floxim.org/?essence=module_patch&action=download&id=15";}', 'system', 0),
 (4, 'next_patch', '1.0.0', 'system', 0),
 (5, 'user_email_field', 'email', 'system', 0),
-(6, 'spam_from_name', 'Администратор', 'system', 0),
+(6, 'spam_from_name', 'Admin', 'system', 0),
 (7, 'spam_from_email', 'dubr.cola@gmail.com', 'system', 0),
 (8, 'secret_key', '387768baa556f6f94ee29cb0e3e2a662', 'system', 0),
 (9, 'authtype', '3', 'auth', 0),
