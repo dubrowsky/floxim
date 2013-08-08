@@ -215,7 +215,7 @@ class fx_data {
         return $data;
     }
     
-    protected function _get_default_relation_finder($rel) {
+    protected function _get_default_relation_finder($rel, $rel_name = null) {
         return fx::data($rel[1]);
     }
     
@@ -228,7 +228,7 @@ class fx_data {
         list($rel_type, $rel_datatype, $rel_field) = $rel;
 
         if (!$rel_finder){
-            $rel_finder = $this->_get_default_relation_finder($rel);//fx::data($rel_datatype);
+            $rel_finder = $this->_get_default_relation_finder($rel, $rel_name);
         }
 
         // e.g. $rel = array(fx_data::HAS_MANY, 'field', 'component_id');
@@ -266,6 +266,9 @@ class fx_data {
     protected function _add_relations(fx_collection $essences) {
 
         if (count($this->with) == 0) {
+            return;
+        }
+        if (count($essences) == 0) {
             return;
         }
         $relations = $this->relations();

@@ -3,17 +3,7 @@ class fx_template_html {
     protected $_string = null;
     public function __construct($string) {
         $string = trim($string);
-        //$string = preg_replace("~(<[^>]+>)\s+(?=<)~", '$1', $string);
         $this->_string = $string;
-    }
-    
-    public static function has_floxim_atts($string) {
-        $res = preg_match(
-                '~<[^>]+fx:(template|area|each|var|replace|layout)[a-z_]*?=[\'\"]~', 
-                $string, 
-                $atts
-        );
-        return $res;
     }
     
     public function tokenize() {
@@ -53,6 +43,20 @@ class fx_template_html {
         
         $tree->apply( function(fx_template_html_token $n) use (&$unnamed_replaces) {
             if ($n->name == 'text') {
+                // удаляем пробелы в начале строки, 
+                // если она начинается с {...}
+                $n->source = preg_replace(
+                    "~\s*?[\n\r]+\s*?(\{.+?\})~s", 
+                    '\1', 
+                    $n->source
+                );
+                // или заканчивается на {...}
+                $n->source = preg_replace(
+                    "~(\{.+?\}\s*?)[\n\r]+\s*~s",
+                    '\1',
+                    $n->source
+                );
+            
                 return;
             }
             if (preg_match("~\{\%~", $n->source)) {
@@ -132,6 +136,8 @@ class fx_template_html {
                 $n->remove_attribute('fx:template');
             }
             if ( ($each_id = $n->get_attribute('fx:each')) ) {
+                $each_id = trim($each_id, '{}');
+                $each_id = str_replace('"', '\\"', $each_id);
                 $each_macro_tag = '{each subroot="true"';
                 if (!empty($each_id)) {
                     $each_macro_tag .= ' select="'.$each_id.'"';
@@ -186,7 +192,6 @@ class fx_template_html {
         $c_att = null;
         $c_prop = null;
         $c_mode = null;
-        //echo fen_debug($source);
         foreach ($source as $part) {
             if (!$c_tag && preg_match("~^<~", $part)) {
                 $c_tag = preg_replace("~^<~", '', $part);

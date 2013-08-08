@@ -1518,7 +1518,7 @@ CREATE TABLE IF NOT EXISTS `fx_settings` (
 --
 
 INSERT INTO `fx_settings` (`id`, `key`, `value`, `module`, `site_id`) VALUES
-(1, 'version', '0.9.9', 'system', 0),
+(1, 'version', '0.0.0', 'system', 0),
 (2, 'last_check', '1346408043', 'system', 0),
 (3, 'last_response', 'a:3:{s:10:"next_patch";s:5:"1.0.0";s:19:"next_patch_fulllink";s:39:"http://floxim.org/update/update_15.html";s:15:"next_patch_link";s:61:"http://floxim.org/?essence=module_patch&action=download&id=15";}', 'system', 0),
 (4, 'next_patch', '1.0.0', 'system', 0),

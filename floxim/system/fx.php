@@ -417,4 +417,21 @@ class fx {
         }
         return $util;
     }
+    
+    public static function date($value, $format) {
+        if (!is_numeric($value)) {
+			$value = strtotime($value);
+		}
+		return date($format, $value);
+    }
+    
+    public static function image($value, $format) {
+        try {
+            $thumber = new fx_thumb($value, $format);
+            $value = $thumber->get_result_path();
+        } catch (Exception $e) {
+            $value = '';
+        }
+        return $value;
+    }
 }

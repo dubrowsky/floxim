@@ -74,29 +74,13 @@ class fx_template_processor {
             }
             $source .= '{templates source="'.$file.'"}';
             $file_data = file_get_contents($file);
-            /*
+            
+            // Проверяем наличие fx-атрибутов в разметке файла
+            $T = new fx_template_html($file_data);
+            $file_data = $T->transform_to_floxim();
+            
             $file_data = trim($file_data);
             $file_data = preg_replace("~\{\*.*?\*\}~s", '', $file_data);
-            
-            // удаляем пробелы в начале строки, 
-            // если она начинается с {...}
-            $file_data = preg_replace(
-                "~\s*?[\n\r]+\s*?(\{.+?\})~s", 
-                '\1', 
-                $file_data
-            );
-            // или заканчивается на {...}
-            $file_data = preg_replace(
-                "~(\{.+?\}\s*?)[\n\r]+\s*~s",
-                '\1',
-                $file_data
-            );
-            */
-            // Проверяем наличие fx-атрибутов в разметке файла
-            if (fx_template_html::has_floxim_atts($file_data)) {
-                $T = new fx_template_html($file_data);
-                $file_data = $T->transform_to_floxim();
-            }
             
             if (!preg_match("~^{template~", $file_data)) {
                 $is_layout = $this->_controller_type == 'layout';
@@ -395,7 +379,7 @@ class fx_template_processor {
         if (!preg_match("~\.~", $tpl_name)) {
             $tpl_name = $this->_class_code.".".$tpl_name;
         }
-        $code .= '$tpl_to_call = fx::template("'.$tpl_name.'");'."\n";
+        $code .= '$tpl_to_call = fx::template("'.$tpl_name.'", $this->data);'."\n";
         $call_children = $token->get_children();
         /*
          * Преобразуем:
@@ -441,8 +425,7 @@ class fx_template_processor {
                 '".$param_var_token->get_prop('id')."', 
                 ".$value_to_set.");\n";
         }
-        //$code .= 'dev_log($tpl_to_call);'."\n";
-        $code .= 'echo $tpl_to_call->render($this->data);?>';
+        $code .= 'echo $tpl_to_call->render();?>';
         $current_template =& $this->templates[$this->_get_current_template_id()];
         if (!isset($current_template['calls'])) {
             $current_template['calls'] = array();
@@ -551,9 +534,9 @@ class fx_template_processor {
                     $code .= 'if ('.$var_tmp.' instanceof fx_template_field) {'."\n";
                     $code .= 'switch ('.$var_tmp.'->get_meta("type")) {'."\n";
                     $code .= "case 'datetime':\n";
-                    $code .= '$callback = "fx_template_field::format_date";'."\nbreak;\n";
+                    $code .= '$callback = "fx::date";'."\nbreak;\n";
                     $code .= "case 'image':\n";
-                    $code .= '$callback = "fx_template_field::format_image";'."\nbreak;\n";
+                    $code .= '$callback = "fx::image";'."\nbreak;\n";
                     $code .= "}\n";
                     $code .= "}\n";
                 } else {
@@ -675,7 +658,6 @@ class fx_template_processor {
         if ($extract) {
         	if ( ($e_prefix = $token->get_prop('prefix')) ) {
         		$e_flags = ", EXTR_PREFIX_ALL, '".$e_prefix."'"; 
-        		$code .= 'dev_log("extracting", '.$item_alias.')'.";\n";
         	} else {
         		$e_flags = '';
         	}
@@ -934,28 +916,26 @@ class fx_template_processor {
 		} else {
 			// добавляем отсутствующие кавычки атрибутов
 			$source  = preg_replace("~\s([a-z]+)\s*?=\s*?([^\'\\\"\s]+)~", ' $1="$2"', $source);
-			
 			$source = preg_replace_callback(
-				'~([a-z]+)="([^\"]+)"~',
+				'~([a-z]+)="(.+?)(?<!\\\\)"~',
 				function ($matches) use (&$props) {
-					$props[$matches[1]] = $matches[2];
+					$props[$matches[1]] = str_replace('\"', '"', $matches[2]);
 					return '';
 				},
 				$source
 			);
-			
 			if ($name == 'var' && preg_match("~^\s*\|~", $source)) {
-				$props['modifiers'] = self::_get_var_modifiers($source);
+				$props['modifiers'] = self::get_var_modifiers($source);
 			}
 		}
         return new fx_template_token($name, $type, $props);   
     }
     
-    protected function _get_var_modifiers($source) {
+    public static function get_var_modifiers($source) {
         $source = preg_replace("~^\s*\|~", '', $source);
         $source = trim($source);
         $source .= '|';
-        $source = preg_split("~(\s*\|\s*|\s*:\s*|[\'\"])~", $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+        $source = preg_split("~(\s*\|\s*|\s*(?<!:):(?!:)\s*|[\'\"])~", $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
         if (count($source) == 0) {
             return null;
         }
@@ -969,7 +949,7 @@ class fx_template_processor {
             $is_arg_separator = preg_match("~^\s*:\s*$~", $chunk);
             if ($c_state == 'default') {
                 // нормальное название модификатора
-                if (preg_match("~^[a-z0-9_-]+$~i", $chunk)) {
+                if (preg_match("~^[a-z0-9_:-]+$~i", $chunk)) {
                     $c_modifier['name'] = $chunk;
                     $c_state = 'modifier';
                     $c_arg_quote = '';

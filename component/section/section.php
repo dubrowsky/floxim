@@ -63,7 +63,8 @@ class fx_controller_component_section extends fx_controller_component {
                 case 'none':
                     return;
                 case 'all':
-                    $f->with('submenu');
+                    //$f->with('submenu');
+                    $f->with_submenu(3);
                     return;
                 case 'active':
                     $sub_f = fx::data('content_section')->where('parent_id', $path);
@@ -71,7 +72,7 @@ class fx_controller_component_section extends fx_controller_component {
                     return;
             }
         });
-        $this->listen('items_ready', function($items) use ($path, $controller) {
+        $prepare_items = function($items) use ($path, $controller, &$prepare_items) {
             if ( ($active_item = $items->find_one('id', $path)) ) {
                 $active_item->set('active',true);
                 
@@ -80,7 +81,12 @@ class fx_controller_component_section extends fx_controller_component {
                     'parent_id' => $active_item['id'],
                 ));
             }
-        });
+            
+            foreach ($items->find('submenu') as $i) { 
+                $prepare_items($i['submenu']);
+            }
+        };
+        $this->listen('items_ready', $prepare_items);
         return parent::do_listing();
     }
     

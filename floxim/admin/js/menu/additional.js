@@ -13,7 +13,6 @@ fx_additional_menu.prototype.load = function () {
     });
     */
 
-    //$('<span/>').addClass('fx_admin_additional_menu_divider').appendTo(menu);
     var logout = $('<a style="cursor:pointer;"/>').text(fx_lang('выход'));
     logout.appendTo(menu);
     logout.click(function() {
@@ -25,4 +24,6 @@ fx_additional_menu.prototype.load = function () {
         '</form>');
         $(this).find('form').submit();
     });
+    console.log('patcher');
+    $('<a class="fx_check_updates"><img src="http://floxim.org/getfloxim/check_updates.gif?version=#FX_VERSION_HASH#" /></a>').appendTo(menu);
 }

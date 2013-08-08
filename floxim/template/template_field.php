@@ -1,7 +1,7 @@
 <?php
 
 class fx_template_field  {
-	
+	/*
 	public static function format_date($value, $format) {
 		if (!is_numeric($value)) {
 			$value = strtotime($value);
@@ -18,6 +18,8 @@ class fx_template_field  {
         }
         return $value;
     }
+     * 
+     */
 	
     protected $_value = null;
     
@@ -85,7 +87,6 @@ class fx_template_field  {
                 );
                 $tag_meta = array('class' => 'fx_template_var_in_att');
                 foreach ($att_fields as $afk => $af) {
-                    //$tag_meta['data-fx_template_var_'.$afk] = htmlentities(json_encode($af));
                     $tag_meta['data-fx_template_var_'.$afk] = $af;
                 }
                 $tag = fx_template_html_token::create_standalone($tag);

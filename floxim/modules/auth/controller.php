@@ -62,6 +62,9 @@ class fx_controller_module_auth extends fx_controller_module {
 			})(c_form);
 			c_form.submit();
 		}
+        if (forms.length == 0) {
+            js_next();
+        }
 
 		</script>
 		<?

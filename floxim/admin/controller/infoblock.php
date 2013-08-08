@@ -333,10 +333,16 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         $fields = array();
         
         if ($admin_mode == 'design') {
+            $index_page_id = fx::env('site')->get('index_page_id');
             $fields []= array(
                 'type' => 'hidden',
                 'name' => 'page_id',
-                'value' => 0
+                'value' => $index_page_id
+            );
+            $fields[]= array(
+                'type' => 'hidden',
+                'name' => 'pages',
+                'value' => 'descendants'
             );
             return $fields;
         }

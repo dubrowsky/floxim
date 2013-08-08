@@ -20,6 +20,10 @@ class fx_controller_component_blogpost extends fx_controller_component {
         return $res;
     }
     
+    public function do_listing_rss() {
+        
+    }
+    
     protected function show_rss($data){
         $data['base_url'] = 'http://'.$_SERVER['HTTP_HOST'];
         $data['blog'] = $this->_get_blog_page();
@@ -41,7 +45,6 @@ class fx_controller_component_blogpost extends fx_controller_component {
             )->render();
         }
         
-        $rss_template = 
         $rss = fx::template(
                 'component_blogpost.listing_rss', 
                 array_merge(

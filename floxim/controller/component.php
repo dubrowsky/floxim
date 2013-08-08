@@ -35,8 +35,12 @@ class fx_controller_component extends fx_controller {
             'parent' => array('limit' => '!=0')
         );
 
-        $sortings = array('manual' => fx::lang('Ручная','controller_component'), 'created'=> fx::lang('Дата создания','controller_component'));
-        $sortings += $this->get_component()->fields()->get_values('description', 'name');
+        $sortings = array('manual' => '-'.fx::lang('Ручная','controller_component').'-', 'created'=> fx::lang('Дата создания','controller_component'));
+        $sortings += $this
+            ->get_component()
+            ->all_fields()
+            ->find('type', fx_field::FIELD_MULTILINK, '!=')
+            ->get_values('description', 'name');
         $fields['sorting'] = array(
             'name' => 'sorting',
             'label' => fx::lang('Сортировка','controller_component'),
@@ -214,8 +218,9 @@ class fx_controller_component extends fx_controller {
 
         if (fx::env('is_admin') && $infoblock_id) {
             $c_ib_name = $c_ib->get_prop_inherited('name');
+            $c_ib_name = $c_ib_name ? $c_ib_name : $c_ib['id'];
             $component = fx::data('component', $content_type);
-            $adder_title = $component['item_name'].' &rarr; '.($c_ib_name ? $c_ib_name:$c_ib['id']);
+            $adder_title = $component['item_name'].' &rarr; '.$c_ib_name;
             
             $this->accept_content(array(
                 'title' => $adder_title,
@@ -223,6 +228,12 @@ class fx_controller_component extends fx_controller {
                 'type' => $content_type,
                 'infoblock_id' => $this->get_param('infoblock_id')
             ));
+            
+            if (count($items) == 0) {
+                $this->_meta['hidden'] = true;
+                $this->_meta['hidden_placeholder'] = 'Infoblock "'.$c_ib_name.'" is empty. '.
+                                                'You can add '.$component['item_name'].' here';
+            }
         }
         $res = array('items' => $items);
         if ( ($pagination = $this->_get_pagination()) ) {

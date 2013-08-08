@@ -1,14 +1,10 @@
 <?php
 
 class fx_auth {
-    /** @var fx_auth_user_relation */
-    public $relation;
-
     /** @var fx_auth_user_mail */
     public $mail;
 
     protected function __construct() {
-        $this->relation = new fx_auth_user_relation();
         $this->mail = new fx_auth_user_mail();
     }
 

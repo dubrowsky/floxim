@@ -645,7 +645,6 @@ function fx_get_cattables_for_lower_case() {
 function fx_get_cattables() {
     $cattables = array(
 		'fx_auth_external',
-		'fx_auth_user_relation',
 		'fx_classificator',
 		'fx_classificator_cities',
 		'fx_classificator_country',

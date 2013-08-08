@@ -170,10 +170,13 @@ class fx_template_html_token {
         
         // Сохраняем в массив field-маркеры, восстановим при обратной сборке
         $injections = array();
+        /*
         $source = preg_replace_callback("~###fx_template_field.*?fx_template_field_end###~", function($matches) use (&$injections) {
             $injections []= $matches[0];
             return "#inj".(count($injections)-1)."#";
         }, $source);
+         * 
+         */
         
         // здесь должна быть более общая регулярка
         // пока ловим fx-ы
@@ -199,8 +202,7 @@ class fx_template_html_token {
         $this->_injections = $injections;
         $source  = preg_replace("~\s([a-z0-9\:_-]+)\s*?=\s*?([^\'\\\"\s]+)~", ' $1="$2"', $source);
         $atts = null;
-        preg_match_all('~(#inj\d+#)|([a-z0-9\:_-]+)=(["\'])(.*?)\3~', $source, $atts);
-        
+        preg_match_all('~(#inj\d+#)|([a-z0-9\:_-]+)=(["\'])(.*?)\3~s', $source, $atts);
         $this->attributes = array();
         foreach ($atts[0] as $att_num => $att_full) {
             $att_name = $atts[2][$att_num];
@@ -220,7 +222,22 @@ class fx_template_html_token {
         if (!isset($this->attributes)) {
             $this->_parse_attributes();
         }
-        return isset($this->attributes[$att_name]) ? $this->attributes[$att_name] : null;
+        if (!isset($this->attributes[$att_name])) {
+            return null;
+        }
+        $att = $this->attributes[$att_name];
+        if (!$this->_injections) {
+            return $att;
+        }
+        $injections = $this->_injections;
+        $att = preg_replace_callback(
+            "~#inj(\d+)#~", 
+            function($matches) use ($injections) {
+                return $injections[$matches[1]];
+            }, 
+            $att
+        );
+        return $att;
     }
     
     public function set_attribute($att_name, $att_value) {

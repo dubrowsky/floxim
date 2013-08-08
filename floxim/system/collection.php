@@ -74,6 +74,14 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
             }
             return new fx_collection($res);
         }
+        if ($compare_type == self::FILTER_EXISTS) {
+            foreach ($this->data as $item) {
+                if (isset($item[$field]) && $item[$field]) {
+                    $res []= $item;
+                }
+            }
+            return new fx_collection($res);
+        }
         if ($compare_type == self::FILTER_CALLBACK) {
             foreach ($this->data as $item) {
                 if (call_user_func($field, $item)) {
@@ -157,14 +165,82 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
     
     public function group($groupper) {
         $res = new fx_collection();
-        foreach ($this as $item) {
-            $key = call_user_func($groupper, $item);
-            if (!isset($res[$key])) {
-                $res[$key] = new fx_collection();
+        if (is_numeric($groupper)) {
+            $c = 0;
+            $r = 0;
+            foreach ($this as $item) {
+                if ($c % $groupper == 0) {
+                    $r++;
+                }
+                if (!isset($res[$r])) {
+                    $res[$r] = new fx_collection();
+                }
+                $res[$r] []= $item;
+                $c++;
             }
-            $res[$key] []= $item;
+            return $res;
         }
-        return $res;
+        if (is_callable($groupper)) {
+            foreach ($this as $item) {
+                $key = call_user_func($groupper, $item);
+                if (!isset($res[$key])) {
+                    $res[$key] = new fx_collection();
+                }
+                $res[$key] []= $item;
+            }
+            return $res;
+        }
+        if (is_string($groupper)) {
+            $modifiers = array();
+            if (preg_match("~\|~", $groupper)) {
+                $groupper_parts = explode("|", $groupper, 2);
+                $groupper = trim($groupper_parts[0]);
+                $parsed_modifiers = fx_template_processor::get_var_modifiers($groupper_parts[1]);
+                if ($parsed_modifiers) {
+                    foreach ($parsed_modifiers as $pmod) {
+                        $callback = array_shift($pmod);
+                        if (!is_callable($callback)) {
+                            continue;
+                        }
+                        $self_key = array_keys($pmod, "self");
+                        if (isset($self_key[0])) {
+                            $self_key = $self_key[0];
+                        } else {
+                            array_unshift($pmod, '');
+                            $self_key = 0;
+                        }
+                        foreach ($pmod as &$arg_v) {
+                            $arg_v = trim($arg_v, '"\'');
+                        }
+                        $modifiers []= array(
+                            $callback,
+                            $pmod,
+                            $self_key
+                        );
+                    }
+                }
+            }
+            foreach ($this as $item) {
+                $key = $item[$groupper];
+                if (is_null($key)) {
+                    $key = '';
+                } else {
+                    foreach ($modifiers as $mod) {
+                        $callback = $mod[0];
+                        $self_key = $mod[2];
+                        $args = $mod[1];
+                        $args[$self_key] = $key;
+                        $key = call_user_func_array($callback, $args);
+                    }
+                }
+                
+                if (!isset($res[$key])) {
+                    $res[$key] = new fx_collection();
+                }
+                $res[$key] []= $item;
+            }
+            return $res;
+        }
     }
     
     /*

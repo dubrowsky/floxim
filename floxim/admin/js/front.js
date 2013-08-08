@@ -305,6 +305,7 @@ fx_front.prototype.hilight = function() {
         removeClass('fx_hilight_empty_inline').
         removeClass('fx_no_hilight').
         removeClass('fx_wrong_mode');
+    items.filter('.fx_hidden_placeholded').removeClass('fx_hidden_placeholded').html('');
 	if ($fx.front.mode == 'view') {
 		return;
 	}
@@ -317,6 +318,11 @@ fx_front.prototype.hilight = function() {
                 if (i.css('display') == 'inline') {
                 	i.addClass('fx_hilight_empty_inline');
                 }
+            }
+            var controller_meta = i.data('fx_controller_meta');
+            if (controller_meta && controller_meta.hidden_placeholder) {
+                i.html(controller_meta.hidden_placeholder);
+                i.addClass('fx_hidden_placeholded');
             }
 		}
 	});

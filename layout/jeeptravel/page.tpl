@@ -79,47 +79,48 @@
                         fx:template="index_slider" 
 						fx:name="Slider" 
 	                    fx:of="component_page.listing">
-                    <div 
-                        fx:each="$items"
-                        class="gallery_item {if $item_is_first} gallery_item_active{/if}">
-                        <img 
-                            src="{%bg_photo_$id}<?=$template_dir?>images/img01.jpg{/%}" 
-                            alt="" />
-                        <div class="slide-text active">
-                            <div class="slide-holder">
-                                <h1>{%header_$id type="html"}<?=$item['name']?>{/%}</h1>
-                                <span class="date">
-                                    {%date_$id}May 12-16<br />Expidition{/%}
-                                </span>
-                                <div class="info">
-                                    {%info_$id}
-                                        <dl>
-                                            <dt>Difficulty:</dt>
-                                            <dd>easy</dd>
-                                        </dl>
-                                    {/%}
-                                </div>
-                                <div class="holder">
-                                    <a href="{$url}" class="more">
-                                        {%more_text_$id}More info{/%}
-                                    </a>
-                                    <a href="{%action_url_$id}" class="btn">
-                                        {%action_text_$id}I'm in!{/%}
-                                    </a>
+                        <div 
+                            fx:each="$items"
+                            class="gallery_item {if $item_is_first} gallery_item_active{/if}">
+                            <img 
+                                src="{%bg_photo_$id}<?=$template_dir?>images/img01.jpg{/%}" 
+                                alt="" />
+                            <div class="slide-text active">
+                                <div class="slide-holder">
+                                    <h1>{%header_$id type="html"}<?=$item['name']?>{/%}</h1>
+                                    <span class="date">
+                                        {%date_$id}May 12-16<br />Expidition{/%}
+                                    </span>
+                                    <div class="info">
+                                        {%info_$id}
+                                            <dl>
+                                                <dt>Difficulty:</dt>
+                                                <dd>easy</dd>
+                                            </dl>
+                                        {/%}
+                                    </div>
+                                    <div class="holder">
+                                        <a href="{$url}" class="more">
+                                            {%more_text_$id}More info{/%}
+                                        </a>
+                                        <a href="{%action_url_$id}" class="btn">
+                                            {%action_text_$id}I'm in!{/%}
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                        <div class="switcher">
+                            <ul>
+                                <li fx:each="$items" {if $item_is_first}class="active"{/if}>
+                                    <a href="#" title="{$name}">{$item_index}</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <a href="#" class="btn-prev">previous</a>
+                        <a href="#" class="btn-next">next</a>
                     </div>
-                    <div class="switcher">
-                        <ul>
-                            <li fx:each="$items" {if $item_is_first}class="active"{/if}>
-                                <a href="#" title="{$name}">{$item_index}</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <a href="#" class="btn-prev">previous</a>
-                    <a href="#" class="btn-next">next</a>
-                </div><div 
+                    <div 
                         class="img-list" 
                         fx:template="photo_listing" fx:of="component_photo.listing">
                         <div class="images fx_not_sortable" fx:template="$items">
@@ -144,13 +145,8 @@
                         fx:name="Pages by year"
                         fx:template="pages_by_year" 
                         fx:of="component_page.listing">
-                        <?
-                        $years = $items->group(function($item) {
-							return fx_template_field::format_date($item['publish_date'], 'Y'); 
-                        });
-                        ?>
                         <div 
-                            fx:each="$years as $year => $pages" 
+                            fx:each="{$items->group('publish_date | fx::date : "Y"') as $year => $pages}" 
                             class="col"
                             {if ($pages_index-1) % 3 == 0} style="clear:both;"{/if}>
                             <strong>{$year}</strong>
