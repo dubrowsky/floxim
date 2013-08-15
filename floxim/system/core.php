@@ -317,6 +317,7 @@ class fx_core extends fx_system {
                 }
                 $test_file = $doc_root.$ctr_type.'/'.$ctr_name.'/'.$ctr_name;
                 if (file_exists($test_file.'.php')) {
+                    dev_log('exist ctr', $test_file);
                     $file = $test_file;
                     break;
                 }

@@ -191,9 +191,7 @@ class fx {
     }
 
     public static function template($template, $data = array()) {
-        if (is_numeric($template)) {
-            // ...
-        }
+        //dev_log('tpl lurk start');
         $parts= explode(".", $template);
         if (count($parts) == 2) {
             $template = $parts[0];

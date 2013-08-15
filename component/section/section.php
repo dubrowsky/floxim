@@ -1,5 +1,5 @@
 <?
-class fx_controller_component_section extends fx_controller_component {
+class fx_controller_component_section extends fx_controller_component_page {
 
     /*
      * Отключаем "Отдельную страницу" для компонента
@@ -32,7 +32,19 @@ class fx_controller_component_section extends fx_controller_component {
                     'active' => fx::lang('Показывать у активного','component_section'),
                     'all' => fx::lang('Показывать у всех','component_section')
                 )
-            );
+            );/*
+            $fields['submenu_level'] = array(
+                'name' => 'submenu_level',
+                'label' => fx::lang('Уровень вложенности', 'component_section'),
+                'type' => 'select',
+                'values' => array(
+                    array('2', fx::lang('2 уровня', 'component_section')),
+                    array('3', fx::lang('3 уровня', 'component_section')),
+                    array('onemore', fx::lang('Текущий +1', 'component_section')),
+                    array('infinity', fx::lang('Без ограничения', 'component_section'))
+                ),
+                'parent' => array('submenu' => '!=none')
+            );*/
         } elseif ($action == 'breadcrumbs') {
             $fields = array(
                 'header_only' => array(
@@ -51,42 +63,51 @@ class fx_controller_component_section extends fx_controller_component {
     }
     
     public function do_listing() {
-        $this->set_param('sorting', 'manual');
-        $this->set_param('parent_type', 'mount_page_id');
-        $controller = $this;
+        
         $c_page_id  = fx::env('page');
         $path = fx::data('content_page', $c_page_id)->get_parent_ids();
         $path []= $c_page_id;
-        $this->listen('build_query', function($f) use ($controller, $path) {
-            $submenu = $controller->get_param('submenu');
-            switch ($submenu) {
-                case 'none':
-                    return;
+        
+        $submenu_type = $this->get_param('submenu');
+        if ($submenu_type == 'none') {
+            $this->set_param('parent_type', 'mount_page_id');
+        }
+        
+        $this->set_param('sorting', 'manual');
+        
+        $this->listen('query_ready', function($q) use ($path, $submenu_type) {
+            switch ($submenu_type) {
                 case 'all':
-                    //$f->with('submenu');
-                    $f->with_submenu(3);
-                    return;
+                    $q->clear_where('parent_id');
+                    break;
                 case 'active':
-                    $sub_f = fx::data('content_section')->where('parent_id', $path);
-                    $f->with('submenu', $sub_f);
-                    return;
+                    $q->clear_where('parent_id')->where('parent_id', $path);
+                    break;
+                default:
+                    dev_log($q);
+                    break;
             }
         });
-        $prepare_items = function($items) use ($path, $controller, &$prepare_items) {
-            if ( ($active_item = $items->find_one('id', $path)) ) {
-                $active_item->set('active',true);
-                
-                $controller->accept_content(array(
-                    'title' => fx::lang('Подраздел','component_section') . ' &rarr; ' . $active_item['name'],
-                    'parent_id' => $active_item['id'],
-                ));
+        
+        $this->listen('items_ready', function($items, $ctr) use ($path, $submenu_type) {
+            foreach ($items as $item) {
+                if (in_array($item['id'], $path)) {
+                    $item['active'] = true;
+                    if ($ctr->get_param('submenu') !== 'none') {
+                        $ctr->accept_content(array(
+                            'title' => fx::lang('Подраздел','component_section') 
+                                        . ' &rarr; ' . $item['name'],
+                            'parent_id' => $item['id']
+                        ));
+                    }
+                } else {
+                    $item['active'] = false;
+                }
             }
-            
-            foreach ($items->find('submenu') as $i) { 
-                $prepare_items($i['submenu']);
+            if ($submenu_type != 'none') {
+                fx::data('content_page')->make_tree($items);
             }
-        };
-        $this->listen('items_ready', $prepare_items);
+        });
         return parent::do_listing();
     }
     

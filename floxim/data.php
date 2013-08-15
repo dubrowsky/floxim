@@ -52,6 +52,18 @@ class fx_data {
         return $this;
     }
     
+    public function clear_where($field, $value = null) {
+        
+        foreach ($this->where as $where_num => $where_props) {
+            if ($where_props[0] == $field) {
+                if (func_num_args() == 1 || $value == $where_props[1]) {
+                    unset($this->where[$where_num]);
+                }
+            }
+        }
+        return $this;
+    }
+    
     public function order($field, $direction = 'ASC') {
         // clear order by passing null
         if ($field === null) {

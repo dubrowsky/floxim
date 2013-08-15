@@ -1,5 +1,5 @@
 <?php
-class fx_data_content_section extends fx_data_content {
+class fx_data_content_section extends fx_data_content_page {
     public function relations() {
         return parent::relations() + array(
             'submenu' => array(
@@ -9,16 +9,7 @@ class fx_data_content_section extends fx_data_content {
             )
         );
     }
-    
-    protected $c_depth = 1;
-    protected $max_depth = 10;
-    public function with_submenu($max_depth = null) {
-        if ($max_depth !== null) {
-            $this->max_depth = $max_depth;
-        }
-        $this->with('submenu');
-    }
-    
+    /*
     protected function _get_default_relation_finder($rel, $rel_name) {
         if ($rel_name == 'submenu') {
             $f = fx::data('content_section');
@@ -31,5 +22,7 @@ class fx_data_content_section extends fx_data_content {
         }
         return parent::_get_default_relation_finder($rel);
     }
+     * 
+     */
 }
 ?>

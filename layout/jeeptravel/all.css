@@ -424,21 +424,21 @@ a.calendar {
     font-size: 30px;
 }
 .sidebar p { margin: 0 0 15px; }
-.sidebar ul {
+.sidebar ul.jt_side_menu {
     font-size: 24px;
     padding-top: 15px;
 }
-.sidebar ul li {
+.sidebar ul.jt_side_menu li {
     padding: 10px 5px 10px 32px;
     margin-bottom: 5px;
     background: url(images/arrow03.png) 5px 12px no-repeat;
 }
-.sidebar ul li.active {
+.sidebar ul.jt_side_menu li.active {
     background: #556577 url(images/arrow04.png) 98% 12px no-repeat;
     font-weight: bold;
     padding: 10px 32px 10px 5px;
 }
-.sidebar ul li.active a {
+.sidebar ul.jt_side_menu li.active a {
     color: #fff;
     text-decoration: none;
 }

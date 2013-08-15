@@ -1304,6 +1304,10 @@ span.fx_admin_current {
     background: #FFF;
 }
 
+.fx_tree_groupper>ul>li.fx_tree_item {
+    margin-left:10px;
+}
+
 .fx_tree_title {
     font-size: 13px;
     cursor: pointer;
@@ -1326,10 +1330,28 @@ ul.fx_tree_children_expanded {
 
 .fx_tree_expander {
     cursor: pointer;
-    display: inline-block;
+    display: none;
     position: relative;
     top: 3px;
-    padding: 0 10px;
+    padding-right: 5px;
+}
+
+.fx_tree_is_grandpa>li>div>.fx_tree_expander {
+    display: inline-block;
+    visibility:hidden;
+}
+
+.fx_tree_expander_visible, .fx_tree_is_grandpa>li>div>.fx_tree_expander_visible {
+    display:inline-block;
+    visibility:visible;
+}
+
+.fx_tree_groupper_label a {
+    font-style:italic;
+}
+
+.fx_tree_groupper_label .fx_tree_expander {
+    display:none;
 }
 
 .fx_tree_expander span {
@@ -1725,7 +1747,8 @@ body div.fx_overlay, body div.fx_overlay table {
 }
 
 .fx_backend_login_title {
-    /*font-family: MyriadPro;*/
+    padding-top: 6px;
+    display: inline-block;
 }
 
 .fx_backend_login form {

@@ -96,7 +96,15 @@ class fx_admin_response {
             $buttons = explode(",", $buttons);
         }
         $this->buttons = array_merge($this->buttons, $buttons);
-        $this->buttons = array_map('trim', $this->buttons);
+        $this->buttons = array_map(
+            function($b) {
+                if (is_string($b)) {
+                    $b = trim($b);
+                }
+                return $b;
+            }, 
+            $this->buttons
+        );
     }
     
     public function add_pulldown_item($button, $name, $options) {

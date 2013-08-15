@@ -31,9 +31,18 @@ class fx_controller_admin_site extends fx_controller_admin {
 
         $this->response->add_field($list);
 
-        $this->response->add_pulldown_item('add', fx::lang('Новый сайт','system'), 'source=new');
+        //$this->response->add_pulldown_item('add', fx::lang('Новый сайт','system'), 'source=new');
         
-        $this->response->add_buttons("add,delete");//settings,
+        $this->response->add_buttons(
+            array(
+                array('key' => 'add', 'title' => fx::lang('Новый сайт','system')),
+                'delete'
+            )
+        );
+        $this->response->add_button_options('add', array(
+            'essence' => 'site',
+            'action' => 'add'
+        ));
         $this->response->breadcrumb->add_item( fx::lang('Сайты','system') );
         $this->response->submenu->set_menu('site');
     }
@@ -132,7 +141,6 @@ class fx_controller_admin_site extends fx_controller_admin {
         
         $site['error_page_id'] = $error_page['id'];
         $site['index_page_id'] = $index_page['id'];
-        dev_log('site to add', $site);
         
         fx::data('infoblock')->create(
             array(
@@ -158,7 +166,7 @@ class fx_controller_admin_site extends fx_controller_admin {
         $this->response->add_fields($fields);
         $this->response->add_buttons("add,settings,on,off,delete");
         $this->response->add_button_options('add', 'site_id='.$site['id']);
-        $this->response->set_essence('subdivision');
+        $this->response->set_essence('content');
         $this->_set_layout('map', $site);
     }
     
@@ -175,16 +183,45 @@ class fx_controller_admin_site extends fx_controller_admin {
     }
 
     protected function _get_site_tree($site) {
+        $content = fx::data('content')->where('site_id', $site['id'])->all();
+        $tree = fx::data('content_page')->make_tree($content);
+        $res = $this->_get_tree_branch($tree);
+        return $res[0]['children'];
+    }
+    
+    protected function _get_tree_branch($level_collection) {
         $result = array();
-        $subs = fx::data('subdivision')->get_all('site_id', $site['id']);
-
-        $subdivisions = array();
-        foreach ($subs as $sub) {
-            $subdivisions[$sub['id']] = array('name' => $sub['name'], 'parent_id' => $sub['parent_id'], 'checked' => $sub['checked'], 'url' => $sub['hidden_url']);
-            $child_subs[$sub['parent_id']][] = $sub['id'];
+        $content_blocks = $level_collection->group('infoblock_id');
+        $infoblocks = fx::data('infoblock')->where('action', 'listing')->all();
+        foreach ($content_blocks as $ib_id => $items) {
+            $infoblock = $infoblocks->find_one('id', $ib_id);
+            $ib_name = $infoblock && $infoblock['name'] ? $infoblock['name'] : 'ib #'.$ib_id;
+            $type_result = array();
+            foreach ($items as $item) {
+                $name = isset($item['name']) ? $item['name'] : $item['type'].' #'.$item['id'];
+                $item_res = array(
+                    'data' => $name,
+                    'metadata' => array(
+                        'id' => $item['id']
+                    )
+                );
+                if ($item['children']) {
+                    $item_res['children'] = $this->_get_tree_branch($item['children']);
+                }
+                $type_result []= $item_res;
+            }
+            $result []= array(
+                'data' => $ib_name,// . " (".count($items).")",
+                'metadata' => array(
+                    'id' => $ib_id,
+                    'is_groupper' => 1
+                ),
+                'children' => $type_result
+            );
         }
-
-        $result = $this->_map_get_childerns($subdivisions, $child_subs, 0);
+        if (count($result) == 1) {
+            $result = $result[0]['children'];
+        }
         return $result;
     }
 

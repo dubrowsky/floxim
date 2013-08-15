@@ -163,7 +163,7 @@
                 </div>
                 <!-- This is for inner -->
                 <div class="sidebar" fx:area="sidebar" fx:if="$sidebar">
-                    <ul fx:template="side_menu" fx:of="component_section.listing" fx:name="Side menu">
+                    <ul fx:template="side_menu" fx:of="component_section.listing" fx:name="Side menu" class="jt_side_menu">
                         <li fx:template="inactive"><a href="{$url}">{$name}</a></li>
                         <li fx:template="active"><a href="{$url}"><b>{$name}</b></a></li>
                     </ul>

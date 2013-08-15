@@ -44,10 +44,14 @@ class fx_controller_module_auth extends fx_controller_module {
 			</form>
 			<?
 		}
+        $next_location = $_SERVER['HTTP_REFERER'] ? $_SERVER['HTTP_REFERER'] : '/';
+        if (preg_match("~/floxim/$~i", $next_location)) {
+            $next_location = '/';
+        }
 		?>
 		<script type="text/javascript">
 		function js_next() {
-			document.location.href = "<?=$_SERVER['HTTP_REFERER'] ? $_SERVER['HTTP_REFERER'] : '/'?>";
+			document.location.href = "<?=$next_location?>";
 		}
 		var forms = document.getElementsByTagName('form');
 		for (var i = 0; i< forms.length; i++) {
