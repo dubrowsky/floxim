@@ -13,14 +13,6 @@ class fx_system_mail extends fx_system {
     protected $from, $name, $reply;
     protected $is_html = false;
 
-    public function __construct() {
-        parent::__construct();
-        $settings = fx_core::get_object()->get_settings();
-        $this->default_from = $settings['spam_from_email'];
-        $this->default_from_name = $settings['spam_from_name'];
-        $this->default_reply = $settings['spam_from_email'];
-    }
-
     public function set_body($plain, $html = "") {
         $this->body_plain = $plain;
         $this->body_html = $html;

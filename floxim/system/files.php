@@ -1,8 +1,6 @@
 <?php
 
 class fx_system_files extends fx_system {
-
-    protected $core;
     public $ftp_host;
     public $ftp_port;
     public $ftp_path;
@@ -254,8 +252,7 @@ class fx_system_files extends fx_system {
     public function __construct($user = '', $password = '', $host = null, $port = 21, $ftp_path = '') {
         // load parent constructor
         parent::__construct();
-        $this->core = fx_core::get_object();
-
+        
         $this->ftp_user = $user;
         $this->ftp_password = $password;
         $this->ftp_port = $port;
@@ -323,7 +320,7 @@ class fx_system_files extends fx_system {
             return 0;
         }
 
-        throw new fx_exception_files( fx::lang('Не могу произвести запись в файл','system') . ' ' . $filename);
+        throw new fx_exception_files( fx::lang('File is not writable','system') . ' ' . $filename);
 
         // В противном случае пишем через ftp
         $tmpfile = tmpfile();
@@ -863,8 +860,6 @@ class fx_system_files extends fx_system {
         $local_filename = $this->base_path.$filename;
 
         extract($vars);
-        $fx_core = fx_core::get_object();
-
         include($local_filename);
     }
 
@@ -1030,7 +1025,6 @@ class fx_system_files extends fx_system {
      * @return mixed 0 в случае удачи, либо null в случае ошибки
      */
     public function tgz_create($out_file, $dir) {
-        $fx_core = fx_core::get_object();
         require_once fx::config()->INCLUDE_FOLDER.'tar.php';
 
         if (!$out_file || !$dir) {
@@ -1073,7 +1067,6 @@ class fx_system_files extends fx_system {
      * @return mixed 0 в случае удачи, либо null в случае ошибки
      */
     public function tgz_extract($tgz_file, $dir) {
-        $fx_core = fx_core::get_object();
         require_once fx::config()->INCLUDE_FOLDER.'tar.php';
 
         if (!$tgz_file || !$dir) {

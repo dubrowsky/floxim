@@ -43,10 +43,10 @@ class fx_controller_admin_content extends fx_controller_admin {
         return array(
             'status' => 'ok', 
             'dialog_title' => 
-                fx::lang(
-                    $input['content_id'] ? 'Editing ' : 'Adding new ',
-                    'system'
-                ). ' '.fx::data('component', $content_type)->get('item_name')
+            	($input['content_id'] ? 
+                	fx::lang('Editing ', 'system') :
+                	fx::lang('Adding new ', 'system')
+				). ' '.fx::data('component', $content_type)->get('item_name')
         );
     }
 

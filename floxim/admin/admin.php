@@ -93,7 +93,7 @@ class fx_controller_admin extends fx_controller {
     }
     */
     protected function get_status_text() {
-        return fx::lang('Сохранено','system');
+        return fx::lang('Saved','system');
     }
 
     public function admin_tabs($tabs, $callback_param = null) {
@@ -163,14 +163,8 @@ class fx_controller_admin extends fx_controller {
             $page->add_css_file($file);
         }
     }
-
-
-    ///// ACTIONS ////
-            
     
     /**
-     * Возвращает строку с базовой разметкой и
-     * собирает все сопутсвующие файлы в fx_core::get_object()->page'е
      * @return string
      */
     public function admin_office()
@@ -215,15 +209,15 @@ class fx_controller_admin extends fx_controller {
                 <input type="hidden" name="essence" value="module_auth" />
                 <input type="hidden" name="action" value="auth" />
                 <div class="group">
-                    <label for="inp_user">'.fx::lang('Логин', 'system').'</label>
+                    <label for="inp_user">'.fx::lang('Login', 'system').'</label>
                     <input class="text" name="AUTH_USER" id="inp_user" />
                 </div>
                 <div class="group">
-                    <label for="inp_password">'.fx::lang('Пароль', 'system').'</label>
+                    <label for="inp_password">'.fx::lang('Password', 'system').'</label>
                     <input class="text" type="password" name="AUTH_PW" id="inp_password" />
                 </div>
                 <button type="submit" class="fx_button fx_admin_button_text">
-                    <span>'.fx::lang('Вход','system').'</span>
+                    <span>'.fx::lang('Login','system').'</span>
                 </button>
                 </form></div>';
         }
@@ -326,13 +320,13 @@ class fx_controller_admin_module extends fx_controller_admin {
     public function basesettings($input) {
         $module_keyword = str_replace('fx_controller_admin_module_', '', get_class($this));
         $this->response->submenu->set_menu('settings')->set_subactive('settings-'.$module_keyword);
-        $this->response->breadcrumb->add_item( fx::lang('Настройка модуля','system') . ' ' . $module_keyword);
+        $this->response->breadcrumb->add_item( fx::lang('Configuring the','system') . ' ' . $module_keyword);
         $this->response->add_form_button('save');
         $this->settings();
     }
 
     public function settings() {
-        $this->response->add_field($this->ui->label( fx::lang('Переопределите метод settings в своем классе','system') ));
+        $this->response->add_field($this->ui->label( fx::lang('Override the settings in the class','system') ));
     }
 
     public function basesettings_save($input) {

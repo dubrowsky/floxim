@@ -15,28 +15,38 @@ class fx_system_input extends fx_system {
 
 
   public function prepare_extract () {
-    // system superior object
-    $fx_core = fx_core::get_object();
-
-    $fx_core->REQUEST_URI = isset($_GET['REQUEST_URI']) ? $_GET['REQUEST_URI'] : (
+    $request_uri = isset($_GET['REQUEST_URI']) ? $_GET['REQUEST_URI'] : (
                             isset($_POST['REQUEST_URI']) ? $_POST['REQUEST_URI'] : (
                             isset($_ENV['REQUEST_URI']) ? $_ENV['REQUEST_URI'] :
                             getenv("REQUEST_URI")));
-    if ( substr($fx_core->REQUEST_URI, 0, 1) != "/" ) $fx_core->REQUEST_URI="/".$fx_core->REQUEST_URI;
-    $fx_core->REQUEST_URI = trim($fx_core->REQUEST_URI);
-    $url = "http".( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? "s":"")."://".getenv("HTTP_HOST").$fx_core->REQUEST_URI;
+    if ( substr($request_uri, 0, 1) != "/" ) {
+        $request_uri = "/".$request_uri;
+    }
+    $request_uri = trim($request_uri);
+    $url = "http"
+           .( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? "s":"")
+           ."://".getenv("HTTP_HOST")
+           .$request_uri;
     // parse entire url
     $parsed_url = @parse_url($url);
 
     // validate query parameter
     if ( is_array($parsed_url) && array_key_exists('query', $parsed_url) && $parsed_url['query']) {
-      parse_str($parsed_url['query'], $parsed_query_arr);
-      $_GET = $parsed_query_arr ? $parsed_query_arr : array();
+        $parsed_query_arr = null;
+        parse_str($parsed_url['query'], $parsed_query_arr);
+        $_GET = $parsed_query_arr ? $parsed_query_arr : array();
     }
 
 
     // superglobal arrays
-    $superglobals = array("_COOKIE" => $_COOKIE, "_GET" => $_GET, "_POST" => $_POST, "_FILES" => $_FILES, "_ENV" => $_ENV, "_SERVER" => $_SERVER);
+    $superglobals = array(
+        "_COOKIE" => $_COOKIE, 
+        "_GET" => $_GET, 
+        "_POST" => $_POST, 
+        "_FILES" => $_FILES, 
+        "_ENV" => $_ENV, 
+        "_SERVER" => $_SERVER
+    );
     // set default
 
     // merge superglobals arrays
@@ -177,54 +187,50 @@ class fx_system_input extends fx_system {
   }
 
   public function GET($item = "") {
-    $fx_core = fx_core::get_object();
-
-    if (empty($this->_GET))
+    if (empty($this->_GET)) {
         return array();
+    }
 
     if ($item) {
-        return array_key_exists($item, $this->_GET) ? $fx_core->db->escape($this->_GET[$item]) : null;
-    } else {
-        $get = $this->_GET;
-        foreach ($get as $k => &$v) {
-            $v = $fx_core->db->escape($v);
-        }
-        return $get;
+        return array_key_exists($item, $this->_GET) ? fx::db()->escape($this->_GET[$item]) : null;
     }
+    
+    $get = $this->_GET;
+    foreach ($get as $k => &$v) {
+        $v = fx::db()->escape($v);
+    }
+    return $get;
   }
 
   public function POST($item = "") {
-    $fx_core = fx_core::get_object();
-
-    if (empty($this->_POST))
+      
+    if (empty($this->_POST)) {
         return array();
+    }
 
     if ($item) {
-        return array_key_exists($item, $this->_POST) ? $fx_core->db->escape($this->_POST[$item]) : null;
-    } else {
-        $post = $this->_POST;
-        foreach ($post as $k => &$v) {
-            $v = $fx_core->db->escape($v);
-        }
-        return $post;
+        return array_key_exists($item, $this->_POST) ? fx::db()->escape($this->_POST[$item]) : null;
     }
+    $post = $this->_POST;
+    foreach ($post as $k => &$v) {
+        $v = fx::db()->escape($v);
+    }
+    return $post;
   }
 
   public function GET_POST($item = "") {
-    $fx_core = fx_core::get_object();
-
-    if ( empty($this->_GET) && empty($this->_POST) )
-            return array();
+    if ( empty($this->_GET) && empty($this->_POST) ) {
+        return array();
+    }
 
     if ($item) {
-        return array_key_exists($item, $this->_GET) ? $fx_core->db->escape($this->_GET[$item]) : (array_key_exists($item, $this->_POST) ? $fx_core->db->escape($this->_POST[$item]) : null);
-    } else {
-        $data = array_merge($this->_POST, $this->_GET);
-        foreach ($data as $k => &$v) {
-            $v = $fx_core->db->escape($v);
-        }
-        return $data;
+        return array_key_exists($item, $this->_GET) ? fx::db()->escape($this->_GET[$item]) : (array_key_exists($item, $this->_POST) ? fx::db()->escape($this->_POST[$item]) : null);
     }
+    $data = array_merge($this->_POST, $this->_GET);
+    foreach ($data as $k => &$v) {
+        $v = fx::db()->escape($v);
+    }
+    return $data;
   }
 
 
@@ -256,5 +262,3 @@ class fx_system_input extends fx_system {
   }
 
 }
-
-?>

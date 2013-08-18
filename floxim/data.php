@@ -141,7 +141,10 @@ class fx_data {
                 if ($field == 'id') {
                     $field = "`{{".$base_table."}}`.id";
                 } else {
-                    $field = '`'.$field.'`';
+                    // use conditions like "MD5(`field`)" as is
+                    if (!preg_match("~[a-z0-9_-]\s*\(.*?\)~i", $field)) {
+                        $field = '`'.$field.'`';
+                    }
                 }
                 if (is_array($value)) {
                     if (count($value) == 0) {

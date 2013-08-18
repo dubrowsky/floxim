@@ -679,7 +679,6 @@ function fx_get_cattables() {
 		'fx_module',
 		'fx_multiselect',
 		'fx_patch',
-		'fx_permission',
 		'fx_redirect',
 		'fx_session',
 		'fx_settings',

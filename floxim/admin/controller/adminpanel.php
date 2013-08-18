@@ -28,7 +28,7 @@ class fx_controller_admin_adminpanel extends fx_controller_admin {
     public static function get_more_menu() {
         $more_menu = array();
         $more_menu[] = array(
-            'name' => fx::lang('Дизайн страницы','system'),
+            'name' => fx::lang('Page design','system'),
             'button' => array(
                 'essence' => 'infoblock',
                 'action' => 'layout_settings',
@@ -47,18 +47,18 @@ class fx_controller_admin_adminpanel extends fx_controller_admin {
                 'off' => array('title' => fx::lang('off', 'system')),
                 'settings' => array('title' => fx::lang('settings', 'system')),
                 'delete' => array('title' => fx::lang('delete', 'system')),
-                'select_block' => array('title' => fx::lang('выделить блок','system')),
-                'rights' => array('title' => fx::lang('Права','system')),
-                'upload' => array('title' => fx::lang('Закачать файл','system')),
-                'download' => array('title' => fx::lang('Cкачать файл','system')),
-                'map' => array('title' => fx::lang('Карта сайта','system')),
-                'export' => array('title' => fx::lang('Экспорт','system')),
-                'store' => array('title' => fx::lang('Скачать с FloximStore','system')),
-                'import' => array('title' => fx::lang('Импорт','system')),
-                'change_password' => array('title' => fx::lang('Сменить пароль','system')),
-                'undo' => array('title' => FX_ADMINPANEL_SITE_BUTTON_UNDO),
-                'redo' => array('title' => FX_ADMINPANEL_SITE_BUTTON_REDO),
-                'more' => array('title' => FX_ADMINPANEL_SITE_BUTTON_REDO)
+                'select_block' => array('title' => fx::lang('Select parent block','system')),
+                'rights' => array('title' => fx::lang('Permissions','system')),
+                'upload' => array('title' => fx::lang('Upload file','system')),
+                'download' => array('title' => fx::lang('Download file','system')),
+                'map' => array('title' => fx::lang('Site map','system')),
+                'export' => array('title' => fx::lang('Export','system')),
+                'store' => array('title' => fx::lang('Download from FloximStore','system')),
+                'import' => array('title' => fx::lang('Import','system')),
+                'change_password' => array('title' => fx::lang('Change password','system')),
+                'undo' => array('title' => fx::lang('Cancel', 'system')),
+                'redo' => array('title' => fx::lang('Redo', 'system')),
+                'more' => array('title' => fx::lang('More', 'system'))
             ),
             'map' => array(
                 'page' => explode(

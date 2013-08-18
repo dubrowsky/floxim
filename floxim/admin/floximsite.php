@@ -32,7 +32,6 @@ class fx_admin_floximsite {
     protected function get_userinfo() {
         $info = array();
         $info['host'] = $_SERVER['HTTP_HOST'];
-        $info['version'] = fx_core::get_object()->get_settings('version');
         return $info;
     }
 

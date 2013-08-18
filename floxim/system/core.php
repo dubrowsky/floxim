@@ -120,27 +120,6 @@ class fx_core extends fx_system {
         return $db->affected_rows;
     }
 
-    public function load_default_extensions() {
-        static $loaded = false;
-
-        if (!$loaded) {
-            $this->load("files");
-            $this->load("token");
-            $this->load("eventmanager");
-            $this->event = $this->eventmanager;
-            $this->load("util");
-            $this->load("input");
-            $this->load("url");
-            $this->load("page");
-            $this->load("lang");
-            $this->load("modules");
-            $this->load("env");
-            $this->load("mail");
-
-            $loaded = true;
-        }
-    }
-
     /**
      * @return fx_core object
      */
@@ -343,7 +322,7 @@ class fx_core extends fx_system {
                 break;
             }
 
-            if (preg_match("/^controller_(administrate|site|template_files|template_colors|template|component|field|settings|widget)$/", $classname, $match)) {
+            if (preg_match("/^controller_(site|template_files|template_colors|template|component|field|settings|widget)$/", $classname, $match)) {
                 $file = $root.'/admin/controller/'.str_replace('_', '/', $match[1]);
                 break;
             }

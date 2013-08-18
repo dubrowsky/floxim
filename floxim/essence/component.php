@@ -1,8 +1,4 @@
 <?php
-
-/* $Id: component.php 8576 2012-12-27 15:14:06Z myasin $ */
-defined("FLOXIM") || die("Unable to load file.");
-
 class fx_component extends fx_essence {
     
     public function get_content_table() {
@@ -32,17 +28,17 @@ class fx_component extends fx_essence {
         $res = true;
 
         if (!$this['name']) {
-            $this->validate_errors[] = array('field' => 'name', 'text' => fx::lang('Название компонента не может быть пустым','system'));
+            $this->validate_errors[] = array('field' => 'name', 'text' => fx::lang('Component name can not be empty','system'));
             $res = false;
         }
 
         if (!$this['keyword']) {
-            $this->validate_errors[] = array('field' => 'keyword', 'text' => fx::lang('Укажите keyword компонента','system'));
+            $this->validate_errors[] = array('field' => 'keyword', 'text' => fx::lang('Specify component keyword','system'));
             $res = false;
         }
 
         if ($this['keyword'] && !preg_match("/^[a-z][a-z0-9-]*$/i", $this['keyword'])) {
-            $this->validate_errors[] = array('field' => 'keyword', 'text' => fx::lang('Keyword может содержать только буквы, цифры, символы "дефис" и "подчеркивание"','system'));
+            $this->validate_errors[] = array('field' => 'keyword', 'text' => fx::lang('Keyword can only contain letters, numbers, symbols, \"hyphen\" and \"underscore\"','system'));
             $res = false;
         }
 
@@ -50,7 +46,7 @@ class fx_component extends fx_essence {
             $components = fx::data('component')->get_all();
             foreach ($components as $component) {
                 if ($component['id'] != $this['id'] && $component['keyword'] == $this['keyword']) {
-                    $this->validate_errors[] = array('field' => 'keyword', 'text' => fx::lang('Такой keyword уже используется компоненте','system') . ' "'.$component['name'].'"');
+                    $this->validate_errors[] = array('field' => 'keyword', 'text' => fx::lang('This keyword is used by the component','system') . ' "'.$component['name'].'"');
                     $res = false;
                 }
             }
@@ -81,9 +77,9 @@ class fx_component extends fx_essence {
 
         $result = array();
 
-        $result['created'] = fx::lang('Дата создания','system');
+        $result['created'] = fx::lang('Created','system');
         $result['id'] = 'ID';
-        $result['priority'] = fx::lang('Приоритет','system');
+        $result['priority'] = fx::lang('Priority','system');
 
 
         foreach ($this->fields() as $v) {
@@ -115,22 +111,13 @@ class fx_component extends fx_essence {
     }
 
     public function is_user_component() {
-        return fx_core::get_object()->get_settings('user_component_id', 'auth') == $this['id'];
+        return $this['keyword'] == 'user';
     }
 
     protected function _after_insert() {
         $this->create_content_table();
     }
-    /*
-    protected function _after_update() {
-        parent::_after_update();
-        if ($this->is_modified('parent_id')) {
-            
-        }
-    }
-     * 
-     */
-
+    
     protected function create_content_table() {
         $sql = "DROP TABLE IF  EXISTS `{{content_".$this['keyword']."}}`;
             CREATE TABLE IF NOT EXISTS `{{content_".$this['keyword']."}}` (

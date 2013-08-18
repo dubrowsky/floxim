@@ -10,7 +10,7 @@ class fx_controller_component_section extends fx_controller_component_page {
     
     public function info_listing() {
         return array(
-            'name' => fx::lang('Меню','component_section')
+            'name' => fx::lang('Navigation','component_section')
         );
     }
 
@@ -25,23 +25,23 @@ class fx_controller_component_section extends fx_controller_component_page {
             }
             $fields['submenu'] = array(
                 'name' => 'submenu',
-                'label' => fx::lang('Подразделы','component_section'),
+                'label' => fx::lang('Subsections','component_section'),
                 'type' => 'select',
                 'values' => array(
-                    'none' => fx::lang('Не показывать','component_section'),
-                    'active' => fx::lang('Показывать у активного','component_section'),
-                    'all' => fx::lang('Показывать у всех','component_section')
+                    'none' => fx::lang('Don\'t show','component_section'),
+                    'active' => fx::lang('Show for the active item','component_section'),
+                    'all' => fx::lang('Show for all items','component_section')
                 )
             );/*
             $fields['submenu_level'] = array(
                 'name' => 'submenu_level',
-                'label' => fx::lang('Уровень вложенности', 'component_section'),
+                'label' => fx::lang('Nesting level', 'component_section'),
                 'type' => 'select',
                 'values' => array(
-                    array('2', fx::lang('2 уровня', 'component_section')),
-                    array('3', fx::lang('3 уровня', 'component_section')),
-                    array('onemore', fx::lang('Текущий +1', 'component_section')),
-                    array('infinity', fx::lang('Без ограничения', 'component_section'))
+                    array('2', fx::lang('2 levels', 'component_section')),
+                    array('3', fx::lang('3 levels', 'component_section')),
+                    array('onemore', fx::lang('Current level +1', 'component_section')),
+                    array('infinity', fx::lang('No limit', 'component_section'))
                 ),
                 'parent' => array('submenu' => '!=none')
             );*/
@@ -50,12 +50,12 @@ class fx_controller_component_section extends fx_controller_component_page {
                 'header_only' => array(
                     'name' => 'header_only',
                     'type' => 'checkbox',
-                    'label' => fx::lang('Показывать только заголовок?', 'component_section'),
+                    'label' => fx::lang('Show only header?', 'component_section'),
                 ),
                 'hide_on_index' => array(
                     'name' => 'hide_on_index',
                     'type' => 'checkbox',
-                    'label' => fx::lang('Скрыть на главной?', 'component_section')
+                    'label' => fx::lang('Hide on the index page', 'component_section')
                 )
             );
         }
@@ -95,7 +95,7 @@ class fx_controller_component_section extends fx_controller_component_page {
                     $item['active'] = true;
                     if ($ctr->get_param('submenu') !== 'none') {
                         $ctr->accept_content(array(
-                            'title' => fx::lang('Подраздел','component_section') 
+                            'title' => fx::lang('Subsection','component_section') 
                                         . ' &rarr; ' . $item['name'],
                             'parent_id' => $item['id']
                         ));
@@ -113,8 +113,8 @@ class fx_controller_component_section extends fx_controller_component_page {
     
     public function info_breadcrumbs() {
         return array(
-            'name' => fx::lang('Хлебные крошки','component_section'),
-            'description' => fx::lang('Отображает путь до текущей страницы в структуре сайта','component_section')
+            'name' => fx::lang('Bread crumbs','component_section'),
+            'description' => fx::lang('Show path to the current page','component_section')
         );
     }
     

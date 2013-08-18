@@ -179,8 +179,10 @@ abstract class fx_essence implements ArrayAccess {
          * Например для $post['tags'], где tags - поле-мультисвязь
          * Если связанные не загружены, просим файндер их загрузить
          */
-        $finder = $this->_get_finder();
-        $rels = $finder->relations();
+         
+         $finder = $this->_get_finder();
+         $rels = $finder->relations();
+        
         if (!isset($rels[$offset])) {
             return null;
         }

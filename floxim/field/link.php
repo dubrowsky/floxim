@@ -27,7 +27,7 @@ class fx_field_link extends fx_field_baze {
         $fields[] = array(
             'id' => 'format[target]',
             'name' => 'format[target]',
-            'label' => fx::lang('Куда ссылается','system'),
+            'label' => fx::lang('Links to','system'),
             'type' => 'select',
             'values' => $comp_values,
             'value' => $this['format']['target'] ? $this['format']['target'] : ''
@@ -35,13 +35,13 @@ class fx_field_link extends fx_field_baze {
         $fields[] = array(
             'id' => 'format[prop_name]',
             'name' => 'format[prop_name]',
-            'label' => fx::lang('Ключ для свойства','system'),
+            'label' => fx::lang('Key name for the property','system'),
             'value' => $this->get_prop_name()
         );
         $fields[]= array(
             'id' => 'format[is_parent]',
             'name' => 'format[is_parent]',
-            'label' => fx::lang('Привязать значение к родителю','system'),
+            'label' => fx::lang('Bind value to the parent','system'),
             'type' => 'checkbox',
             'value' => $this['format']['is_parent']
         );
