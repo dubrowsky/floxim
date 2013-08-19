@@ -4,15 +4,6 @@ fx_additional_menu = function ( ) {
 
 fx_additional_menu.prototype.load = function () {
     var menu = this.container;
-    /*
-    $.each( ['undo', 'redo'], function(k, v) {
-        var item = $('<div>').addClass('fx_admin_button').addClass('fx_admin_button_'+v).appendTo(menu);
-        item.click( function(){
-            console.log('history will be here some day...');
-        });
-    });
-    */
-
     var logout = $('<a style="cursor:pointer;"/>').text(fx_lang('выход'));
     logout.appendTo(menu);
     logout.click(function() {
@@ -24,6 +15,4 @@ fx_additional_menu.prototype.load = function () {
         '</form>');
         $(this).find('form').submit();
     });
-    console.log('patcher');
-    $('<a class="fx_check_updates"><img src="http://floxim.org/getfloxim/check_updates.gif?version=#FX_VERSION_HASH#" /></a>').appendTo(menu);
 }

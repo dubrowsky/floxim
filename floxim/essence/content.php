@@ -61,7 +61,6 @@ class fx_content extends fx_essence {
         
         $fields = $this->get_fields();
         $result = array('status' => 'ok');
-        dev_log('svf', $fields, $values);
 
         foreach ($fields as $field) {
             $field_name = $field->get_name();

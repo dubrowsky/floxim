@@ -373,31 +373,35 @@ input.ui-button {
 #fx_admin_additional_menu {
     position: absolute;
     top: 0;
-    right: 0;
-    width: 120px;
+    right: 10px;
+    width: 250px;
     height: 34px;
+    text-align: right;
+}
+
+#fx_admin_additional_menu .fx_admin_additional_menu_divider, #fx_admin_additional_menu a {
+    display: inline-block;
+    height: 14px;
+    font-size: 14px;
+    line-height: 14px;
+    border: none;
+    margin:9px 5px;
+    vertical-align: top;
 }
 
 #fx_admin_additional_menu .fx_admin_additional_menu_divider {
-    display: block;
     width: 1px;
-    height: 14px;
-    border: none;
     background: #4e4e50;
-    position: absolute;
-    left: 60px;
-    top: 10px;
 }
 
 #fx_admin_additional_menu a {
     color: #a0a4a5;
     text-decoration: none;
     font-family: Tahoma, sans-serif;
-    font-size: 14px;
-    position: absolute;
-    right: 10px;
-    top: 9px;
-    line-height: 14px;
+}
+
+#fx_admin_additional_menu a.fx_update_notifier {
+    color:#FFF;
 }
 
 /* Панель с кнопками */

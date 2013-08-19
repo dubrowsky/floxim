@@ -83,9 +83,6 @@ class fx_controller_component_section extends fx_controller_component_page {
                 case 'active':
                     $q->clear_where('parent_id')->where('parent_id', $path);
                     break;
-                default:
-                    dev_log($q);
-                    break;
             }
         });
         

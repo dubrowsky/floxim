@@ -976,7 +976,8 @@ class fx_system_files extends fx_system {
         return array(   
             'id' => fx::db()->insert_id(), 
             'path' => $http_path,
-            'filename' => $filename
+            'filename' => $filename,
+            'fullpath' => $full_path
         );
     }
 
@@ -1262,7 +1263,68 @@ class fx_system_files extends fx_system {
 
         return $text[$error_num];
     }
+    
+    function unzip($file, $dir) {
+        $dir = trim($dir, '/').'/';
+        $dir = fx::config()->DOCUMENT_ROOT.
+               fx::config()->HTTP_FILES_PATH.
+               $dir;
+        $this->zip_mkdir($dir);
+        
+        $zip_handle = zip_open($file);
+        if (!is_resource($zip_handle)) {
+            die("Problems while reading zip archive");
+        }
+        while ($zip_entry = zip_read($zip_handle)) {
+            $zip_name = zip_entry_name($zip_entry);
+            $zip_dir = dirname( zip_entry_name($zip_entry) );
+            $zip_size = zip_entry_filesize($zip_entry);
+            if (preg_match("~/$~", $zip_name)) {
+                $new_dir_name = preg_replace("~/$~", '', $dir . $zip_name);
+                $this->zip_mkdir($new_dir_name);
+                chmod($new_dir_name, 0777);
+            }
+            else {
+                zip_entry_open($zip_handle, $zip_entry, 'r');
+                if (is_writable($dir . $zip_dir)) {
+                    $fp = @fopen($dir . $zip_name, 'w');
+                    if (is_resource($fp)) {
+                        @fwrite($fp, zip_entry_read($zip_entry, $zip_size));
+                        @fclose($fp);
+                        chmod($dir.$zip_name, 0666);
+                    }
+                }
+                zip_entry_close($zip_entry);
+            }
+        }
+        zip_close($zip_handle);
+        return true;
+    }
 
+    function zip_mkdir($dir, $chmod = 0755) {
+        $slash = "/";
+        if (substr(php_uname(), 0, 7) == "Windows") {
+            $slash = "\\";
+            $dir = str_replace("/", $slash, $dir);
+        }
+
+        $tree = explode($slash, $dir);
+
+        $path = $slash;
+        // win path begin from C:\
+        if (substr(php_uname(), 0, 7) == "Windows") $path = "";
+
+        foreach($tree as $row) {
+
+            if($row === false) continue;
+
+            if( !@is_dir($path . $row) ) {
+                @mkdir( strval($path . $row), $chmod );
+            }
+
+            $path .= $row . $slash;
+        }
+    }
 }
 
 class fx_exception_files extends fx_exception {

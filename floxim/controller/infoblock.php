@@ -184,7 +184,7 @@ class fx_controller_infoblock extends fx_controller {
             }
             return 'edit';
         }
-        //dev_log($infoblock['name'], $infoblock, $scope);
+        
         if ($ib_page_id == 0 && !$scope['page_type']) {
             return 'design';
         }

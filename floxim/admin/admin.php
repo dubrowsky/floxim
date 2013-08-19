@@ -147,7 +147,11 @@ class fx_controller_admin extends fx_controller {
             '/floxim/admin/js/menu/breadcrumb.js',
             '/floxim/lib/editors/redactor/redactor.js',
             '/floxim/lib/js/jquery.form.js',
-            '/floxim/lib/js/jquery.jstree.js'
+            '/floxim/lib/js/jquery.jstree.js',
+                fx::config()->FLOXIM_SITE_PROTOCOL.'://'.
+                fx::config()->FLOXIM_SITE_HOST.
+                '/getfloxim/check_updates.js?v='.
+                fx::config()->FX_VERSION
         );
         $page = fx::page();
         foreach ($js_files as $file) {

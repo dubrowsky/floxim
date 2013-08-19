@@ -116,6 +116,12 @@ class fx_admin_submenu {
             $this->active = 'settings';
             $this->active_main_menu = 'manage';
         }
+        
+        if ($match[1] == 'patch') {
+            $this->init_manage();
+            $this->active = 'patch';
+            $this->active_main_menu = 'manage';
+        }
 
         return $this;
     }
@@ -146,6 +152,11 @@ class fx_admin_submenu {
             'site', 
             fx::lang('All sites','system'), 
             'site.all'
+        );
+        $this->menu[] = $this->add_node(
+            'patch', 
+            fx::lang('Patches','system'), 
+            'patch.all'
         );
     }
 

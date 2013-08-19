@@ -20,19 +20,13 @@ class fx_controller_admin_site extends fx_controller_admin {
             $r = array(
                     'id' => $v['id'],
                     'header' => array('name' => $v['name'], 'url' => 'site.settings('.$v['id'].')'),
-                    'text' => $text/*,
-                    'buttons' => array(
-                    	array('url' => 'site.settings('.$v['id'].')', 'label' => fx::lang('Settings','system')),
-                    	array('url' => 'site.design('.$v['id'].')', 'label' => fx::lang('Design','system'))
-                    )*/
+                    'text' => $text
             );
             $list['values'][] = $r;
         }
 
         $this->response->add_field($list);
 
-        //$this->response->add_pulldown_item('add', fx::lang('Add new site','system'), 'source=new');
-        
         $this->response->add_buttons(
             array(
                 array('key' => 'add', 'title' => fx::lang('Add new site','system')),

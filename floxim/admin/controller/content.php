@@ -106,7 +106,6 @@ class fx_controller_admin_content extends fx_controller_admin {
     }
     
     public function livesearch($input) {
-        //dev_log('liveserching', $input);
         if (!isset($input['content_type'])) {
             return;
         }
@@ -153,13 +152,6 @@ class fx_controller_admin_content extends fx_controller_admin {
                         with('tag')->
                         order('priority')->all();
         $nn = $neighbours->find('id', $next_id);
-        
-        dev_log(
-                'sorting', 
-                $input, 
-                $content['tag']['name'] . ($nn ? 'before '.$nn['tag']['name'] : 'after all'), 
-                $neighbours
-        );
         
         $c_priority = 1;
         $next_found = false;

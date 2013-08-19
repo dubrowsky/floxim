@@ -16,13 +16,11 @@ class fx_field_multilink extends fx_field_baze {
             $rel = $this->get_relation();
             $related_relation = fx::data($rel[1])->relations();
             $linker_field = $related_relation[$rel[3]][2];
-            //dev_log($rel, $related_relation);
             
             $this->_js_field['name_postfix'] = 'f_'.$linker_field;
             if (isset($content[$this['name']])) {
                 $this->_js_field['value'] = array();
                 $linkers = $content[$this['name']]->linker_map;
-                //$linker_ids = array_keys($content[$this['name']]->linker_map);
                 foreach ($content[$this['name']] as $num => $v) {
                     $this->_js_field['value'] []= array(
                         'id' => $v['id'], 
@@ -43,7 +41,6 @@ class fx_field_multilink extends fx_field_baze {
             }
             $this->_js_field['values'] = array();
             if (isset($content[$this['name']])) {
-                //$linker_ids = $content[$this['name']]->linker_map->get_values('id');
                 $linkers = $content[$this['name']]->linker_map;
                 foreach ($linkers as $linker) {
                     $linker_fields = $linker->get_form_fields();
@@ -187,7 +184,6 @@ class fx_field_multilink extends fx_field_baze {
                 $linked_item = fx::data($first_data_type)->create();
                 $linked_item['infoblock_id'] = $linker_infoblock_id;
             }
-            dev_log('filing linked item', $linked_item, $item_props);
             $linked_item->set_field_values($item_props);
             if ($is_mm) {
                 $new_value[]= $linked_item[$rel[3]];
@@ -196,8 +192,6 @@ class fx_field_multilink extends fx_field_baze {
                 $new_value[]= $linked_item;
             }
         }
-        //$new_value = fx::data($end_data_type, $new_rel_ids);
-        //dev_log('ml savestring', $new_rel_ids, $end_data_type);
         return $new_value;
     }
     

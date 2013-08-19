@@ -62,7 +62,9 @@ class fx_config {
             'TEMPLATE_FOLDER' => '',
             'COMPONENT_FOLDER' => '',
             'WIDGET_FOLDER' => '',
-            'NC_JQUERY_PATH' => ''
+            'FX_VERSION' => '0.1.0.1',
+            'FLOXIM_SITE_PROTOCOL' => 'http',
+            'FLOXIM_SITE_HOST' => 'floxim.org'
     );
 
     public function __construct() {

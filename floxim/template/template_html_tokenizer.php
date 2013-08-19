@@ -88,8 +88,7 @@ class fx_template_html_tokenizer {
         if (!empty($this->stack)) {
             $this->text_to_tag('');
         }
-        //dev_log('parsed', $this->res, $string);
-		return $this->res;
+        return $this->res;
 	}
 	
 	protected $res = array();

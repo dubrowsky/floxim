@@ -67,8 +67,11 @@ class fx {
         // look for data-* class in cache
         if (isset($data_classes_cache[$datatype])) {
         	$finder_class = $data_classes_cache[$datatype];
-        	$data_finder = new $finder_class();
-        	//dev_log("From cache", $datatype, $finder_class);
+            if ($finder_class == 'fx_data') {
+                $data_finder = new fx_data($datatype);
+            } else {
+                $data_finder = new $finder_class();
+            }
         } else {
 			try {
 				$classname = 'fx_data_'.$datatype;
@@ -87,8 +90,6 @@ class fx {
 			if (is_null($data_finder)) {
 				$data_finder = new fx_data($datatype);
 				$data_classes_cache[$datatype] = 'fx_data';
-				//dev_log("NO DATATYPE", func_get_args(), debug_backtrace());
-				//die("Unable to create Finder for datatype '".$datatype."'");
 			}
 		}
 		
@@ -209,7 +210,6 @@ class fx {
     }
 
     public static function template($template, $data = array()) {
-        //dev_log('tpl lurk start');
         $parts= explode(".", $template);
         if (count($parts) == 2) {
             $template = $parts[0];
@@ -453,5 +453,19 @@ class fx {
             $value = '';
         }
         return $value;
+    }
+    
+    public static function version($type = null) {
+        $v = fx::config()->FX_VERSION;
+        preg_match("~(\d+\.\d+\.\d+)\.(\d+)~", $v, $v_parts);
+        if (is_null($type)) {
+            return $v_parts[1];
+        }
+        if ($type == 'build') {
+            return $v_parts[2];
+        }
+        if ($type == 'full') {
+            return $v;
+        }
     }
 }

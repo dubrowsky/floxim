@@ -504,6 +504,9 @@ class fx_data {
     public function essence($data = array()) {
         $classname = $this->get_class_name($data);
         $obj = new $classname(array('data' => $data));
+        if ($classname == 'fx_simplerow') {
+            $obj->table = $this->table;
+        }
         return $obj;
     }
 
@@ -520,8 +523,6 @@ class fx_data {
     public function update($data, $where = array()) {
         $wh = array();
         $update = $this->_set_statement($data);
-
-        dev_log('updating', $data, $update, $where);
         
         foreach ($where as $k => $v) {
             $wh[] = "`".fx::db()->escape($k)."` = '".fx::db()->escape($v)."' ";
