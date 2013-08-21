@@ -9,9 +9,15 @@ class fx_controller_layout extends fx_controller {
         if (! ($layout_id = $this->get_param('layout_id'))) {
             $layout_id = fx::env('layout');
         }
+        
+        // add admin files bundle BEFORE site scripts/styles
+        if (! ($this->get_param('ajax_mode'))) {
+            fx_controller_admin::add_admin_files();
+        }
+        
         $page_infoblocks = fx::router('front')->get_page_infoblocks(
-                $page_id, 
-                $layout_id
+            $page_id, 
+            $layout_id
         );
         $res = array(
             'areas' => $page_infoblocks,
@@ -70,8 +76,6 @@ class fx_controller_layout extends fx_controller {
         $p = fx::page();
         $js_config = new fx_admin_configjs();
         $p->add_js_text("fx_adminpanel.init(".$js_config->get_config().");");
-        
-        fx_controller_admin::add_admin_files();
         $p->set_after_body(fx_controller_admin_adminpanel::panel_html());        
     }
 

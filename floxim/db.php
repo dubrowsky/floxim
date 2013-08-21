@@ -103,8 +103,12 @@ class fx_db extends PDO {
                 $this->last_result_array = $res; // ??? $result->fetchAll($result_type);
             }
         }
-
         return $res;
+    }
+    
+    public function get_collection($query = null) {
+        $res = $this->get_results($query, PDO::FETCH_ASSOC);
+        return new fx_collection($res);
     }
 
     public function get_col ( $query = null, $col_num = 0 ) {

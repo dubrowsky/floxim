@@ -14,6 +14,7 @@ class fx_data_content_page extends fx_data_content {
             $pid = $item['parent_id'];
             if (!isset($index_by_parent[$pid])) {
                 $index_by_parent[$pid] = fx::collection();
+                $index_by_parent[$pid]->is_sortable = $data->is_sortable;
             }
             $index_by_parent[$pid] []= $item;
         }

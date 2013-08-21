@@ -46,8 +46,61 @@ class fx_system_page extends fx_system {
         $this->_files_css[] = $file;
     }
 
+    // both simple scrits & scripts from bundles
+    protected $_all_js = array();
+    
     public function add_js_file($file) {
-        $this->_files_js[] = $file;
+        if (!in_array($file, $this->_all_js)) {
+            $this->_files_js[] = $file;
+            $this->_all_js[]= $file;
+        }
+    }
+    
+    
+    
+    public function add_js_bundle($files, $params = array()) {
+        if (!isset($params['name'])) {
+            $params['name'] = md5(join($files));
+        }
+        $params['name'] .= '.jsgz';
+        $doc_root = fx::config()->DOCUMENT_ROOT;
+        $http_path = fx::config()->HTTP_FILES_PATH.$params['name'];
+        $full_path = $doc_root.$http_path;
+        
+        $this->_all_js = array_merge($this->_all_js, $files);
+        
+        if (!file_exists($full_path)) {
+            require_once($doc_root.'/floxim/lib/JSMinPlus.php');
+            $bundle_content = '';
+            foreach ($files as $i => $f) {
+                if (!preg_match("~^http://~i", $f)) {
+                    $f = $doc_root.$f;
+                }
+                $file_content = file_get_contents($f);
+                if (!preg_match("~\.min~", $f)) {
+                    $minified = JSMinPlus::minify($file_content);
+                    $file_content = $minified;
+                }
+                $bundle_content .= $file_content.";\n";
+            }
+            $fh = gzopen($full_path, 'wb5');
+            gzwrite($fh, $bundle_content);
+            gzclose($fh);
+            $fh = fopen(preg_replace("~\.jsgz$~", ".js", $full_path), 'w');
+            fputs($fh, $bundle_content);
+            fclose($fh);
+        }
+        if (!$this->_accept_gzip()) {
+            $http_path = preg_replace("~\.jsgz$~", ".js", $http_path);
+        }
+        $this->_files_js[]= $http_path;
+    }
+    
+    protected function _accept_gzip() {
+        if (!isset($_SERVER['HTTP_ACCEPT_ENCODING'])) {
+            return false;
+        }
+        return in_array('gzip', explode(",", $_SERVER['HTTP_ACCEPT_ENCODING']));
     }
 
     public function add_data_js($keyword, $values) {

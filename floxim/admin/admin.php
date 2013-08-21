@@ -43,18 +43,6 @@ class fx_controller_admin extends fx_controller {
         }
         
         $this->response = new fx_admin_response($input);
-        /*
-        if ($this->save_history && $input['posting']) {
-            $history = fx::data('history')->create(array('user_id' => 1));
-            $history['name'] = $this->get_history_name($action);
-            $history['date'] = date("Y-m-d H:i:s");
-            $history->save();
-            fx_history::set_history_obj($history);
-            fx_history::delete_old();
-        }
-         * 
-         */
-
         $result = $this->$action($input);
         if (is_string($result)) {
             return $result;
@@ -62,13 +50,6 @@ class fx_controller_admin extends fx_controller {
 
         if ($input['posting']) {
             if (!$result['text']) $result['text'] = $this->get_status_text();
-            /*
-            $undo = fx_controller_admin_history::get_undo_obj();
-            $redo = fx_controller_admin_history::get_redo_obj();
-            if ($undo) $result['history']['undo'] = $undo['name'];
-            if ($redo) $result['history']['redo'] = $redo['name'];
-             * 
-             */
         }
 
         if ($this->response) {
@@ -83,15 +64,6 @@ class fx_controller_admin extends fx_controller {
         echo json_encode($result);
     }
 
-    /*
-    protected function get_history_name($action) {
-        $essence = str_replace('fx_controller_', '', get_class($this));
-        $action = str_replace('_save', '', $action);
-        $constant = "FX_HISTORY_".strtoupper($essence)."_".strtoupper($action);
-
-        return defined($constant) ? constant($constant) : $constant;
-    }
-    */
     protected function get_status_text() {
         return fx::lang('Saved','system');
     }
@@ -126,7 +98,7 @@ class fx_controller_admin extends fx_controller {
             '/floxim/lib/js/jquery.json-2.3.js',
             '/floxim/lib/js/ajaxfileupload.js',                                            
             '/floxim/admin/js-templates/jstx.js',
-            '/floxim/admin/js-templates/compile.php',
+            'http://'.getenv("HTTP_HOST").'/floxim/admin/js-templates/compile.php',
             '/floxim/admin/js/lib.js',
             '/floxim/admin/js/adminpanel.js',
             '/floxim/admin/js/front.js',
@@ -146,19 +118,28 @@ class fx_controller_admin extends fx_controller {
             '/floxim/admin/js/menu/additional.js',
             '/floxim/admin/js/menu/breadcrumb.js',
             '/floxim/lib/editors/redactor/redactor.js',
-            '/floxim/lib/js/jquery.form.js',
-            '/floxim/lib/js/jquery.jstree.js',
-                fx::config()->FLOXIM_SITE_PROTOCOL.'://'.
-                fx::config()->FLOXIM_SITE_HOST.
-                '/getfloxim/check_updates.js?v='.
-                fx::config()->FX_VERSION
+            '/floxim/lib/js/jquery.form.js'
         );
         $page = fx::page();
-        foreach ($js_files as $file) {
-            $page->add_js_file($file);
-        }
+        
+        $page->add_js_bundle($js_files, array('name' => 'fx_admin'));
+        
+        $update_checker_url = fx::config()->FLOXIM_SITE_PROTOCOL.'://'.
+                  fx::config()->FLOXIM_SITE_HOST.
+                  '/getfloxim/check_updates.js?v='.
+                  fx::config()->FX_VERSION;
+        
+        $page->add_js_text("
+           (function(){
+            var fxupdate = document.createElement('script');
+               fxupdate.type = 'text/javascript';
+               fxupdate.async = true;
+               fxupdate.src = '".$update_checker_url."';
+            (document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild(fxupdate);
+          })(); 
+        ");
+        
         $css_files = array(
-            //'/floxim/lib/css/elrte/elrte.min.css',
             '/floxim/lib/editors/redactor/redactor.css',
             '/floxim/admin/skins/default/jquery-ui/main.css',
             '/floxim/admin/skins/default/css/main.css'

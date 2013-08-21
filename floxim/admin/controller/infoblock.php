@@ -525,6 +525,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                 $content = fx::data(array('content',$content_type_id), $content_id);
                 if ($content) {
                     $content[$var['name']] = $value;
+                    dev_log('saving val', $value);
                     $content->save();
                 }
             }

@@ -8,6 +8,9 @@ AddDefaultCharset utf-8
 # в противном случае
 ErrorDocument 404 /floxim/require/e404.php
 
+AddEncoding gzip .jsgz
+AddType "application/javascript" .jsgz 
+
 Options -Indexes
 Options +FollowSymLinks
 

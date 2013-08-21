@@ -12,7 +12,7 @@ class fx_controller_admin_adminpanel extends fx_controller_admin {
                 <div id="fx_admin_main_menu"></div>
                 <div id="fx_admin_page_modes"></div>
                 <div id="fx_admin_more_menu"></div>
-                <div id="fx_admin_additional_menu"></div>
+                <div id="fx_admin_additional_menu"><a class="fx_logout">'.fx::lang('Sign out','system').'</a></div>
                 <div id="fx_admin_clear"></div>
             </div>
             <div id="fx_admin_control" class="fx_overlay">

@@ -397,7 +397,9 @@ fx_front.prototype.select_content_essence = function(n) {
 		   });
 	   }
 	});
-    $fx.front.start_essences_sortable(n.closest('.fx_infoblock'));
+    //$fx.front.start_essences_sortable(n.closest('.fx_infoblock'));
+    //console.log('make sortbl', n.parent());
+    $fx.front.start_essences_sortable(n.parent());
 	$('html').one('fx_deselect', function() {
 		$fx.buttons.unbind('edit');
 		$fx.buttons.unbind('delete');

@@ -212,7 +212,6 @@ class fx_data {
             $sorting = str_replace("`", '', $sorting);
             $sorting = trim($sorting);
             $collection->is_sortable = $sorting == 'priority';
-            //$collection->sorting = $sorting;
         }
         return $collection;
     }

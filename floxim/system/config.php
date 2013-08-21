@@ -62,7 +62,7 @@ class fx_config {
             'TEMPLATE_FOLDER' => '',
             'COMPONENT_FOLDER' => '',
             'WIDGET_FOLDER' => '',
-            'FX_VERSION' => '0.1.0.1',
+            'FX_VERSION' => '0.1.1.1',
             'FLOXIM_SITE_PROTOCOL' => 'http',
             'FLOXIM_SITE_HOST' => 'floxim.org'
     );
