@@ -5,33 +5,29 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta fx:layout="inner" content="" />
     <meta fx:layout="index" content="index" />
-    {css}main.css{/css}
+    {css}
+        main.css
+        color.css
+    {/css}
 </head>
 <body>
 <div id="main">
-    <!--верхняя цветная полоса-->
     <div class='color_line'><div><div><div><div><div><div><div><div><div><div></div></div></div></div></div></div></div></div></div></div></div>
-    <!--//верхняя цветная полоса-->
-    <!--шапка сайта, логотип, поиск, меню, языковая версия-->
     <div id="header">
-        <!--логотип, слоган-->
         <div id="logo">
             <a href="/">
                 <img src="{%logo}<?=$template_dir?>images/logo.gif{/%}" />
             </a>
-            <div>{%slogan}название или слоган <br />вашей компании{/%}</div>
+            <div>{%slogan}your company name<br />or slogan{/%}</div>
         </div>
-        <!--//логотип, слоган-->
         <div id="header_nav">
 
-            <!--//поиск-->
             <div class="sep"></div>
-            <!--горизонтальное меню-->
             {area id="header" size="low,wide"}
             <div 
                 fx:template="demo_menu" 
                 fx:of="component_section.listing" 
-                fx:template_name="Горизонтальное меню (главное)"
+                fx:name="Main horizontal menu"
                 class="supernova_menu" id="menu" >
                 <ul>
                     <li fx:template="item">
@@ -43,73 +39,81 @@
                     </li>
                 </ul>
             </div>
-            <!--//горизонтальное меню-->
         </div>
         <div class="sep"></div>
     </div>
-    <!--//шапка сайта, логотип, поиск, меню, языковая версия-->
-    <!--центральная часть, контентная область и правый вспомогательный блок-->
+    <div class="index_data" fx:if="$index">
+        <div id="top_banner">
+            <div class="bottom"><div class="left"><div class="right"><div class="ltc"><div class="rtc"><div class="lbc"><div class="rbc"><div class="color_bg"><div class="content_bg">
+            <div class="banner_content">
+                <img src="{%top_banner | 'w:223,h:268'}<?=$template_dir?>images/the_cat.jpg{/%}" align="right" width="223" height="268" alt="" />
+                <p class="slogan">
+                    {%banner_slogan type="html"}&laquo;Simplicity of sitebuilder, functionality of CMS,
+                        flexibility of framework. And it's free!&raquo;
+                    {/%}
+                </p>
+                <p>
+                    {%banner_text}
+                        If you like Floxim, help us make it more popular, tell us about Floxim!
+                    {/%}
+                </p>
+                <a href="{%banner_url}http://floxim.org/{/%}" class="more"><span><span>{%banner_more}Read more...{/%}</span></span></a>
+                <div class="sep"></div>
+            </div>
+            </div></div></div></div></div></div></div></div></div>
+        </div>
+    </div>
     <div id="center">
-        <!--контент-->
         <div id="content">
-            <div class="index_data" fx:if="$index">
-                This is index!
-                {area id="content"}
-            </div>
-            <div fx:if="!$index">
-                {area id="content"}
-            </div>
-            {template id="wrap_simple" name="Простой блок" of="block"}
+            {area id="content"}
+            {template id="wrap_simple" name="Simple block" of="block"}
                 <div class="block">
                     {$content}
                 </div>
             {/template}
-            {template id="wrap_titled" name="Блок с заголовком" of="block"}
+            {template id="wrap_titled" name="Block with a header" of="block"}
                 <div class="block">
                     <div class="title">
-                        <h1 style="color:{%color}#000{/%color}" fx:var="title">Заголовок</h1>
+                        <h1 style="color:{%color}#000{/%}">{%title}Header{/%}</h1>
                     </div>
                     <div class="data">{$content}</div>
                 </div>
             {/template}
-            <!--//заголовок-->
-
         </div>
-        <!--//контент-->
-        <!--правый блок-->
         <div id="right_content">
             {area id="sidebar" size="high,narrow"}
-            <!--вертикальное меню-->
-            <div id="menu_vert" fx:template="supermenu" fx:of="component_section.listing">
-                <h2 fx:var="menu_title">Заголовок меню</h2>
+            <div 
+	fx:template="supermenu" 
+	fx:of="component_section.listing"
+	fx:name="Vertical menu"
+	id="menu_vert">
+                <h2>{%menu_title}Menu title{/%}</h2>
                 <ul>
                     <li fx:template="item">
                         <a class="menu-active" href="{$url}">{$name}</a>
                     </li>
                 </ul>
             </div>
-            <!--//вертикальное меню-->
         </div>
-        <!--//правый блок-->
     </div>
     <div class="sep"></div>
-    <!--//центральная часть, контентная область и правый вспомогательный блок-->
-    <!--баннеры-->
     <div id="banners">
         <div class="sep"></div>
     </div>
-    <!--//баннеры-->
     <div id="footer">
         {area id="footer" size="wide,low"}
-        <div class="left" fx:var="copy">© 2010 группа компаний «Netcat».<br />Все права защищены.</div>
-        <div class="middle" fx:var="contacts">Адрес: г. Москва, ул. Мануфактурная, д. 14<br />Телефон и факс: (831) 220-80-18</div>
-        <div class="right" fx:var="developa">© 2010 Хороший пример <br />сайтостроения — <a href="#">WebSite.pu</a></div>
+        <div class="left">
+            {%copy}&copy; 2010-<?=date('Y')?> FloxiGroup Ltd.<br />All rights reserved.{/%}
+        </div>
+        <div class="middle">
+            {%contacts}Address: 14, Manufacture street, Moscow, Russia<br />Phone/fax: (831) 220-80-18{/%}
+        </div>
+        <div class="right">
+            {%developer_copy}&copy; 2010 Developed by<br />the <a href="#">WebSite.ru</a> studio{/%}
+        </div>
         <div class="sep"></div>
     </div>
-    <!--нижняя цветная полоса-->
     <div class='color_line'><div><div><div><div><div><div><div><div><div><div></div></div></div></div></div></div></div></div></div></div></div>
-    <!--//нижняя цветная полоса-->
 </div>
-
 </body>
 </html>

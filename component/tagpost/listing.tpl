@@ -1,4 +1,4 @@
-<div class="posttags">
+<div class="posttags" fx:if="count($items)">
     {%tags_label}Tags:{/%}
     <span fx:template="item">
         <span fx:if="!$tag">???</span>

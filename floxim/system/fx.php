@@ -37,7 +37,10 @@ class fx {
      * @param mixed [$id] id или массив ids
     */
     public static function data($datatype, $id = null) {
-        if (is_array($datatype)) {
+    	
+    	static $data_classes_cache = array();
+    	
+		if (is_array($datatype)) {
             $datatype = join("_", $datatype);
         }
         if (
@@ -51,32 +54,49 @@ class fx {
         
         $data_finder = null;
         
-        try {
-            $classname = 'fx_data_'.$datatype;
-            $data_finder = new $classname();
-            if ($datatype == 'content') {
-                $component = fx::data('component', 'content');
-                $data_finder->set_component($component['id']);
-            }
-        } catch (Exception $e) {
-            // Файндер для контента, класс не определен
-            if (preg_match("~^content_~", $datatype)) {
-                $component = fx::data(
-                    'component', 
-                    preg_replace("~^content_~", '', $datatype)
-                );
-                if ($component) {
-                    $data_finder = new fx_data_content();
-                    $data_finder->set_component($component['id']);
-                }
-            } elseif (preg_match("~^field_~", $datatype)) {
-                $data_finder = new fx_data_field();
-            }
+        $component = null;
+        
+        if (preg_match("~^content~", $datatype)) {
+        	if ($datatype == 'content') {
+        		$component = fx::data('component', 'content');
+        	} else {
+        		$component = fx::data('component', preg_replace("~^content_~", '', $datatype));
+        	}
         }
-        if (is_null($data_finder)) {
-            dev_log("NO DATATYPE", func_get_args(), debug_backtrace());
-            die("Unable to create Finder for datatype '".$datatype."'");
-    	}
+        
+        // look for data-* class in cache
+        if (isset($data_classes_cache[$datatype])) {
+        	$finder_class = $data_classes_cache[$datatype];
+            if ($finder_class == 'fx_data') {
+                $data_finder = new fx_data($datatype);
+            } else {
+                $data_finder = new $finder_class();
+            }
+        } else {
+			try {
+				$classname = 'fx_data_'.$datatype;
+				$data_finder = new $classname();
+				$data_classes_cache[$datatype] = $classname;
+			} catch (Exception $e) {
+				// Файндер для контента, класс не определен
+				if ($component) {
+					$data_finder = new fx_data_content();
+					$data_classes_cache[$datatype] = 'fx_data_content';
+				} elseif (preg_match("~^field_~", $datatype)) {
+					$data_finder = new fx_data_field();
+					$data_classes_cache[$datatype] = 'fx_data_field';
+				}
+			}
+			if (is_null($data_finder)) {
+				$data_finder = new fx_data($datatype);
+				$data_classes_cache[$datatype] = 'fx_data';
+			}
+		}
+		
+		if ($component) {
+			$data_finder->set_component($component['id']);
+		}
+		
         if (func_num_args() == 2) {
             if (is_numeric($id) || is_string($id)) {
                 $res = $data_finder->get_by_id($id);
@@ -127,7 +147,6 @@ class fx {
             $env = new fx_system_env();
         }
     	
-    	//$env = fx_core::get_object()->env;
         $args = func_get_args();
     	if (count($args) == 0) {
             return $env;
@@ -191,9 +210,6 @@ class fx {
     }
 
     public static function template($template, $data = array()) {
-        if (is_numeric($template)) {
-            // ...
-        }
         $parts= explode(".", $template);
         if (count($parts) == 2) {
             $template = $parts[0];
@@ -262,6 +278,11 @@ class fx {
             $arr = $var_value;
         }
     }
+    
+    public static function collection($data = array()) {
+        return $data instanceof fx_collection ? $data : new fx_collection($data);
+    }
+    
     /*
      * @return fx_system_input
      */
@@ -289,8 +310,12 @@ class fx {
         $dict_key = empty($dict_key) ? 'content' : $dict_key;
         $cur_lang = fx::config()->LANGUAGE;
 
+        /*
         // TODO: заполнить русские строки в базе и убрать временный костыль для русских фраз чтобы не таскать портянку
-        if ( $cur_lang == 'ru' ) return $string;
+		if ( $cur_lang == 'ru' ) {
+			return $string;
+		}
+		*/
 
         $dict_file = fx::config()->DOCUMENT_ROOT . '/floxim_files/php_dictionaries/' . $cur_lang . '.' . $dict_key . '.php';
 
@@ -411,5 +436,36 @@ class fx {
             $util = new fx_system_util();
         }
         return $util;
+    }
+    
+    public static function date($value, $format) {
+        if (!is_numeric($value)) {
+			$value = strtotime($value);
+		}
+		return date($format, $value);
+    }
+    
+    public static function image($value, $format) {
+        try {
+            $thumber = new fx_thumb($value, $format);
+            $value = $thumber->get_result_path();
+        } catch (Exception $e) {
+            $value = '';
+        }
+        return $value;
+    }
+    
+    public static function version($type = null) {
+        $v = fx::config()->FX_VERSION;
+        preg_match("~(\d+\.\d+\.\d+)\.(\d+)~", $v, $v_parts);
+        if (is_null($type)) {
+            return $v_parts[1];
+        }
+        if ($type == 'build') {
+            return $v_parts[2];
+        }
+        if ($type == 'full') {
+            return $v;
+        }
     }
 }

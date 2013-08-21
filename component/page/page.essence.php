@@ -58,5 +58,14 @@ class fx_content_page extends fx_content {
             $this->save();
         }
     }
+    
+    protected function _after_delete() {
+        parent::_after_delete();
+        $killer = function($n) {
+            $n->delete();
+        };
+        fx::data('content')->where('parent_id', $this['id'])->all()->apply($killer);
+        fx::data('infoblock')->where('page_id', $this['id'])->all()->apply($killer);
+    }
 }
 ?>

@@ -145,7 +145,7 @@ input.ui-button {
     background-color: #fff;
 }
 
-.ui-dialog .ui-dialog-buttonpane .fx_dialog_button {
+.fx_overlay .fx_dialog_button {
     background: #3FB7DE;
     cursor: pointer;
     height: 25px;
@@ -156,14 +156,14 @@ input.ui-button {
     padding: 0;
 }
 
-.ui-dialog .ui-dialog-buttonpane .fx_dialog_button .ui-button-text {
+.ui-dialog .fx_dialog_button .ui-button-text {
     font-size: 12px;
     font-weight: bold;
     text-transform: lowercase;
     font-variant: small-caps;
 }
 
-.ui-dialog .ui-dialog-buttonpane .fx_dialog_cancel_button {
+.fx_overlay .fx_dialog_cancel_button {
     background: #eff0f0;
 }
 
@@ -202,7 +202,7 @@ input.ui-button {
 }
 
 #fx_admin_panel_logo {
-    background: url(../images/images.png);
+    background: url('../images/images.png');
     width: 24px;
     height: 17px;
     position: absolute;
@@ -210,7 +210,14 @@ input.ui-button {
     top: 9px;
 }
 
-#fx_admin_main_menu {
+#fx_admin_panel_logo .fx_preloader {
+    width:24px;
+    height:17px;
+    background-image:url('../images/loader-arrow.gif');
+    visibility: hidden;
+}
+
+.fx_overlay #fx_admin_main_menu {
     font-family: 'Myriad Pro Light', 'Myriad Pro', sans-serif;
     font-size: 18px;
     float: left;
@@ -219,9 +226,13 @@ input.ui-button {
     margin: 0 0 0 50px;
 }
 
-.fx_admin_main_menu_item {
+.fx_overlay #fx_admin_main_menu .fx_admin_main_menu_item {
     margin: 0 15px;
     display: inline;
+}
+
+.fx_overlay .fx_admin_main_menu_item a {
+	line-height: 34px;
 }
 
 #fx_admin_main_menu a {
@@ -243,6 +254,10 @@ input.ui-button {
     line-height: 29px;
     float: left;
     padding: 0 10px 0 0;
+}
+
+#fx_admin_page_modes a {
+	line-height: 29px;
 }
 
 #fx_admin_page_modes a {
@@ -313,7 +328,7 @@ input.ui-button {
     z-index:2;
 }
 
-.fx_main_subitem {
+.fx_overlay .fx_main_subitem {
     line-height: 30px;
 }
 
@@ -358,31 +373,35 @@ input.ui-button {
 #fx_admin_additional_menu {
     position: absolute;
     top: 0;
-    right: 0;
-    width: 120px;
+    right: 10px;
+    width: 250px;
     height: 34px;
+    text-align: right;
+}
+
+#fx_admin_additional_menu .fx_admin_additional_menu_divider, #fx_admin_additional_menu a {
+    display: inline-block;
+    height: 14px;
+    font-size: 14px;
+    line-height: 14px;
+    border: none;
+    margin:9px 5px;
+    vertical-align: top;
 }
 
 #fx_admin_additional_menu .fx_admin_additional_menu_divider {
-    display: block;
     width: 1px;
-    height: 14px;
-    border: none;
     background: #4e4e50;
-    position: absolute;
-    left: 60px;
-    top: 10px;
 }
 
 #fx_admin_additional_menu a {
     color: #a0a4a5;
     text-decoration: none;
     font-family: Tahoma, sans-serif;
-    font-size: 14px;
-    position: absolute;
-    right: 10px;
-    top: 9px;
-    line-height: 14px;
+}
+
+#fx_admin_additional_menu a.fx_update_notifier {
+    color:#FFF;
 }
 
 /* Панель с кнопками */
@@ -554,22 +573,27 @@ input.ui-button {
     margin: 0 14px 0 0;
 }
 
-.fx_admin_button_text {
+.fx_overlay .fx_admin_button_text {
     height: 25px;
     line-height: 24px;
-    background: #3fb7de;
+    background: #3fb7de url('../images/button_bg.gif') repeat-x 100% 0;
     float: left;
     cursor: pointer;
     margin: 0 20px 0 0;
+    border:none;
+    text-decoration: none !important;
 }
 
-.fx_admin_button_text span {
+.fx_overlay .fx_admin_button_text span {
+	line-height: 24px;
     font-family: Tahoma, sans-serif;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: bold;
     color: #fff;
     text-transform: lowercase;
+    font-variant: small-caps;
     margin: 0 8px;
+    text-decoration: none !important;
 }
 
 .fx_admin_button_undo {
@@ -731,7 +755,7 @@ input.ui-button {
     color: #333;
 }
 
-.fx_admin_form *, .fx_admin_form .ui-widget input, .fx_admin_form .ui-widget select, .fx_admin_form .ui-widget textarea, .fx_admin_form .ui-widget button {
+.fx_admin_form, .fx_admin_form .ui-widget input, .fx_admin_form .ui-widget select.fx_input, .fx_admin_form .ui-widget textarea.fx_input, .fx_admin_form .ui-widget button {
     font-size: 13px;
     font-family: Tahoma, sans-serif;
 }
@@ -745,26 +769,22 @@ input.ui-button {
     color: #333;
 }
 
-.fx_admin_form input, .fx_admin_form select, .fx_admin_form textarea {
+.fx_admin_form input.fx_input, .fx_admin_form select.fx_input, .fx_admin_form textarea.fx_input {
     display: block;
     margin: 7px 0 0;
 }
 
-.fx_admin_form input[type=text], .fx_admin_form select {
+.fx_admin_form input[type=text].fx_input, .fx_admin_form select.fx_input {
     width: 50%;
 }
 
-.fx_admin_form select {
+.fx_admin_form select.fx_input {
     margin-bottom: 12px;
     padding: 0;
 }
 
-.fx_admin_form textarea {
+.fx_admin_form textarea.fx_input {
     width: 95%;
-}
-
-.fx_admin_form .el-rte .toolbar .panel-format li label {
-    margin: 0 !important;
 }
 
 .fx_admin_form #colorpickerHolder2 input {
@@ -778,7 +798,7 @@ input.ui-button {
     margin: 0 5px 0 0;
 }
 
-.fx_admin_form input, .fx_admin_form textarea {
+.fx_admin_form input.fx_input, .fx_admin_form textarea.fx_input {
     margin-bottom: 10px;
     padding: .4em;
 }
@@ -931,7 +951,13 @@ input.ui-button {
 .fx_list_table td {
     vertical-align: top;
     padding: 10px;
+    font-size:13px;
 }
+
+.fx_list_table h2 {
+    font-size:14px;
+}
+
 
 .fx_list_row {
     border-bottom: 1px solid #efefef;
@@ -1092,124 +1118,6 @@ span.fx_admin_current {
 .fx_admin_child_fields {
     margin-left: 20px;
 }
-
-.CodeMirror {
-    line-height: 1em;
-    font-family: monospace;
-}
-
-.CodeMirror-scroll {
-    overflow: auto;
-    height: 300px;
-    /* This is needed to prevent an IE[67] bug where the scrolled content
-       is visible outside of the scrolling box. */
-    position: relative;
-}
-
-.CodeMirror-gutter {
-    position: absolute;
-    left: 0;
-    top: 0;
-    z-index: 10;
-    background-color: #f7f7f7;
-    border-right: 1px solid #eee;
-    min-width: 2em;
-    height: 100%;
-}
-
-.CodeMirror-gutter-text {
-    color: #aaa;
-    text-align: right;
-    white-space: pre !important;
-    padding: .4em .2em .4em .4em;
-}
-
-.CodeMirror-lines {
-    padding: .4em;
-}
-
-.CodeMirror pre {
-    border-radius: 0;
-    background: transparent;
-    font-family: inherit;
-    font-size: inherit;
-    white-space: pre;
-    word-wrap: normal;
-    border-width: 0;
-    margin: 0;
-    padding: 0;
-}
-
-.CodeMirror-wrap pre {
-    word-wrap: break-word;
-    white-space: pre-wrap;
-}
-
-.CodeMirror-wrap .CodeMirror-scroll {
-    overflow-x: hidden;
-}
-
-.CodeMirror textarea {
-    outline: none !important;
-}
-
-.CodeMirror pre.CodeMirror-cursor {
-    z-index: 10;
-    position: absolute;
-    visibility: hidden;
-    border-left: 1px solid #000;
-}
-
-div.CodeMirror-selected {
-    background: #d9d9d9;
-}
-
-.CodeMirror-focused div.CodeMirror-selected {
-    background: #d7d4f0;
-}
-
-.CodeMirror-focused pre.CodeMirror-cursor {
-    visibility: visible;
-}
-
-.CodeMirror-searching {
-    background: rgba(255, 255, 0, .4);
-}
-
-/* Default theme */
-
-.cm-s-default span.cm-keyword {color: #708;}
-.cm-s-default span.cm-atom {color: #219;}
-.cm-s-default span.cm-number {color: #164;}
-.cm-s-default span.cm-def {color: #00f;}
-.cm-s-default span.cm-variable {color: black;}
-.cm-s-default span.cm-variable-2 {color: #05a;}
-.cm-s-default span.cm-variable-3 {color: #085;}
-.cm-s-default span.cm-property {color: black;}
-.cm-s-default span.cm-operator {color: black;}
-.cm-s-default span.cm-comment {color: #a50;}
-.cm-s-default span.cm-string {color: #a11;}
-.cm-s-default span.cm-string-2 {color: #f50;}
-.cm-s-default span.cm-meta {color: #555;}
-.cm-s-default span.cm-error {color: #f00;}
-.cm-s-default span.cm-qualifier {color: #555;}
-.cm-s-default span.cm-builtin {color: #30a;}
-.cm-s-default span.cm-bracket {color: #cc7;}
-.cm-s-default span.cm-tag {color: #170;}
-.cm-s-default span.cm-attribute {color: #00c;}
-.cm-s-default span.cm-header {color: #a0a;}
-.cm-s-default span.cm-quote {color: #090;}
-.cm-s-default span.cm-hr {color: #999;}
-.cm-s-default span.cm-link {color: #00c;}
-
-span.cm-header, span.cm-strong {font-weight: bold;}
-span.cm-em {font-style: italic;}
-span.cm-emstrong {font-style: italic; font-weight: bold;}
-span.cm-link {text-decoration: underline;}
-
-div.CodeMirror span.CodeMirror-matchingbracket {color: #0f0;}
-div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
-
 
 .fx_admin_colorbasic {
 	clear: both;
@@ -1400,6 +1308,10 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
     background: #FFF;
 }
 
+.fx_tree_groupper>ul>li.fx_tree_item {
+    margin-left:10px;
+}
+
 .fx_tree_title {
     font-size: 13px;
     cursor: pointer;
@@ -1422,10 +1334,28 @@ ul.fx_tree_children_expanded {
 
 .fx_tree_expander {
     cursor: pointer;
-    display: inline-block;
+    display: none;
     position: relative;
     top: 3px;
-    padding: 0 10px;
+    padding-right: 5px;
+}
+
+.fx_tree_is_grandpa>li>div>.fx_tree_expander {
+    display: inline-block;
+    visibility:hidden;
+}
+
+.fx_tree_expander_visible, .fx_tree_is_grandpa>li>div>.fx_tree_expander_visible {
+    display:inline-block;
+    visibility:visible;
+}
+
+.fx_tree_groupper_label a {
+    font-style:italic;
+}
+
+.fx_tree_groupper_label .fx_tree_expander {
+    display:none;
 }
 
 .fx_tree_expander span {
@@ -1518,6 +1448,10 @@ li ul .fx_tree_label .fx_tree_title {
     min-height: 15px;
 }
 
+.fx_hilight_empty_inline {
+	display:inline-block;
+}
+
 .fx_area.fx_hilight, .fx_infoblock.fx_hilight {
     outline: 1px dotted rgba(0, 0, 255, 0.8);
 }
@@ -1541,8 +1475,8 @@ img.fx_hilight {
     padding: 5px 8px;
 }
 
-.fx_infoblock_disabled {
-    opacity: .3;
+.fx_infoblock_hidden {
+    opacity: 0.4;
 }
 
 .fx_area_target {
@@ -1558,6 +1492,10 @@ body div.fx_overlay, body div.fx_overlay table {
     line-height: normal;
     color: #000;
     border-radius: 0;
+}
+
+.fx_overlay * {
+	line-height:normal;
 }
 
 .fx_fieldset .livesearch {
@@ -1665,22 +1603,51 @@ body div.fx_overlay, body div.fx_overlay table {
     color: red;
 }
 
+#fx_admin_fields {
+    position: relative;
+    top: -6px;
+}
 
 #fx_admin_fields .field {
     float: left;
     min-width: 40px;
+    margin-right:15px;
+    margin-left:15px;
 }
 
-#fx_admin_fields .image_field {
+#fx_admin_fields .fx_image_field {
     background: #FFF;
-    border: 1px solid #CCC;
-    padding: 10px;
 }
 
-.fx_overlay .image_field .killer {
-    text-decoration: none;
-    cursor: pointer;
-    color: red;
+.fx_overlay .fx_image_field img {
+    max-height:100px;
+    max-width:150px;
+}
+
+#fx_admin_fields .fx_image_field img {
+    max-height:34px;
+    float: left;
+    margin-right: 10px;
+}
+
+#fx_admin_fields .fx_image_field .preview .fx_admin_button_text {
+    margin-right:10px;
+    margin-top:6px;
+}
+
+.fx_overlay .fx_image_field .file_input {
+    overflow: hidden;
+    width:1px;
+    height:1px;
+    display:inline-block;
+    float:left;
+}
+
+#fx_admin_fields .fx_input {
+    margin-top:6px;
+    border:1px solid #e1e1e1;
+    padding:5px 3px 4px 3px;
+    font-size:11px;
 }
 
 .fx_overlay .ui-datepicker-current-day {
@@ -1780,17 +1747,23 @@ body div.fx_overlay, body div.fx_overlay table {
 .fx_backend_login {
     min-width: 100%;
     min-height: 100%;
-    background: #4C5051;
+    background: #FFF;
+}
+
+.fx_backend_login_title {
+    padding-top: 6px;
+    display: inline-block;
 }
 
 .fx_backend_login form {
     width:450px;
-    padding-top:35px;
-    padding-left:35px;
+    padding-top:15px;
+    padding-left:40px;
 }
 
 .fx_backend_login input, .fx_backend_login label {
     display:block;
+    margin-left:0;
 }
 
 .fx_backend_login .group {
@@ -1798,18 +1771,27 @@ body div.fx_overlay, body div.fx_overlay table {
 }
 
 .fx_backend_login label {
-    color:#FFF;
-    font-size:22px;
+    color:#333;
+    font-size:14px;
+    text-transform: lowercase;
+    font-variant: small-caps;
 }
 
-.fx_backend_login input {
-    font-size:22px;
+.fx_backend_login input.text {
+    font-size:14px;
+    border:1px solid #E1E1E1;
+    padding:5px 3px;
+    width:294px;
 }
 
 .fx_admin_html, .fx_admin_html body {
     min-height: 100%;
     height: 100%;
     position: relative;
+}
+
+.fx_admin_form .fx_fieldset .fx_fieldset_label label {
+    font-size:12px;
 }
 
 .fx_admin_form .fx_fieldset input[type="text"], 
@@ -1853,4 +1835,69 @@ body div.fx_overlay, body div.fx_overlay table {
     max-height:150px;
     overflow:hidden;
     opacity:0.5;
+}
+
+.fx_controller_select .fx_left_pane {
+    width:200px;
+    float:left;
+    position: relative;
+    top:-0.5em;
+    left:-1em;
+    border-right: 1px solid #EFEFEF;
+}
+
+.fx_controller_select .fx_right_pane {
+    float:right;
+    width: 720px;
+}
+
+.fx_controller_select .fx_right_pane .sub {
+    float: left;
+    width: 190px;
+    margin-right: 20px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    overflow: hidden;
+    height: 60px;
+    border: 1px solid #E1E1E1;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.fx_controller_select .fx_right_pane .sub:hover {
+    border:1px solid #CCC;
+}
+
+.fx_controller_select .fx_right_pane .sub.fx_admin_selected,
+.fx_controller_select .fx_right_pane .sub.fx_admin_selected:hover {
+    background: #edf3f5;
+    outline: none !important;
+}
+
+.fx_controller_select .fx_right_pane .sub .pic {
+    float:left;
+    background:#CCC;
+    width:30px;
+    height:30px;
+    margin-right:15px;
+}
+
+.fx_controller_select .fx_right_pane .sub .body {
+    float:left;
+    width:140px;
+}
+
+.fx_controller_select .fx_right_pane .sub .title {
+    font-weight:bold;
+    margin-bottom:5px;
+}
+
+.fx_overlay .CodeMirror {
+    border: 1px solid #eee;
+    height: auto;
+}
+.fx_overlay .CodeMirror-scroll {
+    overflow-y: hidden;
+    overflow-x: auto;
+    height:auto;
 }

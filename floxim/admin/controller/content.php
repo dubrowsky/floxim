@@ -37,18 +37,16 @@ class fx_controller_admin_content extends fx_controller_admin {
         $this->response->add_fields($content->get_form_fields(), false, 'content');
 
         if ($input['data_sent']) {
-            dev_log('content original', $content);
             $content->set_field_values($input['content']);
-            dev_log('content filled', $content, $input['content']);
             $content->save();
         }
         return array(
             'status' => 'ok', 
             'dialog_title' => 
-                fx::lang(
-                    $input['content_id'] ? 'Editing ' : 'Adding new ',
-                    'system'
-                ). ' '.fx::data('component', $content_type)->get('item_name')
+            	($input['content_id'] ? 
+                	fx::lang('Editing ', 'system') :
+                	fx::lang('Adding new ', 'system')
+				). ' '.fx::data('component', $content_type)->get('item_name')
         );
     }
 
@@ -108,7 +106,6 @@ class fx_controller_admin_content extends fx_controller_admin {
     }
     
     public function livesearch($input) {
-        //dev_log('liveserching', $input);
         if (!isset($input['content_type'])) {
             return;
         }
@@ -155,13 +152,6 @@ class fx_controller_admin_content extends fx_controller_admin {
                         with('tag')->
                         order('priority')->all();
         $nn = $neighbours->find('id', $next_id);
-        
-        dev_log(
-                'sorting', 
-                $input, 
-                $content['tag']['name'] . ($nn ? 'before '.$nn['tag']['name'] : 'after all'), 
-                $neighbours
-        );
         
         $c_priority = 1;
         $next_found = false;

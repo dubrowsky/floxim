@@ -40,8 +40,7 @@ function fx_tree_render(root) {
 		toggle_item($(this).closest('.fx_tree_item'));
 	}); 
 	
-	var tree_root = $('.fx_tree>ul', root);
-	
+	var tree_root = $('>ul', root);
 	tree_root.nestedSortable({
 		disableNesting: 'no-nest',
 		distance:5,
@@ -122,6 +121,10 @@ function fx_tree_render(root) {
 		if (e.target != this && !$(e.target).hasClass('fx_tree_title')) {
 			return;
 		}
+        if (c_row.hasClass('fx_tree_groupper_label')) {
+            toggle_item(c_row.closest('.fx_tree_item'));
+            return;
+        }
 		if (e.metaKey || e.ctrlKey) {
 			c_row.toggleClass('fx_admin_selected');
 		} else {
@@ -149,11 +152,13 @@ function fx_tree_render(root) {
 }
 
 function fx_tree_refresh(root) {
-	$('.fx_tree_expander', root).hide();
+	$('.fx_tree_expander', root).removeClass('fx_tree_expander_visible');
+    $('ul', root).removeClass('fx_tree_is_grandpa');
 	$('.fx_tree_item', root).each( function(){
 		var exp = $('.fx_tree_expander', $(this)).first();
 		if ($('>ul > .fx_tree_item', $(this)).length > 0) {
-			exp.show();
+			exp.addClass('fx_tree_expander_visible');
+            $(this).closest('ul').addClass('fx_tree_is_grandpa');
 		}
 	});
 }
@@ -182,14 +187,18 @@ if (!_c.metadata) {
     _c.metadata = {};
 }
 var id = _c.metadata.id || _c.data;
+var is_expanded = _c.metadata.is_groupper;
 ?>
-<li class="fx_tree_item<?=_o.is_first ? ' fx_tree_item_first' : ''?> 
+<li class="fx_tree_item
+    <?=_o.is_first ? ' fx_tree_item_first' : ''?> 
 	<?=_o.is_last ? ' fx_tree_item_last' : ''?>
-	<?=_c.metadata.checked == 0 ? ' fx_admin_unchecked' : ''?>" 
+	<?=_c.metadata.checked == 0 ? ' fx_admin_unchecked' : ''?>
+    <?=_c.metadata.is_groupper == 1 ? ' fx_tree_groupper' : ''?>
+    " 
 	data-id="<?=id?>" id="fx_tree_item_<?=id?>">
-	<div class="fx_tree_label">
+	<div class="fx_tree_label<?=_c.metadata.is_groupper == 1 ? ' fx_tree_groupper_label' : ''?>">
+        <span class="fx_tree_expander<?=is_expanded ? ' fx_tree_expander_expanded' : ''?>"><span></span></span>
 		<a class="fx_tree_title"><?=_c.data?></a>
-		<span class="fx_tree_expander"><span></span></span>
 	</div>
-	<?=$t.tree_children(_c)?>
+	<?=$t.tree_children(_c, {is_expanded:is_expanded})?>
 </li>

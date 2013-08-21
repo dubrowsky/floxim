@@ -4,31 +4,6 @@ class fx_field_datetime extends fx_field_baze {
 
     protected $day = '', $month = '', $year = '', $hours = '', $minutes = '', $seconds = '';
 
-    public function content_procces(fx_content $content, fx_infoblock_content $infoblock = null, $hash_obj = null) {
-        $fx_core = fx_core::get_object();
-        $result = array();
-        $name = $this->name;
-
-        $var = new fx_field_vars_datetime($content[$name]);
-
-        $result = array();
-        $result['f_'.$name.'_none'] = $var->format();
-        $result['f_'.$name] = $var;
-
-        if ($hash_obj) {
-            $eit_in_place_info = $this->get_edit_jsdata($content);
-            $hash = $fx_core->page->add_edit_field('f_'.$name, $eit_in_place_info, null, $hash_obj);
-
-            $var->set_to_str_value('<'.$this->_wrap_tag.' class="'.$hash.'">'.$var->format().'</'.$this->_wrap_tag.'>');
-
-            $result['f_'.$name.'_hash'] = $hash;
-        } else {
-            $result['f_'.$name.'_hash'] = '';
-        }
-
-        return $result;
-    }
-
     public function get_js_field($content, $tname = 'f_%name%', $layer = '', $tab = '') {
         parent::get_js_field($content, $tname, $layer, $tab);
 

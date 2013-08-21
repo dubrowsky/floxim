@@ -16,8 +16,6 @@ class fx_field_file extends fx_field_baze {
     }
 
     protected function init_filetable ( fx_infoblock_content $infoblock ) {
-        $fx_core = fx_core::get_object();
-
         $infoblock_id = $infoblock['id'];
         self::$filetable[$infoblock_id.'-'.$this['id']] = array();
         $db_res = $infoblock->get_db_result();
@@ -34,31 +32,6 @@ class fx_field_file extends fx_field_baze {
             }
         }
 
-    }
-
-    public function content_procces(fx_content $content, fx_infoblock_content $infoblock = null, $hash_obj = null) {
-        $fx_core = fx_core::get_object();
-        $name = $this->name;
-
-        $info = $this->get_fileinfo($infoblock, $content[$this->name]);
-        $var = $this->get_field_vars($info);
-
-        $result = array();
-        $result['f_'.$name.'_none'] = $var->get_path();
-        $result['f_'.$name] = $var;
-
-        if ($hash_obj) {
-            $eit_in_place_info = $this->get_edit_jsdata($content);
-            $hash = $fx_core->page->add_edit_field('f_'.$name, $eit_in_place_info, null, $hash_obj);
-
-            $var->set_to_str_value('<'.$this->_wrap_tag.' class="'.$hash.'">'.$var->get_path().'</'.$this->_wrap_tag.'>');
-
-            $result['f_'.$name.'_hash'] = $hash;
-        } else {
-            $result['f_'.$name.'_hash'] = '';
-        }
-
-        return $result;
     }
 
     protected function get_field_vars($info) {
@@ -103,12 +76,11 @@ class fx_field_file extends fx_field_baze {
     }
 
     public function get_input() {
-        $fx_core = fx_core::get_object();
         $html =  "<input  class='fx_form_field fx_form_field_".fx_field::get_type_by_id($this->type_id)."' type='file' name='f_".$this->name."' />";
         if ( $this->value ) {
             $file = fx::data('filetable')->get_by_id($this->value);
             if ( $file ) {
-                $html .= '<br/> <span>' . fx::lang('Текущий файл:','system') . ' </span><a href="'.fx::config()->HTTP_FILES_PATH.$file['path'].'">'.$file['real_name'].'</a>';
+                $html .= '<br/> <span>' . fx::lang('Current file:','system') . ' </span><a href="'.fx::config()->HTTP_FILES_PATH.$file['path'].'">'.$file['real_name'].'</a>';
             }
         }
 
@@ -147,8 +119,6 @@ class fx_field_file extends fx_field_baze {
     }
 
     public function post_save($content) {
-        $fx_core = fx_core::get_object();
-
         if ($this->_to_delete_id) {
             $file_to_delete = fx::data('filetable')->get_by_id($this->_to_delete_id);
             $file_to_delete->set('to_delete', 1)->save();
@@ -160,8 +130,7 @@ class fx_field_file extends fx_field_baze {
     }
 
     public function get_export_value($value, $dir = '') {
-        $fx_core = fx_core::get_object();
-
+        
         if ( !$value ) {
             return 0;
         }
@@ -172,7 +141,7 @@ class fx_field_file extends fx_field_baze {
         }
 
         $new_name = md5(rand().time().$fileinfo['real_name']).'_'.$fileinfo['real_name'];
-        $fx_core->files->copy( fx::config()->HTTP_FILES_PATH.$fileinfo['path'], $dir.'/'.$new_name);
+        fx::files()->copy( fx::config()->HTTP_FILES_PATH.$fileinfo['path'], $dir.'/'.$new_name);
 
         $result = new stdClass();
         $result->real_name = $fileinfo['real_name'];
@@ -185,11 +154,9 @@ class fx_field_file extends fx_field_baze {
     }
 
     public function get_import_value ( $content, $value, $dir = '' ) {
-        $fx_core = fx_core::get_object();
-
         if ( $value && is_array($value) ) {
             $value['path'] = $dir.$value['path'];
-            $r = $fx_core->files->save_file($value, $content->get_upload_folder());
+            $r = fx::files()->save_file($value, $content->get_upload_folder());
             return $r['id'];
         }
         else {

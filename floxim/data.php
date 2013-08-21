@@ -52,7 +52,24 @@ class fx_data {
         return $this;
     }
     
+    public function clear_where($field, $value = null) {
+        
+        foreach ($this->where as $where_num => $where_props) {
+            if ($where_props[0] == $field) {
+                if (func_num_args() == 1 || $value == $where_props[1]) {
+                    unset($this->where[$where_num]);
+                }
+            }
+        }
+        return $this;
+    }
+    
     public function order($field, $direction = 'ASC') {
+        // clear order by passing null
+        if ($field === null) {
+            $this->order = array();
+            return $this;
+        }
         if (!preg_match("~asc|desc~i", $direction)) {
             $direction = 'ASC';
         }
@@ -124,7 +141,10 @@ class fx_data {
                 if ($field == 'id') {
                     $field = "`{{".$base_table."}}`.id";
                 } else {
-                    $field = '`'.$field.'`';
+                    // use conditions like "MD5(`field`)" as is
+                    if (!preg_match("~[a-z0-9_-]\s*\(.*?\)~i", $field)) {
+                        $field = '`'.$field.'`';
+                    }
                 }
                 if (is_array($value)) {
                     if (count($value) == 0) {
@@ -192,7 +212,6 @@ class fx_data {
             $sorting = str_replace("`", '', $sorting);
             $sorting = trim($sorting);
             $collection->is_sortable = $sorting == 'priority';
-            //$collection->sorting = $sorting;
         }
         return $collection;
     }
@@ -210,7 +229,7 @@ class fx_data {
         return $data;
     }
     
-    protected function _get_default_relation_finder($rel) {
+    protected function _get_default_relation_finder($rel, $rel_name = null) {
         return fx::data($rel[1]);
     }
     
@@ -223,7 +242,7 @@ class fx_data {
         list($rel_type, $rel_datatype, $rel_field) = $rel;
 
         if (!$rel_finder){
-            $rel_finder = $this->_get_default_relation_finder($rel);//fx::data($rel_datatype);
+            $rel_finder = $this->_get_default_relation_finder($rel, $rel_name);
         }
 
         // e.g. $rel = array(fx_data::HAS_MANY, 'field', 'component_id');
@@ -261,6 +280,9 @@ class fx_data {
     protected function _add_relations(fx_collection $essences) {
 
         if (count($this->with) == 0) {
+            return;
+        }
+        if (count($essences) == 0) {
             return;
         }
         $relations = $this->relations();
@@ -481,6 +503,9 @@ class fx_data {
     public function essence($data = array()) {
         $classname = $this->get_class_name($data);
         $obj = new $classname(array('data' => $data));
+        if ($classname == 'fx_simplerow') {
+            $obj->table = $this->table;
+        }
         return $obj;
     }
 
@@ -497,8 +522,6 @@ class fx_data {
     public function update($data, $where = array()) {
         $wh = array();
         $update = $this->_set_statement($data);
-
-        dev_log('updating', $data, $update, $where);
         
         foreach ($where as $k => $v) {
             $wh[] = "`".fx::db()->escape($k)."` = '".fx::db()->escape($v)."' ";

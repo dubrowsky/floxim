@@ -1,22 +1,35 @@
 <?php
 class fx_data_content_page extends fx_data_content {
-    public function attache_to_content(Traversable $content_items) {
-        if ($content_items->length == 0) {
-            return;
-        }
-        $component_id = $content_items->first()->get_component_id();
+    public function get_tree() {
+        $data = $this->all();
+        $tree = $this->make_tree($data);
+        return $tree;
+    }
+    
+    public function make_tree($data) {
         
-        $pages = $this->get_all(
-            array(
-                'content_type' => fx::data('component', $component_id)->get('keyword'), 
-                'content_id' => $content_items->get_values('id')
-            )
-        );
-        foreach ($pages as $p) {
-            $content_items->find('id', $p['content_id'])->apply(function($item) use ($p) {
-                $item->set_page($p);
-            });
+        $index_by_parent = array();
+        
+        foreach ($data as $item) {
+            $pid = $item['parent_id'];
+            if (!isset($index_by_parent[$pid])) {
+                $index_by_parent[$pid] = fx::collection();
+                $index_by_parent[$pid]->is_sortable = $data->is_sortable;
+            }
+            $index_by_parent[$pid] []= $item;
         }
+        foreach ($data as $item) {
+            if (isset($index_by_parent[$item['id']])) {
+                $item['children'] = $index_by_parent[$item['id']];
+                $data->find_remove(
+                    'id',
+                    $index_by_parent[$item['id']]->get_values('id')
+                );
+            } else {
+                $item['children'] = null;
+            }
+        }
+        return $data;
     }
 }
 ?>

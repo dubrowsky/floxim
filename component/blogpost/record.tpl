@@ -4,6 +4,6 @@
             {$publish_date|'d.m.Y'} {if $metatype}&bull; {$metatype}{/if}
         </div>
         <div class="anounce">{$anounce}</div>
-        <div class="text">{$text}</p>
+        <div class="text">{$text}</div>
     </div>
 </div>

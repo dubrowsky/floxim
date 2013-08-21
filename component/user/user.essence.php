@@ -1,35 +1,18 @@
 <?php
-
-/* $Id: content_user.php 8576 2012-12-27 15:14:06Z myasin $ */
-defined("FLOXIM") || die("Unable to load file.");
-
 class fx_content_user extends fx_content {
 
-    protected $_perm;
-    protected $_groups;
-
-    static public function fields() {
-        $fx_core = fx_core::get_object();
-        $user_component_id = $fx_core->get_settings('user_component_id', 'auth');
-        return fx::data('field')->get_all('component_id', $user_component_id);
-    }
-
     static public function attempt_to_authorize() {
-        //$fx_core = fx_core::get_object();
-        $db = fx::db();//$fx_core->db;
-
+        $db = fx::db();
         $session_id = fx::input()->fetch_cookie('fx_sid');
-
         $session_time = time() + (fx::config()->AUTHTIME ? fx::config()->AUTHTIME : 24 * 3600);
 
         if ($session_id) {
             $user_result = $db->get_results("
-                SELECT u.*, ug.`id` AS `groups_id`,  s.`login_save`,s.`session_time`
-                FROM `{{session}}` AS `s` ,`{{content_user}}` AS `u`, `{{user_group}}` as `ug`
+                SELECT u.*, s.`login_save`,s.`session_time`
+                FROM `{{session}}` AS `s` ,`{{content_user}}` AS `u`
                 WHERE
                 s.`id` = '".$db->escape($session_id)."'
                 AND s.`user_id` = u.`id`
-                AND u.`id` = ug.`user_id`
                 AND s.`session_time` > ".time());
         }
 
@@ -67,12 +50,9 @@ class fx_content_user extends fx_content {
 			setcookie("fx_sid", NULL, NULL, "/", str_replace("www.", "", fx::config()->HTTP_HOST));
         }
     }
-
-    public function perm() {
-        if (!$this->_perm) {
-            $this->_perm = new fx_permission($this);
-        }
-        return $this->_perm;
+    
+    public function is_admin() {
+        return $this['is_admin'];
     }
 
     public function create_session($auth_phase = 'authorize', $login_save = 0, $auth_type = 1) {
@@ -149,12 +129,10 @@ class fx_content_user extends fx_content {
 
     protected function _after_delete() {
         fx::db()->query("DELETE FROM {{user_group}} WHERE `user_id` = '".$this['id']."' ");
-
         return false;
     }
 
     protected function _before_save() {
 
     }
-
 }

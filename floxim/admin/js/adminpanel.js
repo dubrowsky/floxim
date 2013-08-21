@@ -24,6 +24,19 @@ fx_adminpanel = {
             $(window).hashchange($fx.set_mode);
             $(window).hashchange();
             $('html').on('click', '.fx_button', $fx.buttons.form_button_click);
+            var ajax_counter = 0;
+            $(document).ajaxSend(function() {
+                ajax_counter++;
+                if (ajax_counter == 1) {
+                    $('.fx_preloader').css('visibility', 'visible');
+                }
+            });
+            $(document).ajaxComplete(function() {
+                ajax_counter--;
+                if (ajax_counter == 0) {
+                    $('.fx_preloader').css('visibility', 'hidden');
+                }
+            });
         });
 
         $(document).bind('keydown',$fx.key_down);
@@ -133,6 +146,8 @@ fx_adminpanel = {
     },
 
     update_history: function () {
+        return;
+        
         if ( $fx.history.undo !== undefined && $fx.history.undo.length > 0 ) {
             $fx.buttons.update_button('undo', {
                 'available' : true,
@@ -192,12 +207,13 @@ fx_adminpanel = {
             type: "POST",
             data: data,
             dataType: "JSON",
-            async: false,
+            //async: false,
             success: [function(json) {
 				if (json.reload) {
 					$fx.reload(json.reload);
 					return;
 				}
+                /*
 				if ( json.history !==  undefined && json.history.undo  !==  undefined ) {
 					$fx.history.undo = json.history.undo;
 				}
@@ -205,6 +221,7 @@ fx_adminpanel = {
 					$fx.history.redo = json.history.redo;
 				}
 				$fx.update_history();
+                */
             },
             callback],
             error: function(jqXHR, textStatus, errorThrown) {
@@ -251,10 +268,10 @@ fx_adminpanel = {
             $fx.show_store();
         } else if (button.post) {
             $fx.post(button.post, function(data) {
-                $('#nc_dialog_form *').remove();
+                $('#fx_dialog_form *').remove();
                 //$('.ui-dialog-buttonset *').remove();
                 $fx_dialog.main.dialog("option", "buttons", [] );
-                $fx_form.draw_fields(data, $('#nc_dialog_form'));
+                $fx_form.draw_fields(data, $('#fx_dialog_form'));
             });
         } else if (button.act_as && button.act_as == 'save') {
             $('form', $fx_dialog.main).append(
@@ -287,7 +304,7 @@ fx_adminpanel = {
         $.fn.fx_create_form = function(options, main_content) {
         	var settings = {
                 form: {
-                    id:'nc_dialog_form', 
+                    id:'fx_dialog_form', 
                     action:$fx.settings.action_link, 
                     target:'nc_upload_target'
                 }

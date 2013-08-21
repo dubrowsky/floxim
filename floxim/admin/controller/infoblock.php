@@ -3,9 +3,9 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
 
     protected function _component_actions ( $key ) {
         $arr = array(
-            'listing' => fx::lang('Список','system'),
+            'listing' => fx::lang('List','system'),
             'mirror' => fx::lang('Mirror','system'),
-            'record' => fx::lang('Отдельный объект','system')
+            'record' => fx::lang('Single entry','system')
         );
         return empty($key) ? $arr : $arr[$key];
     }
@@ -54,7 +54,10 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                 }
                 $c_item['children'][]= array(
                     'data' => $action_info['name'],
-                    'metadata' => array('id' => 'component_'.$c['keyword'].'.'.$action_code)
+                    'metadata' => array(
+                        'id' => 'component_'.$c['keyword'].'.'.$action_code,
+                        'description' => $action_info['description']
+                    )
                 );
             }
             if (count($c_item['children']) > 0) {
@@ -63,10 +66,10 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         }
         $result = array(
             'fields' => $fields,
-            'dialog_title' => fx::lang('Добавление инфоблока','system'),
+            'dialog_title' => fx::lang('Adding infoblock','system'),
             'dialog_button' => array(
-                //array('key' => 'store', 'text' => fx::lang('Установить с Store','system')),
-                array('key' => 'save', 'text' => fx::lang('Продолжить','system'))
+                //array('key' => 'store', 'text' => fx::lang('Install from Store','system')),
+                array('key' => 'save', 'text' => fx::lang('Next','system'))
             )
     	);
         return $result;
@@ -82,7 +85,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         if ($type == 'component') {
             $action_name = $this->_component_actions($action);
         } else {
-            $action_name = fx::lang('Виджет','system');
+            $action_name = fx::lang('Widget','system');
         }
         return $ctr['name'].' / '.$action_name;
     }
@@ -114,16 +117,24 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
     	} else {
             // Создаем новый, тип и ID контроллера получаем с предыдущего шага
             list($controller, $action) = explode(".", $input['controller']);
+            $site_id = fx::data('content_page', $input['page_id'])->get('site_id');
             $infoblock = fx::data("infoblock")->create(array(
                 'name' => $this->_get_controller_name($input['controller']),
                 'controller' => $controller,
                 'action' => $action,
                 'page_id' => $input['page_id'],
-                'site_id' => fx::data('content_page', $input['page_id'])->get('site_id')
+                'site_id' => $site_id
             ));
+            $last_visual = fx::data('infoblock_visual')->
+                    where('area', $input['area'])->
+                    order(null)->
+                    order('priority', 'desc')->
+                    one();
+            $priority = $last_visual ? $last_visual['priority'] + 1 : 0;
             $i2l = fx::data('infoblock_visual')->create(array(
                 'area' => $input['area'],
-                'layout_id' => fx::env('layout')
+                'layout_id' => fx::env('layout'),
+                'priority' => $priority
             ));
             $infoblock->set_visual($i2l);
     	}
@@ -138,15 +149,17 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             $controller_name = $controller;
             $controller = fx::controller($controller);
             $settings = $controller->get_action_settings($action);
+            $defaults = $controller->get_action_defaults($action);
+            
             foreach ($infoblock['params'] as $ib_param => $ib_param_value) {
                 if (isset($settings[$ib_param])) {
                     $settings[$ib_param]['value'] = $ib_param_value;
                 }
             }
-            $this->response->add_tab('settings', fx::lang('Что показывать','system'));
+            $this->response->add_tab('settings', fx::lang('What to show','system'));
             $this->response->add_fields(
                     array(array(
-                        'label' => fx::lang('Название блока','system'),
+                        'label' => fx::lang('Block name','system'),
                         'name' => 'name', 
                         'value' => $infoblock['name']
                     )),
@@ -158,13 +171,13 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         $format_fields = $this->_get_format_fields($infoblock);
 
         if (!$is_layout) {
-            $this->response->add_tab('visual', fx::lang('Как показывать','system'));
+            $this->response->add_tab('visual', fx::lang('How to show','system'));
         }
         $this->response->add_fields($format_fields, $is_layout ? false : 'visual', 'visual');
         
         
         $c_page = fx::data('content_page', $input['page_id']);
-        $scope_fields = $this->_get_scope_fields($infoblock, $c_page, $input['admin_mode']);
+        $scope_fields = $this->_get_scope_fields($infoblock, $c_page, $input['admin_mode'], $defaults['scope']);
         
         $scope_tab = !$is_layout;
         if ($scope_tab) {
@@ -179,7 +192,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         }
 
         if ($scope_tab) {
-            $this->response->add_tab('scope', fx::lang('Где показывать','system'));
+            $this->response->add_tab('scope', fx::lang('Where to show','system'));
         }
         $this->response->add_fields($scope_fields, $scope_tab ? 'scope' : false, 'scope');
         
@@ -241,27 +254,28 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             $i2l['infoblock_id'] = $infoblock['id'];
             $i2l->save();
             $this->response->set_status_ok();
+            $this->response->set_prop('infoblock_id', $infoblock['id']);
             return;
         }
     	
     	$result = array(
             'dialog_title' => $is_layout ? 
-                    fx::lang('Выбор шаблона страницы','system') : 
-                    fx::lang('Настройка инфоблока','system'). 
+                    fx::lang('Page layout','system') : 
+                    fx::lang('Infoblock settings','system'). 
                     ', ' . $controller_name . '.' . $action.' #'.$infoblock['id'],
             'step' => 'settings_select',
             'dialog_button' => array(
-                array('key' => 'save', 'text' => $input['id'] ? fx::lang('Обновить','system') : fx::lang('Создать','system'))
+                array('key' => 'save', 'text' => $input['id'] ? fx::lang('Update','system') : fx::lang('Create','system'))
             )
     	);
         if ($input['id']) {
             $is_inherited = $infoblock['parent_infoblock_id'] != 0;
             $result['dialog_button'] []= array(
-                'key' => 'inherit', 'text' => fx::lang('Создать новое правило','system'), 'act_as' => 'save'
+                'key' => 'inherit', 'text' => fx::lang('Create a new rule','system'), 'act_as' => 'save'
             );
             if ($is_inherited) {
                 $result['dialog_button'] []= array(
-                    'key' => 'inherit_delete', 'text' => fx::lang('Удалить это правило','system'), 'act_as' => 'save'
+                    'key' => 'inherit_delete', 'text' => fx::lang('Remove this rule','system'), 'act_as' => 'save'
                 );
             }
             
@@ -306,19 +320,34 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
      * @param fx_content_page $c_page - страница, на которой открыли окошко настроек
      */
     
-    protected function _get_scope_fields(fx_infoblock $infoblock, fx_content_page $c_page, $admin_mode) {
+    protected function _get_scope_fields(
+                fx_infoblock $infoblock, 
+                fx_content_page $c_page, 
+                $admin_mode, 
+                $defaults 
+            ) {
+        
+        if (!is_array($defaults)) {
+            $defaults = array();
+        }
         $fields = array();
         
         if ($admin_mode == 'design') {
+            $index_page_id = fx::env('site')->get('index_page_id');
             $fields []= array(
                 'type' => 'hidden',
                 'name' => 'page_id',
-                'value' => 0
+                'value' => $index_page_id
+            );
+            $fields[]= array(
+                'type' => 'hidden',
+                'name' => 'pages',
+                'value' => 'descendants'
             );
             return $fields;
         }
         
-        $path_vals = array('0' => fx::lang('На всех страницах','system'));
+        $path_vals = array('0' => fx::lang('On all pages','system'));
         $path_ids = $c_page->get_parent_ids();
         $path = fx::data('content_page', $path_ids);
         $path []= $c_page;
@@ -327,31 +356,34 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         }
         
         if ( ! ($c_pages_val = fx::dig($infoblock, 'scope.pages')) ) {
-            $c_pages_val = 'all';
+            $c_pages_val = $defaults['pages'] ? $defaults['pages'] : 'all';
         }
-        
         
         if ($c_pages_val == 'all'){
             $c_page_id_val = 0;
         } else {
-            $c_page_id_val = $infoblock['page_id'];
+            if ($infoblock['id'] || !$defaults['page_id']) {
+                $c_page_id_val = $infoblock['page_id'];
+            } else {
+                $c_page_id_val = $defaults['page_id'];
+            }
         }
         
         $fields []= array(
             'type' => 'select', 
             'name' => 'page_id', 
-            'label' => fx::lang('Страница','system'),
+            'label' => fx::lang('Page','system'),
             'values' => $path_vals,
             'value' => $c_page_id_val
         );
                 
         $page_vals = array(
-            'this' => fx::lang('Только на этой странице','system')
+            'this' => fx::lang('Only on the page','system')
         );
         
         //if ($c_page['url'] != '/') {
-            $page_vals['children'] = fx::lang('Только на вложенных страницах','system');
-            $page_vals['descendants'] = fx::lang('На этой и на вложенных','system');
+            $page_vals['children'] = fx::lang('Only on children','system');
+            $page_vals['descendants'] = fx::lang('On the page and it\'s children','system');
         //}
         
         $fields []= array(
@@ -363,7 +395,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         );
         
         $page_types = array();
-        $page_types []= array('', fx::lang('Любой', 'system'));
+        $page_types []= array('', fx::lang('-Any-', 'system'));
         $coms = fx::data('component')->get_select_values('page');
         foreach ($coms as $com) {
             $com = fx::data('component', $com[0]);
@@ -372,7 +404,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         
         $fields []= array(
             'name' => 'page_type',
-            'label' => fx::lang('Только на страницах типа','system'),
+            'label' => fx::lang('Only on pages of type','system'),
             'value' => fx::dig($infoblock, 'scope.page_type'),
             'parent' => array('pages' => '!=this'),
             'type' => 'select',
@@ -395,8 +427,8 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             )
         );
 
-        $wrappers = array('' => fx::lang('Без оформления','system'));
-        $templates = array('auto.auto' => ' - ' . fx::lang('Автовыбор','system') . ' - ');
+        $wrappers = array('' => fx::lang('With no wrapper','system'));
+        $templates = array('auto.auto' => ' - ' . fx::lang('Auto select','system') . ' - ');
         $layout_name = fx::data('layout', $i2l['layout_id'])->get('keyword');
         
         $controller_name = $infoblock->get_prop_inherited('controller');
@@ -425,7 +457,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         }
 
         $fields []= array(
-            'label' => fx::lang('Шаблон','system'),
+            'label' => fx::lang('Template','system'),
             'name' => 'template',
             'type' => 'select',
             'values' => $templates,
@@ -433,7 +465,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         );
         if ($controller_name != 'layout') {
             $fields []= array(
-                'label' => fx::lang('Оформление блока','system'),
+                'label' => fx::lang('Block wrapper template','system'),
                 'name' => 'wrapper',
                 'type' => 'select',
                 'values' => $wrappers,
@@ -491,8 +523,11 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                 $content_id = $var['content_id'];
                 $content_type_id = $var['content_type_id'];
                 $content = fx::data(array('content',$content_type_id), $content_id);
-                $content[$var['name']] = $value;
-                $content->save();
+                if ($content) {
+                    $content[$var['name']] = $value;
+                    dev_log('saving val', $value);
+                    $content->save();
+                }
             }
         }
     }
@@ -502,7 +537,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         $infoblock = fx::data('infoblock', $input['id']);
         $fields = array(
             array(
-                'label' => fx::lang('Будет удалено куча всего, я понимаю последствия','system'),
+                'label' => fx::lang('I am REALLY shure','system'),
                 'name' => 'delete_confirm',
                 'type' => 'checkbox'
             ),
@@ -515,15 +550,15 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         if ($ib_content->length > 0) {
             $fields[]= array(
                 'name' => 'content_handle',
-                'label' => fx::lang('Инфоблок содержит контент','system') . ', <b>' . $ib_content->length . '</b> '. fx::lang(' шт. Что с ним делать?','system'),
+                'label' => fx::lang('The infoblock contains some content','system') . ', <b>' . $ib_content->length . '</b> '. fx::lang('items. What should we do with them?','system'),
                 'type' => 'select',
-                'values' => array('unbind' => fx::lang('Отвязать/скрыть','system'), 'delete' => fx::lang('Удалить','system')),
+                'values' => array('unbind' => fx::lang('Unbind/Hide','system'), 'delete' => fx::lang('Delete','system')),
                 'parent' => array('delete_confirm' => true)
             );
         }
         if ($infoblock['controller'] == 'layout' && !$infoblock['parent_infoblock_id']) {
             unset($fields[0]);
-            $fields []= array('type' => 'html', 'html' => fx::lang('Удалять лейауты нельзя!','system'));
+            $fields []= array('type' => 'html', 'html' => fx::lang('Layouts can not be deleted','system'));
         }
         $this->response->add_fields($fields);
         if ($input['delete_confirm']) {

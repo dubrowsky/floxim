@@ -16,9 +16,9 @@ class fx_controller_admin_widget extends fx_controller_admin_component {
             default:
                 $input['source'] = 'new';
                 $fields[] = $this->ui->hidden('action', 'add');
-                $fields[] = array('label' => fx::lang('Название','system'), 'name' => 'name');
-                $fields[] = array('label' => fx::lang('Ключевое слово','system'), 'name' => 'keyword');
-                $fields[] = array('label' => fx::lang('Группа','system'), 'type' => 'select', 'values' => $groups, 'name' => 'group', 'extendable' => fx::lang('Другая группа','system'));
+                $fields[] = array('label' => fx::lang('Name','system'), 'name' => 'name');
+                $fields[] = array('label' => fx::lang('Keyword','system'), 'name' => 'keyword');
+                $fields[] = array('label' => fx::lang('Group','system'), 'type' => 'select', 'values' => $groups, 'name' => 'group', 'extendable' => fx::lang('Another group','system'));
         }
 
         $fields[] = $this->ui->hidden('source', $input['source']);
@@ -32,7 +32,6 @@ class fx_controller_admin_widget extends fx_controller_admin_component {
     }
 
     public function add_save($input) {
-        $fx_core = fx_core::get_object();
         $result = array('status' => 'ok');
 
         $data['name'] = trim($input['name']);
@@ -53,7 +52,7 @@ class fx_controller_admin_widget extends fx_controller_admin_component {
 
         try {
             $content_php = $this->_get_tpl($widget['keyword']);
-            $fx_core->files->writefile(fx::config()->HTTP_WIDGET_PATH.$data['keyword'].'/main.tpl.php', $content_php);
+            fx::files()->writefile(fx::config()->HTTP_WIDGET_PATH.$data['keyword'].'/main.tpl.php', $content_php);
             $widget->save();
         } catch (Exception $e) {
             $result['status'] = 'error';
@@ -83,18 +82,14 @@ class fx_controller_admin_widget extends fx_controller_admin_component {
     }
 
     public function edit_save($input) {
-        $fx_core = fx_core::get_object();
         $widget = fx::data('widget')->get_by_id($input['id']);
-
         $result['status'] = 'ok';
-
         // сохранение настроек
         if ($input['phase'] == 'settings') {
             $params = array('name', 'group', 'description', 'embed');
-
             if (!trim($input['name'])) {
                 $result['status'] = 'error';
-                $result['text'][] = fx::lang('Введите название виджета','system');
+                $result['text'][] = fx::lang('Enter the widget name','system');
                 $result['fields'][] = 'name';
             }
 
@@ -110,42 +105,16 @@ class fx_controller_admin_widget extends fx_controller_admin_component {
         return $result;
     }
 
-    public function export($input) {
-        $widget = fx::data('widget')->get_by_id($input['id']);
-
-        $fx_export = new fx_export();
-        $fx_export->export_essence($widget);
-    }
-
-    public function import_save($input) {
-        $file = $input['importfile'];
-        if (!$file) {
-            $result = array('status' => 'error');
-            $result['text'][] = fx::lang('Ошибка при создании временного файла','system');
-        }
-
-        $result = array('status' => 'ok');
-        try {
-            $imex = new fx_import();
-            $imex->import_by_file($file['tmp_name']);
-        } catch (Exception $e) {
-            $result = array('status' => 'ok');
-            $result['text'][] = $e->getMessage();
-        }
-
-        return $result;
-    }
-
     public function settings($widget) {
 
         $groups = fx::data('widget')->get_all_groups();
 
-        $fields[] = array('label' => fx::lang('Ключевое слово:','system') . ' '.$widget['keyword'], 'type' => 'label');
+        $fields[] = array('label' => fx::lang('Keyword:','system') . ' '.$widget['keyword'], 'type' => 'label');
 
-        $fields[] = array('label' => fx::lang('Название','system'), 'name' => 'name', 'value' => $widget['name']);
-        $fields[] = array('label' => fx::lang('Группа','system'), 'type' => 'select', 'values' => $groups, 'name' => 'group', 'value' => $widget['group'], 'extendable' => fx::lang('Другая группа','system'));
+        $fields[] = array('label' => fx::lang('Name','system'), 'name' => 'name', 'value' => $widget['name']);
+        $fields[] = array('label' => fx::lang('Group','system'), 'type' => 'select', 'values' => $groups, 'name' => 'group', 'value' => $widget['group'], 'extendable' => fx::lang('Another group','system'));
 
-        $fields[] = array('label' => fx::lang('Описание','system'), 'name' => 'description', 'value' => $widget['description'], 'type' => 'text');
+        $fields[] = array('label' => fx::lang('Description','system'), 'name' => 'description', 'value' => $widget['description'], 'type' => 'text');
 
         $fields[] = array('type' => 'hidden', 'name' => 'phase', 'value' => 'settings');
         $fields[] = array('type' => 'hidden', 'name' => 'id', 'value' => $widget['id']);

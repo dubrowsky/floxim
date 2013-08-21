@@ -10,80 +10,54 @@ class fx_controller_admin_site extends fx_controller_admin {
 
         $list['values'] = array();
         foreach ($sites as $v) {
-            $text = fx::lang('Язык:','system') . ' ' . $v['language'];
+            $text = fx::lang('Language:','system') . ' ' . $v['language'];
             if ($v['domain']) {
                 $text .= "<br />".$v['domain'];
             }
             $text = '<a href="http://'.$v['domain'].'" style="color:#666;" target="_blank"> '.$v['domain'].'</a>';
             $text .=" <span style='font-size:10px; color:#777;'>&middot;</span> ".$v['language'];
-            if ($v['type'] == 'mobile') $text .= "<br/>" . fx::lang('для мобильный устройств','system');
+            if ($v['type'] == 'mobile') $text .= "<br/>" . fx::lang('for mobile devices','system');
             $r = array(
                     'id' => $v['id'],
                     'header' => array('name' => $v['name'], 'url' => 'site.settings('.$v['id'].')'),
-                    'text' => $text,
-                    'buttons' => array(
-                    	//array('url' => 'site.map('.$v['id'].')', 'label' => fx::lang('Карта сайта','system')),
-                    	array('url' => 'site.settings('.$v['id'].')', 'label' => fx::lang('Настройки','system')),
-                    	array('url' => 'site.design('.$v['id'].')', 'label' => fx::lang('Дизайн','system')),
-                    	//array('label' => fx::lang('Экспорт','system'), array('essence' => 'site', 'action' => 'export', 'id' => $v['id']))
-                    )
+                    'text' => $text
             );
             $list['values'][] = $r;
         }
 
         $this->response->add_field($list);
 
-        $this->response->add_pulldown_item('add', fx::lang('Новый сайт','system'), 'source=new');
-        
-        $this->response->add_buttons("add,delete");//settings,
-        $this->response->breadcrumb->add_item( fx::lang('Сайты','system') );
+        $this->response->add_buttons(
+            array(
+                array('key' => 'add', 'title' => fx::lang('Add new site','system')),
+                'delete'
+            )
+        );
+        $this->response->add_button_options('add', array(
+            'essence' => 'site',
+            'action' => 'add'
+        ));
+        $this->response->breadcrumb->add_item( fx::lang('Sites','system') );
         $this->response->submenu->set_menu('site');
     }
 
     public function add($input) {
         $fields = array();
 
-        switch ($input['source']) {
-            case 'store':
-                $fields[] = $this->ui->store('site');
-                break;
-            default:
-                $fields[] = $this->ui->hidden('action', 'add');
-                $fields[] = $this->ui->input('name', fx::lang('Название сайта','system'), fx::lang('Новый сайт','system'));
-                $fields[] = $this->ui->input('domain', fx::lang('Домен','system'), fx::lang('Домен','system'));
-        }
-
+        $fields[] = $this->ui->hidden('action', 'add');
+        $fields[] = $this->ui->input('name', fx::lang('Site name','system'), fx::lang('Add new site','system'));
+        $fields[] = $this->ui->input('domain', fx::lang('Domain','system'), fx::lang('Domain','system'));
+        
         $fields[] = $this->ui->hidden('posting');
         $this->response->add_fields($fields);
-        $this->response->dialog->set_title( fx::lang('Добавление нового сайта','system') );
-    }
-
-    public function store($input) {
-        return $this->ui->store('site', $input['filter']);
-    }
-
-    public function store_save($input) {
-        $store = new fx_admin_store();
-        $file = $store->get_file($input['store_id']);
-
-        $result = array('status' => 'ok');
-        try {
-            $param = array('template_id' => fx_core::get_object()->env->get_site('template_id'));
-            $imex = new fx_import($param);
-            $imex->import_by_content($file);
-        } catch (Exception $e) {
-            $result = array('status' => 'ok');
-            $result['text'][] = $e->getMessage();
-        }
-
-        return $result;
+        $this->response->dialog->set_title( fx::lang('Create a new site','system') );
     }
 
     public function import_save($input) {
         $file = $input['importfile'];
         if (!$file) {
             $result = array('status' => 'error');
-            $result['text'][] = fx::lang('Ошибка при создании временного файла','system');
+            $result['text'][] = fx::lang('Error creating a temporary file','system');
         }
 
         $result = array('status' => 'ok');
@@ -120,13 +94,13 @@ class fx_controller_admin_site extends fx_controller_admin {
         $site->save();
 
         $index_page = fx::data('content_page')->create(array(
-            'name' => fx::lang('Титульная страница','system'),
+            'name' => fx::lang('Cover Page','system'),
             'url' => '/',
             'site_id' => $site['id']
         ))->save();
         
         $error_page = fx::data('content_page')->create(array(
-            'name' => fx::lang('Страница не найдена','system'),
+            'name' => fx::lang('Page not found','system'),
             'url' => '/404', 
             'site_id' => $site['id'],
             'parent_id' => $index_page['id']
@@ -134,7 +108,6 @@ class fx_controller_admin_site extends fx_controller_admin {
         
         $site['error_page_id'] = $error_page['id'];
         $site['index_page_id'] = $index_page['id'];
-        dev_log('site to add', $site);
         
         fx::data('infoblock')->create(
             array(
@@ -151,7 +124,7 @@ class fx_controller_admin_site extends fx_controller_admin {
     public function map($input) {
         $site = fx::data('site')->get_by_id($input['params'][0]);
         if (!$site) {
-            $this->response->set_status_error( fx::lang('Сайт не найден','system') );
+            $this->response->set_status_error( fx::lang('Site not found','system') );
             return;
         }
         $fields = array();
@@ -160,62 +133,62 @@ class fx_controller_admin_site extends fx_controller_admin {
         $this->response->add_fields($fields);
         $this->response->add_buttons("add,settings,on,off,delete");
         $this->response->add_button_options('add', 'site_id='.$site['id']);
-        $this->response->set_essence('subdivision');
+        $this->response->set_essence('content');
         $this->_set_layout('map', $site);
     }
     
     protected function _set_layout($section, $site) {
     	$titles = array(
-    		'map' => fx::lang('Карта сайта','system'),
-    		'settings' => fx::lang('Настройки','system'),
-    		'design' => fx::lang('Дизайн','system')
+    		'map' => fx::lang('Site map','system'),
+    		'settings' => fx::lang('Settings','system'),
+    		'design' => fx::lang('Design','system')
 		);
-    	$this->response->breadcrumb->add_item( fx::lang('Сайты','system'), '#admin.site.all');
+    	$this->response->breadcrumb->add_item( fx::lang('Sites','system'), '#admin.site.all');
         $this->response->breadcrumb->add_item($site['name'], '#admin.site.settings('.$site['id'].')');
         $this->response->breadcrumb->add_item($titles[$section]);
         $this->response->submenu->set_menu('site-'.$site['id'])->set_subactive('site'.$section.'-'.$site['id']);
     }
 
     protected function _get_site_tree($site) {
-        $result = array();
-        $subs = fx::data('subdivision')->get_all('site_id', $site['id']);
-
-        $subdivisions = array();
-        foreach ($subs as $sub) {
-            $subdivisions[$sub['id']] = array('name' => $sub['name'], 'parent_id' => $sub['parent_id'], 'checked' => $sub['checked'], 'url' => $sub['hidden_url']);
-            $child_subs[$sub['parent_id']][] = $sub['id'];
-        }
-
-        $result = $this->_map_get_childerns($subdivisions, $child_subs, 0);
-        return $result;
+        $content = fx::data('content')->where('site_id', $site['id'])->all();
+        $tree = fx::data('content_page')->make_tree($content);
+        $res = $this->_get_tree_branch($tree);
+        return $res[0]['children'];
     }
-
-    protected function _map_get_childerns($subdivisions, $child_subs, $parent_id) {
-        $result = false;
-
-        if ($child_subs[$parent_id]) {
-            foreach ($child_subs[$parent_id] as $sub_id) {
-                $r = array(
-                		'data' => $subdivisions[$sub_id]['name'],/*
-                        'attr' => array(
-                        	'id' => 'tree-sub-'.$sub_id, 
-                        	'class' => $subdivisions[$sub_id]['checked'] ? "" : "fx_admin_unchecked"
-                        ),*/
-                        'metadata' => array(
-                        	'id' => $sub_id, 
-                        	'url' => $subdivisions[$sub_id]['url'],
-                        	'checked' => $subdivisions[$sub_id]['checked'],
-                        	'options' => array('add' => array('parent_id' => $sub_id))
-                        )
+    
+    protected function _get_tree_branch($level_collection) {
+        $result = array();
+        $content_blocks = $level_collection->group('infoblock_id');
+        $infoblocks = fx::data('infoblock')->where('action', 'listing')->all();
+        foreach ($content_blocks as $ib_id => $items) {
+            $infoblock = $infoblocks->find_one('id', $ib_id);
+            $ib_name = $infoblock && $infoblock['name'] ? $infoblock['name'] : 'ib #'.$ib_id;
+            $type_result = array();
+            foreach ($items as $item) {
+                $name = isset($item['name']) ? $item['name'] : $item['type'].' #'.$item['id'];
+                $item_res = array(
+                    'data' => $name,
+                    'metadata' => array(
+                        'id' => $item['id']
+                    )
                 );
-                $childs = $this->_map_get_childerns($subdivisions, $child_subs, $sub_id);
-                if ($childs) {
-                    $r['children'] = $childs;
+                if ($item['children']) {
+                    $item_res['children'] = $this->_get_tree_branch($item['children']);
                 }
-                $result[] = $r;
+                $type_result []= $item_res;
             }
+            $result []= array(
+                'data' => $ib_name,
+                'metadata' => array(
+                    'id' => $ib_id,
+                    'is_groupper' => 1
+                ),
+                'children' => $type_result
+            );
         }
-
+        if (count($result) == 1) {
+            $result = $result[0]['children'];
+        }
         return $result;
     }
 
@@ -225,10 +198,10 @@ class fx_controller_admin_site extends fx_controller_admin {
         $site = fx::data('site', $site_id);
 
         $main_fields = array();
-        $main_fields[] = $this->ui->input('name', fx::lang('Название сайта','system'), $site['name']);
-        $main_fields[] = $this->ui->input('domain', fx::lang('Домен','system'), $site['domain']);
-        $main_fields[] = $this->ui->input('mirrors', fx::lang('Зеркала','system'), $site['mirrors']);
-        $main_fields[] = $this->ui->input('language', fx::lang('Язык сайта','system'), $site['language']);
+        $main_fields[] = $this->ui->input('name', fx::lang('Site name','system'), $site['name']);
+        $main_fields[] = $this->ui->input('domain', fx::lang('Domain','system'), $site['domain']);
+        $main_fields[] = $this->ui->input('mirrors', fx::lang('Aliases','system'), $site['mirrors']);
+        $main_fields[] = $this->ui->input('language', fx::lang('Site language','system'), $site['language']);
         $this->response->add_fields($main_fields);
 
         $fields = array();
@@ -279,7 +252,7 @@ class fx_controller_admin_site extends fx_controller_admin {
 				'type' => 'select', 
 				'values' => $layouts_select,
 				'value' => $site['layout_id'],
-				'label' => fx::lang('Макет','system')
+				'label' => fx::lang('Layout','system')
 			),
 			array(
 				'type' => 'hidden',
@@ -310,7 +283,7 @@ class fx_controller_admin_site extends fx_controller_admin {
          
         $fields []= array(
         	'type' => 'button',
-        	'label' => fx::lang('Превью','system'),
+        	'label' => fx::lang('Preview','system'),
         	'send_form' => true,
         	'post' => array(
         		'essence' => 'layout',
@@ -353,7 +326,7 @@ class fx_controller_admin_site extends fx_controller_admin {
         $items = $input['params'];
         if ($items) {
             $store = new fx_admin_store();
-            $fields[] = $this->ui->label( fx::lang('Вы собираетесь установить:','system') );
+            $fields[] = $this->ui->label( fx::lang('You are about to install:','system') );
             foreach ($items as $store_id) {
                 $info = $store->get_info($store_id);
                 $fields[] = $this->ui->hidden('download['.$info['type'].']', $store_id);

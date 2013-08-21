@@ -2,16 +2,22 @@
 class fx_controller_layout extends fx_controller {
     
     public function show() {
-        if (! ($page_id = $this->param('page_id')) ) {
+        if (! ($page_id = $this->get_param('page_id')) ) {
             $page_id = fx::env('page');
             $this->input['page_id'] = $page_id;
         }
-        if (! ($layout_id = $this->param('layout_id'))) {
+        if (! ($layout_id = $this->get_param('layout_id'))) {
             $layout_id = fx::env('layout');
         }
+        
+        // add admin files bundle BEFORE site scripts/styles
+        if (! ($this->get_param('ajax_mode'))) {
+            fx_controller_admin::add_admin_files();
+        }
+        
         $page_infoblocks = fx::router('front')->get_page_infoblocks(
-                $page_id, 
-                $layout_id
+            $page_id, 
+            $layout_id
         );
         $res = array(
             'areas' => $page_infoblocks,
@@ -22,11 +28,11 @@ class fx_controller_layout extends fx_controller {
     }
     
     public function postprocess($html) {
-        if ($this->param('ajax_mode')) {
+        if ($this->get_param('ajax_mode')) {
             $html = preg_replace("~^.+?<body[^>]*?>~is", '', $html);
             $html = preg_replace("~</body>.+?$~is", '', $html);
         } else {
-            $page = fx::data('content_page', $this->param('page_id'));
+            $page = fx::data('content_page', $this->get_param('page_id'));
             $meta_title = empty($page['title']) ? $page['name'] : $page['title'];
             $this->_show_admin_panel();
             $html = fx::page()->set_metatags('title',$meta_title)
@@ -44,7 +50,7 @@ class fx_controller_layout extends fx_controller {
         if ($this->_layout) {
             return $this->_layout;
         }
-        $page = fx::data('content_page', $this->param('page_id'));
+        $page = fx::data('content_page', $this->get_param('page_id'));
         if ($page['layout_id']) {
             $layout_id = $page['layout_id'];
         } else {
@@ -70,8 +76,6 @@ class fx_controller_layout extends fx_controller {
         $p = fx::page();
         $js_config = new fx_admin_configjs();
         $p->add_js_text("fx_adminpanel.init(".$js_config->get_config().");");
-        
-        fx_controller_admin::add_admin_files();
         $p->set_after_body(fx_controller_admin_adminpanel::panel_html());        
     }
 

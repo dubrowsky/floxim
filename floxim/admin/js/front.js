@@ -11,6 +11,12 @@ fx_front = function () {
     this.mode_selectable_selector = null;
     $('html').on('keyup', '*', function(e) {
         if (e.which == 113) {
+            if ($fx.front.get_selected_item()) {
+                if ($fx.buttons.is_active('edit')) {
+                    $fx.buttons.trigger('edit');
+                    return false;
+                }
+            }
             var mode_map = {
                 view:'#page.edit',
                 edit:'#page.design',
@@ -101,12 +107,14 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
 	}
 	
 	var ib = node.closest('.fx_infoblock_'+mode);
+    var adders = [];
 	var cm = ib.data('fx_controller_meta');
 	if (cm && cm.accept_content) {
 		for (var i = 0; i < cm.accept_content.length; i++) {
 			var c_cnt = cm.accept_content[i];
 			var cb_closure = (function(c_cnt) {
 				return function() {
+                    $fx.front.disable_infoblock(ib);
 					$fx.post({
 					   essence:'content',
 					   action:'add_edit',
@@ -122,12 +130,14 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
 					});
 				}
 			})(c_cnt);
+            adders.push(cb_closure);
 			buttons.push({
 				name:c_cnt.title,
 				callback:cb_closure
 			});
         }
 	}
+    ib.data('content_adders', adders);
 	var area_meta = node.closest('.fx_area').data('fx_area');
 	if (area_meta) {
 		buttons.push({
@@ -144,8 +154,24 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
 					$fx_dialog.open_dialog(
                         json,
                         {
-                            onfinish:function() {
-                                $fx.front.reload_layout();
+                            onfinish:function(res) {
+                                $fx.front.reload_layout(
+                                    function() {
+                                        if (!res.props || !res.props.infoblock_id) {
+                                            return;
+                                        }
+                                        var new_ib_node = $('.fx_infoblock_'+res.props.infoblock_id);
+                                        if (new_ib_node.length == 0) {
+                                            return;
+                                        }
+                                        $fx.front.select_item(new_ib_node.get(0));
+                                        var adders = new_ib_node.data('content_adders');
+                                        if (!adders || adders.length == 0 ){
+                                            return;
+                                        }
+                                        adders[0]();
+                                    }
+                                );
                             }
                         }
                     );
@@ -276,8 +302,10 @@ fx_front.prototype.hilight = function() {
 	items.
         removeClass('fx_hilight').
         removeClass('fx_hilight_empty').
+        removeClass('fx_hilight_empty_inline').
         removeClass('fx_no_hilight').
         removeClass('fx_wrong_mode');
+    items.filter('.fx_hidden_placeholded').removeClass('fx_hidden_placeholded').html('');
 	if ($fx.front.mode == 'view') {
 		return;
 	}
@@ -287,6 +315,14 @@ fx_front.prototype.hilight = function() {
 			i.addClass('fx_hilight');
             if (i.width() == 0 || i.height() == 0) {
                 i.addClass('fx_hilight_empty');
+                if (i.css('display') == 'inline') {
+                	i.addClass('fx_hilight_empty_inline');
+                }
+            }
+            var controller_meta = i.data('fx_controller_meta');
+            if (controller_meta && controller_meta.hidden_placeholder) {
+                i.html(controller_meta.hidden_placeholder);
+                i.addClass('fx_hidden_placeholded');
             }
 		}
 	});
@@ -350,6 +386,7 @@ fx_front.prototype.select_content_essence = function(n) {
 	});
 	$fx.buttons.bind('delete', function() {
 	   if (confirm(fx_lang("Вы уверены?"))) {
+           $fx.front.disable_infoblock(ib_node);
 		   $fx.post({
 			   essence:'content',
 			   action:'delete_save',
@@ -360,7 +397,9 @@ fx_front.prototype.select_content_essence = function(n) {
 		   });
 	   }
 	});
-    $fx.front.start_essences_sortable(n.closest('.fx_infoblock'));
+    //$fx.front.start_essences_sortable(n.closest('.fx_infoblock'));
+    //console.log('make sortbl', n.parent());
+    $fx.front.start_essences_sortable(n.parent());
 	$('html').one('fx_deselect', function() {
 		$fx.buttons.unbind('edit');
 		$fx.buttons.unbind('delete');
@@ -387,7 +426,7 @@ fx_front.prototype.select_infoblock = function(n) {
             	json, 
             	{
             		onfinish:function() {
-					 $fx.front.reload_infoblock(ib_node);
+                        $fx.front.reload_infoblock(ib_node);
 					}
 				}
 			);
@@ -472,7 +511,7 @@ fx_front.prototype.start_essences_sortable = function(container) {
                 } else {
                     console.log('no next');
                 }
-
+                $fx.front.disable_infoblock(cp.closest('.fx_infoblock'));
                 $fx.post({
                     essence:'content',
                     action:'move',
@@ -570,17 +609,21 @@ fx_front.prototype.set_mode_design = function() {
     //start_areas_sortable();
 }
 
-fx_front.prototype.reload_infoblock = function(infoblock_node) {
-    var ib_parent = $(infoblock_node).parent();
-    var meta = $(infoblock_node).data('fx_infoblock');
-    var page_id = $('body').data('fx_page_id');
+fx_front.prototype.disable_infoblock = function(infoblock_node) {
     $(infoblock_node).css({opacity:'0.3'}).on('click.fx_fake_click', function() {
         return false;
     });
+}
+
+fx_front.prototype.reload_infoblock = function(infoblock_node, callback) {
+    $fx.front.disable_infoblock(infoblock_node);
+    var ib_parent = $(infoblock_node).parent();
+    var meta = $(infoblock_node).data('fx_infoblock');
+    var page_id = $('body').data('fx_page_id');
     $.ajax({
        url:'/~ib/'+meta.id+'@'+page_id,
        success:function(res) {
-           $(infoblock_node).off('click.fx_fake_click');
+           $(infoblock_node).off('click.fx_fake_click').css({opacity:''});
            var selected = $(infoblock_node).descendant_or_self('.fx_selected');
            var selected_selector = null;
            if(selected.length > 0) {
@@ -613,12 +656,15 @@ fx_front.prototype.reload_infoblock = function(infoblock_node) {
                }
            }
            $fx.front.hilight();
+           if (typeof callback == 'function') {
+               callback();
+           }
        }
     });
 }
 
-fx_front.prototype.reload_layout = function() {
-   $fx.front.reload_infoblock($('body').get(0));
+fx_front.prototype.reload_layout = function(callback) {
+   $fx.front.reload_infoblock($('body').get(0), callback);
 }
 
 fx_front.prototype.move_down_body =function () {

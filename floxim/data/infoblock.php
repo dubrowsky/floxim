@@ -80,10 +80,7 @@ class fx_data_infoblock extends fx_data {
     }
 
     public function next_priority($keyword) {
-        $db = fx_core::get_object()->db;
-        return $db->get_var("SELECT MAX(`priority`)+1 FROM `{{".$this->table."}}` WHERE `keyword` = '".$db->escape($keyword)."' ");
+        return fx::db()->get_var("SELECT MAX(`priority`)+1 FROM `{{".$this->table."}}` WHERE `keyword` = '".fx::db()->escape($keyword)."' ");
     }
 
 }
-
-?>

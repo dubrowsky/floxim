@@ -5,10 +5,10 @@ class fx_controller_admin_layout extends fx_controller_admin {
     /**
      * Вывод списка всех макетов дизайна "в разработке"
      */
-    public function all($input) {
+    public function all() {
         $items = array();
         
-        $layouts = fx::data('layout')->all(); //('parent_id', 0);
+        $layouts = fx::data('layout')->all();
         foreach ($layouts as $layout) {
             $layout_id = $layout['id'];
             $items[$layout_id] = $layout;
@@ -20,7 +20,7 @@ class fx_controller_admin_layout extends fx_controller_admin {
         }
 
         $ar = array('type' => 'list', 'filter' => true);
-        $ar['labels'] = array('name' => FX_ADMIN_NAME, 'use' => fx::lang('Используется на сайтах','system'), 'buttons' => array('type' => 'buttons'));
+        $ar['labels'] = array('name' => FX_ADMIN_NAME, 'use' => fx::lang('Used on','system'), 'buttons' => array('type' => 'buttons'));
 
         foreach ($items as $item) {
         	$submenu = self::get_template_submenu($item);
@@ -52,9 +52,9 @@ class fx_controller_admin_layout extends fx_controller_admin {
 
         $buttons = array("add", "delete");
         $buttons_pulldown['add'] = array(
-                array('name' => fx::lang('пустой','system'), 'options' => array('source' => 'new')),
-                array('name' => fx::lang('импортировать','system'), 'options' => array('source' => 'import')),
-                array('name' => fx::lang('установить с FloximStore','system'), 'options' => array('source' => 'store'))
+                array('name' => fx::lang('empty','system'), 'options' => array('source' => 'new')),
+                array('name' => fx::lang('import','system'), 'options' => array('source' => 'import')),
+                array('name' => fx::lang('Install from FloximStore','system'), 'options' => array('source' => 'store'))
         );
 
         $result = array('fields' => $fields, 'buttons' => $buttons, 'buttons_pulldown' => $buttons_pulldown);
@@ -67,16 +67,16 @@ class fx_controller_admin_layout extends fx_controller_admin {
 
         switch ($input['source']) {
             case 'import' :
-                $fields[] = array('name' => 'importfile', 'type' => 'file', 'label' => fx::lang('Файл','system'));
-                $result['dialog_title'] = fx::lang('Импорт макета дизайна','system');
+                $fields[] = array('name' => 'importfile', 'type' => 'file', 'label' => fx::lang('File','system'));
+                $result['dialog_title'] = fx::lang('Import layout design','system');
                 $fields[] = $this->ui->hidden('action', 'import');
                 break;
             default :
                 $input['source'] = 'new';
                 $fields[] = $this->ui->hidden('action', 'add');
-                $fields[] = array('name' => 'name', 'label' => fx::lang('Название макета','system'));
+                $fields[] = array('name' => 'name', 'label' => fx::lang('Layout name','system'));
                 $fields[] = array('name' => 'keyword', 'label' => fx::lang('Keyword (название папки с макетом)','system'));
-                $result['dialog_title'] = fx::lang('Добавление макета дизайна','system');
+                $result['dialog_title'] = fx::lang('Adding a layout design','system');
         }
 
         $fields[] = $this->ui->hidden('source', $input['source']);
@@ -101,7 +101,7 @@ class fx_controller_admin_layout extends fx_controller_admin {
             $layout->save();
         } catch (Exception $e) {
             $result['status'] = 'error';
-            $result['text'][] = fx::lang('Не удалось создать каталог','system'). ' ' .$path;
+            $result['text'][] = fx::lang('Unable to create directory','system'). ' ' .$path;
         }
         return $result;
     }
@@ -129,7 +129,7 @@ class fx_controller_admin_layout extends fx_controller_admin {
         $action = isset($input['params'][1]) ? $input['params'][1] : 'layouts';
 
         if (!$layout) {
-            $fields[] = $this->ui->error(fx::lang('Макет не найден','system'));
+            $fields[] = $this->ui->error(fx::lang('Layout not found','system'));
             return array('fields' => $fields);
         }
         
@@ -147,7 +147,7 @@ class fx_controller_admin_layout extends fx_controller_admin {
     	$tpl_submenu = self::get_template_submenu($template);
         $tpl_submenu_first = current($tpl_submenu);
         
-    	$breadcrumb->add_item(fx::lang('Макеты','system'), '#admin.layout.all');
+    	$breadcrumb->add_item(fx::lang('Layouts','system'), '#admin.layout.all');
         $breadcrumb->add_item($template['name'], $tpl_submenu_first['url']);
 		$breadcrumb->add_item($tpl_submenu[$action]['title'], $tpl_submenu[$action]['url']);
     }
@@ -178,7 +178,7 @@ class fx_controller_admin_layout extends fx_controller_admin {
     		// 'layouts' => 'Лэйауты',
 			// 'files' => 'Файлы',
 			// 'colors' => 'Расцветки',
-			'settings' => fx::lang('Настройки','system')
+			'settings' => fx::lang('Settings','system')
 		);
 
         $layout_id = $layout['id'];
@@ -221,13 +221,14 @@ class fx_controller_admin_layout extends fx_controller_admin {
         $ar = array('type' => 'list', 'filter' => true);
         $ar['labels'] = array('name' => FX_ADMIN_NAME);
 
-        if ($files)
-                foreach ($files as $id => $item) {
+        if ($files) {
+            foreach ($files as $id => $item) {
                 $name = $item['file'];
                 $el = array('id' => $id, 'name' => array('name' =>$name, 'url' => 'template_files.edit('.$template['id'].','.$id.') '));
                 $ar['values'][] = $el;
-            } else {
-            $fields[] = $this->ui->label( fx::lang('Нет файлов','system') );
+            }
+        } else {
+            $fields[] = $this->ui->label( fx::lang('No files','system') );
         }
 
         $fields[] = $ar;
@@ -244,8 +245,7 @@ class fx_controller_admin_layout extends fx_controller_admin {
     }
 
     public function settings($template) {
-    	$fields[] = $this->ui->label("<a href='/floxim/?essence=template&amp;action=export&amp;id=".$template['id']."'>" . fx::lang('Экспортировать в файл','system') . "</a>");
-        $fields[] = $this->ui->input('name', fx::lang('Название макета','system'), $template['name']);
+    	$fields[] = $this->ui->input('name', fx::lang('Layout name','system'), $template['name']);
         $fields[] = $this->ui->hidden('action', 'settings');
         $fields[] = $this->ui->hidden('id', $template['id']);
         
@@ -257,7 +257,7 @@ class fx_controller_admin_layout extends fx_controller_admin {
         $name = trim($input['name']);
         if ( !$name ) {
             $result['status'] = 'error';
-            $result['text'][] = fx::lang('Укажите название макета','system');
+            $result['text'][] = fx::lang('Enter the layout name','system');
             $result['fields'][] = 'name';
         }
         else {
@@ -268,147 +268,10 @@ class fx_controller_admin_layout extends fx_controller_admin {
             }
             else {
                 $result['status'] = 'error';
-                $result['text'][] = fx::lang('Макет не найден','system');
+                $result['text'][] = fx::lang('Layout not found','system');
             }
         }
         
         return $result;
-    }
-    
-    // вернуть id текущего, если false
-    protected static  function _get_site_id($site_id = false) {
-    	if ($site_id) {
-    		return $site_id;
-    	}
-    	$fx_core = fx_core::get_object();
-    	$site = $fx_core->env->get_site();
-    	return $site['id'];
-    }
-    
-    public static function set_preview_data($template_id, $color_id = false, $site_id = false) {
-    	$fx_core = fx_core::get_object();
-    	$site_id = self::_get_site_id($site_id);
-    	$fx_core->input->set_service_session('preview_template_id_site_'.$site_id, $template_id);
-    	$fx_core->input->set_service_session('preview_color_id_site_'.$site_id, $color_id);
-    }
-    
-    public static function unset_preview_data($site_id = false) {
-    	$fx_core = fx_core::get_object();
-    	$site_id = self::_get_site_id($site_id);
-    	$fx_core->input->unset_service_session('preview_template_id_site_'.$site_id);
-    	$fx_core->input->unset_service_session('preview_color_id_site_'.$site_id);
-    }
-    
-    public static function get_preview_data($site_id = false) {
-    	$fx_core = fx_core::get_object();
-    	$site_id = self::_get_site_id($site_id);
-    	$res =  array(
-    		'template_id' => $fx_core->input->get_service_session('preview_template_id_site_'.$site_id),
-    		'color_id' => $fx_core->input->get_service_session('preview_color_id_site_'.$site_id),
-		);
-		if (!$res['template_id']) {
-			return false;
-		}
-		return $res;
-    }
-    
-
-    public function set_preview($input) {
-        $template_id = $input['template_id'];
-        $color = $input['color'];
-        
-        $site = fx::data('site')->get_by_id(self::_get_site_id($input['site_id']));
-        
-        if (!$template_id || !is_numeric($template_id)) {
-        	$template_id = $site['template_id'];
-        	$color = $site['color'];
-        }
-        
-        self::set_preview_data($template_id, $color, $site_id);
-        
-        $suitable = new fx_suitable();
-        $suitable->apply_design($site, $template_id);
-            
-        $result = array('status' => 'ok');
-        
-        
-        $result['reload'] = $input['panel_mode'] ? true : 'http://'.$site['domain'].'/';
-        return $result;
-    }
-
-    public function exit_preview($input) {
-    	self::unset_preview_data($input['site_id']);
-        return array('status' => 'ok', 'reload' => true);
-    }
-
-    public function approve_preview($input) {
-        $site_id = self::_get_site_id($input['site_id']);
-        
-        if ($preview = self::get_preview_data($site_id) ) {
-        	$site = fx::data('site')->get_by_id($site_id);
-			$site['template_id'] = $preview['template_id'];
-			$site['color'] = $preview['color_id'];
-			$site->save();
-			self::unset_preview_data($site_id);
-        }
-		
-        return array('status' => 'ok', 'reload' => true);
-    }
-    
-    public function preview_panel($input) {
-    	
-    	$tpl_values = array();
-        $tpl_all = fx::data('template')->get_all('type', 'parent');
-
-        $colors = array();
-        foreach ($tpl_all as $tpl) {
-            $tpl_values[$tpl['id']] = $tpl['name'];
-            $colors[$tpl['id']] = $tpl['colors'];
-        }
-        
-        $site_id = self::_get_site_id($input['site_id']);
-        if (! ($preview = self::get_preview_data($site_id)) ) {
-        	// данные из текущего сайта подставляются в превью из set_preview
-        	return;
-        }
-        
-        $post_on_change = array(
-        	'action' => 'set_preview',
-        	'essence' => 'template',
-        	'fx_admin' =>	true,
-        	'panel_mode' => true
-		);
-
-        $fields = array();
-        $fields []= array(
-        		'name' => 'template_id', 
-        		'type' => 'select', 
-        		'values' => $tpl_values, 
-        		'value' => $preview['template_id'], 
-        		'label' => fx::lang('Макет','system'),
-        		'post' => $post_on_change
-        );
-        foreach ($colors as $tpl_id => $color) {
-            if ($color) {
-                $color_value = array( fx::lang('По умолчанию','system') );
-                foreach ($color as $color_id => $v) {
-                    $color_value[$color_id] = $v['name'];
-                }
-                $fields[] = array(
-                	'label' => fx::lang('Расцветка','system'),
-                	'name' => 'color', 
-                	'type' => 'select', 
-                	'value' => $preview['color_id'], 
-                	'values' => $color_value, 
-                	'parent' => array('template_id', $tpl_id), 
-                	'unactive' => true,
-                	'post' => $post_on_change
-                );
-            }
-        }
-        $fields []= array('type' => 'button', 'label' => fx::lang('Применить текущий','system'), 'post' => array('essence' => 'template', 'action' => 'approve_preview'));
-        $fields []= array('type' => 'button', 'label' => fx::lang('Выход','system'), 'post' => array('essence' => 'template', 'action' => 'exit_preview'));
-        $this->response->add_fields($fields);
     }
 }
-?>

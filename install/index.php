@@ -1,4 +1,6 @@
 <?php
+
+
 header('Content-Type: text/html; charset=utf-8'); 
 session_start();
 
@@ -26,35 +28,33 @@ $ajax = false;
 switch ($action) {
     case 0:
         fx_html_beg();
-        echo fx_html_status_bar(array("'color': '#444', 'opacity': 1", "можно приступать"));
-        echo "Вас приветствует программа-установщик системы управления сайтами Floxim! Сейчас я протестирую ваш сервер на совместимость с Floxim (это рядовая проверка, которая не займет много времени), после чего установлю систему, и вы сможете начать работу. На втором (из трех) шаге проверки мне потребуется доступ к базе данных MySQL.";
-        echo fx_html_form(1, 'Приступить к проверке');
+        echo fx_html_status_bar(array("'color': '#444', 'opacity': 1", "You may start now"));
+        echo "Hello, Floxim installer's here. I'm going to test your web server on compatibility, it's going to take just a couple of seconds Then I'll download the system and you can start working. I'm also going to need access to  MySQL database.";
+        echo fx_html_form(1, 'Start checking');
     break;
     case 1:
         if (!$ajax)
             fx_html_beg();
-        // Проверка настроек сервера: основных и дополнительных
         $php_version = phpversion();
         $logHeader =
                 '--------------------------------------------------' . PHP_EOL .
-                'Дата ' . date("d.m.Y") . PHP_EOL .
+                'Date ' . date("d.m.Y") . PHP_EOL .
                 '--------------------------------------------------' . PHP_EOL .
-                'Установка Floxim' . PHP_EOL .
+                'Installing Floxim ' . PHP_EOL .
                 '--------------------------------------------------';
         fx_write_log($logHeader, false);
 
-        fx_write_log("Этап №" . $action . ": Начало проверки параметров хостинга.");
-        fx_write_log("Текущая версия PHP: " . $php_version);
+        fx_write_log("Step number " . $action . ": Starting checking your hosting.");
+        fx_write_log("Current PHP version: " . $php_version);
 
         $errors = array();
         $notices = array();
 
         if (version_compare($php_version, "5.3.0") == '-1') {
-            $errors['phpversion'] = "Версия PHP должна быть не ниже 5.3.0.";
-            fx_write_log("Ошибка: " . $errors['phpversion']);
+            $errors['phpversion'] = "PHP version 5.3.0 or greater required";
+            fx_write_log("Error: " . $errors['phpversion']);
         }
 
-        // проверка значений обязательных директив в php.ini
         $arr_ini = array(
 			'allow_url_fopen' => 1,
             'safe_mode' => 0,
@@ -65,63 +65,51 @@ switch ($action) {
             if (intval(ini_get($key)) != $value)
                 if (strtolower(ini_get($key)) != ($value ? 'on' : 'off')) {
                     echo $key . " - " . $value;
-                    $errors[$key] = "Необходимо " . ($value ? "включить " : "отключить ") . "параметр " . $key . ".";
-                    fx_write_log("Ошибка: " . $errors[$key]);
+                    $errors[$key] = "You need to " . ($value ? "turn on " : "turn off ") . $key. "parameter.";
+                    fx_write_log("Error: " . $errors[$key]);
                 }
         }
         if (intval(ini_get('memory_limit')) < 24) {
-            $errors['memory_limit'] = "Необходимо увеличить параметр memory_limit.";
-            fx_write_log("Ошибка: " . $errors['memory_limit']);
+            $errors['memory_limit'] = "Your need to increase memory_limit parameter.";
+            fx_write_log("Error: " . $errors['memory_limit']);
         }
 
-        // 1 необязательная директива
         if (intval(ini_get('mbstring.func_overload')) != 0) {
-            $notices['mbstring.func_overload'] = "Необходимо выключить параметр mbstring.func_overload.";
-            fx_write_log("Предупреждение: " . $notices['mbstring.func_overload']);
+            $notices['mbstring.func_overload'] = "Turn off mbstring.func_overload parameter.";
+            fx_write_log("Warning: " . $notices['mbstring.func_overload']);
         }
 		
 		$extensions_name = array(
 			'mysql' => 'MySQL',
 			'session' => 'Session',
-			'mbstring' => 'MBstring'/*,
-			'iconv' => 'iconv',
-			'tokenizer' => 'Tokenizer',
-			'ctype' => 'Ctype',
-			'dom' => 'DOM',
-			'json' => 'JSON',
-			'libxml' => 'libxml',
-			'simplexml' => 'SimpleXML',
-			'curl' => 'cURL',
-			'gmp' => 'GMP'*/
+			'mbstring' => 'MBstring'
 		);
 		
-        // проверка наличия обязательных расширений
         $arr_ext = array('session', 'mysql');
         foreach ($arr_ext as $ext) {
             if (!extension_loaded($ext)) {
-                $errors[$ext] = "Не хватает расширения " . ( isset($extensions_name[$ext]) ? $extensions_name[$ext] : $ext ) . ".";
-                fx_write_log("Ошибка: " . $errors[$ext]);
+                $errors[$ext] = "there is no " . ( isset($extensions_name[$ext]) ? $extensions_name[$ext] : $ext ) . " extension.";
+                fx_write_log("Error: " . $errors[$ext]);
             }
         }
 
-        // проверка наличия "необязательных" расширений
-        $arr_ext_opt = array('mbstring', 'iconv'/*, 'ctype', 'curl', 'dom', 'gd', 'json', 'libxml', 'simplexml', 'gmp', 'tokenizer'*/);
+        $arr_ext_opt = array('mbstring', 'iconv');
         foreach ($arr_ext_opt as $ext) {
             if (!extension_loaded($ext)) {
-                $notices[$ext] = "Не хватает расширения " . ( isset($extensions_name[$ext]) ? $extensions_name[$ext] : $ext ) . ".";
-                fx_write_log("Предупреждение: " . $notices[$ext]);
+                $notices[$ext] = "There is no  " . ( isset($extensions_name[$ext]) ? $extensions_name[$ext] : $ext ) . " extension.";
+                fx_write_log("Warning: " . $notices[$ext]);
             } else if ($ext == 'gd') {
                 if (function_exists('gd_info')) {
                     $gd = gd_info();
                     preg_match('/\d/', $gd['GD Version'], $match);
                     $gd = $match[0];
                     if ($gd < 2) {
-                        $notices['gd'] = "Расширения gd имеет версию ниже 2.0.0.";
-                        fx_write_log("Предупреждение: " . $notices['gd']);
+                        $notices['gd'] = "gd extension version is lower than 2.0.0";
+                        fx_write_log("Warning: " . $notices['gd']);
                     }
                 } else {
-                    $notices['gd'] = "Не удалось выяснить версию расширения gd.";
-                    fx_write_log("Предупреждение: " . $notices['gd']);
+                    $notices['gd'] = "Can't get gd version.";
+                    fx_write_log("Warning: " . $notices['gd']);
                 }
             }
         }
@@ -129,96 +117,91 @@ switch ($action) {
         $dir = dirname($_SERVER['PHP_SELF']);
         $test_dir = "testdirtestdir";
         if (!@mkdir($test_dir)) {
-            $errors['mkdir'] = "Нет прав на создание директорий.";
-            fx_write_log("Ошибка: " . $errors['mkdir']);
+            $errors['mkdir'] = "The script has no permission to create directory.";
+            fx_write_log("Error: " . $errors['mkdir']);
         }
         if (!is_writable($test_dir)) {
-            $errors['is_writable'] = "Нет прав на изменение директорий.";
-            fx_write_log("Ошибка: " . $errors['is_writable']);
+            $errors['is_writable'] = "The script has no permission to change directory.";
+            fx_write_log("Error: " . $errors['is_writable']);
         }
         if (!@rmdir($test_dir)) {
-            $errors['rmdir'] = "Нет прав на удаление директорий.";
-            fx_write_log("Ошибка: " . $errors['rmdir']);
+            $errors['rmdir'] = "The script has no permission to delete directories.";
+            fx_write_log("Error: " . $errors['rmdir']);
         }
 
         if (empty($errors)) {
             if (empty($notices))
-                fx_write_log("Этап №1: Проверка параметров завершена. Все параметры подходят.");
+                fx_write_log("Step 1: Parameters checking complete. All parameters match.");
             if (!empty($notices))
-                fx_write_log("Этап №1: Проверка параметров завершена.");
-            $result = fx_html_status_bar(array("'color': 'green', 'opacity': 1", "всё отлично!"), array("'color': '#444', 'opacity': 1", "можно начинать"), false, array(1, 0));
-            $result .= "Ваш хостинг" . ( empty($notices) ? " прекрасно" : "" ) ." подходит для работы Floxim. Теперь я проверю базу данных MySQL. Введите параметры доступа к ней. Если вы их не знаете, обратитесь к сотруднику службы поддержки или системному администратору. В случае, когда вы используете обычный хостинг, эти параметры, скорее всего, были присланы вам по электронной почте после регистрации на сайте хостинг-провайдера.";
+                fx_write_log("Step 1: Parameters checking complete.");
+            $result = fx_html_status_bar(array("'color': 'green', 'opacity': 1", "Everything is working fine!"), array("'color': '#444', 'opacity': 1", "you can start now"), false, array(1, 0));
+            $result .= "Your hosting suits " . ( empty($notices) ? " perfectly" : "" ) ."  for  Floxim. Now I'm going to check MySQL database. Specify database connection parameters. If you don't know them ask your system asministrator or support service. If you are using common hosting you may find the parameters in an email you got after registrating on hosting provider's site.";
             
         	if ( !empty($notices) ) {
-				$result .= "<br /><br />Эти предупреждения нужно учесть, чтобы обеспечить корректную работу системы в будущем:<br /><div style='margin: 7px 0; font-style: italic; color: orange;'>" . join("<br />", $notices) . "</div>";
-				$result .= "Тем не менее система может быть установлена, но её функциональность может быть ограничена.";
+				$result .= "<br /><br />To ensure correct work of the system, you should consider these:<br /><div style='margin: 7px 0; font-style: italic; color: orange;'>" . join("<br />", $notices) . "</div>";
+				$result .= "System can be installed but its functonality might be limited.";
 			}
             
             $result .= "<div class='db'>";
             $opt_html = "
             <div class='cell'>
-                <span class='item'>Хост (host)</span><br />
+                <span class='item'>Host</span><br />
                 <input type='text' name='host' id='host' value='" . (fx_post_get('host') ? fx_post_get('host') : "localhost") . "' />
             </div>
                     <div class='cell'>
-                <span class='item'>Имя БД (name)</span><br />
+                <span class='item'>Database name</span><br />
                 <input type='text' name='dbname' id='dbname' value='" . fx_post_get('dbname') . "' />
             </div>
             <div class='cell'>
-                <span class='item'>Логин (user)</span><br />
+                <span class='item'>Database user</span><br />
                 <input type='text' name='user' id='user' value='" . fx_post_get('user') . "' />
             </div>
             <div class='cell'>
-                <span class='item'>Пароль (password)</span><br />
+                <span class='item'>Password</span><br />
                 <input type='password' name='pass' id='pass' value='" . fx_post_get('pass') . "' />
             </div>";
-            $result .= fx_html_form(2, 'Проверить БД', $opt_html);
+            $result .= fx_html_form(2, 'Check database', $opt_html);
             $result .= "</div>";
         }
         else {
-            $result = fx_html_status_bar(array("'color': 'red', 'opacity': 1", "возникли проблемы!"));
-            $result .= "<span style='font-style: italic; padding: 10pt; color: red;'>" . join(" ", $errors) . "</span><br /><br />Эти проблемы не позволяют использовать Floxim на вашем хостинге. Если вы не можете решить их самостоятельно, перешлите их описание сотруднику технической поддержки или системному администратору. Извините, но это зависит не от меня. Я очень надеюсь, что эти проблемы можно решить, и тогда установку можно будет произвести еще раз. ";
+            $result = fx_html_status_bar(array("'color': 'red', 'opacity': 1", "There are some  problems!"));
+            $result .= "<span style='font-style: italic; padding: 10pt; color: red;'>" . join(" ", $errors) . "</span><br /><br />There are some issues that make using Floxim on your hosting impossible. If you can't solve them yourself describe the problems to system administrator or to support service. I hope you can solve the problems so we can complete the installation.";
         }
 
         echo $result;
     break;
     case 2:
-        // Проверка настроек БД
         if (!$ajax)
             fx_html_beg();
-        fx_write_log("Этап №" . $action . ": Начало проверки БД.");
+        fx_write_log("Step #" . $action . ": Starting to check database.");
         $error = "";
         $LinkID = fx_connect_db();
-        // проверка соединения с БД
         if (!$LinkID) {
-            $error = "Нет соединение с указанной БД. MySQL ошибка: " . mysql_error();
+            $error = "No connection with the indicated database. MySQL error: " . mysql_error();
             fx_write_log($error);
-            echo fx_html_status_bar(array("'color': 'green', 'opacity': 1", "всё отлично!"), array("'color': 'red', 'opacity': 1", "возникли проблемы!"), false, array(1, 0));
-            echo "Не удалось произвести подключение к указанной БД, возможно были указаны не все параметры подключения. Проверьте правильность и повторите попытку. Подробнее об ошибке читайте <a href='log.txt' target='_blank'>в логе</a>.";
-            echo fx_html_form(1, "Вернуться и повторить");
+            echo fx_html_status_bar(array("'color': 'green', 'opacity': 1", "it's going just fine!"), array("'color': 'red', 'opacity': 1", "There are some problems!"), false, array(1, 0));
+            echo "Can't connect to database. Check if all the access parameters are there and try again. Read more about error <a href='log.txt' target='_blank'>in log</a>.";
+            echo fx_html_form(1, "Go back and try again");
             break;
         }
         else
-            fx_write_log("Соединение с БД успешно установлено.");
+            fx_write_log("Connected to database.");
 
-        // проверка версии MySQL
         if (version_compare(mysql_get_server_info(), "4.1.0") == '-1') {
-            $error = "Версия MySQL ниже требуемой. Обратитесь, пожалуйста, к системному администратору или хостинг-провайдеру для решения этой проблемы.";
+            $error = "MySQL version is lower than required. Contact your system administrator or hosting provider to solve the problem.";
             fx_write_log($error);
-            echo fx_html_status_bar(array("'color': 'green', 'opacity': 1", "всё отлично!"), array("'color': 'red', 'opacity': 1", "возникли проблемы!"), false, array(1, 0));
+            echo fx_html_status_bar(array("'color': 'green', 'opacity': 1", "All's working fine!"), array("'color': 'red', 'opacity': 1", "There are some problems!"), false, array(1, 0));
             echo $error;
             break;
         }
 
-        // проверка прав заданного пользователя на действия в БД
         if (!fx_check_user_grants()) {
-            echo fx_html_status_bar(array("'color': 'green', 'opacity': 1", "всё отлично!"), array("'color': 'red', 'opacity': 1", "возникли проблемы!"), false, array(1, 0));
-            echo "Указанный вами пользователь не имеет прав записи в базу данных. Может, есть какой-то другой? Обратитесь в службу поддержки вашего хостинг-провайдера или к системному администратору, чтобы решить эту проблему.";
-            echo fx_html_form(1, 'Вернуться');
+            echo fx_html_status_bar(array("'color': 'green', 'opacity': 1", "All's working fine!"), array("'color': 'red', 'opacity': 1", "There are some problems!"), false, array(1, 0));
+            echo "Indicated user haven't got permission to write to database. Is there any other user you can log in?  Contact your system administrator or hosting provider to solve the problem.";
+            echo fx_html_form(1, 'Go back');
             break;
         }
 
-        // найдены таблицы Floxim
         $deltables = fx_post_get('deltables');
         if ($deltables) {
             $repeatTables = fx_repeat_tables();
@@ -229,62 +212,61 @@ switch ($action) {
         }
 
         if (fx_repeat_tables()) {
-            $error = "В указанной БД найдены таблицы Floxim.";
+            $error = "There are Floxim tables in the indicated database.";
             fx_write_log($error);
-            echo fx_html_status_bar(array("'color': 'green', 'opacity': 1", "всё отлично!"), array("'color': 'red', 'opacity': 1", "внимание!"), false, array(1, 0));
-            echo "В указанной вами базе данных уже есть таблицы, которые хочет создать установщик. Хотите удалить их и продолжить установку?";
-            echo fx_html_form(2, 'Удалить и продолжить', "<input type='hidden' id='deltables' name='deltables' value='1' />");
+            echo fx_html_status_bar(array("'color': 'green', 'opacity': 1", "All's working fine!"), array("'color': 'red', 'opacity': 1", "attention!"), false, array(1, 0));
+            echo "Indicated database already has the tables that installer is about to create. Do you want to delete them and continue installing?";
+            echo fx_html_form(2, 'Delete and install', "<input type='hidden' id='deltables' name='deltables' value='1' />");
             break;
         }
 
-        fx_write_log("Этап №" . $action . ": Проверка параметров БД успешно завершена.");
-        echo fx_html_status_bar(array("'color': 'green', 'opacity': 1", "всё отлично!"), array("'color': 'green', 'opacity': 1", "всё прекрасно!"), array("'color': '#444', 'opacity': 1", "осталось совсем немного!"), array(1, 1));
+        fx_write_log("Step #" . $action . ": Database parameter checking complete");
+        echo fx_html_status_bar(array("'color': 'green', 'opacity': 1", "All's working fine!"), array("'color': 'green', 'opacity': 1", "Going well…"), array("'color': '#444', 'opacity': 1", "Just one steps to go!"), array(1, 1));
         echo "<div id='settings'>" . fx_html_settings() . "</div>";
     break;
     case 3:
-        // Установка выбранной редакции
         if (!$ajax)
             fx_html_beg();
-        fx_write_log("Этап №" . $action . ": Установка дистрибутива.");
+        fx_write_log("Step #" . $action . ": Installing distributive.");
         $errors = array();
         
         if ( !( fx_post_get('pwd') && fx_post_get('email') ) ) {
-            fx_write_log('Не введены данные администратора системы.');
-            echo fx_html_status_bar(array("'color': 'green', 'opacity': 1", "всё отлично!"), array("'color': 'green', 'opacity': 1", "всё прекрасно!"), array("'color': 'red', 'opacity': 1", "возникла проблема!"), array(1, 1));
-            echo "Не введены данные администратора системы. Вернитесь и введите эти данные.";
-            echo fx_html_form(2, 'Вернуться');
+            fx_write_log('System administrator\'s data are not entered');
+            echo fx_html_status_bar(array("'color': 'green', 'opacity': 1", "So far so good!"), array("'color': 'green', 'opacity': 1", "All's working fine!"), array("'color': 'red', 'opacity': 1", "There is a problem!"), array(1, 1));
+            echo "System administrator's data were not entered. Go back and put them in.";
+            echo fx_html_form(2, 'Go back');
             break;
         }
         
-        echo "Установка может занять от нескольких секунд до нескольких минут, все зависит от произвоительности вашего сервера.<br />
+        echo "Installing may take from a few seconds up to several minutes depending on your server's capacity.<br />
         <ul>";
         @ob_flush();
         @flush();
-        $notify['success0'] = "<script>$('#timer0').html('<span style=\'color: green;\'>готово!</span>');</script>";
-        $notify['error0'] = "<script>$('#timer0').html('<span style=\'color: red;\'>ошибка!</span>');</script>";
-        $notify['success1'] = "<script>$('#timer1').html('<span style=\'color: green;\'>готово!</span>');</script>";
-        $notify['error1'] = "<script>$('#timer1').html('<span style=\'color: red;\'>ошибка!</span>');</script>";
-        $notify['success2'] = "<script>$('#timer2').html('<span style=\'color: green;\'>готово!</span>');</script>";
-        $notify['error2'] = "<script>$('#timer2').html('<span style=\'color: red;\'>ошибка!</span>');</script>";
+        $notify['success0'] = "<script>$('#timer0').html('<span style=\'color: green;\'>All's done!</span>');</script>";
+        $notify['error0'] = "<script>$('#timer0').html('<span style=\'color: red;\'>Error!</span>');</script>";
+        $notify['success1'] = "<script>$('#timer1').html('<span style=\'color: green;\'>All's done!</span>');</script>";
+        $notify['error1'] = "<script>$('#timer1').html('<span style=\'color: red;\'>Error!</span>');</script>";
+        $notify['success2'] = "<script>$('#timer2').html('<span style=\'color: green;\'>All's done!</span>');</script>";
+        $notify['error2'] = "<script>$('#timer2').html('<span style=\'color: red;\'>Error!</span>');</script>";
 
-        echo "<li>Разворачиваю базу данных... <span id='timer2'></span></li>";
+        echo "<li>Unpacking database… <span id='timer2'></span></li>";
         @ob_flush();
         @flush();
         if ( !fx_install_db() ) {
-            echo fx_html_status_bar(array("'color': 'green', 'opacity': 1", "всё отлично!"), array("'color': 'green', 'opacity': 1", "всё прекрасно!"), array("'color': 'red', 'opacity': 1", "возникла проблема!"), array(1, 1));
-            $errors['db'] = "При установке базы данных возникла проблема.";
+            echo fx_html_status_bar(array("'color': 'green', 'opacity': 1", "All's going great!"), array("'color': 'green', 'opacity': 1", "Everything is fine!"), array("'color': 'red', 'opacity': 1", "Oops! There is a problem."), array(1, 1));
+            $errors['db'] = "A problem occurred when setting up databse.";
             fx_write_log($errors['db']);
             echo $notify['error2'];
             $message['db'] = $errors['db'];
             echo "</ul>";
             echo $message['db'];
-            echo fx_html_form(4, 'Повторить');
+            echo fx_html_form(4, 'Try again');
             break;
         }
         echo $notify['success2'];
         @ob_flush();
         @flush();
-        $errors['db'] = "База данных успешно развернута.";
+        $errors['db'] = "Database unpacked.";
         fx_write_log($errors['db']);
 
         echo "</ul>";
@@ -296,28 +278,27 @@ switch ($action) {
         // update .htaccess
         fx_change_htaccess($FLOXIM_FOLDER, $CUSTOM_FOLDER);
         
-        echo fx_html_form('4', 'Завершить установку');
+        echo fx_html_form('4', 'Complete installing');
     break;
     case 4:
-        // Floxim установлен
         if (!$ajax) fx_html_beg();
         
         $dir = $_SERVER['HTTP_HOST'].$CUSTOM_FOLDER;
         
         $result = fx_html_status_bar(
-          array("'color': 'green', 'opacity': 1", "всё отлично!"),
-          array("'color': 'green', 'opacity': 1", "всё прекрасно!"),
-          array("'color': 'green', 'opacity': 1", "готово!"),
+          array("'color': 'green', 'opacity': 1", "Everything is fine!"),
+          array("'color': 'green', 'opacity': 1", "All's great!"),
+          array("'color': 'green', 'opacity': 1", "All's done!"),
           array(1, 1)
         );
-        $result.= "Ура, Floxim установлен, теперь вы можете начать работу. Смотрите:<br />".
+        $result.= "Hurray! Floxim installed, you can start working. Here are:<br />".
           "<ul>".
-          "<li>Адрес сайта: <a href='http://".$dir."' target='_blank'>http://".$dir."</a></li>".
-          "<li>Логин для <a href='http://".$dir."/floxim/'>входа</a>: <strong>admin</strong></li>".
-          "<li>Пароль: тот, который вы ввели ".( fx_post_get('email') ? "(и еще он выслан на e-mail <a href='mailto:".fx_post_get('email')."'>".fx_post_get('email')."</a>)" : "" )."</li>".
+          "<li>site address: <a href='http://".$dir."' target='_blank'>http://".$dir."</a></li>".
+          "<li>Login for the <a href='http://".$dir."/floxim/'>back office</a>: <strong>".fx_post_get('email')."</strong></li>".
+          "<li>Password: the one you've entered ".( fx_post_get('email') ? "(and it's also in an email we've sent to <a href='mailto:".fx_post_get('email')."'>".fx_post_get('email')."</a>)" : "" )."</li>".
           "</ul>".
           "<br />".
-          "<em style='color: red;'>Обязательно удалите папку install с сервера!</em>";
+          "<em style='color: red;'>Make sure you've deleted install folder from server!</em>";
         echo $result;
         fx_mail_to_user($dir);
     break;
@@ -329,29 +310,29 @@ function fx_html_beg() {
 <!doctype html>
 <html>
 <head>
-    <title>Установка Floxim</title>
-    <meta http-equiv="Content-Language" content="ru" />
+    <title>Floxim installing</title>
+    <meta http-equiv="Content-Language" content="en" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" type="text/css" href="style.css" />
     <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
 </head>
 <body>
     <div class='main'>       
-            <div class='top'>Установщик Floxim</div>
+            <div class='top'>Floxim installer</div>
             <div class='status_bar'>
                 <div class='pair'>
-                    <span id='item0'>Проверка хостинга</span><br />
-                    <span id='status0'>можно приступать</span>
+                    <span id='item0'>Checking the hosting</span><br />
+                    <span id='status0'>You may start now</span>
                 </div>
                 <div id='arrow0'>&rarr;</div>
                 <div class='pair'>
-                    <span id='item1' >Проверка базы данных</span><br />
-                    <span id='status1' >еще не производилась</span>
+                    <span id='item1'>Checking database</span><br />
+                    <span id='status1' >is not executed </span>
                 </div>
                 <div id='arrow1'>&rarr;</div>
                 <div class='pair'>
-                    <span id='item2' >Установка Floxim</span><br />
-                    <span id='status2'>сначала все проверим</span>
+                    <span id='item2' >Floxim installing</span><br />
+                    <span id='status2'>Checking everything first</span>
                 </div>
                 <div style='clear:both;'></div>
             </div>
@@ -466,7 +447,7 @@ function fx_html_end() {
         var email = value;
         if(email != '') {
           if (fx_is_valid_email_address(email) == false) {
-            $('#email_valid').html('<span style=\'color: red;\'>не похоже на настоящий email</span>');
+            $('#email_valid').html('<span style=\'color: red;\'>Doesn\'t look like real email</span>');
           } 
           else {
             $('#email_valid').html('');
@@ -517,6 +498,7 @@ function fx_html_form($action, $button, $opt = '') {
 function fx_query($query) {
     global $LinkID;
     $res = mysql_query($query, $LinkID);
+    fx_write_log($query);
     if (mysql_error()) {
         print mysql_error() . "\n<br /><strong>Query:</strong> <pre>$query</pre>\n";
         return false;
@@ -547,7 +529,7 @@ function fx_connect_db() {
         return false;
 
     if (!mysql_select_db($dbname, $LinkID)) {
-        fx_write_log('Не удалось произвести подключение к указанной БД');
+        fx_write_log('Can\'t connect to indicated database');
         return false;
     }
     mysql_query("SET NAMES 'utf8'");
@@ -569,24 +551,26 @@ function fx_check_user_grants() {
 }
 
 function fx_html_settings() {
-    return fx_html_form(3, 'Установить Floxim', fx_html_config());
+    return fx_html_form(3, 'Install Floxim', fx_html_config());
 }
 
 function fx_html_config() {
-    $html = "<div class='pwd_create'>
-                    Введите пароль пользователя <strong>admin</strong>, для входа в систему администрирования системы:<br />
-                    <input type='password' name='pwd' id='pwd_field' />
-                    <a href='#' id='pwd_gen' class='selected_tab'>сгенерировать пароль</a>
-                    <div>
-						<input type='checkbox' name='show_pwd' value='1' id='show_pwd' onclick='document.getElementById(\"pwd_field\").type = (this.checked ? \"text\" : \"password\");' />
-                        <label for='show_pwd'>Показать пароль</label>
-                    </div>
-                </div>
-                <div class='email_form'>
-                    E-mail администратора:<br />
-                    <input class='email' type='text' name='email' id='email_field' />
-                    <span id='email_valid' class='valid'></span>
-                </div>";
+    $html = "
+    <div class='email_form'>
+		Administrator's email:<br />
+		<input class='email' type='text' name='email' id='email_field' />
+		<span id='email_valid' class='valid'></span>
+	</div>
+    <div class='pwd_create'>
+		Enter user's password to access the administration system:<br />
+		<input type='password' name='pwd' id='pwd_field' />
+		<a href='#' id='pwd_gen' class='selected_tab'>generate password</a>
+		<div>
+			<input type='checkbox' name='show_pwd' value='1' id='show_pwd' onclick='document.getElementById(\"pwd_field\").type = (this.checked ? \"text\" : \"password\");' />
+			<label for='show_pwd'>Show password</label>
+		</div>
+	</div>
+	";
 
     return $html;
 }
@@ -625,7 +609,7 @@ function fx_install_db($dir = 'sql/', $level = 0) {
 			$file = fx_standardize_path_to_file( dirname(__FILE__) . '/' . $dir . $file_name );
 			if ( file_exists($file) ) {
 				if ( !fx_exec_sql($file) ) {
-					fx_write_log('Возможно система уже установлена: ' . $file);
+					fx_write_log('The system could be already installed: ' . $file);
 					return false;
 				}
 			}
@@ -634,7 +618,7 @@ function fx_install_db($dir = 'sql/', $level = 0) {
     
 	if (!$level) {
 		fx_update_db();
-		fx_write_log('Распаковка базы данных прошла успешно.');
+		fx_write_log('Unpacking database finished.');
 	}
 
     return true;
@@ -661,7 +645,6 @@ function fx_get_cattables_for_lower_case() {
 function fx_get_cattables() {
     $cattables = array(
 		'fx_auth_external',
-		'fx_auth_user_relation',
 		'fx_classificator',
 		'fx_classificator_cities',
 		'fx_classificator_country',
@@ -696,7 +679,6 @@ function fx_get_cattables() {
 		'fx_module',
 		'fx_multiselect',
 		'fx_patch',
-		'fx_permission',
 		'fx_redirect',
 		'fx_session',
 		'fx_settings',
@@ -742,20 +724,18 @@ function fx_mail_to_user($path) {
     $mail = fx_post_get('email');
     $pwd = fx_post_get('pwd');
 
-    $subject = 'Floxim успешно установлен';
-    $message = 'Поздравляю!
+    $subject = 'Floxim installed successfully.';
+    $message = 'Congratulations! 
+You\'ve installed Floxim on http://'.$path.'
+Your authorised data to access the site: 
+    - address: http://'.$path.'/floxim/
+    - login: '.$mail.'
+    - password: '.$pwd .'
 
-Вы успешно установили Floxim на сайт http://' . $path . '.
-    
-Ваши авторизационные данные для доступа на сайт: 
-- адрес: http://' . $path . '
-- логин: admin 
-' . ($pwd ? '- пароль: ' . $pwd : '- вход в систему без пароля') . '
-    
-Спасибо, что выбрали нашу систему!
+Thank you for choosing Floxim! 
 
-С уважением, 
-Скрипт Установки Floxim';
+Best regards, 
+Floxim Install Script';
 
     $headers = "Content-type: text/plain; charset=UTF-8 \r\n";
     $headers .= "From: info@{$_SERVER['SERVER_NAME']}\r\n";
@@ -763,7 +743,7 @@ function fx_mail_to_user($path) {
 }
 
 function fx_write_log($message, $time = true) {
-    return null;
+    #return null;
     $message_time = "";
     if ($time) {
         $message_time = date("H:i:s d.m.Y") . ' ';
@@ -792,7 +772,7 @@ function fx_func_enabled($function) {
 function fx_exec_sql($file) {
     $fp = fopen($file, "r");
     if (!$fp) {
-        fx_write_log('Не удалось открыть sql-файл: ' . $file);
+        fx_write_log('Can\'t open sql-file: ' . $file);
         return false;
     }
     $i = 0;
@@ -803,7 +783,7 @@ function fx_exec_sql($file) {
                 $statement .= chop(fgets($fp, 65536));
             if (substr($statement, 0, 1) <> "#" && substr($statement, 0, 2) <> "--") {
                 if (!fx_query($statement)) {
-                    fx_write_log('Неудачное выполнение запроса в файле ' . $file . ' MySQL ошибка: ' . mysql_error());
+                    fx_write_log('Execution of request failed in file ' . $file . ' MySQL error: ' . mysql_error());
                 }
             }
         }
@@ -816,7 +796,7 @@ function fx_exec_sql($file) {
 function fx_get_config($MYSQL_HOST, $MYSQL_USER, $MYSQL_PASSWORD, $MYSQL_DB_NAME) {
     ob_start();
     ?>
-define("FX_JQUERY_PATH", '/floxim/lib/js/jquery-1.9.1.js');
+define("FX_JQUERY_PATH", '/floxim/lib/js/jquery-1.9.1.min.js');
 $db_config = array(
     'default' =>  array(
         'DB_DSN' => 'mysql:dbname=<?=$MYSQL_DB_NAME?>;host=<?=$MYSQL_HOST?>',
@@ -844,7 +824,7 @@ function fx_write_config($distr_dir, $custom_dir) {
     if ( is_writable($distr_dir) ) {
       file_put_contents($config_path, $cfg_file);
     } else {
-		fx_write_log('Конфигурационный файл config.php недоступен для записи. Установите нужные права на этот файл и повторите установку заново.');
+		fx_write_log('Configuration file config.php unaccessible for recording. Add the required permissions on this file and repeat the installation. ');
 	}
 }
 

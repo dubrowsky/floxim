@@ -109,7 +109,7 @@ class fx_template_suitable {
         
         if (!$source_layout_id || !$c_variant) {
             foreach ($template_variants as $tplv) {
-                if ($tplv['for'] == 'layout.show') {
+                if ($tplv['of'] == 'layout.show') {
                     $layout_vis = $layout_ib->get_visual();
                     $layout_vis['template'] = $tplv['full_id'];
                     unset($layout_vis['is_stub']);

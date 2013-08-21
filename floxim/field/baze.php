@@ -10,28 +10,6 @@ class fx_field_baze extends fx_field {
     protected $_js_field = array();
     protected $_wrap_tag = 'span';
 
-    public function content_procces(fx_content $content, fx_infoblock_content $infoblock = null, $hash_obj = null) {
-        $fx_core = fx_core::get_object();
-        $name = $this->name;
-        
-        $result = array();
-        $result['f_'.$name.'_none'] = $content[$name];
-        
-        if ( $hash_obj ) {
-            $eit_in_place_info = $this->get_edit_jsdata($content);
-            $hash = $fx_core->page->add_edit_field('f_'.$name, $eit_in_place_info, null, $hash_obj);
-                    
-            $result['f_'.$name] = '<'.$this->_wrap_tag.' class="'.$hash.'">'.$content[$name].'</'.$this->_wrap_tag.'>';
-            $result['f_'.$name.'_hash'] = $hash; 
-        }
-        else {
-            $result['f_'.$name] = $content[$name];
-            $result['f_'.$name.'_hash'] = '';
-        }
-
-        return $result;
-    }
-
     public function get_edit_jsdata($content) {
         $data = $this->get_js_field($content);
         unset($data['label'], $data['id'], $data['parent'], $data['name']);
@@ -116,11 +94,4 @@ class fx_field_baze extends fx_field {
     public function get_import_value ( $content, $value, $dir = '' ) {
         return $value;
     }
-    
-    public function get_search_cond ( $cond ) {
-        return false;
-    }
-
 }
-
-?>

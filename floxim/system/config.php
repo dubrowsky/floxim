@@ -62,7 +62,9 @@ class fx_config {
             'TEMPLATE_FOLDER' => '',
             'COMPONENT_FOLDER' => '',
             'WIDGET_FOLDER' => '',
-            'NC_JQUERY_PATH' => ''
+            'FX_VERSION' => '0.1.1.1',
+            'FLOXIM_SITE_PROTOCOL' => 'http',
+            'FLOXIM_SITE_HOST' => 'floxim.org'
     );
 
     public function __construct() {
@@ -105,8 +107,8 @@ class fx_config {
         $this->config['TMP_FOLDER'] = $this->config['ROOT_FOLDER'].'tmp/';
         $this->config['MODULE_FOLDER'] = $this->config['FLOXIM_FOLDER'].$this->config['HTTP_MODULE_PATH'];
         $this->config['ADMIN_FOLDER'] = $this->config['ROOT_FOLDER'].'admin/';
-        $this->config['NC_JQUERY_PATH'] = $this->config['ROOT_FOLDER'].'lib/js/jquery-1.6.min.js';
         $this->config['COMPILED_TEMPLATES_FOLDER'] = $this->config['FILES_FOLDER'].'compiled_templates';
+        $this->config['COMPILED_TEMPLATES_TTL'] = 0;
 
         return $this;
     }

@@ -3,9 +3,6 @@ class fx_system_page extends fx_system {
 
     // title, keywords, description
     protected $metatags = array();
-    // post, который пошлется при edit-in-place (например, при изменении h1)
-    protected $metatags_post = array();
-    protected $block_number = 1, $field_number = 1000;
     
     protected $_macroconst = array();
 
@@ -36,13 +33,6 @@ class fx_system_page extends fx_system {
         return $this->metatags;
     }
 
-    public function get_h1($id = '', $class = '') {
-        $this->h1['id'] = $id;
-        $this->h1['class'] = $class;
-
-        return '%FX_H1%';
-    }
-
     public function add_file($file) {
         if (substr($file, strlen($file) - 4) == '.css') {
             return $this->add_css_file($file);
@@ -56,100 +46,61 @@ class fx_system_page extends fx_system {
         $this->_files_css[] = $file;
     }
 
+    // both simple scrits & scripts from bundles
+    protected $_all_js = array();
+    
     public function add_js_file($file) {
-        $this->_files_js[] = $file;
-    }
-
-    public function add_infoblock($keyword, $params = array()) {
-        $this->infoblocks[$keyword] = $params;
-    }
-
-    public function get_infoblocks() {
-        return $this->infoblocks ? $this->infoblocks : array();
-    }
-
-    public function add_block($post, $buttons = '', $mode = null, $parent = null, $checked = 1) {
-        if (is_string($post)) parse_str($post, $post);
-        
-        $buttons = explode(",", $buttons);
-        $res = array('post' => $post, 'buttons' => $buttons);
-        if ( $mode ) $res['mode'] = $mode;
-        if ( $parent ) $res['parent'] = $parent;
-        $res['checked'] = intval($checked);
-        
-        $this->blocks[$this->block_number] = $res;
-
-        return 'fx_page_block_'.$this->block_number++;
-    }
-    
-    public function update_block ( $hash, $data ) {
-        if (is_string($data)) parse_str($data, $data);
-        $block_num = str_replace('fx_page_block_', '', $hash);
-        if ( $this->blocks[$block_num] ) {
-            $this->blocks[$block_num] = array_merge($this->blocks[$block_num], $data);
+        if (!in_array($file, $this->_all_js)) {
+            $this->_files_js[] = $file;
+            $this->_all_js[]= $file;
         }
+    }
+    
+    
+    
+    public function add_js_bundle($files, $params = array()) {
+        if (!isset($params['name'])) {
+            $params['name'] = md5(join($files));
+        }
+        $params['name'] .= '.jsgz';
+        $doc_root = fx::config()->DOCUMENT_ROOT;
+        $http_path = fx::config()->HTTP_FILES_PATH.$params['name'];
+        $full_path = $doc_root.$http_path;
         
-    }
-
-    public function get_blocks() {
-        return $this->blocks ? $this->blocks : array();
-    }
-    
-    /**
-     * делает блок, в который можно добавлять.
-     * Ключи массива:
-     * mode - режим, когда в этот блок можно добавить
-     * post 
-     * name - имя для меню
-     * key, parent_key
-     * decent_parent
-     * preview
-     * preview_parent
-     */
-    public function addition_block ( $data ) {
-        $num = md5(serialize($data));
-        $this->addition_block[$num] = $data;
-    }
-    
-    public function get_addition_block() {
-        return $this->addition_block ? $this->addition_block : array();
-    }
-    
-
-    public function add_edit_field($field, $type, $post = array(), $parent = '', $mode = '') {
-
-        if (is_string($post)) parse_str($post, $post);
-        $ar['field'] = $field;
-
-        if (is_array($type)) {
-            foreach ($type as $k => $v) {
-                $ar[$k] = $v;
+        $this->_all_js = array_merge($this->_all_js, $files);
+        
+        if (!file_exists($full_path)) {
+            require_once($doc_root.'/floxim/lib/JSMinPlus.php');
+            $bundle_content = '';
+            foreach ($files as $i => $f) {
+                if (!preg_match("~^http://~i", $f)) {
+                    $f = $doc_root.$f;
+                }
+                $file_content = file_get_contents($f);
+                if (!preg_match("~\.min~", $f)) {
+                    $minified = JSMinPlus::minify($file_content);
+                    $file_content = $minified;
+                }
+                $bundle_content .= $file_content.";\n";
             }
-        } else {
-            $ar['type'] = $type;
+            $fh = gzopen($full_path, 'wb5');
+            gzwrite($fh, $bundle_content);
+            gzclose($fh);
+            $fh = fopen(preg_replace("~\.jsgz$~", ".js", $full_path), 'w');
+            fputs($fh, $bundle_content);
+            fclose($fh);
         }
-        if (!$ar['type']) $ar['type'] = 'string';
-
-        if ($post) $ar['post'] = $post;
-        if ($parent) $ar['parent'] = $parent;
-        if ($mode) $ar['mode'] = array($mode);
-
-        $this->edit_fields[$this->field_number] = $ar;
-
-        return 'fx_page_field fx_page_field_'.$this->field_number++;
+        if (!$this->_accept_gzip()) {
+            $http_path = preg_replace("~\.jsgz$~", ".js", $http_path);
+        }
+        $this->_files_js[]= $http_path;
     }
-
-    public function get_edit_fields() {
-        return $this->edit_fields ? $this->edit_fields : array();
-    }
-
-    public function add_sortable($params) {
-        $num = md5(serialize($params));
-        $this->sortable[$num] = $params;
-    }
-
-    public function get_sortable() {
-        return $this->sortable ? $this->sortable : array();
+    
+    protected function _accept_gzip() {
+        if (!isset($_SERVER['HTTP_ACCEPT_ENCODING'])) {
+            return false;
+        }
+        return in_array('gzip', explode(",", $_SERVER['HTTP_ACCEPT_ENCODING']));
     }
 
     public function add_data_js($keyword, $values) {
@@ -239,14 +190,6 @@ class fx_system_page extends fx_system {
         
         $buffer = preg_replace("~<head(\s[^>]*?|)>~", '$0'.$r, $buffer);
 
-        //h1
-        $h1_post = $this->metatags_post['seo_h1'];
-        if ($h1_post) {
-            $h1_class = $this->add_edit_field('h1', 'string', $h1_post);
-        }
-        $buffer = str_replace('%FX_H1%', '<h1 class="'.$h1_class.'">'.$this->get_metatags('h1').'</h1>', $buffer);
-
-
         if ($this->_after_body) {
             $after_body = $this->_after_body;
             $buffer = preg_replace_callback(
@@ -281,7 +224,4 @@ class fx_system_page extends fx_system {
         
         return $buffer;
     }
-
 }
-
-?>

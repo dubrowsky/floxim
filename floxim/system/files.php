@@ -1,8 +1,6 @@
 <?php
 
 class fx_system_files extends fx_system {
-
-    protected $core;
     public $ftp_host;
     public $ftp_port;
     public $ftp_path;
@@ -254,8 +252,7 @@ class fx_system_files extends fx_system {
     public function __construct($user = '', $password = '', $host = null, $port = 21, $ftp_path = '') {
         // load parent constructor
         parent::__construct();
-        $this->core = fx_core::get_object();
-
+        
         $this->ftp_user = $user;
         $this->ftp_password = $password;
         $this->ftp_port = $port;
@@ -323,7 +320,7 @@ class fx_system_files extends fx_system {
             return 0;
         }
 
-        throw new fx_exception_files( fx::lang('Не могу произвести запись в файл','system') . ' ' . $filename);
+        throw new fx_exception_files( fx::lang('File is not writable','system') . ' ' . $filename);
 
         // В противном случае пишем через ftp
         $tmpfile = tmpfile();
@@ -863,8 +860,6 @@ class fx_system_files extends fx_system {
         $local_filename = $this->base_path.$filename;
 
         extract($vars);
-        $fx_core = fx_core::get_object();
-
         include($local_filename);
     }
 
@@ -957,7 +952,11 @@ class fx_system_files extends fx_system {
         $full_path = fx::config()->FILES_FOLDER.$dir.$put_file;
         
         if ($type == 1) {
-            move_uploaded_file($file['tmp_name'], $full_path);
+            $res= move_uploaded_file($file['tmp_name'], $full_path);
+            if (!$res) {
+            	dev_log($file, $full_path);
+            	die();
+            }
             //$this->move_uploaded_file($file['tmp_name'], $full_path);
         } else if ( $type == 2 || $type == 3) {
             $content = file_get_contents($link);
@@ -977,7 +976,8 @@ class fx_system_files extends fx_system {
         return array(   
             'id' => fx::db()->insert_id(), 
             'path' => $http_path,
-            'filename' => $filename
+            'filename' => $filename,
+            'fullpath' => $full_path
         );
     }
 
@@ -1026,7 +1026,6 @@ class fx_system_files extends fx_system {
      * @return mixed 0 в случае удачи, либо null в случае ошибки
      */
     public function tgz_create($out_file, $dir) {
-        $fx_core = fx_core::get_object();
         require_once fx::config()->INCLUDE_FOLDER.'tar.php';
 
         if (!$out_file || !$dir) {
@@ -1069,7 +1068,6 @@ class fx_system_files extends fx_system {
      * @return mixed 0 в случае удачи, либо null в случае ошибки
      */
     public function tgz_extract($tgz_file, $dir) {
-        $fx_core = fx_core::get_object();
         require_once fx::config()->INCLUDE_FOLDER.'tar.php';
 
         if (!$tgz_file || !$dir) {
@@ -1265,7 +1263,68 @@ class fx_system_files extends fx_system {
 
         return $text[$error_num];
     }
+    
+    function unzip($file, $dir) {
+        $dir = trim($dir, '/').'/';
+        $dir = fx::config()->DOCUMENT_ROOT.
+               fx::config()->HTTP_FILES_PATH.
+               $dir;
+        $this->zip_mkdir($dir);
+        
+        $zip_handle = zip_open($file);
+        if (!is_resource($zip_handle)) {
+            die("Problems while reading zip archive");
+        }
+        while ($zip_entry = zip_read($zip_handle)) {
+            $zip_name = zip_entry_name($zip_entry);
+            $zip_dir = dirname( zip_entry_name($zip_entry) );
+            $zip_size = zip_entry_filesize($zip_entry);
+            if (preg_match("~/$~", $zip_name)) {
+                $new_dir_name = preg_replace("~/$~", '', $dir . $zip_name);
+                $this->zip_mkdir($new_dir_name);
+                chmod($new_dir_name, 0777);
+            }
+            else {
+                zip_entry_open($zip_handle, $zip_entry, 'r');
+                if (is_writable($dir . $zip_dir)) {
+                    $fp = @fopen($dir . $zip_name, 'w');
+                    if (is_resource($fp)) {
+                        @fwrite($fp, zip_entry_read($zip_entry, $zip_size));
+                        @fclose($fp);
+                        chmod($dir.$zip_name, 0666);
+                    }
+                }
+                zip_entry_close($zip_entry);
+            }
+        }
+        zip_close($zip_handle);
+        return true;
+    }
 
+    function zip_mkdir($dir, $chmod = 0755) {
+        $slash = "/";
+        if (substr(php_uname(), 0, 7) == "Windows") {
+            $slash = "\\";
+            $dir = str_replace("/", $slash, $dir);
+        }
+
+        $tree = explode($slash, $dir);
+
+        $path = $slash;
+        // win path begin from C:\
+        if (substr(php_uname(), 0, 7) == "Windows") $path = "";
+
+        foreach($tree as $row) {
+
+            if($row === false) continue;
+
+            if( !@is_dir($path . $row) ) {
+                @mkdir( strval($path . $row), $chmod );
+            }
+
+            $path .= $row . $slash;
+        }
+    }
 }
 
 class fx_exception_files extends fx_exception {

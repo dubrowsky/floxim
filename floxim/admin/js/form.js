@@ -7,7 +7,7 @@
 
         get_settings_from: function () {
             return {
-                id:'nc_dialog_form', 
+                id:'fx_dialog_form', 
                 action:$fx.settings.action_link,
                 target:'nc_upload_target'
             };
@@ -234,6 +234,8 @@
                                         $('[name="'+data.fields[i]+'"]').addClass("ui-state-error");
                                     }
                                 }
+                                console.log('changing hash');
+                                $(window).hashchange();
                             }); 
  
                             return false;

@@ -1,3 +1,221 @@
+/* STYLES FOR FX_OVERLAY: forms&dialogs */
+.fx_overlay .redactor_box {
+	position: relative;
+	overflow: visible;
+	border: 1px solid #ddd;
+	background-color: #fff;
+}
+
+.fx_overlay .redactor_box iframe {
+	display: block;
+	margin: 0;
+	padding: 0;
+}
+
+.fx_overlay .redactor_box textarea, .fx_overlay .redactor_box textarea:focus {
+	position: relative;
+	z-index: 1004;
+	display: block;
+	overflow: auto;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	outline: none;
+	outline: none;
+	border: none;
+	background-color: #222;
+	box-shadow: none;
+	color: #ccc;
+	font-size: 13px;
+	font-family: Menlo, Monaco, monospace, sans-serif;
+	resize: none;
+}
+
+.fx_overlay .redactor_editor,
+.fx_overlay .redactor_editor:focus,
+.fx_overlay .redactor_editor div,
+.fx_overlay .redactor_editor p,
+.fx_overlay .redactor_editor ul,
+.fx_overlay .redactor_editor ol,
+.fx_overlay .redactor_editor table,
+.fx_overlay .redactor_editor dl,
+.fx_overlay .redactor_editor blockquote,
+.fx_overlay .redactor_editor pre,
+.fx_overlay .redactor_editor h1,
+.fx_overlay .redactor_editor h2,
+.fx_overlay .redactor_editor h3,
+.fx_overlay .redactor_editor h4,
+.fx_overlay .redactor_editor h5 {
+	font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif !important;
+}
+
+.fx_overlay .redactor_editor code,
+.fx_overlay .redactor_editor pre {
+	font-family: Menlo, Monaco, monospace, sans-serif !important;
+}
+
+.fx_overlay .redactor_editor,
+.fx_overlay .redactor_editor:focus,
+.fx_overlay .redactor_editor div,
+.fx_overlay .redactor_editor p,
+.fx_overlay .redactor_editor ul,
+.fx_overlay .redactor_editor ol,
+.fx_overlay .redactor_editor table,
+.fx_overlay .redactor_editor dl,
+.fx_overlay .redactor_editor blockquote,
+.fx_overlay .redactor_editor pre {
+	font-size: 15px !important;
+	line-height: 1.45em;
+}
+
+.fx_overlay .redactor_editor,
+.fx_overlay .redactor_editor:focus {
+	position: relative;
+	overflow: auto;
+	margin: 0 !important;
+	padding: 10px;
+	padding-bottom: 5px;
+	outline: none;
+	background: none;
+	background: #fff !important;
+	box-shadow: none !important;
+	white-space: normal;
+}
+.fx_overlay .redactor_editor a {
+	color: #15c !important;
+	text-decoration: underline !important;
+}
+
+.fx_overlay .redactor_editor .redactor_placeholder {
+	color: #999 !important;
+	display: block !important;
+	margin-bottom: 10px !important;
+}
+
+.fx_overlay .redactor_editor object,
+.fx_overlay .redactor_editor embed,
+.fx_overlay .redactor_editor video,
+.fx_overlay .redactor_editor img {
+	max-width: 100%;
+	width: auto;
+}
+.fx_overlay .redactor_editor video,
+.fx_overlay .redactor_editor img {
+	height: auto;
+}
+
+.fx_overlay .redactor_editor div,
+.fx_overlay .redactor_editor p,
+.fx_overlay .redactor_editor ul,
+.fx_overlay .redactor_editor ol,
+.fx_overlay .redactor_editor table,
+.fx_overlay .redactor_editor dl,
+.fx_overlay .redactor_editor blockquote,
+.fx_overlay .redactor_editor pre {
+	margin: 0;
+	margin-bottom: 10px !important;
+	border: none;
+	background: none !important;
+	box-shadow: none !important;
+}
+.fx_overlay .redactor_editor iframe,
+.fx_overlay .redactor_editor object,
+.fx_overlay .redactor_editor hr {
+	margin-bottom: 15px !important;
+}
+.fx_overlay .redactor_editor blockquote {
+	margin-left: 3em !important;
+	color: #777;
+	font-style: italic !important;
+}
+.fx_overlay .redactor_editor ul,
+.fx_overlay .redactor_editor ol {
+	padding-left: 2em !important;
+}
+.fx_overlay .redactor_editor ul ul,
+.fx_overlay .redactor_editor ol ol,
+.fx_overlay .redactor_editor ul ol,
+.fx_overlay .redactor_editor ol ul {
+	margin: 2px !important;
+	padding: 0 !important;
+	padding-left: 2em !important;
+	border: none;
+}
+.fx_overlay .redactor_editor dl dt { font-weight: bold; }
+.fx_overlay .redactor_editor dd { margin-left: 1em;}
+
+.fx_overlay .redactor_editor table {
+	border-collapse: collapse;
+	font-size: 1em !important;
+}
+.fx_overlay .redactor_editor table td {
+	padding: 5px !important;
+	border: 1px solid #ddd;
+	vertical-align: top;
+}
+.fx_overlay .redactor_editor table thead td {
+	border-bottom: 2px solid #000 !important;
+	font-weight: bold !important;
+}
+.fx_overlay .redactor_editor code {
+	background-color: #d8d7d7 !important;
+}
+.fx_overlay .redactor_editor pre {
+	overflow: auto;
+	padding: 1em !important;
+	border: 1px solid #ddd !important;
+	border-radius: 3px !important;
+	background: #f8f8f8 !important;
+	white-space: pre;
+	font-size: 90% !important;
+}
+.fx_overlay .redactor_editor hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #ccc;
+}
+
+.fx_overlay .redactor_editor h1,
+.fx_overlay .redactor_editor h2,
+.fx_overlay .redactor_editor h3,
+.fx_overlay .redactor_editor h4,
+.fx_overlay .redactor_editor h5 {
+	margin-top: 0 !important;
+	margin-right: 0 !important;
+	margin-left: 0;
+	padding: 0 !important;
+	background: none;
+	color: #000;
+	font-weight: bold;
+}
+
+.fx_overlay .redactor_editor h1 {
+	margin-bottom: 10px;
+	font-size: 36px !important;
+	line-height: 40px !important;
+}
+.fx_overlay .redactor_editor h2 {
+	margin-bottom: 10px;
+	font-size: 30px !important;
+	line-height: 38px !important;
+}
+.fx_overlay .redactor_editor h3 {
+	margin-bottom: 10px;
+	font-size: 24px !important;
+	line-height: 30px;
+}
+.fx_overlay .redactor_editor h4 {
+	margin-bottom: 10px;
+	font-size: 18px !important;
+	line-height: 24px !important;
+}
+.fx_overlay .redactor_editor h5 {
+	margin-bottom: 10px;
+	font-size: 1em !important;
+}
+/* END OF FX_OVERLAY */
+
 body .redactor_air {
 	position: absolute;
 	z-index: 2;

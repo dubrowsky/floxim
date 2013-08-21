@@ -7,6 +7,9 @@ class fx_controller_component extends fx_controller {
 
     public function process() {
         $result = parent::process();
+        if (is_string($result)) {
+            return $result;
+        }
         if (!isset($result['_meta'])) {
             $result['_meta'] = array();
         }
@@ -21,30 +24,34 @@ class fx_controller_component extends fx_controller {
         $fields = array();
         $fields['limit'] = array(
             'name' => 'limit',
-            'label' => fx::lang('Сколько выводить','controller_component'),
+            'label' => fx::lang('How many entries to display','controller_component'),
             'value' => 10
         );
         $fields['show_pagination'] = array(
             'name' => 'show_pagination',
-            'label' => fx::lang('Разбивать на страницы?','controller_component'),
+            'label' => fx::lang('Show pagination?','controller_component'),
             'type' => 'checkbox',
             'value' => true,
             'parent' => array('limit' => '!=0')
         );
 
-        $sortings = array('manual' => fx::lang('Ручная','controller_component'), 'created'=> fx::lang('Дата создания','controller_component'));
-        $sortings += $this->get_component()->fields()->get_values('description', 'name');
+        $sortings = array('manual' => '-'.fx::lang('Manual','controller_component').'-', 'created'=> fx::lang('Created','controller_component'));
+        $sortings += $this
+            ->get_component()
+            ->all_fields()
+            ->find('type', fx_field::FIELD_MULTILINK, '!=')
+            ->get_values('description', 'name');
         $fields['sorting'] = array(
             'name' => 'sorting',
-            'label' => fx::lang('Сортировка','controller_component'),
+            'label' => fx::lang('Sorting','controller_component'),
             'type' => 'select',
             'values' => $sortings
         );
         $fields['sorting_dir'] = array(
             'name' => 'sorting_dir',
-            'label' => fx::lang('Порядок','controller_component'),
+            'label' => fx::lang('Order','controller_component'),
             'type' => 'select',
-            'values' => array('asc' => fx::lang('По возрастанию','controller_component'), 'desc' => fx::lang('По убыванию','controller_component')),
+            'values' => array('asc' => fx::lang('Ascending','controller_component'), 'desc' => fx::lang('Descending','controller_component')),
             'parent' => array('sorting' => '!=manual')
         );
         return $fields;
@@ -54,17 +61,17 @@ class fx_controller_component extends fx_controller {
     {
         $fields['parent_type'] = array(
             'name' => 'parent_type',
-            'label' => fx::lang('Родитель','controller_component'),
+            'label' => fx::lang('Parent','controller_component'),
             'type' => 'select',
             'values' => array(
-                'current_page_id' => fx::lang('Текущая страница','controller_component'),
-                'mount_page_id' => fx::lang('Страница, куда прицеплен инфоблок','controller_component'),
-                'custom' => fx::lang('Произвольный','controller_component')
+                'current_page_id' => fx::lang('Current page','controller_component'),
+                'mount_page_id' => fx::lang('The infoblock owner section','controller_component'),
+                'custom' => fx::lang('Random','controller_component')
             )
         );
         $fields['parent_id']= array(
             'name' => 'parent_id',
-            'label' => fx::lang('Выбрать родителя','controller_component'),
+            'label' => fx::lang('Choose section','controller_component'),
             'parent' => array('parent_type' => 'custom')
         );
         return $fields;
@@ -95,12 +102,12 @@ class fx_controller_component extends fx_controller {
             $com_infoblocks = fx::data('infoblock')->
                     where('site_id', fx::env('site')->get('id'))->
                     get_content_infoblocks($target_com['keyword']);
-            $ib_values = $com_infoblocks->get_values('name', 'id') + array('new' => fx::lang('Новый инфоблок', 'controller_component'));
+            $ib_values = $com_infoblocks->get_values('name', 'id') + array('new' => fx::lang('New infoblock', 'controller_component'));
             $fields ['field_'.$lf['id'].'_infoblock']= array(
                 'type' => 'select',
                 'values' => $ib_values,
                 'name' => 'field_'.$lf['id'].'_infoblock',
-                'label' => fx::lang('Инфоблок для поля ', 'controller_component').$lf['description']
+                'label' => fx::lang('Infoblock for the field', 'controller_component').$lf['description']
             );
         }
         return $fields;
@@ -110,7 +117,7 @@ class fx_controller_component extends fx_controller {
         $fields = $this->get_action_settings_list_common();
         $fields['from_all'] = array(
             'name' => 'from_all',
-            'label' => fx::lang('Из любого раздела','controller_component'),
+            'label' => fx::lang('From all sections','controller_component'),
             'type' => 'checkbox',
             'parent' => array('is_mirror' => '1'),
             'value' => 1
@@ -132,7 +139,7 @@ class fx_controller_component extends fx_controller {
         }
         $fields['parent_id'] = array(
             'name' => 'parent_id',
-            'label' => fx::lang('Указать раздел явно','controller_component'),
+            'label' => fx::lang('From specified section','controller_component'),
             'parent' => array('from_all' => '0')
         );
         return $fields;
@@ -149,15 +156,15 @@ class fx_controller_component extends fx_controller {
     public function trigger($event, $data = null) {
         if (isset($this->_bound[$event]) && is_array($this->_bound[$event])) {
             foreach ( $this->_bound[$event] as $cb) {
-                call_user_func($cb, $data);
+                call_user_func($cb, $data, $this);
             }
         }
     }
 
     public function info_record() {
         return array(
-            'name' => fx::lang('Запись','controller_component'),
-            'description' => fx::lang('Выводит отдельную запись','controller_component')
+            'name' => fx::lang('Entry','controller_component'),
+            'description' => fx::lang('Show single entry','controller_component')
         );
     }
     
@@ -168,8 +175,17 @@ class fx_controller_component extends fx_controller {
     
     public function info_listing() {
         return array(
-            'name' => fx::lang('Список','controller_component'),
-            'description' => fx::lang('Выводит список записей из указанного раздела','controller_component')
+            'name' => fx::lang('List','controller_component'),
+            'description' => fx::lang('Show entries from the specified section','controller_component')
+        );
+    }
+    
+    public function defaults_listing() {
+        return array(
+            'scope' => array(
+                'page_id' => fx::env('page'),
+                'pages' => 'this'
+            )
         );
     }
 
@@ -177,20 +193,22 @@ class fx_controller_component extends fx_controller {
         $f = $this->_get_finder();
         
         $content_type = $this->get_content_type();
-        if ( ($infoblock_id = $this->param('infoblock_id'))) {
+        if ( ($infoblock_id = $this->get_param('infoblock_id'))) {
             $c_ib = fx::data('infoblock', $infoblock_id);
-            $f->where('infoblock_id', $c_ib->get_root_infoblock()->get('id'));
+            if (!$this->get_param('skip_infoblock_filter')) {
+                $f->where('infoblock_id', $c_ib->get_root_infoblock()->get('id'));
+            }
         }
         if ( ($parent_id = $this->_get_parent_id()) ) {
             $f->where('parent_id', $this->_get_parent_id());
         }
         $this->trigger('build_query',$f);
 
-        if ( ($sorting = $this->param('sorting')) ) {
+        if ( ($sorting = $this->get_param('sorting')) ) {
             if ($sorting == 'manual') {
                 $f->order('priority');
             } else {
-                $f->order($sorting, $this->param('sorting_dir'));
+                $f->order($sorting, $this->get_param('sorting_dir'));
             }
         }
         $this->trigger('query_ready', $f);
@@ -200,15 +218,22 @@ class fx_controller_component extends fx_controller {
 
         if (fx::env('is_admin') && $infoblock_id) {
             $c_ib_name = $c_ib->get_prop_inherited('name');
+            $c_ib_name = $c_ib_name ? $c_ib_name : $c_ib['id'];
             $component = fx::data('component', $content_type);
-            $adder_title = $component['item_name'].' &rarr; '.($c_ib_name ? $c_ib_name:$c_ib['id']);
+            $adder_title = $component['item_name'].' &rarr; '.$c_ib_name;
             
             $this->accept_content(array(
                 'title' => $adder_title,
                 'parent_id' => $this->_get_parent_id(),
                 'type' => $content_type,
-                'infoblock_id' => $this->param('infoblock_id')
+                'infoblock_id' => $this->get_param('infoblock_id')
             ));
+            
+            if (count($items) == 0) {
+                $this->_meta['hidden'] = true;
+                $this->_meta['hidden_placeholder'] = 'Infoblock "'.$c_ib_name.'" is empty. '.
+                                                'You can add '.$component['item_name'].' here';
+            }
         }
         $res = array('items' => $items);
         if ( ($pagination = $this->_get_pagination()) ) {
@@ -220,7 +245,7 @@ class fx_controller_component extends fx_controller {
     public function accept_content($params) {
         $params = array_merge(
             array(
-                'infoblock_id' => $this->param('infoblock_id'),
+                'infoblock_id' => $this->get_param('infoblock_id'),
                 'type' => $this->get_content_type()
             ), $params
         );
@@ -241,14 +266,14 @@ class fx_controller_component extends fx_controller {
     }
 
     protected function _get_pagination() {
-        if (!$this->param('show_pagination')){
+        if (!$this->get_param('show_pagination')){
             return null;
         }
         $total_rows = $this->_get_finder()->get_found_rows();
         if ($total_rows == 0) {
             return null;
         }
-        $limit = $this->param('limit');
+        $limit = $this->get_param('limit');
         if ($limit == 0) {
             return null;
         }
@@ -275,12 +300,12 @@ class fx_controller_component extends fx_controller {
     }
     
     protected function _get_parent_id() {
-        $ib = fx::data('infoblock', $this->param('infoblock_id')); 
+        $ib = fx::data('infoblock', $this->get_param('infoblock_id')); 
         if (!$ib) {
-            return $this->param('parent_id');
+            return $this->get_param('parent_id');
         }
         $parent_id = null;
-        switch($this->param('parent_type')) {
+        switch($this->get_param('parent_type')) {
             case 'mount_page_id':
                 $parent_id = $ib['page_id'];
                 break;
@@ -288,7 +313,7 @@ class fx_controller_component extends fx_controller {
                 $parent_id = fx::env('page');
                 break;
             case 'custom':
-                $parent_id = $this->param('parent_id');
+                $parent_id = $this->get_param('parent_id');
                 break;
         }
         return $parent_id;
@@ -298,22 +323,22 @@ class fx_controller_component extends fx_controller {
     public function info_listing_mirror() {
         return array(
             'name' => 'Mirror',
-            'description' => fx::lang('Выводит записи по произвольному фильтру','controller_component')
+            'description' => fx::lang('Show entries by filter','controller_component')
         );
     }
     
     public function do_listing_mirror() {
         $f = $this->_get_finder();
-        if ( ($parent_id = $this->param('parent_id')) ) {
+        if ( ($parent_id = $this->get_param('parent_id')) ) {
             $f->where('parent_id', $parent_id);
         }
         $this->trigger('build_query',$f);
 
-        if ( ($sorting = $this->param('sorting')) ) {
+        if ( ($sorting = $this->get_param('sorting')) ) {
             if ($sorting == 'manual') {
                 $f->order('priority');
             } else {
-                $f->order($sorting, $this->param('sorting_dir'));
+                $f->order($sorting, $this->get_param('sorting_dir'));
             }
         }
         $this->trigger('query_ready', $f);
@@ -368,9 +393,9 @@ class fx_controller_component extends fx_controller {
             return $this->_finder;
         }
         $finder = fx::data('content_'.$this->get_content_type());
-        $show_pagination = $this->param('show_pagination');
+        $show_pagination = $this->get_param('show_pagination');
         $c_page = $this->_get_current_page();
-        $limit = $this->param('limit');
+        $limit = $this->get_param('limit');
         if ( $show_pagination && $limit) {
             $finder->calc_found_rows();
         }

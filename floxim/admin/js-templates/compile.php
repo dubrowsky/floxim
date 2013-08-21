@@ -145,6 +145,9 @@ class JSTX {
 				if (isset($tpl['test'])) {
 					echo "f._test = function(_c, _o) {return ".$tpl['test']."};\n";
 				}
+				if (isset($tpl['priority'])) {
+					echo "f._priority = ".$tpl['priority'].";\n";
+				}
 				echo "\$t.add('".$tpl_name."', f);\n\n";
 			}
 		}

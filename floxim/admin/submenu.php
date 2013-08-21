@@ -116,6 +116,12 @@ class fx_admin_submenu {
             $this->active = 'settings';
             $this->active_main_menu = 'manage';
         }
+        
+        if ($match[1] == 'patch') {
+            $this->init_manage();
+            $this->active = 'patch';
+            $this->active_main_menu = 'manage';
+        }
 
         return $this;
     }
@@ -126,9 +132,9 @@ class fx_admin_submenu {
     }
 
     protected function init_develop() {
-        $this->menu[] = $node_component = $this->add_node('component', fx::lang('Компоненты','system'), 'component.group');
-        $this->menu[] = $node_template = $this->add_node('layout', fx::lang('Макеты','system'), 'layout.all'); // template ->layout
-        $this->menu[] = $node_widget = $this->add_node('widget', fx::lang('Виджеты','system'), 'widget.group');
+        $this->menu[] = $node_component = $this->add_node('component', fx::lang('Components','system'), 'component.group');
+        $this->menu[] = $node_template = $this->add_node('layout', fx::lang('Layouts','system'), 'layout.all'); // template ->layout
+        $this->menu[] = $node_widget = $this->add_node('widget', fx::lang('Widgets','system'), 'widget.group');
 
         foreach (fx::data('component')->get_all_groups() as $group) {
             $hash = md5($group);
@@ -141,31 +147,24 @@ class fx_admin_submenu {
     }
 
     protected function init_manage() {
-        //$fx_core = fx_core::get_object();
-        //$modules = $fx_core->modules->get_data();
         
-        $this->menu[] = $node_site = $this->add_node('site', fx::lang('Список сайтов','system'), 'site.all');
-        /*
-        $this->menu[] = $node_administrate = $this->add_node('administrate', fx::lang('Администрирование','system'), 'administrate.module');
-        $this->menu[] = $this->add_node('module', fx::lang('Модули','system'), 'administrate.module', $node_administrate);
-        
-        $this->menu[] = $node_tools = $this->add_node('tools', fx::lang('Инструменты','system'), 'redirect.all');
-        $this->menu[] = $this->add_node('module', fx::lang('Модули','system'), 'administrate.module', $node_administrate);
-        
-        $this->menu[] = $node_users = $this->add_node('user', fx::lang('Пользователи','system'), 'user.all');
-        $this->menu[] = $this->add_node('user', 'Список пользователей', 'user.all', $node_users);
-        $this->menu[] = $this->add_node('group', 'Группы', 'group.all', $node_users);
-
-        $this->menu[] = $node_settings = $this->add_node('settings', fx::lang('Настройки','system'), 'settings.system');
-         * 
-         */
+        $this->menu[] = $this->add_node(
+            'site', 
+            fx::lang('All sites','system'), 
+            'site.all'
+        );
+        $this->menu[] = $this->add_node(
+            'patch', 
+            fx::lang('Patches','system'), 
+            'patch.all'
+        );
     }
 
     protected function init_menu_component($id) {
         $this->type = 'full';
         $component = fx::data('component')->get_by_id($id);
         if (!$component) {
-            $this->error = fx::lang('Компонент не найден','system');
+            $this->error = fx::lang('Component not found','system');
         } else {
             $this->title = $component['name'];
             $this->backlink = 'component.group';
@@ -173,21 +172,12 @@ class fx_admin_submenu {
             // выводим основные разделы
             $submenu_items = fx_controller_admin_component::get_component_submenu($component);
             foreach ($submenu_items as $item) {
-            	$this->menu[] = $this->add_node($item['code'], $item['title'], $item['url']);
-            }
-            
-            /*
-            // добавляем шаблоны
-            $ctpls = fx::data('ctpl')->get_by_component($cid);
-            foreach ($ctpls as $v) {
-                $this->menu[] = $this->add_node('ctpl-'.$v['id'], $v['name'], 'ctpl.edit('.$v['id'].')', 'ctpl');
-            }
-             * 
-             */
-            
-            // и поля
-            foreach ($component->fields() as $v) {
-                $this->menu[] = $this->add_node('field-'.$v['id'], $v['name'], 'component.edit('.$cid.',edit_field,'.$v['id'].')', 'fields');
+            	$this->menu[] = $this->add_node(
+                        $item['code'], 
+                        $item['title'], 
+                        $item['url'], 
+                        $item['parent']
+                );
             }
         }
     }
@@ -197,7 +187,7 @@ class fx_admin_submenu {
         // $template = fx::data('template')->get_by_id($id);
         $layout = fx::data('layout', $id);
         if (!$layout) {
-            $this->error = fx::lang('Макет не найден','system');
+            $this->error = fx::lang('Layout not found','system');
         } else {
             $this->title = $layout['name'];
             $this->backlink = 'template.all';
@@ -218,7 +208,7 @@ class fx_admin_submenu {
         $this->type = 'full';
         $widget = fx::data('widget')->get_by_id($id);
         if (!$widget) {
-            $this->error = fx::lang('Виджет не найден','system');
+            $this->error = fx::lang('Widget not found','system');
         } else {
             $this->title = $widget['name'];
             $this->backlink = 'widget.group';
@@ -234,14 +224,14 @@ class fx_admin_submenu {
         $this->type = 'full';
         $site = fx::data('site')->get_by_id($id);
         if (!$site) {
-            $this->error = fx::lang('Сайт не найден','system');
+            $this->error = fx::lang('Site not found','system');
         } else {
             $this->title = $site['name'];
             $this->backlink = 'site.all';
 
-            //$this->menu[] = $this->add_node('sitemap-'.$site['id'], fx::lang('Карта сайта','system'), 'site.map('.$site['id'].')');
-            $this->menu[] = $this->add_node('sitesettings-'.$site['id'], fx::lang('Настройки','system'), 'site.settings('.$site['id'].')');
-            $this->menu[] = $this->add_node('sitedesign-'.$site['id'], fx::lang('Дизайн','system'), 'site.design('.$site['id'].')');
+            //$this->menu[] = $this->add_node('sitemap-'.$site['id'], fx::lang('Site map','system'), 'site.map('.$site['id'].')');
+            $this->menu[] = $this->add_node('sitesettings-'.$site['id'], fx::lang('Settings','system'), 'site.settings('.$site['id'].')');
+            $this->menu[] = $this->add_node('sitedesign-'.$site['id'], fx::lang('Design','system'), 'site.design('.$site['id'].')');
         }
     }
 
@@ -249,7 +239,7 @@ class fx_admin_submenu {
         $this->type = 'full';
         $classificator = fx::data('classificator')->get_by_id($id);
         if (!$classificator) {
-            $this->error = fx::lang('Список не найден','system');
+            $this->error = fx::lang('List not found','system');
         } else {
             $this->title = $classificator['name'];
             $this->backlink = 'classificator.all';
@@ -260,11 +250,11 @@ class fx_admin_submenu {
         $this->type = 'full';
         $user = fx::data('user')->get_by_id($id);
         if (!$user) {
-            $this->error = fx::lang('Пользователь не найден','system');
+            $this->error = fx::lang('User not found','system');
         } else {
             $this->title = $user['name'];
             $this->backlink = 'user.all';
-            $this->menu[] = $this->add_node('profile', fx::lang('Профиль','system'), 'user.full('.$user['id'].')');
+            $this->menu[] = $this->add_node('profile', fx::lang('Profile','system'), 'user.full('.$user['id'].')');
         }
     }
 

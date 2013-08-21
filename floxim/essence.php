@@ -26,7 +26,6 @@ abstract class fx_essence implements ArrayAccess {
     public function save($dont_log = false, $action = 'update') {
         $this->_before_save();
         $pk = $this->_get_pk();
-        dev_log('saving', $this, $action);
         // update
         if ($this->data[$pk] && $action === 'update') {
             $this->_before_update();
@@ -38,9 +37,12 @@ abstract class fx_essence implements ArrayAccess {
             $this->_get_finder()->update($data, array($pk => $this->data[$pk]));
             $this->_save_multi_links();
             $this->_after_update();
+            /*
             if (!$dont_log) {
                 $this->_add_history_operation('update', $data);
             }
+             * 
+             */
         } // insert
         else {
             $this->_before_insert();
@@ -48,9 +50,12 @@ abstract class fx_essence implements ArrayAccess {
             $this->data['id'] = $id;
             $this->_save_multi_links();
             $this->_after_insert();
+            /*
             if (!$dont_log) {
                 $this->_add_history_operation('add', $this->data);
             }
+             * 
+             */
         }
         
 
@@ -173,8 +178,10 @@ abstract class fx_essence implements ArrayAccess {
          * Например для $post['tags'], где tags - поле-мультисвязь
          * Если связанные не загружены, просим файндер их загрузить
          */
-        $finder = $this->_get_finder();
-        $rels = $finder->relations();
+         
+         $finder = $this->_get_finder();
+         $rels = $finder->relations();
+        
         if (!isset($rels[$offset])) {
             return null;
         }
@@ -189,7 +196,13 @@ abstract class fx_essence implements ArrayAccess {
     public function offsetSet($offset, $value) {
         // ставим modified | modified_data только если существовал ключик
         // чтобы при первой догрузке полей-связей они не помечались как обновленные
-        if (!is_object($value) || array_key_exists($offset, $this->data)) {
+        
+        $offset_exists = array_key_exists($offset, $this->data);
+        if ($offset_exists && $this->data[$offset] === $value) {
+            return;
+        }
+        
+        if (!is_object($value) || $offset_exists) {
             if (!isset($this->modified_data[$offset])) {
                 $this->modified_data[$offset] = $this->data[$offset];
             }
@@ -217,6 +230,13 @@ abstract class fx_essence implements ArrayAccess {
      */
     public function add_template_record_meta($html) {
         return $html;
+    }
+    
+    public function is_modified($field = null) {
+        if ($field === null) {
+            return count($this->modified) > 0;
+        }
+        return is_array($this->modified) && in_array($field, $this->modified);
     }
 
 }

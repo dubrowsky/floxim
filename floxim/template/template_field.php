@@ -1,7 +1,7 @@
 <?php
 
 class fx_template_field  {
-	
+	/*
 	public static function format_date($value, $format) {
 		if (!is_numeric($value)) {
 			$value = strtotime($value);
@@ -14,11 +14,12 @@ class fx_template_field  {
             $thumber = new fx_thumb($value, $format);
             $value = $thumber->get_result_path();
         } catch (Exception $e) {
-            //dev_log($e);
             $value = '';
         }
         return $value;
     }
+     * 
+     */
 	
     protected $_value = null;
     
@@ -31,6 +32,10 @@ class fx_template_field  {
     
     public function get_value(){
         return $this->_value;
+    }
+    
+    public function set_value($value) {
+        $this->_value = $value;
     }
     
     public function set_meta($key, $value) {
@@ -82,10 +87,9 @@ class fx_template_field  {
                 );
                 $tag_meta = array('class' => 'fx_template_var_in_att');
                 foreach ($att_fields as $afk => $af) {
-                    //$tag_meta['data-fx_template_var_'.$afk] = htmlentities(json_encode($af));
                     $tag_meta['data-fx_template_var_'.$afk] = $af;
                 }
-                $tag = fx_html_token::create_standalone($tag);
+                $tag = fx_template_html_token::create_standalone($tag);
                 $tag->add_meta($tag_meta);
                 $tag = $tag->serialize();
                 return $tag;
@@ -100,7 +104,7 @@ class fx_template_field  {
             "~(<[a-z0-9_-]+[^>]*?>)(\s*?)###fxf(\d+)###(\s*?</[a-z0-9_-]+>)~", 
             function($matches) {
                 $replacement = fx_template_field::$replacements[$matches[3]];
-                $tag = fx_html_token::create_standalone($matches[1]);
+                $tag = fx_template_html_token::create_standalone($matches[1]);
                 $tag->add_meta(array(
                     'class' => 'fx_template_var',
                     'data-fx_var' => $replacement[1]
@@ -120,7 +124,7 @@ class fx_template_field  {
             function($matches) {
                 $replacement = fx_template_field::$replacements[$matches[1]];
                 $tag_name = preg_match("~<(?:div|ul|li|table|br)~i", $replacement[2]) ? 'div' : 'span';
-                $tag = fx_html_token::create_standalone('<'.$tag_name.'>');
+                $tag = fx_template_html_token::create_standalone('<'.$tag_name.'>');
                 $tag->add_meta(array(
                     'class' => 'fx_template_var',
                     'data-fx_var' => $replacement[1]

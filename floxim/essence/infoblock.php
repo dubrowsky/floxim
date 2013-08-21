@@ -1,9 +1,5 @@
 <?php
-
-defined("FLOXIM") || die("Unable to load file.");
-
 class fx_infoblock extends fx_essence {
-
     
     protected $_visual = array();
     
@@ -43,48 +39,13 @@ class fx_infoblock extends fx_essence {
     public function render() {
         return fx::controller('infoblock.render', array('infoblock' => $this))->process();
     }
-
-    public function get_access($item = '', $consider_inheritance = true) {
-        $fx_core = fx_core::get_object();
-
-        $items = fx_rights::get_user_types();
-        $types = fx_rights::get_rights_types();
-        $access = $this['access'];
-
-        // права по умолчанию
-        foreach ($types as $type) {
-            if (!in_array($access[$type], $items)) {
-                $access[$type] = 'inherit';
-            }
-        }
-
-        if ($consider_inheritance && $this['type'] == 'content') {
-            $ctpl = fx::data('ctpl')->get_by_id($this['list_ctpl_id']);
-            if ($ctpl) {
-				$ctpl_access = $ctpl->get_access();
-				foreach ($access as $type => $v) {
-					if ($v == 'inherit') {
-						$access[$type] = $ctpl_access[$type];
-					}
-				}
-			}
-        }
-
-        return $item ? $access[$item] : $access;
-    }
-
-    public function check_rights($action) {
-        return true;
-    }
     
     protected function _after_delete() {
-        $visual = fx::data('infoblock_visual')->get_all('infoblock_id', $this->get('id'));
         $killer = function($cv) {
             $cv->delete();
         };
-        $visual->apply($killer);
-        $inherit = fx::data('infoblock')->get_all('parent_infoblock_id', $this->get('id'));
-        $inherit->apply($killer);
+        fx::data('infoblock_visual')->where('infoblock_id', $this['id'])->all()->apply($killer);
+        fx::data('infoblock')->where('parent_infoblock_id', $this['id'])->all()->apply($killer);
     }
     
     public function get_owned_content() {

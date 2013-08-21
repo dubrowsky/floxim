@@ -10,6 +10,7 @@ fx_buttons = function ( source ) {
     $fx.panel.bind('fx.admin_load_page', function(event, data){
         self.pulldown = {};
         self.buttons_action = {};
+        console.log(data);
         if ( data.buttons_pulldown ) {
             self.pulldown = data.buttons_pulldown;
         }
@@ -30,10 +31,19 @@ fx_buttons.prototype.bind = function(button_key, callback) {
     var b = $('.fx_admin_button_'+button_key);
     b.show();
     b.data('has_callback', true);
+    b.unbind('click');
     b.click(function() {
     		callback();
     		return false;
     });
+}
+
+fx_buttons.prototype.is_active = function(button_key) {
+    return $('.fx_admin_button_'+button_key).data('has_callback');
+}
+
+fx_buttons.prototype.trigger = function(button_key) {
+    $('.fx_admin_button_'+button_key).trigger('click');
 }
 
 fx_buttons.prototype.unbind = function(button_key, callback) {
@@ -51,7 +61,6 @@ fx_buttons.prototype.draw_buttons = function ( buttons ) {
     if ( buttons === undefined ) {
         return false;
     }
-  
     $.each(buttons, function(key, button) {
         if ( button == 'divider' ) {
             var div = $('<div/>').addClass('nc_adminpanel_button_divider');
@@ -59,26 +68,35 @@ fx_buttons.prototype.draw_buttons = function ( buttons ) {
         }
         else {
             var button_source = self.source[button];
-            element = $('<div/>').addClass('fx_admin_button_'+button);
-            element.attr('title', button_source.title);
-            if ( button_source.type && button_source.type == 'text' ) {
-                element.addClass('fx_admin_button_text').html( $('<span>').text(button_source.title) );
+            if (typeof button != 'object') {
+                button = {
+                    key:button,
+                    type:button_source.type,
+                    title:button_source.title
+                }
             }
-            else {
+            if (!button_source) {
+                button.type = 'text';
+            }
+            
+            element = $('<div/>').addClass('fx_admin_button_'+button.key);
+            element.attr('title', button.title);
+            if (button.type == 'text' ) {
+                element.addClass('fx_admin_button_text').html( $('<span>').text(button.title) );
+            } else {
                 element.addClass('fx_admin_button');
             }
 
-            element.data(button_source).data('key', button);
+            element.data(button);
             element.click( function () {
 				if ($(this).data('has_callback')) {
 					return;
 				}
-                self.handle(button);
+                self.handle(button.key);
                 return false;
             });
 			element.hide();
         }
-                
         self.container.append(element);
     });
             
@@ -135,6 +153,8 @@ fx_buttons.prototype.handle = function ( button ) {
         $fx.panel.trigger('fx.click', 'button_pulldown');
         return false;    
     }
+    
+    console.log('handling', button, this);
     
     var button_action = this.buttons_action[button];
     if ( button_action ) {

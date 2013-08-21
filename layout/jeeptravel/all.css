@@ -1,4 +1,4 @@
-@font-face {
+/*@font-face {
     font-family: 'CalibriLight';
     src: url('fonts/calibril.eot');
     src: url('fonts/calibril.eot') format('embedded-opentype'), url('fonts/calibril.woff') format('woff'), url('fonts/calibril.ttf') format('truetype'), url('fonts/calibril.svg#CalibriLight') format('svg');
@@ -23,6 +23,7 @@
     src: url('fonts/CambriaBoldItalic.eot');
     src: local('☺'), url('fonts/CambriaBoldItalic.woff') format('woff'), url('fonts/CambriaBoldItalic.ttf') format('truetype'), url('fonts/CambriaBoldItalic.svg') format('svg');
 }
+*/
 article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section { display: block; }
 figure {
@@ -210,7 +211,6 @@ ul {
     margin: 0 0 25px;
 }
 .slide-text h1 b, .slide-text h1 strong {
-    display: block;
     color: #dc093b;
     font-size: 60px;
 }
@@ -329,21 +329,24 @@ ul {
     font-weight: bold;
 }
 
+.section-info {
+    color: #323639;
+}
+
 .center {
     float: left;
-    color: #323639;
     margin: 15px 30px 0 0;
     width: 235px;
 }
-.center p {
+.section-info p {
     font: italic 20px/20px 'CambriaItalic', Times, sans-serif;
 }
-.center h2, .l-side h2 {
+.section-info h2, .l-side h2 {
     color: #323639;
     font: bold 22px/25px 'CalibriRegular', Arial, sans-serif;
     margin: 0;
 }
-.center ul {
+.section-info ul {
     font: 18px/24px 'CalibriLight', Arial, sans-serif;
     margin-bottom: 15px;
 }
@@ -381,8 +384,16 @@ a.calendar {
     margin-top: 20px;
 }
 
+.content img {
+    max-width:550px;
+}
+
 .section_inner_full .content {
     width:auto;
+}
+
+.section_inner_full .content img {
+    max-width: none;
 }
 
 .content h1,
@@ -413,21 +424,21 @@ a.calendar {
     font-size: 30px;
 }
 .sidebar p { margin: 0 0 15px; }
-.sidebar ul {
+.sidebar ul.jt_side_menu {
     font-size: 24px;
     padding-top: 15px;
 }
-.sidebar ul li {
+.sidebar ul.jt_side_menu li {
     padding: 10px 5px 10px 32px;
     margin-bottom: 5px;
     background: url(images/arrow03.png) 5px 12px no-repeat;
 }
-.sidebar ul li.active {
+.sidebar ul.jt_side_menu li.active {
     background: #556577 url(images/arrow04.png) 98% 12px no-repeat;
     font-weight: bold;
     padding: 10px 32px 10px 5px;
 }
-.sidebar ul li.active a {
+.sidebar ul.jt_side_menu li.active a {
     color: #fff;
     text-decoration: none;
 }

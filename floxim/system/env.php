@@ -36,19 +36,6 @@ class fx_system_env extends fx_system {
     return $item ? $this->current['ibs'][$item] : $this->current['ibs'];
   }
 
-  public function get_template ($item=null) {
-  	  if (!isset($this->current['template']) || !$this->current['template'] || !is_numeric($this->current['template'])) {
-  	  	  $first_template = current(fx_core::get_object()->template->get_all());
-  	  	  $this->current['template'] = $first_template['id'];
-  	  	  /*
-        	if ($template_id != $first_template['id']) {
-        		return $this->load_tpl($first_template['id']);
-        	}
-		  */
-  	  }
-    return $item ? $this->current['template'][$item] : $this->current['template'];
-  }
-
   /**
    * @return fx_site
    */
@@ -99,14 +86,17 @@ class fx_system_env extends fx_system {
   public function get_home_id() {
       if (!isset($this->current['home_id'])) {
         $site = $this->get_site();
-        $home_page = fx::data('content_page')->get(array('parent_id' => 0, 'site_id' => $site['id']));
+        $home_page = fx::data('content_page')
+            ->where('parent_id', 0)
+            ->where('site_id', $site['id'])
+            ->one();
         $this->current['home_id'] = $home_page['id'];
       }
       return $this->current['home_id'];
   }
   
   public function is_admin() {
-      return ($user = $this->get_user()) ? $user->perm()->is_supervisor() : false;
+      return ($user = $this->get_user()) ? $user->is_admin() : false;
   }
   
   public function get_layout() {

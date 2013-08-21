@@ -11,10 +11,10 @@ class fx_history extends fx_essence {
     }
 
     static public function delete_old() {
-        $fx_core = fx_core::get_object();
-        $history = fx::data('history')->get_all('marker', 1);
-        foreach ($history as $v)
+        $history = fx::data('history')->where('marker', 1)->all();
+        foreach ($history as $v) {
             $v->delete(true);
+        }
     }
 
     static public function add_operation($action, $essence, $essence_id, $prestate = '', $poststate = '') {

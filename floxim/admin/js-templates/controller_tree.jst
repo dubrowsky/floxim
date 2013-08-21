@@ -1,0 +1,92 @@
+<!--[input ? _c.type =='tree' && _c.name == 'controller']-->
+<div class="fx_controller_select">
+	<input type="hidden" <?=$t.field_id_name(_c)?> class="tree_value_input" />
+	<?
+	var children = _c.children || _c.values;
+	?>
+	<div class="fx_left_pane fx_tree">
+		<ul class="fx_tree_children fx_tree_children_expanded">
+			<?
+			for (var i = 0; i < children.length; i++){
+			var child = children[i];
+			?>
+			<li class="fx_tree_item" data-id="<?=child.metadata.id?>">
+				<div class="fx_tree_label">
+					<a class="fx_tree_title"><?=child.data?></a>
+				</div>
+			</li>
+			<?
+			}
+			?>
+		</ul>
+	</div>
+	<div class="fx_right_pane">
+		<?
+		for (var i = 0; i < children.length; i++){
+			var child = children[i];
+			?>
+			<div class="children children_<?=child.metadata.id?>" style="display:none;">
+				<?
+				var subs = child.children;
+				for (var j = 0; j < subs.length; j++) {
+					var sub = subs[j];
+					?>
+					<div class="sub" data-id="<?=sub.metadata.id?>">
+						<div class="pic"></div>
+						<div class="body">
+							<div class="title"><?=sub.data?></div>
+							<div class="description"><?=sub.metadata.description?></div>
+						</div>
+					</div>
+					<?
+				}
+				?>
+			</div>
+			<?
+		}
+		?>
+	</div>
+</div>
+
+<!--priority-->
+2
+
+<!--jquery-->
+
+var dialog_buttons = null;
+setTimeout(function() {
+		dialog_buttons = html.closest('.ui-dialog').find('.ui-dialog-buttonset button:not(.fx_dialog_cancel_button)');
+		dialog_buttons.hide();
+		select_pane_item(html.find('.fx_left_pane .fx_tree_item').first());
+}, 100);
+
+function select_pane_item(node) {
+	node.closest('.fx_left_pane').find('.fx_admin_selected').removeClass('fx_admin_selected');
+	node.find('div').addClass('fx_admin_selected');
+	var nid = node.data('id');
+	html.find('.fx_right_pane .children').hide();
+	html.find('.children_'+nid).show();
+	if (html.find('.children_'+nid+' .fx_admin_selected').length) {
+		dialog_buttons.show();
+	} else {
+		dialog_buttons.hide();
+	}
+}
+$('.fx_left_pane', html).on('click', '.fx_tree_item', function() {
+	select_pane_item($(this));
+});
+
+$('.fx_right_pane', html).on('click', '.sub', function() {
+	var sub = $(this);
+	var inp = html.find('.tree_value_input');
+	if (sub.hasClass('fx_admin_selected')) {
+		sub.removeClass('fx_admin_selected');
+		inp.val('');
+		dialog_buttons.hide();
+		return;
+	}
+	html.find('.fx_right_pane .fx_admin_selected').removeClass('fx_admin_selected');
+	sub.addClass('fx_admin_selected');
+	inp.val(sub.data('id'));
+	dialog_buttons.show();
+});
