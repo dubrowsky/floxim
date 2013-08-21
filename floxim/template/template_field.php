@@ -91,7 +91,9 @@ class fx_template_field  {
                 }
                 $tag = fx_template_html_token::create_standalone($tag);
                 $tag->add_meta($tag_meta);
+                //dev_log('metataging', $tag);
                 $tag = $tag->serialize();
+                //dev_log('done', $tag);
                 return $tag;
             }, 
             $html

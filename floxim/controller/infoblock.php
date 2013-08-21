@@ -127,7 +127,7 @@ class fx_controller_infoblock extends fx_controller {
         }
         
         $meta = array(
-            'data-fx_infoblock' => htmlentities(json_encode($ib_info)),
+            'data-fx_infoblock' => $ib_info,
             'class' => 'fx_infoblock fx_infoblock_'.$infoblock['id']
         );
         
@@ -139,7 +139,7 @@ class fx_controller_infoblock extends fx_controller {
             if (fx::dig($controller_meta, 'hidden')) {
                 $meta['class'] .= ' fx_infoblock_hidden';
             }
-            $meta['data-fx_controller_meta'] = htmlentities(json_encode($controller_meta));
+            $meta['data-fx_controller_meta'] = $controller_meta;
         }
         
         if ($infoblock->get_prop_inherited('controller') == 'layout') {

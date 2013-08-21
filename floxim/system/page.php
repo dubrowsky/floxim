@@ -59,6 +59,13 @@ class fx_system_page extends fx_system {
     
     
     public function add_js_bundle($files, $params = array()) {
+        // for dev mode
+        if (fx::config()->IS_DEV_MODE) {
+            foreach ($files as $f) {
+                $this->add_js_file($f);
+            }
+            return;
+        }
         if (!isset($params['name'])) {
             $params['name'] = md5(join($files));
         }
@@ -70,7 +77,7 @@ class fx_system_page extends fx_system {
         $this->_all_js = array_merge($this->_all_js, $files);
         
         if (!file_exists($full_path)) {
-            require_once($doc_root.'/floxim/lib/JSMinPlus.php');
+            require_once(fx::config()->INCLUDE_FOLDER.'JSMinPlus.php');
             $bundle_content = '';
             foreach ($files as $i => $f) {
                 if (!preg_match("~^http://~i", $f)) {

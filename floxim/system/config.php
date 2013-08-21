@@ -64,7 +64,9 @@ class fx_config {
             'WIDGET_FOLDER' => '',
             'FX_VERSION' => '0.1.1.1',
             'FLOXIM_SITE_PROTOCOL' => 'http',
-            'FLOXIM_SITE_HOST' => 'floxim.org'
+            'FLOXIM_SITE_HOST' => 'floxim.org',
+            'COMPILED_TEMPLATES_TTL' => 0,
+            'IS_DEV_MODE' => false
     );
 
     public function __construct() {
@@ -81,11 +83,7 @@ class fx_config {
         @ini_set("session.hash_bits_per_character", "5");
         @ini_set("mbstring.internal_encoding", "UTF-8");
         @ini_set("session.name", ini_get("session.hash_bits_per_character") >= 5 ? "sid" : "ced");
-    }
-
-    public function load(array $config = array()) {
-        $this->config = array_merge($this->config, $config);
-
+        
         $this->config['DOCUMENT_ROOT'] = rtrim(getenv("DOCUMENT_ROOT"), "/\\");
         $this->config['HTTP_HOST'] = getenv("HTTP_HOST");
         $this->config['FLOXIM_FOLDER'] = $this->config['DOCUMENT_ROOT'] . $this->config['SUB_FOLDER'];
@@ -108,8 +106,14 @@ class fx_config {
         $this->config['MODULE_FOLDER'] = $this->config['FLOXIM_FOLDER'].$this->config['HTTP_MODULE_PATH'];
         $this->config['ADMIN_FOLDER'] = $this->config['ROOT_FOLDER'].'admin/';
         $this->config['COMPILED_TEMPLATES_FOLDER'] = $this->config['FILES_FOLDER'].'compiled_templates';
-        $this->config['COMPILED_TEMPLATES_TTL'] = 0;
 
+    }
+
+    public function load(array $config = array()) {
+        $this->config = array_merge($this->config, $config);
+        if (!$this->config['IS_DEV_MODE'] && !defined("FX_ALLOW_DEBUG")) {
+            define("FX_ALLOW_DEBUG", false);
+        }
         return $this;
     }
 

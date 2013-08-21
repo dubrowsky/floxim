@@ -1425,35 +1425,31 @@ li ul .fx_tree_label .fx_tree_title {
 }
 
 .fx_hilight {
-    outline: 1px dotted rgba(0, 255, 0, 0.8);
-    outline-offset: -1px;
+    /*outline: 1px dotted rgba(0, 255, 0, 0.8);*/
+    /*outline-offset: -1px;*/
+}
+
+.fx_hilight_hover {
+    outline: 1px solid #0F0; /*&rgba(0, 255, 0, 0.8);*/
 }
 
 .fx_no_hilight {
     opacity:0.3;
 }
 
-/*
-.fx_hilight .fx_hilight {
-    outline-offset: -2px;
-}
-
-.fx_hilight .fx_hilight .fx_hilight {
-    outline-offset: -3px;
-}
-*/
-
 .fx_hilight_empty {
     min-width: 15px;
     min-height: 15px;
+    outline:1px solid #0F0;
 }
 
 .fx_hilight_empty_inline {
 	display:inline-block;
 }
 
-.fx_area.fx_hilight, .fx_infoblock.fx_hilight {
-    outline: 1px dotted rgba(0, 0, 255, 0.8);
+.fx_area.fx_hilight_hover, .fx_infoblock.fx_hilight_hover {
+    outline: 1px solid #00F;
+    outline-offset:2px;
 }
 
 img.fx_hilight {
@@ -1463,7 +1459,7 @@ img.fx_hilight {
 
 .fx_selected {
     outline: 4px solid rgba(255, 255, 0, 0.5) !important;
-    outline-offset: -4px !important;
+    /*outline-offset: -4px !important;*/
 }
 
 .fx_empty_infoblock {
