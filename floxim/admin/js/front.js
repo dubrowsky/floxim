@@ -26,6 +26,34 @@ fx_front = function () {
         }
     });
     
+    var c_hover = null;
+    $('html').on('mouseover', '.fx_hilight', function() {
+        c_hover = this;
+        var node = $(this);
+        setTimeout(
+            function() {
+                if (c_hover != node.get(0)) {
+                    return;
+                }
+                $('.fx_hilight_hover').removeClass('fx_hilight_hover');
+                node.addClass('fx_hilight_hover');
+            }, 
+            c_hover ? 100 : 10
+        );
+        node.one('mouseout', function() {
+            c_hover = null;
+            setTimeout(
+                function() {
+                    if (c_hover != node.get(0)) {
+                        node.removeClass('fx_hilight_hover');
+                    }
+                },
+                100
+            );
+        });
+        return false;
+    });
+    
     $('html').on('click', function(e) {
         
         if ($fx.front.mode == 'view') {
@@ -305,6 +333,7 @@ fx_front.prototype.hilight = function() {
         removeClass('fx_hilight_empty_inline').
         removeClass('fx_no_hilight').
         removeClass('fx_wrong_mode');
+    $('.fx_hilight_hover').removeClass('fx_hilight_hover');
     items.filter('.fx_hidden_placeholded').removeClass('fx_hidden_placeholded').html('');
 	if ($fx.front.mode == 'view') {
 		return;

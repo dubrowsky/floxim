@@ -109,11 +109,11 @@ class fx_template_html_token {
                     if ($att_val === null) {
                         continue;
                     }
-                    $tag_start .= '="'.
-                                $att_val.
-                                // последний аргумент - выключаем double_encode
-                                //htmlentities($att_val, ENT_COMPAT | ENT_HTML401, 'UTF-8', false).
-                                '"';
+                    //$quot = in_array($att_name, $this->fx_meta_atts) ? "'" : '"';
+                    $quot = isset($this->att_quotes[$att_name]) 
+                                ? $this->att_quotes[$att_name] 
+                                : '"';
+                    $tag_start .= '='.$quot.$att_val.$quot;
                 }
                 if ($this->type == 'single') {
                     $tag_start .= ' /';
@@ -170,16 +170,7 @@ class fx_template_html_token {
         
         // Сохраняем в массив field-маркеры, восстановим при обратной сборке
         $injections = array();
-        /*
-        $source = preg_replace_callback("~###fx_template_field.*?fx_template_field_end###~", function($matches) use (&$injections) {
-            $injections []= $matches[0];
-            return "#inj".(count($injections)-1)."#";
-        }, $source);
-         * 
-         */
         
-        // здесь должна быть более общая регулярка
-        // пока ловим fx-ы
         $source = preg_replace_callback( 
             "~{.+?}~i", 
             function($matches) use (&$injections) {
@@ -207,6 +198,7 @@ class fx_template_html_token {
         foreach ($atts[0] as $att_num => $att_full) {
             $att_name = $atts[2][$att_num];
             $att_val = $atts[4][$att_num];
+            $this->att_quotes[$att_name] = $atts[3][$att_num];
             if (empty($att_name)) {
                 $att_name = $att_full;
                 $att_val = null;
@@ -271,6 +263,7 @@ class fx_template_html_token {
         $this->attributes_modified = true;
     }
     
+    protected $att_quotes = array();
     public function add_meta($meta) {
         foreach ($meta as $k => $v) {
             if ($k == 'class') {
@@ -278,6 +271,10 @@ class fx_template_html_token {
             } else {
                 if (is_array($v) || is_object($v)) {
                     $v = htmlentities(json_encode($v));
+                    
+                    $v = str_replace("'", '&apos;', $v);
+                    $v = str_replace("&quot;", '"', $v);
+                    $this->att_quotes[$k] = "'";
                 }
                 $this->set_attribute($k, $v);
             }

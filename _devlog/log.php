@@ -11,6 +11,9 @@ function fx_debug_start() {
 
 function dev_log() {
 	static $fh = false;
+    if (defined("FX_ALLOW_DEBUG") && !FX_ALLOW_DEBUG) {
+        return;
+    }
 	if (!$fh) {
 		if (!is_dir(DEV_LOG_PATH)) {
 			mkdir(DEV_LOG_PATH);
@@ -25,16 +28,14 @@ function dev_log() {
 		fputs($fh, serialize($log_header)."\n");
 	}
     $args = func_get_args();
-    foreach ($args as &$arg) {
-        if (is_string($arg) && preg_match("~[<>]~", $arg)) {
-            $arg = '<pre>'.htmlspecialchars($arg).'</pre>';
-        }
-    }
-	$res = call_user_func_array('fx_debug', $args);
+    $res = call_user_func_array('fx_debug', $args);
 	fputs($fh, $res);
 }
 
 function fx_debug() {
+    if (defined("FX_ALLOW_DEBUG") && !FX_ALLOW_DEBUG) {
+        return;
+    }
 	$call_time = Timer::Instance()->elapsed();
 	static $is_first_launch = true;
 	static $last_timer_value = 0;
@@ -53,7 +54,11 @@ function fx_debug() {
         fx_debug_start();
         $is_first_launch = false;
     }
+	
 	foreach (func_get_args() as $print_item) {
+        if (is_string($print_item) && preg_match("~[<>]~", $print_item)) {
+            $print_item = '<pre>'.htmlspecialchars($print_item).'</pre>';
+        }
 		if (is_object($print_item) && $print_item instanceof DOMNode) {
 			$result []= fen_pretty_xml($print_item);
 		} elseif ( is_object($print_item) || is_array($print_item) ) {

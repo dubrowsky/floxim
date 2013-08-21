@@ -138,6 +138,7 @@ fx_edit_in_place.prototype.stop = function() {
         this.destroy_wysiwyg();
     }
     $('*').off('.edit_in_place');
+    this.node.blur();
 	return this;
 }
 
