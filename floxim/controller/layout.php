@@ -11,7 +11,7 @@ class fx_controller_layout extends fx_controller {
         }
         
         // add admin files bundle BEFORE site scripts/styles
-        if (! ($this->get_param('ajax_mode'))) {
+        if (! ($this->get_param('ajax_mode')) && fx::is_admin()) {
             fx_controller_admin::add_admin_files();
         }
         

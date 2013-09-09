@@ -29,6 +29,9 @@ abstract class fx_essence implements ArrayAccess {
         // update
         if ($this->data[$pk] && $action === 'update') {
             $this->_before_update();
+            if ($this->validate() === false) {
+                $this->throw_invalid();
+            }
             // обновляем только изменившиеся поля
             $data = array();
             foreach ($this->modified as $v) {
@@ -37,31 +40,30 @@ abstract class fx_essence implements ArrayAccess {
             $this->_get_finder()->update($data, array($pk => $this->data[$pk]));
             $this->_save_multi_links();
             $this->_after_update();
-            /*
-            if (!$dont_log) {
-                $this->_add_history_operation('update', $data);
-            }
-             * 
-             */
         } // insert
         else {
             $this->_before_insert();
+            if ($this->validate() === false) {
+                $this->throw_invalid();
+            }
             $id = $this->_get_finder()->insert($this->data);
             $this->data['id'] = $id;
             $this->_save_multi_links();
             $this->_after_insert();
-            /*
-            if (!$dont_log) {
-                $this->_add_history_operation('add', $this->data);
-            }
-             * 
-             */
         }
-        
+        $this->_after_save();
 
         return $this;
     }
     
+    protected function throw_invalid() {
+        throw new Exception(
+                "Unable to save essence \"".$this->get_type()."\": ".
+                join("<br />", $this->validate_errors)
+        );
+    }
+
+
     /*
      * Сохраняет поля-ссылки, определяется в fx_data_content
      */
@@ -70,6 +72,10 @@ abstract class fx_essence implements ArrayAccess {
     }
     
     protected function _before_save () {
+        
+    }
+    
+    protected function _after_save() {
         
     }
 

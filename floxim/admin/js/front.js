@@ -1,4 +1,4 @@
-fx_front = function () {
+var fx_front = function () {
     this.mode = '';
     var more_menu = new fx_more_menu($fx.settings.more_menu); 
     more_menu.load();
@@ -16,36 +16,43 @@ fx_front = function () {
                     $fx.buttons.trigger('edit');
                     return false;
                 }
+                if ($fx.buttons.is_active('settings')) {
+                    $fx.buttons.trigger('settings');
+                    return false;
+                }
             }
             var mode_map = {
-                view:'#page.edit',
-                edit:'#page.design',
-                design:'#page.view'
+                view: '#page.edit',
+                edit: '#page.design',
+                design: '#page.view'
             }
             document.location.hash = mode_map[$fx.front.mode];
         }
     });
     
-    var c_hover = null;
+    this.c_hover = null;
     $('html').on('mouseover', '.fx_hilight', function() {
-        c_hover = this;
+        $fx.front.outline_block_off($($fx.front.c_hover));
+        $fx.front.c_hover = this;
         var node = $(this);
         setTimeout(
             function() {
-                if (c_hover != node.get(0)) {
+                if ($fx.front.c_hover != node.get(0)) {
                     return;
                 }
                 $('.fx_hilight_hover').removeClass('fx_hilight_hover');
                 node.addClass('fx_hilight_hover');
+                $fx.front.outline_block(node);
             }, 
-            c_hover ? 100 : 10
+            $fx.front.c_hover ? 100 : 10
         );
-        node.one('mouseout', function() {
-            c_hover = null;
+        node.one('mouseout', function(e) {
+            $fx.front.c_hover = null;
             setTimeout(
                 function() {
-                    if (c_hover != node.get(0)) {
+                    if ($fx.front.c_hover != node.get(0)) {
                         node.removeClass('fx_hilight_hover');
+                        $fx.front.outline_block_off(node);
                     }
                 },
                 100
@@ -67,119 +74,136 @@ fx_front = function () {
         if ($fx.front.is_selectable(target)) {
             closest_selectable = target;
         } else {
-        	closest_selectable = $fx.front.get_selectable_up(target);
+            closest_selectable = $fx.front.get_selectable_up(target);
         }
         
         // нечего выбирать
         if (!closest_selectable) {
-        	// случаи, когда target оказался вне основого дерева
-        	// как с jqueryui-datepicker при перерисовке
-        	if (target.closest('html').length == 0) {
-        		return;
-			}
-			// снимаем выделение и заканчиваем обработку
-			$fx.front.deselect_item();
-        	return;
+            // случаи, когда target оказался вне основого дерева
+            // как с jqueryui-datepicker при перерисовке
+            if (target.closest('html').length == 0) {
+                return;
+            }
+            // снимаем выделение и заканчиваем обработку
+            $fx.front.deselect_item();
+            return;
         }
         
-		// перемещение между страницами по ссылкам с зажатым контролом,
-		// и даже сохраняет текущий режим
-		var clicked_link = target.closest('a');
-		if (clicked_link.length > 0 && e.ctrlKey && clicked_link.attr('href')) {
-			document.location.href = clicked_link.attr('href')+document.location.hash;
-			return false;
-		}
+        // перемещение между страницами по ссылкам с зажатым контролом,
+        // и даже сохраняет текущий режим
+        var clicked_link = target.closest('a');
+        if (clicked_link.length > 0 && e.ctrlKey && clicked_link.attr('href')) {
+            document.location.href = clicked_link.attr('href')+document.location.hash;
+            return false;
+        }
         
-		// отлавливаем только contenteditable
-		if ($(closest_selectable).hasClass('fx_selected')) {
+        // отлавливаем только contenteditable
+        if ($(closest_selectable).hasClass('fx_selected')) {
             if ($(closest_selectable).attr('contenteditable') == 'true') {
                 return;
             }
             return false;
-		}
-		$fx.front.select_item(closest_selectable);
-		return false;
+        }
+        $fx.front.select_item(closest_selectable);
+        return false;
         
     });
     
     $('html').on('fx_select', function(e) {
-		var n = $(e.target);
-		if (n.is('.fx_content_essence')) {
-			$fx.front.select_content_essence(n);
+        var n = $(e.target);
+        if (n.is('.fx_content_essence')) {
+            $fx.front.select_content_essence(n);
             var tvs = $('.fx_template_var, .fx_template_var_in_att', n);
             if (tvs.length == 1) {
                 tvs.edit_in_place();
             }
-		}
-		if (n.is('.fx_template_var, .fx_template_var_in_att')) {
-			n.edit_in_place();
+        }
+        if (n.is('.fx_template_var, .fx_template_var_in_att')) {
+            n.edit_in_place();
             var container_essence = n.closest('.fx_content_essence');
             if (container_essence.get(0) !== n.get(0)) {
                 container_essence.trigger('fx_select');
             }
-		}
-		if (n.is('.fx_infoblock')) {
-			$fx.front.select_infoblock(n);
-		}
+        }
+        if (n.is('.fx_infoblock')) {
+            $fx.front.select_infoblock(n);
+        }
         
         $fx.front.redraw_add_button(n, $fx.front.mode);
-    	return false;
+        return false;
     });
 }
 
 fx_front.prototype.redraw_add_button = function(node, mode) {
-	$fx.buttons.unbind('add');
-	var buttons = [];
-	if (!node) {
-		return;
-	}
-	
-	var ib = node.closest('.fx_infoblock_'+mode);
+    $fx.buttons.unbind('add');
+    var buttons = [];
+    if (!node) {
+        return;
+    }
+    
+    var ib = node.closest('.fx_infoblock_'+mode);
     var adders = [];
-	var cm = ib.data('fx_controller_meta');
-	if (cm && cm.accept_content) {
-		for (var i = 0; i < cm.accept_content.length; i++) {
-			var c_cnt = cm.accept_content[i];
-			var cb_closure = (function(c_cnt) {
-				return function() {
+    var cm = ib.data('fx_controller_meta');
+    if (cm && cm.accept_content) {
+        for (var i = 0; i < cm.accept_content.length; i++) {
+            var c_cnt = cm.accept_content[i];
+            var cb_closure = (function(c_cnt) {
+                return function() {
                     $fx.front.disable_infoblock(ib);
-					$fx.post({
-					   essence:'content',
-					   action:'add_edit',
-					   content_type:c_cnt.type,
-					   infoblock_id:c_cnt.infoblock_id,
-					   parent_id:c_cnt.parent_id
-					}, function(res) {
-						$fx_dialog.open_dialog(res, {
-							onfinish:function() {
-								$fx.front.reload_infoblock(ib);
-							}
-						});
-					});
-				}
-			})(c_cnt);
+                    $fx.front_panel.load_form({
+                       essence:'content',
+                       action:'add_edit',
+                       content_type:c_cnt.type,
+                       infoblock_id:c_cnt.infoblock_id,
+                       parent_id:c_cnt.parent_id
+                    });
+                    return;
+                    $fx.post({
+                       essence:'content',
+                       action:'add_edit',
+                       content_type:c_cnt.type,
+                       infoblock_id:c_cnt.infoblock_id,
+                       parent_id:c_cnt.parent_id
+                    }, function(res) {
+                        $fx_dialog.open_dialog(res, {
+                            onfinish:function() {
+                                $fx.front.reload_infoblock(ib);
+                            }
+                        });
+                    });
+                }
+            })(c_cnt);
             adders.push(cb_closure);
-			buttons.push({
-				name:c_cnt.title,
-				callback:cb_closure
-			});
+            buttons.push({
+                name:c_cnt.title,
+                callback:cb_closure
+            });
         }
-	}
+    }
     ib.data('content_adders', adders);
-	var area_meta = node.closest('.fx_area').data('fx_area');
-	if (area_meta) {
-		buttons.push({
-			name:'Add new infoblock to '+area_meta.id,
-			callback: function() {
-				$fx.post({
-					essence:'infoblock',
-					action:'select_controller',
-					page_id:$('body').data('fx_page_id'),
-					area:area_meta.id,
+    var area_meta = node.closest('.fx_area').data('fx_area');
+    if (area_meta) {
+        buttons.push({
+            name:'Add new infoblock to '+area_meta.id,
+            callback: function() {
+                $fx.front_panel.load_form({
+                    essence:'infoblock',
+                    action:'select_controller',
+                    page_id:$('body').data('fx_page_id'),
+                    area:area_meta.id,
                     admin_mode:$fx.front.mode,
-					fx_admin:true
-				}, function(json) {
-					$fx_dialog.open_dialog(
+                    fx_admin:true
+                });
+                return;
+                $fx.post({
+                    essence:'infoblock',
+                    action:'select_controller',
+                    page_id:$('body').data('fx_page_id'),
+                    area:area_meta.id,
+                    admin_mode:$fx.front.mode,
+                    fx_admin:true
+                }, function(json) {
+                    $fx_dialog.open_dialog(
                         json,
                         {
                             onfinish:function(res) {
@@ -203,44 +227,44 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
                             }
                         }
                     );
-				});
-			}
-		});
-	}
-	if (buttons.length > 0) {
-		$fx.buttons.bind('add', function() {
-			$fx.buttons.show_pulldown('add', buttons);
-			return false;
-		});
-		$('html').one('fx_deselect', function() {
-			$fx.front.redraw_add_button();
-		});
-	}
+                });
+            }
+        });
+    }
+    if (buttons.length > 0) {
+        $fx.buttons.bind('add', function() {
+            $fx.buttons.show_pulldown('add', buttons);
+            return false;
+        });
+        $('html').one('fx_deselect', function() {
+            $fx.front.redraw_add_button();
+        });
+    }
 }
 
 fx_front.prototype.is_selectable = function(node) {
-	var n = $(node);
-	if (n.hasClass('fx_unselectable')) {
-		return false;
-	}
-	if (n.hasClass('fx_area')) {
-		return true;
-	}
-	if (!n.is('.fx_template_var, .fx_template_var_in_att, .fx_content_essence, .fx_infoblock')) {
-		return false;
-	}
-	var ib_node = n.closest('.fx_infoblock');
-	if (!ib_node.hasClass('fx_infoblock_'+$fx.front.mode)) {
+    var n = $(node);
+    if (n.hasClass('fx_unselectable')) {
+        return false;
+    }
+    if (n.hasClass('fx_area')) {
+        return true;
+    }
+    if (!n.is('.fx_template_var, .fx_template_var_in_att, .fx_content_essence, .fx_infoblock')) {
+        return false;
+    }
+    var ib_node = n.closest('.fx_infoblock');
+    if (!ib_node.hasClass('fx_infoblock_'+$fx.front.mode)) {
         n.addClass('fx_wrong_mode');
-		return false;
-	}
+        return false;
+    }
     if (n.is('.fx_template_var, .fx_template_var_in_att') && !n.is('.fx_content_essence') ) {
         var ne = n.closest('.fx_content_essence');
         if (ne && $('.fx_template_var, .fx_template_var_in_att', ne).length == 1) {
             return false;
         }
     }
-	return true;
+    return true;
 }
 
 fx_front.prototype.get_selectable_up = function(rel_node) {
@@ -326,8 +350,8 @@ fx_front.prototype.select_level_up = function() {
 
 
 fx_front.prototype.hilight = function() {
-	var items = $('.fx_template_var, .fx_area, .fx_template_var_in_att, .fx_content_essence, .fx_infoblock').not('.fx_unselectable');
-	items.
+    var items = $('.fx_template_var, .fx_area, .fx_template_var_in_att, .fx_content_essence, .fx_infoblock').not('.fx_unselectable');
+    items.
         removeClass('fx_hilight').
         removeClass('fx_hilight_empty').
         removeClass('fx_hilight_empty_inline').
@@ -335,17 +359,17 @@ fx_front.prototype.hilight = function() {
         removeClass('fx_wrong_mode');
     $('.fx_hilight_hover').removeClass('fx_hilight_hover');
     items.filter('.fx_hidden_placeholded').removeClass('fx_hidden_placeholded').html('');
-	if ($fx.front.mode == 'view') {
-		return;
-	}
-	items.each(function(index, item) {
-		if ($fx.front.is_selectable(item)) {
+    if ($fx.front.mode == 'view') {
+        return;
+    }
+    items.each(function(index, item) {
+        if ($fx.front.is_selectable(item)) {
             var i = $(item);
-			i.addClass('fx_hilight');
+            i.addClass('fx_hilight');
             if (i.width() == 0 || i.height() == 0) {
                 i.addClass('fx_hilight_empty');
                 if (i.css('display') == 'inline') {
-                	i.addClass('fx_hilight_empty_inline');
+                    i.addClass('fx_hilight_empty_inline');
                 }
             }
             var controller_meta = i.data('fx_controller_meta');
@@ -353,8 +377,8 @@ fx_front.prototype.hilight = function() {
                 i.html(controller_meta.hidden_placeholder);
                 i.addClass('fx_hidden_placeholded');
             }
-		}
-	});
+        }
+    });
     var wrong_mode = items.filter('.fx_wrong_mode');
     wrong_mode.each(function(index, item) {
         if ($('.fx_hilight', item).length == 0) {
@@ -392,57 +416,72 @@ fx_front.prototype.load = function ( mode ) {
     }
     
     if ($fx.settings.additional_panel) {
-    	$fx.draw_additional_panel($fx.settings.additional_panel);
+        $fx.draw_additional_panel($fx.settings.additional_panel);
     }
 }
 
 fx_front.prototype.select_content_essence = function(n) {
-	var essence_meta = n.data('fx_content_essence');
-	var ib_node = n.closest('.fx_infoblock').get(0);
-	$fx.buttons.bind('edit', function() {
-		$fx.post({
-			essence:'content',
-			action:'add_edit',
-			content_type:essence_meta.type,
-			content_id:essence_meta.id
-		 }, function(res) {
-			 $fx_dialog.open_dialog(res, {
-				 onfinish:function() {
-					 $fx.front.reload_infoblock(ib_node);
-				 }
-			 });
-		 });
-	});
-	$fx.buttons.bind('delete', function() {
-	   if (confirm(fx_lang("Вы уверены?"))) {
+    var essence_meta = n.data('fx_content_essence');
+    var ib_node = n.closest('.fx_infoblock').get(0);
+    $fx.buttons.bind('edit', function() {
+        /*$fx.front_panel.load_form({
+            essence:'content',
+            action:'add_edit',
+            content_type:essence_meta.type,
+            content_id:essence_meta.id
+        });
+        return;
+        */
+        $fx.post({
+            essence:'content',
+            action:'add_edit',
+            content_type:essence_meta.type,
+            content_id:essence_meta.id
+         }, function(res) {
+             $fx_dialog.open_dialog(res, {
+                 onfinish:function() {
+                     $fx.front.reload_infoblock(ib_node);
+                 }
+             });
+         });
+    });
+    $fx.buttons.bind('delete', function() {
+       if (confirm(fx_lang("Вы уверены?"))) {
            $fx.front.disable_infoblock(ib_node);
-		   $fx.post({
-			   essence:'content',
-			   action:'delete_save',
-			   content_type:essence_meta.type,
-			   content_id:essence_meta.id
-		   }, function () {
-			   $fx.front.reload_infoblock(ib_node);
-		   });
-	   }
-	});
-    //$fx.front.start_essences_sortable(n.closest('.fx_infoblock'));
-    //console.log('make sortbl', n.parent());
+           $fx.post({
+               essence:'content',
+               action:'delete_save',
+               content_type:essence_meta.type,
+               content_id:essence_meta.id
+           }, function () {
+               $fx.front.reload_infoblock(ib_node);
+           });
+       }
+    });
     $fx.front.start_essences_sortable(n.parent());
-	$('html').one('fx_deselect', function() {
-		$fx.buttons.unbind('edit');
-		$fx.buttons.unbind('delete');
+    $('html').one('fx_deselect', function() {
+        $fx.buttons.unbind('edit');
+        $fx.buttons.unbind('delete');
         $fx.front.stop_essences_sortable();
-	});
+    });
 }
 
 fx_front.prototype.select_infoblock = function(n) {
-	$fx.buttons.bind('settings', function() {
+    $fx.buttons.bind('settings', function() {
         var ib_node = n;
         var ib = $(ib_node).data('fx_infoblock');
         if (!ib) {
             return;
         }
+        $fx.front_panel.load_form({
+            essence:'infoblock',
+            action:'select_settings',
+            id:ib.id,
+            visual_id:ib.visual_id,
+            page_id:$('body').data('fx_page_id'),
+            fx_admin:true
+        });
+        return;
         $fx.post({
            essence:'infoblock',
            action:'select_settings',
@@ -452,13 +491,13 @@ fx_front.prototype.select_infoblock = function(n) {
            fx_admin:true
         }, function(json) {
             $fx_dialog.open_dialog(
-            	json, 
-            	{
-            		onfinish:function() {
+                json, 
+                {
+                    onfinish:function() {
                         $fx.front.reload_infoblock(ib_node);
-					}
-				}
-			);
+                    }
+                }
+            );
         });
     });
     
@@ -479,9 +518,9 @@ fx_front.prototype.select_infoblock = function(n) {
         }, function(json) {
             $fx_dialog.open_dialog(
                 json, {
-            		onfinish:function() {
+                    onfinish:function() {
                         $fx.front.reload_layout();
-					}
+                    }
                 }
             );
         });
@@ -490,8 +529,8 @@ fx_front.prototype.select_infoblock = function(n) {
     $fx.front.start_areas_sortable();
     
     $('html').one('fx_deselect', function() {
-    	$fx.buttons.unbind('settings');	
-        $fx.buttons.unbind('delete');	
+        $fx.buttons.unbind('settings');    
+        $fx.buttons.unbind('delete');    
         $fx.front.stop_areas_sortable();
     });
 }
@@ -626,7 +665,7 @@ fx_front.prototype.stop_areas_sortable = function() {
 }
 
 fx_front.prototype.set_mode_design = function() {
-	$fx.panel.one('fx.startsetmode', function() {
+    $fx.panel.one('fx.startsetmode', function() {
         $('html').off('.fx_design_mode');/*
         $('.fx_area_sortable').
             sortable('destroy').
@@ -697,11 +736,163 @@ fx_front.prototype.reload_layout = function(callback) {
 }
 
 fx_front.prototype.move_down_body =function () {
-    $("body").css('margin-top','74px'); //74 - высота панели
+    $("body").css('margin-top','73px'); //74 - высота панели
 }
 
 fx_front.prototype.add_panel_field = function(field) {
-	var field_node = $fx_form.draw_field(field);
-	$('#fx_admin_fields').append(field_node);
-	return field_node;
+    var field_node = $fx_form.draw_field(field);
+    $('#fx_admin_fields').append(field_node);
+    /*
+    $('#fx_admin_control').animate(
+        {'background-color':'#668'}, 
+        200, 
+        null, 
+        function() {
+            $('#fx_admin_control').animate(
+                {'background-color':'#FFF'},
+                800
+            );
+        }
+    );*/
+    field_node.css({'outline-style': 'solid','outline-color':'#FFF'});
+    field_node.find(':input').css({'background':'transparent'});
+    field_node.animate(
+        {
+            'background-color':'#FF0', 
+            'outline-width':'6px',
+            'outline-color':'#FF0'
+        },
+        300,
+        null,
+        function() {
+            field_node.animate(
+                {
+                    'background-color':'#FFF', 
+                    'outline-width':'0px',
+                    'outline-color':'#FFF'
+                },
+                300
+            );
+        }
+    );
+    return field_node;
+}
+
+fx_front.prototype.outline_block = function(n) {
+    // already hilighted
+    if (n.data('fx_outline_panes')) {
+        return;
+    }
+    var o = n.offset();
+    var nw = n.outerWidth();
+    var nh = n.outerHeight();
+    var size = 2;
+    //var clight = '#DDD';
+    //var cdark = '#555';
+    var pane_z_index = $('#fx_admin_control').css('z-index') - 1;
+    function make_pane(css, type) {
+        var m = $('<div class="fx_outline_pane fx_outline_pane_'+type+'" />');
+        css['z-index'] = pane_z_index;
+        m.css(css);
+        $('body').append(m);
+        return m;
+    }
+    var panes = {};
+    //var is_unsquare = false;
+    var top_left_offset = 0;
+    var top_top_offset = 0;
+    var bottom_right_offset = 0;
+    var bottom_bottom_offset = 0;
+    if (n.css('display') == 'inline') {
+        //var saved_position = n.css('position');
+        //n.css('position', 'relative');
+        var m_before = $('<span style="display:inline-block;width:1px; height:1px;"></span>');
+        m_before.insertBefore(n.get(0).firstChild);
+        var mbo = m_before.offset();
+        if (mbo.left > o.left) {
+            top_left_offset = (mbo.left - o.left);
+            top_top_offset = mbo.top - o.top + size*2 + 1;
+            panes.top_left = make_pane({
+                top:o.top - size + 'px',
+                left:mbo.left - size +'px',
+                height: (mbo.top - o.top) + size*2 + 'px',
+                width:size+'px'
+            }, 'left');
+            panes.top_top = make_pane({
+                top:mbo.top +size*2+'px',
+                left:o.left+'px',
+                width:mbo.left - o.left + 'px',
+                height:size+'px'
+            }, 'top');
+            //n.css('position', saved_position);
+        }
+        m_before.remove();
+        var m_after = $('<span style="display:inline-block;width:1px; height:1px;vertical-align: top; background:#FFF;"></span>');
+        n.append(m_after);
+        var mao = m_after.offset();
+        /// ловить правильно случаи, когда спан-тестер переносит строку
+        if (n.outerHeight() > nh) {
+            console.log('lbrk');
+            mao.top = o.top;
+            mao.left = o.left + nw;
+        }
+        
+        if ( (o.left+nw) - mao.left > 2) {
+            console.log(o.left+nw, mao.left);
+            bottom_right_offset = nw - (mao.left - o.left);
+            bottom_bottom_offset = o.top+nh-mao.top;
+            panes.bottom_right = make_pane({
+                top:mao.top+'px',
+                left:mao.left+'px',
+                width:size+'px',
+                height:bottom_bottom_offset+'px'
+            }, 'right');
+            panes.bottom_bottom = make_pane({
+                top:mao.top+'px',
+                left:mao.left+'px',
+                width: bottom_right_offset +'px',
+                height:size+'px'
+            }, 'bottom');
+            //console.log(mao, panes.bottom_right.attr('style'));
+        }
+        
+        m_after.remove();
+    }
+    panes.top = make_pane({
+        top:o.top - size +'px',
+        left: (o.left + top_left_offset)+'px',
+        width:(nw-top_left_offset )+'px',
+        height:size+'px'
+    }, 'top');
+    panes.bottom = make_pane({
+        top:o.top + nh +'px',
+        left:o.left+'px',
+        width: nw - bottom_right_offset+'px',
+        height:size+'px'
+    }, 'bottom');
+    panes.left = make_pane({
+        top: (o.top - size + top_top_offset) +'px',
+        left:o.left - size + 'px',
+        width:size+'px',
+        height: (nh + size*2 - top_top_offset) +'px'
+        
+    }, 'left');
+    panes.right = make_pane({
+        top:o.top - size +'px',
+        left:o.left + nw + 'px',
+        width:size+'px',
+        height: (nh + size*2 - bottom_bottom_offset) +'px'
+    }, 'right');
+    n.data('fx_outline_panes', panes);
+}
+
+fx_front.prototype.outline_block_off = function(n) {
+    var panes = n.data('fx_outline_panes');
+    if (!panes) {
+        return;
+    }
+    for (var i in panes) {
+        panes[i].remove();
+    }
+    n.data('fx_outline_panes', null);
 }

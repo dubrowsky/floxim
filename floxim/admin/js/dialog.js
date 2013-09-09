@@ -210,6 +210,9 @@
                 return false;
             }
 
+            if (!$fx_dialog.main) {
+                return;
+            }
             var buttons = $fx_dialog.main.dialog( "option", "buttons" );
             if ( !buttons || !buttons.length ) buttons = [];
 

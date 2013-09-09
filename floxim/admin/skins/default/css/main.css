@@ -389,6 +389,10 @@ input.ui-button {
     vertical-align: top;
 }
 
+#fx_admin_additional_menu a {
+    cursor:pointer;
+}
+
 #fx_admin_additional_menu .fx_admin_additional_menu_divider {
     width: 1px;
     background: #4e4e50;
@@ -1237,7 +1241,7 @@ span.fx_admin_current {
 }
 
 
-#fx_admin_control form .field, #fx_admin_control form>div, #fx_admin_control form>button {
+#fx_admin_control form .field {
     display: inline-block;
     vertical-align: top;
     margin-right: 15px;
@@ -1248,7 +1252,6 @@ span.fx_admin_current {
     font-size: 11px;
     width: auto;
     margin: 0;
-    padding: 0;
 }
 
 .fx_button {
@@ -1428,10 +1431,11 @@ li ul .fx_tree_label .fx_tree_title {
     /*outline: 1px dotted rgba(0, 255, 0, 0.8);*/
     /*outline-offset: -1px;*/
 }
-
+/*
 .fx_hilight_hover {
-    outline: 1px solid #0F0; /*&rgba(0, 255, 0, 0.8);*/
+    outline: 1px solid #0F0;
 }
+*/
 
 .fx_no_hilight {
     opacity:0.3;
@@ -1446,11 +1450,12 @@ li ul .fx_tree_label .fx_tree_title {
 .fx_hilight_empty_inline {
 	display:inline-block;
 }
-
+/*
 .fx_area.fx_hilight_hover, .fx_infoblock.fx_hilight_hover {
     outline: 1px solid #00F;
     outline-offset:2px;
 }
+*/
 
 img.fx_hilight {
     min-width: 5px;
@@ -1639,7 +1644,7 @@ body div.fx_overlay, body div.fx_overlay table {
     float:left;
 }
 
-#fx_admin_fields .fx_input {
+#fx_admin_fields .fx_input, #fx_admin_extra_panel .fx_input {
     margin-top:6px;
     border:1px solid #e1e1e1;
     padding:5px 3px 4px 3px;
@@ -1896,4 +1901,92 @@ body div.fx_overlay, body div.fx_overlay table {
     overflow-y: hidden;
     overflow-x: auto;
     height:auto;
+}
+
+.fx_var_editable::selection, .fx_var_editable *::selection {
+    background: #FFA;
+}
+
+/* EXTRA PANEL */
+#fx_admin_extra_panel {
+    clear: both;
+    position: absolute;
+    top: 0px;
+    width:100%;
+    overflow: auto;
+    background: #FFF;
+    max-height: 500px;
+    border-bottom:1px solid #e4e6e6;
+}
+
+#fx_admin_extra_panel .ui-tabs-panel {
+    clear:both;
+}
+
+#fx_admin_extra_panel form {
+    margin:5px;
+    overflow:auto;
+}
+
+
+#fx_admin_extra_panel form .field_text {
+    display:none;
+}
+
+
+#fx_admin_extra_panel .redactor_box .redactor_editor {
+    max-width:470px;
+    max-height:200px;
+}
+
+#fx_admin_extra_panel .fx_admin_form .form_label {
+    display:block;
+    min-height:16px;
+}
+
+#fx_admin_extra_panel .fx_image_field img {
+    height:50px;
+    margin-right:10px;
+    float:left;
+}
+
+#fx_admin_extra_panel .fx_image_field .fx_admin_button_text {
+    margin-right:10px;
+}
+
+#fx_admin_extra_panel form>.fx_admin_button_text {
+    float:none;
+    display:inline-block;
+    margin-top:16px;
+}
+
+.fx_outline_pane {
+    position:absolute;
+    background-color:#555;
+}
+
+.fx_outline_pane_top, .fx_outline_pane_bottom {
+    background-image: -webkit-linear-gradient(left, transparent 50%, #DDD 50%);
+    background-size: 9px 3px;
+}
+
+.fx_outline_pane_left, .fx_outline_pane_right {
+    background-image: -webkit-linear-gradient(transparent 50%, #DDD 50%);
+    background-size: 3px 9px;
+}
+
+.fx_outline_pane_top {
+    -webkit-box-shadow: 0px -3px 6px rgba(50, 50, 50, 0.6);
+}
+
+.fx_outline_pane_right {
+    -webkit-box-shadow: 3px 0px 6px rgba(50, 50, 50, 0.6);
+}
+
+.fx_outline_pane_bottom {
+    -webkit-box-shadow: 0px 3px 6px rgba(50, 50, 50, 0.6);
+}
+
+.fx_outline_pane_left {
+    -webkit-box-shadow: -3px 0px 6px rgba(50, 50, 50, 0.6);
 }

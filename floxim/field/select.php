@@ -9,7 +9,7 @@ class fx_field_select extends fx_field_baze {
 
         parent::get_js_field($content, $tname, $layer);
 
-        $values = $this->get_values();
+        $values = $this->get_options();
         if (!$this->is_not_null() && is_array($values)) {
             $values = array_merge(
                 array( array('', fx::lang('-- choose something --', 'system'))),
@@ -51,11 +51,21 @@ class fx_field_select extends fx_field_baze {
         return $fields;
     }
 
-    public function get_values() {
+    public function get_options() {
         $values = array();
         if ($this->format['values']) {
             foreach ($this->format['values'] as $v) {
                 $values[]= array($v['id'], $v['value']);
+            }
+        }
+        return $values;
+    }
+    
+    public function get_values() {
+        $values = array();
+        if ($this->format['values']) {
+            foreach ($this->format['values'] as $v) {
+                $values[$v['id']] = $v['value'];
             }
         }
         return $values;

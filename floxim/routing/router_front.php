@@ -2,24 +2,7 @@
 class fx_router_front extends fx_router {
 
     public function route($url = null, $context = null) {
-        $url_variants = array($url);
-        
-        $url_with_no_params = preg_replace("~\?.+$~", '', $url);
-        
-        $url_variants []= 
-            preg_match("~/$~", $url_with_no_params) ? 
-            preg_replace("~/$~", '', $url_with_no_params) : 
-            $url_with_no_params . '/';
-        
-        if ($url_with_no_params != $url) {
-            $url_variants []= $url_with_no_params;
-        }
-        $site = fx::data('site', $context['site_id']);
-
-        $page = fx::data('content_page')->
-            where('url', $url_variants)->
-            where('site_id', $site['id'])->
-            one();
+        $page = fx::data('content_page')->get_by_url($url, $context['site_id']);
         if (!$page) {
             return null;
         }
@@ -38,6 +21,10 @@ class fx_router_front extends fx_router {
                 )
             )
         );
+    }
+    
+    public function get_path($url) {
+        
     }
     
     protected $_ib_cache = array();
@@ -59,19 +46,9 @@ class fx_router_front extends fx_router {
                 $ib->set_visual($c_visual);
             } else {
                 if ($ib->get_visual()->get('is_stub')) {
-                    //echo fen_debug('init suitable on', $ib);
                     $suitable = new fx_template_suitable();
                     $suitable->suit($infoblocks, $layout_id);
                 }
-                /*
-                echo fen_debug(
-                    'no visual:', 
-                    $ib->get_prop_inherited('controller'),
-                    $ib->get_prop_inherited('action')
-                );
-                die();
-                 * 
-                 */
             }
 
             if ($ib->get_prop_inherited('controller') == 'layout') {

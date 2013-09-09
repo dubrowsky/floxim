@@ -2,7 +2,7 @@
 <div class="fx_image_field">
 	<input type="hidden" <?=$t.field_id_name(_c)?> class="real_value" value="<?=_c.value?>" />
 	<div class="preview">
-        <img <?=(_c.path ? 'src="'+_c.path+'"' : '')?> />
+        <img <?=(_c.path ? ' src="'+_c.path+'"' : ' style="display:none;"')?> />
         <a class="uploader fx_admin_button_text"><span>upload</span></a>
         <a class="killer fx_admin_button_text" style="display:<?=(_c.path ? 'block' : 'none')?>"><span>delete</span></a>
     </div>

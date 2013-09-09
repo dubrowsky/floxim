@@ -54,9 +54,16 @@ class fx_controller_admin_component extends fx_controller_admin {
         $fields[] = $field;
 
         $buttons = array("add", "delete");
+        /*
         $buttons_pulldown['add'] = array(
             array('name' => fx::lang('New','system'), 'options' => array('source' => 'new'))
         );
+         * 
+         */
+        $this->response->add_button_options('add', array(
+            'essence' => 'component',
+            'action' => 'add'
+        ));
 
         $result = array('fields' => $fields, 'buttons' => $buttons, 'buttons_pulldown' => $buttons_pulldown);
 
@@ -141,8 +148,8 @@ class fx_controller_admin_component extends fx_controller_admin {
                 $groups = fx::data('component')->get_all_groups();
 
                 $fields[] = $this->ui->hidden('action', 'add');
-                $fields[] = array('label' => fx::lang('Название компонента (по-русски)','system'), 'name' => 'name');
-                $fields[] = array('label' => fx::lang('Название сущности создаваемой компонентом (по-русски)','system'), 'name' => 'item_name');
+                $fields[] = array('label' => fx::lang('Component name','system'), 'name' => 'name');
+                $fields[] = array('label' => fx::lang('Name of an entity created by the component','system'), 'name' => 'item_name');
                 $fields[] = array('label' => fx::lang('Keyword','system'), 'name' => 'keyword');
                 $fields[] = array('label' => fx::lang('Group','system'), 'type' => 'select', 'values' => $groups, 'name' => 'group', 'extendable' => fx::lang('Another group','system'));
         }

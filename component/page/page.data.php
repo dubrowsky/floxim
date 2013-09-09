@@ -6,6 +6,29 @@ class fx_data_content_page extends fx_data_content {
         return $tree;
     }
     
+    public function get_by_url($url, $site_id = null) {
+        $url_variants = array($url);
+        if ($site_id === null){
+            $site_id = fx::env('site')->get('id');
+        }
+        $url_with_no_params = preg_replace("~\?.+$~", '', $url);
+        
+        $url_variants []= 
+            preg_match("~/$~", $url_with_no_params) ? 
+            preg_replace("~/$~", '', $url_with_no_params) : 
+            $url_with_no_params . '/';
+        
+        if ($url_with_no_params != $url) {
+            $url_variants []= $url_with_no_params;
+        }
+        
+        $page = fx::data('content_page')->
+            where('url', $url_variants)->
+            where('site_id', $site_id)->
+            one();
+        return $page;
+    }
+    
     public function make_tree($data) {
         
         $index_by_parent = array();

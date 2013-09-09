@@ -9,11 +9,6 @@
 function fx_edit_in_place( node ) { 
     this.node = node;
     this.panel_fields = [];
-    this.config_elrte = {
-        toolbar: 'fx_einp_toolbar',
-        lang:'ru',
-        allowSource: false
-    };
     this.is_content_editable = false;
     
     this.ib_meta = node.closest('.fx_infoblock').data('fx_infoblock');

@@ -1,4 +1,7 @@
-<div fx:template="calendar" class="blog_calendar">
+<div 
+        fx:template="calendar" 
+        class="blog_calendar" 
+        data-expand="{%expand}false{/%}">
     {js}
         FX_JQUERY_PATH
         calendar.js
@@ -14,7 +17,7 @@
         'July,August,September,October,November,December'
     );
     ?>
-    <div fx:template="item" class="year{if $active} year_active{/if}">
+    <div fx:template="item" class="year{if $active || $expand == 'true'} year_active{/if}">
         <div class="year_title">{$year}</div>
         <div class="months" fx:template="$months">
             <div fx:template="item">

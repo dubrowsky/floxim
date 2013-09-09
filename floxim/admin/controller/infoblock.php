@@ -52,8 +52,9 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                 if (count($act_templates) == 0) {
                     continue;
                 }
+                $action_name = ($c['name'] ? $c['name'] . ' / ' : '').$action_info['name']; 
                 $c_item['children'][]= array(
-                    'data' => $action_info['name'],
+                    'data' => $action_name,
                     'metadata' => array(
                         'id' => 'component_'.$c['keyword'].'.'.$action_code,
                         'description' => $action_info['description']
@@ -263,7 +264,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                     fx::lang('Page layout','system') : 
                     fx::lang('Infoblock settings','system'). 
                     ', ' . $controller_name . '.' . $action.' #'.$infoblock['id'],
-            'step' => 'settings_select',
+            //'step' => 'settings_select',
             'dialog_button' => array(
                 array('key' => 'save', 'text' => $input['id'] ? fx::lang('Update','system') : fx::lang('Create','system'))
             )

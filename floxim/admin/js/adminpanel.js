@@ -312,7 +312,7 @@ fx_adminpanel = {
             if (options) {
                 $.extend(true, settings, options);
             }
-
+            console.log('creating form', this, options);
             var _form = $('<form class="fx_admin_form" id="'+settings.form.id+'" action="'+settings.form.action+'" enctype="multipart/form-data" method="post" target="'+settings.form.target+'" />');
             $(_form).append('<iframe id="'+settings.form.target+'" name="'+settings.form.target+'" style="display:none;"></iframe><div id="nc_warn_text"></div>');
             this.html('<div id="nc_dialog_error"/>');

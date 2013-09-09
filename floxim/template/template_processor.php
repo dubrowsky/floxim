@@ -362,7 +362,6 @@ class fx_template_processor {
         if (isset($subtemplates['separator'])) {
             $each_token->add_child($subtemplates['separator']);
         }
-        
     }
     
     protected $templates = array();
@@ -813,12 +812,16 @@ class fx_template_processor {
         if ( !($name = $token->get_prop('name'))) {
             $name = $token->get_prop('id');
         }
-        if (! ($of = $token->get_prop('of'))) {
+        $of = $token->get_prop('of');
+        $magic_of = array('block', 'menu');
+        if (!$of) {
             if ($this->_controller_type == 'layout') {
                 $of = 'layout.show';
             } else {
                 $of = $this->_controller_type."_".$this->_controller_name.".".$token->get_prop('id');
             }
+        } elseif (!in_array($of, $magic_of) && !preg_match("~\.~", $of ) ) {
+            $of = $this->_controller_type."_".$this->_controller_name.".".$of;
         }
         $this->templates [$token->get_prop('id')] += array(
             'code' => $code,

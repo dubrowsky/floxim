@@ -115,7 +115,8 @@ class fx_content extends fx_essence {
             // поле-селект
             if ($cf->type == 'select') {
                 $jsf = $cf->get_js_field($this);
-                $field_meta['display_value'] = $v ? $jsf['value'] : '';
+                $values = $cf->get_values();
+                $field_meta['display_value'] = $v ? $values[$v] : '';
                 // для не админов показываем название варианта
                 if (!$is_admin) {
                     $fields_to_show[$fkey] = $field_meta['display_value'];

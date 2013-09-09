@@ -108,6 +108,7 @@ class fx_controller_admin extends fx_controller {
             '/floxim/admin/js/livesearch.js',
             '/floxim/admin/js/fields.js',
             '/floxim/admin/js/edit-in-place.js',
+            '/floxim/admin/js/panel.js',
             '/floxim/admin/js/store.js',
             '/floxim/admin/js/dialog_file.js',
             '/floxim/admin/js/admin.js',

@@ -1,27 +1,7 @@
 <?php
 
 class fx_template_field  {
-	/*
-	public static function format_date($value, $format) {
-		if (!is_numeric($value)) {
-			$value = strtotime($value);
-		}
-		return date($format, $value);
-	}
-    
-    public static function format_image($value, $format) {
-        try {
-            $thumber = new fx_thumb($value, $format);
-            $value = $thumber->get_result_path();
-        } catch (Exception $e) {
-            $value = '';
-        }
-        return $value;
-    }
-     * 
-     */
-	
-    protected $_value = null;
+	protected $_value = null;
     
     protected $_meta = array();
     
