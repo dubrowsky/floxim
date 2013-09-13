@@ -39,7 +39,7 @@ function fx_edit_in_place( node ) {
 }
 
 fx_edit_in_place.prototype.handle_keydown = function(e) {
-    if (e.which == 27) {
+    if (e.which === 27) {
         if (e.isDefaultPrevented && e.isDefaultPrevented()) {
             return;
         }
@@ -48,7 +48,7 @@ fx_edit_in_place.prototype.handle_keydown = function(e) {
         $fx.front.deselect_item();
         return false;
     }
-    if (e.which == 13 && (!this.is_wysiwyg || e.ctrlKey)) {
+    if (e.which === 13 && (!this.is_wysiwyg || e.ctrlKey)) {
         this.save().stop();
         $fx.front.deselect_item();
         e.which = 666;
@@ -60,30 +60,30 @@ fx_edit_in_place.prototype.handle_keydown = function(e) {
 fx_edit_in_place.prototype.start = function(meta) {
 	var edit_in_place = this;
 	switch (meta.type) {
-		case 'datetime':
-			var field = this.add_panel_field(meta);
-			break;
-		case 'image': case 'file': 
-			var field = this.add_panel_field(
-				$.extend({}, meta, {
-					value:meta.filetable_id,
-					path:meta.value
-				})
-			);
-			field.on('fx_change_file', function() {
-				edit_in_place.save().stop();
-			});
-			break;
-		case 'color':
-			this.add_panel_field(meta);
-			break;
+            case 'datetime':
+                var field = this.add_panel_field(meta);
+                break;
+            case 'image': case 'file': 
+                var field = this.add_panel_field(
+                    $.extend({}, meta, {
+                        value:meta.filetable_id,
+                        path:meta.value
+                    })
+                );
+                field.on('fx_change_file', function() {
+                    edit_in_place.save().stop();
+                });
+                break;
+            case 'color':
+                this.add_panel_field(meta);
+                break;
         case 'select':
             this.add_panel_field(meta);
             break;
-		case 'string': case 'html': case '': case 'text': case 'int':
-			if (meta.is_att) {
-				this.add_panel_field(meta);
-			} else {
+        case 'string': case 'html': case '': case 'text': case 'int':
+            if (meta.is_att) {
+                this.add_panel_field(meta);
+            } else {
                 this.is_content_editable = true;
                 if (!$($fx.front.get_selected_item()).hasClass('fx_content_essence')) {
                     setTimeout(function() {
@@ -96,20 +96,20 @@ fx_edit_in_place.prototype.start = function(meta) {
                     this.make_wysiwyg();
                 }
                 this.node
-					.attr('contenteditable', 'true')
-					.data('fx_saved_value', this.node.html())
-					.focus();
-			}
-			break;
+                    .attr('contenteditable', 'true')
+                    .data('fx_saved_value', this.node.html())
+                    .focus();
+            }
+            break;
 	}
 	this.node.closest('.fx_selected').one('fx_deselect.edit_in_place', function() {
-		edit_in_place.save().stop();
+            edit_in_place.save().stop();
 	});
 }
 
 fx_edit_in_place.prototype.add_panel_field = function(meta) {
     meta = $.extend({}, meta);
-	if (meta.var_type == 'visual') {
+	if (meta.var_type === 'visual') {
 		meta.name = meta.id;
 	}
     if (!meta.type) {
@@ -119,14 +119,14 @@ fx_edit_in_place.prototype.add_panel_field = function(meta) {
 	field.data('meta', meta);
 	this.panel_fields.push(field);
 	return field;
-}
+};
 
 fx_edit_in_place.prototype.stop = function() {
-	for (var i =0 ;i<this.panel_fields.length; i++) {
-		this.panel_fields[i].remove();
-	}
-	this.panel_fields = [];
-	this.node.data('edit_in_place', null);
+    for (var i =0 ;i<this.panel_fields.length; i++) {
+        this.panel_fields[i].remove();
+    }
+    this.panel_fields = [];
+    this.node.data('edit_in_place', null);
     this.node.attr('contenteditable', null);
     this.node.removeClass('fx_var_editable');
     if (this.is_content_editable && this.is_wysiwyg) {
@@ -134,59 +134,57 @@ fx_edit_in_place.prototype.stop = function() {
     }
     $('*').off('.edit_in_place');
     this.node.blur();
-	return this;
-}
+    return this;
+};
 
 fx_edit_in_place.prototype.save = function() {
-	var node = this.node;
-	var vars = [];
-	// редактируем текст узла
+    var node = this.node;
+    var vars = [];
+    // редактируем текст узла
     var is_content_editable = this.is_content_editable;
-	if (is_content_editable) {
+    if (is_content_editable) {
         if (this.is_wysiwyg && this.source_area.is(':visible')) {
             this.node.redactor('toggle');
         }
         var val = this.is_wysiwyg ? node.html() : node.text();
-		if (val != node.data('fx_saved_value') ) {
+        if (val !== node.data('fx_saved_value') ) {
             vars.push({
-				'var':this.meta,
-				value:val
-			});
-		}
-	}
-	for (var i = 0; i < this.panel_fields.length; i++) {
-		var pf = this.panel_fields[i];
-		var pf_meta= pf.data('meta');
-		var old_value = pf_meta.value;
-		var new_value = $(':input[name="'+pf_meta['name']+'"]', pf).val();
-		if (old_value != new_value) {
-			vars.push({
-				'var': pf_meta,
-				value:new_value
-			});
-		}
-	}
-	// ничего не поменялось
-	if (vars.length == 0) {
-		return this;
-	}
+                'var':this.meta,
+                value:val
+            });
+        }
+    }
+    for (var i = 0; i < this.panel_fields.length; i++) {
+        var pf = this.panel_fields[i];
+        var pf_meta= pf.data('meta');
+        var old_value = pf_meta.value;
+        var new_value = $(':input[name="'+pf_meta['name']+'"]', pf).val();
+        if (old_value !== new_value) {
+            vars.push({
+                'var': pf_meta,
+                value:new_value
+            });
+        }
+    }
+    // ничего не поменялось
+    if (vars.length === 0) {
+        return this;
+    }
     $fx.front.disable_infoblock(node.closest('.fx_infoblock'));
-    $fx.post({
-		essence:'infoblock',
-		action:'save_var',
-		infoblock:this.ib_meta,
-		vars: vars,
-		fx_admin:true
-	}, function(res) {
-        /*
-		if (is_content_editable) {
-			node.html(val);
-			node.data('fx_saved_value', val);
-		}*/
-		$fx.front.reload_infoblock(node.closest('.fx_infoblock').get(0));
-	});
-	return this;
-}
+    $fx.post(
+        {
+            essence:'infoblock',
+            action:'save_var',
+            infoblock:this.ib_meta,
+            vars: vars,
+            fx_admin:true
+        }, 
+        function() {
+            $fx.front.reload_infoblock(node.closest('.fx_infoblock').get(0));
+	}
+    );
+    return this;
+};
 
 fx_edit_in_place.prototype.restore = function() {
     if (!this.is_content_editable) {
@@ -222,9 +220,9 @@ fx_edit_in_place.prototype.make_wysiwyg = function () {
         top:'0px',
         left:'0px'
     });
-}
+};
 
 fx_edit_in_place.prototype.destroy_wysiwyg = function() {
     this.node.redactor('destroy');
     $('#fx_admin_control .editor_panel').remove();
-}
+};

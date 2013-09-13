@@ -106,7 +106,7 @@ if (_c.values) {
 						}
 					}
 					if (c_row.parents('.ui-dialog').length == 0) {
-						fx_form.update_available_buttons();
+                                            $fx.buttons.update_available_buttons();
 					}
 					set_input_value();
 				});
@@ -147,7 +147,7 @@ if (_c.values) {
 		}
 	});
 if ($fx.mode == 'admin' ) {
-    fx_form.update_available_buttons();
+    $fx.buttons.update_available_buttons();
 }
 
 <!--[list_field_row]-->

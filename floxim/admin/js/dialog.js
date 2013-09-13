@@ -10,7 +10,6 @@
             zIndex: 78887,
             resizable: false
         },
-        steps: [],
 
 
         open_dialog: function(data, settings) {
@@ -23,8 +22,7 @@
             $fx_dialog.settings = $.extend($fx_dialog.settings, settings);
             var main_cont = '#fx_dialog';
             $fx_dialog.main = $(main_cont);
-            $fx_dialog.steps = [];
-
+            
             // Dialog container is invisible (visibility: hidden) when it opens;
             // it becomes visible when it has 'fx_dialog_opened' class (visibility: visible).
             // That class is assigned to the dialog container in $fx_dialog.on_ready().
@@ -136,15 +134,7 @@
                 return false;
             }
 
-            if ( data.step ) {
-                var prev_closer = $fx_dialog.settings.onclose;
-                $fx_dialog.settings.onclose = function() {
-                    $fx_dialog.settings.onclose = prev_closer;
-                    $fx_dialog.open_dialog(data, $fx_dialog.settings);
-                }
-                $fx_dialog.close();
-            }
-            else if ( data.status == 'ok') {
+            if ( data.status === 'ok') {
                 if (typeof $fx_dialog.settings.onfinish === 'function') {
                     $fx_dialog.settings.onfinish(data);
                 }
@@ -274,11 +264,6 @@
             }
 
             return false;
-        },
-
-        add_step: function (step) {
-            $fx_dialog.steps.push(step);
-            $fx_dialog.steps.unique();
         },
 
         rename_button : function (button, name) {

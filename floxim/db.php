@@ -1,5 +1,4 @@
 <?php
-
 class fx_db extends PDO {
 
     // информация о последней ошибке
@@ -44,7 +43,7 @@ class fx_db extends PDO {
     
     public function query($statement) {
         self::$q_count++;
-    	$start_time = microtime();
+    	$start_time = microtime(true);
 
         $statement = $this->prepare_query($statement);
 
@@ -64,7 +63,8 @@ class fx_db extends PDO {
             echo "</div>\n";
             dev_log($statement, debug_backtrace());
         }
-        $q_time = microtime() - $start_time;
+        $end_time = microtime(true);
+        $q_time = $end_time - $start_time;
         self::$q_time += $q_time;
         return $this->last_result;
         dev_log(
@@ -165,67 +165,6 @@ class fx_db extends PDO {
         return $this->errorInfo();
     }
 
-    public function debug() {
-
-        $last = $this->get_results();
-
-        echo "<blockquote>";
-
-        if ($this->last_error) {
-            echo "<font face=arial size=2 color=000099><b>Last Error --</b> [<font color=000000><b>" . $this->last_error[2] . "</b></font>]<p>";
-        }
-
-        echo "<font face=arial size=2 color=000099><b>Query</b> [" . $this->num_queries . "] <b>--</b> ";
-        echo "[<font color=000000><b>$this->last_query</b></font>]</font><p>";
-
-        echo "<font face=arial size=2 color=000099><b>Query Result..</b></font>";
-        echo "<blockquote>";
-
-        if ($last) {
-
-            // =====================================================
-            // Results top rows
-
-            echo "<table cellpadding=5 cellspacing=1 bgcolor=555555>";
-            echo "<tr bgcolor=eeeeee><td nowrap valign=bottom><font color=555599 face=arial size=2><b>(row)</b></font></td>";
-
-
-            foreach (array_keys($last[0]) as $name) {
-                echo "<td nowrap align=left valign=top><span style='font-family: arial; font-size: 10pt; font-weight: bold;'>" . $name . "</span></td>";
-            }
-
-            echo "</tr>";
-
-            // ======================================================
-            // print main results
-
-            if ($this->last_result) {
-
-                $i = 0;
-                foreach ($last as $one_row) {
-                    $i++;
-                    echo "<tr bgcolor=ffffff><td bgcolor=eeeeee nowrap align=middle><font size=2 color=555599 face=arial>$i</font></td>";
-
-                    foreach ($one_row as $item) {
-                        echo "<td nowrap><font face=arial size=2>$item</font></td>";
-                    }
-
-                    echo "</tr>";
-                }
-            } // if last result
-            else {
-                echo "<tr bgcolor=ffffff><td colspan=" . (count($this->col_info) + 1) . "><font face=arial size=2>No Results</font></td></tr>";
-            }
-
-            echo "</table>";
-        } // if col_info
-        else {
-            echo "<font face=arial size=2>No Results</font>";
-        }
-
-        echo "</blockquote></blockquote><hr noshade color=dddddd size=1>";
-    }
-
     protected function replace_prefix($query) {
         if ( $this->prefix ) {
             $query = preg_replace('/{{(.*?)}}/', $this->prefix . '\1', $query);
@@ -252,5 +191,3 @@ class fx_db extends PDO {
     }
 
 }
-
-?>

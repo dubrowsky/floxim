@@ -73,29 +73,29 @@ class fx {
                 $data_finder = new $finder_class();
             }
         } else {
-			try {
-				$classname = 'fx_data_'.$datatype;
-				$data_finder = new $classname();
-				$data_classes_cache[$datatype] = $classname;
-			} catch (Exception $e) {
-				// Файндер для контента, класс не определен
-				if ($component) {
-					$data_finder = new fx_data_content();
-					$data_classes_cache[$datatype] = 'fx_data_content';
-				} elseif (preg_match("~^field_~", $datatype)) {
-					$data_finder = new fx_data_field();
-					$data_classes_cache[$datatype] = 'fx_data_field';
-				}
-			}
-			if (is_null($data_finder)) {
-				$data_finder = new fx_data($datatype);
-				$data_classes_cache[$datatype] = 'fx_data';
-			}
-		}
+            try {
+                $classname = 'fx_data_'.$datatype;
+                $data_finder = new $classname();
+                $data_classes_cache[$datatype] = $classname;
+            } catch (Exception $e) {
+                // Файндер для контента, класс не определен
+                if ($component) {
+                        $data_finder = new fx_data_content();
+                        $data_classes_cache[$datatype] = 'fx_data_content';
+                } elseif (preg_match("~^field_~", $datatype)) {
+                        $data_finder = new fx_data_field();
+                        $data_classes_cache[$datatype] = 'fx_data_field';
+                }
+            }
+            if (is_null($data_finder)) {
+                $data_finder = new fx_data($datatype);
+                $data_classes_cache[$datatype] = 'fx_data';
+            }
+        }
 		
-		if ($component) {
-			$data_finder->set_component($component['id']);
-		}
+        if ($component) {
+                $data_finder->set_component($component['id']);
+        }
 		
         if (func_num_args() == 2) {
             if (is_numeric($id) || is_string($id)) {

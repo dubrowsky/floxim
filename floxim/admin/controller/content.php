@@ -40,6 +40,7 @@ class fx_controller_admin_content extends fx_controller_admin {
             $content->set_field_values($input['content']);
             $content->save();
         }
+        //$this->response->add_form_button('save');
         return array(
             'status' => 'ok', 
             'dialog_title' => 

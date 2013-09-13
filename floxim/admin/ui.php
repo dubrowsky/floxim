@@ -125,22 +125,6 @@ class fx_admin_ui {
         return $result;
     }
 
-    public function ajaxlink ($text, $control_names, $post_arr) {
-        if (!is_array($post_arr)) {
-            $post_arr = array($post_arr);
-        }
-        if (!is_array($control_names)) {
-            $control_names = array($control_names);
-        }
-        // ajaxlink практически никогда ничего не сохраняет
-        if ( !isset($post_arr['posting'])) {
-            $post_arr['posting'] = 0;
-        }
-        
-        return array('type' => 'ajaxlink', 'text' => $text,
-            'control_names' => $control_names, 'post_data' => $post_arr);
-    }
-    
     public function admin_tabs ( $tabs, $active_tab, $callback_object, $callback_param = null ) {
         $tabs_key = array_keys($tabs);
         if (!in_array($active_tab, $tabs_key)) $active_tab = $tabs_key[0];

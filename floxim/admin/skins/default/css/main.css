@@ -163,10 +163,6 @@ input.ui-button {
     font-variant: small-caps;
 }
 
-.fx_overlay .fx_dialog_cancel_button {
-    background: #eff0f0;
-}
-
 .ui-dialog .ui-dialog-buttonpane .fx_dialog_cancel_button .ui-button-text {
     color: #3FB7DE !important;
 }
@@ -589,7 +585,7 @@ input.ui-button {
 }
 
 .fx_overlay .fx_admin_button_text span {
-	line-height: 24px;
+    line-height: 24px;
     font-family: Tahoma, sans-serif;
     font-size: 14px;
     font-weight: bold;
@@ -598,6 +594,14 @@ input.ui-button {
     font-variant: small-caps;
     margin: 0 8px;
     text-decoration: none !important;
+}
+
+.fx_overlay .fx_admin_button_cancel {
+    background: #eff0f0;
+}
+
+.fx_overlay .fx_admin_button_cancel span {
+    color: #3FB7DE;
 }
 
 .fx_admin_button_undo {
@@ -1462,8 +1466,9 @@ img.fx_hilight {
     min-height: 5px;
 }
 
-.fx_selected {
-    outline: 4px solid rgba(255, 255, 0, 0.5) !important;
+.fx_selected, .fx_selected:focus {
+    outline:none;
+    /*outline: 4px solid rgba(255, 255, 0, 0.5) !important;*/
     /*outline-offset: -4px !important;*/
 }
 
@@ -1973,6 +1978,20 @@ body div.fx_overlay, body div.fx_overlay table {
 .fx_outline_pane_left, .fx_outline_pane_right {
     background-image: -webkit-linear-gradient(transparent 50%, #DDD 50%);
     background-size: 3px 9px;
+}
+
+/* styles for selected element */
+
+.fx_outline_style_selected {
+    background-color: #000;
+}
+
+.fx_outline_pane_top.fx_outline_style_selected, .fx_outline_pane_bottom.fx_outline_style_selected {
+    background-image: -webkit-linear-gradient(left, transparent 50%, #FF0 50%);
+}
+
+.fx_outline_pane_left.fx_outline_style_selected, .fx_outline_pane_right.fx_outline_style_selected {
+    background-image: -webkit-linear-gradient(transparent 50%, #FF0 50%);
 }
 
 .fx_outline_pane_top {

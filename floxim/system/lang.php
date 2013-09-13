@@ -60,6 +60,9 @@ class fx_lang {
     
     protected function dump_dictionary($dict, $lang, $file) {
         $data = fx::data('lang_string')->where('dict', $dict)->all();
+        if (!file_exists(dirname($file))) {
+            mkdir(dirname($file));
+        }
         $fh = fopen($file, 'w');
         fputs($fh, "<?php\nreturn array(\n");
         foreach ($data as $s) {

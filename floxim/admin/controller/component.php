@@ -21,22 +21,16 @@ class fx_controller_admin_component extends fx_controller_admin {
         $field['values'] = array();
         foreach ($components as $v) {
         	
-        	$submenu = self::get_component_submenu($v);
-        	$submenu_first = current($submenu);
+            $submenu = self::get_component_submenu($v);
+            $submenu_first = current($submenu);
         	
             $r = array(
-				'id' => $v['id'],
-				'name' => array(
-					'name' => $v['name'],
-					'url' => $submenu_first['url']
-				)
-			);
-			
-            /*
-            if ( $essence == 'component' && $user_component_id == $v['id'] ) {
-                $r['fx_not_available_buttons'] = array('delete');
-            }
-             */
+                'id' => $v['id'],
+                'name' => array(
+                    'name' => $v['name'],
+                    'url' => $submenu_first['url']
+                )
+            );
             
             $r['buttons'] = array();
             foreach ($submenu as $submenu_item) {
@@ -53,19 +47,24 @@ class fx_controller_admin_component extends fx_controller_admin {
         }
         $fields[] = $field;
 
-        $buttons = array("add", "delete");
-        /*
-        $buttons_pulldown['add'] = array(
-            array('name' => fx::lang('New','system'), 'options' => array('source' => 'new'))
+        $buttons = array(
+            array(
+                'key' => "add", 
+                'title' => fx::lang('Add new '.$essence, 'system'),
+                'url' => '#admin.'.$essence.'.add'
+            ),
+            "delete"
         );
+        /*
+        $this->response->add_button_options('add', array(
+            //'essence' => 'component',
+            //'action' => 'add'
+            'url' => '#admin.'.$essence.'.add'
+        ));
          * 
          */
-        $this->response->add_button_options('add', array(
-            'essence' => 'component',
-            'action' => 'add'
-        ));
 
-        $result = array('fields' => $fields, 'buttons' => $buttons, 'buttons_pulldown' => $buttons_pulldown);
+        $result = array('fields' => $fields, 'buttons' => $buttons);
 
         $this->response->breadcrumb->add_item(self::_essence_types($essence), '#admin.'.$essence.'.group');
         if ($input['params'][0]) {
@@ -84,25 +83,25 @@ class fx_controller_admin_component extends fx_controller_admin {
     	$essence_code = str_replace('fx_','',get_class($component));
     	
     	$titles = array(
-    		'component' => array(
-				'settings' => fx::lang('Settings','system'),
+            'component' => array(
+                'settings' => fx::lang('Settings','system'),
                 'fields' => fx::lang('Fields','system'),
                 //'actions' => fx::lang('Component actions', 'system'),
                 'templates' => fx::lang('Templates', 'system')
-			), 
-			'widget' => array(
-				'settings' => fx::lang('Settings','system')
-			)
-		);
+            ), 
+            'widget' => array(
+                'settings' => fx::lang('Settings','system')
+            )
+        );
 		
-		$res = array();
-		foreach($titles[$essence_code] as $code => $title) {
-			$res [$code]= array(
-				'title' => $title,
-				'code' => $code,
-				'url' => $essence_code.'.edit('.$component['id'].','.$code.')',
+        $res = array();
+        foreach($titles[$essence_code] as $code => $title) {
+            $res[$code]= array(
+                'title' => $title,
+                'code' => $code,
+                'url' => $essence_code.'.edit('.$component['id'].','.$code.')',
                 'parent' => null
-			);
+            );
             if ($code == 'fields') {
                 foreach ($component->fields() as $v) {
                     $res['field-'.$v['id']] = array(
@@ -113,8 +112,8 @@ class fx_controller_admin_component extends fx_controller_admin {
                     );
                 }
             }
-		}
-		return $res;
+        }
+	return $res;
     }
     
     protected function _get_component_templates($component) {
@@ -157,7 +156,18 @@ class fx_controller_admin_component extends fx_controller_admin {
         $fields[] = $this->ui->hidden('source', $input['source']);
         $fields[] = $this->ui->hidden('posting');
         $fields[]= $this->_get_parent_component_field();
-
+        
+        $essence =$this->essence_type;
+        
+        $this->response->breadcrumb->add_item(
+            self::_essence_types($essence), 
+            '#admin.'.$essence.'.group'
+        );
+        $this->response->breadcrumb->add_item(
+            fx::lang('Add new '.$essence, 'system')
+        );
+        
+        $this->response->submenu->set_menu($essence);
 
         return array('fields' => $fields);
     }

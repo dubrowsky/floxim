@@ -1,7 +1,3 @@
-function fx_admin_install_patch() {
-    $("#fx_admin_content_form").append('<input type="hidden" name="from_site" value="1" />');
-}
-
 fx_admin = function () {
     this.submenu = new fx_submenu();
     this.breadcrumb = new fx_breadcrumb();
@@ -9,21 +5,20 @@ fx_admin = function () {
     this.action = '';
     this.menu_id = '';
     this.last_post = {};
-    
     this.bind_actions();
-}
+};
 
 fx_admin.prototype.bind_actions = function () {
     var self = this;
     $fx.panel.bind('fx.dialog.ok', function(event, data) {
-        if ( $fx.mode == 'admin' ) {
+        if ( $fx.mode === 'admin' ) {
             $fx_dialog.main.dialog('close');
             var post = self.last_post;
             post.menu_id = '';
             $fx.post(post, self.load_page );
         }
     });
-}
+};
 
 fx_admin.prototype.load = function () {
     var self = this;
@@ -38,7 +33,7 @@ fx_admin.prototype.load = function () {
         self.last_post = post;
         $fx.post(post, self.load_page );
     }
-}
+};
 
 fx_admin.prototype.load_page = function ( data ) {
     var self = $fx.admin;
@@ -59,15 +54,19 @@ fx_admin.prototype.load_page = function ( data ) {
     data.form = {
         id:'fx_admin_content_form'
     };
-    $('#fx_admin_content').fx_create_form(data, true);
-	function set_admin_content_height() {
-		$('#fx_admin_content').height( $(window).height() - $("#fx_admin_content").offset().top);
-	}
-	setTimeout(set_admin_content_height,100);
-	$(window).resize(set_admin_content_height);
-    //$('#fx_admin_content').height( $(window).height() - $("#fx_admin_control").height() - $("#fx_admin_panel").height() - $('#fx_admin_breadcrumb').height() );
+    $('#fx_admin_content').fx_create_form(data);
+    function set_admin_content_height() {
+        $('#fx_admin_content').height( 
+                $(window).height() - $("#fx_admin_content").offset().top
+        );
+    }
+    setTimeout(
+        set_admin_content_height,
+        100
+    );
+    $(window).resize(set_admin_content_height);
     $('html').scrollTop(0);
-}
+};
 
 
 fx_admin.prototype.set_essence = function ( essence ) {

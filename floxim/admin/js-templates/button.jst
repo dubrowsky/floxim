@@ -1,4 +1,6 @@
 <!--[input ? _c.type == 'button']-->
-<div class="fx_button fx_admin_button_text" <?=$t.data_attr(_c)?>>
+<div 
+    class="fx_button fx_admin_button_text<?=_c.class ? ' fx_admin_button_'+_c.class : ''?>" 
+    <?=$t.data_attr(_c)?>>
     <span><?=_c.label || ''?></span>
 </div>

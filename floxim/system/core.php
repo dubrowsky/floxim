@@ -24,11 +24,6 @@ class fx_core extends fx_system {
         spl_autoload_register(array($this, 'load_class'));
     }
 
-    public function db_init() {
-        $this->db = new fx_db();
-        $this->db->query("SET NAMES '".fx::config()->DB_CHARSET."'");
-    }
-
     /**
      * Load system extension
      *
