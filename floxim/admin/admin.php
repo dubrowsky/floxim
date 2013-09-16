@@ -49,14 +49,17 @@ class fx_controller_admin extends fx_controller {
         }
 
         if ($input['posting']) {
-            if (!$result['text']) $result['text'] = $this->get_status_text();
+            if (!$result['text']) {
+                $result['text'] = $this->get_status_text();
+            }
         }
 
         if ($this->response) {
-            $result = $result ? $result : array();
-            $result = array_merge($result, $this->response->to_array());
+            $result = array_merge(
+                $result ? $result : array(), 
+                $this->response->to_array()
+            );
         }
-        
         if ($this->process_do_return) {
             return $result;
         }
@@ -108,8 +111,7 @@ class fx_controller_admin extends fx_controller {
             '/floxim/admin/js/livesearch.js',
             '/floxim/admin/js/fields.js',
             '/floxim/admin/js/edit-in-place.js',
-            '/floxim/admin/js/store.js',
-            '/floxim/admin/js/dialog_file.js',
+            '/floxim/admin/js/panel.js',
             '/floxim/admin/js/admin.js',
             '/floxim/admin/js/menu/main.js',
             '/floxim/admin/js/menu/mode.js',

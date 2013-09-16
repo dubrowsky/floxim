@@ -136,10 +136,10 @@ function fx_tree_render(root) {
 			}
 		}
 		if (!c_row.data('id')) {
-			c_row.data('id', c_row.closest('.fx_tree_item').data('id'));
+                    c_row.data('id', c_row.closest('.fx_tree_item').data('id'));
 		}
-        root.find('.tree_value_input').val(c_row.data('id'));
-		$fx_form.update_available_buttons();
+                root.find('.tree_value_input').val(c_row.data('id'));
+		$fx.buttons.update_available_buttons();
 	});
 	
 	fx_tree_refresh(root);

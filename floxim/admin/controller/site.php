@@ -29,14 +29,14 @@ class fx_controller_admin_site extends fx_controller_admin {
 
         $this->response->add_buttons(
             array(
-                array('key' => 'add', 'title' => fx::lang('Add new site','system')),
+                array(
+                    'key' => 'add', 
+                    'title' => fx::lang('Add new site','system'),
+                    'url' => '#admin.administrate.site.add'
+                ),
                 'delete'
             )
         );
-        $this->response->add_button_options('add', array(
-            'essence' => 'site',
-            'action' => 'add'
-        ));
         $this->response->breadcrumb->add_item( fx::lang('Sites','system') );
         $this->response->submenu->set_menu('site');
     }
@@ -51,6 +51,15 @@ class fx_controller_admin_site extends fx_controller_admin {
         $fields[] = $this->ui->hidden('posting');
         $this->response->add_fields($fields);
         $this->response->dialog->set_title( fx::lang('Create a new site','system') );
+        $this->response->breadcrumb->add_item( 
+            fx::lang('Sites','system'),
+            '#admin.administrate.site.all'
+        );
+        $this->response->breadcrumb->add_item(
+            fx::lang('Add new site','system')
+        );
+        $this->response->add_form_button('save');
+        $this->response->submenu->set_menu('site');
     }
 
     public function import_save($input) {

@@ -25,9 +25,6 @@ class fx_field_baze extends fx_field {
         if ($content[$this->name]) {
             $this->_js_field['value'] = $content[$this->name];
         }
-        /* else if ( $this['default']) {
-          $this->_js_field['value'] = $this['default'];
-          } */
 
         if ($this['parent']) {
             $this->_js_field['parent'] = array('visual['.$this['parent'][0].']', $this['parent'][1]);

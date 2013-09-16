@@ -10,19 +10,8 @@
         </div>
         
         <div class="anounce">{$anounce}</div>
-        
-        <div fx:template="$tags" class="tags">
-            {%tags_label}Tags:{/%} 
-            <a fx:template="item" href="{$url}">
-                 {$name}
-            </a>
-            <span fx:template="separator">, </span>
-        </div>
+        {call id="component_tag.entity_tags"}{$items select="$tags" /}{/call}
     </div>
 
-    <div fx:template="$pagination" class="pagination">
-        <a fx:template="inactive" href="{$url}">{$page}</a>
-        <b fx:template="active">{$page}</b>
-        <span fx:template="separator"> | </span>
-    </div>
+    {call id="component_content.pagination" /}
 </div>

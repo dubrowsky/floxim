@@ -9,8 +9,6 @@ fx_adminpanel = {
         $fx.history = options.history;
         $fx.panel = $('#fx_admin_panel');
        
-        $fx.init_form_function();
-            
         $(function () {
             $fx.admin = false;
             $fx.buttons = new fx_buttons($fx.settings.buttons.source);
@@ -98,13 +96,6 @@ fx_adminpanel = {
             $fx.hash[1] = 'view';
         }
         $fx.mode = $fx.hash[0]; // page or admin
-            
-        /*
-         * если оставить, проматывает страницу в начало при переходе в #page.view
-        if ( window.location.hash == '#page.view' ) {
-            window.location.hash = '';
-        }
-        */
     },
 
     draw_additional_text: function (data) {
@@ -264,122 +255,21 @@ fx_adminpanel = {
     },
               
     click_extend_button: function (button_key, button) {
-        if ( button_key == 'store') {
-            $fx.show_store();
-        } else if (button.post) {
+        if (button.post) {
             $fx.post(button.post, function(data) {
                 $('#fx_dialog_form *').remove();
-                //$('.ui-dialog-buttonset *').remove();
                 $fx_dialog.main.dialog("option", "buttons", [] );
                 $fx_form.draw_fields(data, $('#fx_dialog_form'));
             });
-        } else if (button.act_as && button.act_as == 'save') {
+            return;
+        }
+        if (button.act_as === 'save') {
             $('form', $fx_dialog.main).append(
                 '<input type="hidden" name="fx_dialog_button" value="'+button_key+'" />'
             );
             $fx_dialog.click_save();
         }
-    },
-        
-    show_store: function () {
-        $("input[name=phase]", $fx_dialog.main).val(7);
-        $("input[name=posting]", $fx_dialog.main).val(0);
-        $fx_dialog.submit();
-        $fx.panel.bind("fx.fielddrawn", $fx.store_hide_button);  
-    },
-        
-    store_hide_button: function () {
-        $fx_dialog.hide_button(['save','store']);
-        $fx.panel.unbind("fx.fielddrawn", $fx.store_hide_button); 
-    },
-        
-    store_after_install: function ( store_id ) {
-        $("input[name=phase]", $fx_dialog.main).val(1);
-        $fx_dialog.submit();
-        $('#fx_step_1').remove();
-        $('#fx_step_10').remove();
-    },
-        
-    init_form_function: function () {
-        $.fn.fx_create_form = function(options, main_content) {
-        	var settings = {
-                form: {
-                    id:'fx_dialog_form', 
-                    action:$fx.settings.action_link, 
-                    target:'nc_upload_target'
-                }
-            };
-            if (options) {
-                $.extend(true, settings, options);
-            }
-
-            var _form = $('<form class="fx_admin_form" id="'+settings.form.id+'" action="'+settings.form.action+'" enctype="multipart/form-data" method="post" target="'+settings.form.target+'" />');
-            $(_form).append('<iframe id="'+settings.form.target+'" name="'+settings.form.target+'" style="display:none;"></iframe><div id="nc_warn_text"></div>');
-            this.html('<div id="nc_dialog_error"/>');
-            this.append(_form);
-            $fx_form.draw_fields(settings, _form, main_content);
-            $fx_form.add_elrte();
-            
-            if (options.buttons_essence) {
-            	$fx.admin.set_essence(options.buttons_essence);
-            }
-            
-            return this;
-        };
-
-        $.fn.writeError = function(message){
-            if ( typeof message == 'string' ) message = [message];
-            return this.each(function(){
-                var $this = $(this);
-
-                var errorHtml = "<div class=\"ui-widget\">";
-                errorHtml+= "<div class=\"ui-state-error ui-corner-all\" style=\"padding: 0 .7em;\">";
-                errorHtml+= "<p>";
-                errorHtml+= "<span class=\"ui-icon ui-icon-alert\" style=\"float:left; margin-right: .3em;\"></span>";
-                errorHtml+= message.join('<br/>');
-                errorHtml+= "</p>";
-                errorHtml+= "</div>";
-                errorHtml+= "</div>";
-
-                $this.html(errorHtml);
-            });
-        }
-
-        $.fn.writeAlert = function(message){
-            return this.each(function(){
-                var $this = $(this);
-
-                var alertHtml = "<div class=\"ui-widget\">";
-                alertHtml+= "<div class=\"ui-state-highlight ui-corner-all\" style=\"padding: 0 .7em;\">";
-                alertHtml+= "<p>";
-                alertHtml+= "<span class=\"ui-icon ui-icon-info\" style=\"float:left; margin-right: .3em;\"></span>";
-                alertHtml+= message;
-                alertHtml+= "</p>";
-                alertHtml+= "</div>";
-                alertHtml+= "</div>";
-
-                $this.html(alertHtml);
-            });
-        }
-            
-            
-        $.fn.writeOk = function(message){
-            return this.each(function(){
-                var $this = $(this);
-
-                var alertHtml = "<div class=\"ui-widget\">";
-                alertHtml+= "<div class=\"ui-state-highlight ui-corner-all\" style=\"padding: 0 .7em;\"><p>";
-                alertHtml+= message;
-                alertHtml+= "</p></div></div>";
-                $this.html(alertHtml);
-                
-                setTimeout(function(){
-                    $this.fadeOut('normal');
-                }, 2000);
-            });
-        }
     }
-
-}
+};
 
 window.$fx = fx_adminpanel;

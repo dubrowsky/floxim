@@ -10,7 +10,6 @@ fx_buttons = function ( source ) {
     $fx.panel.bind('fx.admin_load_page', function(event, data){
         self.pulldown = {};
         self.buttons_action = {};
-        console.log(data);
         if ( data.buttons_pulldown ) {
             self.pulldown = data.buttons_pulldown;
         }
@@ -20,12 +19,12 @@ fx_buttons = function ( source ) {
     });
     
     $fx.panel.bind('fx.click', function(event,owner){
-		if ( owner != 'button_pulldown') {
+        if ( owner !== 'button_pulldown') {
             self.hide_pulldown();
         } 
     });
     
-}
+};
 
 fx_buttons.prototype.bind = function(button_key, callback) {
     var b = $('.fx_admin_button_'+button_key);
@@ -33,25 +32,25 @@ fx_buttons.prototype.bind = function(button_key, callback) {
     b.data('has_callback', true);
     b.unbind('click');
     b.click(function() {
-    		callback();
-    		return false;
+        callback();
+        return false;
     });
-}
+};
 
 fx_buttons.prototype.is_active = function(button_key) {
     return $('.fx_admin_button_'+button_key).data('has_callback');
-}
+};
 
 fx_buttons.prototype.trigger = function(button_key) {
     $('.fx_admin_button_'+button_key).trigger('click');
-}
+};
 
 fx_buttons.prototype.unbind = function(button_key, callback) {
     var b = $('.fx_admin_button_'+button_key);
     b.data('has_callback', null);
     b.hide();
     b.unbind('click', callback);
-}
+};
 
 
 fx_buttons.prototype.draw_buttons = function ( buttons ) {
@@ -62,18 +61,18 @@ fx_buttons.prototype.draw_buttons = function ( buttons ) {
         return false;
     }
     $.each(buttons, function(key, button) {
-        if ( button == 'divider' ) {
+        if ( button === 'divider' ) {
             var div = $('<div/>').addClass('nc_adminpanel_button_divider');
             div.data('key', button);
         }
         else {
             var button_source = self.source[button];
-            if (typeof button != 'object') {
+            if (typeof button !== 'object') {
                 button = {
                     key:button,
                     type:button_source.type,
                     title:button_source.title
-                }
+                };
             }
             if (!button_source) {
                 button.type = 'text';
@@ -81,7 +80,7 @@ fx_buttons.prototype.draw_buttons = function ( buttons ) {
             
             element = $('<div/>').addClass('fx_admin_button_'+button.key);
             element.attr('title', button.title);
-            if (button.type == 'text' ) {
+            if (button.type === 'text' ) {
                 element.addClass('fx_admin_button_text').html( $('<span>').text(button.title) );
             } else {
                 element.addClass('fx_admin_button');
@@ -89,29 +88,32 @@ fx_buttons.prototype.draw_buttons = function ( buttons ) {
 
             element.data(button);
             element.click( function () {
-				if ($(this).data('has_callback')) {
-					return;
-				}
+                if ($(this).data('has_callback')) {
+                    return;
+                }
                 self.handle(button.key);
                 return false;
             });
-			element.hide();
+            element.hide();
         }
         self.container.append(element);
     });
-            
-}
+};
 
 fx_buttons.prototype.set_active_buttons = function ( buttons ) {
     $('div', this.container).each(function() {
-        if ( $(this).data('key') == 'more' || $(this).data('key') == 'divider'  ) return true;
-        if ($.inArray($(this).data('key'), buttons) == -1 ) {
-            $(this).hide();
+        var $this = $(this);
+        var key = $this.data('key');
+        if (key  === 'more' || key === 'divider') {
+            return true;
+        }
+        if ($.inArray(key, buttons) === -1 ) {
+            $this.hide();
         } else {
-        	$(this).show();
+            $this.show();
         }
     });
-}
+};
 
 fx_buttons.prototype.update_button = function ( btn, settings) {
     var button = $(".fx_admin_button_" + btn);
@@ -127,15 +129,15 @@ fx_buttons.prototype.update_button = function ( btn, settings) {
         	button.hide();
         }
     }
-}
+};
 
 fx_buttons.prototype.show_panel = function () {
     this.container.show();
-}
+};
 
 fx_buttons.prototype.hide_panel = function () {
     this.container.hide();
-}
+};
 
 /**
  * Первичная обработка нажатия, например, показ всплывающего меню
@@ -145,26 +147,17 @@ fx_buttons.prototype.handle = function ( button ) {
     if ( this.pulldown[button] ) {
         if ( this.pulldown_is_hide ) {
             this.show_pulldown(button, this.pulldown[button]);
+        } else {
+            this.hide_pulldown();
         }
-        else {
-        	this.hide_pulldown();
-        }
-
         $fx.panel.trigger('fx.click', 'button_pulldown');
-        return false;    
+        return false;
     }
-    
-    console.log('handling', button, this);
     
     var button_action = this.buttons_action[button];
     if ( button_action ) {
         if ( button_action.url ) {
             window.location = button_action.url;
-            return false;
-        }
-        if ( button_action.location ) {
-            var location = '#'+$fx.hash.slice(0,2).join('.')+'.'+button_action.location;
-            window.location.hash = location;
             return false;
         }
         if (button_action.options) {
@@ -179,22 +172,26 @@ fx_buttons.prototype.handle = function ( button ) {
             return false;
         }
     }
-    if (button == 'delete'){
+    if (button === 'delete'){
+        var sel = $('.fx_admin_selected');
+        if (sel.length === 0) {
+            return;
+        }
         var opts = {
-            essence:$fx.admin.essence,
+            essence:sel.data('essence'),
             action:'delete',
-            id:$('.fx_admin_selected', '#fx_admin_content').data('id'),
+            id:sel.data('id'),
             posting:true
         };
         $fx.post(
             opts, 
-            function(json) {
+            function() {
                 $(window).hashchange();
             }
         );
         return false;
     }
-}
+};
 
 fx_buttons.prototype.show_pulldown = function ( button, data ) {
     var container = $('<div class="fx_admin_pull_down_menu"/>');
@@ -267,3 +264,29 @@ fx_buttons.prototype.form_button_click = function() {
 	}
 	return false;
 }
+
+fx_buttons.prototype.update_available_buttons = function () {
+    var btn, selected = $('.fx_admin_selected', '#fx_admin_content');
+    var len = selected.length;
+
+
+    if ( !len ) {
+        btn = [];
+    } else if ( len === 1 ) {
+        btn = ['edit', 'settings','on','off', 'delete', 'rights', 'change_password', 'map', 'export', 'download'];
+    } else {
+        btn = ['on','off','delete'];
+    }
+    btn.push('add', 'upload', 'import', 'store');
+    
+    
+    if ( len >= 1 ) {
+        $.each (selected, function(k,v){
+           var  not_available_buttons = $(v).data('fx_not_available_buttons');
+           if ( not_available_buttons ) {
+               btn = array_diff(btn,not_available_buttons);
+           }
+        });
+    }
+    $fx.buttons.set_active_buttons(btn);
+};

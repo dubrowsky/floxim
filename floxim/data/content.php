@@ -308,5 +308,11 @@ class fx_data_content extends fx_data {
         }
         return $res;
     }
+    
+    
+    public function _ss($data, $table = null) {
+        $ss = $this->_set_statement($data);
+        return $ss;//[$table];
+    }
 }
 ?>

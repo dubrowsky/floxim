@@ -36,6 +36,7 @@ class fx_thumb {
     }
     
     public function process($target_path) {
+    	ini_set('memory_limit', '64m');
         $defaults = array(
             'w' => false,
             'h' => false,

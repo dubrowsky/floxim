@@ -52,8 +52,9 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                 if (count($act_templates) == 0) {
                     continue;
                 }
+                $action_name = ($c['name'] ? $c['name'] . ' / ' : '').$action_info['name']; 
                 $c_item['children'][]= array(
-                    'data' => $action_info['name'],
+                    'data' => $action_name,
                     'metadata' => array(
                         'id' => 'component_'.$c['keyword'].'.'.$action_code,
                         'description' => $action_info['description']
@@ -68,7 +69,6 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             'fields' => $fields,
             'dialog_title' => fx::lang('Adding infoblock','system'),
             'dialog_button' => array(
-                //array('key' => 'store', 'text' => fx::lang('Install from Store','system')),
                 array('key' => 'save', 'text' => fx::lang('Next','system'))
             )
     	);
@@ -260,18 +260,24 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
     	
     	$result = array(
             'dialog_title' => $is_layout ? 
-                    fx::lang('Page layout','system') : 
-                    fx::lang('Infoblock settings','system'). 
-                    ', ' . $controller_name . '.' . $action.' #'.$infoblock['id'],
-            'step' => 'settings_select',
+                fx::lang('Page layout','system') : 
+                fx::lang('Infoblock settings','system'). 
+                ', ' . $controller_name . '.' . $action.' #'.$infoblock['id'],
             'dialog_button' => array(
-                array('key' => 'save', 'text' => $input['id'] ? fx::lang('Update','system') : fx::lang('Create','system'))
+                array(
+                    'key' => 'save', 
+                    'text' => $input['id'] 
+                                ? fx::lang('Update','system') 
+                                : fx::lang('Create','system')
+                )
             )
     	);
         if ($input['id']) {
             $is_inherited = $infoblock['parent_infoblock_id'] != 0;
             $result['dialog_button'] []= array(
-                'key' => 'inherit', 'text' => fx::lang('Create a new rule','system'), 'act_as' => 'save'
+                'key' => 'inherit', 
+                'text' => fx::lang('Create a new rule','system'), 
+                'act_as' => 'save'
             );
             if ($is_inherited) {
                 $result['dialog_button'] []= array(

@@ -24,11 +24,6 @@ class fx_core extends fx_system {
         spl_autoload_register(array($this, 'load_class'));
     }
 
-    public function db_init() {
-        $this->db = new fx_db();
-        $this->db->query("SET NAMES '".fx::config()->DB_CHARSET."'");
-    }
-
     /**
      * Load system extension
      *
@@ -233,7 +228,8 @@ class fx_core extends fx_system {
             'site', 
             'widget',
             'filetable',
-            'patch'
+            'patch',
+            'lang_string'
         ); //'user'
 
         $classname = str_replace(array('nc_', 'fx_'), '', $classname);
@@ -274,7 +270,7 @@ class fx_core extends fx_system {
                 break;
             }
             
-            if (in_array($classname, array('http', 'event', 'cache', 'thumb'))) {
+            if (in_array($classname, array('http', 'event', 'cache', 'thumb', 'lang'))) {
                 $file = $root.'system/'.$classname;
                 break;
             }

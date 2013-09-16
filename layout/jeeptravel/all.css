@@ -43,7 +43,7 @@ a {
     text-decoration: underline;
     color: #dc093b;
 }
-a:hover { text-decoration: none; }
+
 input,
 textarea,
 select {
@@ -171,7 +171,7 @@ ul {
 }
 .header nav .active a {
     color: #e9a502;
-    font-family: 'CambriaBoldItalic', Times, serif;
+    /*font-family: 'CambriaBoldItalic', Times, serif;*/
 }
 .gallery {
     margin: 0 0 10px -100px;
@@ -349,6 +349,7 @@ ul {
 .section-info ul {
     font: 18px/24px 'CalibriLight', Arial, sans-serif;
     margin-bottom: 15px;
+    overflow: hidden;
 }
 a.calendar {
     margin: 0 0 0 -24px;

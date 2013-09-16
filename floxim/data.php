@@ -512,7 +512,7 @@ class fx_data {
     public function insert($data) {
         $set = $this->_set_statement($data);
         if ($set) {
-            fx::db()->query("INSERT INTO `{{".$this->table."}}` SET ".join(",", $set)."");
+            fx::db()->query("INSERT INTO `{{".$this->table."}}` SET ".join(",", $set));
             $id = fx::db()->insert_id();
         }
 

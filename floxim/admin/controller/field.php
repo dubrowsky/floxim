@@ -2,7 +2,8 @@
 
 class fx_controller_admin_field extends fx_controller_admin {
 
-    public function items( $essence ) {
+    public function items( $input ) {
+        $essence = $input['essence'];
         
         $items = $essence->fields();
         
@@ -10,6 +11,7 @@ class fx_controller_admin_field extends fx_controller_admin {
         
         $essence_code = str_replace('fx_','',get_class($essence));
         
+        $ar['essence'] = 'field';
         $ar['values'] = array();
         $ar['labels'] = array(
             'name' => fx::lang('Name','system'), 
@@ -20,26 +22,26 @@ class fx_controller_admin_field extends fx_controller_admin {
             $r = array(
                 'id' => $field->get_id(), 
                 'name' => array(
-                	'name' => $field->get_name(), 
-                	'url' =>  '#admin.'.$essence_code.'.edit('.$essence['id'].',edit_field,'.$field->get_id().')'
+                    'name' => $field->get_name(), 
+                    'url' =>  '#admin.'.$essence_code.'.edit('.$essence['id'].',edit_field,'.$field->get_id().')'
                 ),
                 'label' => $field->get_description(), 
                 'type' => fx::lang("FX_ADMIN_FIELD_".strtoupper($field->get_type(false)), 'system')
-		   );
+            );
             $ar['values'][] = $r;
         }
         
-        $fields[] = $ar;
-        $result['buttons'] = array('add', 'delete');
-        
-        $result['buttons_action']['add']['options'] = array(
-            'to_essence' => $essence_code,
-            'to_id' => $essence['id'],
-            'essence' => 'field',
-            'action' => 'add'
+        $result['fields'] = array($ar);
+        $this->response->add_buttons(
+            array(
+                array(
+                    'key' => 'add', 
+                    'title' => fx::lang('Add new field', 'system'),
+                    'url' => '#admin.'.$essence_code.'.edit('.$essence['id'].',add_field)'
+                ),
+                "delete"
+            )
         );
-        $result['fields'] = $fields;
-        $result['essence'] = 'field';
         return $result;
     }
     
@@ -49,9 +51,10 @@ class fx_controller_admin_field extends fx_controller_admin {
         $fields[] = $this->ui->hidden('action', 'add');
         $fields[] = $this->ui->hidden('to_essence', $input['to_essence']);
         $fields[] = $this->ui->hidden('to_id', $input['to_id']);
-
+        $this->response->add_form_button('save');
         return array('fields' => $fields);
     }
+    
     
     protected function _form ( $info = array() ) {
         $fields[] = $this->ui->input('name', fx::lang('Field keyword','system'), $info['name']);

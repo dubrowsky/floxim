@@ -20,6 +20,7 @@ class fx_controller_admin_adminpanel extends fx_controller_admin {
                 <div id="fx_admin_fields"></div>
                 <div id="fx_admin_additionl_text"></div>
                 <div id="fx_admin_statustext"></div>
+                <div id="fx_admin_extra_panel"></div>
             </div>
             <div id="fx_dialog" class="fx_overlay"></div>
             <div id="fx_dialog_file" class="fx_overlay"></div>';

@@ -281,13 +281,13 @@ class fx_controller_component extends fx_controller {
         if ($total_pages == 1) {
             return null;
         }
-        $result = array();
+        $links = array();
         $url_tpl = $this->_get_pagination_url_template();
         $base_url = preg_replace('~##.*?##~', '', $url_tpl);
         $url_tpl = str_replace("##", '', $url_tpl);
         $c_page = $this->_get_current_page();
         foreach (range(1, $total_pages) as $page_num) {
-            $result[]= array(
+            $links[$page_num]= array(
                 'active' => $page_num == $c_page,
                 'page' => $page_num,
                 'url' => 
@@ -296,7 +296,19 @@ class fx_controller_component extends fx_controller {
                     sprintf($url_tpl, $page_num)
             );
         }
-        return $result;
+        $res = array(
+            'links' => fx::collection($links),
+            'total_pages' => $total_pages,
+            'total_items' => $total_rows,
+            'current_page' => $c_page
+        );
+        if ($c_page != 1) {
+            $res['prev'] = $links[$c_page-1]['url'];
+        }
+        if ($c_page != $total_pages) {
+            $res['next'] = $links[$c_page+1]['url'];
+        }
+        return $res;
     }
     
     protected function _get_parent_id() {

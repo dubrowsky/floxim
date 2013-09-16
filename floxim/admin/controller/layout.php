@@ -50,39 +50,38 @@ class fx_controller_admin_layout extends fx_controller_admin {
 
         $fields[] = $ar;
 
-        $buttons = array("add", "delete");
-        $buttons_pulldown['add'] = array(
-                array('name' => fx::lang('empty','system'), 'options' => array('source' => 'new')),
-                array('name' => fx::lang('import','system'), 'options' => array('source' => 'import')),
-                array('name' => fx::lang('Install from FloximStore','system'), 'options' => array('source' => 'store'))
-        );
+        $this->response->add_buttons(array(
+            array(
+                'key'=> 'add',
+                'title' => 'Add new layout',
+                'url' => '#admin.layout.add'
+            )
+        ));
 
-        $result = array('fields' => $fields, 'buttons' => $buttons, 'buttons_pulldown' => $buttons_pulldown);
+        $result = array('fields' => $fields);
 
-        $this->response->submenu->set_menu('template');
+        $this->response->submenu->set_menu('layout');
         return $result;
     }
 
     public function add($input) {
-
-        switch ($input['source']) {
-            case 'import' :
-                $fields[] = array('name' => 'importfile', 'type' => 'file', 'label' => fx::lang('File','system'));
-                $result['dialog_title'] = fx::lang('Import layout design','system');
-                $fields[] = $this->ui->hidden('action', 'import');
-                break;
-            default :
-                $input['source'] = 'new';
-                $fields[] = $this->ui->hidden('action', 'add');
-                $fields[] = array('name' => 'name', 'label' => fx::lang('Layout name','system'));
-                $fields[] = array('name' => 'keyword', 'label' => fx::lang('Keyword (название папки с макетом)','system'));
-                $result['dialog_title'] = fx::lang('Adding a layout design','system');
-        }
-
-        $fields[] = $this->ui->hidden('source', $input['source']);
-        
-        $fields[] = $this->ui->hidden('posting');
-
+        $input['source'] = 'new';
+        $fields = array(
+            $this->ui->hidden('action', 'add'),
+            array('name' => 'name', 'label' => fx::lang('Layout name','system')),
+            array('name' => 'keyword', 'label' => fx::lang('Layout keyword','system')),
+            $this->ui->hidden('source', $input['source']),
+            $this->ui->hidden('posting')
+        );
+        $this->response->submenu->set_menu('layout');
+        $this->response->breadcrumb->add_item(
+            fx::lang('Layouts','system'), 
+            '#admin.layout.all'
+        );
+        $this->response->breadcrumb->add_item(
+            fx::lang('Add new layout','system')
+        );
+        $this->response->add_form_button('save');
         $result['fields'] = $fields;
         return $result;
     }
@@ -149,7 +148,7 @@ class fx_controller_admin_layout extends fx_controller_admin {
         
     	$breadcrumb->add_item(fx::lang('Layouts','system'), '#admin.layout.all');
         $breadcrumb->add_item($template['name'], $tpl_submenu_first['url']);
-		$breadcrumb->add_item($tpl_submenu[$action]['title'], $tpl_submenu[$action]['url']);
+        $breadcrumb->add_item($tpl_submenu[$action]['title'], $tpl_submenu[$action]['url']);
     }
 
     public function layouts($template) {
@@ -175,23 +174,19 @@ class fx_controller_admin_layout extends fx_controller_admin {
     
     public static function get_template_submenu($layout) {
     	$titles = array(
-    		// 'layouts' => 'Лэйауты',
-			// 'files' => 'Файлы',
-			// 'colors' => 'Расцветки',
-			'settings' => fx::lang('Settings','system')
-		);
+            'settings' => fx::lang('Settings','system')
+        );
 
         $layout_id = $layout['id'];
-        
-		$items = array();
-		foreach ($titles as $key => $title) {
-			$items [$key]= array(
-				'title' => $title,
-				'code' => $key,
-				'url' => 'layout.operating('.$layout_id.','.$key.')'
-			);
-		}
-		return $items;
+        $items = array();
+        foreach ($titles as $key => $title) {
+            $items [$key]= array(
+                'title' => $title,
+                'code' => $key,
+                'url' => 'layout.operating('.$layout_id.','.$key.')'
+            );
+        }
+        return $items;
     }
 
     public function files($template) {
@@ -215,40 +210,12 @@ class fx_controller_admin_layout extends fx_controller_admin {
     	return $result;
     }
     
-    public function _files($template) {
-        $files = $template['files'];
-
-        $ar = array('type' => 'list', 'filter' => true);
-        $ar['labels'] = array('name' => FX_ADMIN_NAME);
-
-        if ($files) {
-            foreach ($files as $id => $item) {
-                $name = $item['file'];
-                $el = array('id' => $id, 'name' => array('name' =>$name, 'url' => 'template_files.edit('.$template['id'].','.$id.') '));
-                $ar['values'][] = $el;
-            }
-        } else {
-            $fields[] = $this->ui->label( fx::lang('No files','system') );
-        }
-
-        $fields[] = $ar;
-
-        $buttons = array("add", "delete");
-        $buttons_action['add']['options']['template_id'] = $template['id'];
-        $buttons_action['delete']['options']['template_id'] = $template['id'];
-        return array('fields' => $fields, 'buttons' => $buttons, 'buttons_action' => $buttons_action, 'essence' => 'template_files');
-    }
-    
-    public function colors($template) {
-    	$controller = new fx_controller_admin_template_colors(array('params' => array($template['id'])), 'all', true);
-    	return $controller->process();
-    }
-
     public function settings($template) {
     	$fields[] = $this->ui->input('name', fx::lang('Layout name','system'), $template['name']);
         $fields[] = $this->ui->hidden('action', 'settings');
         $fields[] = $this->ui->hidden('id', $template['id']);
         
+        $this->response->submenu->set_menu('layout');
         $result = array('fields' => $fields, 'form_button' => array('save'));
         return $result;
     }
