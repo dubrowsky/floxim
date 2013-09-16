@@ -8,75 +8,109 @@ fx_form = {
         };
     },
             
-    draw_fields: function(settings, container) {
+    draw_fields: function(settings, $form_node) {
         if (settings.fields === undefined) {
             return;
         }
 
         if (settings.tabs) {
-            $fx_form.init_tabs(settings, container);
+            $fx_form.init_tabs(settings, $form_node);
         }
         
-        $fx.buttons.draw_buttons(settings.buttons);
+        if ($fx.mode !== 'page') {
+            $fx.buttons.draw_buttons(settings.buttons);
+        }
 
         $.each(settings.fields, function(i, json) {        
             var target = json.tab
-                            ? $('#'+settings.form.id+'_'+json.tab, container)
-                            : container;
+                            ? $('#'+settings.form.id+'_'+json.tab, $form_node)
+                            : $form_node;
             $fx_form.draw_field(json, target);
         });
         
-        
-
-        if ( settings.form_button ) {
-            $.each(settings.form_button, function (key,value) {
-                if ( value === 'save' ) {
-                    var form = $('#'+settings.form.id);
-                    
-                    form.append(
-                        '<input type="submit" value="' + fx_lang('Сохранить') + '" />'
-                    );
-
-                    var status_block = $("#fx_admin_status_block");
-
-                    $(form).submit(function() {
-                        $(".ui-state-error").removeClass("ui-state-error");
-                        $(this).trigger('fx_form_submit');
-
-                        $(this).ajaxSubmit(function ( data ) {
-                            try {
-                                data = $.parseJSON( data );
-                            }
-                            catch(e) {
-                                status_block.show();
-                                status_block.writeError(data);
-                                return false;
-                            }
-
-                            if ( data.status === 'ok') {
-                                status_block.show();
-                                status_block.writeOk( data.text ? data.text : 'Ok');
-                                if ( data.fields) {
-                                    $fx_form.draw_fields(data, $('#nc_dialog_error'));
-                                }
-                            }
-                            else {
-                                status_block.show();
-                                status_block.writeError(data['text']);
-                                for ( i in data.fields ) {
-                                    $('[name="'+data.fields[i]+'"]').addClass("ui-state-error");
-                                }
-                            }
-                            $(window).hashchange();
-                        }); 
-
-                        return false;
-                    });
-                }
-            });
+        if (typeof settings.form_button === 'undefined') {
+            settings.form_button = [];
         }
+        var submit_added = false;
+        $.each(settings.form_button, function (key,options) {
+            if (typeof options === 'string') {
+                options = {key:options};
+            }
+            options.type = 'button';
+            if (!options.label) {
+                options.label = options.key;
+            }
+            if (typeof options.is_submit === 'undefined') {
+                options.is_submit = true;
+            }
+            switch (options.key) {
+                case 'cancel':
+                    options.class = 'cancel';
+                    options.is_submit = false;
+                    break;
+            }
+            var b = $t.jQuery('input', options);
+            $form_node.append(b);
+            if (options.key === 'cancel') {
+                b.on('click', function() {
+                    $form_node.trigger('fx_form_cancel');
+                });
+            }
+            if (options.is_submit) {
+                b.on('click', function() {
+                    $form_node.submit();
+                });
+                if (!submit_added) {
+                    $form_node.append(
+                        '<input '+
+                            ' type="submit" '+
+                            ' style="position:absolute; top:-10000px; left:-10000px" />'
+                    );
+                    submit_added = true;
+                }
+            }
+        });
+        console.log(settings.form_button);
+        $form_node.submit($fx_form.submit_handler);
+    },
+            
+    submit_handler : function() {
+        var status_block = $("#fx_admin_status_block");
+        var $form = $(this);
+        $(".ui-state-error").removeClass("ui-state-error");
         
-        $fx.panel.trigger('fx.fielddrawn');
+        $form.trigger('fx_form_submit');
+
+        $form.ajaxSubmit(function ( data ) {
+            try {
+                data = $.parseJSON( data );
+            }
+            catch(e) {
+                status_block.show();
+                status_block.writeError(data);
+                return false;
+            }
+
+            if ( data.status === 'ok') {
+                status_block.show();
+                status_block.writeOk( data.text ? data.text : 'Ok');
+                $form.trigger('fx_form_ok');
+                /*
+                if ( data.fields) {
+                    $fx_form.draw_fields(data, $('#nc_dialog_error'));
+                }
+                */
+            }
+            else {
+                status_block.show();
+                status_block.writeError(data['text']);
+                for ( i in data.fields ) {
+                    $('[name="'+data.fields[i]+'"]').addClass("ui-state-error");
+                }
+            }
+            $(window).hashchange();
+        });
+        return false;
     },
 
     init_tabs: function ( settings, container ) {
@@ -261,3 +295,83 @@ fx_form = {
 })(jQuery);
 
 window.fx_form = window.$fx_form = fx_form;
+
+(function($) {
+    $.fn.fx_create_form = function(options) {
+        var settings = {
+            form: {
+                id:'fx_dialog_form', 
+                action:$fx.settings.action_link, 
+                target:'nc_upload_target'
+            }
+        };
+        if (options) {
+            $.extend(true, settings, options);
+        }
+        var _form = $('<form class="fx_admin_form" id="'+settings.form.id+'" action="'+settings.form.action+'" enctype="multipart/form-data" method="post" target="'+settings.form.target+'" />');
+        $(_form).append('<iframe id="'+settings.form.target+'" name="'+settings.form.target+'" style="display:none;"></iframe><div id="nc_warn_text"></div>');
+        this.html('<div id="nc_dialog_error"/>');
+        this.append(_form);
+        $fx_form.draw_fields(settings, _form);
+
+        if (options.buttons_essence) {
+            $fx.admin.set_essence(options.buttons_essence);
+        }
+
+        return this;
+    };
+
+    $.fn.writeError = function(message){
+        if ( typeof message === 'string' ) {
+            message = [message];
+        }
+        return this.each(function(){
+            var $this = $(this);
+
+            var errorHtml = "<div class=\"ui-widget\">";
+            errorHtml+= "<div class=\"ui-state-error ui-corner-all\" style=\"padding: 0 .7em;\">";
+            errorHtml+= "<p>";
+            errorHtml+= "<span class=\"ui-icon ui-icon-alert\" style=\"float:left; margin-right: .3em;\"></span>";
+            errorHtml+= message.join('<br/>');
+            errorHtml+= "</p>";
+            errorHtml+= "</div>";
+            errorHtml+= "</div>";
+
+            $this.html(errorHtml);
+        });
+    };
+
+    $.fn.writeAlert = function(message){
+        return this.each(function(){
+            var $this = $(this);
+
+            var alertHtml = "<div class=\"ui-widget\">";
+            alertHtml+= "<div class=\"ui-state-highlight ui-corner-all\" style=\"padding: 0 .7em;\">";
+            alertHtml+= "<p>";
+            alertHtml+= "<span class=\"ui-icon ui-icon-info\" style=\"float:left; margin-right: .3em;\"></span>";
+            alertHtml+= message;
+            alertHtml+= "</p>";
+            alertHtml+= "</div>";
+            alertHtml+= "</div>";
+
+            $this.html(alertHtml);
+        });
+    };
+
+
+    $.fn.writeOk = function(message){
+        return this.each(function(){
+            var $this = $(this);
+
+            var alertHtml = "<div class=\"ui-widget\">";
+            alertHtml+= "<div class=\"ui-state-highlight ui-corner-all\" style=\"padding: 0 .7em;\"><p>";
+            alertHtml+= message;
+            alertHtml+= "</p></div></div>";
+            $this.html(alertHtml);
+
+            setTimeout(function(){
+                $this.fadeOut('normal');
+            }, 2000);
+        });
+    };
+})(jQuery);

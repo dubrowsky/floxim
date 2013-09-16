@@ -16,8 +16,9 @@ class fx_router_admin extends fx_router {
         $essence = fx::input()->fetch_post('essence');
         $action = fx::input()->fetch_post('action');
         $posting = fx::input()->fetch_post('posting');
-
-        $essence = 'admin_'.$essence;
+        if (!preg_match("~^module_~", $essence)) {
+            $essence = 'admin_'.$essence;
+        }
 
         if ($posting && $posting !== 'false') {
             $action .= "_save";

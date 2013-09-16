@@ -592,16 +592,21 @@ input.ui-button {
     color: #fff;
     text-transform: lowercase;
     font-variant: small-caps;
-    margin: 0 8px;
+    margin: 0 10px;
     text-decoration: none !important;
 }
 
 .fx_overlay .fx_admin_button_cancel {
     background: #eff0f0;
+    border:2px solid #3FB7DE;
+    height:21px;
 }
 
 .fx_overlay .fx_admin_button_cancel span {
     color: #3FB7DE;
+    position: relative;
+    top:-2px;
+    margin: 0 8px;
 }
 
 .fx_admin_button_undo {
@@ -1142,109 +1147,6 @@ span.fx_admin_current {
     margin: 3px;
 }
 
-/* TipTip CSS - Version 1.2 */
-
-#tiptip_holder {
-    display: none;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 99999;
-}
-
-#tiptip_holder.tip_top {
-    padding-bottom: 5px;
-}
-
-#tiptip_holder.tip_bottom {
-    padding-top: 5px;
-}
-
-#tiptip_holder.tip_right {
-    padding-left: 5px;
-}
-
-#tiptip_holder.tip_left {
-    padding-right: 5px;
-}
-
-#tiptip_content {
-    font-size: 11px;
-    color: #fff;
-    text-shadow: 0 0 2px #000;
-    padding: 4px 8px;
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    background-color: rgb(25, 25, 25);
-    background-color: rgba(25, 25, 25, 0.92);
-    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(transparent), to(#000));
-}
-
-#tiptip_arrow, #tiptip_arrow_inner {
-    position: absolute;
-    height: 0;
-    width: 0;
-    border-color: transparent;
-    border-style: solid;
-    border-width: 6px;
-}
-
-#tiptip_holder.tip_top #tiptip_arrow {
-    border-top-color: rgba(255, 255, 255, 0.35);
-}
-
-#tiptip_holder.tip_bottom #tiptip_arrow {
-    border-bottom-color: rgba(255, 255, 255, 0.35);
-}
-
-#tiptip_holder.tip_right #tiptip_arrow {
-    border-right-color: rgba(255, 255, 255, 0.35);
-}
-
-#tiptip_holder.tip_left #tiptip_arrow {
-    border-left-color: rgba(255, 255, 255, 0.35);
-}
-
-#tiptip_holder.tip_top #tiptip_arrow_inner {
-    margin-top: -7px;
-    margin-left: -6px;
-    border-top-color: rgba(25, 25, 25, 0.92);
-}
-
-#tiptip_holder.tip_bottom #tiptip_arrow_inner {
-    margin-top: -5px;
-    margin-left: -6px;
-    border-bottom-color: rgba(25, 25, 25, 0.92);
-}
-
-#tiptip_holder.tip_right #tiptip_arrow_inner {
-    margin-top: -6px;
-    margin-left: -5px;
-    border-right-color: rgba(25, 25, 25, 0.92);
-}
-
-#tiptip_holder.tip_left #tiptip_arrow_inner {
-    margin-top: -6px;
-    margin-left: -7px;
-    border-left-color: rgba(25, 25, 25, 0.92);
-}
-
-/* Webkit Hacks  */
-@media screen and (-webkit-min-device-pixel-ratio:0) {
-    #tiptip_content {
-        background-color: rgba(45, 45, 45, 0.88);
-        padding: 4px 8px 5px;
-    }
-
-    #tiptip_holder.tip_bottom #tiptip_arrow_inner {
-        border-bottom-color: rgba(45, 45, 45, 0.88);
-    }
-
-    #tiptip_holder.tip_top #tiptip_arrow_inner {
-        border-top-color: rgba(20, 20, 20, 0.92);
-    }
-}
-
-
 #fx_admin_control form .field {
     display: inline-block;
     vertical-align: top;
@@ -1656,6 +1558,10 @@ body div.fx_overlay, body div.fx_overlay table {
     font-size:11px;
 }
 
+#fx_admin_extra_panel .livesearch {
+    max-width:400px;
+}
+
 .fx_overlay .ui-datepicker-current-day {
     background: #FF0;
 }
@@ -1669,6 +1575,10 @@ body div.fx_overlay, body div.fx_overlay table {
 .fx_var_editable {
     -webkit-line-break: normal;
     word-wrap: normal;
+}
+
+a.fx_var_editable:focus, .fx_var_editable a:focus {
+    outline:none;
 }
 
 .ui-datepicker-rtl .ui-datepicker-buttonpane button.ui-datepicker-current, .ui-datepicker-rtl .ui-datepicker-group, .fx_dialog_save_button {
@@ -1963,6 +1873,8 @@ body div.fx_overlay, body div.fx_overlay table {
     float:none;
     display:inline-block;
     margin-top:16px;
+    margin-right:15px;
+    vertical-align: top;
 }
 
 .fx_outline_pane {
@@ -1972,11 +1884,19 @@ body div.fx_overlay, body div.fx_overlay table {
 
 .fx_outline_pane_top, .fx_outline_pane_bottom {
     background-image: -webkit-linear-gradient(left, transparent 50%, #DDD 50%);
+    background-image: -moz-linear-gradient(left, transparent 50%, #DDD 50%);
+    background-image: -ms-linear-gradient(left, transparent 50%, #DDD 50%);
+    background-image: -o-linear-gradient(left, transparent 50%, #DDD 50%);
+    background-image: linear-gradient(left, transparent 50%, #DDD 50%);
     background-size: 9px 3px;
 }
 
 .fx_outline_pane_left, .fx_outline_pane_right {
     background-image: -webkit-linear-gradient(transparent 50%, #DDD 50%);
+    background-image: -moz-linear-gradient(transparent 50%, #DDD 50%);
+    background-image: -ms-linear-gradient(transparent 50%, #DDD 50%);
+    background-image: -o-linear-gradient(transparent 50%, #DDD 50%);
+    background-image: linear-gradient(transparent 50%, #DDD 50%);
     background-size: 3px 9px;
 }
 
@@ -1988,24 +1908,48 @@ body div.fx_overlay, body div.fx_overlay table {
 
 .fx_outline_pane_top.fx_outline_style_selected, .fx_outline_pane_bottom.fx_outline_style_selected {
     background-image: -webkit-linear-gradient(left, transparent 50%, #FF0 50%);
+    background-image: -moz-linear-gradient(left, transparent 50%, #FF0 50%);
+    background-image: -ms-linear-gradient(left, transparent 50%, #FF0 50%);
+    background-image: -o-linear-gradient(left, transparent 50%, #FF0 50%);
+    background-image: linear-gradient(left, transparent 50%, #FF0 50%);
 }
 
 .fx_outline_pane_left.fx_outline_style_selected, .fx_outline_pane_right.fx_outline_style_selected {
     background-image: -webkit-linear-gradient(transparent 50%, #FF0 50%);
+    background-image: -moz-linear-gradient(transparent 50%, #FF0 50%);
+    background-image: -ms-linear-gradient(transparent 50%, #FF0 50%);
+    background-image: -o-linear-gradient(transparent 50%, #FF0 50%);
+    background-image: linear-gradient(transparent 50%, #FF0 50%);
 }
 
 .fx_outline_pane_top {
     -webkit-box-shadow: 0px -3px 6px rgba(50, 50, 50, 0.6);
+    -moz-box-shadow: 0px -3px 6px rgba(50, 50, 50, 0.6);
+    -ms-box-shadow: 0px -3px 6px rgba(50, 50, 50, 0.6);
+    -o-box-shadow: 0px -3px 6px rgba(50, 50, 50, 0.6);
+    box-shadow: 0px -3px 6px rgba(50, 50, 50, 0.6);
 }
 
 .fx_outline_pane_right {
     -webkit-box-shadow: 3px 0px 6px rgba(50, 50, 50, 0.6);
+    -moz-box-shadow: 0px -3px 6px rgba(50, 50, 50, 0.6);
+    -ms-box-shadow: 0px -3px 6px rgba(50, 50, 50, 0.6);
+    -o-box-shadow: 0px -3px 6px rgba(50, 50, 50, 0.6);
+    box-shadow: 0px -3px 6px rgba(50, 50, 50, 0.6);
 }
 
 .fx_outline_pane_bottom {
     -webkit-box-shadow: 0px 3px 6px rgba(50, 50, 50, 0.6);
+    -moz-box-shadow: 0px 3px 6px rgba(50, 50, 50, 0.6);
+    -ms-box-shadow: 0px 3px 6px rgba(50, 50, 50, 0.6);
+    -o-box-shadow: 0px 3px 6px rgba(50, 50, 50, 0.6);
+    box-shadow: 0px 3px 6px rgba(50, 50, 50, 0.6);
 }
 
 .fx_outline_pane_left {
     -webkit-box-shadow: -3px 0px 6px rgba(50, 50, 50, 0.6);
+    -moz-box-shadow: -3px 0px 6px rgba(50, 50, 50, 0.6);
+    -ms-box-shadow: -3px 0px 6px rgba(50, 50, 50, 0.6);
+    -o-box-shadow: -3px 0px 6px rgba(50, 50, 50, 0.6);
+    box-shadow: -3px 0px 6px rgba(50, 50, 50, 0.6);
 }

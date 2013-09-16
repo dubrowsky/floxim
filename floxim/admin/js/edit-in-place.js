@@ -91,7 +91,7 @@ fx_edit_in_place.prototype.start = function(meta) {
                     }, 50);
                 }
                 this.node.addClass('fx_var_editable');
-                if ( (meta.type == 'text' && meta.html) || meta.type == 'html') {
+                if ( (meta.type === 'text' && meta.html) || meta.type === 'html') {
                     this.is_wysiwyg = true;
                     this.make_wysiwyg();
                 }
@@ -105,20 +105,20 @@ fx_edit_in_place.prototype.start = function(meta) {
 	this.node.closest('.fx_selected').one('fx_deselect.edit_in_place', function() {
             edit_in_place.save().stop();
 	});
-}
+};
 
 fx_edit_in_place.prototype.add_panel_field = function(meta) {
     meta = $.extend({}, meta);
-	if (meta.var_type === 'visual') {
-		meta.name = meta.id;
-	}
+    if (meta.var_type === 'visual') {
+            meta.name = meta.id;
+    }
     if (!meta.type) {
         meta.type = 'string';
     }
-	var field = $fx.front.add_panel_field(meta);
-	field.data('meta', meta);
-	this.panel_fields.push(field);
-	return field;
+    var field = $fx.front.add_panel_field(meta);
+    field.data('meta', meta);
+    this.panel_fields.push(field);
+    return field;
 };
 
 fx_edit_in_place.prototype.stop = function() {

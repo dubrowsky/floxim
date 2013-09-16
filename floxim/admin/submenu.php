@@ -40,14 +40,10 @@ class fx_admin_submenu {
             $this->active_main_menu = 'develop';
         }
 
-        if ($match[1] == 'template' && !$match[3]) {
+        if ($match[1] == 'layout' && !$match[3]) {
             $this->init_develop();
-            $this->active = 'template';
+            $this->active = 'layout';
             $this->active_main_menu = 'develop';
-        }
-
-        if($match[1] == 'layout') {
-            $this->init_manage();
         }
 
         if ($match[1] == 'template' && is_numeric($match[3])) {

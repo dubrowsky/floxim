@@ -155,15 +155,9 @@ fx_buttons.prototype.handle = function ( button ) {
     }
     
     var button_action = this.buttons_action[button];
-    console.log('handling', button, button_action, this);
     if ( button_action ) {
         if ( button_action.url ) {
             window.location = button_action.url;
-            return false;
-        }
-        if ( button_action.location ) {
-            var location = '#'+$fx.hash.slice(0,2).join('.')+'.'+button_action.location;
-            window.location.hash = location;
             return false;
         }
         if (button_action.options) {
@@ -179,10 +173,14 @@ fx_buttons.prototype.handle = function ( button ) {
         }
     }
     if (button === 'delete'){
+        var sel = $('.fx_admin_selected');
+        if (sel.length === 0) {
+            return;
+        }
         var opts = {
-            essence:$fx.admin.essence,
+            essence:sel.data('essence'),
             action:'delete',
-            id:$('.fx_admin_selected', '#fx_admin_content').data('id'),
+            id:sel.data('id'),
             posting:true
         };
         $fx.post(
@@ -290,6 +288,5 @@ fx_buttons.prototype.update_available_buttons = function () {
            }
         });
     }
-    console.log(len, btn, selected);
     $fx.buttons.set_active_buttons(btn);
 };

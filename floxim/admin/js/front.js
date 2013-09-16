@@ -158,13 +158,17 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
             var c_cnt = cm.accept_content[i];
             var cb_closure = (function(c_cnt) {
                 return function() {
-                    $fx.front.disable_infoblock(ib);
+                    //$fx.front.disable_infoblock(ib);
                     $fx.front_panel.load_form({
                        essence:'content',
                        action:'add_edit',
                        content_type:c_cnt.type,
                        infoblock_id:c_cnt.infoblock_id,
                        parent_id:c_cnt.parent_id
+                    }, {
+                        onfinish:function() {
+                            $fx.front.reload_infoblock(ib);
+                        }
                     });
                     return;
                     $fx.post({
@@ -437,12 +441,19 @@ fx_front.prototype.select_content_essence = function(n) {
     var essence_meta = n.data('fx_content_essence');
     var ib_node = n.closest('.fx_infoblock').get(0);
     $fx.buttons.bind('edit', function() {
-        $fx.front_panel.load_form({
-            essence:'content',
-            action:'add_edit',
-            content_type:essence_meta.type,
-            content_id:essence_meta.id
-        });
+        $fx.front_panel.load_form(
+            {
+                essence:'content',
+                action:'add_edit',
+                content_type:essence_meta.type,
+                content_id: essence_meta.id
+            }, 
+            {
+                onfinish: function() {
+                    $fx.front.reload_infoblock(ib_node);
+                }
+            }
+        );
         return;
         $fx.post({
             essence:'content',
@@ -743,7 +754,7 @@ fx_front.prototype.move_down_body =function () {
 };
 
 fx_front.prototype.add_panel_field = function(field) {
-    var field_node = $fx_form.draw_field(field, $('fx_admin_fields'));
+    var field_node = $fx_form.draw_field(field, $('#fx_admin_fields'));
     field_node.css({'outline-style': 'solid','outline-color':'#FFF'});
     field_node.find(':input').css({'background':'transparent'});
     field_node.animate(

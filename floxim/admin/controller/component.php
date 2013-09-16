@@ -47,24 +47,16 @@ class fx_controller_admin_component extends fx_controller_admin {
         }
         $fields[] = $field;
 
-        $buttons = array(
+        $this->response->add_buttons(array(
             array(
                 'key' => "add", 
                 'title' => fx::lang('Add new '.$essence, 'system'),
                 'url' => '#admin.'.$essence.'.add'
             ),
             "delete"
-        );
-        /*
-        $this->response->add_button_options('add', array(
-            //'essence' => 'component',
-            //'action' => 'add'
-            'url' => '#admin.'.$essence.'.add'
         ));
-         * 
-         */
-
-        $result = array('fields' => $fields, 'buttons' => $buttons);
+        
+        $result = array('fields' => $fields);
 
         $this->response->breadcrumb->add_item(self::_essence_types($essence), '#admin.'.$essence.'.group');
         if ($input['params'][0]) {
@@ -74,7 +66,6 @@ class fx_controller_admin_component extends fx_controller_admin {
         else {
             $this->response->submenu->set_menu($essence);
         }
-
         return $result;
     }
     
@@ -168,6 +159,7 @@ class fx_controller_admin_component extends fx_controller_admin {
         );
         
         $this->response->submenu->set_menu($essence);
+        $this->response->add_form_button('save');
 
         return array('fields' => $fields);
     }
@@ -212,7 +204,6 @@ class fx_controller_admin_component extends fx_controller_admin {
         return $result;
     }
     
-
     protected static function _essence_types( $key = null ) {
         $arr = array (
             'widget' => fx::lang('Widgets','system'),
@@ -307,9 +298,34 @@ class fx_controller_admin_component extends fx_controller_admin {
     }
 
     public function fields($component) {
-        $controller = new fx_controller_admin_field();
+        $controller = new fx_controller_admin_field(
+             array(
+                 'essence' => $component,
+                 'do_return' => true
+            ),
+            'items'
+        );
         $this->response->submenu->set_subactive('fields');
-        return $controller->items($component);
+        return $controller->process();
+    }
+    
+    public function add_field($component) {
+        $controller = new fx_controller_admin_field(
+            array(
+                'to_id' => $component['id'],
+                'to_essence' => 'component',
+                'do_return' => true
+            ),
+            'add'
+        );
+        $this->response->breadcrumb->add_item(
+            fx::lang('Fields', 'system'),
+            '#admin.component.edit('.$component['id'].',fields)'
+        );
+        $this->response->breadcrumb->add_item(
+            fx::lang('Add new field', 'system')
+        );
+        return $controller->process();
     }
     
     public function templates($component, $input) {

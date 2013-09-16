@@ -2,24 +2,30 @@
     $fx.front_panel = {
         panel: null,
         second_row_height:37,
-        show_form: function(data) {
+        show_form: function(data, params) {
             this.panel = $('#fx_admin_extra_panel');
             var p = this.panel;
             p.show();
             p.css('height', $fx.front_panel.second_row_height+'px');
+            if (!data.form_button) {
+                data.form_button = ['save'];
+            }
+            data.form_button.unshift('cancel');
             p.fx_create_form(data);
-            var cancel = $t.jQuery('input', {
-                type:'button',
-                label:'cancel',
-                class:'cancel'
-            });
-            cancel.on('click', function() {
+            var $form = $('form', p);
+            $form.on('fx_form_cancel', function() {
                 $fx.front_panel.hide();
             });
-            $('form', p).append(cancel);
+            $form.on('fx_form_ok', function() {
+                console.log('form ok');
+                $fx.front_panel.hide();
+                if (params.onfinish) {
+                    params.onfinish();
+                }
+            });
             p.css('opacity', 0.1).animate({opacity:1}, 300);
             var panel_height = $('form', p).height() + 10; // form with margins
-
+            $('#fx_admin_control .editor_panel').hide();
             $fx.front_panel.animate_panel_height(panel_height);
         },
         animate_panel_height: function(panel_height) {
@@ -45,11 +51,11 @@
                 top: (height_delta > 0 ? '+=' : '-=')+ Math.abs(height_delta)
             }, 300);
         },
-        load_form: function(options) {
+        load_form: function(form_options, params) {
             $fx.post(
-                options, 
+                form_options, 
                 function(json) {
-                    $fx.front_panel.show_form(json)
+                    $fx.front_panel.show_form(json, params)
                 }
             );
         },
@@ -58,6 +64,7 @@
             var p = this.panel;
             p.animate({opacity:0},300, function () {
                 p.hide();
+                $('#fx_admin_control .editor_panel').show();
             });
         }
     };

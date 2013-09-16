@@ -49,8 +49,8 @@ class fx_admin_response {
             $result['buttons_pulldown'] = $this->buttons_pulldown;
         }
         
-        if ( $this->buttons_options ) {
-            $result['buttons_action'] = $this->buttons_options;
+        if ( $this->buttons_action ) {
+            $result['buttons_action'] = $this->buttons_action;
         }
         
         if ( $this->form_buttons ) {
@@ -95,7 +95,20 @@ class fx_admin_response {
         if (!is_array($buttons)) {
             $buttons = explode(",", $buttons);
         }
+        foreach ($buttons as &$b) {
+            if (is_string($b)) {
+                $b = trim($b);
+                continue;
+            }
+            if (is_array($b)) {
+                if (isset($b['url'])) {
+                    $this->buttons_action[$b['key']]['url'] = $b['url'];
+                }
+            }
+        }
         $this->buttons = array_merge($this->buttons, $buttons);
+        dev_log($this->buttons, $buttons);
+        /*
         $this->buttons = array_map(
             function($b) {
                 if (is_string($b)) {
@@ -105,6 +118,8 @@ class fx_admin_response {
             }, 
             $this->buttons
         );
+         * 
+         */
     }
     
     public function add_pulldown_item($button, $name, $options) {
@@ -120,7 +135,7 @@ class fx_admin_response {
         if ( is_string($options) ) {
             parse_str($options, $options);
         }
-        $this->buttons_options[$button]['options'] = $options;
+        $this->buttons_action[$button]['options'] = $options;
     }
     
     public function add_form_button ( $buttons ) {

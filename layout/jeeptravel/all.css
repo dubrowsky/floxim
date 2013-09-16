@@ -43,7 +43,7 @@ a {
     text-decoration: underline;
     color: #dc093b;
 }
-a:hover { text-decoration: none; }
+
 input,
 textarea,
 select {
@@ -349,6 +349,7 @@ ul {
 .section-info ul {
     font: 18px/24px 'CalibriLight', Arial, sans-serif;
     margin-bottom: 15px;
+    overflow: hidden;
 }
 a.calendar {
     margin: 0 0 0 -24px;
