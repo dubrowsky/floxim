@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1
--- Время создания: Сен 09 2013 г., 13:09
+-- Время создания: Сен 16 2013 г., 20:17
 -- Версия сервера: 5.5.25
 -- Версия PHP: 5.3.13
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- База данных: `floxim`
+-- База данных: `floxim_loc`
 --
 
 -- --------------------------------------------------------
@@ -152,7 +152,7 @@ CREATE TABLE IF NOT EXISTS `fx_content` (
   `site_id` int(11) DEFAULT NULL,
   `parent_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=47 AUTO_INCREMENT=2085 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=47 AUTO_INCREMENT=2086 ;
 
 --
 -- Дамп данных таблицы `fx_content`
@@ -171,9 +171,9 @@ INSERT INTO `fx_content` (`id`, `priority`, `checked`, `created`, `last_updated`
 (1890, 2, 1, '2013-06-10 02:27:12', '2013-07-14 03:39:35', 99, 'section', 69, 15, 1883),
 (1891, 1, 1, '2013-06-10 11:38:10', '2013-08-21 17:35:44', 99, 'travel_route', 70, 15, 1883),
 (1892, 2, 1, '2013-06-10 12:17:59', '2013-08-21 17:35:44', 99, 'travel_route', 70, 15, 1883),
-(1898, 2, 1, '2013-06-11 13:15:18', '2013-06-12 18:22:37', 99, 'section', 76, 15, 1883),
-(1899, 1, 1, '2013-06-11 13:16:36', '2013-06-12 18:22:37', 99, 'section', 76, 15, 1883),
-(1900, 3, 1, '2013-06-11 13:17:27', '2013-06-11 05:17:56', 99, 'section', 76, 15, 1883),
+(1898, 1, 1, '2013-06-11 13:15:18', '2013-09-10 13:03:24', 99, 'section', 76, 15, 1883),
+(1899, 3, 1, '2013-06-11 13:16:36', '2013-09-10 13:03:24', 99, 'section', 76, 15, 1883),
+(1900, 2, 1, '2013-06-11 13:17:27', '2013-09-10 13:03:24', 99, 'section', 76, 15, 1883),
 (1901, 4, 1, '2013-06-11 13:17:47', '2013-06-11 05:17:53', 99, 'section', 76, 15, 1883),
 (1902, 0, 1, '2013-06-13 01:24:02', '2013-06-12 17:24:02', 99, 'section', 77, 15, 1887),
 (1903, 0, 1, '2013-06-13 01:24:43', '2013-06-12 17:24:43', 99, 'text', 74, 15, 1887),
@@ -298,8 +298,8 @@ INSERT INTO `fx_content_page` (`id`, `url`, `name`, `title`) VALUES
 (1887, '/about', 'About', NULL),
 (1889, '/portfolio/', 'Portfolio', NULL),
 (1890, '/contacts', 'Contacts', NULL),
-(1891, '/summer-rally', 'Mangyshlak. The Great Step', ''),
-(1892, '/paris-dakar', 'Argentina – Chile', NULL),
+(1891, '/summer-rally', 'Mangyshlak: The Great Step', ''),
+(1892, '/paris-dakar', 'Argentina – Chilix', ''),
 (1898, 'http://facebook.com/', 'Facebook', NULL),
 (1899, 'http://plus.google.com/', 'Google+', NULL),
 (1900, 'http://instagram.com', 'Instagram', NULL),
@@ -310,10 +310,10 @@ INSERT INTO `fx_content_page` (`id`, `url`, `name`, `title`) VALUES
 (1916, '/gaityanski-holyday', 'Haiti', ''),
 (1917, '/Pereslavl-Zalesskiy', 'Namibia', ''),
 (1925, '/Blog', 'Our blog', NULL),
-(1933, '/tag-ivan-kurochkin', 'John Kurochkin ', 'News about John'),
+(1933, '/tag-ivan-kurochkin', 'John Kurochkin', 'News about John'),
 (1968, '/funeral', 'Our funeral instructions', ''),
 (1976, '/hi', 'Hello world!', ''),
-(1996, '/dominikana', 'Dominicana is mega cool!', ''),
+(1996, '/dominikana', 'Dominicana is mega cool', ''),
 (2028, '/lulz', '#lulz', NULL),
 (2033, '/funeral-2', 'aero funeral', NULL),
 (2039, '/dominikana-666', 'Dominikana', NULL),
@@ -378,9 +378,9 @@ CREATE TABLE IF NOT EXISTS `fx_content_publication` (
 --
 
 INSERT INTO `fx_content_publication` (`id`, `publish_date`, `anounce`, `image`, `text`) VALUES
-(1968, '2013-05-17 12:20:17', '<p class="">\n	         Everyone shoud know! what?</p><p class="">\n	This is «Alyona»! ·</p>', 383, '<p>\r\n	        They told us this was not logistically possible and a hugely inconsiderate thing to do to a grief stricken family.\r\n</p>\r\n<p>\r\n	        I called them a bunch of a-holes and soccer-kicked the watermelon off the picnic table and into the bushes.\r\n</p>'),
+(1968, '2013-05-17 12:20:17', '<p class="">\n	         Everyone shoud know! what?</p><p class="">\n	This is «Alyona»!</p>', 383, '<p>\r\n	        They told us this was not logistically possible and a hugely inconsiderate thing to do to a grief stricken family.\r\n</p>\r\n<p>\r\n	        I called them a bunch of a-holes and soccer-kicked the watermelon off the picnic table and into the bushes.\r\n</p>'),
 (1976, '2012-04-19 00:00:00', '<p>​Jeep Travel is here to make you laugh.</p>', NULL, '<p>\r\n	 Put your hands up in the air!\r\n</p>'),
-(1996, '2013-08-20 18:22:00', '<p>\r\n	                               Dominicana Republic''s Afro-tourism with a side of beach!\r\n</p>', 379, '<p>\r\n	                On the weekend of Jan 19th, 2013, we left the farm early one morning for Samana via a direct <em>gua-gua</em>.  It left in rising sun at 7 am from nearby Saboneta and arrived there at 10:30 am.\r\n</p>\r\n<p>\r\n	<img src="/floxim_files/content/me_2.jpg">\r\n</p>\r\n<p>\r\n	             It was a very easy trip with one stop on an uncomfortable and overcrowded bus which was exacerbated by the holiday weekend.  Fortunately it was cheap too, only 300 pesos ($7.50 USD).\r\n</p>\r\n<p>\r\n	             From there we met some friends and went onto Las Galeras which we am sure is one of the more beautiful places on this island.  Very Caribbean with its palm ladden beaches, forested hillsides in the distance, and white sands with colors of the sea you can hardly imagine.\r\n</p>');
+(1996, '2013-08-20 18:22:00', '<p>\r\n	                                Dominicana Republic''s Afro-tourism with a side of beach!\r\n</p>', 379, '<p>\r\n	                 On the weekend of Jan 19th, 2013, we left the farm early one morning for Samana via a direct <em>gua-gua</em>.  It left in rising sun at 7 am from nearby Saboneta and arrived there at 10:30 am.\r\n</p>\r\n<p>\r\n	 <img src="/floxim_files/content/me_2.jpg">\r\n</p>\r\n<p>\r\n	              It was a very easy trip with one stop on an uncomfortable and overcrowded bus which was exacerbated by the holiday weekend.  Fortunately it was cheap too, only 300 pesos ($7.50 USD).\r\n</p>\r\n<p>\r\n	              From there we met some friends and went onto Las Galeras which we am sure is one of the more beautiful places on this island.  Very Caribbean with its palm ladden beaches, forested hillsides in the distance, and white sands with colors of the sea you can hardly imagine.\r\n</p>');
 
 -- --------------------------------------------------------
 
@@ -483,6 +483,7 @@ INSERT INTO `fx_content_tagpost` (`id`, `tag_id`, `post_id`, `comment`) VALUES
 CREATE TABLE IF NOT EXISTS `fx_content_text` (
   `id` int(11) NOT NULL,
   `text` text,
+  `olofild` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=1199;
 
@@ -490,16 +491,16 @@ CREATE TABLE IF NOT EXISTS `fx_content_text` (
 -- Дамп данных таблицы `fx_content_text`
 --
 
-INSERT INTO `fx_content_text` (`id`, `text`) VALUES
-(112, '<p>Put your content here!​</p>'),
-(1903, '<p>\n	The adventure began back in 1977, when Thierry Sabine got lost on his motorbike in the Libyan desert during the Abidjan-Nice Rally. Saved from the sands in extremis, he returned to France still in thrall to this landscape and promising himself he would share his fascination with as many people as possible. He proceeded to come up with a route starting in Europe, continuing to Algiers and crossing Agadez before eventually finishing at Dakar. The founder coined a motto for his inspiration: "A challenge for those who go. A dream for those who stay behind." Courtesy of his great conviction and that modicum of madness peculiar to all great ideas, the plan quickly became a reality. Since then, the Paris-Dakar, a unique event sparked by the spirit of adventure, open to all riders and carrying a message of friendship between all men, has never failed to challenge, surprise and excite. Over the course of almost thirty years, it has generated innumerable sporting and human stories.</p><p>(c) <a href="http://www.dakar.com">www.dakar.com</a></p>'),
-(1910, '<p class="">\n	Everyone can join our team! Please, feel free to contact us for a details.</p>'),
-(1924, '<p></p><p>Port-au-Prince, Haiti. Here we are!&nbsp;</p><p></p>'),
-(2006, '<p>\r\n	The page you''ve requested doesn''t exist here ;(\r\n</p>'),
-(2027, '<p>\r\n	Have questions? Need more information?\r\n</p>\r\n<p>\r\n	Send a starter inquiry to <a href="http://mailto:info@jeeptravel.loc">info@jeeptravel.loc</a>\r\n</p>'),
-(2047, '<p>\r\n	We are going to post many sad  but interesting posts under the "funeral" tag. Stay idle.\r\n</p>'),
-(2059, '<p>\n	Feel free to subscribe our&nbsp;<a href="/Blog?rss" target="_blank">​RSS</a>&nbsp;chanel!</p>'),
-(2062, '<p>\r\n	Welcome welcome welcom!\r\n</p>');
+INSERT INTO `fx_content_text` (`id`, `text`, `olofild`) VALUES
+(112, '<p>Put your content here!​</p>', NULL),
+(1903, '<p>\n	The adventure began back in 1977, when Thierry Sabine got lost on his motorbike in the Libyan desert during the Abidjan-Nice Rally. Saved from the sands in extremis, he returned to France still in thrall to this landscape and promising himself he would share his fascination with as many people as possible. He proceeded to come up with a route starting in Europe, continuing to Algiers and crossing Agadez before eventually finishing at Dakar. The founder coined a motto for his inspiration: "A challenge for those who go. A dream for those who stay behind." Courtesy of his great conviction and that modicum of madness peculiar to all great ideas, the plan quickly became a reality. Since then, the Paris-Dakar, a unique event sparked by the spirit of adventure, open to all riders and carrying a message of friendship between all men, has never failed to challenge, surprise and excite. Over the course of almost thirty years, it has generated innumerable sporting and human stories.</p><p>(c) <a href="http://www.dakar.com">www.dakar.com</a></p>', NULL),
+(1910, '<p class="">\n	Everyone can join our team! Please, feel free to contact us for a details.</p>', NULL),
+(1924, '<p></p><p>Port-au-Prince, Haiti. Here we are!&nbsp;</p><p></p>', NULL),
+(2006, '<p>\r\n	The page you''ve requested doesn''t exist here ;(\r\n</p>', NULL),
+(2027, '<p>\r\n	Have questions? Need more information?\r\n</p>\r\n<p>\r\n	Send a starter inquiry to <a href="http://mailto:info@jeeptravel.loc">info@jeeptravel.loc</a>\r\n</p>', NULL),
+(2047, '<p>\r\n	We are going to post many sad  but interesting posts under the "funeral" tag. Stay idle.\r\n</p>', NULL),
+(2059, '<p>\n	Feel free to subscribe our&nbsp;<a href="/Blog?rss" target="_blank">​RSS</a>&nbsp;chanel!</p>', NULL),
+(2062, '<p>\r\n	Welcome welcome welcom!\r\n</p>', NULL);
 
 -- --------------------------------------------------------
 
@@ -650,7 +651,7 @@ CREATE TABLE IF NOT EXISTS `fx_field` (
   KEY `TypeOfData_ID` (`type`),
   KEY `TypeOfEdit_ID` (`type_of_edit`),
   KEY `Widget_Class_ID` (`widget_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=95 AUTO_INCREMENT=217 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=95 AUTO_INCREMENT=218 ;
 
 --
 -- Дамп данных таблицы `fx_field`
@@ -666,7 +667,7 @@ INSERT INTO `fx_field` (`id`, `parent`, `component_id`, `ctpl_id`, `system_table
 (190, NULL, 23, 0, 0, 0, 'name', 'Name', 1, '', 1, 0, 1, '', 0, 1, 1),
 (191, NULL, 23, 0, 0, 0, 'title', 'Title', 1, '', 0, 158, 0, '', 0, 1, 1),
 (192, NULL, 31, 0, 0, 0, 'counter', 'Usage counter', 2, '', 0, 159, 0, '0', 0, 3, 1),
-(195, NULL, 30, 0, 0, 0, 'tags', 'Tags', 14, 'a:2:{s:6:"target";s:7:"198.186";s:11:"render_type";s:5:"table";}', 0, 2, 0, '', 0, 1, 1),
+(195, NULL, 30, 0, 0, 0, 'tags', 'Tags', 14, 'a:2:{s:6:"target";s:7:"198.186";s:11:"render_type";s:10:"livesearch";}', 0, 2, 0, '', 0, 1, 1),
 (196, NULL, 36, 0, 0, 0, 'parent_id', 'Parent', 13, 'a:3:{s:6:"target";s:2:"23";s:9:"prop_name";s:0:"";s:11:"render_type";s:6:"select";}', 0, 161, 0, '', 0, 3, 1),
 (197, NULL, 31, 0, 0, 0, 'tagposts', 'Tag posts', 14, 'a:1:{s:6:"target";s:3:"186";}', 0, 162, 0, '', 0, 3, 1),
 (198, NULL, 32, 0, 0, 0, 'post_id', 'Page', 13, 'a:4:{s:6:"target";s:2:"30";s:9:"prop_name";s:4:"post";s:9:"is_parent";s:1:"1";s:11:"render_type";s:6:"select";}', 0, 163, 0, '', 0, 3, 1),
@@ -683,7 +684,8 @@ INSERT INTO `fx_field` (`id`, `parent`, `component_id`, `ctpl_id`, `system_table
 (213, NULL, 49, 0, 0, 0, 'anounce', 'Anounce', 3, 'a:1:{s:4:"html";s:1:"1";}', 0, 175, 0, '', 0, 1, 1),
 (214, NULL, 49, 0, 0, 0, 'image', 'Image', 11, '', 0, 176, 0, '', 0, 1, 1),
 (215, NULL, 49, 0, 0, 0, 'text', 'Text', 3, 'a:1:{s:4:"html";s:1:"1";}', 0, 177, 0, '', 0, 1, 1),
-(216, NULL, 1, 0, 0, 0, 'is_admin', 'Is admin?', 5, '', 0, 178, 0, '0', 0, 2, 1);
+(216, NULL, 1, 0, 0, 0, 'is_admin', 'Is admin?', 5, '', 0, 178, 0, '0', 0, 2, 1),
+(217, NULL, 19, 0, 0, 0, 'olofild', 'Olo field', 1, '', 0, 179, 0, 'olo', 0, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -699,7 +701,7 @@ CREATE TABLE IF NOT EXISTS `fx_filetable` (
   `size` int(10) unsigned NOT NULL DEFAULT '0',
   `to_delete` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=56 AUTO_INCREMENT=422 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=56 AUTO_INCREMENT=423 ;
 
 --
 -- Дамп данных таблицы `fx_filetable`
@@ -759,7 +761,8 @@ INSERT INTO `fx_filetable` (`id`, `real_name`, `path`, `type`, `size`, `to_delet
 (418, 'img06.jpg', 'content/img06_0.jpg', 'image/jpeg', 5396, 0),
 (419, 'arrow_right_red.gif', 'content/arrow_right_red_0.gif', 'image/gif', 868, 0),
 (420, 'slider_stub.jpg', 'content/slider_stub_0.jpg', 'image/jpeg', 71404, 0),
-(421, 'art_stub_3.jpg', 'content/art_stub_3_0.jpg', 'image/jpeg', 26120, 0);
+(421, 'art_stub_3.jpg', 'content/art_stub_3_0.jpg', 'image/jpeg', 26120, 0),
+(422, 'oblako_edit.png', 'content/oblako_edit_0.png', 'image/png', 17575, 0);
 
 -- --------------------------------------------------------
 
@@ -930,7 +933,7 @@ INSERT INTO `fx_infoblock_visual` (`id`, `infoblock_id`, `layout_id`, `wrapper`,
 (134, 67, 1, '', '', 'layout_supernova.index', '', '', 0),
 (137, 67, 10, '', '', 'layout_jeeptravel.page', 'a:31:{s:18:"page_bg_color_1895";s:0:"";s:18:"page_bg_color_1888";s:7:"#E9A502";s:18:"page_bg_image_1888";s:52:"/controllers/layout/jeeptravel/images/bg-company.jpg";s:18:"page_bg_image_1895";s:0:"";s:18:"page_bg_color_1887";s:4:"#000";s:18:"page_bg_image_1887";s:3:"358";s:5:"phone";s:18:"+7 (905) 561 99 75";s:4:"mail";s:19:"info@jeeptravel.loc";s:18:"page_bg_color_1889";s:7:"#c7c1c7";s:18:"page_bg_image_1889";s:3:"389";s:18:"page_bg_color_1890";s:7:"#E9A502";s:18:"page_bg_image_1890";s:2:"60";s:18:"page_bg_color_1925";s:7:"#b5b5b5";s:18:"page_bg_image_1925";s:0:"";s:18:"page_bg_color_1926";s:7:"#500070";s:18:"page_bg_image_1926";s:3:"326";s:4:"logo";s:3:"378";s:18:"page_bg_image_1891";s:0:"";s:18:"page_bg_image_1968";s:0:"";s:14:"contacts_label";s:8:"Call us:";s:4:"copy";s:93:"© JeepTravel, 2013<br>&nbsp; &nbsp; Photo by: <a href="http://leecannon.com/">Lee Cannon</a>";s:18:"page_bg_image_1883";s:0:"";s:18:"page_bg_image_1996";s:0:"";s:18:"page_bg_image_1884";s:0:"";s:18:"page_bg_color_1883";s:7:"#fafafa";s:18:"page_bg_color_1884";s:7:"#000000";s:18:"page_bg_image_1916";s:0:"";s:18:"page_bg_image_1902";s:0:"";s:18:"page_bg_image_2033";s:0:"";s:5:"email";s:11:"info@jt.com";s:18:"page_bg_color_1996";s:7:"#bd0dbd";}', '', 0),
 (139, 69, 10, '', '', 'layout_jeeptravel.top_menu', '', 'header', 1),
-(140, 70, 10, '', '', 'layout_jeeptravel.index_slider', 'a:14:{s:9:"info_1891";s:767:"<dt><strong>Difficulty:</strong>&nbsp;easy<br><strong>Cities:</strong>&nbsp;<span data-redactor="verified" data-redactor-inlinemethods="" style="color: rgb(217, 150, 148);">Gada</span>, <span data-redactor="verified" data-redactor-inlinemethods="" style="color: rgb(255, 255, 0);">B<strong>a</strong>lle</span>,&nbsp;<a href="https://google.com"><strong><span data-redactor="verified" data-redactor-inlinemethods="" style="color: rgb(242, 195, 20);">​Binji</span></strong></a>, Wurno<br><strong>Villages:</strong> Kaita, Rimi<br>​<strong>Cities:</strong> Gada, <span data-redactor="verified" data-redactor-inlinemethods="" style="color: rgb(84, 141, 212);">B<strong>a</strong>lle, <a href="https://google.com/"><strong>Binji</strong></a>, Wurno</span><br>​</dt>";s:14:"more_text_1891";s:12:"Tell me more";s:16:"action_text_1891";s:14:"Gonna b there!";s:9:"date_1891";s:9:"May 12-15";s:11:"header_1891";s:18:"Summer&nbsp;Rally!";s:13:"bg_photo_1892";s:3:"357";s:11:"header_1892";s:34:"It''s going to be<br>​Legen-dary!";s:16:"action_text_1892";s:15:"Yes, I''m crazy!";s:14:"more_text_1892";s:12:"Tell me more";s:9:"date_1892";s:16:"January 5 – 19";s:9:"info_1892";s:251:"<dl>\n                                            <dt>Difficulty: </dt>extremely difficult<br>​Period: 2 weeks<br>Cities<strong>: Paris, Dakar</strong><dd></dd><dt>A chance to survive:</dt><dd>~23.5%</dd>\n                                        </dl>";s:13:"bg_photo_1891";s:3:"345";s:15:"action_url_1891";s:18:"http://google.com/";s:15:"action_url_1892";s:0:"";}', 'content', 8),
+(140, 70, 10, '', '', 'layout_jeeptravel.index_slider', 'a:15:{s:9:"info_1891";s:510:"<dt><strong>Difficulty:</strong> easy<br>\n <strong>Cities:</strong> <span data-redactor="verified" style="color: rgb(217, 150, 148);">Gada</span>, <span data-redactor="verified" style="color: rgb(255, 255, 0);">B<strong>a</strong>lle</span>, <a href="https://google.com"><strong><span data-redactor="verified" style="color: rgb(242, 195, 20);">Binji</span></strong></a>, Wurno<br>\n <strong>Villages:</strong> Kaita, Rimi<span data-redactor="verified" style="color: rgb(84, 141, 212);"><br>​</span><br>\n </dt>";s:14:"more_text_1891";s:12:"Tell me more";s:16:"action_text_1891";s:14:"Gonna b there!";s:9:"date_1891";s:9:"May 12-15";s:11:"header_1891";s:16:"Summer Rally<br>";s:13:"bg_photo_1892";s:3:"357";s:11:"header_1892";s:34:"It''s going to be<br>​Legen-dary!";s:16:"action_text_1892";s:15:"Yes, I''m crazy!";s:14:"more_text_1892";s:12:"Tell me more";s:9:"date_1892";s:16:"January 5 – 19";s:9:"info_1892";s:251:"<dl>\n                                            <dt>Difficulty: </dt>extremely difficult<br>​Period: 2 weeks<br>Cities<strong>: Paris, Dakar</strong><dd></dd><dt>A chance to survive:</dt><dd>~23.5%</dd>\n                                        </dl>";s:13:"bg_photo_1891";s:3:"345";s:15:"action_url_1891";s:18:"http://google.com/";s:15:"action_url_1892";s:0:"";s:13:"bg_photo_2085";s:3:"422";}', 'content', 8),
 (141, 71, 10, '', '', 'layout_jeeptravel.index', '', '', 0),
 (142, 72, 10, 'layout_jeeptravel.block_titled', 'a:1:{s:6:"header";s:8:"Upcoming";}', 'layout_jeeptravel.index_link_list', '', 'index_center', 1),
 (144, 74, 10, '', '', 'component_text.listing', '', 'content', 7),
@@ -976,7 +979,7 @@ CREATE TABLE IF NOT EXISTS `fx_lang_string` (
   `lang_en` text,
   `lang_ru` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=434 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=446 ;
 
 --
 -- Дамп данных таблицы `fx_lang_string`
@@ -1384,7 +1387,19 @@ INSERT INTO `fx_lang_string` (`id`, `dict`, `string`, `lang_en`, `lang_ru`) VALU
 (414, 'system', 'Installing patch %s...', NULL, NULL),
 (415, 'content', 'Current Floxim version:', NULL, NULL),
 (416, 'system', 'Current Floxim version:', NULL, NULL),
-(433, 'system', 'Название компонента (по-русски)', 'Название компонента (по-русски)', NULL);
+(433, 'system', 'Название компонента (по-русски)', 'Название компонента (по-русски)', NULL),
+(434, 'system', 'Welcome to Floxim.CMS, please sign in', 'Welcome to Floxim.CMS, please sign in', NULL),
+(435, 'system', 'Login', 'Login', NULL),
+(436, 'system', 'Password', 'Password', NULL),
+(437, 'system', 'Login', 'Login', NULL),
+(438, 'system', 'Add', 'Add', NULL),
+(439, 'system', 'Add new component', 'Add new component', NULL),
+(440, 'system', 'Add new Components', 'Add new Components', NULL),
+(441, 'system', 'Add new widget', 'Add new widget', NULL),
+(442, 'system', 'Add new field', 'Add new field', NULL),
+(443, 'system', 'Keyword (название папки с макетом)', 'Keyword (название папки с макетом)', NULL),
+(444, 'system', 'Layout keyword', 'Layout keyword', NULL),
+(445, 'system', 'Add new layout', 'Add new layout', NULL);
 
 -- --------------------------------------------------------
 
@@ -1532,8 +1547,8 @@ CREATE TABLE IF NOT EXISTS `fx_session` (
 --
 
 INSERT INTO `fx_session` (`id`, `user_id`, `session_start`, `session_time`, `ip`, `login_save`, `site_id`, `auth_type`) VALUES
-('0e55d95d8a652dc0683ba9d1e3e4d91d', 99, 1378298387, 1378627805, 2130706433, 0, 0, 1),
-('29883d6cd773ca41c0227d563b7e34c3', 99, 1378129738, 1378310267, 2130706433, 0, 0, 1);
+('0cd2cd28df7262c9eb53889d5e8a66a0', 99, 1379346640, 1379433504, 2130706433, 0, 0, 1),
+('eb4b551e7aba69fbaa5048222e5fdfaa', 99, 1379326148, 1379432990, 2130706433, 0, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -1631,8 +1646,8 @@ CREATE TABLE IF NOT EXISTS `fx_site` (
 --
 
 INSERT INTO `fx_site` (`id`, `parent_id`, `name`, `domain`, `layout_id`, `color`, `mirrors`, `priority`, `checked`, `index_page_id`, `error_page_id`, `created`, `last_updated`, `robots`, `disallow_indexing`, `type`, `language`, `offline_text`, `store_id`) VALUES
-(1, 0, 'FloxiShop', 'playground.fx', 1, 2, '', 0, 1, 2, 3, '2012-05-24 12:42:50', '2013-07-15 10:32:59', '# Floxim Robots file\r\nUser-agent: *\r\nDisallow: /install/', 0, 'useful', 'en', '<table width=''100%'' height=''100%'' border=''0'' cellpadding=''0'' cellspacing=''0''><tr><td align=''center''>Сайт временно (!) недоступен.</td></tr></table>', NULL),
-(15, 0, 'JeepTravel', 'floxim', 10, 0, '', 1, 1, 1883, 1884, '2013-06-08 17:03:02', '2013-08-06 12:21:04', NULL, 0, 'useful', 'en', NULL, NULL);
+(1, 0, 'PlayGround', 'playground.fx', 1, 2, '', 0, 1, 2, 3, '2012-05-24 12:42:50', '2013-09-11 15:32:05', '# Floxim Robots file\r\nUser-agent: *\r\nDisallow: /install/', 0, 'useful', 'en', '<table width=''100%'' height=''100%'' border=''0'' cellpadding=''0'' cellspacing=''0''><tr><td align=''center''>Сайт временно (!) недоступен.</td></tr></table>', NULL),
+(15, 0, 'JeepTravel', 'floxim.loc', 10, 0, '', 1, 1, 1883, 1884, '2013-06-08 17:03:02', '2013-09-09 13:02:57', NULL, 0, 'useful', 'en', NULL, NULL);
 
 -- --------------------------------------------------------
 
