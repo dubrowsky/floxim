@@ -6,18 +6,18 @@
 
 
 <!--jquery-->
-
+var tree_open_node = {};
 function fx_tree_render(root) {
 	function expand_item(item) {
 		get_children(item).addClass('fx_tree_children_expanded');
 		get_expander(item).addClass('fx_tree_expander_expanded');
-		fx_fields.tree_open_node[item.data('id')] = true;
+		tree_open_node[item.data('id')] = true;
 	}
 	
 	function collapse_item(item) {
 		get_children(item).removeClass('fx_tree_children_expanded');
 		get_expander(item).removeClass('fx_tree_expander_expanded');
-		fx_fields.tree_open_node[item.data('id')] = false;
+		tree_open_node[item.data('id')] = false;
 	}
 	
 	function is_expanded(item) {
@@ -144,8 +144,8 @@ function fx_tree_render(root) {
 	
 	fx_tree_refresh(root);
 	
-	for (var iid in fx_fields.tree_open_node) {
-		if (fx_fields.tree_open_node[iid]) {
+	for (var iid in tree_open_node) {
+		if (tree_open_node[iid]) {
 			expand_item( $('#fx_tree_item_'+iid, root) );
 		}
 	}
