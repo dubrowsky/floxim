@@ -36,7 +36,7 @@ class JSTX {
             $tpl = explode("\t", $tpl);
             $tpl = join("');", $tpl);
             $tpl = explode($this->opt('right_bracket'), $tpl);
-            $tpl = join("p.push('", $tpl);
+            $tpl = join("\np.push('", $tpl);
             $tpl = explode("\r", $tpl);
             $tpl = join("\\'", $tpl);
 

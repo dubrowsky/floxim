@@ -711,6 +711,7 @@ fx_front.prototype.reload_infoblock = function(infoblock_node, callback) {
            if(selected.length > 0) {
                 selected_selector = selected.first().generate_selector(ib_parent);
            }
+           $fx.front.outline_all_off();
 
            if (infoblock_node.nodeName === 'BODY') {
                var inserted = false;
@@ -914,4 +915,8 @@ fx_front.prototype.outline_block_off = function(n) {
     }
     n.data('fx_outline_panes', null);
     n.off('.recount_outlines');
+};
+
+fx_front.prototype.outline_all_off = function() {
+    $('.fx_outline_pane').remove();
 };

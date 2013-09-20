@@ -70,7 +70,6 @@ fx_form = {
                 }
             }
         });
-        console.log(settings.form_button);
         $form_node.submit($fx_form.submit_handler);
     },
             
@@ -215,6 +214,9 @@ fx_form = {
                 });
             });
             node.trigger('change');
+        }
+        if (json.parent) {
+            this.add_parent_condition(json.parent, node, target);
         }
         return node;
     },

@@ -1,51 +1,47 @@
 <!--[input ? _c.type =='tree' && _c.name == 'controller']-->
 <div class="fx_controller_select">
-	<input type="hidden" <?=$t.field_id_name(_c)?> class="tree_value_input" />
-	<?
-	var children = _c.children || _c.values;
-	?>
-	<div class="fx_left_pane fx_tree">
-		<ul class="fx_tree_children fx_tree_children_expanded">
-			<?
-			for (var i = 0; i < children.length; i++){
-			var child = children[i];
-			?>
-			<li class="fx_tree_item" data-id="<?=child.metadata.id?>">
-				<div class="fx_tree_label">
-					<a class="fx_tree_title"><?=child.data?></a>
-				</div>
-			</li>
-			<?
-			}
-			?>
-		</ul>
-	</div>
-	<div class="fx_right_pane">
-		<?
-		for (var i = 0; i < children.length; i++){
-			var child = children[i];
-			?>
-			<div class="children children_<?=child.metadata.id?>" style="display:none;">
-				<?
-				var subs = child.children;
-				for (var j = 0; j < subs.length; j++) {
-					var sub = subs[j];
-					?>
-					<div class="sub" data-id="<?=sub.metadata.id?>">
-						<div class="pic"></div>
-						<div class="body">
-							<div class="title"><?=sub.data?></div>
-							<div class="description"><?=sub.metadata.description?></div>
-						</div>
-					</div>
-					<?
-				}
-				?>
-			</div>
-			<?
-		}
-		?>
-	</div>
+    <input type="hidden" <?=$t.field_id_name(_c)?> class="tree_value_input" />
+    <?
+    var children = _c.children || _c.values;
+    ?>
+    <div>
+        <select class="fx_controller_groups fx_input">
+            <option value="">-all-</option>
+            <?
+            $.each(children, function(i, child) {
+                ?><option value="<?=child.metadata.id?>"><?=child.data?></option><?
+            });
+            ?>
+        </select>
+    </div>
+    <div class="fx_scroll_left"><a>&laquo;</a></div>
+    <div class="fx_controller_list">
+        <table class="fx_controller_list_table">
+        <tr>
+        <?
+        for (var i = 0; i < children.length; i++){
+            var child = children[i];
+            var subs = child.children;
+            for (var j = 0; j < subs.length; j++) {
+                var sub = subs[j];
+                ?>
+                <td class="children children_<?=child.metadata.id?>">
+                <div class="sub" data-id="<?=sub.metadata.id?>">
+                    <div class="pic"></div>
+                    <div class="body">
+                        <div class="title"><?=sub.data?></div>
+                        <div class="description"><?=sub.metadata.description?></div>
+                    </div>
+                </div>
+                </td>
+                <?
+            }
+        }
+        ?>
+        </tr>
+        </table>
+    </div>
+    <div class="fx_scroll_right"><a>&raquo;</a></div>
 </div>
 
 <!--priority-->
@@ -55,26 +51,76 @@
 
 var dialog_buttons = null;
 setTimeout(function() {
-		dialog_buttons = html.closest('.ui-dialog').find('.ui-dialog-buttonset button:not(.fx_dialog_cancel_button)');
-		dialog_buttons.hide();
-		select_pane_item(html.find('.fx_left_pane .fx_tree_item').first());
+    select_controller_group();
 }, 100);
 
-function select_pane_item(node) {
-	node.closest('.fx_left_pane').find('.fx_admin_selected').removeClass('fx_admin_selected');
-	node.find('div').addClass('fx_admin_selected');
-	var nid = node.data('id');
-	html.find('.fx_right_pane .children').hide();
-	html.find('.children_'+nid).show();
-	if (html.find('.children_'+nid+' .fx_admin_selected').length) {
-		dialog_buttons.show();
-	} else {
-		dialog_buttons.hide();
-	}
+function select_controller_group(c_group) {
+    if (typeof c_group === 'undefined') {
+        c_group = $('.fx_controller_groups').val();
+    }
+    console.log(c_group);
+    $('.fx_controller_list_table').css('left', 0);
+    if (c_group === '') {
+        html.find('.fx_controller_list .children').show();
+        recount_scrollers();
+        return;
+    }
+    html.find('.fx_controller_list .children').hide();
+    html.find('.children_'+c_group).show();
+    recount_scrollers();
 }
-$('.fx_left_pane', html).on('click', '.fx_tree_item', function() {
-	select_pane_item($(this));
+
+function recount_scrollers() {
+    var tb = $('.fx_controller_list_table').first();
+    var container = $('.fx_controller_list').first();
+    var tbo = tb.offset();
+    var co = container.offset();
+    var has_left = tbo.left < co.left;
+    var has_right = (tb.width() + tbo.left) > container.width();
+    //console.log('rcs', (tb.width() + tbo.left), has_left, has_right);
+    var scl = $('.fx_scroll_left');
+    var scr = $('.fx_scroll_right');
+    if (!has_left) {
+        scl.hide();
+    } else {
+        scl.show();
+    }
+    if (!has_right) {
+        scr.hide();
+    } else {
+        scr.show();
+    }
+}
+
+function scroll_container(dir) {
+    var tb = $('.fx_controller_list_table').first();
+    var cl = parseInt(tb.css('left'));
+    var nl = 0;
+    var step = Math.ceil($('.fx_controller_list').width() / 2);
+    if (dir === 'right') {
+        nl = cl - step;
+    } else {
+        nl = cl + step;
+    }
+    tb.animate({left:nl+'px'}, function() {
+        recount_scrollers();
+    console.log('scrled');
+    });
+    console.log('scrlng', dir, nl);
+}
+
+$('.fx_scroll_left', html).on('click', function() {
+    scroll_container('left');
 });
+
+$('.fx_scroll_right', html).on('click', function() {
+    scroll_container('right');
+});
+
+$('.fx_controller_groups', html).on('change', function() {
+    select_controller_group();
+});
+
 
 $('.fx_right_pane', html).on('click', '.sub', function() {
 	var sub = $(this);

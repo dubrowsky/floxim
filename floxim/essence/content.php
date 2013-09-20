@@ -143,7 +143,7 @@ class fx_content extends fx_essence {
                 $field_meta['value'] = $v;
             }
             if ($cf->type == 'text') {
-                $field_meta['html'] = $cf['format']['html'];
+                $field_meta['html'] = isset($cf['format']['html']) ? $cf['format']['html'] : 0;
             }
             
             $field_meta = array_merge(array(
