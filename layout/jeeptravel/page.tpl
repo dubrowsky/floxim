@@ -121,26 +121,6 @@
                         <a href="#" class="btn-next">next</a>
                     </div>
                     <div 
-                        class="img-list" 
-                        fx:template="photo_listing" fx:of="component_photo.listing">
-                        <div class="images fx_not_sortable" fx:template="$items">
-                            <div 
-                                fx:template="item" 
-                                class="img-block {if $item_is_first}img-block-active{/if}">
-                                <img src="{$photo}" alt="{$description editable="false"}" />
-                                <span class="left">{$description}</span>
-                                <span class="right" fx:if="$copy">© {$copy}</span>
-                            </div>
-                        </div>
-                        <div class="img-slider" fx:template="$items">
-                            <div 
-                                fx:template="item" 
-                                class="preview{if $item_is_first} preview-active{/if}">
-                                <img src="{$photo|'h:100'}" />
-                            </div>
-                        </div>
-                    </div>
-                    <div 
                         class="places" 
                         fx:name="Pages by year"
                         fx:template="pages_by_year" 
