@@ -138,12 +138,11 @@ class fx_admin_response {
         $this->buttons_action[$button]['options'] = $options;
     }
     
-    public function add_form_button ( $buttons ) {
-        if (!is_array($buttons)) {
-            $buttons = explode(",", $buttons);
+    public function add_form_button ( $button ) {
+        if (!is_array($button)) {
+            $button = array('key' => trim($button));
         }
-        $this->form_buttons = array_merge($this->form_buttons, $buttons);
-        $this->form_buttons = array_map('trim', $this->form_buttons);
+        $this->form_buttons[]= $button;
     }
     public function add_field ( $field, $tab = null ) {
         if ( $tab ) {

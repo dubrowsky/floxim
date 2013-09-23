@@ -195,6 +195,7 @@ input.ui-button {
     height: 34px;
     background-color: #272729;
     z-index: 2677;
+    min-width:750px;
 }
 
 #fx_admin_panel_logo {
@@ -1782,17 +1783,23 @@ a.fx_var_editable:focus, .fx_var_editable a:focus {
 
 .fx_controller_select .fx_scroll_left, .fx_controller_select .fx_scroll_right {
     float:left;
-    width:30px;
+    width:40px;
     height:100px;
     text-align: center;
     cursor:pointer;
     position: absolute;
     background: #FFF;
+    background: -webkit-linear-gradient(left, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 1) 30%, #FFF);
     z-index: 2;
+    visibility:hidden;
 }
 
 .fx_controller_select .fx_scroll_right {
     right:0px;
+}
+
+.fx_controller_select .fx_scroll_left {
+    background:-webkit-linear-gradient(left, #FFF, rgba(255, 255, 255, 1) 70%, rgba(255, 255, 255, 0.1));
 }
 
 .fx_controller_select .fx_scroll_left a, .fx_controller_select .fx_scroll_right a {

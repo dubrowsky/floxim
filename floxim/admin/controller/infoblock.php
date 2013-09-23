@@ -65,6 +65,14 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                 $fields['controller']['values'][]= $c_item;
             }
         }
+        $this->response->add_form_button(array(
+            'key' => 'next',
+            'label' => fx::lang('Next','system')
+        ));
+        $this->response->add_form_button(array(
+            'key' => 'finish',
+            'label' => fx::lang('Finish','system')
+        ));
         $result = array(
             'fields' => $fields,
             'dialog_title' => fx::lang('Adding infoblock','system'),
