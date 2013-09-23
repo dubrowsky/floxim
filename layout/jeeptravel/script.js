@@ -58,15 +58,4 @@ $(function(){
 
         return false;
     });
-    
-    $('html').on('click', '.img-slider .preview', function() {
-        if (!$(this).hasClass('active')) {
-            var previews = $(this).closest('.img-slider').find('.preview');
-            var index = previews.index(this);
-            var images = $(this).closest('.img-list').find('.img-block');
-            images.filter(':visible').stop().fadeOut();
-            images.eq(index).fadeIn();
-        }
-        //return false;
-    });
 });
