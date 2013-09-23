@@ -30,12 +30,11 @@ var fx_front = function () {
                 }
             }
             var mode_map = {
-                view: '#page.edit',
-                edit: '#page.design',
-                design: '#page.view'
+                view: 'edit',
+                edit: 'design',
+                design: 'view'
             };
-            //document.location.hash = mode_map[$fx.front.mode];
-            $fx.set_mode(mode_map[$fx.front.mode]);
+            $fx.front.load(mode_map[$fx.front.mode]);
         }
     });
     

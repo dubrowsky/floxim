@@ -83,7 +83,7 @@
                             fx:each="$items"
                             class="gallery_item {if $item_is_first} gallery_item_active{/if}">
                             <img 
-                                src="{%bg_photo_$id}<?=$template_dir?>images/img01.jpg{/%}" 
+                                src="{%bg_photo_$id | 'width:1100,height:530'}<?=$template_dir?>images/img01.jpg{/%}" 
                                 alt="" />
                             <div class="slide-text active">
                                 <div class="slide-holder">
@@ -162,7 +162,7 @@
                                 extract($parent->get_fields_to_show());
                                 ?>
                                 <a href="{$url}">
-                                    <img src="{$photo | 'w:140,h:105'}" alt="" />
+                                    <img src="{$photo | 'width:140,height:100'}" alt="" />
                                 </a>
                                 <span>{$description}</span>
                             </li>

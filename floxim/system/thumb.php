@@ -205,7 +205,7 @@ Constraint Violation															Resolved Width							Resolved Height
 				'min-height' => false,
 				'max-width' => false,
 				'max-height' => false,
-				'crop' => false,
+				'crop' => true,
 				'quality' => 90
 			),
 			$params
