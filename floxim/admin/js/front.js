@@ -125,7 +125,6 @@ var fx_front = function () {
     });
     
     $('html').on('fx_select', function(e) {
-        console.log('selecting tar');
         var n = $(e.target);
         if (n.is('.fx_content_essence')) {
             $fx.front.select_content_essence(n);
@@ -201,7 +200,6 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
                     fx_admin:true
                 }, {
                     onfinish:function(data) {
-                        console.log('iba res');
                         $fx.front_panel.show_form(data, {
                             onfinish:function(res) {
                                 $fx.front.reload_layout(
@@ -325,7 +323,6 @@ fx_front.prototype.fix = function() {
 fx_front.prototype.select_item = function(node) {
     var c_selected = this.get_selected_item();
     if (c_selected === node) {
-        console.log('alreadt sled');
         return;
     }
     this.deselect_item();
@@ -343,7 +340,7 @@ fx_front.prototype.select_item = function(node) {
     } else {
         $fx.buttons.unbind('select_block', $fx.front.select_level_up);
     }
-    $fx.front.fix();
+    //$fx.front.fix();
     $('html').on('keydown.fx_selected', function(e) {
        if (e.which === 27) {
            if (e.isDefaultPrevented && e.isDefaultPrevented()) {
@@ -371,7 +368,7 @@ fx_front.prototype.deselect_item = function() {
                 unbind('remove.deselect_removed');
         $fx.front.outline_block_off($(selected_item));
         // chrome outline bug
-        $fx.front.fix();
+        //$fx.front.fix();
     }
     $fx.buttons.unbind('select_block');
     $('html').off('.fx_selected');
@@ -645,7 +642,7 @@ fx_front.prototype.start_essences_sortable = function(container) {
                 }, function(res) {
                     $fx.front.reload_infoblock(cp.closest('.fx_infoblock'));
                 });
-                $fx.front.fix();
+                //$fx.front.fix();
             }
         });
     });
@@ -708,7 +705,7 @@ fx_front.prototype.start_areas_sortable = function() {
                 $fx.post(params, function(res) {
 
                 });
-                $fx.front.fix();
+                //$fx.front.fix();
             }
         });
     });

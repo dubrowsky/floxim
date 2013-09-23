@@ -419,7 +419,7 @@ a.calendar {
     float: right;
     width: 280px;
     margin-top: 90px;
-    font: 16px/18px 'CalibriLight', Arial, sans-serif;
+    font: 16px 'CalibriLight', Arial, sans-serif;
 }
 .sidebar h2 {
     font-size: 30px;

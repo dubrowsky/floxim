@@ -140,7 +140,7 @@ class fx_controller_admin_site extends fx_controller_admin {
         $fields[] = $this->ui->tree($this->_get_site_tree($site));
 
         $this->response->add_fields($fields);
-        $this->response->add_buttons("add,settings,on,off,delete");
+        $this->response->add_buttons("add,edit,settings,delete");
         $this->response->add_button_options('add', 'site_id='.$site['id']);
         $this->response->set_essence('content');
         $this->_set_layout('map', $site);
@@ -171,14 +171,19 @@ class fx_controller_admin_site extends fx_controller_admin {
         $infoblocks = fx::data('infoblock')->where('action', 'listing')->all();
         foreach ($content_blocks as $ib_id => $items) {
             $infoblock = $infoblocks->find_one('id', $ib_id);
-            $ib_name = $infoblock && $infoblock['name'] ? $infoblock['name'] : 'ib #'.$ib_id;
+            if (!$infoblock) {
+                $ib_name = '<span style="color:#F00;">ib #'.$ib_id.'</span>';
+            } else {
+                $ib_name = $infoblock['name'] ? $infoblock['name'] : 'ib #'.$ib_id;
+            }
             $type_result = array();
             foreach ($items as $item) {
                 $name = isset($item['name']) ? $item['name'] : $item['type'].' #'.$item['id'];
                 $item_res = array(
                     'data' => $name,
                     'metadata' => array(
-                        'id' => $item['id']
+                        'id' => $item['id'],
+                        'essence' => 'content'
                     )
                 );
                 if ($item['children']) {
@@ -190,7 +195,8 @@ class fx_controller_admin_site extends fx_controller_admin {
                 'data' => $ib_name,
                 'metadata' => array(
                     'id' => $ib_id,
-                    'is_groupper' => 1
+                    'is_groupper' => 1,
+                    'essence' => 'infoblock'
                 ),
                 'children' => $type_result
             );
