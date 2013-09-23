@@ -44,7 +44,10 @@ fx_adminpanel = {
         });
     },
 
-    set_mode: function() {
+    set_mode: function(force_hash) {
+        if (typeof force_hash === 'string'){
+            $fx.settings.hash = force_hash;
+        }
         $fx.admin_buttons_action = {};
         $fx.parse_hash();
         $fx.panel.trigger('fx.startsetmode');

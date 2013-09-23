@@ -50,6 +50,7 @@ fx_form = {
                     break;
             }
             var b = $t.jQuery('input', options);
+            b.data('key', options.key);
             $form_node.append(b);
             if (options.key === 'cancel') {
                 b.on('click', function() {
@@ -58,6 +59,10 @@ fx_form = {
             }
             if (options.is_submit) {
                 b.on('click', function() {
+                    $form_node.append(
+                        '<input type="hidden" name="pressed_button" '+
+                            ' value="'+$(this).data('key')+'" />'
+                    );
                     $form_node.submit();
                 });
                 if (!submit_added) {

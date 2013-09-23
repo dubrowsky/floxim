@@ -9,6 +9,12 @@ var fx_front = function () {
     this.move_down_body();
     
     this.mode_selectable_selector = null;
+    
+    $('#fx_admin_page_modes').on('click', 'a', function() {
+        $fx.set_mode($(this).attr('href'));
+        return false;
+    });
+    
     $('html').on('keyup', '*', function(e) {
         if (e.which === 113) {
             if ($fx.front.get_selected_item()) {
@@ -26,7 +32,8 @@ var fx_front = function () {
                 edit: '#page.design',
                 design: '#page.view'
             };
-            document.location.hash = mode_map[$fx.front.mode];
+            //document.location.hash = mode_map[$fx.front.mode];
+            $fx.set_mode(mode_map[$fx.front.mode]);
         }
     });
     
@@ -698,15 +705,16 @@ fx_front.prototype.disable_infoblock = function(infoblock_node) {
 };
 
 fx_front.prototype.reload_infoblock = function(infoblock_node, callback) {
+    var $infoblock_node = $(infoblock_node);
     $fx.front.disable_infoblock(infoblock_node);
-    var ib_parent = $(infoblock_node).parent();
-    var meta = $(infoblock_node).data('fx_infoblock');
+    var ib_parent = $infoblock_node.parent();
+    var meta = $infoblock_node.data('fx_infoblock');
     var page_id = $('body').data('fx_page_id');
     $.ajax({
        url:'/~ib/'+meta.id+'@'+page_id,
        success:function(res) {
-           $(infoblock_node).off('click.fx_fake_click').css({opacity:''});
-           var selected = $(infoblock_node).descendant_or_self('.fx_selected');
+           $infoblock_node.off('click.fx_fake_click').css({opacity:''});
+           var selected = $infoblock_node.descendant_or_self('.fx_selected');
            var selected_selector = null;
            if(selected.length > 0) {
                 selected_selector = selected.first().generate_selector(ib_parent);
@@ -715,7 +723,7 @@ fx_front.prototype.reload_infoblock = function(infoblock_node, callback) {
 
            if (infoblock_node.nodeName === 'BODY') {
                var inserted = false;
-               $(infoblock_node).children().each(function() {
+               $infoblock_node.children().each(function() {
                    if(!$(this).hasClass('fx_overlay')) {
                        if (!inserted) {
                             $(this).before(res);
@@ -724,9 +732,11 @@ fx_front.prototype.reload_infoblock = function(infoblock_node, callback) {
                        $(this).remove();
                    }
                });
+               $('body').trigger('fx_infoblock_loaded');
            } else {
-               $(infoblock_node).hide().before(res);
-               $(infoblock_node).remove();
+               $infoblock_node.hide().before(res);
+               $infoblock_node.prev().trigger('fx_infoblock_loaded');
+               $infoblock_node.remove();
            }
            if (selected_selector) {
                var sel_target = ib_parent.find(selected_selector);

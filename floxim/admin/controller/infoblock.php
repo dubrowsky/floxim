@@ -66,8 +66,12 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             }
         }
         $this->response->add_form_button(array(
-            'key' => 'save',
-            'text' => fx::lang('Next','system')
+            'key' => 'next',
+            'label' => fx::lang('Next','system')
+        ));
+        $this->response->add_form_button(array(
+            'key' => 'finish',
+            'label' => fx::lang('Finish','system')
         ));
         $result = array(
             'fields' => $fields,
