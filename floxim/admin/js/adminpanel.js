@@ -18,13 +18,18 @@ fx_adminpanel = {
                 
             $fx.additional_menu = new fx_additional_menu();
             $fx.additional_menu.load();
-                              
-            var cookie_mode = $.cookie('fx_front_mode');
             $(window).hashchange($fx.set_mode);
+            
             $(window).hashchange();
-            if (cookie_mode && !$fx.admin) {
-                $fx.set_mode(cookie_mode);
+            
+            if ($fx.mode === 'page') {
+                $fx.front = new fx_front();
+                var c_mode = $.cookie('fx_front_mode') || 'view';
+                $fx.front.load(c_mode);
+                //document.body.className = document.body.className.replace(/fx_mode_[^\s]+/, '');
+                //$(document.body).addClass('fx_mode_'+$fx.hash.join('_'));
             }
+            
             $('html').on('click', '.fx_button', $fx.buttons.form_button_click);
             var ajax_counter = 0;
             $(document).ajaxSend(function() {
@@ -48,11 +53,7 @@ fx_adminpanel = {
         });
     },
 
-    set_mode: function(force_hash) {
-        if (typeof force_hash === 'string'){
-            $fx.settings.hash = force_hash;
-            $.cookie('fx_front_mode', force_hash, {path:'/'});
-        }
+    set_mode: function() {
         $fx.admin_buttons_action = {};
         $fx.parse_hash();
         $fx.panel.trigger('fx.startsetmode');
@@ -68,14 +69,6 @@ fx_adminpanel = {
                 $fx.admin.set_action($fx.hash[len-1]);
             }
             $fx.admin.load();
-        }
-        else {
-            if ( !$fx.front) {
-                $fx.front = new fx_front();
-            }
-            $fx.front.load($fx.hash[1]);
-            document.body.className = document.body.className.replace(/fx_mode_[^\s]+/, '');
-            $(document.body).addClass('fx_mode_'+$fx.hash.join('_'));
         }
     },
         

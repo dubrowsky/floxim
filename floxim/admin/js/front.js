@@ -11,7 +11,9 @@ var fx_front = function () {
     this.mode_selectable_selector = null;
     
     $('#fx_admin_page_modes').on('click', 'a', function() {
-        $fx.set_mode($(this).attr('href'));
+        //$fx.set_mode($(this).attr('href'));
+        var mode = $(this).attr('href').match(/\.([^\.]+)$/)[1];
+        $fx.front.load(mode);
         return false;
     });
     
@@ -78,7 +80,6 @@ var fx_front = function () {
     });
     
     $('html').on('click', function(e) {
-        
         if ($fx.front.mode === 'view') {
             return;
         }
@@ -92,7 +93,6 @@ var fx_front = function () {
         } else {
             closest_selectable = $fx.front.get_selectable_up(target);
         }
-        
         // нечего выбирать
         if (!closest_selectable) {
             // случаи, когда target оказался вне основого дерева
@@ -126,6 +126,7 @@ var fx_front = function () {
     });
     
     $('html').on('fx_select', function(e) {
+        console.log('selecting tar');
         var n = $(e.target);
         if (n.is('.fx_content_essence')) {
             $fx.front.select_content_essence(n);
@@ -314,6 +315,7 @@ fx_front.prototype.fix = function() {
 fx_front.prototype.select_item = function(node) {
     var c_selected = this.get_selected_item();
     if (c_selected === node) {
+        console.log('alreadt sled');
         return;
     }
     this.deselect_item();
@@ -414,6 +416,7 @@ fx_front.prototype.hilight = function() {
 
 fx_front.prototype.load = function ( mode ) {
     this.mode = mode;
+    $.cookie('fx_front_mode', mode, {path:'/'});
     
     $fx.front.deselect_item();
     
