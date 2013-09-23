@@ -400,8 +400,11 @@ class fx {
     
     public static function image($value, $format) {
         try {
+        	
             $thumber = new fx_thumb($value, $format);
             $value = $thumber->get_result_path();
+            dev_log($value);
+         
         } catch (Exception $e) {
             $value = '';
         }
