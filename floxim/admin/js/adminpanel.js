@@ -19,19 +19,23 @@ fx_adminpanel = {
             $fx.additional_menu = new fx_additional_menu();
             $fx.additional_menu.load();
                               
+            var cookie_mode = $.cookie('fx_front_mode');
             $(window).hashchange($fx.set_mode);
             $(window).hashchange();
+            if (cookie_mode && !$fx.admin) {
+                $fx.set_mode(cookie_mode);
+            }
             $('html').on('click', '.fx_button', $fx.buttons.form_button_click);
             var ajax_counter = 0;
             $(document).ajaxSend(function() {
                 ajax_counter++;
-                if (ajax_counter == 1) {
+                if (ajax_counter === 1) {
                     $('.fx_preloader').css('visibility', 'visible');
                 }
             });
             $(document).ajaxComplete(function() {
                 ajax_counter--;
-                if (ajax_counter == 0) {
+                if (ajax_counter === 0) {
                     $('.fx_preloader').css('visibility', 'hidden');
                 }
             });
@@ -47,6 +51,7 @@ fx_adminpanel = {
     set_mode: function(force_hash) {
         if (typeof force_hash === 'string'){
             $fx.settings.hash = force_hash;
+            $.cookie('fx_front_mode', force_hash, {path:'/'});
         }
         $fx.admin_buttons_action = {};
         $fx.parse_hash();
