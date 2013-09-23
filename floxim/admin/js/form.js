@@ -94,7 +94,9 @@ fx_form = {
                 status_block.writeError(data);
                 return false;
             }
-
+            
+            $form.trigger('fx_form_sent', data);
+            
             if ( data.status === 'ok') {
                 status_block.show();
                 status_block.writeOk( data.text ? data.text : 'Ok');

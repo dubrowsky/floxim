@@ -5,6 +5,7 @@
         show_form: function(data, params) {
             this.prepare_form_data(data);
             this.panel = $('#fx_admin_extra_panel');
+            this.stop();
             var p = this.panel;
             p.show();
             p.css('height', $fx.front_panel.second_row_height+'px');
@@ -17,11 +18,11 @@
             $form.on('fx_form_cancel', function() {
                 $fx.front_panel.hide();
             });
-            $form.on('fx_form_ok', function() {
+            $form.on('fx_form_sent', function(e, data) {
                 console.log('form ok');
                 $fx.front_panel.hide();
                 if (params.onfinish) {
-                    params.onfinish();
+                    params.onfinish(data);
                 }
             });
             p.css('opacity', 0.1).animate({opacity:1}, 300);
@@ -67,6 +68,11 @@
             $('.fx_outline_style_selected').animate({
                 top: (height_delta > 0 ? '+=' : '-=')+ Math.abs(height_delta)
             }, 300);
+        },
+        stop: function() {
+            this.panel.stop(1,1);
+            $('body').stop(1,1);
+            $('.fx_outline_style_selected').stop(1,1);
         },
         load_form: function(form_options, params) {
             $fx.post(

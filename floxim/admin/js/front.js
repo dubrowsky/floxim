@@ -178,20 +178,6 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
                             $fx.front.reload_infoblock(ib);
                         }
                     });
-                    return;
-                    $fx.post({
-                       essence:'content',
-                       action:'add_edit',
-                       content_type:c_cnt.type,
-                       infoblock_id:c_cnt.infoblock_id,
-                       parent_id:c_cnt.parent_id
-                    }, function(res) {
-                        $fx_dialog.open_dialog(res, {
-                            onfinish:function() {
-                                $fx.front.reload_infoblock(ib);
-                            }
-                        });
-                    });
                 };
             })(c_cnt);
             adders.push(cb_closure);
@@ -214,6 +200,31 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
                     area:area_meta.id,
                     admin_mode:$fx.front.mode,
                     fx_admin:true
+                }, {
+                    onfinish:function(data) {
+                        console.log('iba res');
+                        $fx.front_panel.show_form(data, {
+                            onfinish:function(res) {
+                                $fx.front.reload_layout(
+                                    function() {
+                                        if (!res.props || !res.props.infoblock_id) {
+                                            return;
+                                        }
+                                        var new_ib_node = $('.fx_infoblock_'+res.props.infoblock_id);
+                                        if (new_ib_node.length === 0) {
+                                            return;
+                                        }
+                                        $fx.front.select_item(new_ib_node.get(0));
+                                        var adders = new_ib_node.data('content_adders');
+                                        if (!adders || adders.length === 0 ){
+                                            return;
+                                        }
+                                        adders[0]();
+                                    }
+                                );
+                            }
+                        });
+                    }
                 });
                 return;
                 $fx.post({
@@ -513,6 +524,10 @@ fx_front.prototype.select_infoblock = function(n) {
             visual_id:ib.visual_id,
             page_id:$('body').data('fx_page_id'),
             fx_admin:true
+        }, {
+            onfinish:function() {
+                $fx.front.reload_infoblock(ib_node);
+            }
         });
         return;
         $fx.post({
@@ -543,6 +558,17 @@ fx_front.prototype.select_infoblock = function(n) {
         if (!ib) {
             return;
         }
+        $fx.front_panel.load_form({
+            essence:'infoblock',
+            action:'delete_infoblock',
+            id:ib.id,
+            fx_admin:true
+        }, {
+            onfinish: function() {
+                $fx.front.reload_layout();
+            }
+        });
+        return;
         $fx.post({
            essence:'infoblock',
            action:'delete_infoblock',
