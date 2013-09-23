@@ -1,10 +1,10 @@
 $(function(){
     $('html').on('click', '.img-slider .preview', function() {
         if (!$(this).hasClass('preview-active')) {
-        	changepic($(this).attr("data-picid"));
+        	change_pic($(this).attr("data-picid"));
         }
-        //return false;
     });
+    /*
     $('html').on('click', '.img-block.img-block-active', function() {
     	var next = $(this).next(); 
     	var id;
@@ -15,9 +15,10 @@ $(function(){
     	}
 		changepic(id)
     })
-    function changepic (id) {
-    	var pic = $(".img-block.picid"+id).filter(':hidden');
-    	if (pic.length  == 1) {
+    */
+    function change_pic (id) {
+    	var pic = $(".img-block.picid"+id);
+    	if (pic.length  > 0 ) {
     		var pics = $(".img-block");
     		pics.filter(':visible').stop().fadeOut().removeClass("img-block-active");
     		pic.addClass("img-block-active").fadeIn();
@@ -26,13 +27,18 @@ $(function(){
     		window.location.hash = '#picid'+id;
     	}
 	}
-    
-    $(document).ready (function () {
+	function change_pic_by_hash () {
     	var hash = window.location.hash.substring(1);
     	if (hash.indexOf("picid") == 0) {
 			var id = hash.substring(5);
-			changepic(id);
+			change_pic(id);
     	}
+	}
+    $("html").on("fx_infoblock_loaded", function () {
+    	change_pic_by_hash ();
+    })
+    $(document).ready (function () {
+    	change_pic_by_hash ();
     })
     
 });
