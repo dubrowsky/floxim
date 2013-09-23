@@ -15,6 +15,7 @@
         </select>
     </div>
     <div class="fx_scroll_left"><a>&laquo;</a></div>
+    <div class="fx_scroll_right"><a>&raquo;</a></div>
     <div class="fx_controller_list">
         <table class="fx_controller_list_table">
         <tr>
@@ -41,7 +42,6 @@
         </tr>
         </table>
     </div>
-    <div class="fx_scroll_right"><a>&raquo;</a></div>
 </div>
 
 <!--priority-->
@@ -58,7 +58,6 @@ function select_controller_group(c_group) {
     if (typeof c_group === 'undefined') {
         c_group = $('.fx_controller_groups').val();
     }
-    console.log(c_group);
     $('.fx_controller_list_table').css('left', 0);
     if (c_group === '') {
         html.find('.fx_controller_list .children').show();
@@ -77,26 +76,18 @@ function recount_scrollers() {
     var co = container.offset();
     var has_left = tbo.left < co.left;
     var has_right = (tb.width() + tbo.left) > container.width();
-    //console.log('rcs', (tb.width() + tbo.left), has_left, has_right);
     var scl = $('.fx_scroll_left');
     var scr = $('.fx_scroll_right');
-    if (!has_left) {
-        scl.hide();
-    } else {
-        scl.show();
-    }
-    if (!has_right) {
-        scr.hide();
-    } else {
-        scr.show();
-    }
+    scl.css('visibility', has_left ? 'visible' : 'hidden');
+    scr.css('visibility', has_right ? 'visible' : 'hidden');
 }
 
 function scroll_container(dir) {
     var tb = $('.fx_controller_list_table').first();
     var cl = parseInt(tb.css('left'));
     var nl = 0;
-    var step = Math.ceil($('.fx_controller_list').width() / 2);
+    var list_width = $('.fx_controller_list').width();
+    var step = Math.ceil(list_width / 2);
     if (dir === 'right') {
         nl = cl - step;
     } else {
@@ -104,9 +95,8 @@ function scroll_container(dir) {
     }
     tb.animate({left:nl+'px'}, function() {
         recount_scrollers();
-    console.log('scrled');
     });
-    console.log('scrlng', dir, nl);
+    console.log('scrlng', list_width, cl, step);
 }
 
 $('.fx_scroll_left', html).on('click', function() {

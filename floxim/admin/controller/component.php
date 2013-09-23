@@ -19,11 +19,10 @@ class fx_controller_admin_component extends fx_controller_admin {
             'buttons' => array('type' => 'buttons')
         );
         $field['values'] = array();
+        $field['essence'] = $essence;
         foreach ($components as $v) {
-        	
             $submenu = self::get_component_submenu($v);
             $submenu_first = current($submenu);
-        	
             $r = array(
                 'id' => $v['id'],
                 'name' => array(
@@ -146,9 +145,10 @@ class fx_controller_admin_component extends fx_controller_admin {
 
         $fields[] = $this->ui->hidden('source', $input['source']);
         $fields[] = $this->ui->hidden('posting');
-        $fields[]= $this->_get_parent_component_field();
+        $fields[] = $this->_get_parent_component_field();
         
         $essence =$this->essence_type;
+        $fields[] = $this->ui->hidden('essence', $essence);
         
         $this->response->breadcrumb->add_item(
             self::_essence_types($essence), 
@@ -485,6 +485,8 @@ class fx_controller_admin_component extends fx_controller_admin {
         $fields[] = array('type' => 'hidden', 'name' => 'id', 'value' => $component['id']);
         
         $this->response->submenu->set_subactive('settings-'.$component['id']);
+        $fields[] = $this->ui->hidden('essence', 'component');
+        $fields[] = $this->ui->hidden('action', 'edit_save');
 
         return array('fields' => $fields, 'form_button' => array('save'));
     }

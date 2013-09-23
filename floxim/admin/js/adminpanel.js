@@ -50,7 +50,7 @@ fx_adminpanel = {
         $fx.panel.trigger('fx.startsetmode');
             
         // admin
-        if ( $fx.mode == 'admin' ) {
+        if ( $fx.mode === 'admin' ) {
             if ( !$fx.admin ) {
                 $fx.admin = new fx_admin();
             }
