@@ -11,6 +11,7 @@
         
         <div class="anounce">{$anounce}</div>
         {call id="component_tag.entity_tags"}{$items select="$tags" /}{/call}
+        <div class="comments_counter">Comments: {$comments_counter}0{/$}</div>
     </div>
 
     {call id="component_content.pagination" /}
