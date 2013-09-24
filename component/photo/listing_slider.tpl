@@ -11,7 +11,7 @@
 		<div 
 			fx:template="item" 
 			class="img-block {if $item_is_first}img-block-active{/if} picid{$id}" data-picid="{$id}">
-				<img src="{$photo}" alt="{$description editable="false"}" />
+				<img src="{$photo|'height:550'}" alt="{$description editable="false"}" />
 					<span class="left">{$description}</span>
 					<span class="right" fx:if="$copy">© {$copy}</span>
       </div>
@@ -20,7 +20,7 @@
     	<div 
     		fx:template="item" 
     			class="preview{if $item_is_first} preview-active{/if} picidprev{$id}" data-picid="{$id}">
-    				<img src="{$photo|'h:100'}" />
+    				<img src="{$photo|'height:100,width:135,crop:middle'}" />
     	</div>
 	</div>
 </div>

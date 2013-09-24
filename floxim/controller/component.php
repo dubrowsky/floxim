@@ -322,6 +322,7 @@ class fx_controller_component extends fx_controller {
                 $parent_id = $ib['page_id'];
                 break;
             case 'current_page_id':
+            default:
                 $parent_id = fx::env('page');
                 break;
             case 'custom':
