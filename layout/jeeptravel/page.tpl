@@ -134,7 +134,7 @@
                                 <li fx:template="item">
                                     <a href="{$url}">{$name}</a>
                                     <div fx:if="$cover">
-                                        <img src="{$cover|'w:110'}" alt="" />
+                                        <img src="{$cover|'width:110'}" alt="" />
                                     </div>
                                 </li>
                             </ul>

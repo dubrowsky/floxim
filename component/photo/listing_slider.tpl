@@ -1,9 +1,10 @@
 <div 
     class="img-list" 
     fx:template="listing_slider" 
-    fx:of="component_photo.listing">	
+    fx:of="component_photo.listing">
+	
     {js}
-        FX_JQUERY_PATH
+	FX_JQUERY_PATH
         script.js
     {/js}
     {css}listing_slider.css{/css}
@@ -19,9 +20,8 @@
     <div class="img-slider" fx:template="$items">
     	<div 
             fx:template="item" 
-            class="preview{if $item_is_first} preview-active{/if} pic_preview_{$id}" 
-            data-pic_id="{$id}">
-            <img src="{$photo|'height:100'}" />
+            class="preview{if $item_is_first} preview-active{/if} pic_preview_{$id}" data-pic_id="{$id}">
+                <img src="{$photo|'height:100'}" />
     	</div>
     </div>
 </div>
