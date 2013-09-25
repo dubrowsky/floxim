@@ -3,11 +3,19 @@
 }
 
 	.comment_list .comment {
-	
+	   margin: 20px 0;
+	   padding: 5px;
+	   border: 1px solid #505050;
 	}
 
+		.comment_list .comment .is_moderated {
+            margin: 5px 0;
+            color: red;		
+            font-size: 14px;
+		}
+
 		.comment_list .comment h3 {
-			margin-bottom: 5px;
+			margin: 5px 0;
 			font-size: 22px;
 		}
 		.comment_list .comment .date {

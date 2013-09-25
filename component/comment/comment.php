@@ -1,20 +1,6 @@
 <?php
 class fx_controller_component_comment extends fx_controller_component {
     public function do_listing() {
-      /*if (isset($_POST["addcomment"]) && isset($_POST["user_name"]) && isset($_POST["comment_text"])) {
-			
-         $comments = fx::data('content_comment')->create(
-            array(
-               'user_name' => $_POST["user_name"], 
-               'comment_text' => $_POST["comment_text"], 
-               'publish_date' => date("Y-m-d H:i:s"), 
-               'parent_id' => $this->_get_parent_id(),
-               'infoblock_id' => $this->get_param('infoblock_id')
-            )
-         );
-         $comments->save();    	
-      }
-    */
       $res= parent::do_listing();
       $this->_meta['hidden'] = false;
       return $res;
@@ -35,6 +21,13 @@ class fx_controller_component_comment extends fx_controller_component {
             $field['values'] []= array($ib['id'], $ib['name']);
         }
         return array('target_infoblock_id' => $field);
+    }
+    protected function _get_finder() {
+        $finder = parent::_get_finder();
+        if (!fx::is_admin()) {
+            $finder->where('is_moderated', 1);   
+        }
+        return $finder;
     }
     
     public function do_add() {
