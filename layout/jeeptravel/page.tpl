@@ -81,9 +81,9 @@
 	                    fx:of="component_page.listing">
                         <div 
                             fx:each="$items"
-                            class="gallery_item {if $item_is_first} gallery_item_active{/if}">
+                            class="gallery_item {if $item_is_first} gallery_item_active{/if} slideid{$id}">
                             <img 
-                                src="{%bg_photo_$id | 'width:1100,height:530'}<?=$template_dir?>images/img01.jpg{/%}" 
+                                src="{%bg_photo_$id | 'width:1100,height:530,crop:middle'}<?=$template_dir?>images/img01.jpg{/%}" 
                                 alt="" />
                             <div class="slide-text active">
                                 <div class="slide-holder">
@@ -112,7 +112,7 @@
                         </div>
                         <div class="switcher">
                             <ul>
-                                <li fx:each="$items" {if $item_is_first}class="active"{/if}>
+                                <li fx:each="$items" class="{if $item_is_first}active{/if} slideid{$id}" data-slideid="{$id}">
                                     <a href="#" title="{$name}">{$item_index}</a>
                                 </li>
                             </ul>
