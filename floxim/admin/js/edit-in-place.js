@@ -161,12 +161,13 @@ fx_edit_in_place.prototype.save = function() {
         var pf = this.panel_fields[i];
         var pf_meta= pf.data('meta');
         var old_value = pf_meta.value;
-        var c_input = $(':input[name="'+pf_meta['name']+'"]', pf);
-        if (c_input.attr('type') === 'checkbox') {
+        if (pf_meta.type === 'bool') {
+            var c_input = $('input[name="'+pf_meta['name']+'"][type="checkbox"]', pf);
             var new_value = c_input.is(':checked') ? "1" : "0";
         } else {
-            var new_value = c_input.val();
+            var new_value = $(':input[name="'+pf_meta['name']+'"]', pf).val();
         }
+    
         if (old_value !== new_value) {
             vars.push({
                 'var': pf_meta,
