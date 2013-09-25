@@ -52,6 +52,12 @@ class fx_data {
         return $this;
     }
     
+    public function where_or() {
+        $conditions = func_get_args();
+        $this->where []= array($conditions, null, 'OR');
+        return $this;
+    }
+    
     public function clear_where($field, $value = null) {
         
         foreach ($this->where as $where_num => $where_props) {
@@ -137,30 +143,7 @@ class fx_data {
         if (count($this->where) > 0) {
             $conds = array();
             foreach ($this->where as $cond) {
-                list($field, $value, $type) = $cond;
-                if ($field == 'id') {
-                    $field = "`{{".$base_table."}}`.id";
-                } else {
-                    // use conditions like "MD5(`field`)" as is
-                    if (!preg_match("~[a-z0-9_-]\s*\(.*?\)~i", $field)) {
-                        $field = '`'.$field.'`';
-                    }
-                }
-                if (is_array($value)) {
-                    if (count($value) == 0) {
-                        $conds []= 'FALSE';
-                        continue;
-                    }
-                    if ($type == '=') {
-                        $type = 'IN';
-                    }
-                    $value = " ('".join("', '", $value)."') ";
-                } elseif (in_array(strtolower($type), array('is null', 'is not null'))) {
-                    $value = '';
-                } else {
-                    $value = "'".$value."'";
-                }
-                $conds []= $field.' '.$type.' '.$value;
+                $conds []= $this->_make_cond($cond, $base_table);
             }
             $q .= "WHERE ".join(" AND ", $conds);
         }
@@ -174,6 +157,42 @@ class fx_data {
             $q .= ' LIMIT '.$this->limit;
         }
         return $q;
+    }
+    
+    protected function _make_cond($cond, $base_table) {
+        if ($cond[2] === 'OR') {
+            $parts = array();
+            foreach ($cond[0] as $sub_cond) {
+                if (!isset($sub_cond[2])) {
+                    $sub_cond[2] = '=';
+                }
+                $parts []= $this->_make_cond($sub_cond, $base_table);
+            }
+            return " (".join(" OR ", $parts).") ";
+        }
+        list($field, $value, $type) = $cond;
+        if ($field == 'id') {
+            $field = "`{{".$base_table."}}`.id";
+        } else {
+            // use conditions like "MD5(`field`)" as is
+            if (!preg_match("~[a-z0-9_-]\s*\(.*?\)~i", $field)) {
+                $field = '`'.$field.'`';
+            }
+        }
+        if (is_array($value)) {
+            if (count($value) == 0) {
+                return 'FALSE';
+            }
+            if ($type == '=') {
+                $type = 'IN';
+            }
+            $value = " ('".join("', '", $value)."') ";
+        } elseif (in_array(strtolower($type), array('is null', 'is not null'))) {
+            $value = '';
+        } else {
+            $value = "'".$value."'";
+        }
+        return $field.' '.$type.' '.$value;
     }
     
     public function show_query() {
