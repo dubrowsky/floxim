@@ -146,18 +146,17 @@ function fx_livesearch(node) {
 		}
 		
 		var res_value = id;
-		if (!id || (id*1 == 0) ) {
-			id = false;
-			//input_name = this.n.closest('form').attr('id')+'_'+(input_name.replace(/[\[\]]+/g, '_')+'_title').replace(/__/, '_');
-            input_name = input_name+'[title]';
-			res_value = name;
+		if (!id || (id*1 === 0) ) {
+                    id = false;
+                    input_name = input_name+'[title]';
+                    res_value = name;
 		}
 		
 		var node = $('<li class="livesearch_item'+ (!id ? ' livesearch_item_empty' : '')+'">'+
-			(this.isMultiple ? '<span class="killer">&times;</span>' : '')+
-			'<input type="hidden" name="'+input_name+'" value="'+res_value+'" />'+
-			'<span class="title">'+name+'</span>'+
-			'</li>');
+                    (this.isMultiple ? '<span class="killer">&times;</span>' : '')+
+                    '<input type="hidden" name="'+input_name+'" value="'+res_value+'" />'+
+                    '<span class="title">'+name+'</span>'+
+                    '</li>');
 		this.inputContainer.before( node );
 		if (!this.isMultiple) {
 			this.disableAdd();

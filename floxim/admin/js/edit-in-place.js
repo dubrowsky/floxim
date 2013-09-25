@@ -80,6 +80,9 @@ fx_edit_in_place.prototype.start = function(meta) {
         case 'select':
             this.add_panel_field(meta);
             break;
+        case 'bool':
+            this.add_panel_field(meta);
+            break;
         case 'string': case 'html': case '': case 'text': case 'int':
             if (meta.is_att) {
                 this.add_panel_field(meta);
@@ -158,7 +161,12 @@ fx_edit_in_place.prototype.save = function() {
         var pf = this.panel_fields[i];
         var pf_meta= pf.data('meta');
         var old_value = pf_meta.value;
-        var new_value = $(':input[name="'+pf_meta['name']+'"]', pf).val();
+        var c_input = $(':input[name="'+pf_meta['name']+'"]', pf);
+        if (c_input.attr('type') === 'checkbox') {
+            var new_value = c_input.is(':checked') ? "1" : "0";
+        } else {
+            var new_value = c_input.val();
+        }
         if (old_value !== new_value) {
             vars.push({
                 'var': pf_meta,
