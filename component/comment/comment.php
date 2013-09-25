@@ -24,14 +24,19 @@ class fx_controller_component_comment extends fx_controller_component {
     }
     protected function _get_finder() {
         $finder = parent::_get_finder();
+        
         if (!fx::is_admin()) {
-            $finder->where('is_moderated', 1);   
+            if ($own_comments  = $this->_get_own_comments()){
+                $finder->where_or(array('is_moderated', 1), array('id', $own_comments));    
+            } else {
+                $finder->where('is_moderated', 1);
+            }
         }
         return $finder;
     }
     
     public function do_add() {
-      if (isset($_POST["addcomment"]) && isset($_POST["user_name"]) && isset($_POST["comment_text"])) {
+      if (isset($_POST["addcomment"]) && isset($_POST["user_name"]) && !empty($_POST["user_name"]) && isset($_POST["comment_text"]) && !empty($_POST["comment_text"])) {
 			
          $comments = fx::data('content_comment')->create(
             array(
@@ -42,10 +47,23 @@ class fx_controller_component_comment extends fx_controller_component {
                'infoblock_id' => $this->get_param('target_infoblock_id'),
             )
          );
-         dev_log($comments);
-         $comments->save();    	
+         $comments->save();
+         if(!isset($_COOKIE["own_comments"])) {
+             setcookie('own_comments', $comments["id"], time()+60*60*24*30);   
+         } else {
+             setcookie('own_comments', $_COOKIE["own_comments"].','.$comments["id"], time()+60*60*24*30);
+         }
          fx::http()->refresh();    
       }
    }
+   
+   protected function _get_own_comments () {
+        if (isset($_COOKIE["own_comments"])) {
+            return explode(',', $_COOKIE["own_comments"]);        
+        }
+        return; 
+        
+   }
+   
 }
 ?>
