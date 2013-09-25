@@ -862,7 +862,7 @@ fx_front.prototype.outline_block = function(n, style) {
     var top_top_offset = 0;
     var bottom_right_offset = 0;
     var bottom_bottom_offset = 0;
-    if (n.css('display') === 'inline') {
+    if (n.css('display') === 'inline' && n.text() !== '') {
         var m_before = $('<span style="display:inline-block;width:1px; height:1px;background:#F00;"></span>');
         m_before.insertBefore(n.get(0).firstChild);
         var mbo = m_before.offset();
