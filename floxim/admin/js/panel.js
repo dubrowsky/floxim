@@ -3,6 +3,7 @@
         panel: null,
         second_row_height:37,
         show_form: function(data, params) {
+            console.log(data);
             this.prepare_form_data(data);
             this.panel = $('#fx_admin_extra_panel');
             this.stop();
@@ -27,13 +28,15 @@
             });
             p.css('opacity', 0.1).animate({opacity:1}, 300);
             $('#fx_admin_control .editor_panel').hide();
-            $fx.front_panel.animate_panel_height();
-            $('form', p).resize(function() {
-                if ($fx.front_panel._is_moving) {
-                    return;
-                }
+            setTimeout(function() {
                 $fx.front_panel.animate_panel_height();
-            });
+                $('form', p).resize(function() {
+                    if ($fx.front_panel._is_moving) {
+                        return;
+                    }
+                    $fx.front_panel.animate_panel_height();
+                });
+            }, 500);
         },
         animate_panel_height: function(panel_height) {
             var p = this.panel;
@@ -45,6 +48,7 @@
                     panel_height = this.second_row_height;
                 }
             }
+            console.log('phe', panel_height);
             var body_default_margin = $('body').data('fx_default_margin');
             if (!body_default_margin) {
                 body_default_margin = parseInt($('body').css('margin-top'));

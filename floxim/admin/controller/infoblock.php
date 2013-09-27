@@ -53,11 +53,26 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                     continue;
                 }
                 $action_name = ($c['name'] ? $c['name'] . ' / ' : '').$action_info['name']; 
+                switch ($controller_type) {
+                    case 'widget':
+                        $action_type = 'widget';
+                        break;
+                    case 'component':
+                        if (!preg_match("~^listing~", $action_code)) {
+                            $action_type = 'widget';
+                        } elseif (preg_match('~mirror~', $action_code)) {
+                            $action_type = 'mirror';
+                        } else {
+                            $action_type = 'content';
+                        }
+                        break;
+                }
                 $c_item['children'][]= array(
                     'data' => $action_name,
                     'metadata' => array(
                         'id' => 'component_'.$c['keyword'].'.'.$action_code,
-                        'description' => $action_info['description']
+                        'description' => $action_info['description'],
+                        'type' => $action_type
                     )
                 );
             }
@@ -65,6 +80,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                 $fields['controller']['values'][]= $c_item;
             }
         }
+        //dev_log($fields);
         $this->response->add_form_button(array(
             'key' => 'next',
             'label' => fx::lang('Next','system')
@@ -164,7 +180,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                     $settings[$ib_param]['value'] = $ib_param_value;
                 }
             }
-            $this->response->add_tab('settings', fx::lang('What to show','system'));
+            //$this->response->add_tab('settings', fx::lang('What to show','system'));
             $this->response->add_fields(
                     array(array(
                         'label' => fx::lang('Block name','system'),
@@ -173,15 +189,17 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                     )),
                     'settings'
             );
-            $this->response->add_fields($settings, 'settings', 'params');
+            //$this->response->add_fields($settings, 'settings', 'params');
+            $this->response->add_fields($settings, false, 'params');
         }
         
         $format_fields = $this->_get_format_fields($infoblock);
 
         if (!$is_layout) {
-            $this->response->add_tab('visual', fx::lang('How to show','system'));
+            //$this->response->add_tab('visual', fx::lang('How to show','system'));
         }
-        $this->response->add_fields($format_fields, $is_layout ? false : 'visual', 'visual');
+        //$this->response->add_fields($format_fields, $is_layout ? false : 'visual', 'visual');
+        $this->response->add_fields($format_fields, false, 'visual');
         
         
         $c_page = fx::data('content_page', $input['page_id']);
@@ -200,9 +218,10 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         }
 
         if ($scope_tab) {
-            $this->response->add_tab('scope', fx::lang('Where to show','system'));
+            //$this->response->add_tab('scope', fx::lang('Where to show','system'));
         }
-        $this->response->add_fields($scope_fields, $scope_tab ? 'scope' : false, 'scope');
+        //$this->response->add_fields($scope_fields, $scope_tab ? 'scope' : false, 'scope');
+        $this->response->add_fields($scope_fields, false, 'scope');
         
         if ($input['settings_sent'] == 'true') {
             if ($is_layout) {
@@ -442,7 +461,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         );
 
         $wrappers = array('' => fx::lang('With no wrapper','system'));
-        $templates = array('auto.auto' => ' - ' . fx::lang('Auto select','system') . ' - ');
+        //$templates = array('auto.auto' => ' - ' . fx::lang('Auto select','system') . ' - ');
         $layout_name = fx::data('layout', $i2l['layout_id'])->get('keyword');
         
         $controller_name = $infoblock->get_prop_inherited('controller');
@@ -466,7 +485,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         $tmps = $controler->get_available_templates($layout_name);
         if ( !empty($tmps) ) {
             foreach ( $tmps as $template ) {
-                $templates[$template['full_id']] = $template['name'] . ' (' . $template['full_id'] . ')';
+                $templates[$template['full_id']] = $template['name'];// . ' (' . $template['full_id'] . ')';
             }
         }
 

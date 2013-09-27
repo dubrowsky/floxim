@@ -1892,6 +1892,10 @@ a.fx_var_editable:focus, .fx_var_editable a:focus {
     height:20px;
 }
 
+.fx_overlay .field_hidden {
+    display:none !important;
+}
+
 #fx_admin_extra_panel .redactor_toolbar {
     left:0;
     top:0;

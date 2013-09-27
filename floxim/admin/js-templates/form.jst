@@ -19,7 +19,7 @@ $('.input_container', html).append($t.jQuery('input', _c));
 ?>
 
 <!--[form_row ? _c.type == 'hidden' || _c.type == 'button' || _c.type == 'list' || _c.type == 'tree']-->
-<div></div>
+<div class="<?=_c.type === 'hidden' ? 'field field_'+_c.type : ''?>"></div>
 
 <!--jquery-->
 html.append($t.jQuery('input', _c));

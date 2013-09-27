@@ -191,6 +191,7 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
         buttons.push({
             name:'Add new infoblock to '+area_meta.id,
             callback: function() {
+                window.infoblock_back = arguments.callee;
                 $fx.front_panel.load_form({
                     essence:'infoblock',
                     action:'select_controller',
@@ -222,40 +223,6 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
                             }
                         });
                     }
-                });
-                return;
-                $fx.post({
-                    essence:'infoblock',
-                    action:'select_controller',
-                    page_id:$('body').data('fx_page_id'),
-                    area:area_meta.id,
-                    admin_mode:$fx.front.mode,
-                    fx_admin:true
-                }, function(json) {
-                    $fx_dialog.open_dialog(
-                        json,
-                        {
-                            onfinish:function(res) {
-                                $fx.front.reload_layout(
-                                    function() {
-                                        if (!res.props || !res.props.infoblock_id) {
-                                            return;
-                                        }
-                                        var new_ib_node = $('.fx_infoblock_'+res.props.infoblock_id);
-                                        if (new_ib_node.length === 0) {
-                                            return;
-                                        }
-                                        $fx.front.select_item(new_ib_node.get(0));
-                                        var adders = new_ib_node.data('content_adders');
-                                        if (!adders || adders.length === 0 ){
-                                            return;
-                                        }
-                                        adders[0]();
-                                    }
-                                );
-                            }
-                        }
-                    );
                 });
             }
         });
