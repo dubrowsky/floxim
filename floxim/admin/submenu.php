@@ -225,9 +225,9 @@ class fx_admin_submenu {
             $this->title = $site['name'];
             $this->backlink = 'site.all';
 
-            //$this->menu[] = $this->add_node('sitemap-'.$site['id'], fx::lang('Site map','system'), 'site.map('.$site['id'].')');
             $this->menu[] = $this->add_node('sitesettings-'.$site['id'], fx::lang('Settings','system'), 'site.settings('.$site['id'].')');
             $this->menu[] = $this->add_node('sitedesign-'.$site['id'], fx::lang('Design','system'), 'site.design('.$site['id'].')');
+            $this->menu[] = $this->add_node('sitemap-'.$site['id'], fx::lang('Site map','system'), 'site.map('.$site['id'].')');
         }
     }
 

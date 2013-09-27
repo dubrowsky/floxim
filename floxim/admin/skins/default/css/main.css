@@ -195,6 +195,7 @@ input.ui-button {
     height: 34px;
     background-color: #272729;
     z-index: 2677;
+    min-width:750px;
 }
 
 #fx_admin_panel_logo {
@@ -1767,7 +1768,48 @@ a.fx_var_editable:focus, .fx_var_editable a:focus {
     width: 720px;
 }
 
-.fx_controller_select .fx_right_pane .sub {
+.fx_controller_select .fx_controller_list {
+    overflow: hidden;
+    height: 100px;
+    width:100%;
+    float:left;
+    position: relative;
+}
+
+.fx_controller_select .fx_controller_list .fx_controller_list_table {
+    position: absolute;
+    left:0;
+}
+
+.fx_controller_select .fx_scroll_left, .fx_controller_select .fx_scroll_right {
+    float:left;
+    width:40px;
+    height:100px;
+    text-align: center;
+    cursor:pointer;
+    position: absolute;
+    background: #FFF;
+    background: -webkit-linear-gradient(left, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 1) 30%, #FFF);
+    z-index: 2;
+    visibility:hidden;
+}
+
+.fx_controller_select .fx_scroll_right {
+    right:0px;
+}
+
+.fx_controller_select .fx_scroll_left {
+    background:-webkit-linear-gradient(left, #FFF, rgba(255, 255, 255, 1) 70%, rgba(255, 255, 255, 0.1));
+}
+
+.fx_controller_select .fx_scroll_left a, .fx_controller_select .fx_scroll_right a {
+    display: inline-block;
+    font-size:25px;
+    text-decoration: none;
+    margin-top:33px;
+}
+
+.fx_controller_select .sub {
     float: left;
     width: 190px;
     margin-right: 20px;
@@ -1780,17 +1822,17 @@ a.fx_var_editable:focus, .fx_var_editable a:focus {
     cursor: pointer;
 }
 
-.fx_controller_select .fx_right_pane .sub:hover {
+.fx_controller_select .sub:hover {
     border:1px solid #CCC;
 }
 
-.fx_controller_select .fx_right_pane .sub.fx_admin_selected,
-.fx_controller_select .fx_right_pane .sub.fx_admin_selected:hover {
+.fx_controller_select .sub.fx_admin_selected,
+.fx_controller_select .sub.fx_admin_selected:hover {
     background: #edf3f5;
     outline: none !important;
 }
 
-.fx_controller_select .fx_right_pane .sub .pic {
+.fx_controller_select .sub .pic {
     float:left;
     background:#CCC;
     width:30px;
@@ -1798,12 +1840,12 @@ a.fx_var_editable:focus, .fx_var_editable a:focus {
     margin-right:15px;
 }
 
-.fx_controller_select .fx_right_pane .sub .body {
+.fx_controller_select .sub .body {
     float:left;
     width:140px;
 }
 
-.fx_controller_select .fx_right_pane .sub .title {
+.fx_controller_select .sub .title {
     font-weight:bold;
     margin-bottom:5px;
 }
@@ -1844,8 +1886,26 @@ a.fx_var_editable:focus, .fx_var_editable a:focus {
 }
 
 
-#fx_admin_extra_panel form .field_text {
-    display:none;
+#fx_admin_extra_panel form .field_text .input_container {
+    overflow:hidden;
+    max-width:150px;
+    height:20px;
+}
+
+.fx_overlay .field_hidden {
+    display:none !important;
+}
+
+#fx_admin_extra_panel .redactor_toolbar {
+    left:0;
+    top:0;
+    border: none;
+    border-bottom: 1px solid #e1e1e1 !important;
+}
+
+#fx_admin_extra_panel .redactor_toolbar .redactor_separator {
+    border-right:none;
+    height:31px;
 }
 
 
@@ -1857,6 +1917,11 @@ a.fx_var_editable:focus, .fx_var_editable a:focus {
 #fx_admin_extra_panel .fx_admin_form .form_label {
     display:block;
     min-height:16px;
+}
+
+#fx_admin_extra_panel .livesearch_items {
+    width:auto;
+    max-width: 300px;
 }
 
 #fx_admin_extra_panel .fx_image_field img {
@@ -1952,4 +2017,8 @@ a.fx_var_editable:focus, .fx_var_editable a:focus {
     -ms-box-shadow: -3px 0px 6px rgba(50, 50, 50, 0.6);
     -o-box-shadow: -3px 0px 6px rgba(50, 50, 50, 0.6);
     box-shadow: -3px 0px 6px rgba(50, 50, 50, 0.6);
+}
+
+.fx_panel_text_expander {
+    cursor:pointer;
 }

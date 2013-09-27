@@ -120,7 +120,9 @@ class fx_controller_admin extends fx_controller {
             '/floxim/admin/js/menu/additional.js',
             '/floxim/admin/js/menu/breadcrumb.js',
             '/floxim/lib/editors/redactor/redactor.js',
-            '/floxim/lib/js/jquery.form.js'
+            '/floxim/lib/js/jquery.form.js',
+            '/floxim/lib/js/jquery.cookie.js',
+            '/floxim/lib/js/jquery.ba-resize.min.js'
         );
         $page = fx::page();
         
@@ -308,7 +310,6 @@ class fx_controller_admin_module extends fx_controller_admin {
         $module_keyword = str_replace('fx_controller_admin_module_', '', get_class($this));
         $this->response->submenu->set_menu('settings')->set_subactive('settings-'.$module_keyword);
         $this->response->breadcrumb->add_item( fx::lang('Configuring the','system') . ' ' . $module_keyword);
-        $this->response->add_form_button('save');
         $this->settings();
     }
 

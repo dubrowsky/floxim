@@ -18,20 +18,29 @@ fx_adminpanel = {
                 
             $fx.additional_menu = new fx_additional_menu();
             $fx.additional_menu.load();
-                              
             $(window).hashchange($fx.set_mode);
+            
             $(window).hashchange();
+            
+            if ($fx.mode === 'page') {
+                $fx.front = new fx_front();
+                var c_mode = $.cookie('fx_front_mode') || 'view';
+                $fx.front.load(c_mode);
+                //document.body.className = document.body.className.replace(/fx_mode_[^\s]+/, '');
+                //$(document.body).addClass('fx_mode_'+$fx.hash.join('_'));
+            }
+            
             $('html').on('click', '.fx_button', $fx.buttons.form_button_click);
             var ajax_counter = 0;
             $(document).ajaxSend(function() {
                 ajax_counter++;
-                if (ajax_counter == 1) {
+                if (ajax_counter === 1) {
                     $('.fx_preloader').css('visibility', 'visible');
                 }
             });
             $(document).ajaxComplete(function() {
                 ajax_counter--;
-                if (ajax_counter == 0) {
+                if (ajax_counter === 0) {
                     $('.fx_preloader').css('visibility', 'hidden');
                 }
             });
@@ -50,7 +59,7 @@ fx_adminpanel = {
         $fx.panel.trigger('fx.startsetmode');
             
         // admin
-        if ( $fx.mode == 'admin' ) {
+        if ( $fx.mode === 'admin' ) {
             if ( !$fx.admin ) {
                 $fx.admin = new fx_admin();
             }
@@ -60,14 +69,6 @@ fx_adminpanel = {
                 $fx.admin.set_action($fx.hash[len-1]);
             }
             $fx.admin.load();
-        }
-        else {
-            if ( !$fx.front) {
-                $fx.front = new fx_front();
-            }
-            $fx.front.load($fx.hash[1]);
-            document.body.className = document.body.className.replace(/fx_mode_[^\s]+/, '');
-            $(document.body).addClass('fx_mode_'+$fx.hash.join('_'));
         }
     },
         

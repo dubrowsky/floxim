@@ -5,6 +5,7 @@ class fx_router_infoblock extends fx_router {
             return null;
         }
         fx::env('page', $ib_info[2]);
+        fx::http()->status('200');
         $controller = fx::controller(
             'infoblock.render', 
             array(

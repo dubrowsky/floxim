@@ -172,7 +172,7 @@ fx_buttons.prototype.handle = function ( button ) {
             return false;
         }
     }
-    if (button === 'delete'){
+    if (button === 'delete' && confirm('Are you sure?')){
         var sel = $('.fx_admin_selected');
         if (sel.length === 0) {
             return;
@@ -269,7 +269,6 @@ fx_buttons.prototype.update_available_buttons = function () {
     var btn, selected = $('.fx_admin_selected', '#fx_admin_content');
     var len = selected.length;
 
-
     if ( !len ) {
         btn = [];
     } else if ( len === 1 ) {
@@ -288,5 +287,6 @@ fx_buttons.prototype.update_available_buttons = function () {
            }
         });
     }
+    console.log('sab', btn);
     $fx.buttons.set_active_buttons(btn);
 };

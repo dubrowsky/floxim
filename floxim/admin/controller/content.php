@@ -99,9 +99,16 @@ class fx_controller_admin_content extends fx_controller_admin {
 
     public function delete_save($input) {
         if (!isset($input['content_type']) || !isset($input['content_id'])) {
+            if (!isset($input['id']) || !is_numeric($input['id'])) {
+                return;
+            }
+            $content = fx::data('content', $input['id']);
+        } else {
+            $content = fx::data('content_'.$input['content_type'], $input['content_id']);
+        }
+        if (!$content) {
             return;
         }
-        $content = fx::data('content_'.$input['content_type'], $input['content_id']);
         $content->delete();
         return array('status' => 'ok');
     }
@@ -177,5 +184,3 @@ class fx_controller_admin_content extends fx_controller_admin {
 class fx_exception_controller_content extends fx_exception {
     
 }
-
-?>

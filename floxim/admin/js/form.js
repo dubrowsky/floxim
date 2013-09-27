@@ -50,6 +50,7 @@ fx_form = {
                     break;
             }
             var b = $t.jQuery('input', options);
+            b.data('key', options.key);
             $form_node.append(b);
             if (options.key === 'cancel') {
                 b.on('click', function() {
@@ -58,6 +59,10 @@ fx_form = {
             }
             if (options.is_submit) {
                 b.on('click', function() {
+                    $form_node.append(
+                        '<input type="hidden" name="pressed_button" '+
+                            ' value="'+$(this).data('key')+'" />'
+                    );
                     $form_node.submit();
                 });
                 if (!submit_added) {
@@ -70,7 +75,6 @@ fx_form = {
                 }
             }
         });
-        console.log(settings.form_button);
         $form_node.submit($fx_form.submit_handler);
     },
             
@@ -90,7 +94,9 @@ fx_form = {
                 status_block.writeError(data);
                 return false;
             }
-
+            
+            $form.trigger('fx_form_sent', data);
+            
             if ( data.status === 'ok') {
                 status_block.show();
                 status_block.writeOk( data.text ? data.text : 'Ok');
@@ -215,6 +221,9 @@ fx_form = {
                 });
             });
             node.trigger('change');
+        }
+        if (json.parent) {
+            this.add_parent_condition(json.parent, node, target);
         }
         return node;
     },

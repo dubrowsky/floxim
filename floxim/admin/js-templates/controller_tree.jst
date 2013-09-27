@@ -1,51 +1,65 @@
 <!--[input ? _c.type =='tree' && _c.name == 'controller']-->
 <div class="fx_controller_select">
-	<input type="hidden" <?=$t.field_id_name(_c)?> class="tree_value_input" />
-	<?
-	var children = _c.children || _c.values;
-	?>
-	<div class="fx_left_pane fx_tree">
-		<ul class="fx_tree_children fx_tree_children_expanded">
-			<?
-			for (var i = 0; i < children.length; i++){
-			var child = children[i];
-			?>
-			<li class="fx_tree_item" data-id="<?=child.metadata.id?>">
-				<div class="fx_tree_label">
-					<a class="fx_tree_title"><?=child.data?></a>
-				</div>
-			</li>
-			<?
-			}
-			?>
-		</ul>
-	</div>
-	<div class="fx_right_pane">
-		<?
-		for (var i = 0; i < children.length; i++){
-			var child = children[i];
-			?>
-			<div class="children children_<?=child.metadata.id?>" style="display:none;">
-				<?
-				var subs = child.children;
-				for (var j = 0; j < subs.length; j++) {
-					var sub = subs[j];
-					?>
-					<div class="sub" data-id="<?=sub.metadata.id?>">
-						<div class="pic"></div>
-						<div class="body">
-							<div class="title"><?=sub.data?></div>
-							<div class="description"><?=sub.metadata.description?></div>
-						</div>
-					</div>
-					<?
-				}
-				?>
-			</div>
-			<?
-		}
-		?>
-	</div>
+    <input type="hidden" <?=$t.field_id_name(_c)?> class="tree_value_input" />
+    <?
+    var children = _c.children || _c.values;
+    ?>
+    <div>
+        <span class="filter" data-filter="type">
+            Type: 
+            <select class="fx_controller_groups filter_type fx_input">
+                <option value="">-any-</option>
+                <?
+                $.each({content:'Content', mirror:'Mirror',widget:'Widget'}, function(i, child) {
+                    ?><option value="<?=i?>"><?=child?></option><?
+                });
+                ?>
+            </select>
+        </span>
+        <span class="filter" data-filter="controller">
+            Component:
+            <select class="fx_controller_groups fx_input">
+                <option value="">-any-</option>
+                <?
+                $.each(children, function(i, child) {
+                    ?><option value="<?=child.metadata.id?>"><?=child.data?></option><?
+                });
+                ?>
+            </select>
+        </span>
+    </div>
+    <div class="fx_scroll_left"><a>&laquo;</a></div>
+    <div class="fx_scroll_right"><a>&raquo;</a></div>
+    <div class="fx_controller_list">
+        <table class="fx_controller_list_table">
+        <tr>
+        <?
+        for (var i = 0; i < children.length; i++){
+            var child = children[i];
+            var subs = child.children;
+            for (var j = 0; j < subs.length; j++) {
+                var sub = subs[j];
+                ?>
+                <td>
+                <div 
+                    class="
+                        sub 
+                        controller_<?=child.metadata.id?> 
+                        type_<?=sub.metadata.type?>" data-id="<?=sub.metadata.id?>">
+                    <div class="pic"></div>
+                    <div class="body">
+                        <div class="title"><?=sub.data?></div>
+                        <div class="description"><?=sub.metadata.description?></div>
+                    </div>
+                </div>
+                </td>
+                <?
+            }
+        }
+        ?>
+        </tr>
+        </table>
+    </div>
 </div>
 
 <!--priority-->
@@ -55,38 +69,151 @@
 
 var dialog_buttons = null;
 setTimeout(function() {
-		dialog_buttons = html.closest('.ui-dialog').find('.ui-dialog-buttonset button:not(.fx_dialog_cancel_button)');
-		dialog_buttons.hide();
-		select_pane_item(html.find('.fx_left_pane .fx_tree_item').first());
+    select_controller_group();
+    recount_buttons();
 }, 100);
+$('table', html).css('border-collapse', 'collapse');
+$('td', html).css('padding', 0);
 
-function select_pane_item(node) {
-	node.closest('.fx_left_pane').find('.fx_admin_selected').removeClass('fx_admin_selected');
-	node.find('div').addClass('fx_admin_selected');
-	var nid = node.data('id');
-	html.find('.fx_right_pane .children').hide();
-	html.find('.children_'+nid).show();
-	if (html.find('.children_'+nid+' .fx_admin_selected').length) {
-		dialog_buttons.show();
-	} else {
-		dialog_buttons.hide();
-	}
+function select_controller_group() {
+    var subs = $('.sub', html);
+    subs.show();
+    var filter = {};
+    $('.filter', html).each(function() {
+        var filter = $(this).data('filter');
+        var filter_value = $(':input', this).val();
+        if (filter_value === '') {
+            return;
+        }
+        var selector = '.'+filter+'_'+filter_value;
+        subs.not(selector).hide();
+    });
+    $('.fx_controller_list_table').css('left', 0);
+    recount_buttons();
+    recount_scrollers();
+    return;
+    
+    
+    if (c_group === '') {
+        html.find('.fx_controller_list .children').show();
+    } else {
+        html.find('.fx_controller_list .children').hide();
+        html.find('.children_'+c_group).show();
+    }
+    
 }
-$('.fx_left_pane', html).on('click', '.fx_tree_item', function() {
-	select_pane_item($(this));
+
+function recount_buttons() {
+    var buttons = 
+            html
+            .closest('form')
+            .find('.fx_button')
+            .not('.fx_admin_button_cancel');
+    var selected = html.find('.sub.fx_admin_selected:visible');
+    if (selected.length === 0) {
+        buttons.hide();
+    } else {
+        buttons.first().click();
+    }
+}
+
+function recount_scrollers() {
+    var tb = $('.fx_controller_list_table').first();
+    var container = $('.fx_controller_list').first();
+    var tbo = tb.offset();
+    var co = container.offset();
+    var has_left = tbo.left < co.left;
+    var has_right = (tb.width() + tbo.left) > container.width();
+    var scl = $('.fx_scroll_left');
+    var scr = $('.fx_scroll_right');
+    scl.css('visibility', has_left ? 'visible' : 'hidden');
+    scr.css('visibility', has_right ? 'visible' : 'hidden');
+}
+
+function scroll_container(dir) {
+    var tb = $('.fx_controller_list_table').first();
+    var cl = parseInt(tb.css('left'));
+    var nl = 0;
+    var list_width = $('.fx_controller_list').width();
+    var step = Math.ceil(list_width / 2);
+    if (dir === 'right') {
+        nl = cl - step;
+    } else {
+        nl = cl + step;
+    }
+    tb.animate({left:nl+'px'}, function() {
+        recount_scrollers();
+    });
+    console.log('scrlng', list_width, cl, step);
+}
+
+$('.fx_scroll_left', html).on('click', function() {
+    scroll_container('left');
 });
 
-$('.fx_right_pane', html).on('click', '.sub', function() {
-	var sub = $(this);
-	var inp = html.find('.tree_value_input');
-	if (sub.hasClass('fx_admin_selected')) {
-		sub.removeClass('fx_admin_selected');
-		inp.val('');
-		dialog_buttons.hide();
-		return;
-	}
-	html.find('.fx_right_pane .fx_admin_selected').removeClass('fx_admin_selected');
-	sub.addClass('fx_admin_selected');
-	inp.val(sub.data('id'));
-	dialog_buttons.show();
+$('.fx_scroll_right', html).on('click', function() {
+    scroll_container('right');
 });
+
+$('.fx_controller_groups', html).on('change', function() {
+    select_controller_group();
+});
+
+
+$('.fx_controller_list', html).on('click', '.sub', function() {
+    var sub = $(this);
+    var inp = html.find('.tree_value_input');
+    if (sub.hasClass('fx_admin_selected')) {
+        sub.removeClass('fx_admin_selected');
+        inp.val('');
+        recount_buttons();
+        return;
+    }
+    html.find('.fx_controller_list .fx_admin_selected').removeClass('fx_admin_selected');
+    sub.addClass('fx_admin_selected');
+    inp.val(sub.data('id'));
+    recount_buttons();
+});
+
+<!--[input ? _c.type =='select' && _c.name == 'visual[wrapper]']-->
+<div class="visual_wrapper">
+    <?
+        var cnt = 0;
+        $.each(_c.values, function(i, v) {
+            ?><span style="border: <?=i === '' ? '2px solid #000' : '1px solid #CCC'?>;
+border-radius: 2px;
+padding: 2px 5px;
+margin-right: 5px; display:inline-block; cursor:pointer;"><?=i === '' ? 'none' : cnt?></span><?
+            cnt++;
+        });
+    ?>
+</div>
+
+<!--jquery-->
+setTimeout(function() {
+    var back = $t.jQuery('input', {type:'button',label:'&laquo; back',class:'cancel'});
+    back.on('click', function() {
+        console.log('ccc');
+        window.infoblock_back();
+    });
+    html.closest('form').find('.field:visible').first().before(back);
+}, 150);
+
+<!--priority-->
+2
+
+<!--[form_row ? _c.name == 'scope[page_id]']-->
+
+<div class="field">
+    <?=$t.label({label:'Where to show'})?>
+    <div class="input_container"><a>Specify infobock scope...</a></div>
+</div>
+
+<!--priority-->
+2
+
+<!--[form_row ? (_c.name == 'scope[pages]' || _c.name == 'scope[page_type]')]-->
+<div class="field field_hidden"></div>
+
+<!--priority-->
+2

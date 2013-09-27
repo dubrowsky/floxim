@@ -140,7 +140,7 @@ class fx_controller_admin_site extends fx_controller_admin {
         $fields[] = $this->ui->tree($this->_get_site_tree($site));
 
         $this->response->add_fields($fields);
-        $this->response->add_buttons("add,settings,on,off,delete");
+        $this->response->add_buttons("add,edit,settings,delete");
         $this->response->add_button_options('add', 'site_id='.$site['id']);
         $this->response->set_essence('content');
         $this->_set_layout('map', $site);
@@ -171,14 +171,19 @@ class fx_controller_admin_site extends fx_controller_admin {
         $infoblocks = fx::data('infoblock')->where('action', 'listing')->all();
         foreach ($content_blocks as $ib_id => $items) {
             $infoblock = $infoblocks->find_one('id', $ib_id);
-            $ib_name = $infoblock && $infoblock['name'] ? $infoblock['name'] : 'ib #'.$ib_id;
+            if (!$infoblock) {
+                $ib_name = '<span style="color:#F00;">ib #'.$ib_id.'</span>';
+            } else {
+                $ib_name = $infoblock['name'] ? $infoblock['name'] : 'ib #'.$ib_id;
+            }
             $type_result = array();
             foreach ($items as $item) {
                 $name = isset($item['name']) ? $item['name'] : $item['type'].' #'.$item['id'];
                 $item_res = array(
                     'data' => $name,
                     'metadata' => array(
-                        'id' => $item['id']
+                        'id' => $item['id'],
+                        'essence' => 'content'
                     )
                 );
                 if ($item['children']) {
@@ -190,7 +195,8 @@ class fx_controller_admin_site extends fx_controller_admin {
                 'data' => $ib_name,
                 'metadata' => array(
                     'id' => $ib_id,
-                    'is_groupper' => 1
+                    'is_groupper' => 1,
+                    'essence' => 'infoblock'
                 ),
                 'children' => $type_result
             );
@@ -256,62 +262,21 @@ class fx_controller_admin_site extends fx_controller_admin {
         }
 
         $fields = array(
-        	array(
-				'name' => 'layout_id',
-				'type' => 'select', 
-				'values' => $layouts_select,
-				'value' => $site['layout_id'],
-				'label' => fx::lang('Layout','system')
-			),
-			array(
-				'type' => 'hidden',
-				'name' => 'site_id',
-				'value' => $site_id
-			)
-		);
-
-		/*
-            foreach ($colors as $tpl_id => $color) {
-                if ($color) {
-                    $color_value = array();
-                    $color_value[0] = "По умолчанию";
-                    foreach ($color as $color_id => $v) {
-                        $color_value[$color_id] = $v['name'];
-                    }
-                    $fields[] = array(
-                        'label' => 'Расцветка',
-                        'name' => 'color',
-                        'type' => 'select',
-                        'value' => ($tpl_id == $site['template_id'] ? $site['color'] : 0 ),
-                        'values' => $color_value,
-                        'parent' => array('template_id', "$tpl_id"),
-                        'unactive' => true
-                    );
-                }
-            }
-         
-        $fields []= array(
-        	'type' => 'button',
-        	'label' => fx::lang('Preview','system'),
-        	'send_form' => true,
-        	'post' => array(
-        		'essence' => 'layout',
-        		'action' => 'set_preview',
-        		'posting' => false
-        	)
-        );
-
-        $fields []= array(
-            'type' => 'button',
-            'label' => 'Создать',
-            'send_form' => true,
-            'post' => array(
-                'essence' => 'layout',
-                'action' => 'add',
-                'posting' => false
+            array(
+                'name' => 'layout_id',
+                'type' => 'select', 
+                'values' => $layouts_select,
+                'value' => $site['layout_id'],
+                'label' => fx::lang('Layout','system')
+            ),
+            array(
+                'type' => 'hidden',
+                'name' => 'site_id',
+                'value' => $site_id
             )
         );
-        */
+        $fields[] = $this->ui->hidden('essence', 'site');
+        $fields[] = $this->ui->hidden('action', 'design_save');
         $this->response->add_fields($fields);
         
         $this->response->add_form_button('save');

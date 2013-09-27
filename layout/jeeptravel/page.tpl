@@ -81,9 +81,9 @@
 	                    fx:of="component_page.listing">
                         <div 
                             fx:each="$items"
-                            class="gallery_item {if $item_is_first} gallery_item_active{/if}">
+                            class="gallery_item {if $item_is_first} gallery_item_active{/if} slideid{$id}">
                             <img 
-                                src="{%bg_photo_$id}<?=$template_dir?>images/img01.jpg{/%}" 
+                                src="{%bg_photo_$id | 'width:1100,height:530,crop:middle'}<?=$template_dir?>images/img01.jpg{/%}" 
                                 alt="" />
                             <div class="slide-text active">
                                 <div class="slide-holder">
@@ -112,33 +112,13 @@
                         </div>
                         <div class="switcher">
                             <ul>
-                                <li fx:each="$items" {if $item_is_first}class="active"{/if}>
+                                <li fx:each="$items" class="{if $item_is_first}active{/if} slideid{$id}" data-slideid="{$id}">
                                     <a href="#" title="{$name}">{$item_index}</a>
                                 </li>
                             </ul>
                         </div>
                         <a href="#" class="btn-prev">previous</a>
                         <a href="#" class="btn-next">next</a>
-                    </div>
-                    <div 
-                        class="img-list" 
-                        fx:template="photo_listing" fx:of="component_photo.listing">
-                        <div class="images fx_not_sortable" fx:template="$items">
-                            <div 
-                                fx:template="item" 
-                                class="img-block {if $item_is_first}img-block-active{/if}">
-                                <img src="{$photo}" alt="{$description editable="false"}" />
-                                <span class="left">{$description}</span>
-                                <span class="right" fx:if="$copy">© {$copy}</span>
-                            </div>
-                        </div>
-                        <div class="img-slider" fx:template="$items">
-                            <div 
-                                fx:template="item" 
-                                class="preview{if $item_is_first} preview-active{/if}">
-                                <img src="{$photo|'h:100'}" />
-                            </div>
-                        </div>
                     </div>
                     <div 
                         class="places" 
@@ -154,7 +134,7 @@
                                 <li fx:template="item">
                                     <a href="{$url}">{$name}</a>
                                     <div fx:if="$cover">
-                                        <img src="{$cover|'w:110'}" alt="" />
+                                        <img src="{$cover|'width:110'}" alt="" />
                                     </div>
                                 </li>
                             </ul>
@@ -182,7 +162,7 @@
                                 extract($parent->get_fields_to_show());
                                 ?>
                                 <a href="{$url}">
-                                    <img src="{$photo | 'w:140,h:105'}" alt="" />
+                                    <img src="{$photo | 'width:140,height:100'}" alt="" />
                                 </a>
                                 <span>{$description}</span>
                             </li>

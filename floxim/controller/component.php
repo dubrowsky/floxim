@@ -216,6 +216,9 @@ class fx_controller_component extends fx_controller {
         $this->trigger('items_ready', $items);
         
 
+        if (count($items) == 0) {
+            $this->_meta['hidden'] = true;
+        }
         if (fx::env('is_admin') && $infoblock_id) {
             $c_ib_name = $c_ib->get_prop_inherited('name');
             $c_ib_name = $c_ib_name ? $c_ib_name : $c_ib['id'];
@@ -230,7 +233,6 @@ class fx_controller_component extends fx_controller {
             ));
             
             if (count($items) == 0) {
-                $this->_meta['hidden'] = true;
                 $this->_meta['hidden_placeholder'] = 'Infoblock "'.$c_ib_name.'" is empty. '.
                                                 'You can add '.$component['item_name'].' here';
             }
@@ -322,6 +324,7 @@ class fx_controller_component extends fx_controller {
                 $parent_id = $ib['page_id'];
                 break;
             case 'current_page_id':
+            default:
                 $parent_id = fx::env('page');
                 break;
             case 'custom':
