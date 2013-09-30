@@ -1889,7 +1889,7 @@ a.fx_var_editable:focus, .fx_var_editable a:focus {
 #fx_admin_extra_panel form .field_text .input_container {
     overflow:hidden;
     max-width:150px;
-    height:20px;
+    /*height:20px;*/
 }
 
 .fx_overlay .field_hidden {
