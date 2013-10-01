@@ -18,9 +18,7 @@ class fx_data_site extends fx_data {
         $res = false;
         $expected = false;
         $first = false;
-        dev_log('now ready');
         $sites = $this->all();
-        dev_log('gotta sites', $sites, $this->build_query());
         // поиск по доменом и зеркалам
         foreach ($sites as $site) {
             $domain = str_replace($replace, '', $site['domain']);

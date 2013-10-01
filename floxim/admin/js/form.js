@@ -255,13 +255,13 @@ fx_form = {
                 } else {
                     var par_val = par_inp.val();
                 }
-
+                
                 if (par_inp.attr('type') === 'radio') {
                     par_val = $(':input[name="'+pkey+'"]:checked').val();
                 }
                 switch (pexp) {
                     case '==':
-                        do_show = (par_val === pval);
+                        do_show = (par_inp.is(':visible') && par_val == pval);
                         break;
                     case '!=':
                         if (
@@ -293,7 +293,8 @@ fx_form = {
             parent_selector.push(':input[name="'+pkey+'"]');
         });
         parent_selector = parent_selector.join(', ', parent_selector);
-
+        console.log(parent_selector);
+        
         $(container).on('change', parent_selector, check_parent_state);
 
         setTimeout(function() {

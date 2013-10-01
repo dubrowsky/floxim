@@ -78,8 +78,11 @@ class fx_controller_component extends fx_controller {
     }
     
     public function get_action_settings_listing() {
-        $fields = $this->get_action_settings_list_common();
-        $fields = array_merge($fields,$this->get_action_settings_list_parent());
+        $fields = array_merge(
+            $this->get_action_settings_list_common(),
+            $this->get_action_settings_list_parent()
+        );
+        return $fields;
         /*
          * Ниже код, который добывает допустимые инфоблоки для полей-ссылок
          * и предлагает выбрать, откуда брать/куда добавлять значения-ссылки
