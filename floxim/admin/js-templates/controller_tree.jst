@@ -177,13 +177,13 @@ $('.fx_controller_list', html).on('click', '.sub', function() {
 
 <!--[input ? _c.type =='select' && _c.name == 'visual[wrapper]']-->
 <div class="visual_wrapper">
+    <input type="hidden" <?=$t.field_id_name(_c)?> value="<?=_c.value?>" />
     <?
         var cnt = 0;
         $.each(_c.values, function(i, v) {
-            ?><span style="border: <?=i === '' ? '2px solid #000' : '1px solid #CCC'?>;
-border-radius: 2px;
-padding: 2px 5px;
-margin-right: 5px; display:inline-block; cursor:pointer;"><?=i === '' ? 'none' : cnt?></span><?
+            ?><span 
+                class="variant<?=i === _c.value ? ' active' : ''?>" 
+                data-value="<?=i?>"><?=i === '' ? '-' : cnt?></span><?
             cnt++;
         });
     ?>
@@ -191,29 +191,22 @@ margin-right: 5px; display:inline-block; cursor:pointer;"><?=i === '' ? 'none' :
 
 <!--jquery-->
 setTimeout(function() {
+    var form = html.closest('form');
+    if ($('input[name="id"]').val().match(/[0-9]+/)) {
+        return;
+    }
     var back = $t.jQuery('input', {type:'button',label:'&laquo; back',class:'cancel'});
     back.on('click', function() {
-        console.log('ccc');
         window.infoblock_back();
     });
-    html.closest('form').find('.field:visible').first().before(back);
+    form.find('.field:visible').first().before(back);
 }, 150);
 
-<!--priority-->
-2
-
-<!--[form_row ? _c.name == 'scope[page_id]']-->
-
-<div class="field">
-    <?=$t.label({label:'Where to show'})?>
-    <div class="input_container"><a>Specify infobock scope...</a></div>
-</div>
-
-<!--priority-->
-2
-
-<!--[form_row ? (_c.name == 'scope[pages]' || _c.name == 'scope[page_type]')]-->
-<div class="field field_hidden"></div>
+html.on('click', '.variant', function() {
+    $('.variant', html).removeClass('active');
+    $(this).addClass('active');
+    $('input[type="hidden"]',html).val($(this).data('value')).trigger('change');
+});
 
 <!--priority-->
 2

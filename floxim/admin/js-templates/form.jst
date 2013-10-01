@@ -66,7 +66,8 @@ c_val = $t.clear(c_val);
 ?>
 <div class="fx_textarea_container">
 <?
-if (_c.context == 'panel') {
+var hide_in_panel = _c.context == 'panel' && _c.wysiwyg;
+if (hide_in_panel) {
     var $temp_container = $('<div />');
     $temp_container.html(_c.value);
     var text = $temp_container.text().replace(/^\s+/, '').slice(0, 20)+'...';
@@ -79,7 +80,7 @@ if (_c.context == 'panel') {
         _c.wysiwyg ? 'fx_wysiwyg' : 'fx_input'
         ?> <?=
         _c.code ? 'fx_code fx_code_'+_c.code : ''?>"
-    <?if (_c.context == 'panel') {?> style="display:none;"<?}?>
+    <?if (hide_in_panel) {?> style="display:none;"<?}?>
         ><?=c_val?></textarea>
 </div>
 

@@ -255,13 +255,13 @@ fx_form = {
                 } else {
                     var par_val = par_inp.val();
                 }
-
+                
                 if (par_inp.attr('type') === 'radio') {
                     par_val = $(':input[name="'+pkey+'"]:checked').val();
                 }
                 switch (pexp) {
                     case '==':
-                        do_show = (par_val === pval);
+                        do_show = (par_inp.is(':visible') && par_val == pval);
                         break;
                     case '!=':
                         if (
@@ -293,7 +293,8 @@ fx_form = {
             parent_selector.push(':input[name="'+pkey+'"]');
         });
         parent_selector = parent_selector.join(', ', parent_selector);
-
+        console.log(parent_selector);
+        
         $(container).on('change', parent_selector, check_parent_state);
 
         setTimeout(function() {
@@ -382,5 +383,23 @@ window.fx_form = window.$fx_form = fx_form;
                 $this.fadeOut('normal');
             }, 2000);
         });
+    };
+    
+    $.fn.serializeObject = function()
+    {
+        var o = {};
+        var a = this.serializeArray();
+        console.log('ser ar', a);
+        $.each(a, function() {
+            if (o[this.name] !== undefined) {
+                if (!o[this.name].push) {
+                    o[this.name] = [o[this.name]];
+                }
+                o[this.name].push(this.value || '');
+            } else {
+                o[this.name] = this.value || '';
+            }
+        });
+        return o;
     };
 })(jQuery);

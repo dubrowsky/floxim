@@ -3,7 +3,6 @@
         panel: null,
         second_row_height:37,
         show_form: function(data, params) {
-            console.log(data);
             this.prepare_form_data(data);
             this.panel = $('#fx_admin_extra_panel');
             this.stop();
@@ -20,7 +19,6 @@
                 $fx.front_panel.hide();
             });
             $form.on('fx_form_sent', function(e, data) {
-                console.log('form ok');
                 $fx.front_panel.hide();
                 if (params.onfinish) {
                     params.onfinish(data);
@@ -30,6 +28,9 @@
             $('#fx_admin_control .editor_panel').hide();
             setTimeout(function() {
                 $fx.front_panel.animate_panel_height();
+                if (params.onready) {
+                    params.onready($form);
+                }
                 $('form', p).resize(function() {
                     if ($fx.front_panel._is_moving) {
                         return;

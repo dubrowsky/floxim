@@ -63,8 +63,14 @@ class fx_lang {
         if (!file_exists(dirname($file))) {
             mkdir(dirname($file));
         }
+        $res = array();
+        foreach ($data as $s) {
+            $res[$s['string']] = $s['lang_'.$lang];        
+        }
+        
         $fh = fopen($file, 'w');
-        fputs($fh, "<?php\nreturn array(\n");
+        fputs($fh, "<?php\nreturn ".var_export($res,1).";?>");
+        /*
         foreach ($data as $s) {
             $key = str_replace('"', '\"', $s['string']);
             $val = str_replace('"', '\"', $s['lang_'.$lang]);
@@ -74,6 +80,7 @@ class fx_lang {
             );
         }
         fputs($fh, ");");
+        */
         fclose($fh);
     }
     

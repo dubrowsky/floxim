@@ -253,6 +253,7 @@ class fx_data {
     }
     
     public function add_related($rel_name, $essences, $rel_finder = null) {
+        //echo fx_debug('adding rel', 'bt5', $rel_name, $essences, $rel_finder);
         $relations = $this->relations();
         if (!isset($relations[$rel_name])) {
             return;
@@ -271,6 +272,7 @@ class fx_data {
                 $essences->attache($rel_items, $rel_field, $rel_name);
                 break;
             case self::HAS_MANY:
+                //echo fx_debug('has manu', $rel_finder);
                 $rel_items = $rel_finder->where($rel_field, $essences->get_values('id'))->all();
                 $essences->attache_many($rel_items, $rel_field, $rel_name);
                 break;
@@ -282,11 +284,23 @@ class fx_data {
                 // только с непустым полем, по которому связываем
                 $end_rel_data = $rel_finder->relations();
                 $end_rel_field = $end_rel_data[$end_rel][2];
-                $rel_finder->with($end_rel)->where($rel_field, $essences->get_values('id'));
+                
+                // $rel[4] - тип данных для many-many
+                $end_finder = null;
+                if (isset($rel[4])) {
+                    $end_rel_datatype = $rel[4];
+                    $end_finder = fx::data($end_rel_datatype);
+                }
+                
+                
+                $rel_finder
+                        ->with($end_rel, $end_finder)
+                        ->where($rel_field, $essences->get_values('id'));
                 if ($end_rel_field) {
                     $rel_finder->where($end_rel_field, 0, '!=');
                 }
-                $rel_items = $rel_finder->all();
+                $rel_items = $rel_finder->all()->find($end_rel, null, '!=');
+                //echo fx_debug($rel_items, $rel_finder);
                 $essences->attache_many($rel_items, $rel_field, $rel_name, 'id', $end_rel);
                 break;
         }

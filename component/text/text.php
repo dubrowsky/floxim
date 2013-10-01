@@ -1,7 +1,7 @@
 <?php
 class fx_controller_component_text extends fx_controller_component {
     public function get_action_settings($action) {
-        $fields = parent::get_action_settings_list_parent();
+        $fields = parent::_settings_list_parent();
         unset($fields['sorting']);
         unset($fields['parent_type']);
         unset($fields['parent_id']);

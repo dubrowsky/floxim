@@ -20,7 +20,7 @@ class fx_controller_component extends fx_controller {
     /*
      * Общие настройки для списков - mirror | listing
      */
-    public function get_action_settings_list_common() {
+    protected function _settings_list_common() {
         $fields = array();
         $fields['limit'] = array(
             'name' => 'limit',
@@ -57,7 +57,7 @@ class fx_controller_component extends fx_controller {
         return $fields;
     }
 
-    public function get_action_settings_list_parent()
+    protected function _settings_list_parent()
     {
         $fields['parent_type'] = array(
             'name' => 'parent_type',
@@ -78,8 +78,11 @@ class fx_controller_component extends fx_controller {
     }
     
     public function get_action_settings_listing() {
-        $fields = $this->get_action_settings_list_common();
-        $fields = array_merge($fields,$this->get_action_settings_list_parent());
+        $fields = array_merge(
+            $this->_settings_list_common(),
+            $this->_settings_list_parent()
+        );
+        return $fields;
         /*
          * Ниже код, который добывает допустимые инфоблоки для полей-ссылок
          * и предлагает выбрать, откуда брать/куда добавлять значения-ссылки

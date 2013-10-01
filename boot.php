@@ -3,7 +3,6 @@ define("FLOXIM", 1);
 require_once '_devlog/log.php';
 require_once 'floxim/system/config.php';
 require_once 'floxim/system/fx.php';
-dev_log('init');
 
 $config_res = @ include_once(dirname(__FILE__) ). '/config.php';
 if (!$config_res) {
@@ -20,5 +19,4 @@ session_start();
 fx::core();
 
 fx::env('site', fx::data('site')->get_by_host_name($_SERVER['HTTP_HOST'], 1));
-dev_log('site loaded');
 fx_content_user::attempt_to_authorize();
