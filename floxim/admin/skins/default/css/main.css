@@ -1896,6 +1896,19 @@ a.fx_var_editable:focus, .fx_var_editable a:focus {
     display:none !important;
 }
 
+.fx_overlay .visual_wrapper .variant {
+    border: 1px solid #CCC;
+    border-radius: 2px;
+    padding: 2px 5px;
+    margin-right: 5px; 
+    display:inline-block; 
+    cursor:pointer;
+}
+
+.fx_overlay .visual_wrapper .variant.active {
+    border:2px solid #000;
+}
+
 #fx_admin_extra_panel .redactor_toolbar {
     left:0;
     top:0;

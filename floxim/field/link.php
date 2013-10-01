@@ -136,7 +136,6 @@ class fx_field_link extends fx_field_baze {
             $entity = fx::data($entity_type)->create($entity_params);
             $entity_prop_name = $this['format']['prop_name'];
             $content[$entity_prop_name] = $entity;
-            dev_log($entity_params, $entity_type, $this, $entity);
             return false;
         }
         return parent::get_savestring();

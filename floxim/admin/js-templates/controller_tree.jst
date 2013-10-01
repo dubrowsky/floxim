@@ -177,13 +177,13 @@ $('.fx_controller_list', html).on('click', '.sub', function() {
 
 <!--[input ? _c.type =='select' && _c.name == 'visual[wrapper]']-->
 <div class="visual_wrapper">
+    <input type="hidden" <?=$t.field_id_name(_c)?> value="<?=_c.value?>" />
     <?
         var cnt = 0;
         $.each(_c.values, function(i, v) {
-            ?><span style="border: <?=i === '' ? '2px solid #000' : '1px solid #CCC'?>;
-border-radius: 2px;
-padding: 2px 5px;
-margin-right: 5px; display:inline-block; cursor:pointer;"><?=i === '' ? '-' : cnt?></span><?
+            ?><span 
+                class="variant<?=i === _c.value ? ' active' : ''?>" 
+                data-value="<?=i?>"><?=i === '' ? '-' : cnt?></span><?
             cnt++;
         });
     ?>
@@ -201,6 +201,12 @@ setTimeout(function() {
     });
     form.find('.field:visible').first().before(back);
 }, 150);
+
+html.on('click', '.variant', function() {
+    $('.variant', html).removeClass('active');
+    $(this).addClass('active');
+    $('input[type="hidden"]',html).val($(this).data('value')).trigger('change');
+});
 
 <!--priority-->
 2

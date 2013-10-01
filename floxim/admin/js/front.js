@@ -490,6 +490,27 @@ fx_front.prototype.select_infoblock = function(n) {
         }, {
             onfinish:function() {
                 $fx.front.reload_infoblock(ib_node);
+            },
+            onready:function($form) {
+                console.log('form ready');
+                $form.data('ib_node', ib_node);
+                $form.on('change', function() {
+                    console.log('form changed');
+                    if ($form.data('is_waiting')) {
+                        console.log('waiting');
+                        return;
+                    }
+                    $form.data('is_waiting', true);
+                    $fx.front.reload_infoblock(
+                        $form.data('ib_node'), 
+                        function($new_ib_node) {
+                            $form.data('ib_node', $new_ib_node);
+                            $form.data('is_waiting', false);
+                            console.log('reloaded', $new_ib_node);
+                        }, 
+                        {override_infoblock:$form.serialize()}
+                    );
+                });
             }
         });
         return;
@@ -696,13 +717,19 @@ fx_front.prototype.disable_infoblock = function(infoblock_node) {
     });
 };
 
-fx_front.prototype.reload_infoblock = function(infoblock_node, callback) {
+fx_front.prototype.reload_infoblock = function(infoblock_node, callback, extra_data) {
     var $infoblock_node = $(infoblock_node);
     $fx.front.disable_infoblock(infoblock_node);
     var ib_parent = $infoblock_node.parent();
     var meta = $infoblock_node.data('fx_infoblock');
     var page_id = $('body').data('fx_page_id');
+    var post_data = {c_url:document.location.href};
+    if (typeof extra_data !== 'undefined') {
+        $.extend(post_data, extra_data);
+    }
     $.ajax({
+        type:'post',
+        data:post_data,
        url:'/~ib/'+meta.id+'@'+page_id,
        success:function(res) {
            $infoblock_node.off('click.fx_fake_click').css({opacity:''});
@@ -727,7 +754,8 @@ fx_front.prototype.reload_infoblock = function(infoblock_node, callback) {
                $('body').trigger('fx_infoblock_loaded');
            } else {
                $infoblock_node.hide().before(res);
-               $infoblock_node.prev().trigger('fx_infoblock_loaded');
+               var $new_infoblock_node = $infoblock_node.prev();
+               $new_infoblock_node.trigger('fx_infoblock_loaded');
                $infoblock_node.remove();
            }
            if (selected_selector) {
@@ -742,7 +770,8 @@ fx_front.prototype.reload_infoblock = function(infoblock_node, callback) {
            }
            $fx.front.hilight();
            if (typeof callback === 'function') {
-               callback();
+               console.log('cbing', $new_infoblock_node.get(0));
+               callback($new_infoblock_node);
            }
        }
     });

@@ -30,8 +30,16 @@ class fx_controller_infoblock extends fx_controller {
         if (!is_array($params)) {
             $params = array();
         }
+        // override_infoblock - параметры для всего инфоблока, предпросмотр настроек
+        // override_params - параметры только контроллера
+        $ib_overs = $this->get_param('override_infoblock');
+        
         if ( ($override_params = $this->get_param('override_params'))) {
             $params = array_merge($params, $override_params);
+        }
+        
+        if (isset($ib_overs['params'])) {
+            $params = array_merge($params, $ib_overs['params']);
         }
         
         $params['ajax_mode'] = $this->get_param('ajax_mode');
@@ -61,10 +69,12 @@ class fx_controller_infoblock extends fx_controller {
         if (fx::dig($controller_meta, 'disabled')) { // !fx::is_admin()
             return;
         }
-        $tpl_params = array();
         $tpl = null;
         
-        if ( ($tpl_name = $infoblock->get_prop_inherited('visual.template'))) {
+        // берем шаблон для предпросмотра
+        if (isset($ib_overs['visual']['template'])) {
+            $tpl = fx::template($ib_overs['visual']['template']);
+        } elseif ( ($tpl_name = $infoblock->get_prop_inherited('visual.template'))) {
             if ($tpl_name != 'auto.auto') {
                 $tpl = fx::template($tpl_name);
             }
@@ -86,7 +96,11 @@ class fx_controller_infoblock extends fx_controller {
         $output = $tpl->render($tpl_params);
         $is_subroot = $tpl->is_subroot;
         
-        $wrapper = $infoblock->get_prop_inherited('visual.wrapper');
+        if (isset($ib_overs['visual']['wrapper'])) {
+            $wrapper = $ib_overs['visual']['wrapper'];
+        } else {
+            $wrapper = $infoblock->get_prop_inherited('visual.wrapper');
+        }
         
         if ($wrapper) {
             $tpl_wrap = fx::template($wrapper);
@@ -104,8 +118,8 @@ class fx_controller_infoblock extends fx_controller {
         if (fx::env('is_admin')) {
             $output = $this->_add_infoblock_meta($output, $infoblock, $controller_meta, $is_subroot);
         }
-        $output = $controller->postprocess($output);
-        return $output;
+        $processed_output = $controller->postprocess($output);
+        return $processed_output;
     }
     
     /**
