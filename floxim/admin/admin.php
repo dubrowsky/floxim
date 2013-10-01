@@ -60,6 +60,11 @@ class fx_controller_admin extends fx_controller {
                 $this->response->to_array()
             );
         }
+        // force numeric indexes for fields to preserve order
+        if (isset($result['fields']) && is_array($result['fields'])) {
+            $result['fields'] = array_values($result['fields']);
+        }
+        
         if ($this->process_do_return) {
             return $result;
         }
