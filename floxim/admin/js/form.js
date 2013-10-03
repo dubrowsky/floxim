@@ -293,8 +293,7 @@ fx_form = {
             parent_selector.push(':input[name="'+pkey+'"]');
         });
         parent_selector = parent_selector.join(', ', parent_selector);
-        console.log(parent_selector);
-        
+
         $(container).on('change', parent_selector, check_parent_state);
 
         setTimeout(function() {

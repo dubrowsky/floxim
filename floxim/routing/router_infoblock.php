@@ -1,7 +1,7 @@
 <?
 class fx_router_infoblock extends fx_router {
     public function route($url = null, $context = null) {
-        if (!preg_match("~^/\~ib/(\d+)@(\d+)$~", $url, $ib_info)) {
+        if (!preg_match("~^/\~ib/(\d+|fake)@(\d+)$~", $url, $ib_info)) {
             return null;
         }
         if (isset($_POST['c_url'])) {

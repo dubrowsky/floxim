@@ -17,6 +17,9 @@
             var $form = $('form', p);
             $form.on('fx_form_cancel', function() {
                 $fx.front_panel.hide();
+                if (params.oncancel) {
+                    params.oncancel();
+                }
             });
             $form.on('fx_form_sent', function(e, data) {
                 $fx.front_panel.hide();
@@ -49,7 +52,6 @@
                     panel_height = this.second_row_height;
                 }
             }
-            console.log('phe', panel_height);
             var body_default_margin = $('body').data('fx_default_margin');
             if (!body_default_margin) {
                 body_default_margin = parseInt($('body').css('margin-top'));
@@ -98,7 +100,6 @@
         },
         prepare_form_data: function(data) {
             $.each(data.fields, function(key, field) {
-                //console.log('fk', key, field);
                 field.context = 'panel';
             });
         }

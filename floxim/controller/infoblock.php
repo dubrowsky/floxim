@@ -10,6 +10,11 @@ class fx_controller_infoblock extends fx_controller {
             return $ib;
         }
         if (($infoblock_id = $this->get_param('infoblock_id'))) {
+            if ($infoblock_id === 'fake') {
+                $ib = fx::data('infoblock')->create();
+                $ib['id'] = 'fake';
+                return $ib;
+            }
             return fx::data('infoblock', $infoblock_id);
         }
         return null;
@@ -46,6 +51,19 @@ class fx_controller_infoblock extends fx_controller {
         
         if (!isset($params['infoblock_id'])) {
             $params['infoblock_id'] = $infoblock['id'];
+        }
+        
+        
+        if ($infoblock['id'] === 'fake'){
+            $params['is_fake'] = true;
+            
+            list(
+                    $infoblock['controller'], 
+                    $infoblock['action']
+                ) = explode(".", $ib_overs['controller']);
+            
+            $infoblock['scope'] = $ib_overs['scope'];
+            $infoblock['page_id'] = $ib_overs['page_id'];
         }
         
         $controller = fx::controller(
@@ -185,6 +203,7 @@ class fx_controller_infoblock extends fx_controller {
     }
     
     protected function _get_infoblock_scope_name(fx_infoblock $infoblock) {
+        dev_log('ib scoping', $infoblock);
         $ib_controller = $infoblock->get_prop_inherited('controller');
         $ib_action = $infoblock->get_prop_inherited('action');
         if ($ib_controller == 'layout' && $ib_action == 'show') {

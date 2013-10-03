@@ -77,7 +77,7 @@ class fx_controller_component extends fx_controller {
         return $fields;
     }
     
-    public function get_action_settings_listing() {
+    public function settings_listing() {
         $fields = array_merge(
             $this->_settings_list_common(),
             $this->_settings_list_parent()
@@ -191,6 +191,21 @@ class fx_controller_component extends fx_controller {
             )
         );
     }
+    
+    protected function _list() {
+        $f = $this->_get_finder();
+        $this->trigger('query_ready', $f);
+        $items = $f->all();
+        if (count($items) === 0) {
+            $this->_meta['hidden'] = true;
+        }
+        $this->trigger('items_ready', $items);
+        $res = array('items' => $items);
+        if ( ($pagination = $this->_get_pagination()) ) {
+            $res ['pagination'] = $pagination;
+        }
+        return $res;
+    }
 
     public function do_listing() {
         $f = $this->_get_finder();
@@ -198,7 +213,7 @@ class fx_controller_component extends fx_controller {
         $content_type = $this->get_content_type();
         if ( ($infoblock_id = $this->get_param('infoblock_id'))) {
             $c_ib = fx::data('infoblock', $infoblock_id);
-            if (!$this->get_param('skip_infoblock_filter')) {
+            if ($c_ib && !$this->get_param('skip_infoblock_filter')) {
                 $f->where('infoblock_id', $c_ib->get_root_infoblock()->get('id'));
             }
         }
@@ -215,14 +230,23 @@ class fx_controller_component extends fx_controller {
             }
         }
         $this->trigger('query_ready', $f);
+        if ($this->get_param('is_fake')) {
+            // dirty hack
+            $f->where('id', -1);
+        }
         $items = $f->all();
         $this->trigger('items_ready', $items);
         
+        if ($this->get_param('is_fake')) {
+            foreach (range(0, 3) as $cnt) {
+                $items[]= $f->fake();
+            }
+        }
 
         if (count($items) == 0) {
             $this->_meta['hidden'] = true;
         }
-        if (fx::env('is_admin') && $infoblock_id) {
+        if (fx::env('is_admin') && $c_ib) {
             $c_ib_name = $c_ib->get_prop_inherited('name');
             $c_ib_name = $c_ib_name ? $c_ib_name : $c_ib['id'];
             $component = fx::data('component', $content_type);

@@ -148,8 +148,8 @@ class fx_controller {
     }
     
     public function get_action_settings($action) {
-        if (method_exists($this, 'get_action_settings_'.$action)) {
-            return call_user_func(array($this, 'get_action_settings_'.$action));
+        if (method_exists($this, 'settings_'.$action)) {
+            return call_user_func(array($this, 'settings_'.$action));
         }
         return array();
     }

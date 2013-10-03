@@ -258,6 +258,17 @@ class fx_content extends fx_essence {
             
             switch ($relation[0]) {
                 case fx_data::HAS_MANY:
+                    $old_data = isset($this->modified_data[$link_field['name']]) ? 
+                        $this->modified_data[$link_field['name']] :
+                        new fx_collection();
+                    foreach ($val as $linked_item) {
+                        $linked_item[$related_field_name] = $this['id'];
+                        $linked_item->save();
+                    }
+                    $old_data->find_remove('id', $val->get_values('id'));
+                    $old_data->apply(function($i) {
+                        $i->delete();
+                    });
                     break;
                 case fx_data::MANY_MANY:
                     $old_linkers = isset($this->modified_data[$link_field['name']]->linker_map) ? 
@@ -356,6 +367,14 @@ class fx_content extends fx_essence {
             }
         }
         
+    }
+    
+    public function fake() {
+        $fields = $this->get_fields();
+        foreach ($fields as $f) {
+            $this[$f['name']] = $f->fake_value();
+        }
+        //echo fx_debug($fields);
     }
 }
 

@@ -37,7 +37,7 @@ class fx_component extends fx_essence {
             $res = false;
         }
 
-        if ($this['keyword'] && !preg_match("/^[a-z][a-z0-9-]*$/i", $this['keyword'])) {
+        if ($this['keyword'] && !preg_match("/^[a-z][a-z0-9_-]*$/i", $this['keyword'])) {
             $this->validate_errors[] = array('field' => 'keyword', 'text' => fx::lang('Keyword can only contain letters, numbers, symbols, "hyphen" and "underscore"','system'));
             $res = false;
         }
