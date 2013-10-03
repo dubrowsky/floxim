@@ -77,7 +77,7 @@ class fx_controller_component extends fx_controller {
         return $fields;
     }
     
-    public function get_action_settings_listing() {
+    public function settings_listing() {
         $fields = array_merge(
             $this->_settings_list_common(),
             $this->_settings_list_parent()
@@ -190,6 +190,21 @@ class fx_controller_component extends fx_controller {
                 'pages' => 'this'
             )
         );
+    }
+    
+    protected function _list() {
+        $f = $this->_get_finder();
+        $this->trigger('query_ready', $f);
+        $items = $f->all();
+        if (count($items) === 0) {
+            $this->_meta['hidden'] = true;
+        }
+        $this->trigger('items_ready', $items);
+        $res = array('items' => $items);
+        if ( ($pagination = $this->_get_pagination()) ) {
+            $res ['pagination'] = $pagination;
+        }
+        return $res;
     }
 
     public function do_listing() {

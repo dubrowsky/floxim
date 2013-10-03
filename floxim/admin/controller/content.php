@@ -38,6 +38,7 @@ class fx_controller_admin_content extends fx_controller_admin {
 
         if ($input['data_sent']) {
             $content->set_field_values($input['content']);
+            dev_log('saving', $content);
             $content->save();
         }
         //$this->response->add_form_button('save');
@@ -117,12 +118,15 @@ class fx_controller_admin_content extends fx_controller_admin {
         if (!isset($input['content_type'])) {
             return;
         }
-        $finder = fx::data($input['content_type'])->where('site_id', fx::env('site')->get('id'));
+        $content_type = $input['content_type'];
+        $finder = fx::data($content_type);
+        if ($content_type !== 'content_user'){
+            $finder->where('site_id', fx::env('site')->get('id'));
+        }
         if (isset($input['skip_ids']) && is_array($input['skip_ids'])) {
             $finder->where('id', $input['skip_ids'], 'NOT IN');
         }
-        $term = $_POST['term'];
-        $term = explode(" ", $term);
+        $term = explode(" ", $_POST['term']);
         if (count($term) > 0) {
             foreach ($term as $tp) {
                 $finder->where('name', '%'.$tp.'%', 'LIKE');

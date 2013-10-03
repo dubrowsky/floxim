@@ -41,7 +41,11 @@ class fx_field_multilink extends fx_field_baze {
             }
             $this->_js_field['values'] = array();
             if (isset($content[$this['name']])) {
-                $linkers = $content[$this['name']]->linker_map;
+                if ($rel[0] === fx_data::HAS_MANY) {
+                    $linkers = $content[$this['name']];
+                } else {
+                    $linkers = $content[$this['name']]->linker_map;
+                }
                 foreach ($linkers as $linker) {
                     $linker_fields = $linker->get_form_fields();
                     $val_array = array('_index' => $linker['id']);

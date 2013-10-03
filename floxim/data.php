@@ -207,7 +207,7 @@ class fx_data {
         $res = fx::db()->get_results($query);
 
         if (fx::db()->is_error()) {
-            throw new Exception("SQL ERROR ".fx::db()->debug());
+            throw new Exception("SQL ERROR");
         }
         
         if ($this->calc_found_rows) {
