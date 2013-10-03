@@ -44,11 +44,12 @@ class fx_controller_admin_site extends fx_controller_admin {
     public function add($input) {
         $fields = array();
 
-        $fields[] = $this->ui->hidden('action', 'add');
+        $fields[] = $this->ui->hidden('action', 'add_save');
+        $fields[] = $this->ui->hidden('essence', 'site');
         $fields[] = $this->ui->input('name', fx::lang('Site name','system'), fx::lang('Add new site','system'));
         $fields[] = $this->ui->input('domain', fx::lang('Domain','system'), fx::lang('Domain','system'));
         
-        $fields[] = $this->ui->hidden('posting');
+        //$fields[] = $this->ui->hidden('posting');
         $this->response->add_fields($fields);
         $this->response->dialog->set_title( fx::lang('Create a new site','system') );
         $this->response->breadcrumb->add_item( 
