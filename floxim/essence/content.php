@@ -251,6 +251,7 @@ class fx_content extends fx_essence {
             $this->get_fields()->
             find('name', $this->modified)->
             find('type', fx_field::FIELD_MULTILINK);
+        dev_log('saving multi', $link_fields);
         foreach ($link_fields as $link_field) {
             $val = $this[$link_field['name']];
             $relation = $link_field->get_relation();
@@ -258,6 +259,18 @@ class fx_content extends fx_essence {
             
             switch ($relation[0]) {
                 case fx_data::HAS_MANY:
+                    $old_data = isset($this->modified_data[$link_field['name']]) ? 
+                        $this->modified_data[$link_field['name']] :
+                        new fx_collection();
+                    dev_log($old_data, $val);
+                    foreach ($val as $linked_item) {
+                        $linked_item[$related_field_name] = $this['id'];
+                        $linked_item->save();
+                    }
+                    $old_data->find_remove('id', $val->get_values('id'));
+                    $old_data->apply(function($i) {
+                        $i->delete();
+                    });
                     break;
                 case fx_data::MANY_MANY:
                     $old_linkers = isset($this->modified_data[$link_field['name']]->linker_map) ? 
