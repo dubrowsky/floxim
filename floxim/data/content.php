@@ -314,5 +314,12 @@ class fx_data_content extends fx_data {
         $ss = $this->_set_statement($data);
         return $ss;//[$table];
     }
+    
+    public function fake($props = array()) {
+        $content = $this->create();
+        $content->fake();
+        $content->set($props);
+        return $content;
+    }
 }
 ?>

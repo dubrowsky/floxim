@@ -180,5 +180,29 @@ class fx_field extends fx_essence {
         $field = new $classname();
         return $field->get_sql_type();
     }
+    
+    public function fake_value() {
+        $c_type = preg_replace("~\(.+?\)~", '', $this->get_sql_type());
+        $val = '';
+        //echo $this['name'].' - '.$c_type."<br />";
+        switch ($c_type) {
+            case 'TEXT': case 'VARCHAR':
+                $val = $this['description'];
+                break;
+            case 'INT': case 'TINYINT': case 'FLOAT':
+                $val = rand(0, 1000);
+                break;
+            case 'DATETIME':
+                $val = date('r');
+                break;
+        }
+        if ($this->type === 'image') {
+            $val = fx::db()->get_var('SELECT id FROM {{filetable}} WHERE path LIKE "%.jpg" ORDER BY RAND()', 0);
+            
+        }
+        //echo fx_debug($this);
+        //echo $val."<br />";
+        return $val;
+    }
 
 }
