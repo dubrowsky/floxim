@@ -320,7 +320,6 @@ class fx_field_multilink extends fx_field_baze {
                 $linked_item = fx::data($first_data_type)->create();
                 $linked_item['infoblock_id'] = $linker_infoblock_id;
             }
-            dev_log($rel, $linked_item, $item_props);
             $linked_item->set_field_values($item_props);
             if ($is_mm) {
                 $new_value[]= $linked_item[$rel[3]];

@@ -222,20 +222,34 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         }
         //$this->response->add_fields($scope_fields, $scope_tab ? 'scope' : false, 'scope');
         $this->response->add_fields($scope_fields, false, 'scope');
+        if ($is_layout) {
+            $this->response->add_field(array(
+               'type' => 'bool',
+                'name' => 'create_inherited',
+                'label' => 'Create inherited'
+            ));
+            if ($infoblock['parent_infoblock_id']) {
+                $this->response->add_field(array(
+                   'type' => 'bool',
+                    'name' => 'delete_inherited',
+                    'label' => 'Delete inherited'
+                ));
+            }
+        }
         
         if ($input['settings_sent'] == 'true') {
             if ($is_layout) {
                 $this->response->set_reload(true);
             }
             if (
-                    $input['fx_dialog_button'] == 'inherit_delete' && 
+                    $input['delete_inherited'] && 
                     $infoblock['parent_infoblock_id'] != 0
                 ) {
                 $infoblock->delete();
                 $this->response->set_status_ok();
                 return;
             }
-            $inherit_mode = $input['fx_dialog_button'] == 'inherit';
+            $inherit_mode = $input['create_inherited'];
             
             
             if ($inherit_mode) {
