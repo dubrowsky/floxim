@@ -299,15 +299,19 @@ class fx_content extends fx_essence {
      * Получить id инфоблока, куда добавлять новые связанные объекты по полю $link_field
      */
     public function get_link_field_infoblock($link_field_id) {
-        $linker_infoblock_id = null;
-        $link_field = fx::data('field', $link_field_id);
-        $related_component = $link_field->get_related_component();
-        
         // инфоблок, где живем мы сами
         $our_infoblock = fx::data('infoblock', $this['infoblock_id']);
+        return $our_infoblock['params']['field_'.$link_field_id.'_infoblock'];
+        
+        $link_field = fx::data('field', $link_field_id);
+        
+        $com_keyword = $link_field->get_related_component()->get('keyword');
+        
+        //$related_component = $link_field->get_related_component();
+        
+        
 
         // достаем значение поля настроек листинга "инфоблок для поля тагпосты"
-        $c_infoblock_id = $our_infoblock['params']['field_'.$link_field['id'].'_infoblock'];
         if ($c_infoblock_id) {
             $linker_infoblock_id = $c_infoblock_id;
         } 

@@ -305,6 +305,7 @@ class fx_field_multilink extends fx_field_baze {
                 if (!$linker_infoblock_id) {
                     $linker_infoblock_id = $content->get_link_field_infoblock($this['id']);
                 }
+                $linked_item = fx::data($first_data_type)->create();
                 if ($is_mm && $end_data_type) {
                     // Находим название для поля, например "tag_id"
                     // что-то страшненько...
@@ -315,12 +316,14 @@ class fx_field_multilink extends fx_field_baze {
                         });
                     if ($end_link_field) {
                         $item_props['f_'.$end_link_field['name']]['type'] = $end_data_type;
+                        $item_props['f_'.$end_link_field['name']]['infoblock_id'] = $linker_infoblock_id;
                     }
+                } else {
+                    $linked_item['infoblock_id'] = $linker_infoblock_id;
                 }
-                $linked_item = fx::data($first_data_type)->create();
-                $linked_item['infoblock_id'] = $linker_infoblock_id;
             }
             $linked_item->set_field_values($item_props);
+            dev_log($linked_item);
             if ($is_mm) {
                 $new_value[]= $linked_item[$rel[3]];
                 $new_value->linker_map []= $linked_item;
@@ -348,9 +351,17 @@ class fx_field_multilink extends fx_field_baze {
      */
     public function get_related_component() {
         $rel = $this->get_relation();
+        switch ($rel[0]) {
+            case fx_data::HAS_MANY:
+                $content_type = $rel[1];
+                break;
+            case fx_data::MANY_MANY:
+                $content_type = $rel[4];
+                break;
+        }
         return fx::data(
                 'component', 
-                preg_replace("~^content_~", '', $rel[1])
+                preg_replace("~^content_~", '', $content_type)
         );
     }
     

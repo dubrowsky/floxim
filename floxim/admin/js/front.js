@@ -223,7 +223,6 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
                                 );
                             },
                             onready:function($form) {
-                                console.log('form ready', $form);
                                 var back = $t.jQuery(
                                     'input', 
                                     {type:'button',label:'&laquo; back',class:'cancel'}
@@ -233,7 +232,7 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
                                     $('.fx_infoblock_fake').remove();
                                 });
                                 var first_field = $form.find('.field:visible').first();
-                                //console.log($form, back, first_field);
+                                
                                 first_field.before(back);
                                 
                                 // creating infoblock preview
@@ -533,12 +532,9 @@ fx_front.prototype.select_infoblock = function(n) {
                 $fx.front.reload_infoblock(ib_node);
             },
             onready:function($form) {
-                console.log('form ready');
                 $form.data('ib_node', ib_node);
                 $form.on('change', function() {
-                    console.log('form changed');
                     if ($form.data('is_waiting')) {
-                        console.log('waiting');
                         return;
                     }
                     $form.data('is_waiting', true);
@@ -547,7 +543,6 @@ fx_front.prototype.select_infoblock = function(n) {
                         function($new_ib_node) {
                             $form.data('ib_node', $new_ib_node);
                             $form.data('is_waiting', false);
-                            console.log('reloaded', $new_ib_node);
                         }, 
                         {override_infoblock:$form.serialize()}
                     );
@@ -762,7 +757,6 @@ fx_front.prototype.reload_infoblock = function(infoblock_node, callback, extra_d
     var $infoblock_node = $(infoblock_node);
     $fx.front.disable_infoblock(infoblock_node);
     var ib_parent = $infoblock_node.parent();
-    console.log('reloading', $infoblock_node);
     var meta = $infoblock_node.data('fx_infoblock');
     var page_id = $('body').data('fx_page_id');
     var post_data = {c_url:document.location.href};
@@ -798,7 +792,6 @@ fx_front.prototype.reload_infoblock = function(infoblock_node, callback, extra_d
                $infoblock_node.hide().before(res);
                var $new_infoblock_node = $infoblock_node.prev();
                $new_infoblock_node.trigger('fx_infoblock_loaded');
-               console.log('removng', $infoblock_node);
                $infoblock_node.remove();
            }
            if (selected_selector) {

@@ -85,7 +85,7 @@
             $fx.post(
                 form_options, 
                 function(json) {
-                    $fx.front_panel.show_form(json, params)
+                    $fx.front_panel.show_form(json, params);
                 }
             );
         },
