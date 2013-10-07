@@ -186,8 +186,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                         'label' => fx::lang('Block name','system'),
                         'name' => 'name', 
                         'value' => $infoblock['name']
-                    )),
-                    'settings'
+                    ))
             );
             //$this->response->add_fields($settings, 'settings', 'params');
             $this->response->add_fields($settings, false, 'params');

@@ -130,7 +130,6 @@ fx_adminpanel = {
           
     key_down: function ( e ) {
         if ( e.keyCode == 46 ) {
-            console.log('delete click handled');
             e.stopPropagation();
         }
 
@@ -201,21 +200,13 @@ fx_adminpanel = {
             dataType: "JSON",
             //async: false,
             success: [function(json) {
-				if (json.reload) {
-					$fx.reload(json.reload);
-					return;
-				}
-                /*
-				if ( json.history !==  undefined && json.history.undo  !==  undefined ) {
-					$fx.history.undo = json.history.undo;
-				}
-				if ( json.history !==  undefined && json.history.redo  !==  undefined ) {
-					$fx.history.redo = json.history.redo;
-				}
-				$fx.update_history();
-                */
-            },
-            callback],
+                        if (json.reload) {
+                                $fx.reload(json.reload);
+                                return;
+                        }
+                    },
+                    callback
+            ],
             error: function(jqXHR, textStatus, errorThrown) {
                 if ( textStatus == 'parsererror') {
                     $fx.show_status_text( fx_lang('Ошибка сервера:') + jqXHR.responseText, 'error');

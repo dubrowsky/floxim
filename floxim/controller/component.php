@@ -82,7 +82,7 @@ class fx_controller_component extends fx_controller {
             $this->_settings_list_common(),
             $this->_settings_list_parent()
         );
-        return $fields;
+        //return $fields;
         /*
          * Ниже код, который добывает допустимые инфоблоки для полей-ссылок
          * и предлагает выбрать, откуда брать/куда добавлять значения-ссылки
@@ -95,13 +95,20 @@ class fx_controller_component extends fx_controller {
                             find('type_of_edit', fx_field::EDIT_NONE, fx_collection::FILTER_NEQ);
         
         foreach ($link_fields as $lf) {
+            //dev_log('lf', $lf);
+            //continue;
             if ($lf['type'] == fx_field::FIELD_LINK) {
                 $target_com_id = $lf['format']['target'];
             } else {
-                $target = explode(".", $lf['format']['target']);
-                $target_com_id = fx::data('field', $target[0])->get('component_id');
+                $target_com_id = isset($lf['format']['mm_datatype']) 
+                                    ? $lf['format']['mm_datatype']
+                                    : $lf['format']['linking_datatype'];
             }
             $target_com = fx::data('component', $target_com_id);
+            if (!$target_com) {
+                dev_log('no tcom', $lf);
+                continue;
+            }
             $com_infoblocks = fx::data('infoblock')->
                     where('site_id', fx::env('site')->get('id'))->
                     get_content_infoblocks($target_com['keyword']);
@@ -110,8 +117,11 @@ class fx_controller_component extends fx_controller {
                 'type' => 'select',
                 'values' => $ib_values,
                 'name' => 'field_'.$lf['id'].'_infoblock',
-                'label' => fx::lang('Infoblock for the field', 'controller_component').$lf['description']
+                'label' => 
+                    fx::lang('Infoblock for the field', 'controller_component')
+                    .' "'.$lf['description'].'"'
             );
+            dev_log($lf);
         }
         return $fields;
     }

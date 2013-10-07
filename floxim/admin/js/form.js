@@ -84,7 +84,7 @@ fx_form = {
         $(".ui-state-error").removeClass("ui-state-error");
         
         $form.trigger('fx_form_submit');
-
+        
         $form.ajaxSubmit(function ( data ) {
             try {
                 data = $.parseJSON( data );
@@ -94,7 +94,6 @@ fx_form = {
                 status_block.writeError(data);
                 return false;
             }
-            
             $form.trigger('fx_form_sent', data);
             
             if ( data.status === 'ok') {
@@ -382,23 +381,5 @@ window.fx_form = window.$fx_form = fx_form;
                 $this.fadeOut('normal');
             }, 2000);
         });
-    };
-    
-    $.fn.serializeObject = function()
-    {
-        var o = {};
-        var a = this.serializeArray();
-        console.log('ser ar', a);
-        $.each(a, function() {
-            if (o[this.name] !== undefined) {
-                if (!o[this.name].push) {
-                    o[this.name] = [o[this.name]];
-                }
-                o[this.name].push(this.value || '');
-            } else {
-                o[this.name] = this.value || '';
-            }
-        });
-        return o;
     };
 })(jQuery);

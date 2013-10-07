@@ -124,7 +124,10 @@ class fx_field_link extends fx_field_baze {
     public function get_savestring($content) {
         if (is_array($this->value) && isset($this->value['title'])) {
             $title = $this->value['title'];
-            $entity_infoblock_id = $content->get_link_field_infoblock($this['id']);
+            $entity_infoblock_id = 
+                    isset($this->value['infoblock_id']) 
+                    ? $this->value['infoblock_id']
+                    : $content->get_link_field_infoblock($this['id']);
             $entity_infoblock = fx::data('infoblock', $entity_infoblock_id);
             $rel = $this->get_relation();
             $entity_params = array(
@@ -136,6 +139,7 @@ class fx_field_link extends fx_field_baze {
             $entity = fx::data($entity_type)->create($entity_params);
             $entity_prop_name = $this['format']['prop_name'];
             $content[$entity_prop_name] = $entity;
+            dev_log('link', $this, $content);
             return false;
         }
         return parent::get_savestring();
