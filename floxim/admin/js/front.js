@@ -40,6 +40,9 @@ var fx_front = function () {
     
     this.c_hover = null;
     $('html').on('mouseover', '.fx_hilight', function() {
+        if ($fx.front.hilight_disabled) {
+            return;
+        }
         var node = $(this);
         if (node.hasClass('fx_selected')) {
             return false;
@@ -79,7 +82,7 @@ var fx_front = function () {
     });
     
     $('html').on('click', function(e) {
-        if ($fx.front.mode === 'view') {
+        if ($fx.front.mode === 'view' || $fx.front.hilight_disabled) {
             return;
         }
         var target = $(e.target);
@@ -149,6 +152,14 @@ var fx_front = function () {
     });
 };
 
+fx_front.prototype.disable_hilight = function() {
+    this.hilight_disabled = true;
+};
+
+fx_front.prototype.enable_hilight = function(){
+    this.hilight_disabled = false;
+};
+
 fx_front.prototype.redraw_add_button = function(node, mode) {
     $fx.buttons.unbind('add');
     var buttons = [];
@@ -165,6 +176,9 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
             var cb_closure = (function(c_cnt) {
                 return function() {
                     //$fx.front.disable_infoblock(ib);
+                    $fx.front.select_item(ib.get(0));
+                    $fx.front.disable_hilight();
+                    
                     $fx.front_panel.load_form({
                        essence:'content',
                        action:'add_edit',
@@ -174,6 +188,10 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
                     }, {
                         onfinish:function() {
                             $fx.front.reload_infoblock(ib);
+                            $fx.front.enable_hilight();
+                        },
+                        oncancel:function() {
+                            $fx.front.enable_hilight();
                         }
                     });
                 };
@@ -193,6 +211,12 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
             name:'Add new infoblock to '+area_meta.id,
             callback: function() {
                 var infoblock_back = arguments.callee;
+                
+                //$fx.front.outline_block_off($($fx.front.get_selected_item()));
+                //$fx.front.outline_block(area_node, 'selected');
+                $fx.front.select_item(area_node.get(0));
+                $fx.front.disable_hilight();
+                
                 $fx.front_panel.load_form({
                     essence:'infoblock',
                     action:'select_controller',
@@ -206,6 +230,7 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
                             onfinish:function(res) {
                                 $fx.front.reload_layout(
                                     function() {
+                                        $fx.front.enable_hilight();
                                         if (!res.props || !res.props.infoblock_id) {
                                             return;
                                         }
@@ -252,6 +277,7 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
                                         function($new_ib_node) {
                                             $form.data('ib_node', $new_ib_node);
                                             $form.data('is_waiting', false);
+                                            $fx.front.select_item($new_ib_node.get(0));
                                         }, 
                                         {override_infoblock:$form.serialize()}
                                     );
@@ -260,8 +286,12 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
                             },
                             oncancel:function() {
                                 $('.fx_infoblock_fake').remove();
+                                $fx.front.enable_hilight();
                             }
                         });
+                    },
+                    oncancel:function() {
+                        $fx.front.enable_hilight();
                     }
                 });
             }
@@ -465,6 +495,8 @@ fx_front.prototype.select_content_essence = function(n) {
     var essence_meta = n.data('fx_content_essence');
     var ib_node = n.closest('.fx_infoblock').get(0);
     $fx.buttons.bind('edit', function() {
+        $fx.front.select_item(n.get(0));
+        $fx.front.disable_hilight();
         $fx.front_panel.load_form(
             {
                 essence:'content',
@@ -475,6 +507,10 @@ fx_front.prototype.select_content_essence = function(n) {
             {
                 onfinish: function() {
                     $fx.front.reload_infoblock(ib_node);
+                    $fx.front.enable_hilight();
+                },
+                oncancel: function() {
+                    $fx.front.enable_hilight();
                 }
             }
         );
@@ -899,8 +935,20 @@ fx_front.prototype.outline_block = function(n, style) {
     if (n.css('display') === 'inline' && n.text() !== '') {
         var m_before = $('<span style="display:inline-block;width:1px; height:1px;background:#F00;"></span>');
         m_before.insertBefore(n.get(0).firstChild);
-        var mbo = m_before.offset();
-        if ( (mbo.left - parseInt(n.css('padding-left')) - o.left) > 10) {
+        var mbo = m_before.offset();/*
+        $('body').append(
+            $('<div />').css({
+                position:'absolute',
+                background:'#F00',
+                width:'3px',
+                height:'3px',
+                top:mbo.top+'px',
+                left:mbo.left+'px'
+            })
+        );*/
+        // сравниваем высоту для случаев, когда тестовый пиксель оказывается на предыдущей строке один, 
+        // т.к. он влезает, а реальный текст - нет
+        if (mbo.top > o.top && (mbo.left - parseInt(n.css('padding-left')) - o.left) > 10) {
             top_left_offset = (mbo.left - o.left);
             top_top_offset = mbo.top - o.top + size*2 + 1;
             panes.top_left = make_pane({

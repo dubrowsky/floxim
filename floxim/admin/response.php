@@ -163,7 +163,11 @@ class fx_admin_response {
                 if ($field['parent'] && is_array($field['parent'])) {
                     $np = array();
                     foreach ($field['parent'] as $pkey => $pval) {
-                        $np[ $prefix.'['.$pkey.']'] = $pval;
+                        if (preg_match("~\[~", $pkey)) {
+                            $np[$pkey] = $pval;
+                        } else {
+                            $np[ $prefix.'['.$pkey.']'] = $pval;
+                        }
                     }
                     $field['parent'] = $np;
                 }

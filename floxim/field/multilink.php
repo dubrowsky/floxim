@@ -293,6 +293,13 @@ class fx_field_multilink extends fx_field_baze {
         $new_value = new fx_collection();
         if ($is_mm) {
             $new_value->linker_map = new fx_collection();
+            // Находим название для поля, например "tag_id"
+            // что-то страшненько...
+            $end_link_field_name = 'f_'.fx::data(
+                    'component', preg_replace('~^content_~', '', $rel[1])
+                )->all_fields()->find_one(function($i) use ($rel) {
+                    return $i['format']['prop_name'] == $rel[3];
+                })->get('name');
         }
         $linker_infoblock_id = null;
         foreach ($this->value as $item_id => $item_props) {
@@ -306,24 +313,17 @@ class fx_field_multilink extends fx_field_baze {
                     $linker_infoblock_id = $content->get_link_field_infoblock($this['id']);
                 }
                 $linked_item = fx::data($first_data_type)->create();
-                if ($is_mm && $end_data_type) {
-                    // Находим название для поля, например "tag_id"
-                    // что-то страшненько...
-                    $end_link_field = fx::data(
-                            'component', preg_replace('~^content_~', '', $rel[1])
-                        )->all_fields()->find_one(function($i) use ($rel) {
-                            return $i['format']['prop_name'] == $rel[3];
-                        });
-                    if ($end_link_field) {
-                        $item_props['f_'.$end_link_field['name']]['type'] = $end_data_type;
-                        $item_props['f_'.$end_link_field['name']]['infoblock_id'] = $linker_infoblock_id;
-                    }
+                
+                // создание нового конечного объекта для MANY_MANY
+                if ($is_mm && $end_data_type && is_array($item_props[$end_link_field_name])) {
+                    $item_props[$end_link_field_name]['type'] = $end_data_type;
+                    $item_props[$end_link_field_name]['infoblock_id'] = $linker_infoblock_id;
                 } else {
                     $linked_item['infoblock_id'] = $linker_infoblock_id;
                 }
             }
+            
             $linked_item->set_field_values($item_props);
-            dev_log($linked_item);
             if ($is_mm) {
                 $new_value[]= $linked_item[$rel[3]];
                 $new_value->linker_map []= $linked_item;
