@@ -227,7 +227,7 @@ class fx_controller_component extends fx_controller {
                 $f->where('infoblock_id', $c_ib->get_root_infoblock()->get('id'));
             }
         }
-        if ( ($parent_id = $this->_get_parent_id()) ) {
+        if ( ($parent_id = $this->_get_parent_id()) && !($this->get_param('skip_parent_filter')) ) {
             $f->where('parent_id', $this->_get_parent_id());
         }
         $this->trigger('build_query',$f);
