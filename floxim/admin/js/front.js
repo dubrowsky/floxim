@@ -18,8 +18,10 @@ var fx_front = function () {
     });
     
     $('html').on('keyup', '*', function(e) {
+        // F2
         if (e.which === 113) {
-            if ($fx.front.get_selected_item()) {
+            
+            if ($fx.front.get_selected_item() && !e.shiftKey) {
                 if ($fx.buttons.is_active('edit')) {
                     $fx.buttons.trigger('edit');
                     return false;
@@ -34,7 +36,11 @@ var fx_front = function () {
                 edit: 'design',
                 design: 'view'
             };
-            $fx.front.load(mode_map[$fx.front.mode]);
+            var target_mode = 
+                    !e.shiftKey 
+                    ? mode_map[$fx.front.mode]
+                    : mode_map[mode_map[$fx.front.mode]];
+            $fx.front.load(target_mode);
         }
     });
     
@@ -380,6 +386,7 @@ fx_front.prototype.select_item = function(node) {
     //$fx.front.fix();
     $('html').on('keydown.fx_selected', function(e) {
        if (e.which === 27) {
+           console.log('deselecting');
            if (e.isDefaultPrevented && e.isDefaultPrevented()) {
                 return;
            }

@@ -68,15 +68,9 @@ class fx_controller_component extends fx_controller {
             'type' => 'select',
             'values' => array(
                 'current_page_id' => fx::lang('Current page','controller_component'),
-                'mount_page_id' => fx::lang('The infoblock owner section','controller_component')//,
-                //'custom' => fx::lang('Random','controller_component')
+                'mount_page_id' => fx::lang('The infoblock owner section','controller_component')
             ),
             'parent' => array('scope[pages]' => '!=this')
-        );
-        $fields['parent_id']= array(
-            'name' => 'parent_id',
-            'label' => fx::lang('Choose section','controller_component'),
-            'parent' => array('parent_type' => 'custom')
         );
         return $fields;
     }
@@ -491,6 +485,7 @@ class fx_controller_component extends fx_controller {
     
     protected function _get_controller_variants() {
         $vars = parent::_get_controller_variants();
+        dev_log(debug_backtrace());
         $chain = array_reverse($this->get_component()->get_chain());
         foreach ($chain as $chain_item) {
             $vars []= 'component_'.$chain_item['keyword'];
