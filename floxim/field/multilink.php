@@ -250,7 +250,6 @@ class fx_field_multilink extends fx_field_baze {
     public function get_savestring($content) {
         // дергаем предыдущее значение,
         // чтобы заполнить его
-        
         $content->get($this['name']);
         
         $rel = $this->get_relation();

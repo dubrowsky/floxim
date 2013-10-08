@@ -186,7 +186,7 @@
             </div>
         </section>
         <section class="footer" fx:if="!$hide_footer">
-            <div class="wrapper">
+            <div class="wrapper" fx:area="footer" fx:if="!$hide_footer">
                 <div class="contact">
                     <span>
                         {%contacts_label}Contacts:{/%}
