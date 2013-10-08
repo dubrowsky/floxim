@@ -70,7 +70,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                 $c_item['children'][]= array(
                     'data' => $action_name,
                     'metadata' => array(
-                        'id' => 'component_'.$c['keyword'].'.'.$action_code,
+                        'id' => $controller_type.'_'.$c['keyword'].'.'.$action_code,
                         'description' => $action_info['description'],
                         'type' => $action_type
                     )
@@ -494,8 +494,9 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         }
 
         // Собираем доступные шаблоны
-        $controler = fx::controller($controller_name.'.'.$action_name);
-        $tmps = $controler->get_available_templates($layout_name);
+        $controller = fx::controller($controller_name.'.'.$action_name);
+        dev_log('ctr', $controller_name.'.'.$action_name);
+        $tmps = $controller->get_available_templates($layout_name);
         if ( !empty($tmps) ) {
             foreach ( $tmps as $template ) {
                 $templates[$template['full_id']] = $template['name'];// . ' (' . $template['full_id'] . ')';
