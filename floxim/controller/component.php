@@ -35,7 +35,10 @@ class fx_controller_component extends fx_controller {
             'parent' => array('limit' => '!=0')
         );
 
-        $sortings = array('manual' => '-'.fx::lang('Manual','controller_component').'-', 'created'=> fx::lang('Created','controller_component'));
+        $sortings = array(
+            'manual' => '-'.fx::lang('Manual','controller_component').'-', 
+            'created'=> fx::lang('Created','controller_component')
+        );
         $sortings += $this
             ->get_component()
             ->all_fields()
@@ -65,9 +68,10 @@ class fx_controller_component extends fx_controller {
             'type' => 'select',
             'values' => array(
                 'current_page_id' => fx::lang('Current page','controller_component'),
-                'mount_page_id' => fx::lang('The infoblock owner section','controller_component'),
-                'custom' => fx::lang('Random','controller_component')
-            )
+                'mount_page_id' => fx::lang('The infoblock owner section','controller_component')//,
+                //'custom' => fx::lang('Random','controller_component')
+            ),
+            'parent' => array('scope[pages]' => '!=this')
         );
         $fields['parent_id']= array(
             'name' => 'parent_id',
@@ -112,16 +116,31 @@ class fx_controller_component extends fx_controller {
             $com_infoblocks = fx::data('infoblock')->
                     where('site_id', fx::env('site')->get('id'))->
                     get_content_infoblocks($target_com['keyword']);
-            $ib_values = $com_infoblocks->get_values('name', 'id') + array('new' => fx::lang('New infoblock', 'controller_component'));
-            $fields ['field_'.$lf['id'].'_infoblock']= array(
-                'type' => 'select',
-                'values' => $ib_values,
-                'name' => 'field_'.$lf['id'].'_infoblock',
-                'label' => 
-                    fx::lang('Infoblock for the field', 'controller_component')
-                    .' "'.$lf['description'].'"'
+            //$ib_values = $com_infoblocks->get_values('name', 'id'); // + array('new' => fx::lang('New infoblock', 'controller_component'));
+            $ib_values = array();
+            foreach ($com_infoblocks as $ib) {
+                $ib_values []= array($ib['id'], $ib['name']);
+            }
+            if (count($ib_values) === 0) {
+                continue;
+            }
+            $c_ib_field = array(
+                'name' => 'field_'.$lf['id'].'_infoblock'
             );
-            dev_log($lf);
+            if (count($ib_values) === 1) {
+                $c_ib_field += array(
+                    'type' => 'hidden',
+                    'value' => $ib_values[0][0]
+                );
+            } else {
+                $c_ib_field += array(
+                    'type' => 'select',
+                    'values' => $ib_values,
+                    'label' => fx::lang('Infoblock for the field', 'controller_component')
+                                .' "'.$lf['description'].'"'
+                );
+            }
+            $fields []= $c_ib_field;
         }
         return $fields;
     }
