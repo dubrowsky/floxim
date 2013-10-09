@@ -157,20 +157,25 @@ class fx_controller {
             return $settings;
         }
         $forced = array();
+        $force_all = false;
         if (isset($defaults['force'])) {
-            $force_parts = preg_split("~,\s*~", trim($defaults['force']));
-            foreach ($force_parts as $fp) {
-                $fp = explode(".", $fp);
-                if (count($fp) !== 2 || $fp[0] !== 'params') {
-                    continue;
+            if ($defaults['force'] === true || $defaults['force']=== '*') {
+                $force_all = true;
+            } else {
+                $force_parts = preg_split("~,\s*~", trim($defaults['force']));
+                foreach ($force_parts as $fp) {
+                    $fp = explode(".", $fp);
+                    if (count($fp) !== 2 || $fp[0] !== 'params') {
+                        continue;
+                    }
+                    $forced [trim($fp[1])] = true;
                 }
-                $forced [trim($fp[1])] = true;
             }
         }
         foreach ($defaults['params'] as $pk => $pv) {
             if (isset($settings[$pk])) {
                 $settings[$pk]['value'] = $pv;
-                if (isset($forced[$pk]) || isset($forced['*'])) {
+                if ($force_all | isset($forced[$pk]) || isset($forced['*'])) {
                     $settings[$pk]['type'] = 'hidden';
                 }
             }

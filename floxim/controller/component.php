@@ -313,7 +313,7 @@ class fx_controller_component extends fx_controller {
         return $url.'##'.(preg_match("~\?~", $url) ? '&' : '?').'page=%d##';
     }
     
-    protected function _get_current_page() {
+    protected function _get_current_page_number() {
         return isset($_GET['page']) ? $_GET['page'] : 1;
     }
 
@@ -337,7 +337,7 @@ class fx_controller_component extends fx_controller {
         $url_tpl = $this->_get_pagination_url_template();
         $base_url = preg_replace('~##.*?##~', '', $url_tpl);
         $url_tpl = str_replace("##", '', $url_tpl);
-        $c_page = $this->_get_current_page();
+        $c_page = $this->_get_current_page_number();
         foreach (range(1, $total_pages) as $page_num) {
             $links[$page_num]= array(
                 'active' => $page_num == $c_page,
@@ -459,7 +459,7 @@ class fx_controller_component extends fx_controller {
         }
         $finder = fx::data('content_'.$this->get_content_type());
         $show_pagination = $this->get_param('show_pagination');
-        $c_page = $this->_get_current_page();
+        $c_page = $this->_get_current_page_number();
         $limit = $this->get_param('limit');
         if ( $show_pagination && $limit) {
             $finder->calc_found_rows();
@@ -485,7 +485,6 @@ class fx_controller_component extends fx_controller {
     
     protected function _get_controller_variants() {
         $vars = parent::_get_controller_variants();
-        dev_log(debug_backtrace());
         $chain = array_reverse($this->get_component()->get_chain());
         foreach ($chain as $chain_item) {
             $vars []= 'component_'.$chain_item['keyword'];

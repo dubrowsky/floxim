@@ -5,6 +5,7 @@ class fx_router_infoblock extends fx_router {
             return null;
         }
         if (isset($_POST['c_url'])) {
+            $_SERVER['REQUEST_URI'] = $_POST['c_url'];
             $c_url = parse_url($_POST['c_url']);
             if (isset($c_url['query'])) {
                 parse_str($c_url['query'], $_GET);

@@ -563,6 +563,7 @@ fx_front.prototype.select_infoblock = function(n) {
         if (!ib) {
             return;
         }
+        $fx.front.disable_hilight();
         $fx.front_panel.load_form({
             essence:'infoblock',
             action:'select_settings',
@@ -573,6 +574,7 @@ fx_front.prototype.select_infoblock = function(n) {
         }, {
             onfinish:function() {
                 $fx.front.reload_infoblock(ib_node);
+                $fx.front.enable_hilight();
             },
             onready:function($form) {
                 $form.data('ib_node', ib_node);
@@ -590,25 +592,10 @@ fx_front.prototype.select_infoblock = function(n) {
                         {override_infoblock:$form.serialize()}
                     );
                 });
+            },
+            oncancel:function() {
+                $fx.front.enable_hilight();
             }
-        });
-        return;
-        $fx.post({
-           essence:'infoblock',
-           action:'select_settings',
-           id:ib.id,
-           visual_id:ib.visual_id,
-           page_id:$('body').data('fx_page_id'),
-           fx_admin:true
-        }, function(json) {
-            $fx_dialog.open_dialog(
-                json, 
-                {
-                    onfinish:function() {
-                        $fx.front.reload_infoblock(ib_node);
-                    }
-                }
-            );
         });
     });
     
@@ -630,21 +617,6 @@ fx_front.prototype.select_infoblock = function(n) {
             onfinish: function() {
                 $fx.front.reload_layout();
             }
-        });
-        return;
-        $fx.post({
-           essence:'infoblock',
-           action:'delete_infoblock',
-           id:ib.id,
-           fx_admin:true
-        }, function(json) {
-            $fx_dialog.open_dialog(
-                json, {
-                    onfinish:function() {
-                        $fx.front.reload_layout();
-                    }
-                }
-            );
         });
     });
     
@@ -752,12 +724,14 @@ fx_front.prototype.start_areas_sortable = function() {
                 $('.fx_area').removeClass('fx_area_target');
                 var ce = ui.item;
                 var ce_data = ce.data('fx_infoblock');
+                $fx.front.outline_block_off(ce);
+                $fx.front.outline_block(ce, 'selected');
 
                 var params = {
                     essence:'infoblock',
                     action:'move',
                     area:ce.closest('.fx_area').data('fx_area').id
-                }
+                };
 
                 params.infoblock_id = ce_data.id;
                 params.visual_id = ce_data.visual_id;
