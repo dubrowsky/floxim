@@ -1,16 +1,18 @@
 <?php
-class fx_controller_component_text extends fx_controller_component {
-    public function get_action_settings($action) {
-        $fields = parent::_settings_list_parent();
-        unset($fields['sorting']);
-        unset($fields['parent_type']);
-        unset($fields['parent_id']);
-        return $fields;
-    }
-    
-    public function do_listing() {
-        $this->set_param('parent_type', 'current_page_id');
-        return parent::do_listing();
+class fx_controller_component_text extends fx_controller_component {    
+    public function defaults_listing() {
+        return array_merge_recursive(
+            parent::defaults_listing(),
+            array(
+                'params' => array(
+                    'sorting' => 'manual',
+                    'parent_type' => 'current_page_id',
+                    'limit' => 1,
+                    'show_pagination' => false
+                ),
+                'force' => 'params.*'
+            )
+        );
     }
 }
 ?>

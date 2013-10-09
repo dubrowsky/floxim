@@ -148,10 +148,39 @@ class fx_controller {
     }
     
     public function get_action_settings($action) {
-        if (method_exists($this, 'settings_'.$action)) {
-            return call_user_func(array($this, 'settings_'.$action));
+        if (!method_exists($this, 'settings_'.$action)) {
+            return array();
         }
-        return array();
+        $settings = call_user_func(array($this, 'settings_'.$action));
+        $defaults = $this->get_action_defaults($action);
+        if (!isset($defaults['params'])) {
+            return $settings;
+        }
+        $forced = array();
+        $force_all = false;
+        if (isset($defaults['force'])) {
+            if ($defaults['force'] === true || $defaults['force']=== '*') {
+                $force_all = true;
+            } else {
+                $force_parts = preg_split("~,\s*~", trim($defaults['force']));
+                foreach ($force_parts as $fp) {
+                    $fp = explode(".", $fp);
+                    if (count($fp) !== 2 || $fp[0] !== 'params') {
+                        continue;
+                    }
+                    $forced [trim($fp[1])] = true;
+                }
+            }
+        }
+        foreach ($defaults['params'] as $pk => $pv) {
+            if (isset($settings[$pk])) {
+                $settings[$pk]['value'] = $pv;
+                if ($force_all | isset($forced[$pk]) || isset($forced['*'])) {
+                    $settings[$pk]['type'] = 'hidden';
+                }
+            }
+        }
+        return $settings;
     }
     
     public function get_action_defaults($action) {

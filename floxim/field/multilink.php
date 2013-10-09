@@ -250,7 +250,6 @@ class fx_field_multilink extends fx_field_baze {
     public function get_savestring($content) {
         // дергаем предыдущее значение,
         // чтобы заполнить его
-        
         $content->get($this['name']);
         
         $rel = $this->get_relation();
@@ -294,6 +293,13 @@ class fx_field_multilink extends fx_field_baze {
         $new_value = new fx_collection();
         if ($is_mm) {
             $new_value->linker_map = new fx_collection();
+            // Находим название для поля, например "tag_id"
+            // что-то страшненько...
+            $end_link_field_name = 'f_'.fx::data(
+                    'component', preg_replace('~^content_~', '', $rel[1])
+                )->all_fields()->find_one(function($i) use ($rel) {
+                    return $i['format']['prop_name'] == $rel[3];
+                })->get('name');
         }
         $linker_infoblock_id = null;
         foreach ($this->value as $item_id => $item_props) {
@@ -306,21 +312,17 @@ class fx_field_multilink extends fx_field_baze {
                 if (!$linker_infoblock_id) {
                     $linker_infoblock_id = $content->get_link_field_infoblock($this['id']);
                 }
-                if ($is_mm && $end_data_type) {
-                    // Находим название для поля, например "tag_id"
-                    // что-то страшненько...
-                    $end_link_field = fx::data(
-                            'component', preg_replace('~^content_~', '', $rel[1])
-                        )->all_fields()->find_one(function($i) use ($rel) {
-                            return $i['format']['prop_name'] == $rel[3];
-                        });
-                    if ($end_link_field) {
-                        $item_props['f_'.$end_link_field['name']]['type'] = $end_data_type;
-                    }
-                }
                 $linked_item = fx::data($first_data_type)->create();
-                $linked_item['infoblock_id'] = $linker_infoblock_id;
+                
+                // создание нового конечного объекта для MANY_MANY
+                if ($is_mm && $end_data_type && is_array($item_props[$end_link_field_name])) {
+                    $item_props[$end_link_field_name]['type'] = $end_data_type;
+                    $item_props[$end_link_field_name]['infoblock_id'] = $linker_infoblock_id;
+                } else {
+                    $linked_item['infoblock_id'] = $linker_infoblock_id;
+                }
             }
+            
             $linked_item->set_field_values($item_props);
             if ($is_mm) {
                 $new_value[]= $linked_item[$rel[3]];
@@ -349,9 +351,17 @@ class fx_field_multilink extends fx_field_baze {
      */
     public function get_related_component() {
         $rel = $this->get_relation();
+        switch ($rel[0]) {
+            case fx_data::HAS_MANY:
+                $content_type = $rel[1];
+                break;
+            case fx_data::MANY_MANY:
+                $content_type = $rel[4];
+                break;
+        }
         return fx::data(
                 'component', 
-                preg_replace("~^content_~", '', $rel[1])
+                preg_replace("~^content_~", '', $content_type)
         );
     }
     

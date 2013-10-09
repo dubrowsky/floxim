@@ -172,6 +172,7 @@ $('.fx_controller_list', html).on('click', '.sub', function() {
     html.find('.fx_controller_list .fx_admin_selected').removeClass('fx_admin_selected');
     sub.addClass('fx_admin_selected');
     inp.val(sub.data('id'));
+    console.log('selected', inp.val());
     recount_buttons();
 });
 
@@ -190,19 +191,6 @@ $('.fx_controller_list', html).on('click', '.sub', function() {
 </div>
 
 <!--jquery-->
-/*
-setTimeout(function() {
-    var form = html.closest('form');
-    if ($('input[name="id"]').val().match(/[0-9]+/)) {
-        return;
-    }
-    var back = $t.jQuery('input', {type:'button',label:'&laquo; back',class:'cancel'});
-    back.on('click', function() {
-        window.infoblock_back();
-    });
-    form.find('.field:visible').first().before(back);
-}, 150);
-*/
 
 html.on('click', '.variant', function() {
     $('.variant', html).removeClass('active');

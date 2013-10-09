@@ -21,6 +21,13 @@
                     params.oncancel();
                 }
             });
+            this.panel.on('keydown', function(e) {
+                if (e.which === 27) {
+                    console.log('esc on panel');
+                    $form.trigger('fx_form_cancel');
+                    return false;
+                }
+            });
             $form.on('fx_form_sent', function(e, data) {
                 $fx.front_panel.hide();
                 if (params.onfinish) {
@@ -31,6 +38,7 @@
             $('#fx_admin_control .editor_panel').hide();
             setTimeout(function() {
                 $fx.front_panel.animate_panel_height();
+                $(':input:visible', $form).first().focus();
                 if (params.onready) {
                     params.onready($form);
                 }
@@ -40,7 +48,7 @@
                     }
                     $fx.front_panel.animate_panel_height();
                 });
-            }, 500);
+            }, 100);
         },
         animate_panel_height: function(panel_height) {
             var p = this.panel;
@@ -85,7 +93,7 @@
             $fx.post(
                 form_options, 
                 function(json) {
-                    $fx.front_panel.show_form(json, params)
+                    $fx.front_panel.show_form(json, params);
                 }
             );
         },

@@ -18,8 +18,10 @@ var fx_front = function () {
     });
     
     $('html').on('keyup', '*', function(e) {
+        // F2
         if (e.which === 113) {
-            if ($fx.front.get_selected_item()) {
+            
+            if ($fx.front.get_selected_item() && !e.shiftKey) {
                 if ($fx.buttons.is_active('edit')) {
                     $fx.buttons.trigger('edit');
                     return false;
@@ -34,12 +36,19 @@ var fx_front = function () {
                 edit: 'design',
                 design: 'view'
             };
-            $fx.front.load(mode_map[$fx.front.mode]);
+            var target_mode = 
+                    !e.shiftKey 
+                    ? mode_map[$fx.front.mode]
+                    : mode_map[mode_map[$fx.front.mode]];
+            $fx.front.load(target_mode);
         }
     });
     
     this.c_hover = null;
     $('html').on('mouseover', '.fx_hilight', function() {
+        if ($fx.front.hilight_disabled) {
+            return;
+        }
         var node = $(this);
         if (node.hasClass('fx_selected')) {
             return false;
@@ -79,7 +88,7 @@ var fx_front = function () {
     });
     
     $('html').on('click', function(e) {
-        if ($fx.front.mode === 'view') {
+        if ($fx.front.mode === 'view' || $fx.front.hilight_disabled) {
             return;
         }
         var target = $(e.target);
@@ -149,6 +158,14 @@ var fx_front = function () {
     });
 };
 
+fx_front.prototype.disable_hilight = function() {
+    this.hilight_disabled = true;
+};
+
+fx_front.prototype.enable_hilight = function(){
+    this.hilight_disabled = false;
+};
+
 fx_front.prototype.redraw_add_button = function(node, mode) {
     $fx.buttons.unbind('add');
     var buttons = [];
@@ -165,6 +182,9 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
             var cb_closure = (function(c_cnt) {
                 return function() {
                     //$fx.front.disable_infoblock(ib);
+                    $fx.front.select_item(ib.get(0));
+                    $fx.front.disable_hilight();
+                    
                     $fx.front_panel.load_form({
                        essence:'content',
                        action:'add_edit',
@@ -174,6 +194,10 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
                     }, {
                         onfinish:function() {
                             $fx.front.reload_infoblock(ib);
+                            $fx.front.enable_hilight();
+                        },
+                        oncancel:function() {
+                            $fx.front.enable_hilight();
                         }
                     });
                 };
@@ -193,6 +217,12 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
             name:'Add new infoblock to '+area_meta.id,
             callback: function() {
                 var infoblock_back = arguments.callee;
+                
+                //$fx.front.outline_block_off($($fx.front.get_selected_item()));
+                //$fx.front.outline_block(area_node, 'selected');
+                $fx.front.select_item(area_node.get(0));
+                $fx.front.disable_hilight();
+                
                 $fx.front_panel.load_form({
                     essence:'infoblock',
                     action:'select_controller',
@@ -206,6 +236,7 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
                             onfinish:function(res) {
                                 $fx.front.reload_layout(
                                     function() {
+                                        $fx.front.enable_hilight();
                                         if (!res.props || !res.props.infoblock_id) {
                                             return;
                                         }
@@ -223,7 +254,6 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
                                 );
                             },
                             onready:function($form) {
-                                console.log('form ready', $form);
                                 var back = $t.jQuery(
                                     'input', 
                                     {type:'button',label:'&laquo; back',class:'cancel'}
@@ -233,7 +263,7 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
                                     $('.fx_infoblock_fake').remove();
                                 });
                                 var first_field = $form.find('.field:visible').first();
-                                //console.log($form, back, first_field);
+                                
                                 first_field.before(back);
                                 
                                 // creating infoblock preview
@@ -253,6 +283,7 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
                                         function($new_ib_node) {
                                             $form.data('ib_node', $new_ib_node);
                                             $form.data('is_waiting', false);
+                                            $fx.front.select_item($new_ib_node.get(0));
                                         }, 
                                         {override_infoblock:$form.serialize()}
                                     );
@@ -261,8 +292,12 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
                             },
                             oncancel:function() {
                                 $('.fx_infoblock_fake').remove();
+                                $fx.front.enable_hilight();
                             }
                         });
+                    },
+                    oncancel:function() {
+                        $fx.front.enable_hilight();
                     }
                 });
             }
@@ -351,6 +386,7 @@ fx_front.prototype.select_item = function(node) {
     //$fx.front.fix();
     $('html').on('keydown.fx_selected', function(e) {
        if (e.which === 27) {
+           console.log('deselecting');
            if (e.isDefaultPrevented && e.isDefaultPrevented()) {
                 return;
            }
@@ -466,6 +502,8 @@ fx_front.prototype.select_content_essence = function(n) {
     var essence_meta = n.data('fx_content_essence');
     var ib_node = n.closest('.fx_infoblock').get(0);
     $fx.buttons.bind('edit', function() {
+        $fx.front.select_item(n.get(0));
+        $fx.front.disable_hilight();
         $fx.front_panel.load_form(
             {
                 essence:'content',
@@ -476,6 +514,10 @@ fx_front.prototype.select_content_essence = function(n) {
             {
                 onfinish: function() {
                     $fx.front.reload_infoblock(ib_node);
+                    $fx.front.enable_hilight();
+                },
+                oncancel: function() {
+                    $fx.front.enable_hilight();
                 }
             }
         );
@@ -521,6 +563,7 @@ fx_front.prototype.select_infoblock = function(n) {
         if (!ib) {
             return;
         }
+        $fx.front.disable_hilight();
         $fx.front_panel.load_form({
             essence:'infoblock',
             action:'select_settings',
@@ -531,14 +574,12 @@ fx_front.prototype.select_infoblock = function(n) {
         }, {
             onfinish:function() {
                 $fx.front.reload_infoblock(ib_node);
+                $fx.front.enable_hilight();
             },
             onready:function($form) {
-                console.log('form ready');
                 $form.data('ib_node', ib_node);
                 $form.on('change', function() {
-                    console.log('form changed');
                     if ($form.data('is_waiting')) {
-                        console.log('waiting');
                         return;
                     }
                     $form.data('is_waiting', true);
@@ -547,30 +588,14 @@ fx_front.prototype.select_infoblock = function(n) {
                         function($new_ib_node) {
                             $form.data('ib_node', $new_ib_node);
                             $form.data('is_waiting', false);
-                            console.log('reloaded', $new_ib_node);
                         }, 
                         {override_infoblock:$form.serialize()}
                     );
                 });
+            },
+            oncancel:function() {
+                $fx.front.enable_hilight();
             }
-        });
-        return;
-        $fx.post({
-           essence:'infoblock',
-           action:'select_settings',
-           id:ib.id,
-           visual_id:ib.visual_id,
-           page_id:$('body').data('fx_page_id'),
-           fx_admin:true
-        }, function(json) {
-            $fx_dialog.open_dialog(
-                json, 
-                {
-                    onfinish:function() {
-                        $fx.front.reload_infoblock(ib_node);
-                    }
-                }
-            );
         });
     });
     
@@ -592,21 +617,6 @@ fx_front.prototype.select_infoblock = function(n) {
             onfinish: function() {
                 $fx.front.reload_layout();
             }
-        });
-        return;
-        $fx.post({
-           essence:'infoblock',
-           action:'delete_infoblock',
-           id:ib.id,
-           fx_admin:true
-        }, function(json) {
-            $fx_dialog.open_dialog(
-                json, {
-                    onfinish:function() {
-                        $fx.front.reload_layout();
-                    }
-                }
-            );
         });
     });
     
@@ -714,12 +724,14 @@ fx_front.prototype.start_areas_sortable = function() {
                 $('.fx_area').removeClass('fx_area_target');
                 var ce = ui.item;
                 var ce_data = ce.data('fx_infoblock');
+                $fx.front.outline_block_off(ce);
+                $fx.front.outline_block(ce, 'selected');
 
                 var params = {
                     essence:'infoblock',
                     action:'move',
                     area:ce.closest('.fx_area').data('fx_area').id
-                }
+                };
 
                 params.infoblock_id = ce_data.id;
                 params.visual_id = ce_data.visual_id;
@@ -762,7 +774,6 @@ fx_front.prototype.reload_infoblock = function(infoblock_node, callback, extra_d
     var $infoblock_node = $(infoblock_node);
     $fx.front.disable_infoblock(infoblock_node);
     var ib_parent = $infoblock_node.parent();
-    console.log('reloading', $infoblock_node);
     var meta = $infoblock_node.data('fx_infoblock');
     var page_id = $('body').data('fx_page_id');
     var post_data = {c_url:document.location.href};
@@ -798,7 +809,6 @@ fx_front.prototype.reload_infoblock = function(infoblock_node, callback, extra_d
                $infoblock_node.hide().before(res);
                var $new_infoblock_node = $infoblock_node.prev();
                $new_infoblock_node.trigger('fx_infoblock_loaded');
-               console.log('removng', $infoblock_node);
                $infoblock_node.remove();
            }
            if (selected_selector) {
@@ -906,8 +916,20 @@ fx_front.prototype.outline_block = function(n, style) {
     if (n.css('display') === 'inline' && n.text() !== '') {
         var m_before = $('<span style="display:inline-block;width:1px; height:1px;background:#F00;"></span>');
         m_before.insertBefore(n.get(0).firstChild);
-        var mbo = m_before.offset();
-        if ( (mbo.left - parseInt(n.css('padding-left')) - o.left) > 10) {
+        var mbo = m_before.offset();/*
+        $('body').append(
+            $('<div />').css({
+                position:'absolute',
+                background:'#F00',
+                width:'3px',
+                height:'3px',
+                top:mbo.top+'px',
+                left:mbo.left+'px'
+            })
+        );*/
+        // сравниваем высоту для случаев, когда тестовый пиксель оказывается на предыдущей строке один, 
+        // т.к. он влезает, а реальный текст - нет
+        if (mbo.top > o.top && (mbo.left - parseInt(n.css('padding-left')) - o.left) > 10) {
             top_left_offset = (mbo.left - o.left);
             top_top_offset = mbo.top - o.top + size*2 + 1;
             panes.top_left = make_pane({

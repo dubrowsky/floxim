@@ -35,7 +35,10 @@ class fx_controller_component extends fx_controller {
             'parent' => array('limit' => '!=0')
         );
 
-        $sortings = array('manual' => '-'.fx::lang('Manual','controller_component').'-', 'created'=> fx::lang('Created','controller_component'));
+        $sortings = array(
+            'manual' => '-'.fx::lang('Manual','controller_component').'-', 
+            'created'=> fx::lang('Created','controller_component')
+        );
         $sortings += $this
             ->get_component()
             ->all_fields()
@@ -65,14 +68,9 @@ class fx_controller_component extends fx_controller {
             'type' => 'select',
             'values' => array(
                 'current_page_id' => fx::lang('Current page','controller_component'),
-                'mount_page_id' => fx::lang('The infoblock owner section','controller_component'),
-                'custom' => fx::lang('Random','controller_component')
-            )
-        );
-        $fields['parent_id']= array(
-            'name' => 'parent_id',
-            'label' => fx::lang('Choose section','controller_component'),
-            'parent' => array('parent_type' => 'custom')
+                'mount_page_id' => fx::lang('The infoblock owner section','controller_component')
+            ),
+            'parent' => array('scope[pages]' => '!=this')
         );
         return $fields;
     }
@@ -82,7 +80,7 @@ class fx_controller_component extends fx_controller {
             $this->_settings_list_common(),
             $this->_settings_list_parent()
         );
-        return $fields;
+        //return $fields;
         /*
          * Ниже код, который добывает допустимые инфоблоки для полей-ссылок
          * и предлагает выбрать, откуда брать/куда добавлять значения-ссылки
@@ -95,23 +93,48 @@ class fx_controller_component extends fx_controller {
                             find('type_of_edit', fx_field::EDIT_NONE, fx_collection::FILTER_NEQ);
         
         foreach ($link_fields as $lf) {
+            //dev_log('lf', $lf);
+            //continue;
             if ($lf['type'] == fx_field::FIELD_LINK) {
                 $target_com_id = $lf['format']['target'];
             } else {
-                $target = explode(".", $lf['format']['target']);
-                $target_com_id = fx::data('field', $target[0])->get('component_id');
+                $target_com_id = isset($lf['format']['mm_datatype']) 
+                                    ? $lf['format']['mm_datatype']
+                                    : $lf['format']['linking_datatype'];
             }
             $target_com = fx::data('component', $target_com_id);
+            if (!$target_com) {
+                dev_log('no tcom', $lf);
+                continue;
+            }
             $com_infoblocks = fx::data('infoblock')->
                     where('site_id', fx::env('site')->get('id'))->
                     get_content_infoblocks($target_com['keyword']);
-            $ib_values = $com_infoblocks->get_values('name', 'id') + array('new' => fx::lang('New infoblock', 'controller_component'));
-            $fields ['field_'.$lf['id'].'_infoblock']= array(
-                'type' => 'select',
-                'values' => $ib_values,
-                'name' => 'field_'.$lf['id'].'_infoblock',
-                'label' => fx::lang('Infoblock for the field', 'controller_component').$lf['description']
+            //$ib_values = $com_infoblocks->get_values('name', 'id'); // + array('new' => fx::lang('New infoblock', 'controller_component'));
+            $ib_values = array();
+            foreach ($com_infoblocks as $ib) {
+                $ib_values []= array($ib['id'], $ib['name']);
+            }
+            if (count($ib_values) === 0) {
+                continue;
+            }
+            $c_ib_field = array(
+                'name' => 'field_'.$lf['id'].'_infoblock'
             );
+            if (count($ib_values) === 1) {
+                $c_ib_field += array(
+                    'type' => 'hidden',
+                    'value' => $ib_values[0][0]
+                );
+            } else {
+                $c_ib_field += array(
+                    'type' => 'select',
+                    'values' => $ib_values,
+                    'label' => fx::lang('Infoblock for the field', 'controller_component')
+                                .' "'.$lf['description'].'"'
+                );
+            }
+            $fields []= $c_ib_field;
         }
         return $fields;
     }
@@ -217,7 +240,7 @@ class fx_controller_component extends fx_controller {
                 $f->where('infoblock_id', $c_ib->get_root_infoblock()->get('id'));
             }
         }
-        if ( ($parent_id = $this->_get_parent_id()) ) {
+        if ( ($parent_id = $this->_get_parent_id()) && !($this->get_param('skip_parent_filter')) ) {
             $f->where('parent_id', $this->_get_parent_id());
         }
         $this->trigger('build_query',$f);
@@ -290,7 +313,7 @@ class fx_controller_component extends fx_controller {
         return $url.'##'.(preg_match("~\?~", $url) ? '&' : '?').'page=%d##';
     }
     
-    protected function _get_current_page() {
+    protected function _get_current_page_number() {
         return isset($_GET['page']) ? $_GET['page'] : 1;
     }
 
@@ -314,7 +337,7 @@ class fx_controller_component extends fx_controller {
         $url_tpl = $this->_get_pagination_url_template();
         $base_url = preg_replace('~##.*?##~', '', $url_tpl);
         $url_tpl = str_replace("##", '', $url_tpl);
-        $c_page = $this->_get_current_page();
+        $c_page = $this->_get_current_page_number();
         foreach (range(1, $total_pages) as $page_num) {
             $links[$page_num]= array(
                 'active' => $page_num == $c_page,
@@ -436,7 +459,7 @@ class fx_controller_component extends fx_controller {
         }
         $finder = fx::data('content_'.$this->get_content_type());
         $show_pagination = $this->get_param('show_pagination');
-        $c_page = $this->_get_current_page();
+        $c_page = $this->_get_current_page_number();
         $limit = $this->get_param('limit');
         if ( $show_pagination && $limit) {
             $finder->calc_found_rows();
