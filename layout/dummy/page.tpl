@@ -23,7 +23,7 @@
                         <div class="logo">
                             <a href="/">
                                 <img src="{%logo}<?=$template_dir?>images/logo.png{/%}" alt="" />
-                                <div>Lorem ipsum dolor sit</div>
+                                <div>{%slogan}Lorem ipsum dolor sit{/%}</div>
                             </a>
                         </div>
                     </div>
@@ -77,7 +77,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div fx:area="header" fx:size="wide,low" class="col-md-12">
+                    <div class="col-md-12">
                         <nav
                             class="navbar navbar-default" role="navigation">
                             <div class="navbar-header">
@@ -85,20 +85,20 @@
                                     {%Home}Home{/%}
                                 </a>      
                             </div>
-                            <div fx:area="menu" fx:size="wide,low" >
+                            <div fx:area="menu" fx:size="wide,low" style="overflow:hidden;">
                                 <ul
                                     fx:template="top_menu"
-            						fx:name="Main menu"
+                                    fx:name="Main menu"
                                     fx:of="component_section.listing"
                                     class="nav navbar-nav">
                                     <li fx:template="inactive"><a href="{$url}">{$name}</a></li>
                                     <li fx:template="active" class="active"><a href="{$url}">{$name}</a></li>
                                 </ul>
-                                <div class="col-md-3 pull-right search-line">
+                                <div fx:template="searchline" fx:of="widget_search.show" class="col-md-3 pull-right search-line">
                                     <div class="input-group">
                                         <input type="text" class="form-control">
                                         <span class="input-group-btn">
-                                            <button class="btn btn-default" type="button">Go!</button>
+                                            <input class="btn btn-default" type="button" value="{%go}Go!{/%}" />
                                         </span>
                                     </div>
                                 </div>

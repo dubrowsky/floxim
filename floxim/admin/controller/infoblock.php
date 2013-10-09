@@ -35,6 +35,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         
         $controllers = fx::data('component')->all();
         $controllers->concat(fx::data('widget')->all());
+        dev_log($controllers);
         
         foreach ($controllers as $c) {
             $controller_type = $c instanceof fx_component ? 'component' : 'widget';
