@@ -475,6 +475,9 @@ class fx_controller_component extends fx_controller {
             }
         }
         $this->_finder = $finder;
+        if ($this->get_content_type() === 'text') {
+            dev_log('giving findr', $this, $finder);
+        }
         return $finder;
     }
     
