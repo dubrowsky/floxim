@@ -16,9 +16,9 @@ class fx_controller_component_product extends fx_controller_component_page {
     public function do_listing_featured_products () {
         $this->set_param('skip_parent_filter', true);
         $this->set_param('skip_infoblock_filter',true);
-        $this->listen('query_ready', function ($query) {
+        $this->listen('query_ready', function ($query, $ctr) {
            $query->where('is_featured', 1)->
-                limit($this->get_param('limit') ? $this->get_param('limit') : 4);    
+                limit($ctr->get_param('limit') ? $ctr->get_param('limit') : 4);
         });
         return parent::do_listing();
     }
