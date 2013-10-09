@@ -1,0 +1,71 @@
+.logo {
+    float: left;
+}
+
+.on-top {
+    position: relative;
+    z-index: 1001;
+}
+
+.lang {
+    border-right: 1px solid #e7e7e7;
+}
+
+.log-in {
+    position: relative;
+    cursor: pointer;
+}
+    .log-in .form {
+        display: none;
+        position: absolute;
+        width: 250px;
+        top: 100%;
+        right: 15px;
+    }
+        .log-in .form .input-group {
+            margin-top: 5px;        
+        }
+        
+            .log-in .form .input-group .input-group-addon {
+                width: 40px;            
+            }
+
+.three-columns-right-block {
+    margin-top: 50px;
+}
+
+.search-line {
+    padding: 8px 0;
+}
+
+.no-top-margin {
+    margin-top: 0 !important;
+}
+
+.three-blocks  div.thumbnail {
+    height: 400px !important;
+}
+
+
+.featured-products, .index-areas {
+    margin-top: 20px;
+}
+
+.index-areas > div > div {
+    height: 230px;
+}
+
+.person-record, .award-record {}
+    .person-record img, .award-record img, .news-record img {
+        margin-right: 10px;    
+    }   
+
+.person-item, .award-item, .vacancy-item , .project-item, .news-item {
+    margin-bottom: 20px;
+}
+.award-sm-item, .vacancy-sm-item {
+    margin-bottom: 5px;
+}
+.bootstrap .list-group-item.active a, .bootstrap .list-group-item.active:hover a, .bootstrap .list-group-item.active:focus a {
+    color: white;
+}
