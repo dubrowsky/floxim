@@ -183,6 +183,8 @@ class fx_controller {
         return $settings;
     }
     
+    
+    
     public function get_action_defaults($action) {
         if (method_exists($this, 'defaults_'.$action)) {
             return call_user_func(array($this, 'defaults_'.$action));
@@ -190,13 +192,55 @@ class fx_controller {
         return array();
     }
     
-    public function get_action_info($action) {
+    public final function get_action_info($action = null) {
+        if ($action === null) {
+            if (!$this->action) {
+                return null;
+            }
+            $action = $this->action;
+        }
         $info_method = 'info_'.$action;
         if (method_exists($this, $info_method)) {
             return call_user_func(array($this, $info_method));
         }
         return array('name' => $action);
     }
+    
+    public function get_config() {
+        $sources = $this->_get_config_sources();
+        $config = array();
+        foreach ($sources as $source) {
+            $level_config = include_once $source;
+            if (isset($level_config['actions'])) {
+                $level_config['actions'] = self::_merge_actions($level_config['actions']);
+            }
+            $config = array_merge_recursive($config, $level_config);
+        }
+        return $config;
+    }
+    
+    protected function _get_config_sources() {
+        return array();
+    }
+    
+    protected static function _merge_actions($actions) {
+        ksort($actions);
+        $key_stack = array();
+        foreach (array_keys($actions) as $key) {
+            foreach ($key_stack as $prev_key_index => $prev_key) {
+                if (substr($key, 0, strlen($prev_key)) === $prev_key) {
+                    $actions[$key] = array_merge_recursive(
+                        $actions[$prev_key], $actions[$key]
+                    );
+                    break;
+                }
+                unset($key_stack[$prev_key_index]);
+            }
+            array_unshift($key_stack, $key);
+        }
+        return $actions;
+    }
+    
     
     public function get_actions() {
         $class = new ReflectionClass(get_class($this));

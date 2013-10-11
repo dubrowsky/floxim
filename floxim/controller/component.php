@@ -17,6 +17,22 @@ class fx_controller_component extends fx_controller {
         return $result;
     }
     
+    protected function _get_config_sources() {
+        $sources = array();
+        $com_dir = fx::config()->DOCUMENT_ROOT.'/component/';
+        $sources []= fx::config()->DOCUMENT_ROOT.'/floxim/controller/component.cfg.php';
+        $chain = $this->get_component()->get_chain();
+        foreach ($chain as $com) {
+            $com_file = $com_dir.$com['keyword'].'/'.$com['keyword'].'.cfg.php';
+            if (file_exists($com_file)) {
+                $sources[]= $com_file;
+            }
+        }
+        return $sources;
+    }
+    
+    
+    
     /*
      * Общие настройки для списков - mirror | listing
      */
