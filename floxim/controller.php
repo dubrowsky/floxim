@@ -208,13 +208,37 @@ class fx_controller {
     
     public function get_config() {
         $sources = $this->_get_config_sources();
-        $config = array();
+        $config = array('actions' => $this->_get_real_actions());
         foreach ($sources as $source) {
             $level_config = include_once $source;
-            if (isset($level_config['actions'])) {
-                $level_config['actions'] = self::_merge_actions($level_config['actions']);
+            $level_config = $this->_split_force($level_config);
+            $config = array_replace_recursive($config, $level_config);
+            if (isset($config['actions'])) {
+                $config['actions'] = self::_merge_actions($config['actions']);
             }
-            $config = array_merge_recursive($config, $level_config);
+        }
+        foreach ($config['actions'] as $action => $params) {
+            $method_name = 'config_'.$action;
+            if(method_exists($this, $method_name)) {
+                $config['actions'][$action] = $this->$method_name($params);                
+            }
+        }
+        $config['actions'] = self::_merge_actions($config['actions']);
+        return $config;
+    }
+
+    protected function _split_force($config) {
+        foreach ($config['actions'] as $action => &$params) {
+            if(!isset($params['defaults'])) {
+                continue;
+            }
+            foreach ($params['defaults'] as $key => $value) {
+                if (preg_match('~^!~', $key) !== 0) {
+                    $params['force'][substr($key, 1)] =$value;
+                    $params['defaults'][substr($key, 1)] =$value;
+                    unset($params['defaults'][$key]);
+                }
+            }
         }
         return $config;
     }
@@ -229,8 +253,8 @@ class fx_controller {
         foreach (array_keys($actions) as $key) {
             foreach ($key_stack as $prev_key_index => $prev_key) {
                 if (substr($key, 0, strlen($prev_key)) === $prev_key) {
-                    $actions[$key] = array_merge_recursive(
-                        $actions[$prev_key], $actions[$key]
+                    $actions[$key] = array_replace_recursive(
+                        $actions[$key], $actions[$prev_key]
                     );
                     break;
                 }
@@ -241,6 +265,22 @@ class fx_controller {
         return $actions;
     }
     
+
+    protected function _get_real_actions() {
+        $class = new ReflectionClass(get_class($this));
+        $methods = $class->getMethods(ReflectionMethod::IS_PUBLIC);
+        $props = $class->getDefaultProperties();
+        $prefix = isset($props['_action_prefix']) ? $props['_action_prefix'] : '';
+        $actions = array();
+        foreach ($methods as $method) {
+            $action_name = null;
+            if (preg_match("~^".$prefix."(.+)$~", $method->name, $action_name)) {
+                $action_name = $action_name[1];
+                $actions[$action_name]= array();
+            }
+        }
+        return $actions;
+    }
     
     public function get_actions() {
         $class = new ReflectionClass(get_class($this));
