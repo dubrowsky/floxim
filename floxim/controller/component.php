@@ -52,6 +52,7 @@ class fx_controller_component extends fx_controller {
     }
     
     public function config_list_infoblock($config) {
+        
         /*
          * Ниже код, который добывает допустимые инфоблоки для полей-ссылок
          * и предлагает выбрать, откуда брать/куда добавлять значения-ссылки
@@ -104,6 +105,7 @@ class fx_controller_component extends fx_controller {
             }
             $config['settings'][$c_ib_field['name']]= $c_ib_field;
         }
+        dev_log('configrung', $config, $link_fields);
         return $config;
     }
     

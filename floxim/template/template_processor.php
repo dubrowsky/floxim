@@ -813,17 +813,18 @@ class fx_template_processor {
             $name = $token->get_prop('id');
         }
         $of = $token->get_prop('of');
-        $magic_of = array('block', 'menu');
+        $is_magic_of = in_array($of, array('block', 'menu'));
         if (!$of) {
             if ($this->_controller_type == 'layout') {
                 $of = 'layout.show';
             } else {
                 $of = $this->_controller_type."_".$this->_controller_name.".".$token->get_prop('id');
             }
-        } elseif (!in_array($of, $magic_of) && !preg_match("~\.~", $of ) ) {
+        } elseif (!$is_magic_of && !preg_match("~\.~", $of ) ) {
             $of = $this->_controller_type."_".$this->_controller_name.".".$of;
         }
-        if (!preg_match("~^(layout|component|widget)_~", $of)) {
+        
+        if (!$is_magic_of && !preg_match("~^(layout|component|widget)_~", $of)) {
             $of = 'component_'.$of;
         }
         $this->templates [$token->get_prop('id')] += array(
