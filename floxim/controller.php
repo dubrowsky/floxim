@@ -55,8 +55,14 @@ class fx_controller {
      * @return array|string массив с результатами работы контроллера
      * $input = null, $action = null, $do_return = false
      */
-    public function process() {	
+    public function process() {
     	$action = $this->get_action_method();
+        $cfg = $this->get_config();
+        if (isset($cfg['actions'][$this->action]['force'])) {
+            foreach ($cfg['actions'][$this->action]['force'] as $param => $value) {
+                $this->set_param($param, $value);
+            }
+        }
         return $this->$action($this->input);
     }
     
@@ -159,6 +165,9 @@ class fx_controller {
         $settings = $params['settings'];
         if (!isset($params['force'])) {
             return $settings;
+        }
+        foreach ($params['defaults'] as $param => $val) {
+            $settings[$param]['value'] = $val;
         }
         foreach (array_keys($params['force']) as $forced_key) {
             unset($settings[$forced_key]);

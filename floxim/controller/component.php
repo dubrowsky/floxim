@@ -6,6 +6,9 @@ class fx_controller_component extends fx_controller {
     protected $_action_prefix = 'do_';
 
     public function process() {
+        if (preg_match("~^list_infoblock~", $this->action)) {
+            $this->set_param('parent_id', $this->_get_parent_id());
+        }
         $result = parent::process();
         if (is_string($result)) {
             return $result;
@@ -340,20 +343,13 @@ class fx_controller_component extends fx_controller {
     
     protected function _get_parent_id() {
         $ib = fx::data('infoblock', $this->get_param('infoblock_id')); 
-        if (!$ib) {
-            return $this->get_param('parent_id');
-        }
         $parent_id = null;
         switch($this->get_param('parent_type')) {
             case 'mount_page_id':
                 $parent_id = $ib['page_id'];
                 break;
-            case 'current_page_id':
-            default:
+            case 'current_page_id': default:
                 $parent_id = fx::env('page');
-                break;
-            case 'custom':
-                $parent_id = $this->get_param('parent_id');
                 break;
         }
         return $parent_id;
