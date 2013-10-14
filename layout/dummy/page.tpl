@@ -89,7 +89,7 @@
                                 <ul
                                     fx:template="top_menu"
                                     fx:name="Main menu"
-                                    fx:of="component_section.listing"
+                                    fx:of="section.list"
                                     class="nav navbar-nav">
                                     <li fx:template="inactive"><a href="{$url}">{$name}</a></li>
                                     <li fx:template="active" class="active"><a href="{$url}">{$name}</a></li>
@@ -114,7 +114,7 @@
                         </div>
                         <div 
                             fx:template="main_photo"
-                            fx:of="component_photo.listing"
+                            fx:of="photo.list"
                             fx:omit="true" >
                             <div 
                                 fx:each="$items"
@@ -128,7 +128,7 @@
                          </div>
                         <div 
                             fx:template="main_news"
-                            fx:of="component_news.listing"
+                            fx:of="news.list"
                             fx:omit="true" >
                             <div 
                                 fx:each="$items"
@@ -142,7 +142,7 @@
                          </div>
                         <div 
                             fx:template="main_projects"
-                            fx:of="component_project.listing"
+                            fx:of="project.list"
                             fx:omit="true" >
                             <div 
                                 fx:each="$items"
@@ -183,7 +183,7 @@
                         </div>
                         <div
                             fx:template="bottom_thumbs"
-                            fx:of="component_photo.listing"
+                            fx:of="photo.list"
                             fx:omit="true">
                             <div
                                 fx:each="$items"
@@ -193,7 +193,7 @@
                         </div>  
                         <div
                             fx:template="featured_products"
-                            fx:of="component_product.listing"
+                            fx:of="product.list"
                             class="featured-products">
                             <a
                                 fx:each="$items"
@@ -208,7 +208,7 @@
                         </div>  
                         <div
                             fx:template="product_record"
-                            fx:of="component_product.record"
+                            fx:of="product.record"
                             fx:omit="true" >
                             <div
                                 fx:template="item"
@@ -243,7 +243,7 @@
                         </div>
                         <div
                             fx:template="main_person"
-                            fx:of="component_person.listing"
+                            fx:of="person.list"
                             fx:omit="true">
                             <div
                                 fx:each="$items"
@@ -264,7 +264,7 @@
                     <div fx:area="bottom_right_block" fx:size="narrow,low" class="col-md-6 ">
                         <div
                             fx:template="bottom_photo"
-                            fx:of="component_photo.listing"
+                            fx:of="photo.list"
                             fx:omit="true">
                             <div
                                 fx:each="$items"
@@ -285,8 +285,8 @@
                 </div>
                 <div fx:if="$two_columns" class="row">
                     <div
-                        fx:template="products_listing"
-                        fx:of="component_product.listing"
+                        fx:template="products_list"
+                        fx:of="product.list"
                         fx:omit="true">
                         <a
                             fx:each="$items"
@@ -311,7 +311,7 @@
                         <ul 
                             fx:template="left_menu"
     						fx:name="Left menu"
-                            fx:of="component_section.listing"
+                            fx:of="section.list"
                             class="list-group">
                                 <li fx:template="inactive" class="list-group-item"><a href="{$url}">{$name}</a></li>
                                 <li fx:template="active" class=" list-group-item active"><a class="active" href="{$url}">{$name}</a></li>
@@ -319,7 +319,7 @@
                         <ul 
                             fx:template="categories_menu"
     						fx:name="Categories Menu"
-                            fx:of="component_product_category.listing"
+                            fx:of="product_category.list"
                             class="list-group">
                                 <li fx:template="inactive" class="list-group-item"><a href="{$url}">{$name}</a></li>
                                 <li fx:template="active" class=" list-group-item active"><a class="active" href="{$url}">{$name}</a></li>
@@ -327,8 +327,8 @@
                     </div>
                     <div fx:area="two_columns_right_block" fx:size="wide,high" class="col-md-9">
                         <div 
-                            fx:template="news_listing"
-                            fx:of="component_news.listing"
+                            fx:template="news_list"
+                            fx:of="news.list"
                             fx:omit="true">
                             <div fx:template="item" 
                                 class="news-item clearfix">
@@ -339,13 +339,13 @@
                                     <h3 class="no-top-margin"><a href="{$url}">{$name}</a></h3>
                                     <h5>{$publish_date|'d.m.Y'}</h5>
                                     <div>{$anounce}</div>
-                                    {call id="component_classifier.entity_classifier"}{$items select="$tags" /}{/call}
+                                    {call id="classifier.entity_classifier"}{$items select="$tags" /}{/call}
                                 </div>
                             </div>
                         </div>
                         <div 
                             fx:template="news_record"
-                            fx:of="component_news.record"
+                            fx:of="news.record"
                             fx:omit="true">
                             <div fx:template="item" 
                                 class="clearfix news-record">
@@ -354,13 +354,13 @@
                                 <div>
                                     <img src="{$image}" alt="{$full_name}" class="pull-left">
                                     <div>{$text}</div>
-                                    {call id="component_classifier.entity_classifier"}{$items select="$item['tags']" /}{/call}
+                                    {call id="classifier.entity_classifier"}{$items select="$item['tags']" /}{/call}
                                 </div>
                             </div>
                         </div>
                         <div 
                             fx:template="preson_record"
-                            fx:of="component_person.record"
+                            fx:of="person.record"
                             fx:omit="true">
                             <div fx:template="item" 
                                 class="clearfix person-record">
@@ -370,13 +370,13 @@
                                 <div>
                                     <img src="{$photo}" alt="{$full_name}" class="pull-left">
                                     <div>{$description}</div>
-                                    {call id="component_contact.entity_contact"}{$items select="$item['contacts']" /}{/call}
+                                    {call id="contact.entity_contact"}{$items select="$item['contacts']" /}{/call}
                                 </div>
                             </div>
                         </div>
                         <div 
-                            fx:template="preson_listing"
-                            fx:of="component_person.listing"
+                            fx:template="preson_list"
+                            fx:of="person.list"
                             fx:omit="true">
                             <div fx:template="item" 
                                 class="person-item clearfix">
@@ -392,8 +392,8 @@
                             </div>
                         </div>
                         <div 
-                            fx:template="vacancy_listing"
-                            fx:of="component_vacancy.listing"
+                            fx:template="vacancy_list"
+                            fx:of="vacancy.list"
                             fx:omit="true">
                             <div fx:template="item" 
                                 class="vacancy-item clearfix">
@@ -404,7 +404,7 @@
                         </div>
                         <div 
                             fx:template="vacancy_record"
-                            fx:of="component_vacancy.record"
+                            fx:of="vacancy.record"
                             fx:omit="true">
                             <div fx:template="item" 
                                 class="clearfix vacancy-record">
@@ -437,7 +437,7 @@
                         </div>
                         <div 
                             fx:template="award_record"
-                            fx:of="component_award.record"
+                            fx:of="award.record"
                             fx:omit="true">
                             <div fx:template="item" 
                                 class="clearfix award-record">
@@ -450,8 +450,8 @@
                             </div>
                         </div>
                         <div 
-                            fx:template="award_listing"
-                            fx:of="component_award.listing"
+                            fx:template="award_list"
+                            fx:of="award.list"
                             fx:omit="true">
                             <div fx:template="item" 
                                 class="award-item clearfix">
@@ -466,7 +466,7 @@
                         </div>
                         <div 
                             fx:template="project_record"
-                            fx:of="component_project.record"
+                            fx:of="project.record"
                             fx:omit="true">
                             <div fx:template="item" 
                                 class="clearfix project-record">
@@ -480,8 +480,8 @@
                             </div>
                         </div>
                         <div 
-                            fx:template="project_listing"
-                            fx:of="component_project.listing"
+                            fx:template="project_list"
+                            fx:of="project.list"
                             fx:omit="true">
                             <div fx:template="item" 
                                 class="project-item clearfix">
@@ -536,7 +536,7 @@
                         <div
                             fx:template="left_faq"
                             fx:name="Left FAQ"
-                            fx:of="component_faq.listing"
+                            fx:of="faq.list"
                             fx:omit="true">
                             <div 
                                 fx:each="$items" >
@@ -550,7 +550,7 @@
                         <div
                             fx:template="right_vacancies"
                             fx:name="Right Vacancies"
-                            fx:of="component_vacancy.listing"
+                            fx:of="vacancy.list"
                             fx:omit="true">
                             <div 
                                 fx:each="$items"
@@ -561,7 +561,7 @@
                         <div
                             fx:template="right_awards"
                             fx:name="Right Awards"
-                            fx:of="component_award.listing"
+                            fx:of="award.list"
                             fx:omit="true">
                             <div 
                                 fx:each="$items"
