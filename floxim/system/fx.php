@@ -421,4 +421,12 @@ class fx {
             return $v;
         }
     }
+    
+    public static function debug($what) {
+        echo call_user_func_array('fx_debug', func_get_args());
+    }
+    
+    public static function log($what) {
+        call_user_func_array('dev_log', func_get_args());
+    }
 }

@@ -1,4 +1,4 @@
-<div fx:template="listing" class="post_list">
+<div fx:template="list" class="post_list">
     <div fx:template="item" class="post">
         <h2><a href="{$url}">{$name}Unnamed article{/$}</a></h2>
         <div class="date">

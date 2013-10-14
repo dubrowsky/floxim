@@ -148,6 +148,23 @@ class fx_controller {
     }
     
     public function get_action_settings($action) {
+        $cfg = $this->get_config();
+        if (!isset($cfg['actions'][$action])) {
+            return;
+        }
+        $params = $cfg['actions'][$action];
+        if (!isset($params['settings'])) {
+            return;
+        }
+        $settings = $params['settings'];
+        if (!isset($params['force'])) {
+            return $settings;
+        }
+        foreach (array_keys($params['force']) as $forced_key) {
+            unset($settings[$forced_key]);
+        }
+        return $settings;
+        /*
         if (!method_exists($this, 'settings_'.$action)) {
             return array();
         }
@@ -181,54 +198,41 @@ class fx_controller {
             }
         }
         return $settings;
-    }
-    
-    
-    
-    public function get_action_defaults($action) {
-        if (method_exists($this, 'defaults_'.$action)) {
-            return call_user_func(array($this, 'defaults_'.$action));
-        }
-        return array();
-    }
-    
-    public final function get_action_info($action = null) {
-        if ($action === null) {
-            if (!$this->action) {
-                return null;
-            }
-            $action = $this->action;
-        }
-        $info_method = 'info_'.$action;
-        if (method_exists($this, $info_method)) {
-            return call_user_func(array($this, $info_method));
-        }
-        return array('name' => $action);
+         * 
+         */
     }
     
     public function get_config() {
         $sources = $this->_get_config_sources();
         $config = array('actions' => $this->_get_real_actions());
         foreach ($sources as $source) {
-            $level_config = include_once $source;
-            $level_config = $this->_split_force($level_config);
-            $config = array_replace_recursive($config, $level_config);
-            if (isset($config['actions'])) {
-                $config['actions'] = self::_merge_actions($config['actions']);
+            $level_config = include $source;
+            if (!is_array($level_config)) {
+                continue;
             }
+            if (isset($level_config['actions']) && is_array($level_config['actions'])) {
+                $level_config['actions'] = $this->_prepare_action_config($level_config['actions']);
+                foreach (array_keys($config['actions']) as $parent_action) {
+                    if (!isset($level_config['actions'][$parent_action])) {
+                        $level_config['actions'][$parent_action] = array();
+                    }
+                }
+                $level_config['actions'] = self::_merge_actions($level_config['actions']);
+            }
+            $config = array_replace_recursive($config, $level_config);
         }
         foreach ($config['actions'] as $action => $params) {
             $method_name = 'config_'.$action;
             if(method_exists($this, $method_name)) {
-                $config['actions'][$action] = $this->$method_name($params);                
+                $config['actions'][$action] = $this->$method_name($params);
             }
         }
         $config['actions'] = self::_merge_actions($config['actions']);
         return $config;
     }
 
-    protected function _split_force($config) {
-        foreach ($config['actions'] as $action => &$params) {
+    protected function _prepare_action_config($actions) {
+        foreach ($actions as &$params) {
             if(!isset($params['defaults'])) {
                 continue;
             }
@@ -240,7 +244,7 @@ class fx_controller {
                 }
             }
         }
-        return $config;
+        return $actions;
     }
     
     protected function _get_config_sources() {
@@ -250,17 +254,23 @@ class fx_controller {
     protected static function _merge_actions($actions) {
         ksort($actions);
         $key_stack = array();
-        foreach (array_keys($actions) as $key) {
+        foreach ($actions as $key => $params) {
+            // не наследуем горизонтально флаг disabled 
+            $no_disabled = !isset($params['disabled']);
+            
             foreach ($key_stack as $prev_key_index => $prev_key) {
                 if (substr($key, 0, strlen($prev_key)) === $prev_key) {
                     $actions[$key] = array_replace_recursive(
-                        $actions[$key], $actions[$prev_key]
+                        $actions[$prev_key], $params
                     );
                     break;
                 }
                 unset($key_stack[$prev_key_index]);
             }
             array_unshift($key_stack, $key);
+            if ($no_disabled) {
+                unset($actions[$key]['disabled']);
+            }
         }
         return $actions;
     }
@@ -282,34 +292,35 @@ class fx_controller {
         return $actions;
     }
     
-    public function get_actions() {
-        $class = new ReflectionClass(get_class($this));
-        $methods = $class->getMethods(ReflectionMethod::IS_PUBLIC);
-        $props = $class->getDefaultProperties();
-        $prefix = isset($props['_action_prefix']) ? $props['_action_prefix'] : '';
-        $actions = array();
-        foreach ($methods as $method) {
-            $action_name = null;
-            if (preg_match("~^".$prefix."(.+)$~", $method->name, $action_name)) {
-                $action_name = $action_name[1];
-                $action_meta = $this->get_action_info($action_name);
-                if (isset($action_meta['disabled']) && $action_meta['disabled']) {
-                    continue;
-                }
-                $actions[$action_name]= $action_meta;
+    
+    protected $_bound = array();
+    public function listen($event, $callback) {
+        if (!isset($this->_bound[$event])) {
+            $this->_bound[$event] = array();
+        }
+        $this->_bound[$event][]= $callback;
+    }
+    
+    public function trigger($event, $data = null) {
+        if (isset($this->_bound[$event]) && is_array($this->_bound[$event])) {
+            foreach ( $this->_bound[$event] as $cb) {
+                call_user_func($cb, $data, $this);
             }
         }
-        return $actions;
     }
     
-    
-    
-    /*
-    public function render() {
-        $res = array('input' => $this->process());
-        $template = $this->find_template();
-        return $template->render($res, $this->action);
+    public function get_actions() {
+        $cfg = $this->get_config();
+        $res = array();
+        foreach ($cfg['actions'] as $action => $info) {
+            if (isset($info['disabled']) && $info['disabled']) {
+                continue;
+            }
+            if (!isset($info['name'])) {
+                $info['name'] = $action;
+            }
+            $res[$action] = $info;
+        }
+        return $res;
     }
-     * 
-     */
 }

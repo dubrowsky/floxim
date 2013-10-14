@@ -2,15 +2,14 @@
 return array(
     'actions' => array(
         'list' => array(
+            'disabled' => true,
             'settings' => array(
                 'limit' => array(
-                    'label' => fx::lang('How many entries to display','controller_component'),
-                    'value' => 10
+                    'label' => fx::lang('How many entries to display','controller_component')
                 ),
                 'pagination' => array(
                     'label' => fx::lang('Show pagination?','controller_component'),
                     'type' => 'checkbox',
-                    'value' => true,
                     'parent' => array('limit' => '!=0')
                 ),
                 'sorting' => array(

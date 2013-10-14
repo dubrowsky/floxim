@@ -91,12 +91,20 @@ class fx_controller_component extends fx_controller {
         return $fields;
     }
     
-    public function settings_listing() {
-        $fields = array_merge(
-            $this->_settings_list_common(),
-            $this->_settings_list_parent()
-        );
-        //return $fields;
+    public function config_list($config) {
+        $sortings = array(
+            'manual' => '-'.fx::lang('Manual','controller_component').'-', 
+            'created'=> fx::lang('Created','controller_component')
+        ) + $this
+            ->get_component()
+            ->all_fields()
+            ->find('type', fx_field::FIELD_MULTILINK, '!=')
+            ->get_values('description', 'name');
+        $config['settings']['sorting']['values'] = $sortings;
+        return $config;
+    }
+    
+    public function config_list_infoblock($config) {
         /*
          * Ниже код, который добывает допустимые инфоблоки для полей-ссылок
          * и предлагает выбрать, откуда брать/куда добавлять значения-ссылки
@@ -109,8 +117,6 @@ class fx_controller_component extends fx_controller {
                             find('type_of_edit', fx_field::EDIT_NONE, fx_collection::FILTER_NEQ);
         
         foreach ($link_fields as $lf) {
-            //dev_log('lf', $lf);
-            //continue;
             if ($lf['type'] == fx_field::FIELD_LINK) {
                 $target_com_id = $lf['format']['target'];
             } else {
@@ -126,7 +132,6 @@ class fx_controller_component extends fx_controller {
             $com_infoblocks = fx::data('infoblock')->
                     where('site_id', fx::env('site')->get('id'))->
                     get_content_infoblocks($target_com['keyword']);
-            //$ib_values = $com_infoblocks->get_values('name', 'id'); // + array('new' => fx::lang('New infoblock', 'controller_component'));
             $ib_values = array();
             foreach ($com_infoblocks as $ib) {
                 $ib_values []= array($ib['id'], $ib['name']);
@@ -150,64 +155,9 @@ class fx_controller_component extends fx_controller {
                                 .' "'.$lf['description'].'"'
                 );
             }
-            $fields []= $c_ib_field;
+            $config['settings'][$c_ib_field['name']]= $c_ib_field;
         }
-        return $fields;
-    }
-    
-    public function get_action_settings_listing_mirror() {
-        $fields = $this->get_action_settings_list_common();
-        $fields['from_all'] = array(
-            'name' => 'from_all',
-            'label' => fx::lang('From all sections','controller_component'),
-            'type' => 'checkbox',
-            'parent' => array('is_mirror' => '1'),
-            'value' => 1
-        );
-        $possible_infoblocks = fx::data('infoblock')->get_content_infoblocks($this->get_content_type());
-        $source_values =  array();
-        foreach ($possible_infoblocks as $ib) {
-            $source_values[$ib['id']] = $ib['name'];
-        }
-        if (false && count($source_values) > 0) {
-            $fields['source_infoblocks'] = array(
-                'name' => 'source_infoblocks', 
-                'label' => '', 
-                'type' => 'checkbox', 
-                'values' => $source_values, 
-                'value' => array(),
-                'parent' => array('from_all'=>'0')
-            );
-        }
-        $fields['parent_id'] = array(
-            'name' => 'parent_id',
-            'label' => fx::lang('From specified section','controller_component'),
-            'parent' => array('from_all' => '0')
-        );
-        return $fields;
-    }
-    
-    protected $_bound = array();
-    public function listen($event, $callback) {
-        if (!isset($this->_bound[$event])) {
-            $this->_bound[$event] = array();
-        }
-        $this->_bound[$event][]= $callback;
-    }
-    
-    public function trigger($event, $data = null) {
-        if (isset($this->_bound[$event]) && is_array($this->_bound[$event])) {
-            foreach ( $this->_bound[$event] as $cb) {
-                call_user_func($cb, $data, $this);
-            }
-        }
-    }
-
-    public function info_record() {
-        return array(
-            'name' => fx::lang('Entry','controller_component'),
-            'description' => fx::lang('Show single entry','controller_component')
-        );
+        return $config;
     }
     
     public function do_record() {
@@ -215,23 +165,7 @@ class fx_controller_component extends fx_controller {
         return array('items' => $page);
     }
     
-    public function info_listing() {
-        return array(
-            'name' => fx::lang('List','controller_component'),
-            'description' => fx::lang('Show entries from the specified section','controller_component')
-        );
-    }
-    
-    public function defaults_listing() {
-        return array(
-            'scope' => array(
-                'page_id' => fx::env('page'),
-                'pages' => 'this'
-            )
-        );
-    }
-    
-    protected function _list() {
+    public function do_list() {
         $f = $this->_get_finder();
         $this->trigger('query_ready', $f);
         $items = $f->all();
@@ -245,7 +179,32 @@ class fx_controller_component extends fx_controller {
         }
         return $res;
     }
-
+    
+    public function do_list_infoblock() {
+        $items = $this->do_list();
+        
+        if (fx::env('is_admin')) {
+            $infoblock = fx::data('infoblock', $this->get_param('infoblock_id'));
+            $real_ib_name = $infoblock->get_prop_inherited('name');
+            $ib_name = $real_ib_name ? $real_ib_name : $infoblock['id'];
+            $component = $this->get_component();
+            $adder_title = $component['item_name'].' &rarr; '.$ib_name;
+            
+            $this->accept_content(array(
+                'title' => $adder_title,
+                'parent_id' => $this->_get_parent_id(),
+                'type' => $component['keyword'],
+                'infoblock_id' => $this->get_param('infoblock_id')
+            ));
+            
+            if (count($items) == 0) {
+                $this->_meta['hidden_placeholder'] = 'Infoblock "'.$ib_name.'" is empty. '.
+                                                'You can add '.$component['item_name'].' here';
+            }
+        }
+        return $items;
+    }
+    
     public function do_listing() {
         $f = $this->_get_finder();
         
@@ -474,7 +433,7 @@ class fx_controller_component extends fx_controller {
             return $this->_finder;
         }
         $finder = fx::data('content_'.$this->get_content_type());
-        $show_pagination = $this->get_param('show_pagination');
+        $show_pagination = $this->get_param('pagination');
         $c_page = $this->_get_current_page_number();
         $limit = $this->get_param('limit');
         if ( $show_pagination && $limit) {
@@ -490,10 +449,13 @@ class fx_controller_component extends fx_controller {
                 $finder->limit($limit);
             }
         }
-        $this->_finder = $finder;
-        if ($this->get_content_type() === 'text') {
-            dev_log('giving findr', $this, $finder);
+        if ( ($parent_id = $this->get_param('parent_id')) ) {
+            $finder->where('parent_id', $parent_id);
         }
+        if ( ( $infoblock_id = $this->get_param('infoblock_id')) ) {
+            $finder->where('infoblock_id', $infoblock_id);
+        }
+        $this->_finder = $finder;
         return $finder;
     }
     
