@@ -823,6 +823,9 @@ class fx_template_processor {
         } elseif (!in_array($of, $magic_of) && !preg_match("~\.~", $of ) ) {
             $of = $this->_controller_type."_".$this->_controller_name.".".$of;
         }
+        if (!preg_match("~^(layout|component|widget)_~", $of)) {
+            $of = 'component_'.$of;
+        }
         $this->templates [$token->get_prop('id')] += array(
             'code' => $code,
             'name' => $name,
