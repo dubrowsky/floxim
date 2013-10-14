@@ -63,6 +63,7 @@ class fx_controller {
                 $this->set_param($param, $value);
             }
         }
+        $this->trigger('before_action_run');
         return $this->$action($this->input);
     }
     

@@ -5,10 +5,14 @@ class fx_controller_component extends fx_controller {
     
     protected $_action_prefix = 'do_';
 
-    public function process() {
+    protected function _count_parent_id() {
         if (preg_match("~^list_infoblock~", $this->action)) {
             $this->set_param('parent_id', $this->_get_parent_id());
         }
+    }
+    
+    public function process() {
+        $this->listen('before_action_run', array($this, '_count_parent_id'));
         $result = parent::process();
         if (is_string($result)) {
             return $result;
@@ -32,66 +36,6 @@ class fx_controller_component extends fx_controller {
             }
         }
         return $sources;
-    }
-    
-    
-    
-    /*
-     * Общие настройки для списков - mirror | listing
-     */
-    protected function _settings_list_common() {
-        $fields = array();
-        $fields['limit'] = array(
-            'name' => 'limit',
-            'label' => fx::lang('How many entries to display','controller_component'),
-            'value' => 10
-        );
-        $fields['show_pagination'] = array(
-            'name' => 'show_pagination',
-            'label' => fx::lang('Show pagination?','controller_component'),
-            'type' => 'checkbox',
-            'value' => true,
-            'parent' => array('limit' => '!=0')
-        );
-
-        $sortings = array(
-            'manual' => '-'.fx::lang('Manual','controller_component').'-', 
-            'created'=> fx::lang('Created','controller_component')
-        );
-        $sortings += $this
-            ->get_component()
-            ->all_fields()
-            ->find('type', fx_field::FIELD_MULTILINK, '!=')
-            ->get_values('description', 'name');
-        $fields['sorting'] = array(
-            'name' => 'sorting',
-            'label' => fx::lang('Sorting','controller_component'),
-            'type' => 'select',
-            'values' => $sortings
-        );
-        $fields['sorting_dir'] = array(
-            'name' => 'sorting_dir',
-            'label' => fx::lang('Order','controller_component'),
-            'type' => 'select',
-            'values' => array('asc' => fx::lang('Ascending','controller_component'), 'desc' => fx::lang('Descending','controller_component')),
-            'parent' => array('sorting' => '!=manual')
-        );
-        return $fields;
-    }
-
-    protected function _settings_list_parent()
-    {
-        $fields['parent_type'] = array(
-            'name' => 'parent_type',
-            'label' => fx::lang('Parent','controller_component'),
-            'type' => 'select',
-            'values' => array(
-                'current_page_id' => fx::lang('Current page','controller_component'),
-                'mount_page_id' => fx::lang('The infoblock owner section','controller_component')
-            ),
-            'parent' => array('scope[pages]' => '!=this')
-        );
-        return $fields;
     }
     
     public function config_list($config) {
@@ -347,6 +291,9 @@ class fx_controller_component extends fx_controller {
         switch($this->get_param('parent_type')) {
             case 'mount_page_id':
                 $parent_id = $ib['page_id'];
+                if ($parent_id === 0) {
+                    $parent_id = fx::env('site')->get('index_page_id');
+                }
                 break;
             case 'current_page_id': default:
                 $parent_id = fx::env('page');
@@ -355,31 +302,19 @@ class fx_controller_component extends fx_controller {
         return $parent_id;
     }
     
-    
-    public function info_listing_mirror() {
-        return array(
-            'name' => 'Mirror',
-            'description' => fx::lang('Show entries by filter','controller_component')
-        );
-    }
-    
-    public function do_listing_mirror() {
-        $f = $this->_get_finder();
-        if ( ($parent_id = $this->get_param('parent_id')) ) {
-            $f->where('parent_id', $parent_id);
-        }
-        $this->trigger('build_query',$f);
-
-        if ( ($sorting = $this->get_param('sorting')) ) {
-            if ($sorting == 'manual') {
-                $f->order('priority');
-            } else {
-                $f->order($sorting, $this->get_param('sorting_dir'));
+    public function do_list_filtered() {
+        $this->listen('query_ready', function($q, $ctr) {
+            $conditions = $ctr->get_param('conditions');
+            if (isset($conditions) && is_array($conditions)) {
+                foreach ($conditions as $condition) {
+                    $q->where(
+                        $condition['name'], 
+                        $condition['value'], 
+                        $condition['operator']
+                    );
+                }
             }
-        }
-        $this->trigger('query_ready', $f);
-        $items = $f->all();
-        return array('items' => $items);
+        });
     }
     
 

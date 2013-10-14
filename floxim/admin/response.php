@@ -152,6 +152,9 @@ class fx_admin_response {
     }
     
     public function add_fields ( $fields, $tab = null, $prefix = null ) {
+        if (!is_array($fields)) {
+            return;
+        }
         if ( $tab ) {
             foreach ( $fields as &$field ) {
                 $field['tab'] = $tab;

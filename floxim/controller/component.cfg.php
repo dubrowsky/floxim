@@ -42,12 +42,7 @@ return array(
             ),
             'name' => 'List',
             'description' => 'List of entries'
-        ),/*
-        'list_infoblock_children' => array(
-            'defaults' => array(
-                '!parent_type'=>'current_page_id'
-            )
-        ),*/
+        ),
         'list_filtered' => array(
             
         )
