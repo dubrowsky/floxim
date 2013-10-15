@@ -173,7 +173,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             $controller_name = $controller;
             $controller = fx::controller($controller);
             $settings = $controller->get_action_settings($action);
-            
+            dev_log($settings, $infoblock);
             foreach ($infoblock['params'] as $ib_param => $ib_param_value) {
                 if (isset($settings[$ib_param])) {
                     $settings[$ib_param]['value'] = $ib_param_value;
@@ -188,6 +188,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                     ))
             );
             //$this->response->add_fields($settings, 'settings', 'params');
+            dev_log('done', $settings);
             $this->response->add_fields($settings, false, 'params');
         }
         
