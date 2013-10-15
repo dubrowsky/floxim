@@ -27,7 +27,6 @@ var fs = html;
 if (!_c.values) {
     _c.values = _c.value || [];
 }
-console.log('vlas', _c.values);
 $.each(_c.values, function(row, val) {
     var val_num = 0;
     var inputs = [];
@@ -51,17 +50,17 @@ fs.on('click', '.fx_fieldset_remove', function() {
 	$(this).parents('.fx_fieldset_row').remove();	
 });
 $('.fx_fieldset_add', fs).click( function() {
-	var inputs = [];
-	var index = $('.fx_fieldset_row', fs).length > 0 ? $('.fx_fieldset_row', fs).last().get(0).className.match(/row_(\d+)/)[1]*1 + 1 : 1;
-	for (var i = 0; i < _c.tpl.length; i++) {
-		inputs.push( 
-			$.extend({}, _c.tpl[i], {
-				name:_c.name+'[new_'+index+']['+_c.tpl[i].name+']'
-			})
-		);
-	}
-	var new_row = $t.jQuery('fieldset_row', inputs, {index:index});
-	$('.fx_fieldset_rows', fs).append(new_row);
+    var inputs = [];
+    var index = $('.fx_fieldset_row', fs).length + 1;
+    for (var i = 0; i < _c.tpl.length; i++) {
+        inputs.push( 
+            $.extend({}, _c.tpl[i], {
+                name:_c.name+'[new_'+index+']['+_c.tpl[i].name+']'
+            })
+        );
+    }
+    var new_row = $t.jQuery('fieldset_row', inputs, {index:index});
+    $('.fx_fieldset_rows', fs).append(new_row);
 });
 
 <!--[fieldset_row]-->
