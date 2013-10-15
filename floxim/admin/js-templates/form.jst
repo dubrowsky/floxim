@@ -87,6 +87,25 @@ if (hide_in_panel) {
 <!--jquery-->
 if (_c.context !== 'panel') {
     $('textarea.fx_wysiwyg', html).redactor();
+} else {
+    var expander = $('.fx_panel_text_expander', html);
+    expander.click(function() {
+        var real_ta = $('textarea.fx_wysiwyg', html);
+        var ta = real_ta.clone();
+        var taw = $('<div class="fx_overlay" />');
+        taw.append(ta);
+        $('body').append(taw);
+        ta.show();
+        taw.css({
+            position:'fixed',
+            top: (expander.offset().top + 20) + 'px',
+            left:(expander.offset().left - 300) + 'px',
+            width:'550px',
+            'max-height':'300px',
+            'z-index':'3010'
+        });
+        setTimeout(function() {ta.redactor();}, 50);
+    });
 }
 
 html.find('textarea.fx_code').each( function(){

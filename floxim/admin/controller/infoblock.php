@@ -583,7 +583,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         $infoblock = fx::data('infoblock', $input['id']);
         $fields = array(
             array(
-                'label' => fx::lang('I am REALLY shure','system'),
+                'label' => fx::lang('I am REALLY sure','system'),
                 'name' => 'delete_confirm',
                 'type' => 'checkbox'
             ),
