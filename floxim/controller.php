@@ -174,42 +174,6 @@ class fx_controller {
             unset($settings[$forced_key]);
         }
         return $settings;
-        /*
-        if (!method_exists($this, 'settings_'.$action)) {
-            return array();
-        }
-        $settings = call_user_func(array($this, 'settings_'.$action));
-        $defaults = $this->get_action_defaults($action);
-        if (!isset($defaults['params'])) {
-            return $settings;
-        }
-        $forced = array();
-        $force_all = false;
-        if (isset($defaults['force'])) {
-            if ($defaults['force'] === true || $defaults['force']=== '*') {
-                $force_all = true;
-            } else {
-                $force_parts = preg_split("~,\s*~", trim($defaults['force']));
-                foreach ($force_parts as $fp) {
-                    $fp = explode(".", $fp);
-                    if (count($fp) !== 2 || $fp[0] !== 'params') {
-                        continue;
-                    }
-                    $forced [trim($fp[1])] = true;
-                }
-            }
-        }
-        foreach ($defaults['params'] as $pk => $pv) {
-            if (isset($settings[$pk])) {
-                $settings[$pk]['value'] = $pv;
-                if ($force_all | isset($forced[$pk]) || isset($forced['*'])) {
-                    $settings[$pk]['type'] = 'hidden';
-                }
-            }
-        }
-        return $settings;
-         * 
-         */
     }
     
     public function get_config() {
@@ -231,13 +195,22 @@ class fx_controller {
             }
             $config = array_replace_recursive($config, $level_config);
         }
-        foreach ($config['actions'] as $action => $params) {
+        foreach ($config['actions'] as $action => &$params) {
             $method_name = 'config_'.$action;
             if(method_exists($this, $method_name)) {
                 $config['actions'][$action] = $this->$method_name($params);
             }
+            if (!isset($params['settings']) || !is_array($params['settings'])) {
+                continue;
+            }
+            foreach ($params['settings'] as $param_key => &$param_field) {
+                if (!isset($param_field['name'])) {
+                    $param_field['name'] = $param_key;
+                }
+            }
         }
         $config['actions'] = self::_merge_actions($config['actions']);
+        dev_log($config);
         return $config;
     }
 
