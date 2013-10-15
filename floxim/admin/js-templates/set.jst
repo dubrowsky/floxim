@@ -25,8 +25,9 @@
 var fs = html;
 
 if (!_c.values) {
-    _c.values = [];
+    _c.values = _c.value || [];
 }
+console.log('vlas', _c.values);
 $.each(_c.values, function(row, val) {
     var val_num = 0;
     var inputs = [];

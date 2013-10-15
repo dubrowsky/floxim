@@ -51,6 +51,70 @@ class fx_controller_component extends fx_controller {
         return $config;
     }
     
+    public function config_list_filtered($config) {
+        $config['settings'] += $this->_config_conditions();
+        return $config;
+    }
+    
+    protected function _config_conditions () {
+        $fields['conditions'] = array(
+            'name' => 'conditions',
+            'label' => fx::lang('Conditions','controller_component'),
+            'type' => 'set',   
+            'tpl' => array(
+                array(
+                    'id' => 'name',
+                    'name' => 'name',
+                    'type' => 'select',
+                    'values' =>  $this
+                            ->get_component()
+                            ->all_fields()
+                            ->find('type', fx_field::FIELD_MULTILINK, '!=')
+                            ->get_values('description', 'name')                
+                ),  
+                array(
+                    'id' => 'operator',
+                    'name' => 'operator',
+                    'type' => 'select',
+                    'values' =>array(
+                        array(
+                            '>', '>'
+                        ),
+                        array(
+                            '<', '<'
+                        ),
+                        array(
+                            '>=', '>='
+                        ),
+                        array(
+                            '<=', '<='
+                        ),
+                        array(
+                            '=', '='
+                        ),
+                        array(
+                            '!=', '!='
+                        ),
+                        array(
+                            'LIKE', 'LIKE'
+                        ),                 
+                    ),                
+                ),
+                array(
+                    'id' => 'value',
+                    'name' => 'value',
+                    'type' => 'string'                
+                ),
+            ),
+            'labels' => array(
+                'Field',
+                'Operator',
+                'Value'
+            ),
+        );
+        return $fields;
+    }  
+    
     public function config_list_infoblock($config) {
         
         /*
@@ -305,6 +369,8 @@ class fx_controller_component extends fx_controller {
     }
     
     public function do_list_filtered() {
+        $this->set_param('skip_parent_filter', true);
+        $this->set_param('skip_infoblock_filter', true);
         $this->listen('query_ready', function($q, $ctr) {
             $conditions = $ctr->get_param('conditions');
             if (isset($conditions) && is_array($conditions)) {
@@ -317,6 +383,7 @@ class fx_controller_component extends fx_controller {
                 }
             }
         });
+        return $this->do_list();
     }
     
 
@@ -382,10 +449,10 @@ class fx_controller_component extends fx_controller {
                 $finder->limit($limit);
             }
         }
-        if ( ($parent_id = $this->get_param('parent_id')) ) {
+        if ( ($parent_id = $this->get_param('parent_id')) && !($this->get_param('skip_parent_filter')) ) {
             $finder->where('parent_id', $parent_id);
         }
-        if ( ( $infoblock_id = $this->get_param('infoblock_id')) ) {
+        if ( ( $infoblock_id = $this->get_param('infoblock_id')) && !($this->get_param('skip_infoblock_filter')) ) {
             $finder->where('infoblock_id', $infoblock_id);
         }
         $this->_finder = $finder;
