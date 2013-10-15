@@ -4,15 +4,6 @@ class fx_controller_component_section extends fx_controller_component_page {
     /*
      * Отключаем "Отдельную страницу" для компонента
      */
-    public function info_record() {
-        return array('disabled' => true);
-    }
-    
-    public function info_listing() {
-        return array(
-            'name' => fx::lang('Navigation','component_section')
-        );
-    }
 
     public function get_action_settings($action)
     {
@@ -62,7 +53,7 @@ class fx_controller_component_section extends fx_controller_component_page {
         return $fields;
     }
     
-    public function do_listing() {
+    public function do_list_infoblock() {
         
         $c_page_id  = fx::env('page');
         $path = fx::data('content_page', $c_page_id)->get_parent_ids();
@@ -105,7 +96,7 @@ class fx_controller_component_section extends fx_controller_component_page {
                 fx::data('content_page')->make_tree($items);
             }
         });
-        return parent::do_listing();
+        return parent::do_list_infoblock();
     }
     
     public function info_breadcrumbs() {
