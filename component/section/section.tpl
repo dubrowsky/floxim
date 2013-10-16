@@ -1,5 +1,5 @@
 <div 
-    fx:template="listing" 
+    fx:template="list" 
     fx:name="Standard menu"
     id="menu" 
     class="std_menu">

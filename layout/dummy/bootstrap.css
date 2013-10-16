@@ -2990,6 +2990,15 @@
     display: block;
 }
 
+.bootstrap  ul.nav li.dropdown:hover ul.dropdown-menu{
+display: block;
+margin: 0;
+}
+
+.bootstrap  a.menu:after, .dropdown-toggle:after {
+content: none;
+}
+
 .bootstrap .open>a {
     outline: 0;
 }

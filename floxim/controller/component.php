@@ -53,6 +53,7 @@ class fx_controller_component extends fx_controller {
     
     public function config_list_filtered($config) {
         $config['settings'] += $this->_config_conditions();
+        dev_log(get_class($this), 'filtered', $config);
         return $config;
     }
     
@@ -174,7 +175,7 @@ class fx_controller_component extends fx_controller {
     }
     
     public function do_record() {
-        $page = fx::data('content_page', fx::env('page'));
+        $page = fx::env('page');
         return array('items' => $page);
     }
     
@@ -362,7 +363,7 @@ class fx_controller_component extends fx_controller {
                 }
                 break;
             case 'current_page_id': default:
-                $parent_id = fx::env('page');
+                $parent_id = fx::env('page')->get('id');
                 break;
         }
         return $parent_id;
@@ -383,7 +384,8 @@ class fx_controller_component extends fx_controller {
                 }
             }
         });
-        return $this->do_list();
+        $res = $this->do_list();
+        return $res;
     }
     
 

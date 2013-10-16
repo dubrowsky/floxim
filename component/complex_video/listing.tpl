@@ -1,4 +1,4 @@
-<div fx:template="listing" class="video_list">
+<div fx:template="list" class="video_list">
     <div fx:template="item" class="video">
         <h2><a href="{$ur}">{$name}</a></h2>
         <div class="video">

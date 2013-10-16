@@ -1,4 +1,4 @@
-<div fx:template="listing" class="project_list">
+<div fx:template="list" class="project_list">
 	{css}listing.css{/css}
 	<div fx:template="item" class="project">
 	   <div class="year">{$date|'d.m.Y'}2000{/$}</div>

@@ -8,6 +8,7 @@
         {js}
             FX_JQUERY_PATH
             script.js
+            bootstrap.js
         {/js}
         
         {css}
@@ -85,14 +86,20 @@
                                     {%Home}Home{/%}
                                 </a>      
                             </div>
-                            <div fx:area="menu" fx:size="wide,low" style="overflow:hidden;">
+                            <div fx:area="menu" fx:size="wide,low" >
                                 <ul
                                     fx:template="top_menu"
                                     fx:name="Main menu"
                                     fx:of="section.list"
                                     class="nav navbar-nav">
-                                    <li fx:template="inactive"><a href="{$url}">{$name}</a></li>
-                                    <li fx:template="active" class="active"><a href="{$url}">{$name}</a></li>
+                                    <li fx:each="$items" class="{if $active} active{/if}{if $children} dropdown{/if}" >
+                                        <a href="{$url}" {if $children}class="dropdown-toggle" {/if}>{$name}</a>
+                                        <ul fx:if="$children" class="dropdown-menu">
+                                            <li fx:each="$children" fx:prefix="child">
+                                                <a href="{$child_url}">{$child_name}</a>
+                                            </li>
+                                        </ul>
+                                    </li>
                                 </ul>
                                 <div fx:template="searchline" fx:of="widget_search.show" class="col-md-3 pull-right search-line">
                                     <div class="input-group">
@@ -339,7 +346,7 @@
                                     <h3 class="no-top-margin"><a href="{$url}">{$name}</a></h3>
                                     <h5>{$publish_date|'d.m.Y'}</h5>
                                     <div>{$anounce}</div>
-                                    {call id="classifier.entity_classifier"}{$items select="$tags" /}{/call}
+                                    {call id="component_classifier.entity_classifier"}{$items select="$tags" /}{/call}
                                 </div>
                             </div>
                         </div>
@@ -354,12 +361,12 @@
                                 <div>
                                     <img src="{$image}" alt="{$full_name}" class="pull-left">
                                     <div>{$text}</div>
-                                    {call id="classifier.entity_classifier"}{$items select="$item['tags']" /}{/call}
+                                    {call id="component_classifier.entity_classifier"}{$items select="$item['tags']" /}{/call}
                                 </div>
                             </div>
                         </div>
                         <div 
-                            fx:template="preson_record"
+                            fx:template="person_record"
                             fx:of="person.record"
                             fx:omit="true">
                             <div fx:template="item" 
@@ -370,12 +377,12 @@
                                 <div>
                                     <img src="{$photo}" alt="{$full_name}" class="pull-left">
                                     <div>{$description}</div>
-                                    {call id="contact.entity_contact"}{$items select="$item['contacts']" /}{/call}
+                                    {call id="component_contact.entity_contact"}{$items select="$item['contacts']" /}{/call}
                                 </div>
                             </div>
                         </div>
                         <div 
-                            fx:template="preson_list"
+                            fx:template="person_list"
                             fx:of="person.list"
                             fx:omit="true">
                             <div fx:template="item" 

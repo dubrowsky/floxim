@@ -3,7 +3,7 @@ class fx_controller_layout extends fx_controller {
     
     public function show() {
         if (! ($page_id = $this->get_param('page_id')) ) {
-            $page_id = fx::env('page');
+            $page_id = fx::env('page')->get('id');
             $this->input['page_id'] = $page_id;
         }
         if (! ($layout_id = $this->get_param('layout_id'))) {

@@ -64,7 +64,7 @@ class fx_controller_component_blogpost extends fx_controller_component {
     public function do_listing_by_tag() {
         $this->listen('query_ready', function($query) {
             $ids = fx::data('content_tagpost')->
-                    where('tag_id', fx::env('page'))->
+                    where('tag_id', fx::env('page')->get('id'))->
                     select('post_id')->
                     get_data()->get_values('post_id');
             $query->where('id', $ids);

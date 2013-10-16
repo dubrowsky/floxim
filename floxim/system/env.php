@@ -52,11 +52,14 @@ class fx_system_env extends fx_system {
   }
 
   public function set_page ( $page ) {
+      if (is_numeric($page)) {
+        $page = fx::data('content_page', $page);
+      }
       $this->current['page'] = $page;
   }
 
   public function get_page ( ) {
-      return (int)$this->current['page'];
+      return $this->current['page'];
   }
 
   public function set_tpl ( $tpl ) {
@@ -101,7 +104,7 @@ class fx_system_env extends fx_system {
   
   public function get_layout() {
         if (!$this->current['layout']) {
-            $page_id = $this->get_page();
+            $page_id = $this->get_page()->get('id');
             if ($page_id) {
                 $page = fx::data('content_page', $page_id);
                 if ($page['layout_id']) {

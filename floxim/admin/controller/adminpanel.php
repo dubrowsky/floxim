@@ -33,7 +33,7 @@ class fx_controller_admin_adminpanel extends fx_controller_admin {
             'button' => array(
                 'essence' => 'infoblock',
                 'action' => 'layout_settings',
-                'page_id' => fx::env('page')
+                'page_id' => fx::env('page')->get('id')
             )
         );
         return $more_menu;
