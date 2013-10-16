@@ -207,7 +207,7 @@ class fx_system_page extends fx_system {
                 $buffer
             );
         }
-        $buffer = str_replace("<body", "<body data-fx_page_id='".fx::env('page')->get('id')."'", $buffer);
+        $buffer = str_replace("<body", "<body data-fx_page_id='".fx::env('page_id')."'", $buffer);
 
         
         if (fx::is_admin()) {

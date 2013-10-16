@@ -71,8 +71,15 @@ class fx_controller {
 
 
     public function get_action_method() {
-        $action = $this->_action_prefix.$this->action;
-        return is_callable(array($this, $action)) ? $action : 'default_action';
+        $actions = explode('_', $this->action);
+        while($actions){
+            $action = $this->_action_prefix.implode('_', $actions);
+            array_pop($actions);
+            if (is_callable(array($this, $action))) {
+                return $action;
+            }
+        }
+        return  'default_action';
     }
 
 
@@ -164,11 +171,11 @@ class fx_controller {
             return;
         }
         $settings = $params['settings'];
-        if (!isset($params['force'])) {
-            return $settings;
-        }
         foreach ($params['defaults'] as $param => $val) {
             $settings[$param]['value'] = $val;
+        }
+        if (!isset($params['force'])) {
+            return $settings;
         }
         foreach (array_keys($params['force']) as $forced_key) {
             unset($settings[$forced_key]);

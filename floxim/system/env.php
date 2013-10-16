@@ -62,6 +62,13 @@ class fx_system_env extends fx_system {
       return $this->current['page'];
   }
 
+  public function get_page_id () {
+      if (isset($this->current['page']) && is_object($this->current['page'])) {
+         return $this->current['page']->get('id');
+      }
+      return NULL;
+  }
+
   public function set_tpl ( $tpl ) {
       $this->current['tpl'] = $tpl;
   }

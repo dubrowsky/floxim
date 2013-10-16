@@ -53,7 +53,6 @@ class fx_controller_component extends fx_controller {
     
     public function config_list_filtered($config) {
         $config['settings'] += $this->_config_conditions();
-        dev_log(get_class($this), 'filtered', $config);
         return $config;
     }
     
