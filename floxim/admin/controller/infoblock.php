@@ -120,7 +120,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
      */
     
     public function select_settings($input) {
-
+        dev_log('input', $input);
         // Текущий (редактируемый) инфоблок
     	$infoblock = null;
         // special mode for layouts

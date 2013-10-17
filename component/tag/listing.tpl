@@ -1,4 +1,4 @@
-<div fx:template="tag_list" fx:of="listing" fx:name="Tag list" class="tag_list">
+<div fx:template="tag_list" fx:of="list" fx:name="Tag list" class="tag_list">
     <span 
         fx:template="item" 
         class="tag">
@@ -10,7 +10,7 @@
     
 <div 
     fx:template="entity_tags" 
-    fx:of="listing" 
+    fx:of="list" 
     fx:name="Tags for entity" 
     class="entity_tags">
         {%tags_label}Tags:{/%} 

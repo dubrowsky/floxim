@@ -1,4 +1,4 @@
-<div fx:template="listing" class="company_list">
+<div fx:template="list" class="company_list">
 	{css}listing.css{/css}
 	<div fx:template="item" class="company_item">
 		<div class="image">

@@ -1,4 +1,4 @@
-<div fx:template="listing" class="photo_list">
+<div fx:template="list" class="photo_list">
     <div fx:template="item" class="photo">
         <a class="pic" href="{$url}">
             <img src="{$image}" alt="{$name}" />

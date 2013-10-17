@@ -4,15 +4,6 @@ class fx_controller_component_section extends fx_controller_component_page {
     /*
      * Отключаем "Отдельную страницу" для компонента
      */
-    public function info_record() {
-        return array('disabled' => true);
-    }
-    
-    public function info_listing() {
-        return array(
-            'name' => fx::lang('Navigation','component_section')
-        );
-    }
 
     public function get_action_settings($action)
     {
@@ -62,12 +53,10 @@ class fx_controller_component_section extends fx_controller_component_page {
         return $fields;
     }
     
-    public function do_listing() {
-        
-        $c_page_id  = fx::env('page');
-        $path = fx::data('content_page', $c_page_id)->get_parent_ids();
+    public function do_list_infoblock() {
+        $c_page_id  = fx::env('page')->get('id');
+        $path = fx::env('page')->get_parent_ids();
         $path []= $c_page_id;
-        
         $submenu_type = $this->get_param('submenu');
         if ($submenu_type == 'none') {
             $this->set_param('parent_type', 'mount_page_id');
@@ -105,7 +94,34 @@ class fx_controller_component_section extends fx_controller_component_page {
                 fx::data('content_page')->make_tree($items);
             }
         });
-        return parent::do_listing();
+        return parent::do_list_infoblock();
+    }
+
+    public function do_list_submenu() {
+        $source = $this->get_param('source_infoblock_id');
+        $path = fx::env('page')->get_path();
+        if (isset($path[1])) {
+            $this->set_param('parent_id', $path[1]->get('id'));
+            $this->set_param('infoblock_id', $source);
+        }
+        
+        $paths = fx::env('page')->get_parent_ids();
+        $paths[] = fx::env('page')->get('id');
+        $this->listen('items_ready', function($items, $ctr) use ($paths) {
+            foreach ($items as $item) {
+                if (in_array($item['id'], $paths)) {
+                    $item['active'] = true;
+                }
+            }
+        });
+        return $this->do_list();
+    }
+
+    public function config_list_submenu($config) {
+        $site_id = fx::env('site')->get('id');
+        $sections = fx::data('infoblock')->where('site_id', $site_id)->get_content_infoblocks('section')->get_values('name', 'id');
+        $config['settings']['source_infoblock_id']['values'] = $sections;
+        return $config;
     }
     
     public function info_breadcrumbs() {

@@ -1,4 +1,4 @@
-<div fx:template="listing" class="vacancy_list">
+<div fx:template="list" class="vacancy_list">
 	{css}listing.css{/css}
 	<div fx:template="item" class="vacancy">
 	   <a href="{$url}"><h2>{$position}Position{/$}</h2></a>

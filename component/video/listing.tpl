@@ -1,4 +1,4 @@
-<div fx:template="listing" class="video_list">
+<div fx:template="list" class="video_list">
 	{css}listing.css{/css}
 	<div fx:template="item" class="video">
 		<div class="embed_code">
