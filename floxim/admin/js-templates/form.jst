@@ -66,12 +66,9 @@ c_val = $t.clear(c_val);
 ?>
 <div class="fx_textarea_container">
 <?
-var hide_in_panel = _c.context == 'panel' && _c.wysiwyg;
-if (hide_in_panel) {
-    var $temp_container = $('<div />');
-    $temp_container.html(_c.value);
-    var text = $temp_container.text().replace(/^\s+/, '').slice(0, 20)+'...';
-    ?><a class="fx_panel_text_expander" title="Click here to edit"><?=text?></a><?
+_o.hide_in_panel = _c.context == 'panel' && _c.wysiwyg;
+if (_o.hide_in_panel) {
+    ?><a class="fx_panel_text_expander" title="Click here to edit">...</a><?
 }
 ?>
 <textarea 
@@ -80,11 +77,22 @@ if (hide_in_panel) {
         _c.wysiwyg ? 'fx_wysiwyg' : 'fx_input'
         ?> <?=
         _c.code ? 'fx_code fx_code_'+_c.code : ''?>"
-    <?if (hide_in_panel) {?> style="display:none;"<?}?>
+    <?if (_o.hide_in_panel) {?> style="display:none;"<?}?>
         ><?=c_val?></textarea>
 </div>
 
 <!--jquery-->
+
+function set_snippet(val) {
+    var $temp_container = $('<div />');
+    $temp_container.html(val);
+    var text = $temp_container.text().replace(/^\s+/, '').slice(0, 20)+'...';
+    $('.fx_panel_text_expander', html).html(text);
+}
+if (_o.hide_in_panel) {
+    set_snippet(_c.value);
+}
+
 if (_c.context !== 'panel') {
     $('textarea.fx_wysiwyg', html).redactor();
 } else {
@@ -92,19 +100,23 @@ if (_c.context !== 'panel') {
     expander.click(function() {
         var real_ta = $('textarea.fx_wysiwyg', html);
         var ta = real_ta.clone();
-        var taw = $('<div class="fx_overlay" />');
-        taw.append(ta);
-        $('body').append(taw);
-        ta.show();
-        taw.css({
-            position:'fixed',
-            top: (expander.offset().top + 20) + 'px',
-            left:(expander.offset().left - 300) + 'px',
-            width:'550px',
-            'max-height':'300px',
-            'z-index':'3010'
+        if (expander.data('popup')) {
+            return;
+        }
+        
+        var popup = new $fx.popup({
+            target:this,
+            maxWidth:500,
+            onfinish:function() {
+                var res = ta.redactor('get');
+                $('textarea.fx_wysiwyg', html).val(res).html(res);
+                set_snippet(res);
+                ta.redactor('destroy');
+            }
         });
-        setTimeout(function() {ta.redactor();}, 50);
+        popup.$body.append(ta);
+        ta.redactor({minHeight:300,autoresize:false});
+        popup.position();
     });
 }
 

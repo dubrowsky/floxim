@@ -386,7 +386,6 @@ fx_front.prototype.select_item = function(node) {
     //$fx.front.fix();
     $('html').on('keydown.fx_selected', function(e) {
        if (e.which === 27) {
-           console.log('deselecting');
            if (e.isDefaultPrevented && e.isDefaultPrevented()) {
                 return;
            }

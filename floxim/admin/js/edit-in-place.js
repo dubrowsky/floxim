@@ -3,7 +3,7 @@
         if (!this.data('edit_in_place')) {
             this.data('edit_in_place', new fx_edit_in_place(this));
         }
-    }
+    };
 })(jQuery);
 
 function fx_edit_in_place( node ) { 
@@ -105,7 +105,7 @@ fx_edit_in_place.prototype.start = function(meta) {
             }
             break;
 	}
-	this.node.closest('.fx_selected').one('fx_deselect.edit_in_place', function() {
+	$('html').one('fx_deselect.edit_in_place', function() {
             edit_in_place.save().stop();
 	});
 };
@@ -149,11 +149,13 @@ fx_edit_in_place.prototype.save = function() {
         if (this.is_wysiwyg && this.source_area.is(':visible')) {
             this.node.redactor('toggle');
         }
-        var val = this.is_wysiwyg ? node.html() : node.text();
-        if (val !== node.data('fx_saved_value') ) {
+        var text_val = node.text();
+        var html_val = node.html();
+        var saved_val = node.data('fx_saved_value');
+        if (text_val !== saved_val && html_val !== saved_val ) {
             vars.push({
                 'var':this.meta,
-                value:val
+                value:this.is_wysiwyg ? html_val : text_val
             });
         }
     }
