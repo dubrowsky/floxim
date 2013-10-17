@@ -43,7 +43,7 @@ $.each(_c.values, function(row, val) {
             )
         );
     });
-    $('.fx_fieldset_rows', html).append($t.jQuery('fieldset_row', inputs, {index:row}));
+    $('.fx_fieldset_rows', html).append($t.jQuery('fieldset_row', inputs, {index:row, set_field: _c}));
 });
 
 fs.on('click', '.fx_fieldset_remove', function() {
@@ -59,20 +59,167 @@ $('.fx_fieldset_add', fs).click( function() {
             })
         );
     }
-    var new_row = $t.jQuery('fieldset_row', inputs, {index:index});
+    var new_row = $t.jQuery('fieldset_row', inputs, {index:index, set_field: _c});
     $('.fx_fieldset_rows', fs).append(new_row);
 });
 
-<!--[fieldset_row]-->
+<!--[fieldset_row ? _o.set_field.is_cond_set === undefined]-->
 <tr class="fx_fieldset_row row_<?=_o.index?>">
-	<?for (var i = 0; i< _c.length; i++) {
+    <?for (var i = 0; i< _c.length; i++) {
         ?><td class="input_cell_<?=i?>"></td><?
-	}?>
-	<td>
+    }?>
+    <td>
         <a class="fx_fieldset_remove"><?=fx_lang('Удалить')?></a>
     </td>
 </tr>
+
 <!--jquery-->
 for (var i = 0; i< _c.length; i++) {
-	$('.input_cell_'+i, html).append( $t.jQuery('input', _c[i]) );
+    $('.input_cell_'+i, html).append( $t.jQuery('input', _c[i]) );
 }
+
+<!--[fieldset_row ? _o.set_field.is_cond_set === true]-->
+<tr class="fx_fieldset_row row_<?=_o.index?>">
+    <td class="input_cell_0">
+        <?
+
+            if (typeof _o.index === 'number') {
+                var name = 'new_'+_o.index;
+            } else {
+                var name = _o.index;
+            }
+        ?>
+        <select class="fx_input" name="params[conditions][<?=name?>][<?=_o.set_field.tpl[0].name?>]" >
+        </select>
+    </td>
+    <td class="input_cell_1"></td>
+    <td class="input_cell_2"></td>
+    <td>
+        <a class="fx_fieldset_remove"><?=fx_lang('Удалить')?></a>
+    </td>
+</tr>
+
+<!--jquery-->
+var i = 0;
+
+html.on('change', '.input_cell_0 select', function() {
+    var type = $(this).find('option').filter(':selected').attr('data-field-type');
+    set_control(type);
+});
+function set_saved () {
+    if (typeof _o.index !=='number'){
+        var name = "[name='params[conditions]["+_o.index+"]";
+        $(name+"[name]']", html).val(_o.set_field.values[_o.index].name);
+
+        $(name+"[name]']", html).change();
+        $(name+"[operator]']", html).val(_o.set_field.values[_o.index].operator);
+        if ($(name+"[name]']", html).find('option').filter(':selected').attr('data-field-type') == 'bool') {
+            if(_o.set_field.values[_o.index].value == 1) 
+                $(name+"[value]']", html).eq(1).attr('checked', 'checked');
+        } else {
+            $(name+"[value]']", html).val(_o.set_field.values[_o.index].value);
+        }
+    }   
+}
+function set_control (type) {
+    if (typeof _o.index === 'number') {
+        var name = 'params[conditions][new_'+_o.index+'][';
+    } else {
+        var name = 'params[conditions]['+_o.index+'][';
+    }
+    switch(type) {
+        case 'text':
+        case 'string':
+            var select = $t.jQuery(
+                'input', {
+                    'type':'select', 
+                    'name': name+'operator'+']',
+                    'values':
+                        _o
+                            .set_field
+                            .operators_map
+                            .string
+                    }
+            );
+            $('.input_cell_1', html).html(select);
+            var input_line = $t.jQuery(
+                'input', {
+                    'type':'text', 
+                    'name': name+'value'+']',
+                    }
+            );
+            $('.input_cell_2', html).html(input_line);
+        break;
+        case 'int':
+            var select = $t.jQuery(
+                'input', {
+                    'type':'select', 
+                    'name': name+'operator'+']',
+                    'values':
+                        _o
+                            .set_field
+                            .operators_map
+                            .int
+                    }
+            );
+            $('.input_cell_1', html).html(select);
+            var input_line = $t.jQuery(
+                'input', {
+                    'type':'int', 
+                    'name': name+'value'+']',
+                    }
+            );
+            $('.input_cell_2', html).html(input_line);
+        break;
+        case 'bool':
+            var select = $t.jQuery(
+                'input', {
+                    'type':'hidden', 
+                    'name': name+'operator'+']',
+                    'value': '='
+                    }
+            );
+            $('.input_cell_1', html).html(select);
+            var input_line = $t.jQuery(
+                'input', {
+                    'type':'checkbox', 
+                    'name': name+'value'+']',
+                    }
+            );
+            $('.input_cell_2', html).html(input_line);
+        break;
+        case 'datetime':
+            var select = $t.jQuery(
+                'input', {
+                    'type':'select', 
+                    'name': name+'operator'+']',
+                    'values':
+                        _o
+                            .set_field
+                            .operators_map
+                            .datetime
+                    }
+            );
+            $('.input_cell_1', html).html(select);
+            var input_line = $t.jQuery(
+                'input', {
+                    'type':'datetime', 
+                    'name': name+'value'+']',
+                    }
+            );
+            $('.input_cell_2', html).html(input_line);
+        break;
+        //default:
+        //    $('.input_cell_1', html).append('<select></select>');
+    
+    }
+    
+}
+$.each(_o.set_field.tpl[0].values, function (key, value) {
+    $('.input_cell_0 select', html).append('<option value="'+key+'" data-field-type="'+value.type+'">'+value.description+'</option>');
+    if (i++ == 0) {
+        set_control(value.type)
+    }
+})
+
+set_saved ();

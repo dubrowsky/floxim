@@ -60,7 +60,8 @@ class fx_controller_component extends fx_controller {
         $fields['conditions'] = array(
             'name' => 'conditions',
             'label' => fx::lang('Conditions','controller_component'),
-            'type' => 'set',   
+            'type' => 'set', 
+            'is_cond_set' => true,  
             'tpl' => array(
                 array(
                     'id' => 'name',
@@ -70,41 +71,32 @@ class fx_controller_component extends fx_controller {
                             ->get_component()
                             ->all_fields()
                             ->find('type', fx_field::FIELD_MULTILINK, '!=')
-                            ->get_values('description', 'name')                
-                ),  
-                array(
-                    'id' => 'operator',
-                    'name' => 'operator',
-                    'type' => 'select',
-                    'values' =>array(
-                        array(
-                            '>', '>'
-                        ),
-                        array(
-                            '<', '<'
-                        ),
-                        array(
-                            '>=', '>='
-                        ),
-                        array(
-                            '<=', '<='
-                        ),
-                        array(
-                            '=', '='
-                        ),
-                        array(
-                            '!=', '!='
-                        ),
-                        array(
-                            'LIKE', 'LIKE'
-                        ),                 
-                    ),                
+                            ->find('type', fx_field::FIELD_LINK, '!=')
+                            ->find('type', fx_field::FIELD_IMAGE, '!=')
+                            ->get_values(array('description', 'type'), 'name')
+                ), 
+            ),
+            'operators_map' => array (
+                'string' => array(
+                    'contains' => 'contains',
+                    '=' => '='
                 ),
-                array(
-                    'id' => 'value',
-                    'name' => 'value',
-                    'type' => 'string'                
+                'int' => array(
+                    '=' => '=',
+                    '>' => '>',
+                    '<' => '<',
+                    '>=' => '>=',
+                    '<=' => '<=',
+                    '!=' => '!=',
                 ),
+                'datetime' => array(
+                    '=' => '=',
+                    '>' => '>',
+                    '<' => '<',
+                    '>=' => '>=',
+                    '<=' => '<=',
+                    '!=' => '!=',
+                )
             ),
             'labels' => array(
                 'Field',
@@ -112,6 +104,9 @@ class fx_controller_component extends fx_controller {
                 'Value'
             ),
         );
+        foreach ($fields['conditions']['tpl'][0]['values'] as &$value) {
+            $value['type'] = fx_field::get_type_by_id($value['type']);
+        }
         return $fields;
     }  
     
@@ -375,6 +370,11 @@ class fx_controller_component extends fx_controller {
             $conditions = $ctr->get_param('conditions');
             if (isset($conditions) && is_array($conditions)) {
                 foreach ($conditions as $condition) {
+                    if ($condition['operator'] == 'contains') {
+                        $condition['value'] = '%'.$condition['value'].'%'; 
+                        $condition['operator'] = 'LIKE';
+                    }
+
                     $q->where(
                         $condition['name'], 
                         $condition['value'], 
