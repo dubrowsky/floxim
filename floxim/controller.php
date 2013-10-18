@@ -171,8 +171,10 @@ class fx_controller {
             return;
         }
         $settings = $params['settings'];
-        foreach ($params['defaults'] as $param => $val) {
-            $settings[$param]['value'] = $val;
+        if (isset($params['defaults']) && is_array($params['defaults'])) {
+            foreach ($params['defaults'] as $param => $val) {
+                $settings[$param]['value'] = $val;
+            }
         }
         if (!isset($params['force'])) {
             return $settings;

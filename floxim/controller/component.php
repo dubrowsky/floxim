@@ -30,6 +30,10 @@ class fx_controller_component extends fx_controller {
         $sources []= fx::config()->DOCUMENT_ROOT.'/floxim/controller/component.cfg.php';
         $chain = $this->get_component()->get_chain();
         foreach ($chain as $com) {
+            $com_file = fx::config()->DOCUMENT_ROOT.'/floxim/std/component/'.$com['keyword'].'/'.$com['keyword'].'.cfg.php';
+            if (file_exists($com_file)) {
+                $sources[]= $com_file;
+            }
             $com_file = $com_dir.$com['keyword'].'/'.$com['keyword'].'.cfg.php';
             if (file_exists($com_file)) {
                 $sources[]= $com_file;
