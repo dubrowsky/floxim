@@ -133,7 +133,7 @@ class fx_controller_component_section extends fx_controller_component_page {
     
     public function do_breadcrumbs() {
         if ( !($page_id = $this->get_param('page_id'))) {
-            $page_id = fx::env('page');
+            $page_id = fx::env('page_id');
         }
         $essence_page = fx::data('content_page',$page_id);
         $parents = $essence_page->get_parent_ids();
