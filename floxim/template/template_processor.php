@@ -42,6 +42,10 @@ class fx_template_processor {
             $processor = new fx_template_processor();
             $processor->process_dir($source_dir);
             return $tpl_file;
+        } elseif(is_dir(fx::config()->DOCUMENT_ROOT.'/floxim/std/'.$ctr_type.'/'.$ctr_name)) {
+            $processor = new fx_template_processor();
+            $processor->process_dir(fx::config()->DOCUMENT_ROOT.'/floxim/std/'.$ctr_type.'/'.$ctr_name);
+            return $tpl_file;
         }
         return null;
     }

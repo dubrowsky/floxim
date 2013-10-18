@@ -284,11 +284,14 @@ class fx_core extends fx_system {
                     $ctr_type = 'other';
                     $ctr_name = $controller_name;
                 }
-                $test_file = $doc_root.$ctr_type.'/'.$ctr_name.'/'.$ctr_name;
+                $test_file = $doc_root.'/floxim/std/'.$ctr_type.'/'.$ctr_name.'/'.$ctr_name;
                 if (file_exists($test_file.'.php')) {
                     $file = $test_file;
                     break;
-                }
+                } elseif (file_exists($doc_root.$ctr_type.'/'.$ctr_name.'/'.$ctr_name.'.php')) {
+                    $file = $doc_root.$ctr_type.'/'.$ctr_name.'/'.$ctr_name;
+                    break;
+                } 
             }
 
             if ($classname == 'controller_layout' || $classname == 'controller_admin_layout') {
