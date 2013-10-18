@@ -35,7 +35,14 @@ if (_c.context === 'panel') {
         if (expander.data('popup')) {
             return;
         }
-        var cloned = $('.fx_fieldset', html).clone(true);
+        var orig = $('.fx_fieldset', html);
+        var cloned = orig.clone(true);
+
+        console.log($('select', orig));
+        $('select', orig).each(function(i) {
+            $('select', cloned).eq(i).val($(this).val());
+	});
+        
         cloned.show();
         var popup = new $fx.popup({
             target:expander,

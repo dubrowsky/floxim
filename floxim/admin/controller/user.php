@@ -3,7 +3,7 @@
 class fx_controller_admin_user extends fx_controller_admin {
 
     public function all() {
-        $users = fx::data('user')->all();
+        $users = fx::data('content_user')->all();
 
         $result = array('type' => 'list', 'filter' => true, 'tpl' => 'imgh');
         $result['labels'] = array();
@@ -15,7 +15,7 @@ class fx_controller_admin_user extends fx_controller_admin {
 
             $r = array(
                 'id' => $v['id'],
-                'header' => array('name' => $header_text, 'url' => 'user.full('.$v['id'].')'),
+                'header' => array('name' => $header_text, 'url' => 'user.edit('.$v['id'].')'),
                 'text' => $text,
                 'name' => $v['login']
             );
@@ -42,7 +42,7 @@ class fx_controller_admin_user extends fx_controller_admin {
     }
 
     public function edit_save($input) {
-        $info = fx::data('user', $input['id']);
+        $info = fx::data('content_user', $input['id']);
         return $this->_save($input, $info);
     }
 
@@ -69,7 +69,7 @@ class fx_controller_admin_user extends fx_controller_admin {
             }
 
 			if ($result['status'] != 'error') {
-				$info = fx::data('user')->create(
+				$info = fx::data('cotent_user')->create(
                     array(
                         'checked' => 1,
                         'created' => date("Y-m-d H:i:s")
@@ -120,7 +120,7 @@ class fx_controller_admin_user extends fx_controller_admin {
     }
 
     public function edit($input) {
-        $info = fx::data('user')->get_by_id($input['id']);
+        $info = fx::data('content_user', $input['id']);
         $fields = $this->_form($info);
         $fields[] = $this->ui->hidden('action', 'edit');
         $fields[] = $this->ui->hidden('id', $info['id']);

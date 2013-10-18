@@ -73,6 +73,8 @@ class fx_admin_submenu {
             $this->active = 'site';
             $this->active_main_menu = 'manage';
         }
+        
+        
 
         if ($match[1] == 'administrate') {
             $this->init_manage();
@@ -118,6 +120,12 @@ class fx_admin_submenu {
             $this->active = 'patch';
             $this->active_main_menu = 'manage';
         }
+        
+        if ($match[1] === 'user') {
+            $this->init_manage();
+            $this->active = 'user';
+            $this->active_main_menu = 'manage';
+        }
 
         return $this;
     }
@@ -153,6 +161,11 @@ class fx_admin_submenu {
             'patch', 
             fx::lang('Patches','system'), 
             'patch.all'
+        );
+        $this->menu[] = $this->add_node(
+            'user', 
+            fx::lang('Users','system'), 
+            'user.all'
         );
     }
 
