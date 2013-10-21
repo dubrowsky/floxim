@@ -194,8 +194,7 @@ class fx_controller_component extends fx_controller {
     
     public function do_list_infoblock() {
         $items = $this->do_list();
-        
-        if (fx::env('is_admin')) {
+        if (!$this->get_param('is_fake') && fx::env('is_admin')) {
             $infoblock = fx::data('infoblock', $this->get_param('infoblock_id'));
             $real_ib_name = $infoblock->get_prop_inherited('name');
             $ib_name = $real_ib_name ? $real_ib_name : $infoblock['id'];
