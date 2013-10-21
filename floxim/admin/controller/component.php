@@ -432,6 +432,9 @@ class fx_controller_admin_component extends fx_controller_admin {
         );
         $this->response->add_fields($fields);
         $this->response->add_form_button('save');
+        if ($input['data_sent']) {
+            return $this->template_save($input);
+        }
     }
     
     public function template_save($input) {
@@ -445,6 +448,7 @@ class fx_controller_admin_component extends fx_controller_admin {
         $res = mb_substr($info['full'], 0, $info['start']);
         $res .= $input['source'];
         $res .= mb_substr($info['full'], $info['start']+$info['length']);
+        dev_log('savng', $res, $info);
         $fh = fopen($info['file'], 'w');
         fputs($fh, $res);
         fclose($fh);
