@@ -36,6 +36,10 @@ class fx_controller_admin_user extends fx_controller_admin {
             )
         );
         $this->response->submenu->set_menu('user');
+        $this->response->breadcrumb->add_item(
+            fx::lang('Users', 'system'),
+            '#admin.user.all'
+        );
         return $res;
     }
 
@@ -149,6 +153,14 @@ class fx_controller_admin_user extends fx_controller_admin {
         $result['fields'] = $fields;
         $this->response->add_form_button('save');
         $this->response->submenu->set_menu('user');
+        $this->response->breadcrumb->add_item(
+            fx::lang('Users', 'system'),
+            '#admin.user.all'
+        );
+        $this->response->breadcrumb->add_item(
+            fx::lang('Edit user', 'system'),
+            '#admin.user.edit('.$input['params'][0].')'
+        );
         return $result;
     }
     public function add() {
@@ -161,6 +173,14 @@ class fx_controller_admin_user extends fx_controller_admin {
         $result['fields'] = $fields;
         $this->response->add_form_button('save');
         $this->response->submenu->set_menu('user');
+        $this->response->breadcrumb->add_item(
+            fx::lang('Users', 'system'),
+            '#admin.user.all'
+        );
+        $this->response->breadcrumb->add_item(
+            fx::lang('Add user', 'system'),
+            '#admin.user.add()'
+        );
         return $result;
     }
 
