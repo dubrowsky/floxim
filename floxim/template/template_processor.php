@@ -89,7 +89,6 @@ class fx_template_processor {
                 $T = new fx_template_html($file_data);
                 $file_data = $T->transform_to_floxim();
 
-                $file_data = trim($file_data);
                 $file_data = preg_replace("~\{\*.*?\*\}~s", '', $file_data);
 
                 if (!preg_match("~^{template~", $file_data)) {
@@ -105,11 +104,11 @@ class fx_template_processor {
                         '{template id="'.$auto_tpl_name.'"'.
                             ($is_layout ? ' of="false" ' : '').
                         '}'.
-                           trim($file_data).
+                           $file_data.
                         '{/template}';
                 }
 
-                $source .= trim($file_data);
+                $source .= $file_data;
                 $source .= '{/templates}';
             }
             $source .= '{/templates}';

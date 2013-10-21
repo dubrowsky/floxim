@@ -2,7 +2,7 @@
 class fx_template_html {
     protected $_string = null;
     public function __construct($string) {
-        $string = trim($string);
+        $string = $string;
         $this->_string = $string;
     }
     
