@@ -120,13 +120,6 @@ class fx_admin_submenu {
             $this->active = 'patch';
             $this->active_main_menu = 'manage';
         }
-        
-        if ($match[1] === 'user') {
-            $this->init_manage();
-            $this->active = 'user';
-            $this->active_main_menu = 'manage';
-        }
-
         return $this;
     }
 

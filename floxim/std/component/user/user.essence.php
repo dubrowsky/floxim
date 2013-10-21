@@ -132,7 +132,13 @@ class fx_content_user extends fx_content {
         return false;
     }
 
-    protected function _before_save() {
-
+    protected function _before_save () {
+        if ($this->is_modified('password')) {
+            $this['password'] = crypt($this['password'],  uniqid(mt_rand(), true));
+        }
+        if ($this->is_modified('email') && is_object(fx::data('content_user')->where('email', $this['email'])->one())) {
+            throw new Exception("Ununique email");
+            
+        }
     }
 }

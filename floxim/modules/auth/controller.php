@@ -10,8 +10,7 @@ class fx_controller_module_auth extends fx_controller_module {
         $user = fx::data('content_user')
                 ->where(fx::config()->AUTHORIZE_BY, $AUTH_USER)
                 ->one();
-        
-        if (!$user || !$user['password'] || $user['password'] != md5($AUTH_PW)) {
+        if (!$user || !$user['password'] || crypt($AUTH_PW, $user['password'])!==$user['password']) {
             $this->redirect();
             return;
         }
