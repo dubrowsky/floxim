@@ -2,13 +2,11 @@
 class fx_router_admin extends fx_router {
     
     public function route($url = null, $context = null) {
-
         $regexp = "/((floxim\/)+|(floxim\/index.php)+)$/";
         if (!preg_match($regexp, $url)) {
             return null;
         }
         $input = fx::input()->make_input();
-        
         if (empty($_REQUEST)) {
             return new fx_controller_admin($input);
         }
@@ -28,6 +26,7 @@ class fx_router_admin extends fx_router {
 
         try {
             $controller = new $classname($input, $action);
+            dev_log('routes', $classname);
         } catch (Exception $e) {
             die("Error! Essence: " . htmlspecialchars($essence));
         }
