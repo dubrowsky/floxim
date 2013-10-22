@@ -380,29 +380,37 @@ class fx_controller_component extends fx_controller {
             $conditions = $ctr->get_param('conditions');
             if (isset($conditions) && is_array($conditions)) {
                 foreach ($conditions as $condition) {
+                    $error = false;
                     switch ($condition['operator']) {
                         case 'contains':
                             $condition['value'] = '%'.$condition['value'].'%'; 
                             $condition['operator'] = 'LIKE';
                             break;
                         case 'next': 
-                            $q->where(
-                                $condition['name'], 
-                                '> NOW()', 
-                                'RAW'
-                            );
-                            $condition['value'] = '< NOW() + INTERVAL '.$condition['value'].' '.$condition['interval']; 
-                            $condition['operator'] = 'RAW';
+                            if (isset($condition['value']) && !empty($condition['value'])) {
+                                $q->where(
+                                    $condition['name'], 
+                                    '> NOW()', 
+                                    'RAW'
+                                );
+                                $condition['value'] = '< NOW() + INTERVAL '.$condition['value'].' '.$condition['interval']; 
+                                $condition['operator'] = 'RAW';
+                            } else {
+                                $error = true;
+                            }
                             break;
                         case 'last': 
-
-                            $q->where(
-                                $condition['name'], 
-                                '< NOW()', 
-                                'RAW'
-                            );
-                            $condition['value'] = '> NOW() + INTERVAL '.$condition['value'].' '.$condition['interval']; 
-                            $condition['operator'] = 'RAW';
+                            if (isset($condition['value']) && !empty($condition['value'])) {
+                                $q->where(
+                                    $condition['name'], 
+                                    '< NOW()', 
+                                    'RAW'
+                                );
+                                $condition['value'] = '> NOW() - INTERVAL '.$condition['value'].' '.$condition['interval']; 
+                                $condition['operator'] = 'RAW';
+                            } else {
+                                $error = true;
+                            }
                             break;
                         case 'in_future': 
                             $condition['value'] = '> NOW()'; 
@@ -413,14 +421,16 @@ class fx_controller_component extends fx_controller {
                             $condition['operator'] = 'RAW';
                             break;
                     }
-
-                    $q->where(
-                        $condition['name'], 
-                        $condition['value'], 
-                        $condition['operator']
-                    );
+                    if (!$error) {
+                        $q->where(
+                            $condition['name'], 
+                            $condition['value'], 
+                            $condition['operator']
+                        );
+                    }
                 }
             }
+            dev_log('query', get_class($this), $q->show_query());
         });
         $res = $this->do_list();
         return $res;

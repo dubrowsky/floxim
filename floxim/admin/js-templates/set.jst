@@ -214,6 +214,7 @@ function set_saved () {
                 );
                 var cell = $('<td class="input_cell_3"></td>').append(select);
                 $(name+"[value]']", html).parent().parent().after(cell);
+                $(name+"[value]']", html).unbind();
             }
             $(name+"[value]']", html).val(_o.set_field.values[_o.index].value).css('width', '40px');
         } else {
