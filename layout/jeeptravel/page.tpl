@@ -78,7 +78,7 @@
                         class="gallery fx_not_sortable" 
                         fx:template="index_slider" 
 						fx:name="Slider" 
-	                    fx:of="component_page.listing">
+	                    fx:of="page.list">
                         <div 
                             fx:each="$items"
                             class="gallery_item {if $item_is_first} gallery_item_active{/if} slideid{$id}">
@@ -142,7 +142,7 @@
                     </div>
                 </div>
                 <!-- This is for inner -->
-                <div class="sidebar" fx:area="sidebar" fx:if="$sidebar">
+                <div class="sidebar" fx:area="sidebar" fx:if="$sidebar" fx:size="narrow,high">
                     <ul fx:template="side_menu" fx:of="component_section.listing" fx:name="Side menu" class="jt_side_menu">
                         <li fx:template="inactive"><a href="{$url}">{$name}</a></li>
                         <li fx:template="active"><a href="{$url}"><b>{$name}</b></a></li>

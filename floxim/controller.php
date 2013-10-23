@@ -55,8 +55,15 @@ class fx_controller {
      * @return array|string массив с результатами работы контроллера
      * $input = null, $action = null, $do_return = false
      */
-    public function process() {	
+    public function process() {
     	$action = $this->get_action_method();
+        $cfg = $this->get_config();
+        if (isset($cfg['actions'][$this->action]['force'])) {
+            foreach ($cfg['actions'][$this->action]['force'] as $param => $value) {
+                $this->set_param($param, $value);
+            }
+        }
+        $this->trigger('before_action_run');
         return $this->$action($this->input);
     }
     
@@ -64,8 +71,15 @@ class fx_controller {
 
 
     public function get_action_method() {
-        $action = $this->_action_prefix.$this->action;
-        return is_callable(array($this, $action)) ? $action : 'default_action';
+        $actions = explode('_', $this->action);
+        while($actions){
+            $action = $this->_action_prefix.implode('_', $actions);
+            array_pop($actions);
+            if (is_callable(array($this, $action))) {
+                return $action;
+            }
+        }
+        return  'default_action';
     }
 
 
@@ -148,57 +162,113 @@ class fx_controller {
     }
     
     public function get_action_settings($action) {
-        if (!method_exists($this, 'settings_'.$action)) {
-            return array();
+        $cfg = $this->get_config();
+        if (!isset($cfg['actions'][$action])) {
+            return;
         }
-        $settings = call_user_func(array($this, 'settings_'.$action));
-        $defaults = $this->get_action_defaults($action);
-        if (!isset($defaults['params'])) {
+        $params = $cfg['actions'][$action];
+        if (!isset($params['settings'])) {
+            return;
+        }
+        $settings = $params['settings'];
+        if (isset($params['defaults']) && is_array($params['defaults'])) {
+            foreach ($params['defaults'] as $param => $val) {
+                $settings[$param]['value'] = $val;
+            }
+        }
+        if (!isset($params['force'])) {
             return $settings;
         }
-        $forced = array();
-        $force_all = false;
-        if (isset($defaults['force'])) {
-            if ($defaults['force'] === true || $defaults['force']=== '*') {
-                $force_all = true;
-            } else {
-                $force_parts = preg_split("~,\s*~", trim($defaults['force']));
-                foreach ($force_parts as $fp) {
-                    $fp = explode(".", $fp);
-                    if (count($fp) !== 2 || $fp[0] !== 'params') {
-                        continue;
-                    }
-                    $forced [trim($fp[1])] = true;
-                }
-            }
-        }
-        foreach ($defaults['params'] as $pk => $pv) {
-            if (isset($settings[$pk])) {
-                $settings[$pk]['value'] = $pv;
-                if ($force_all | isset($forced[$pk]) || isset($forced['*'])) {
-                    $settings[$pk]['type'] = 'hidden';
-                }
-            }
+        foreach (array_keys($params['force']) as $forced_key) {
+            unset($settings[$forced_key]);
         }
         return $settings;
     }
     
-    public function get_action_defaults($action) {
-        if (method_exists($this, 'defaults_'.$action)) {
-            return call_user_func(array($this, 'defaults_'.$action));
+    public function get_config() {
+        $sources = $this->_get_config_sources();
+        $config = array('actions' => $this->_get_real_actions());
+        foreach ($sources as $source) {
+            $level_config = include $source;
+            if (!is_array($level_config)) {
+                continue;
+            }
+            if (isset($level_config['actions']) && is_array($level_config['actions'])) {
+                $level_config['actions'] = $this->_prepare_action_config($level_config['actions']);
+                foreach (array_keys($config['actions']) as $parent_action) {
+                    if (!isset($level_config['actions'][$parent_action])) {
+                        $level_config['actions'][$parent_action] = array();
+                    }
+                }
+                $level_config['actions'] = self::_merge_actions($level_config['actions']);
+            }
+            $config = array_replace_recursive($config, $level_config);
         }
+        foreach ($config['actions'] as $action => &$params) {
+            $method_name = 'config_'.$action;
+            if(method_exists($this, $method_name)) {
+                $config['actions'][$action] = $this->$method_name($params);
+            }
+            if (!isset($params['settings']) || !is_array($params['settings'])) {
+                continue;
+            }
+            foreach ($params['settings'] as $param_key => &$param_field) {
+                if (!isset($param_field['name'])) {
+                    $param_field['name'] = $param_key;
+                }
+            }
+        }
+        $config['actions'] = self::_merge_actions($config['actions']);
+        dev_log($config);
+        return $config;
+    }
+
+    protected function _prepare_action_config($actions) {
+        foreach ($actions as &$params) {
+            if(!isset($params['defaults'])) {
+                continue;
+            }
+            foreach ($params['defaults'] as $key => $value) {
+                if (preg_match('~^!~', $key) !== 0) {
+                    $params['force'][substr($key, 1)] =$value;
+                    $params['defaults'][substr($key, 1)] =$value;
+                    unset($params['defaults'][$key]);
+                }
+            }
+        }
+        return $actions;
+    }
+    
+    protected function _get_config_sources() {
         return array();
     }
     
-    public function get_action_info($action) {
-        $info_method = 'info_'.$action;
-        if (method_exists($this, $info_method)) {
-            return call_user_func(array($this, $info_method));
+    protected static function _merge_actions($actions) {
+        ksort($actions);
+        $key_stack = array();
+        foreach ($actions as $key => $params) {
+            // не наследуем горизонтально флаг disabled 
+            $no_disabled = !isset($params['disabled']);
+            
+            foreach ($key_stack as $prev_key_index => $prev_key) {
+                if (substr($key, 0, strlen($prev_key)) === $prev_key) {
+                    $actions[$key] = array_replace_recursive(
+                        $actions[$prev_key], $params
+                    );
+                    break;
+                }
+                unset($key_stack[$prev_key_index]);
+            }
+            array_unshift($key_stack, $key);
+            if ($no_disabled) {
+                unset($actions[$key]['disabled']);
+            }
         }
-        return array('name' => $action);
+        return $actions;
     }
     
-    public function get_actions() {
+
+    protected function _get_real_actions() {
         $class = new ReflectionClass(get_class($this));
         $methods = $class->getMethods(ReflectionMethod::IS_PUBLIC);
         $props = $class->getDefaultProperties();
@@ -208,24 +278,41 @@ class fx_controller {
             $action_name = null;
             if (preg_match("~^".$prefix."(.+)$~", $method->name, $action_name)) {
                 $action_name = $action_name[1];
-                $action_meta = $this->get_action_info($action_name);
-                if (isset($action_meta['disabled']) && $action_meta['disabled']) {
-                    continue;
-                }
-                $actions[$action_name]= $action_meta;
+                $actions[$action_name]= array();
             }
         }
         return $actions;
     }
     
     
-    
-    /*
-    public function render() {
-        $res = array('input' => $this->process());
-        $template = $this->find_template();
-        return $template->render($res, $this->action);
+    protected $_bound = array();
+    public function listen($event, $callback) {
+        if (!isset($this->_bound[$event])) {
+            $this->_bound[$event] = array();
+        }
+        $this->_bound[$event][]= $callback;
     }
-     * 
-     */
+    
+    public function trigger($event, $data = null) {
+        if (isset($this->_bound[$event]) && is_array($this->_bound[$event])) {
+            foreach ( $this->_bound[$event] as $cb) {
+                call_user_func($cb, $data, $this);
+            }
+        }
+    }
+    
+    public function get_actions() {
+        $cfg = $this->get_config();
+        $res = array();
+        foreach ($cfg['actions'] as $action => $info) {
+            if (isset($info['disabled']) && $info['disabled']) {
+                continue;
+            }
+            if (!isset($info['name'])) {
+                $info['name'] = $action;
+            }
+            $res[$action] = $info;
+        }
+        return $res;
+    }
 }

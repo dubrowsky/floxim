@@ -35,7 +35,6 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         
         $controllers = fx::data('component')->all();
         $controllers->concat(fx::data('widget')->all());
-        dev_log($controllers);
         
         foreach ($controllers as $c) {
             $controller_type = $c instanceof fx_component ? 'component' : 'widget';
@@ -121,7 +120,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
      */
     
     public function select_settings($input) {
-
+        dev_log('input', $input);
         // Текущий (редактируемый) инфоблок
     	$infoblock = null;
         // special mode for layouts
@@ -174,8 +173,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             $controller_name = $controller;
             $controller = fx::controller($controller);
             $settings = $controller->get_action_settings($action);
-            $defaults = $controller->get_action_defaults($action);
-            
+            dev_log($settings, $infoblock);
             foreach ($infoblock['params'] as $ib_param => $ib_param_value) {
                 if (isset($settings[$ib_param])) {
                     $settings[$ib_param]['value'] = $ib_param_value;
@@ -190,6 +188,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                     ))
             );
             //$this->response->add_fields($settings, 'settings', 'params');
+            dev_log('done', $settings);
             $this->response->add_fields($settings, false, 'params');
         }
         
@@ -203,7 +202,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         
         
         $c_page = fx::data('content_page', $input['page_id']);
-        $scope_fields = $this->_get_scope_fields($infoblock, $c_page, $input['admin_mode'], $defaults['scope']);
+        $scope_fields = $this->_get_scope_fields($infoblock, $c_page, $input['admin_mode']);
         
         $scope_tab = !$is_layout;
         if ($scope_tab) {
@@ -371,7 +370,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                 fx_infoblock $infoblock, 
                 fx_content_page $c_page, 
                 $admin_mode, 
-                $defaults 
+                $defaults = array() // kill em pls
             ) {
         
         if (!is_array($defaults)) {
@@ -585,7 +584,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         $infoblock = fx::data('infoblock', $input['id']);
         $fields = array(
             array(
-                'label' => fx::lang('I am REALLY shure','system'),
+                'label' => fx::lang('I am REALLY sure','system'),
                 'name' => 'delete_confirm',
                 'type' => 'checkbox'
             ),

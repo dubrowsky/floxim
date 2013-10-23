@@ -232,7 +232,6 @@ fx_form = {
             parent = {};
             parent[parent[0]] = parent[1];
         }
-        console.log(parent);
 
         var check_parent_state = function() {
             var do_show = true;

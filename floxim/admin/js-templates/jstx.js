@@ -109,6 +109,9 @@ var $t = {
         return tpl;
     },
 	jQuery: function(name, obj, options) {
+            if (options === undefined) {
+                options = {};
+            }
 		var tpl = $t.findFor(name, obj, options);
         var res = tpl(obj,options);
         if (!res) {

@@ -5,7 +5,14 @@ class fx_controller_component extends fx_controller {
     
     protected $_action_prefix = 'do_';
 
+    protected function _count_parent_id() {
+        if (preg_match("~^list_infoblock~", $this->action)) {
+            $this->set_param('parent_id', $this->_get_parent_id());
+        }
+    }
+    
     public function process() {
+        $this->listen('before_action_run', array($this, '_count_parent_id'));
         $result = parent::process();
         if (is_string($result)) {
             return $result;
@@ -17,70 +24,102 @@ class fx_controller_component extends fx_controller {
         return $result;
     }
     
-    /*
-     * Общие настройки для списков - mirror | listing
-     */
-    protected function _settings_list_common() {
-        $fields = array();
-        $fields['limit'] = array(
-            'name' => 'limit',
-            'label' => fx::lang('How many entries to display','controller_component'),
-            'value' => 10
-        );
-        $fields['show_pagination'] = array(
-            'name' => 'show_pagination',
-            'label' => fx::lang('Show pagination?','controller_component'),
-            'type' => 'checkbox',
-            'value' => true,
-            'parent' => array('limit' => '!=0')
-        );
-
+    protected function _get_config_sources() {
+        $sources = array();
+        $com_dir = fx::config()->DOCUMENT_ROOT.'/component/';
+        $sources []= fx::config()->DOCUMENT_ROOT.'/floxim/controller/component.cfg.php';
+        $chain = $this->get_component()->get_chain();
+        foreach ($chain as $com) {
+            $com_file = fx::config()->DOCUMENT_ROOT.'/floxim/std/component/'.$com['keyword'].'/'.$com['keyword'].'.cfg.php';
+            if (file_exists($com_file)) {
+                $sources[]= $com_file;
+            }
+            $com_file = $com_dir.$com['keyword'].'/'.$com['keyword'].'.cfg.php';
+            if (file_exists($com_file)) {
+                $sources[]= $com_file;
+            }
+        }
+        return $sources;
+    }
+    
+    public function config_list($config) {
         $sortings = array(
             'manual' => '-'.fx::lang('Manual','controller_component').'-', 
             'created'=> fx::lang('Created','controller_component')
-        );
-        $sortings += $this
+        ) + $this
             ->get_component()
             ->all_fields()
             ->find('type', fx_field::FIELD_MULTILINK, '!=')
             ->get_values('description', 'name');
-        $fields['sorting'] = array(
-            'name' => 'sorting',
-            'label' => fx::lang('Sorting','controller_component'),
-            'type' => 'select',
-            'values' => $sortings
-        );
-        $fields['sorting_dir'] = array(
-            'name' => 'sorting_dir',
-            'label' => fx::lang('Order','controller_component'),
-            'type' => 'select',
-            'values' => array('asc' => fx::lang('Ascending','controller_component'), 'desc' => fx::lang('Descending','controller_component')),
-            'parent' => array('sorting' => '!=manual')
-        );
-        return $fields;
-    }
-
-    protected function _settings_list_parent()
-    {
-        $fields['parent_type'] = array(
-            'name' => 'parent_type',
-            'label' => fx::lang('Parent','controller_component'),
-            'type' => 'select',
-            'values' => array(
-                'current_page_id' => fx::lang('Current page','controller_component'),
-                'mount_page_id' => fx::lang('The infoblock owner section','controller_component')
-            ),
-            'parent' => array('scope[pages]' => '!=this')
-        );
-        return $fields;
+        $config['settings']['sorting']['values'] = $sortings;
+        return $config;
     }
     
-    public function settings_listing() {
-        $fields = array_merge(
-            $this->_settings_list_common(),
-            $this->_settings_list_parent()
+    public function config_list_filtered($config) {
+        $config['settings'] += $this->_config_conditions();
+        return $config;
+    }
+    
+    protected function _config_conditions () {
+        $fields['conditions'] = array(
+            'name' => 'conditions',
+            'label' => fx::lang('Conditions','controller_component'),
+            'type' => 'set', 
+            'is_cond_set' => true,  
+            'tpl' => array(
+                array(
+                    'id' => 'name',
+                    'name' => 'name',
+                    'type' => 'select',
+                    'values' =>  $this
+                            ->get_component()
+                            ->all_fields()
+                            ->find('type', fx_field::FIELD_MULTILINK, '!=')
+                            ->find('type', fx_field::FIELD_LINK, '!=')
+                            ->find('type', fx_field::FIELD_IMAGE, '!=')
+                            ->get_values(array('description', 'type'), 'name')
+                ), 
+            ),
+            'operators_map' => array (
+                'string' => array(
+                    'contains' => 'contains',
+                    '=' => '='
+                ),
+                'int' => array(
+                    '=' => '=',
+                    '>' => '>',
+                    '<' => '<',
+                    '>=' => '>=',
+                    '<=' => '<=',
+                    '!=' => '!=',
+                ),
+                'datetime' => array(
+                    '=' => '=',
+                    '>' => '>',
+                    '<' => '<',
+                    '>=' => '>=',
+                    '<=' => '<=',
+                    '!=' => '!=',
+                    'next' => 'next',
+                    'last' => 'last',
+                    'in_future' => 'in future',
+                    'in_past' => 'in past'
+                )
+            ),
+            'labels' => array(
+                'Field',
+                'Operator',
+                'Value'
+            ),
         );
-        //return $fields;
+        foreach ($fields['conditions']['tpl'][0]['values'] as &$value) {
+            $value['type'] = fx_field::get_type_by_id($value['type']);
+        }
+        return $fields;
+    }  
+    
+    public function config_list_infoblock($config) {
+        
         /*
          * Ниже код, который добывает допустимые инфоблоки для полей-ссылок
          * и предлагает выбрать, откуда брать/куда добавлять значения-ссылки
@@ -93,8 +132,6 @@ class fx_controller_component extends fx_controller {
                             find('type_of_edit', fx_field::EDIT_NONE, fx_collection::FILTER_NEQ);
         
         foreach ($link_fields as $lf) {
-            //dev_log('lf', $lf);
-            //continue;
             if ($lf['type'] == fx_field::FIELD_LINK) {
                 $target_com_id = $lf['format']['target'];
             } else {
@@ -110,7 +147,6 @@ class fx_controller_component extends fx_controller {
             $com_infoblocks = fx::data('infoblock')->
                     where('site_id', fx::env('site')->get('id'))->
                     get_content_infoblocks($target_com['keyword']);
-            //$ib_values = $com_infoblocks->get_values('name', 'id'); // + array('new' => fx::lang('New infoblock', 'controller_component'));
             $ib_values = array();
             foreach ($com_infoblocks as $ib) {
                 $ib_values []= array($ib['id'], $ib['name']);
@@ -134,88 +170,18 @@ class fx_controller_component extends fx_controller {
                                 .' "'.$lf['description'].'"'
                 );
             }
-            $fields []= $c_ib_field;
+            $config['settings'][$c_ib_field['name']]= $c_ib_field;
         }
-        return $fields;
-    }
-    
-    public function get_action_settings_listing_mirror() {
-        $fields = $this->get_action_settings_list_common();
-        $fields['from_all'] = array(
-            'name' => 'from_all',
-            'label' => fx::lang('From all sections','controller_component'),
-            'type' => 'checkbox',
-            'parent' => array('is_mirror' => '1'),
-            'value' => 1
-        );
-        $possible_infoblocks = fx::data('infoblock')->get_content_infoblocks($this->get_content_type());
-        $source_values =  array();
-        foreach ($possible_infoblocks as $ib) {
-            $source_values[$ib['id']] = $ib['name'];
-        }
-        if (false && count($source_values) > 0) {
-            $fields['source_infoblocks'] = array(
-                'name' => 'source_infoblocks', 
-                'label' => '', 
-                'type' => 'checkbox', 
-                'values' => $source_values, 
-                'value' => array(),
-                'parent' => array('from_all'=>'0')
-            );
-        }
-        $fields['parent_id'] = array(
-            'name' => 'parent_id',
-            'label' => fx::lang('From specified section','controller_component'),
-            'parent' => array('from_all' => '0')
-        );
-        return $fields;
-    }
-    
-    protected $_bound = array();
-    public function listen($event, $callback) {
-        if (!isset($this->_bound[$event])) {
-            $this->_bound[$event] = array();
-        }
-        $this->_bound[$event][]= $callback;
-    }
-    
-    public function trigger($event, $data = null) {
-        if (isset($this->_bound[$event]) && is_array($this->_bound[$event])) {
-            foreach ( $this->_bound[$event] as $cb) {
-                call_user_func($cb, $data, $this);
-            }
-        }
-    }
-
-    public function info_record() {
-        return array(
-            'name' => fx::lang('Entry','controller_component'),
-            'description' => fx::lang('Show single entry','controller_component')
-        );
+        dev_log('configrung', $config, $link_fields);
+        return $config;
     }
     
     public function do_record() {
-        $page = fx::data('content_page', fx::env('page'));
+        $page = fx::env('page');
         return array('items' => $page);
     }
     
-    public function info_listing() {
-        return array(
-            'name' => fx::lang('List','controller_component'),
-            'description' => fx::lang('Show entries from the specified section','controller_component')
-        );
-    }
-    
-    public function defaults_listing() {
-        return array(
-            'scope' => array(
-                'page_id' => fx::env('page'),
-                'pages' => 'this'
-            )
-        );
-    }
-    
-    protected function _list() {
+    public function do_list() {
         $f = $this->_get_finder();
         $this->trigger('query_ready', $f);
         $items = $f->all();
@@ -229,7 +195,31 @@ class fx_controller_component extends fx_controller {
         }
         return $res;
     }
-
+    
+    public function do_list_infoblock() {
+        $items = $this->do_list();
+        if (!$this->get_param('is_fake') && fx::env('is_admin')) {
+            $infoblock = fx::data('infoblock', $this->get_param('infoblock_id'));
+            $real_ib_name = $infoblock->get_prop_inherited('name');
+            $ib_name = $real_ib_name ? $real_ib_name : $infoblock['id'];
+            $component = $this->get_component();
+            $adder_title = $component['item_name'].' &rarr; '.$ib_name;
+            
+            $this->accept_content(array(
+                'title' => $adder_title,
+                'parent_id' => $this->_get_parent_id(),
+                'type' => $component['keyword'],
+                'infoblock_id' => $this->get_param('infoblock_id')
+            ));
+            
+            if (count($items) == 0) {
+                $this->_meta['hidden_placeholder'] = 'Infoblock "'.$ib_name.'" is empty. '.
+                                                'You can add '.$component['item_name'].' here';
+            }
+        }
+        return $items;
+    }
+    
     public function do_listing() {
         $f = $this->_get_finder();
         
@@ -365,50 +355,85 @@ class fx_controller_component extends fx_controller {
     
     protected function _get_parent_id() {
         $ib = fx::data('infoblock', $this->get_param('infoblock_id')); 
-        if (!$ib) {
-            return $this->get_param('parent_id');
-        }
         $parent_id = null;
         switch($this->get_param('parent_type')) {
             case 'mount_page_id':
                 $parent_id = $ib['page_id'];
+                if ($parent_id === 0) {
+                    $parent_id = fx::env('site')->get('index_page_id');
+                }
                 break;
-            case 'current_page_id':
-            default:
-                $parent_id = fx::env('page');
-                break;
-            case 'custom':
-                $parent_id = $this->get_param('parent_id');
+            case 'current_page_id': default:
+                $parent_id = fx::env('page')->get('id');
                 break;
         }
         return $parent_id;
     }
     
-    
-    public function info_listing_mirror() {
-        return array(
-            'name' => 'Mirror',
-            'description' => fx::lang('Show entries by filter','controller_component')
-        );
-    }
-    
-    public function do_listing_mirror() {
-        $f = $this->_get_finder();
-        if ( ($parent_id = $this->get_param('parent_id')) ) {
-            $f->where('parent_id', $parent_id);
-        }
-        $this->trigger('build_query',$f);
+    public function do_list_filtered() {
+        $this->set_param('skip_parent_filter', true);
+        $this->set_param('skip_infoblock_filter', true);
+        $this->listen('query_ready', function($q, $ctr) {
+            //$fields = $ctr->get_component()->all_fields();
+            //$date_field = $fields->find_one('name', 'date');
 
-        if ( ($sorting = $this->get_param('sorting')) ) {
-            if ($sorting == 'manual') {
-                $f->order('priority');
-            } else {
-                $f->order($sorting, $this->get_param('sorting_dir'));
+            $conditions = $ctr->get_param('conditions');
+            if (isset($conditions) && is_array($conditions)) {
+                foreach ($conditions as $condition) {
+                    $error = false;
+                    switch ($condition['operator']) {
+                        case 'contains':
+                            $condition['value'] = '%'.$condition['value'].'%'; 
+                            $condition['operator'] = 'LIKE';
+                            break;
+                        case 'next': 
+                            if (isset($condition['value']) && !empty($condition['value'])) {
+                                $q->where(
+                                    $condition['name'], 
+                                    '> NOW()', 
+                                    'RAW'
+                                );
+                                $condition['value'] = '< NOW() + INTERVAL '.$condition['value'].' '.$condition['interval']; 
+                                $condition['operator'] = 'RAW';
+                            } else {
+                                $error = true;
+                            }
+                            break;
+                        case 'last': 
+                            if (isset($condition['value']) && !empty($condition['value'])) {
+                                $q->where(
+                                    $condition['name'], 
+                                    '< NOW()', 
+                                    'RAW'
+                                );
+                                $condition['value'] = '> NOW() - INTERVAL '.$condition['value'].' '.$condition['interval']; 
+                                $condition['operator'] = 'RAW';
+                            } else {
+                                $error = true;
+                            }
+                            break;
+                        case 'in_future': 
+                            $condition['value'] = '> NOW()'; 
+                            $condition['operator'] = 'RAW';
+                            break;
+                        case 'in_past': 
+                            $condition['value'] = '< NOW()'; 
+                            $condition['operator'] = 'RAW';
+                            break;
+                    }
+                    if (!$error) {
+                        $q->where(
+                            $condition['name'], 
+                            $condition['value'], 
+                            $condition['operator']
+                        );
+                    }
+                }
             }
-        }
-        $this->trigger('query_ready', $f);
-        $items = $f->all();
-        return array('items' => $items);
+            dev_log('query', get_class($this), $q->show_query());
+        });
+        $res = $this->do_list();
+        return $res;
     }
     
 
@@ -458,7 +483,7 @@ class fx_controller_component extends fx_controller {
             return $this->_finder;
         }
         $finder = fx::data('content_'.$this->get_content_type());
-        $show_pagination = $this->get_param('show_pagination');
+        $show_pagination = $this->get_param('pagination');
         $c_page = $this->_get_current_page_number();
         $limit = $this->get_param('limit');
         if ( $show_pagination && $limit) {
@@ -474,10 +499,13 @@ class fx_controller_component extends fx_controller {
                 $finder->limit($limit);
             }
         }
-        $this->_finder = $finder;
-        if ($this->get_content_type() === 'text') {
-            dev_log('giving findr', $this, $finder);
+        if ( ($parent_id = $this->get_param('parent_id')) && !($this->get_param('skip_parent_filter')) ) {
+            $finder->where('parent_id', $parent_id);
         }
+        if ( ( $infoblock_id = $this->get_param('infoblock_id')) && !($this->get_param('skip_infoblock_filter')) ) {
+            $finder->where('infoblock_id', $infoblock_id);
+        }
+        $this->_finder = $finder;
         return $finder;
     }
     

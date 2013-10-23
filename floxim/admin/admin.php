@@ -117,6 +117,7 @@ class fx_controller_admin extends fx_controller {
             '/floxim/admin/js/fields.js',
             '/floxim/admin/js/edit-in-place.js',
             '/floxim/admin/js/panel.js',
+            '/floxim/admin/js/popup.js',
             '/floxim/admin/js/admin.js',
             '/floxim/admin/js/menu/main.js',
             '/floxim/admin/js/menu/mode.js',

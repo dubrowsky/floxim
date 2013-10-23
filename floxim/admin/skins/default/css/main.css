@@ -1151,7 +1151,7 @@ span.fx_admin_current {
 #fx_admin_control form .field {
     display: inline-block;
     vertical-align: top;
-    margin-right: 15px;
+    margin-right: 25px;
 }
 
 #fx_admin_control .fx_admin_form .form_label, #fx_admin_control .fx_admin_form label, #fx_admin_control .fx_admin_form input, #fx_admin_control .fx_admin_form select, #fx_admin_control .fx_admin_form textarea {
@@ -1600,6 +1600,18 @@ a.fx_var_editable:focus, .fx_var_editable a:focus {
     float: right;
     margin: 7px 30px 5px 0;
 }
+
+#fx_admin_statustext {
+    background-color: white;
+    width: 98%;
+    margin: auto;
+    padding: 1%;
+}
+    #fx_admin_statustext > span {
+        display: inline-block;
+        width: 100%;
+        word-wrap: break-word;
+    }
 
 #fx_admin_control #fx_admin_additionl_text a, #fx_dialog_file_existing img {
     cursor: pointer;

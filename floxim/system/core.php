@@ -267,7 +267,12 @@ class fx_core extends fx_system {
             if (preg_match('~^content_~', $classname)) {
                 $com_name = preg_replace("~^content_~", '', $classname);
                 $file = $doc_root.'component/'.$com_name.'/'.$com_name.'.essence';
-                break;
+                if (file_exists($file.'.php')) {
+                    break;
+                } elseif(file_exists($doc_root.'floxim/std/component/'.$com_name.'/'.$com_name.'.essence'.'.php')) {
+                    $file = $doc_root.'floxim/std/component/'.$com_name.'/'.$com_name.'.essence';
+                    break;
+                }
             }
             
             if (in_array($classname, array('http', 'event', 'cache', 'thumb', 'lang'))) {
@@ -288,7 +293,10 @@ class fx_core extends fx_system {
                 if (file_exists($test_file.'.php')) {
                     $file = $test_file;
                     break;
-                }
+                } elseif (file_exists($doc_root.'floxim/std/'.$ctr_type.'/'.$ctr_name.'/'.$ctr_name.'.php')) {
+                    $file = $doc_root.'floxim/std/'.$ctr_type.'/'.$ctr_name.'/'.$ctr_name;
+                    break;
+                } 
             }
 
             if ($classname == 'controller_layout' || $classname == 'controller_admin_layout') {
@@ -332,6 +340,12 @@ class fx_core extends fx_system {
                 if (preg_match("~^content_~", $data_name)) {
                     $com_name = preg_replace("~^content_~", '', $data_name);
                     $file = $doc_root.'component/'.$com_name.'/'.$com_name.'.data';
+                    if (file_exists($file.'.php')){
+                        break;
+                    } elseif(file_exists($doc_root.'floxim/std/component/'.$com_name.'/'.$com_name.'.data'.'.php')) {
+                        $file = $doc_root.'floxim/std/component/'.$com_name.'/'.$com_name.'.data';
+                        break;
+                    }
                 } else {
                     $file = $root.'data/'.$match[1];
                 }

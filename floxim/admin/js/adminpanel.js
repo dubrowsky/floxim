@@ -169,9 +169,9 @@ fx_adminpanel = {
         $("#fx_admin_statustext").removeClass();
         $("#fx_admin_statustext").html("<span>"+text+"</span>").addClass(status).fadeIn('slow');
         if ( status != 'wait') {
-            window.setTimeout(function() {
-                $("#fx_admin_statustext").fadeOut('slow');
-            }, 10000);
+            //window.setTimeout(function() {
+                //$("#fx_admin_statustext").fadeOut('slow');
+            //}, 10000);
         }
     },
     

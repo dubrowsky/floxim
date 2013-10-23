@@ -227,10 +227,9 @@ class fx_data_content extends fx_data {
         $set = $this->_set_statement($data);
         
         $tables = $this->get_tables();
-        
+        dev_log('insert', $set);
         $root_set = $set['content'];
         $q = "INSERT INTO `{{content}}` SET ".join(", ", $root_set);
-        
         $tables_inserted = array();
         
         $q_done = fx::db()->query($q);
@@ -272,6 +271,7 @@ class fx_data_content extends fx_data {
         foreach ($chain as $level_component) {
             $table_res = array();
             $fields = $level_component->fields();
+            dev_log('fields', $fields);
             $field_names = $fields->get_values('name');
             // пока базовые поля контента выписываем вручную
             if ($level_component['keyword'] == 'content') {

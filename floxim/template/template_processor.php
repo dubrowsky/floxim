@@ -37,72 +37,84 @@ class fx_template_processor {
             $ctr_name = $tpl_name;
         }
 
-        $source_dir = fx::config()->DOCUMENT_ROOT.'/'.$ctr_type.'/'.$ctr_name;
-        if (is_dir($source_dir)) {
-            $processor = new fx_template_processor();
-            $processor->process_dir($source_dir);
-            return $tpl_file;
+        $custom_source_dir = fx::config()->DOCUMENT_ROOT.'/'.$ctr_type.'/'.$ctr_name;
+        $std_source_dir = fx::config()->DOCUMENT_ROOT.'/floxim/std/'.$ctr_type.'/'.$ctr_name;
+        
+        $sources = array();
+        if (is_dir($custom_source_dir)) {
+            $sources []= $custom_source_dir;
         }
-        return null;
+        if (is_dir($std_source_dir)) {
+            $sources []= $std_source_dir;
+        }
+        $processor = new fx_template_processor();
+        $processor->process_dirs($sources);
+        return $tpl_file;
     }
     /**
      * Преобразовать директорию с шаблономи в php-код
      * @param string $source_dir путь к директории
      * @return string php-код
      */
-    public function process_dir($source_dir) {
-        $this->source_dir = $source_dir;
-        $this->template_dir = str_replace($_SERVER['DOCUMENT_ROOT'], '', $this->source_dir).'/';
-        $tpl_name_parts = null;
-        preg_match("~([a-z]+)[\/\\\]([a-z0-9_]+)$~", $source_dir, $tpl_name_parts);
-        $this->_controller_type = $tpl_name_parts[1];
-        $this->_controller_name = $tpl_name_parts[2];
-        if ($tpl_name_parts[1] == 'other') {
-            $tpl_name = $tpl_name_parts[2];
-        } else {
-            $tpl_name = $tpl_name_parts[1].'_'.$tpl_name_parts[2];
+    public function process_dirs($dirs) {
+        // передали одну папку строкой
+        if (is_string($dirs)) {
+            $dirs = array($dirs);
         }
-        $source = '{templates source="'.$source_dir.'"}';
-        $tpl_files = glob($source_dir.'/*.tpl');
-        if (!$tpl_files) {
-            $tpl_files = array();
-        }
-        foreach ($tpl_files as $file) {
-            // Не включаем файлы шаблонов, начинающиеся на "_"
-            if (preg_match("~/_[^/]+$~", $file)) {
-                continue;
+        $source = "{templates}";
+        foreach ($dirs as $source_dir) {
+            $tpl_name_parts = null;
+            preg_match("~([a-z]+)[\/\\\]([a-z0-9_]+)$~", $source_dir, $tpl_name_parts);
+            $this->_controller_type = $tpl_name_parts[1];
+            $this->_controller_name = $tpl_name_parts[2];
+            if ($tpl_name_parts[1] == 'other') {
+                $tpl_name = $tpl_name_parts[2];
+            } else {
+                $tpl_name = $tpl_name_parts[1].'_'.$tpl_name_parts[2];
             }
-            $source .= '{templates source="'.$file.'"}';
-            $file_data = file_get_contents($file);
-            
-            // Проверяем наличие fx-атрибутов в разметке файла
-            $T = new fx_template_html($file_data);
-            $file_data = $T->transform_to_floxim();
-            
-            $file_data = trim($file_data);
-            $file_data = preg_replace("~\{\*.*?\*\}~s", '', $file_data);
-            
-            if (!preg_match("~^{template~", $file_data)) {
-                $is_layout = $this->_controller_type == 'layout';
-                if ($is_layout) {
-                    $auto_tpl_name = '_layout_body';
-                } else {
-                    $file_tpl_name = null;
-                    preg_match("~/([^/]+)\.tpl~", $file, $file_tpl_name);
-                    $auto_tpl_name = $file_tpl_name[1];
+            $source .= '{templates source="'.$source_dir.'"}';
+            $tpl_files = glob($source_dir.'/*.tpl');
+            if (!$tpl_files) {
+                $tpl_files = array();
+            }
+            foreach ($tpl_files as $file) {
+                // Не включаем файлы шаблонов, начинающиеся на "_"
+                if (preg_match("~/_[^/]+$~", $file)) {
+                    continue;
                 }
-                $file_data = 
-                    '{template id="'.$auto_tpl_name.'"'.
-                        ($is_layout ? ' of="false" ' : '').
-                    '}'.
-                       trim($file_data).
-                    '{/template}';
+                $source .= '{templates source="'.$file.'"}';
+                $file_data = file_get_contents($file);
+
+                // Проверяем наличие fx-атрибутов в разметке файла
+                $T = new fx_template_html($file_data);
+                $file_data = $T->transform_to_floxim();
+
+                $file_data = preg_replace("~\{\*.*?\*\}~s", '', $file_data);
+
+                if (!preg_match("~^{template~", $file_data)) {
+                    $is_layout = $this->_controller_type == 'layout';
+                    if ($is_layout) {
+                        $auto_tpl_name = '_layout_body';
+                    } else {
+                        $file_tpl_name = null;
+                        preg_match("~/([^/]+)\.tpl~", $file, $file_tpl_name);
+                        $auto_tpl_name = $file_tpl_name[1];
+                    }
+                    $file_data = 
+                        '{template id="'.$auto_tpl_name.'"'.
+                            ($is_layout ? ' of="false" ' : '').
+                        '}'.
+                           $file_data.
+                        '{/template}';
+                }
+
+                $source .= $file_data;
+                $source .= '{/templates}';
             }
-            
-            $source .= trim($file_data);
             $source .= '{/templates}';
         }
         $source .= '{/templates}';
+        
         $code = $this->process($source, $tpl_name);
         $tpl_dir = fx::config()->COMPILED_TEMPLATES_FOLDER;
         if (!is_dir($tpl_dir)) {
@@ -813,15 +825,19 @@ class fx_template_processor {
             $name = $token->get_prop('id');
         }
         $of = $token->get_prop('of');
-        $magic_of = array('block', 'menu');
+        $is_magic_of = in_array($of, array('block', 'menu'));
         if (!$of) {
             if ($this->_controller_type == 'layout') {
                 $of = 'layout.show';
             } else {
                 $of = $this->_controller_type."_".$this->_controller_name.".".$token->get_prop('id');
             }
-        } elseif (!in_array($of, $magic_of) && !preg_match("~\.~", $of ) ) {
+        } elseif (!$is_magic_of && !preg_match("~\.~", $of ) ) {
             $of = $this->_controller_type."_".$this->_controller_name.".".$of;
+        }
+        
+        if (!$is_magic_of && !preg_match("~^(layout|component|widget)_~", $of)) {
+            $of = 'component_'.$of;
         }
         $this->templates [$token->get_prop('id')] += array(
             'code' => $code,
@@ -838,10 +854,17 @@ class fx_template_processor {
     protected $_class_code = null;
     protected function  _make_code(fx_template_token $tree, $class_code) {
         $this->_class_code = preg_replace('~[^a-z0-9]+~', '_', $class_code);
-        foreach ($tree->get_children() as $templates_token) {
-            $this->_c_file = $templates_token->get_prop('source');
-            foreach ($templates_token->get_children() as $token) {
-                $this->add_template($token);
+        foreach ($tree->get_children() as $dir_template_token) {
+            $this->template_dir = str_replace(
+                    $_SERVER['DOCUMENT_ROOT'], 
+                    '', 
+                    $dir_template_token->get_prop('source')
+                ).'/';
+            foreach ($dir_template_token->get_children() as $templates_token) {
+                $this->_c_file = $templates_token->get_prop('source');
+                foreach ($templates_token->get_children() as $token) {
+                    $this->add_template($token);
+                }
             }
         }
         ob_start();
