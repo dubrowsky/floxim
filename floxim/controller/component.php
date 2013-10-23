@@ -172,7 +172,6 @@ class fx_controller_component extends fx_controller {
             }
             $config['settings'][$c_ib_field['name']]= $c_ib_field;
         }
-        dev_log('configrung', $config, $link_fields);
         return $config;
     }
     
@@ -430,7 +429,6 @@ class fx_controller_component extends fx_controller {
                     }
                 }
             }
-            dev_log('query', get_class($this), $q->show_query());
         });
         $res = $this->do_list();
         return $res;
