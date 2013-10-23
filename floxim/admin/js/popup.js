@@ -79,9 +79,19 @@ $fx.popup = function(params) {
             if (is_fixed) {
                 to.top -= $(window).scrollTop();
             }
+            var positions = {
+                top:to.top + this.$target.height() + 10 ,
+                left: (to.left + this.$target.width()/2 - this.$node.width() / 2)
+            };
+            console.log(positions);
+            if (positions.left < 0) {
+                positions.left = 5;
+            } else if (positions.left + this.$node.width() > $(window).width()) {
+                positions.left = $(window).width() - this.$node.width() - 5;
+            }
             this.$node.css({
-                top: to.top + 20 + 'px',
-                left: (to.left + this.$target.width()/2 - this.$node.width() / 2) + 'px'
+                top: positions.top+ 'px',
+                left: positions.left + 'px'
             });
         } else {
             

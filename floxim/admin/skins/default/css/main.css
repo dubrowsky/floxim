@@ -1151,7 +1151,7 @@ span.fx_admin_current {
 #fx_admin_control form .field {
     display: inline-block;
     vertical-align: top;
-    margin-right: 15px;
+    margin-right: 25px;
 }
 
 #fx_admin_control .fx_admin_form .form_label, #fx_admin_control .fx_admin_form label, #fx_admin_control .fx_admin_form input, #fx_admin_control .fx_admin_form select, #fx_admin_control .fx_admin_form textarea {
