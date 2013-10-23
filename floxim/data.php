@@ -160,7 +160,7 @@ class fx_data {
     }
     
     protected function _make_cond($cond, $base_table) {
-        if ($cond[2] === 'OR') {
+        if (strtoupper($cond[2]) === 'OR') {
             $parts = array();
             foreach ($cond[0] as $sub_cond) {
                 if (!isset($sub_cond[2])) {
@@ -169,6 +169,9 @@ class fx_data {
                 $parts []= $this->_make_cond($sub_cond, $base_table);
             }
             return " (".join(" OR ", $parts).") ";
+        }
+        if (strtoupper($cond[2]) === 'RAW') {
+            return '`'.$cond[0].'` '.$cond[1];
         }
         list($field, $value, $type) = $cond;
         if ($field == 'id') {
