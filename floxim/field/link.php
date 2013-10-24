@@ -23,7 +23,14 @@ class fx_field_link extends fx_field_baze {
     public function format_settings() {
         $fields = array();
         
-        $comp_values = fx::data('component')->get_select_values();
+        $comp_values = array_merge(
+            fx::data('component')->get_select_values(), 
+            array(
+                array('site', 'Site'),
+                array('component', 'Component'),
+                array('infoblock', 'Infoblock')
+            )
+        );
         $fields[] = array(
             'id' => 'format[target]',
             'name' => 'format[target]',

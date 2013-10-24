@@ -83,7 +83,7 @@ fx_edit_in_place.prototype.start = function(meta) {
         case 'bool':
             this.add_panel_field(meta);
             break;
-        case 'string': case 'html': case '': case 'text': case 'int':
+        case 'string': case 'html': case '': case 'text': case 'int': case 'float':
             if (meta.is_att) {
                 this.add_panel_field(meta);
             } else {
@@ -106,6 +106,7 @@ fx_edit_in_place.prototype.start = function(meta) {
             break;
 	}
 	$('html').one('fx_deselect.edit_in_place', function() {
+            console.log('deseld');
             edit_in_place.save().stop();
 	});
 };
@@ -125,6 +126,7 @@ fx_edit_in_place.prototype.add_panel_field = function(meta) {
 };
 
 fx_edit_in_place.prototype.stop = function() {
+    console.log('stp');
     for (var i =0 ;i<this.panel_fields.length; i++) {
         this.panel_fields[i].remove();
     }
