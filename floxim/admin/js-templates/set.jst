@@ -136,6 +136,9 @@ for (var i = 0; i< _c.length; i++) {
 
 <!--jquery-->
 var i = 0;
+
+var is_new_row = typeof _o.index === 'number';
+
 var intervals = {
     'DAY':'DAYS',
     'WEEK':'WEEKS',
@@ -144,8 +147,8 @@ var intervals = {
 };
 
 html.on('change', '.input_cell_0 select', function() {
-    var type = $(this).find('option').filter(':selected').attr('data-field-type');
-    set_control(type, $(this).parent().parent());
+    var opt = $(this).find('option').filter(':selected');
+    set_control(opt.data('meta'), $(this).parent().parent());
 });
 html.on('change', '.input_cell_1 select.date_operator', function() {
     var type = $(this).val(); 
@@ -190,17 +193,16 @@ html.on('change', '.input_cell_1 select.date_operator', function() {
     }
 });
 function set_saved () {
-    if (typeof _o.index !=='number'){
+    if (!is_new_row){
         var name = "[name='params[conditions]["+_o.index+"]";
         $(name+"[name]']", html).val(_o.set_field.values[_o.index].name);
 
         $(name+"[name]']", html).change();
         $(name+"[operator]']", html).val(_o.set_field.values[_o.index].operator);
-        if ($(name+"[name]']", html).find('option').filter(':selected').attr('data-field-type') == 'bool') {
+        if ($(name+"[name]']", html).find('option').filter(':selected').data('meta').type == 'bool') {
             if(_o.set_field.values[_o.index].value == 1) 
                 $(name+"[value]']", html).eq(1).attr('checked', 'checked');
-        } else if ($(name+"[name]']", html).find('option').filter(':selected').attr('data-field-type') == 'datetime') {
-            console.log(_o.set_field.values)
+        } else if ($(name+"[name]']", html).find('option').filter(':selected').data('meta').type == 'datetime') {
             if (_o.set_field.values[_o.index].value === undefined) {
                 $(name+"[value]']", html).remove();
             } else if (_o.set_field.values[_o.index].interval !== undefined) {
@@ -220,14 +222,18 @@ function set_saved () {
         } else {
             $(name+"[value]']", html).val(_o.set_field.values[_o.index].value);
         }
-    }   
+    }
 }
-function set_control (type, selector) {
+function set_control (meta, selector) {
+    var type = meta.type;
+    var c_value;
     if (typeof _o.index === 'number') {
         var name = 'params[conditions][new_'+_o.index+'][';
     } else {
         var name = 'params[conditions]['+_o.index+'][';
+        c_value = _o.set_field.value[_o.index].value;
     }
+
     var html = selector;
     switch(type) {
         case 'text':
@@ -313,6 +319,7 @@ function set_control (type, selector) {
             $('.input_cell_2', html).html(input_line);
         break;
         case 'link':
+
             var select = $t.jQuery(
                 'input', {
                     'type':'select', 
@@ -324,16 +331,22 @@ function set_control (type, selector) {
                             .link
                     }
             );
+
             $('.input_cell_1', html).html(select);
-            var live_search = $t.jQuery(
-                'input', {
+            var livesearch_opts = {
                     'type':'livesearch', 
                     'name': name+'value'+']',
-                    'is_multiple': false, 
+                    'is_multiple': true, 
+                    'value':c_value,
+                    ajax_preload:true,
+                    //'name_postfix' : 'f_classifier_id',
                     params: {
-                            'content_type' : 'content_page'
+                            'content_type' : meta.content_type
                         }
-                    }
+                    };
+            console.log(livesearch_opts);
+            var live_search = $t.jQuery(
+                'input', livesearch_opts
             );
             $('.input_cell_2', html).html(live_search);
         break;
@@ -344,10 +357,13 @@ function set_control (type, selector) {
     
 }
 $.each(_o.set_field.tpl[0].values, function (key, value) {
-    $('.input_cell_0 select', html).append('<option value="'+key+'" data-field-type="'+value.type+'">'+value.description+'</option>');
+    var opt = $('<option value="'+key+'">'+value.description+'</option>');
+    opt.data('meta', value);
+    //$('.input_cell_0 select', html).append('<option value="'+key+'" data-field-type="'+value.type+'">'+value.description+'</option>');
+    $('.input_cell_0 select', html).append(opt);
 
-    if (i++ == 0) {
-        set_control(value.type, $('.input_cell_0 select', html).parent().parent())
+    if (i++ == 0 && is_new_row)  {
+        set_control(opt.data('meta'), $('.input_cell_0 select', html).parent().parent())
     }
 })
 

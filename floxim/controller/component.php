@@ -71,13 +71,13 @@ class fx_controller_component extends fx_controller {
                     'id' => 'name',
                     'name' => 'name',
                     'type' => 'select',
-                    'values' =>  $this
+                    /*'values' =>  $this
                             ->get_component()
                             ->all_fields()
                             ->find('type', fx_field::FIELD_MULTILINK, '!=')
-                            //->find('type', fx_field::FIELD_LINK, '!=')
+                            ->find('type', fx_field::FIELD_LINK, '!=')
                             ->find('type', fx_field::FIELD_IMAGE, '!=')
-                            ->get_values(array('description', 'type'), 'name')
+                            ->get_values(array('description', 'type'), 'name')*/
                 ), 
             ),
             'operators_map' => array (
@@ -120,8 +120,23 @@ class fx_controller_component extends fx_controller {
                 'Value'
             ),
         );
-        foreach ($fields['conditions']['tpl'][0]['values'] as &$value) {
-            $value['type'] = fx_field::get_type_by_id($value['type']);
+
+        $searchable_fields =  $this
+                ->get_component()
+                ->all_fields()
+                ->find('type', fx_field::FIELD_MULTILINK, '!=')
+                //->find('type', fx_field::FIELD_LINK, '!=')
+                ->find('type', fx_field::FIELD_IMAGE, '!=');
+                //->get_values(array('description', 'type'), 'name');
+        foreach ($searchable_fields as $field) {
+            $res = array(
+                'description' => $field['description'],
+                'type' => fx_field::get_type_by_id($field['type'])
+            );
+            if ($field['type'] == fx_field::FIELD_LINK) {
+                $res['content_type'] = $field->get_target_name();
+            }
+            $fields['conditions']['tpl'][0]['values'][$field['name']] = $res;
         }
         return $fields;
     }  

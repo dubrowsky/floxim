@@ -100,11 +100,15 @@ function fx_livesearch(node) {
 		if (ids.length == 0) {
 			return;
 		}
-		var url = this.getUrl(ids);
+		var url = this.getUrl();
+		url.data.term = null;
+		url.data.ids = ids;
 		$.ajax({
-				url:url,
+				url:url.url,
+				type:'post',
 				dataType:'json',
-				success:function(res){ 
+				data:url.data,
+				success:function(res){
 					$.each(res.results, function(index, item) {
 						livesearch.addValue(item.id, item.name, livesearch.inpNames[item.id]);
 					});
