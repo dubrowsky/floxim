@@ -396,12 +396,14 @@ class fx_controller_component extends fx_controller {
         $this->set_param('skip_parent_filter', true);
         $this->set_param('skip_infoblock_filter', true);
         $this->listen('query_ready', function($q, $ctr) {
-            //$fields = $ctr->get_component()->all_fields();
+            $fields = $ctr->get_component()->all_fields();
             //$date_field = $fields->find_one('name', 'date');
 
             $conditions = $ctr->get_param('conditions');
             if (isset($conditions) && is_array($conditions)) {
                 foreach ($conditions as $condition) {
+                    $field = $fields->find_one('name', $condition['name']);
+                    fx::log($condition, $field);
                     $error = false;
                     switch ($condition['operator']) {
                         case 'contains':
@@ -443,6 +445,18 @@ class fx_controller_component extends fx_controller {
                             $condition['operator'] = 'RAW';
                             break;
                     }
+                    
+                    if ($field['type'] == fx_field::FIELD_LINK){
+                        $ids = array();
+                        foreach ($condition['value'] as $v) {
+                            $ids[]= $v[0];
+                        }
+                        $condition['value'] = $ids;
+                        if ($condition['operator'] === '!=') {
+                            $condition['operator'] = 'NOT IN';
+                        }
+                        fx::log('val mds', $condition);
+                    }
                     if (!$error) {
                         $q->where(
                             $condition['name'], 
@@ -452,6 +466,7 @@ class fx_controller_component extends fx_controller {
                     }
                 }
             }
+            fx::log($q->show_query());
         });
         $res = $this->do_list();
         return $res;
