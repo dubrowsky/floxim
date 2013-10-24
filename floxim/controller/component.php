@@ -75,7 +75,7 @@ class fx_controller_component extends fx_controller {
                             ->get_component()
                             ->all_fields()
                             ->find('type', fx_field::FIELD_MULTILINK, '!=')
-                            ->find('type', fx_field::FIELD_LINK, '!=')
+                            //->find('type', fx_field::FIELD_LINK, '!=')
                             ->find('type', fx_field::FIELD_IMAGE, '!=')
                             ->get_values(array('description', 'type'), 'name')
                 ), 
@@ -104,7 +104,15 @@ class fx_controller_component extends fx_controller {
                     'last' => 'last',
                     'in_future' => 'in future',
                     'in_past' => 'in past'
-                )
+                ),
+                'multilink' => array(
+                    '=' => '=',
+                    '!=' => '!=',
+                ),
+                'link' => array(
+                    '=' => '=',
+                    '!=' => '!=',
+                ),
             ),
             'labels' => array(
                 'Field',

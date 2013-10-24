@@ -312,6 +312,31 @@ function set_control (type, selector) {
             );
             $('.input_cell_2', html).html(input_line);
         break;
+        case 'link':
+            var select = $t.jQuery(
+                'input', {
+                    'type':'select', 
+                    'name': name+'operator'+']',
+                    'values':
+                        _o
+                            .set_field
+                            .operators_map
+                            .link
+                    }
+            );
+            $('.input_cell_1', html).html(select);
+            var live_search = $t.jQuery(
+                'input', {
+                    'type':'livesearch', 
+                    'name': name+'value'+']',
+                    'is_multiple': false, 
+                    params: {
+                            'content_type' : 'content_page'
+                        }
+                    }
+            );
+            $('.input_cell_2', html).html(live_search);
+        break;
         //default:
         //    $('.input_cell_1', html).append('<select></select>');
     
