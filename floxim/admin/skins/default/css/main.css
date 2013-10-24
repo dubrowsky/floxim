@@ -2047,3 +2047,11 @@ a.fx_var_editable:focus, .fx_var_editable a:focus {
 .fx_panel_text_expander {
     cursor:pointer;
 }
+
+.fx_clearfix:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}

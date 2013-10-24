@@ -45,12 +45,17 @@ var fx_front = function () {
     });
     
     this.c_hover = null;
-    $('html').on('mouseover', '.fx_hilight', function() {
+    $('html').on('mouseover', '.fx_hilight', function(e) {
         if ($fx.front.hilight_disabled) {
+            return;
+        }
+        if (e.fx_hilight_done) {
             return;
         }
         var node = $(this);
         if (node.hasClass('fx_selected')) {
+            e.fx_hilight_done = true;
+            return;
             return false;
         }
         $fx.front.outline_block_off($($fx.front.c_hover));
@@ -84,6 +89,8 @@ var fx_front = function () {
                 100
             );
         });
+        e.fx_hilight_done = true;
+        return;
         return false;
     });
     
@@ -432,7 +439,8 @@ fx_front.prototype.hilight = function() {
         removeClass('fx_hilight_empty').
         removeClass('fx_hilight_empty_inline').
         removeClass('fx_no_hilight').
-        removeClass('fx_wrong_mode');
+        removeClass('fx_wrong_mode').
+        removeClass('fx_clearfix');
     $('.fx_hilight_hover').removeClass('fx_hilight_hover');
     items.filter('.fx_hidden_placeholded').removeClass('fx_hidden_placeholded').html('');
     if ($fx.front.mode === 'view') {
@@ -442,7 +450,10 @@ fx_front.prototype.hilight = function() {
         if ($fx.front.is_selectable(item)) {
             var i = $(item);
             i.addClass('fx_hilight');
-            if (i.width() === 0 || i.height() === 0) {
+            i.addClass('fx_clearfix');
+            // зеленые выделения для полей внутри скрытых блоков
+            // пока лечим через i.is(':visible')
+            if (i.is(':visible') && (i.width() === 0 || i.height() === 0) ) {
                 i.addClass('fx_hilight_empty');
                 if (i.css('display') === 'inline') {
                     i.addClass('fx_hilight_empty_inline');
@@ -467,6 +478,8 @@ fx_front.prototype.hilight = function() {
 fx_front.prototype.load = function ( mode ) {
     this.mode = mode;
     $.cookie('fx_front_mode', mode, {path:'/'});
+    
+    $fx.front.outline_all_off();
     
     $fx.front.deselect_item();
     
@@ -862,6 +875,8 @@ fx_front.prototype.add_panel_field = function(field) {
     return field_node;
 };
 
+fx_front.prototype.outline_panes = [];
+
 fx_front.prototype.outline_block = function(n, style) {
     if (!style) {
         style = 'hover';
@@ -885,25 +900,34 @@ fx_front.prototype.outline_block = function(n, style) {
     var size = style === 'hover' ? 2 : 2;
     var pane_z_index = $('#fx_admin_control').css('z-index') - 1;
     var doc_width = $(document).width();
-    function make_pane(css, type) {
-        var c_left = parseInt(css.left);
-        var c_width = parseInt(css.width);
+    function make_pane(box, type) {
+        var c_left = box.left;
+        var c_width = box.width;
         if (c_left < 0) {
             c_left = 0;
-            css.left = c_left+'px';
+            box.left = c_left;
         } else if (c_left >= doc_width) {
             c_left = doc_width - size - 1;
-            css.left= c_left + 'px';
+            box.left= c_left;
         }
         if (c_width + c_left >= doc_width) {
-            css.width = (doc_width - c_left) + 'px';
+            box.width = (doc_width - c_left);
         }
+        var css = {};
+        // добавляем px для размеров
+        $.each(box, function(i, v) {
+            css[i] = v+'px';
+        });
         var m = $(
             '<div class="fx_outline_pane '+
                 'fx_outline_pane_'+type+' fx_outline_style_'+style+'" />'
         );
         css['z-index'] = pane_z_index;
         m.css(css);
+        m.data('pane_props', $.extend(box, {
+            type:type,
+            vertical: type === 'left' || type === 'right'
+        }));
         $('body').append(m);
         return m;
     }
@@ -915,33 +939,23 @@ fx_front.prototype.outline_block = function(n, style) {
     if (n.css('display') === 'inline' && n.text() !== '') {
         var m_before = $('<span style="display:inline-block;width:1px; height:1px;background:#F00;"></span>');
         m_before.insertBefore(n.get(0).firstChild);
-        var mbo = m_before.offset();/*
-        $('body').append(
-            $('<div />').css({
-                position:'absolute',
-                background:'#F00',
-                width:'3px',
-                height:'3px',
-                top:mbo.top+'px',
-                left:mbo.left+'px'
-            })
-        );*/
+        var mbo = m_before.offset();
         // сравниваем высоту для случаев, когда тестовый пиксель оказывается на предыдущей строке один, 
         // т.к. он влезает, а реальный текст - нет
         if (mbo.top > o.top && (mbo.left - parseInt(n.css('padding-left')) - o.left) > 10) {
             top_left_offset = (mbo.left - o.left);
             top_top_offset = mbo.top - o.top + size*2 + 1;
             panes.top_left = make_pane({
-                top:o.top - size + 'px',
-                left:mbo.left - size +'px',
-                height: (mbo.top - o.top) + size*2 + 'px',
-                width:size+'px'
+                top:o.top - size,
+                left:mbo.left - size,
+                height: (mbo.top - o.top) + size*2,
+                width:size
             }, 'left');
             panes.top_top = make_pane({
-                top:mbo.top +size*2+'px',
-                left:o.left+'px',
-                width:mbo.left - o.left + 'px',
-                height:size+'px'
+                top:mbo.top +size*2,
+                left:o.left,
+                width:mbo.left - o.left,
+                height:size
             }, 'top');
         }
         m_before.remove();
@@ -958,48 +972,74 @@ fx_front.prototype.outline_block = function(n, style) {
             bottom_right_offset = nw - (mao.left - o.left);
             bottom_bottom_offset = o.top+nh-mao.top;
             panes.bottom_right = make_pane({
-                top:mao.top+'px',
-                left:mao.left+'px',
-                width:size+'px',
-                height:bottom_bottom_offset+'px'
+                top:mao.top,
+                left:mao.left,
+                width:size,
+                height:bottom_bottom_offset
             }, 'right');
             panes.bottom_bottom = make_pane({
-                top:mao.top+'px',
-                left:mao.left+'px',
-                width: bottom_right_offset +'px',
-                height:size+'px'
+                top:mao.top,
+                left:mao.left,
+                width: bottom_right_offset,
+                height:size
             }, 'bottom');
         }
         
         m_after.remove();
     }
     panes.top = make_pane({
-        top:o.top - size +'px',
-        left: (o.left + top_left_offset)+'px',
-        width:(nw-top_left_offset )+'px',
-        height:size+'px'
+        top:o.top - size,
+        left: (o.left + top_left_offset),
+        width:(nw-top_left_offset ),
+        height:size
     }, 'top');
     panes.bottom = make_pane({
-        top:o.top + nh +'px',
-        left:o.left+'px',
-        width: nw - bottom_right_offset+'px',
-        height:size+'px'
+        top:o.top + nh,
+        left:o.left,
+        width: nw - bottom_right_offset,
+        height:size
     }, 'bottom');
     panes.left = make_pane({
-        top: (o.top - size + top_top_offset) +'px',
-        left:o.left - size + 'px',
-        width:size+'px',
-        height: (nh + size*2 - top_top_offset) +'px'
+        top: (o.top - size + top_top_offset),
+        left:o.left - size ,
+        width:size,
+        height: (nh + size*2 - top_top_offset)
         
     }, 'left');
     panes.right = make_pane({
-        top:o.top - size +'px',
-        left:o.left + nw + 'px',
-        width:size+'px',
-        height: (nh + size*2 - bottom_bottom_offset) +'px'
+        top:o.top - size ,
+        left:o.left + nw ,
+        width:size,
+        height: (nh + size*2 - bottom_bottom_offset) 
     }, 'right');
     n.data('fx_outline_panes', panes);
     n.data('fx_outline_style', style);
+    
+    
+    return;
+    var c_offset = n.offset();
+    c_offset.right = c_offset.left + n.outerWidth();
+    c_offset.bottom = c_offset.top + n.outerHeight();
+    var panes_hidden = false;
+    n.on('mousemove.recount_outlines', function(e) {
+        var panes = $(this).data('fx_outline_panes');
+        var edge = 3;
+        var intersects = false;
+        if (
+               e.pageY - c_offset.top < edge
+            || c_offset.bottom - e.pageY < edge 
+            || e.pageX - c_offset.left < edge
+            || c_offset.right - e.pageX < edge) {
+            intersects = true;
+        }
+        if (intersects && panes_hidden || !intersects && !panes_hidden) {
+            return;
+        }
+        $.each(panes, function() {
+            intersects ? $(this).hide() : $(this).show();
+        });
+        panes_hidden = intersects;
+    });
 };
 
 fx_front.prototype.outline_block_off = function(n) {

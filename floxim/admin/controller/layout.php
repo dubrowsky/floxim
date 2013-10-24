@@ -23,8 +23,8 @@ class fx_controller_admin_layout extends fx_controller_admin {
         $ar['labels'] = array('name' => FX_ADMIN_NAME, 'use' => fx::lang('Used on','system'), 'buttons' => array('type' => 'buttons'));
 
         foreach ($items as $item) {
-        	$submenu = self::get_template_submenu($item);
-        	$submenu_first = current($submenu);
+            $submenu = self::get_template_submenu($item);
+            $submenu_first = current($submenu);
             $name = array(
             	'name' => $item['name'],
             	'url' => $submenu_first['url']
@@ -104,7 +104,7 @@ class fx_controller_admin_layout extends fx_controller_admin {
         }
         return $result;
     }
-
+    
     public function delete_save($input) {
         $result = array('status' => 'ok');
         $ids = $input['id'];
@@ -174,7 +174,8 @@ class fx_controller_admin_layout extends fx_controller_admin {
     
     public static function get_template_submenu($layout) {
     	$titles = array(
-            'settings' => fx::lang('Settings','system')
+            'settings' => fx::lang('Settings','system'),
+            'source' => "Source"
         );
 
         $layout_id = $layout['id'];
@@ -240,5 +241,30 @@ class fx_controller_admin_layout extends fx_controller_admin {
         }
         
         return $result;
+    }
+    
+    
+    public function source($layout) {
+        $template = fx::template('layout_'.$layout['keyword']);
+        $vars = $template->get_template_variants();
+        $files = array();
+        foreach ($vars as $var) {
+            $files[preg_replace("~^.+/~", '', $var['file'])]= $var['file'];
+        }
+        foreach ($files as $file => $path) {
+            $tab_code = preg_replace("~\.~", '_', $file);
+            $source = file_get_contents($path);
+            $this->response->add_tab($tab_code, $file);
+            $this->response->add_fields(
+                array(array(
+                    'type' => 'text',
+                    'code' => 'htmlmixed',
+                    'name' => 'source_'.$file, 
+                    'value' => $source
+                )),
+                $tab_code
+            );
+        }
+        //fx::log('src', $files);
     }
 }
