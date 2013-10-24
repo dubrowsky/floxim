@@ -147,6 +147,12 @@ fx_form = {
             active: active
         });
 
+        $('.fx_tab a', container).click(function(){
+            $('textarea.fx_code').each(function() {
+                $(this).data('codemirror').refresh();
+            });
+        });
+        
         if ( settings.tabs.change_url ) {
             $('.fx_tab a', container).click(function(){
                 var last_i = $fx.hash_param.length;
