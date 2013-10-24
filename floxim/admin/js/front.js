@@ -149,16 +149,13 @@ var fx_front = function () {
             $fx.front.select_content_essence(n);
             var tvs = $('.fx_template_var, .fx_template_var_in_att', n);
             if (tvs.length === 1) {
-                console.log('strt essns');
                 tvs.edit_in_place();
             }
         }
         if (n.is('.fx_template_var, .fx_template_var_in_att')) {
-            console.log('strt var', n);
             n.edit_in_place();
             var container_essence = n.closest('.fx_content_essence');
             if (container_essence.get(0) !== n.get(0)) {
-                console.log('trig sel ess', container_essence);
                 container_essence.trigger('fx_select');
             }
         }
@@ -422,8 +419,6 @@ fx_front.prototype.deselect_item = function() {
                 trigger('fx_deselect').
                 unbind('remove.deselect_removed');
         $fx.front.outline_block_off($(selected_item));
-        // chrome outline bug
-        //$fx.front.fix();
     }
     $fx.buttons.unbind('select_block');
     $('html').off('.fx_selected');
@@ -538,19 +533,6 @@ fx_front.prototype.select_content_essence = function(n) {
                 }
             }
         );
-        return;
-        $fx.post({
-            essence:'content',
-            action:'add_edit',
-            content_type:essence_meta.type,
-            content_id:essence_meta.id
-         }, function(res) {
-             $fx_dialog.open_dialog(res, {
-                 onfinish:function() {
-                     $fx.front.reload_infoblock(ib_node);
-                 }
-             });
-         });
     });
     $fx.buttons.bind('delete', function() {
        if (confirm(fx_lang("Вы уверены?"))) {
@@ -833,7 +815,6 @@ fx_front.prototype.reload_infoblock = function(infoblock_node, callback, extra_d
            if (selected_selector) {
                var sel_target = ib_parent.find(selected_selector);
                if (sel_target.length > 0) {
-                   console.log('selectr', ib_parent, selected_selector, sel_target);
                    sel_target = sel_target.get(0);
                    if (!$fx.front.is_selectable(sel_target)) {
                        sel_target = $fx.front.get_selectable_up(sel_target);

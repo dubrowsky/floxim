@@ -49,8 +49,8 @@ fx_edit_in_place.prototype.handle_keydown = function(e) {
         return false;
     }
     if (e.which === 13 && (!this.is_wysiwyg || e.ctrlKey)) {
-        this.save().stop();
         $fx.front.deselect_item();
+        this.save().stop();
         e.which = 666;
         $(this.node).closest('a').blur();
         return false;
@@ -105,8 +105,7 @@ fx_edit_in_place.prototype.start = function(meta) {
             }
             break;
 	}
-	$('html').one('fx_deselect.edit_in_place', function() {
-            console.log('deseld');
+        $('html').one('fx_deselect.edit_in_place', function() {
             edit_in_place.save().stop();
 	});
 };
@@ -126,7 +125,6 @@ fx_edit_in_place.prototype.add_panel_field = function(meta) {
 };
 
 fx_edit_in_place.prototype.stop = function() {
-    console.log('stp');
     for (var i =0 ;i<this.panel_fields.length; i++) {
         this.panel_fields[i].remove();
     }
