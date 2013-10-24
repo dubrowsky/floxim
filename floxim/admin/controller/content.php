@@ -120,7 +120,7 @@ class fx_controller_admin_content extends fx_controller_admin {
         }
         $content_type = $input['content_type'];
         $finder = fx::data($content_type);
-        if ($content_type !== 'content_user'){
+        if (preg_match("~^content_~", $content_type) && $content_type !== 'content_user'){
             $finder->where('site_id', fx::env('site')->get('id'));
         }
         if (isset($input['skip_ids']) && is_array($input['skip_ids'])) {
@@ -131,6 +131,9 @@ class fx_controller_admin_content extends fx_controller_admin {
             foreach ($term as $tp) {
                 $finder->where('name', '%'.$tp.'%', 'LIKE');
             }
+        }
+        if (isset($input['ids'])) {
+            $finder->where('id', $input['ids']);
         }
 
         $items = $finder->all();
