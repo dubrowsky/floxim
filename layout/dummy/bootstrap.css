@@ -2990,7 +2990,7 @@
     display: block;
 }
 
-.bootstrap  ul.nav li.dropdown:hover ul.dropdown-menu{
+.bootstrap  ul.nav li.dropdown:hover ul.dropdown-menu, .bootstrap  ul.nav li.dropdown.hover ul.dropdown-menu {
 display: block;
 margin: 0;
 }
