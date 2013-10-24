@@ -36,6 +36,20 @@ if (_c.context === 'panel') {
             return;
         }
         var orig = $('.fx_fieldset', html);
+        var popup = new $fx.popup({
+            target:expander,
+            onclose:function() {
+                html.append(orig);
+                orig.hide();
+            }
+        });
+
+        popup.$body.append(orig);
+        orig.show();
+        popup.position();
+        
+        return;
+        var orig = $('.fx_fieldset', html);
         var cloned = orig.clone(true);
 
         console.log($('select', orig));
