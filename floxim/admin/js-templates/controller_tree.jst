@@ -5,6 +5,9 @@
     var children = _c.children || _c.values;
     ?>
     <div>
+        <span class="filter_search">
+            <input type="text" placeholder="Search..." />
+        </span>
         <span class="filter" data-filter="type">
             Type: 
             <select class="fx_controller_groups filter_type fx_input">
@@ -88,19 +91,25 @@ function select_controller_group() {
         var selector = '.'+filter+'_'+filter_value;
         subs.not(selector).hide();
     });
+    var term = $('.filter_search input', html).val();
+    if (term) {
+        var words = term.split(' ');
+        var rex = [];
+        for (wi = 0; wi < words.length; wi++) {
+            rex.push(new RegExp(words[wi], 'i'));
+        }
+        subs.filter(':visible').each(function() {
+            var c_text = $(this).text();
+            for (var ri = 0; ri < rex.length; ri++) {
+                if (!c_text.match(rex[ri])) {
+                    $(this).hide();
+                }
+            }
+        });
+    }
     $('.fx_controller_list_table').css('left', 0);
     recount_buttons();
     recount_scrollers();
-    return;
-    
-    
-    if (c_group === '') {
-        html.find('.fx_controller_list .children').show();
-    } else {
-        html.find('.fx_controller_list .children').hide();
-        html.find('.children_'+c_group).show();
-    }
-    
 }
 
 function recount_buttons() {
@@ -156,6 +165,10 @@ $('.fx_scroll_right', html).on('click', function() {
 });
 
 $('.fx_controller_groups', html).on('change', function() {
+    select_controller_group();
+});
+
+$('.filter_search input', html).on('keyup', function() {
     select_controller_group();
 });
 

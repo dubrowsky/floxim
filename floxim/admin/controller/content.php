@@ -38,7 +38,6 @@ class fx_controller_admin_content extends fx_controller_admin {
 
         if ($input['data_sent']) {
             $content->set_field_values($input['content']);
-            dev_log('saving', $content);
             $content->save();
         }
         //$this->response->add_form_button('save');

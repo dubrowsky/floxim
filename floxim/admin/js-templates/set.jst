@@ -47,6 +47,7 @@ if (_c.context === 'panel') {
         popup.$body.append(orig);
         orig.show();
         popup.position();
+        expander.parent().append(popup.$node);
         
         return;
         var orig = $('.fx_fieldset', html);
