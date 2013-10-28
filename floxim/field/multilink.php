@@ -57,6 +57,7 @@ class fx_field_multilink extends fx_field_baze {
             }
             $this->_js_field['type'] = 'set';
         }
+        dev_log('_js_field', $this->_js_field);
         return $this->_js_field;
     }
     
@@ -250,6 +251,7 @@ class fx_field_multilink extends fx_field_baze {
     public function get_savestring($content) {
         // дергаем предыдущее значение,
         // чтобы заполнить его
+        dev_log($content);
         $content->get($this['name']);
         
         $rel = $this->get_relation();
@@ -392,7 +394,8 @@ class fx_field_multilink extends fx_field_baze {
             'content_'.$direct_target_component['keyword'],
             $direct_target_field['name'],
             $end_target_field->get_prop_name(),
-            'content_'.$end_datatype['keyword']
+            'content_'.$end_datatype['keyword'],
+            $end_target_field['name']
         );
     }
 }

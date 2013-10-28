@@ -124,7 +124,7 @@ class fx_controller_component extends fx_controller {
         $searchable_fields =  $this
                 ->get_component()
                 ->all_fields()
-                ->find('type', fx_field::FIELD_MULTILINK, '!=')
+                //->find('type', fx_field::FIELD_MULTILINK, '!=')
                 //->find('type', fx_field::FIELD_LINK, '!=')
                 ->find('type', fx_field::FIELD_IMAGE, '!=');
                 //->get_values(array('description', 'type'), 'name');
@@ -136,8 +136,13 @@ class fx_controller_component extends fx_controller {
             if ($field['type'] == fx_field::FIELD_LINK) {
                 $res['content_type'] = $field->get_target_name();
             }
+            if ($field['type'] == fx_field::FIELD_MULTILINK) {
+                $relation = $field->get_relation();
+                $res['content_type'] = $relation[0] == fx_data::MANY_MANY ? $relation[4] : $relation[1] ;
+            }
             $fields['conditions']['tpl'][0]['values'][$field['name']] = $res;
         }
+        dev_log('fields', $fields);
         return $fields;
     }  
     
@@ -401,7 +406,6 @@ class fx_controller_component extends fx_controller {
             if (isset($conditions) && is_array($conditions)) {
                 foreach ($conditions as $condition) {
                     $field = $fields->find_one('name', $condition['name']);
-                    
                     $error = false;
                     switch ($condition['operator']) {
                         case 'contains':
@@ -453,6 +457,29 @@ class fx_controller_component extends fx_controller {
                                 $ids[]= $v[0];
                             }
                             $condition['value'] = $ids;
+                            if ($condition['operator'] === '!=') {
+                                $condition['operator'] = 'NOT IN';
+                            } elseif ($condition['operator'] === '=') {
+                                $condition['operator'] = 'IN';
+                            }
+                        }
+                    }
+                    if ($field['type'] == fx_field::FIELD_MULTILINK) {
+                        if (!isset($condition['value'])) {
+                            $error = true;
+                        } else {
+                            foreach ($condition['value'] as $v) {
+                                $ids[]= $v[0];
+                            }
+                            $relation = $field->get_relation();
+                            if ($relation[0] === fx_data::MANY_MANY){
+                                $content_ids = fx::data($relation[1])->
+                                    where($relation[5], $ids)->
+                                    select('content_id')->
+                                    get_data()->get_values('content_id');
+                            }
+                            $condition['name'] = 'id';    
+                            $condition['value'] = $content_ids;
                             if ($condition['operator'] === '!=') {
                                 $condition['operator'] = 'NOT IN';
                             } elseif ($condition['operator'] === '=') {
