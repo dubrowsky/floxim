@@ -455,6 +455,8 @@ class fx_controller_component extends fx_controller {
                             $condition['value'] = $ids;
                             if ($condition['operator'] === '!=') {
                                 $condition['operator'] = 'NOT IN';
+                            } elseif ($condition['operator'] === '=') {
+                                $condition['operator'] = 'IN';
                             }
                         }
                     }
