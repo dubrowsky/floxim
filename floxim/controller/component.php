@@ -472,11 +472,16 @@ class fx_controller_component extends fx_controller {
                                 $ids[]= $v[0];
                             }
                             $relation = $field->get_relation();
+                            dev_log('rels', $relation, $condition);
                             if ($relation[0] === fx_data::MANY_MANY){
                                 $content_ids = fx::data($relation[1])->
                                     where($relation[5], $ids)->
                                     select('content_id')->
                                     get_data()->get_values('content_id');
+                            } else {
+                                $content_ids = fx::data($relation[1])->
+                                    where('id', $ids)->
+                                    select($relation[2])->get_data()->get_values($relation[2]);
                             }
                             $condition['name'] = 'id';    
                             $condition['value'] = $content_ids;

@@ -380,6 +380,7 @@ class fx_field_multilink extends fx_field_baze {
          */
         $direct_target_field = fx::data('field', $this['format']['linking_field']);
         $direct_target_component = fx::data('component', $this['format']['linking_datatype']);
+
         if (!$this['format']['mm_field']) {
             return array(
                 fx_data::HAS_MANY,
