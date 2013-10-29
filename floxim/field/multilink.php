@@ -251,7 +251,6 @@ class fx_field_multilink extends fx_field_baze {
     public function get_savestring($content) {
         // дергаем предыдущее значение,
         // чтобы заполнить его
-        dev_log($content);
         $content->get($this['name']);
         
         $rel = $this->get_relation();
@@ -291,7 +290,6 @@ class fx_field_multilink extends fx_field_baze {
         if (count($existing_ids) > 0) {
             $existing_items = fx::data($first_data_type, $existing_ids);
         }
-        
         $new_value = new fx_collection();
         if ($is_mm) {
             $new_value->linker_map = new fx_collection();
@@ -300,7 +298,10 @@ class fx_field_multilink extends fx_field_baze {
             $end_link_field_name = 'f_'.fx::data(
                     'component', preg_replace('~^content_~', '', $rel[1])
                 )->all_fields()->find_one(function($i) use ($rel) {
-                    return $i['format']['prop_name'] == $rel[3];
+                    //!!! какая-то жесть
+                    if (isset($i['format']['prop_name']))
+                        return $i['format']['prop_name'] == $rel[3];
+                    return false;
                 })->get('name');
         }
         $linker_infoblock_id = null;
