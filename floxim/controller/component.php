@@ -465,7 +465,7 @@ class fx_controller_component extends fx_controller {
                         }
                     }
                     if ($field['type'] == fx_field::FIELD_MULTILINK) {
-                        if (!isset($condition['value'])) {
+                        if (!isset($condition['value']) || !is_array($condition['value'])) {
                             $error = true;
                         } else {
                             foreach ($condition['value'] as $v) {

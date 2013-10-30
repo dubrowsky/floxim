@@ -22,6 +22,27 @@ class fx_data {
     const HAS_ONE = 2;
     const MANY_MANY = 3;
 
+    public function quicksearch($term = null) {
+        if (!isset($term)) {
+            return;
+        }
+        $terms = explode(" ", $term);
+        if (count($terms)>0) {
+            foreach ($terms as $tp) {
+                $this->where('name', '%'.$tp.'%', 'LIKE');
+            }
+        }
+        $items = $this->all();
+        $res = array('meta' => array(), 'results' => array());
+        foreach ($items as $i) {
+            $res['results'][]= array(
+                'name' => $i['name'],
+                'id' => $i['id']
+            );
+        }
+        return $res;
+    }
+
     public function relations() {
         return array();
     }

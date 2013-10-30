@@ -125,24 +125,11 @@ class fx_controller_admin_content extends fx_controller_admin {
         if (isset($input['skip_ids']) && is_array($input['skip_ids'])) {
             $finder->where('id', $input['skip_ids'], 'NOT IN');
         }
-        $term = explode(" ", $_POST['term']);
-        if (count($term) > 0) {
-            foreach ($term as $tp) {
-                $finder->where('name', '%'.$tp.'%', 'LIKE');
-            }
-        }
         if (isset($input['ids'])) {
             $finder->where('id', $input['ids']);
         }
+        $res = $finder->quicksearch($_POST['term']);
 
-        $items = $finder->all();
-        $res = array('meta' => array(), 'results' => array());
-        foreach ($items as $i) {
-            $res['results'][]= array(
-                'name' => $i['name'],
-                'id' => $i['id']
-            );
-        }
         echo json_encode($res);
         die();
     }
