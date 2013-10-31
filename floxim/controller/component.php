@@ -42,6 +42,64 @@ class fx_controller_component extends fx_controller {
         return $sources;
     }
     
+    public function after_save() {
+        if (isset($this->action)) {
+            switch ($this->action) {
+                case 'list_selected':
+                /*
+                        $linkers = fx::data('content_select_linker')
+                                    ->all();
+                        foreach ($linkers as $linker) {
+                            $linker->delete();
+                        }
+                */
+                    if (isset($this->input['params']['selected']) && is_array($this->input['params']['selected'])) {
+                        $linkers = fx::data('content_select_linker')
+                                    ->where('infoblock_id', $this->input['id'])
+                                    ->where('parent_id', $this->input['page_id'])
+                                    ->all();
+                        foreach ($linkers as $linker) {
+                            $linker->delete();
+                        }
+                        foreach ($this->input['params']['selected'] as $value) {
+                            $linker = fx::data('content_select_linker')->create();
+                            $linker['parent_id'] = $this->input['page_id'];
+                            $linker['infoblock_id'] = $this->input['id'];
+                            $linker['linked_id'] = $value[0];
+                            $linker->save();
+                        }
+                    } else {
+                        $linkers = fx::data('content_select_linker')
+                                    ->where('infoblock_id', $this->input['id'])
+                                    ->all();
+                        foreach ($linkers as $linker) {
+                            $linker->delete();
+                        }
+                    }
+                    break;
+                
+                default:
+                    break;
+            }
+        }
+    }
+    public function after_delete() {
+        if (isset($this->action)) {
+            switch ($this->action) {
+                case 'list_selected':
+                    $linkers = fx::data('content_select_linker')
+                                ->where('infoblock_id', $this->input['id'])
+                                ->all();
+                    foreach ($linkers as $linker) {
+                        $linker->delete();
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
     public function config_list($config) {
         $sortings = array(
             'manual' => '-'.fx::lang('Manual','controller_component').'-', 
@@ -57,6 +115,21 @@ class fx_controller_component extends fx_controller {
     
     public function config_list_filtered($config) {
         $config['settings'] += $this->_config_conditions();
+        return $config;
+    }
+
+    public function config_list_selected($config) {
+        $field['selected'] = array (
+            'name' => 'selected', 
+            'label' => fx::lang('Selected','controller_component'),
+            'type' => 'livesearch',
+            'is_multiple' => true,
+            'ajax_preload' => true,
+            'params' => array(
+                'content_type' => 'content_'.$this->_content_type
+            ),
+        );
+        $config['settings'] += $field;
         return $config;
     }
     
@@ -395,6 +468,28 @@ class fx_controller_component extends fx_controller {
                 break;
         }
         return $parent_id;
+    }
+    
+    public function do_list_selected() {
+        $this->set_param('skip_parent_filter', true);
+        $this->set_param('skip_infoblock_filter', true);
+        $parent_id = fx::env('page')->get('id');
+        $linkers = fx::data('content_select_linker')
+                    ->select('linked_id')
+                    ->where('infoblock_id', $this->input['infoblock_id'])
+                    ->where('parent_id', $parent_id)
+                    ->get_data()
+                    ->get_values('linked_id');
+        dev_log('linkers', $linkers);
+        if (is_array($linkers)) {
+            $this->listen('query_ready', function($q, $ctr) use ($linkers) {
+                $q->where('id', $linkers, 'IN');
+                dev_log('selected query', $q->show_query());
+            });
+        }
+        $res = $this->do_list();
+        dev_log('selected res',$res);
+        return $res;
     }
     
     public function do_list_filtered() {
