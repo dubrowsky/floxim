@@ -44,16 +44,17 @@ class fx_controller_component extends fx_controller {
     
     public function config_list($config) {
         $sortings = array(
-            'manual' => '-'.fx::lang('Manual','controller_component').'-', 
             'created'=> fx::lang('Created','controller_component')
         ) + $this
             ->get_component()
             ->all_fields()
             ->find('type', fx_field::FIELD_MULTILINK, '!=')
             ->get_values('description', 'name');
+        
         $config['settings']['sorting']['values'] = $sortings;
         return $config;
     }
+    
     
     public function config_list_filtered($config) {
         $config['settings'] += $this->_config_conditions();
@@ -70,14 +71,7 @@ class fx_controller_component extends fx_controller {
                 array(
                     'id' => 'name',
                     'name' => 'name',
-                    'type' => 'select',
-                    /*'values' =>  $this
-                            ->get_component()
-                            ->all_fields()
-                            ->find('type', fx_field::FIELD_MULTILINK, '!=')
-                            ->find('type', fx_field::FIELD_LINK, '!=')
-                            ->find('type', fx_field::FIELD_IMAGE, '!=')
-                            ->get_values(array('description', 'type'), 'name')*/
+                    'type' => 'select'
                 ), 
             ),
             'operators_map' => array (
@@ -195,6 +189,9 @@ class fx_controller_component extends fx_controller {
             }
             $config['settings'][$c_ib_field['name']]= $c_ib_field;
         }
+        // добавляем ручную сортировку для инфоблок-листинга
+        $config['settings']['sorting']['values']['manual'] = 
+                        '-'.fx::lang('Manual','controller_component').'-';
         return $config;
     }
     
@@ -240,70 +237,6 @@ class fx_controller_component extends fx_controller {
             }
         }
         return $items;
-    }
-    
-    public function do_listing() {
-        $f = $this->_get_finder();
-        
-        $content_type = $this->get_content_type();
-        if ( ($infoblock_id = $this->get_param('infoblock_id'))) {
-            $c_ib = fx::data('infoblock', $infoblock_id);
-            if ($c_ib && !$this->get_param('skip_infoblock_filter')) {
-                $f->where('infoblock_id', $c_ib->get_root_infoblock()->get('id'));
-            }
-        }
-        if ( ($parent_id = $this->_get_parent_id()) && !($this->get_param('skip_parent_filter')) ) {
-            $f->where('parent_id', $this->_get_parent_id());
-        }
-        $this->trigger('build_query',$f);
-
-        if ( ($sorting = $this->get_param('sorting')) ) {
-            if ($sorting == 'manual') {
-                $f->order('priority');
-            } else {
-                $f->order($sorting, $this->get_param('sorting_dir'));
-            }
-        }
-        $this->trigger('query_ready', $f);
-        if ($this->get_param('is_fake')) {
-            // dirty hack
-            $f->where('id', -1);
-        }
-        $items = $f->all();
-        $this->trigger('items_ready', $items);
-        
-        if ($this->get_param('is_fake')) {
-            foreach (range(0, 3) as $cnt) {
-                $items[]= $f->fake();
-            }
-        }
-
-        if (count($items) == 0) {
-            $this->_meta['hidden'] = true;
-        }
-        if (fx::env('is_admin') && $c_ib) {
-            $c_ib_name = $c_ib->get_prop_inherited('name');
-            $c_ib_name = $c_ib_name ? $c_ib_name : $c_ib['id'];
-            $component = fx::data('component', $content_type);
-            $adder_title = $component['item_name'].' &rarr; '.$c_ib_name;
-            
-            $this->accept_content(array(
-                'title' => $adder_title,
-                'parent_id' => $this->_get_parent_id(),
-                'type' => $content_type,
-                'infoblock_id' => $this->get_param('infoblock_id')
-            ));
-            
-            if (count($items) == 0) {
-                $this->_meta['hidden_placeholder'] = 'Infoblock "'.$c_ib_name.'" is empty. '.
-                                                'You can add '.$component['item_name'].' here';
-            }
-        }
-        $res = array('items' => $items);
-        if ( ($pagination = $this->_get_pagination()) ) {
-            $res ['pagination'] = $pagination;
-        }
-        return $res;
     }
     
     public function accept_content($params) {
@@ -540,6 +473,17 @@ class fx_controller_component extends fx_controller {
         }
         if ( ( $infoblock_id = $this->get_param('infoblock_id')) && !($this->get_param('skip_infoblock_filter')) ) {
             $finder->where('infoblock_id', $infoblock_id);
+        }
+        if ( ($sorting = $this->get_param('sorting'))) {
+            $dir = $this->get_param('sorting_dir');
+            if ($sorting === 'manual') {
+                $sorting = 'priority';
+                $dir = 'ASC';
+            }
+            if (!$dir) {
+                $dir = 'ASC';
+            }
+            $finder->order($sorting, $dir);
         }
         $this->_finder = $finder;
         return $finder;

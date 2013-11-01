@@ -80,7 +80,6 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                 $fields['controller']['values'][]= $c_item;
             }
         }
-        //dev_log($fields);
         $this->response->add_form_button(array(
             'key' => 'next',
             'label' => fx::lang('Next','system')
@@ -120,7 +119,6 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
      */
     
     public function select_settings($input) {
-        dev_log('input', $input);
         // Текущий (редактируемый) инфоблок
     	$infoblock = null;
         // special mode for layouts
@@ -168,12 +166,10 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             $infoblock['params'] = array();
         }
         
-        
         if (!$is_layout) {
             $controller_name = $controller;
             $controller = fx::controller($controller);
             $settings = $controller->get_action_settings($action);
-            dev_log($settings, $infoblock);
             foreach ($infoblock['params'] as $ib_param => $ib_param_value) {
                 if (isset($settings[$ib_param])) {
                     $settings[$ib_param]['value'] = $ib_param_value;
@@ -184,11 +180,11 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                     array(array(
                         'label' => fx::lang('Block name','system'),
                         'name' => 'name', 
-                        'value' => $infoblock['name']
+                        'value' => $infoblock['name'],
+                        'tip' => $infoblock['controller'].'.'.$infoblock['action']
                     ))
             );
             //$this->response->add_fields($settings, 'settings', 'params');
-            dev_log('done', $settings);
             $this->response->add_fields($settings, false, 'params');
         }
         
@@ -495,7 +491,6 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
 
         // Собираем доступные шаблоны
         $controller = fx::controller($controller_name.'.'.$action_name);
-        dev_log('ctr', $controller_name.'.'.$action_name);
         $tmps = $controller->get_available_templates($layout_name);
         if ( !empty($tmps) ) {
             foreach ( $tmps as $template ) {
@@ -572,7 +567,6 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                 $content = fx::data(array('content',$content_type_id), $content_id);
                 if ($content) {
                     $content[$var['name']] = $value;
-                    dev_log('saving val', $value);
                     $content->save();
                 }
             }

@@ -219,7 +219,6 @@ class fx_controller {
             }
         }
         $config['actions'] = self::_merge_actions($config['actions']);
-        dev_log($config);
         return $config;
     }
 

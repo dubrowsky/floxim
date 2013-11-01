@@ -26,7 +26,6 @@ class fx_router_admin extends fx_router {
 
         try {
             $controller = new $classname($input, $action);
-            dev_log('routes', $classname);
         } catch (Exception $e) {
             die("Error! Essence: " . htmlspecialchars($essence));
         }

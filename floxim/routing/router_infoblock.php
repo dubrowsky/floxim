@@ -25,7 +25,6 @@ class fx_router_infoblock extends fx_router {
                 'override_infoblock' => $infoblock_overs
             )
         );
-        dev_log('ibc', $controller);
         
         return $controller;
     }
