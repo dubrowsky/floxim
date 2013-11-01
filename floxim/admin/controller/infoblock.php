@@ -169,6 +169,8 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         if (!$is_layout) {
             $controller_name = $controller;
             $controller = fx::controller($controller);
+            $controller->set_action($action);
+            $controller->set_input($input);
             $settings = $controller->get_action_settings($action);
             foreach ($infoblock['params'] as $ib_param => $ib_param_value) {
                 if (isset($settings[$ib_param])) {
@@ -289,6 +291,8 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             $infoblock->save();
             $i2l['infoblock_id'] = $infoblock['id'];
             $i2l->save();
+            $controller->input['id'] = $i2l['infoblock_id'];
+            $controller->after_save();
             $this->response->set_status_ok();
             $this->response->set_prop('infoblock_id', $infoblock['id']);
             return;
@@ -576,6 +580,11 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
     public function delete_infoblock($input) {
         /* @var $infoblock fx_infoblock */
         $infoblock = fx::data('infoblock', $input['id']);
+        $controller = $infoblock->get_prop_inherited('controller');
+        $action = $infoblock->get_prop_inherited('action');
+        $controller = fx::controller($controller);
+        $controller->set_action($action);
+        $controller->set_input($input);
         $fields = array(
             array(
                 'label' => fx::lang('I am REALLY sure','system'),
@@ -609,7 +618,9 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                     $ci->delete();
                 }
             }
+
             $infoblock->delete();
+            $controller->after_delete();
         }
     }
     
