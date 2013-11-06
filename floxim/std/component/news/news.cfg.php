@@ -7,15 +7,18 @@ return array(
             )
         ),
         'list_filtered_featured' => array(
-        	'defaults' => array(
-        		'!conditions' => array(
-        			'new_1' => array(
-        				'name' => 'on_main',
-        				'operator' => '=',
-        				'value' => '1'
-        			),
-        		)
-        	)
+            'defaults' => array(
+                '!conditions' => array(
+                    'new_1' => array(
+                        'name' => 'on_main',
+                        'operator' => '=',
+                        'value' => '1'
+                    ),
+                ),
+                '!pagination' => false,
+                '!sorting' => 'publish_date',
+                '!sorting_dir' => 'desc'
+            )
         )
     )
 );

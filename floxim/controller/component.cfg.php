@@ -26,6 +26,7 @@ return array(
             )
         ),
         'list_infoblock' => array(
+            'name' => '%component%',
             'settings' => array(
                 'parent_type' => array(
                     'label' => fx::lang('Parent','controller_component'),
@@ -39,13 +40,13 @@ return array(
             ),
             'defaults' => array(
                 '!pagination' => true
-            ),
-            'name' => 'List',
-            'description' => 'List of entries'
+            )
         ),
         'list_filtered' => array(
-            
+            'name' => '%component% by filter'
+        ),
+        'list_selected' => array(
+            'name' => '%component% selected'
         )
     )
 );
-?>

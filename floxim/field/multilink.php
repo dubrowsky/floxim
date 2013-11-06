@@ -57,6 +57,7 @@ class fx_field_multilink extends fx_field_baze {
             }
             $this->_js_field['type'] = 'set';
         }
+        dev_log('_js_field', $this->_js_field);
         return $this->_js_field;
     }
     
@@ -289,7 +290,6 @@ class fx_field_multilink extends fx_field_baze {
         if (count($existing_ids) > 0) {
             $existing_items = fx::data($first_data_type, $existing_ids);
         }
-        
         $new_value = new fx_collection();
         if ($is_mm) {
             $new_value->linker_map = new fx_collection();
@@ -298,7 +298,10 @@ class fx_field_multilink extends fx_field_baze {
             $end_link_field_name = 'f_'.fx::data(
                     'component', preg_replace('~^content_~', '', $rel[1])
                 )->all_fields()->find_one(function($i) use ($rel) {
-                    return $i['format']['prop_name'] == $rel[3];
+                    //!!! какая-то жесть
+                    if (isset($i['format']['prop_name']))
+                        return $i['format']['prop_name'] == $rel[3];
+                    return false;
                 })->get('name');
         }
         $linker_infoblock_id = null;
@@ -377,6 +380,7 @@ class fx_field_multilink extends fx_field_baze {
          */
         $direct_target_field = fx::data('field', $this['format']['linking_field']);
         $direct_target_component = fx::data('component', $this['format']['linking_datatype']);
+
         if (!$this['format']['mm_field']) {
             return array(
                 fx_data::HAS_MANY,
@@ -392,7 +396,8 @@ class fx_field_multilink extends fx_field_baze {
             'content_'.$direct_target_component['keyword'],
             $direct_target_field['name'],
             $end_target_field->get_prop_name(),
-            'content_'.$end_datatype['keyword']
+            'content_'.$end_datatype['keyword'],
+            $end_target_field['name']
         );
     }
 }

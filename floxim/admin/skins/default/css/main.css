@@ -1148,33 +1148,113 @@ span.fx_admin_current {
     margin: 3px;
 }
 
-#fx_admin_control form .field {
+/* HORIZONTAL FORM */
+#fx_admin_control form.fx_form_horizontal .field {
     display: inline-block;
     vertical-align: top;
     margin-right: 25px;
 }
 
-#fx_admin_control .fx_admin_form .form_label, #fx_admin_control .fx_admin_form label, #fx_admin_control .fx_admin_form input, #fx_admin_control .fx_admin_form select, #fx_admin_control .fx_admin_form textarea {
+#fx_admin_control .fx_form_horizontal .form_label, 
+#fx_admin_control .fx_form_horizontal label, 
+#fx_admin_control .fx_form_horizontal input, 
+#fx_admin_control .fx_form_horizontal select, 
+#fx_admin_control .fx_form_horizontal textarea {
     display: inline;
     font-size: 11px;
     width: auto;
     margin: 0;
 }
 
+
+#fx_admin_extra_panel form.fx_form_horizontal .field_text .input_container {
+    overflow:hidden;
+    max-width:150px;
+}
+
+
+#fx_admin_extra_panel .redactor_toolbar {
+    left:0;
+    top:0;
+    border: none;
+    border-bottom: 1px solid #e1e1e1 !important;
+}
+
+#fx_admin_control form.fx_form_horizontal .redactor_toolbar {
+    background: #FFF !important;
+    border:none !important;
+    top:2px;
+    left:10px;
+}
+
+
+#fx_admin_extra_panel .redactor_toolbar .redactor_separator {
+    border-right:none;
+    height:31px;
+}
+
+
+#fx_admin_extra_panel .redactor_box {
+    max-width:470px;
+    max-height:300px;
+}
+
+#fx_admin_extra_panel .fx_admin_form .form_label {
+    display:block;
+    min-height:16px;
+}
+
+#fx_admin_extra_panel .livesearch_items {
+    width:auto;
+    max-width: 300px;
+}
+
+#fx_admin_extra_panel .fx_image_field img {
+    height:50px;
+    margin-right:10px;
+    float:left;
+}
+
+#fx_admin_extra_panel .fx_image_field .fx_admin_button_text {
+    margin-right:10px;
+}
+
+#fx_admin_extra_panel form>.fx_admin_button_text {
+    float:none;
+    display:inline-block;
+    margin-top:16px;
+    margin-right:15px;
+    vertical-align: top;
+}
+
+/* VERTICAL FORM */
+#fx_admin_extra_panel form.fx_form_vertical .field {
+    margin-bottom:10px;
+    overflow: hidden;
+}
+#fx_admin_extra_panel form.fx_form_vertical .form_label {
+    float:left;
+    width:10%;
+    margin-top:0;
+    margin-right:1%;
+    text-align: right;
+}
+
+#fx_admin_extra_panel form.fx_form_vertical .input_container {
+    float:left;
+    width:70%;
+}
+
+#fx_admin_extra_panel form.fx_form_vertical .fx_input {
+    margin-top:0;
+    margin-bottom: 0;
+}
+
+
 .fx_button {
     margin-right: 5px;
 }
 
-/*
-.fx_list_buttons {
-    visibility: hidden;
-}
-
-.fx_list_row_hover .fx_list_buttons,
-.fx_admin_selected .fx_list_buttons {
-    visibility: visible;
-}
-*/
 
 /* JSTREE
 часть CSS-когда вшита в JS библиотеки
@@ -1730,17 +1810,6 @@ a.fx_var_editable:focus, .fx_var_editable a:focus {
     margin:0;
 }
 
-#fx_admin_control .redactor_toolbar {
-    background: #FFF !important;
-    border:none !important;
-    top:2px;
-    left:10px;
-}
-
-#fx_admin_control .redactor_toolbar .redactor_separator {
-    
-}
-
 .fx_infoblock_placeholder {
     min-height: 5px;
     min-width: 50px;
@@ -1781,61 +1850,33 @@ a.fx_var_editable:focus, .fx_var_editable a:focus {
 }
 
 .fx_controller_select .fx_controller_list {
-    overflow: hidden;
-    height: 100px;
+    overflow: auto;
+    max-height: 300px;
     width:100%;
     float:left;
     position: relative;
-}
-
-.fx_controller_select .fx_controller_list .fx_controller_list_table {
-    position: absolute;
-    left:0;
-}
-
-.fx_controller_select .fx_scroll_left, .fx_controller_select .fx_scroll_right {
-    float:left;
-    width:40px;
-    height:100px;
-    text-align: center;
-    cursor:pointer;
-    position: absolute;
-    background: #FFF;
-    background: -webkit-linear-gradient(left, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 1) 30%, #FFF);
-    z-index: 2;
-    visibility:hidden;
-}
-
-.fx_controller_select .fx_scroll_right {
-    right:0px;
-}
-
-.fx_controller_select .fx_scroll_left {
-    background:-webkit-linear-gradient(left, #FFF, rgba(255, 255, 255, 1) 70%, rgba(255, 255, 255, 0.1));
-}
-
-.fx_controller_select .fx_scroll_left a, .fx_controller_select .fx_scroll_right a {
-    display: inline-block;
-    font-size:25px;
-    text-decoration: none;
-    margin-top:33px;
+    background:#EEE;
 }
 
 .fx_controller_select .sub {
     float: left;
-    width: 190px;
-    margin-right: 20px;
-    margin-bottom: 10px;
-    margin-top: 10px;
+    width: 16.6%;
     overflow: hidden;
     height: 60px;
-    border: 1px solid #E1E1E1;
-    padding: 10px;
     cursor: pointer;
 }
 
+.fx_controller_select .sub .sub_data {
+    margin:1px 0 0 1px;
+    background:#FFF;
+    background: #FFF;
+    overflow: hidden;
+    height: 46px;
+    padding: 7px;
+}
+
 .fx_controller_select .sub:hover {
-    border:1px solid #CCC;
+   background: #EEE;
 }
 
 .fx_controller_select .sub.fx_admin_selected,
@@ -1849,17 +1890,19 @@ a.fx_var_editable:focus, .fx_var_editable a:focus {
     background:#CCC;
     width:30px;
     height:30px;
-    margin-right:15px;
 }
 
 .fx_controller_select .sub .body {
-    float:left;
-    width:140px;
+    margin-left:37px;
 }
 
 .fx_controller_select .sub .title {
-    font-weight:bold;
     margin-bottom:5px;
+}
+
+.fx_controller_select .sub .description {
+    font-size:11px;
+    color:#666;
 }
 
 .fx_overlay .CodeMirror {
@@ -1893,16 +1936,11 @@ a.fx_var_editable:focus, .fx_var_editable a:focus {
 }
 
 #fx_admin_extra_panel form {
-    margin:5px;
+    padding:5px;
     overflow:auto;
 }
 
 
-#fx_admin_extra_panel form .field_text .input_container {
-    overflow:hidden;
-    max-width:150px;
-    /*height:20px;*/
-}
 
 .fx_overlay .field_hidden {
     display:none !important;
@@ -1919,52 +1957,6 @@ a.fx_var_editable:focus, .fx_var_editable a:focus {
 
 .fx_overlay .visual_wrapper .variant.active {
     border:2px solid #000;
-}
-
-#fx_admin_extra_panel .redactor_toolbar {
-    left:0;
-    top:0;
-    border: none;
-    border-bottom: 1px solid #e1e1e1 !important;
-}
-
-#fx_admin_extra_panel .redactor_toolbar .redactor_separator {
-    border-right:none;
-    height:31px;
-}
-
-
-#fx_admin_extra_panel .redactor_box .redactor_editor {
-    max-width:470px;
-    max-height:200px;
-}
-
-#fx_admin_extra_panel .fx_admin_form .form_label {
-    display:block;
-    min-height:16px;
-}
-
-#fx_admin_extra_panel .livesearch_items {
-    width:auto;
-    max-width: 300px;
-}
-
-#fx_admin_extra_panel .fx_image_field img {
-    height:50px;
-    margin-right:10px;
-    float:left;
-}
-
-#fx_admin_extra_panel .fx_image_field .fx_admin_button_text {
-    margin-right:10px;
-}
-
-#fx_admin_extra_panel form>.fx_admin_button_text {
-    float:none;
-    display:inline-block;
-    margin-top:16px;
-    margin-right:15px;
-    vertical-align: top;
 }
 
 .fx_outline_pane {

@@ -52,7 +52,12 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                 if (count($act_templates) == 0) {
                     continue;
                 }
-                $action_name = ($c['name'] ? $c['name'] . ' / ' : '').$action_info['name']; 
+                
+                $action_name = str_replace(
+                    "%component%", 
+                    $c['name'],
+                    $action_info['name']
+                ); 
                 switch ($controller_type) {
                     case 'widget':
                         $action_type = 'widget';
@@ -80,7 +85,6 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                 $fields['controller']['values'][]= $c_item;
             }
         }
-        //dev_log($fields);
         $this->response->add_form_button(array(
             'key' => 'next',
             'label' => fx::lang('Next','system')
@@ -120,7 +124,6 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
      */
     
     public function select_settings($input) {
-        dev_log('input', $input);
         // Текущий (редактируемый) инфоблок
     	$infoblock = null;
         // special mode for layouts
@@ -168,12 +171,12 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             $infoblock['params'] = array();
         }
         
-        
         if (!$is_layout) {
             $controller_name = $controller;
             $controller = fx::controller($controller);
+            $controller->set_action($action);
+            $controller->set_input($input);
             $settings = $controller->get_action_settings($action);
-            dev_log($settings, $infoblock);
             foreach ($infoblock['params'] as $ib_param => $ib_param_value) {
                 if (isset($settings[$ib_param])) {
                     $settings[$ib_param]['value'] = $ib_param_value;
@@ -184,11 +187,11 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                     array(array(
                         'label' => fx::lang('Block name','system'),
                         'name' => 'name', 
-                        'value' => $infoblock['name']
+                        'value' => $infoblock['name'],
+                        'tip' => $infoblock['controller'].'.'.$infoblock['action']
                     ))
             );
             //$this->response->add_fields($settings, 'settings', 'params');
-            dev_log('done', $settings);
             $this->response->add_fields($settings, false, 'params');
         }
         
@@ -293,6 +296,8 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             $infoblock->save();
             $i2l['infoblock_id'] = $infoblock['id'];
             $i2l->save();
+            $controller->input['id'] = $i2l['infoblock_id'];
+            $controller->after_save();
             $this->response->set_status_ok();
             $this->response->set_prop('infoblock_id', $infoblock['id']);
             return;
@@ -474,7 +479,6 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         );
 
         $wrappers = array('' => fx::lang('With no wrapper','system'));
-        //$templates = array('auto.auto' => ' - ' . fx::lang('Auto select','system') . ' - ');
         $layout_name = fx::data('layout', $i2l['layout_id'])->get('keyword');
         
         $controller_name = $infoblock->get_prop_inherited('controller');
@@ -495,11 +499,11 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
 
         // Собираем доступные шаблоны
         $controller = fx::controller($controller_name.'.'.$action_name);
-        dev_log('ctr', $controller_name.'.'.$action_name);
         $tmps = $controller->get_available_templates($layout_name);
         if ( !empty($tmps) ) {
             foreach ( $tmps as $template ) {
-                $templates[$template['full_id']] = $template['name'];// . ' (' . $template['full_id'] . ')';
+                $templates[$template['full_id']] = $template['name'] . ' (' . $template['full_id'] . ')';
+                //$templates[$template['full_id']] = $template['name'];// . ' (' . $template['full_id'] . ')';
             }
         }
 
@@ -572,7 +576,6 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                 $content = fx::data(array('content',$content_type_id), $content_id);
                 if ($content) {
                     $content[$var['name']] = $value;
-                    dev_log('saving val', $value);
                     $content->save();
                 }
             }
@@ -582,6 +585,11 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
     public function delete_infoblock($input) {
         /* @var $infoblock fx_infoblock */
         $infoblock = fx::data('infoblock', $input['id']);
+        $controller = $infoblock->get_prop_inherited('controller');
+        $action = $infoblock->get_prop_inherited('action');
+        $controller = fx::controller($controller);
+        $controller->set_action($action);
+        $controller->set_input($input);
         $fields = array(
             array(
                 'label' => fx::lang('I am REALLY sure','system'),
@@ -615,7 +623,9 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                     $ci->delete();
                 }
             }
+
             $infoblock->delete();
+            $controller->after_delete();
         }
     }
     

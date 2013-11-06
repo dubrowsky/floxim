@@ -203,7 +203,6 @@ class fx_controller_infoblock extends fx_controller {
     }
     
     protected function _get_infoblock_scope_name(fx_infoblock $infoblock) {
-        dev_log('ib scoping', $infoblock);
         $ib_controller = $infoblock->get_prop_inherited('controller');
         $ib_action = $infoblock->get_prop_inherited('action');
         if ($ib_controller == 'layout' && $ib_action == 'show') {

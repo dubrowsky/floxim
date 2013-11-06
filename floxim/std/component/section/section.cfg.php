@@ -20,12 +20,13 @@ return array(
             ),
         ),
         'list_submenu' => array(
-        	'settings' => array(
-        		'source_infoblock_id' => array(
-        			'label' => fx::lang('Source infoblock','component_section'),
-        			'type' => 'select',
-        		),
-        	),
+            'name' => 'Submenu',
+            'settings' => array(
+                'source_infoblock_id' => array(
+                        'label' => fx::lang('Source infoblock','component_section'),
+                        'type' => 'select',
+                ),
+            ),
         ),
     )
 );

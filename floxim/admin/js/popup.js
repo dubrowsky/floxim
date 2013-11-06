@@ -54,6 +54,9 @@ $fx.popup = function(params) {
         }
     };
     this.destroy = function() {
+        if (params.onclose) {
+            params.onclose(popup);
+        }
         this.$node.remove();
         $('html').off('.fx_popup');
         if (this.$target) {

@@ -49,8 +49,8 @@ fx_edit_in_place.prototype.handle_keydown = function(e) {
         return false;
     }
     if (e.which === 13 && (!this.is_wysiwyg || e.ctrlKey)) {
-        this.save().stop();
         $fx.front.deselect_item();
+        this.save().stop();
         e.which = 666;
         $(this.node).closest('a').blur();
         return false;
@@ -83,7 +83,7 @@ fx_edit_in_place.prototype.start = function(meta) {
         case 'bool':
             this.add_panel_field(meta);
             break;
-        case 'string': case 'html': case '': case 'text': case 'int':
+        case 'string': case 'html': case '': case 'text': case 'int': case 'float':
             if (meta.is_att) {
                 this.add_panel_field(meta);
             } else {
@@ -105,7 +105,7 @@ fx_edit_in_place.prototype.start = function(meta) {
             }
             break;
 	}
-	$('html').one('fx_deselect.edit_in_place', function() {
+        $('html').one('fx_deselect.edit_in_place', function() {
             edit_in_place.save().stop();
 	});
 };

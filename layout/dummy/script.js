@@ -16,7 +16,6 @@ $(document).ready(function () {
         var dd = $(this);
         console.log('movr');
         dd.addClass('hover');
-        dd.css("background", '#F00');
         clearTimeout(dd.data('mouseout_timeout'));
     });
     $('html').on('mouseout', '.dropdown', function(e) {

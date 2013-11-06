@@ -23,7 +23,14 @@ class fx_field_link extends fx_field_baze {
     public function format_settings() {
         $fields = array();
         
-        $comp_values = fx::data('component')->get_select_values();
+        $comp_values = array_merge(
+            fx::data('component')->get_select_values(), 
+            array(
+                array('site', 'Site'),
+                array('component', 'Component'),
+                array('infoblock', 'Infoblock')
+            )
+        );
         $fields[] = array(
             'id' => 'format[target]',
             'name' => 'format[target]',
@@ -72,8 +79,9 @@ class fx_field_link extends fx_field_baze {
     
     public function get_js_field($content, $tname = 'f_%name%', $layer = '', $tab = '') {
         parent::get_js_field($content, $tname, $layer, $tab);
-        $target_component = fx::data('component', $this['format']['target']);
-        $target_content = 'content_'.$target_component['keyword'];
+        //$target_component = fx::data('component', $this['format']['target']);
+        //$target_content = 'content_'.$target_component['keyword'];
+        $target_content = $this->get_target_name();
         $finder = fx::data($target_content);
         
         if ($this['format']['render_type'] == 'livesearch') {
@@ -99,13 +107,24 @@ class fx_field_link extends fx_field_baze {
         return $this->_js_field;
     }
     
+   public function get_target_name () {
+        $rel_target_id = $this['format']['target'];
+        if (!is_numeric($rel_target_id)) {
+            $rel_target = $rel_target_id;
+        } else {
+            $rel_target = 'content_'.fx::data('component', $rel_target_id)->get('keyword');
+        }
+        return $rel_target;
+    }
+
     public function get_relation() {
         if (!$this['format']['target']) {
             return false;
         }
+        $rel_target = $this->get_target_name();
         return array(
             fx_data::BELONGS_TO,
-            'content_'.fx::data('component', $this['format']['target'])->get('keyword'),
+            $rel_target,
             $this['name']
         );
     }

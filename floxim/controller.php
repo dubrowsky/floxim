@@ -219,7 +219,6 @@ class fx_controller {
             }
         }
         $config['actions'] = self::_merge_actions($config['actions']);
-        dev_log($config);
         return $config;
     }
 
@@ -309,7 +308,7 @@ class fx_controller {
                 continue;
             }
             if (!isset($info['name'])) {
-                $info['name'] = $action;
+                $info['name'] = '%component% / '.$action;
             }
             $res[$action] = $info;
         }

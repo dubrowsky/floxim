@@ -32,6 +32,11 @@ fx_form = {
             settings.form_button = [];
         }
         var submit_added = false;
+        var $button_container = settings.button_container;
+        if (!$button_container) {
+            $button_container = $('<div class="fx_form_buttons"></div>');
+            $form_node.append($button_container);
+        }
         $.each(settings.form_button, function (key,options) {
             if (typeof options === 'string') {
                 options = {key:options};
@@ -51,7 +56,7 @@ fx_form = {
             }
             var b = $t.jQuery('input', options);
             b.data('key', options.key);
-            $form_node.append(b);
+            $button_container.append(b);
             if (options.key === 'cancel') {
                 b.on('click', function() {
                     $form_node.trigger('fx_form_cancel');
@@ -234,6 +239,7 @@ fx_form = {
     },
 
     add_parent_condition: function(parent, _el, container) {
+        //return;
         if (parent instanceof Array) {
             parent = {};
             parent[parent[0]] = parent[1];
@@ -322,7 +328,17 @@ window.fx_form = window.$fx_form = fx_form;
         if (options) {
             $.extend(true, settings, options);
         }
-        var _form = $('<form class="fx_admin_form" id="'+settings.form.id+'" action="'+settings.form.action+'" enctype="multipart/form-data" method="post" target="'+settings.form.target+'" />');
+        var _form = $(
+                '<form '+
+                    'class="fx_admin_form" '+
+                    'id="'+settings.form.id+'" '+
+                    'action="'+settings.form.action+'" '+
+                    'enctype="multipart/form-data" '+
+                    'method="post" '+
+                    'target="'+settings.form.target+'" />');
+        if (settings.class_name) {
+            _form.addClass(settings.class_name);
+        }
         $(_form).append('<iframe id="'+settings.form.target+'" name="'+settings.form.target+'" style="display:none;"></iframe><div id="nc_warn_text"></div>');
         this.html('<div id="nc_dialog_error"/>');
         this.append(_form);

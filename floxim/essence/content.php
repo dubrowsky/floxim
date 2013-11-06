@@ -58,10 +58,8 @@ class fx_content extends fx_essence {
         if (count($values) == 0) {
             return;
         }
-        
         $fields = $this->get_fields();
         $result = array('status' => 'ok');
-
         foreach ($fields as $field) {
             $field_name = $field->get_name();
             if (!isset($values['f_'.$field_name])) {
@@ -71,7 +69,7 @@ class fx_content extends fx_essence {
                     continue;
                 }
             } else {
-                $value = $values['f_'.$field_name];
+                $value = $values['f_'.$field_name]; 
             }
             
             if (!$field->check_rights()) {

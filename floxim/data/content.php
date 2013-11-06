@@ -227,7 +227,6 @@ class fx_data_content extends fx_data {
         $set = $this->_set_statement($data);
         
         $tables = $this->get_tables();
-        dev_log('insert', $set);
         $root_set = $set['content'];
         $q = "INSERT INTO `{{content}}` SET ".join(", ", $root_set);
         $tables_inserted = array();
@@ -271,19 +270,18 @@ class fx_data_content extends fx_data {
         foreach ($chain as $level_component) {
             $table_res = array();
             $fields = $level_component->fields();
-            dev_log('fields', $fields);
             $field_names = $fields->get_values('name');
             // пока базовые поля контента выписываем вручную
             if ($level_component['keyword'] == 'content') {
                 $field_names = array_merge($field_names, array(
                     'priority', 
                     'checked',
-                    'created',
+                    //'created',
                     'last_updated',
-                    'user_id',
+                    //'user_id',
                     'type',
                     'infoblock_id',
-                    'site_id'
+                    //'site_id'
                 ));
             }
             $table_name = $level_component->get_content_table();
