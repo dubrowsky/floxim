@@ -89,11 +89,11 @@
                 body_default_margin = parseInt($('body').css('margin-top'));
                 $('body').data('fx_default_margin', body_default_margin);
             }
-
-            var body_offset = 
-                        body_default_margin 
-                        + panel_height
-                        - this.second_row_height; // height of admin panel's second line
+            
+            var body_offset = body_default_margin + panel_height;
+            if (panel_height > 0) {
+                body_offset -= this.second_row_height;
+            }
             var height_delta = body_offset - parseInt($('body').css('margin-top'));
             this._is_moving = true;
             p.animate({height: panel_height+'px'}, 300, function() {
