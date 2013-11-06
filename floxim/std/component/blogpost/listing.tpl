@@ -10,7 +10,7 @@
         </div>
         
         <div class="anounce">{$anounce}</div>
-        {call id="component_tag.entity_tags"}{$items select="$tags" /}{/call}
+        {call id="component_tag.entity_tags"}{$items select="$item['tags']" /}{/call}
         <div fx:if="$comments_counter" class="comments_counter">Comments: {$comments_counter}0{/$}</div>
     </div>
 

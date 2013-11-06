@@ -12,6 +12,7 @@
     fx:template="entity_tags" 
     fx:of="list" 
     fx:name="Tags for entity" 
+    fx:if="count($items) > 0"
     class="entity_tags">
         {%tags_label}Tags:{/%} 
         <a fx:template="item" href="{$url}">

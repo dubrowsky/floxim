@@ -2,9 +2,13 @@
 return array(
     'actions' => array(
         'list' => array(
-            'defaults' => array(
-                'limit' => 1
-            )
+            'disabled' => true
+        ),
+        'list_infoblock' => array(
+            'disabled' => true
+        ),
+        'record' => array(
+            'name' => '%component% record'
         )
     )
 );

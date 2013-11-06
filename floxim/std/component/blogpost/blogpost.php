@@ -1,5 +1,9 @@
 <?php
 class fx_controller_component_blogpost extends fx_controller_component {
+    
+}
+/*
+class fx_controller_component_blogpost extends fx_controller_component {
     public function do_listing() {
         $this->listen('query_ready', function (fx_data $query) {
             $query->with('tags');
@@ -113,4 +117,4 @@ class fx_controller_component_blogpost extends fx_controller_component {
     }
     
 }
-?>
+*/

@@ -3,16 +3,32 @@
         panel: null,
         second_row_height:37,
         show_form: function(data, params) {
+            if (!params.view) {
+                params.view = 'vertical';
+            }
+            this.params = params;
             this.prepare_form_data(data);
-            this.panel = $('#fx_admin_extra_panel');
+            this.panel = $('#fx_admin_extra_panel .fx_admin_panel_body');
+            this.footer = $('#fx_admin_extra_panel .fx_admin_panel_footer');
+            this.footer
+                    .html('')
+                    .css({
+                        overflow: 'hidden',
+                        'border-top':'1px solid #CCC',
+                        padding:'3px'
+                    })
+                    .show();
             this.stop();
             var p = this.panel;
+            p.css('overflow', 'auto');
+            p.parent().css({height:'1px',overflow:'hidden'});
             p.show();
-            p.css('height', $fx.front_panel.second_row_height+'px');
             if (!data.form_button) {
                 data.form_button = ['save'];
             }
             data.form_button.unshift('cancel');
+            data.class_name = 'fx_form_'+params.view;
+            data.button_container = this.footer;
             p.fx_create_form(data);
             var $form = $('form', p);
             $form.on('fx_form_cancel', function() {
@@ -23,7 +39,6 @@
             });
             this.panel.on('keydown', function(e) {
                 if (e.which === 27) {
-                    console.log('esc on panel');
                     $form.trigger('fx_form_cancel');
                     return false;
                 }
@@ -51,13 +66,22 @@
             }, 100);
         },
         animate_panel_height: function(panel_height) {
-            var p = this.panel;
+            var p = this.panel.parent();
+            var footer_height = this.footer.outerHeight();
+            var max_height = Math.round(
+                ($(window).height() - this.second_row_height - footer_height) * 0.6
+            );
             if (typeof panel_height === 'undefined') {
                 var form = $('form', p);
                 if (form.length > 0) {
-                    panel_height = $('form', p).height() + 10; // form with margins
+                    var form_height = $('form', p).outerHeight();
+                    if (form_height > max_height) {
+                        form_height = max_height;
+                    }
+                    panel_height = form_height + footer_height;
+                    this.panel.css('height', form_height);
                 } else{
-                    panel_height = this.second_row_height;
+                    panel_height = 0; //this.second_row_height;
                 }
             }
             var body_default_margin = $('body').data('fx_default_margin');
@@ -99,16 +123,21 @@
         },
         hide: function() {
             var p = this.panel;
+            var footer = this.footer;
             $('form', p).remove();
             this.animate_panel_height();
             p.animate({opacity:0},300, function () {
                 p.hide();
+                footer.hide();
                 $('#fx_admin_control .editor_panel').show();
             });
         },
         prepare_form_data: function(data) {
+            var is_horizontal = this.params.view === 'horizontal';
             $.each(data.fields, function(key, field) {
-                field.context = 'panel';
+                if (is_horizontal) {
+                    field.context = 'panel';
+                }
             });
         }
     };

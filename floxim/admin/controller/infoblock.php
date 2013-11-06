@@ -52,7 +52,12 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                 if (count($act_templates) == 0) {
                     continue;
                 }
-                $action_name = ($c['name'] ? $c['name'] . ' / ' : '').$action_info['name']; 
+                
+                $action_name = str_replace(
+                    "%component%", 
+                    $c['name'],
+                    $action_info['name']
+                ); 
                 switch ($controller_type) {
                     case 'widget':
                         $action_type = 'widget';
@@ -474,7 +479,6 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         );
 
         $wrappers = array('' => fx::lang('With no wrapper','system'));
-        //$templates = array('auto.auto' => ' - ' . fx::lang('Auto select','system') . ' - ');
         $layout_name = fx::data('layout', $i2l['layout_id'])->get('keyword');
         
         $controller_name = $infoblock->get_prop_inherited('controller');
@@ -498,7 +502,8 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         $tmps = $controller->get_available_templates($layout_name);
         if ( !empty($tmps) ) {
             foreach ( $tmps as $template ) {
-                $templates[$template['full_id']] = $template['name'];// . ' (' . $template['full_id'] . ')';
+                $templates[$template['full_id']] = $template['name'] . ' (' . $template['full_id'] . ')';
+                //$templates[$template['full_id']] = $template['name'];// . ' (' . $template['full_id'] . ')';
             }
         }
 

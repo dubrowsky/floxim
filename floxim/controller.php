@@ -308,7 +308,7 @@ class fx_controller {
                 continue;
             }
             if (!isset($info['name'])) {
-                $info['name'] = $action;
+                $info['name'] = '%component% / '.$action;
             }
             $res[$action] = $info;
         }

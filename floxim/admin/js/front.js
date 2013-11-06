@@ -200,8 +200,9 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
                        action:'add_edit',
                        content_type:c_cnt.type,
                        infoblock_id:c_cnt.infoblock_id,
-                       parent_id:c_cnt.parent_id
+                       parent_id:c_cnt.parent_id,
                     }, {
+                        view:'vertical',
                         onfinish:function() {
                             $fx.front.reload_infoblock(ib);
                             $fx.front.enable_hilight();
@@ -238,8 +239,10 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
                     admin_mode:$fx.front.mode,
                     fx_admin:true
                 }, {
+                    view:'horizontal',
                     onfinish:function(data) {
                         $fx.front_panel.show_form(data, {
+                            view:'horizontal',
                             onfinish:function(res) {
                                 $fx.front.reload_layout(
                                     function() {
@@ -252,7 +255,7 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
                                             return;
                                         }
                                         $fx.front.select_item(new_ib_node.get(0));
-                                        $fx.front.scrollTo($new_ib_node);
+                                        $fx.front.scrollTo(new_ib_node);
                                         var adders = new_ib_node.data('content_adders');
                                         if (!adders || adders.length === 0 ){
                                             return;
@@ -450,7 +453,9 @@ fx_front.prototype.hilight = function() {
         if ($fx.front.is_selectable(item)) {
             var i = $(item);
             i.addClass('fx_hilight');
-            i.addClass('fx_clearfix');
+            if (!i.css('float').match(/left|right/) && i.css('display') !== 'inline') {
+                i.addClass('fx_clearfix');
+            }
             // зеленые выделения для полей внутри скрытых блоков
             // пока лечим через i.is(':visible')
             if (i.is(':visible') && (i.width() === 0 || i.height() === 0) ) {
@@ -524,6 +529,7 @@ fx_front.prototype.select_content_essence = function(n) {
                 content_id: essence_meta.id
             }, 
             {
+                view:'vertical',
                 onfinish: function() {
                     $fx.front.reload_infoblock(ib_node);
                     $fx.front.enable_hilight();
@@ -571,6 +577,7 @@ fx_front.prototype.select_infoblock = function(n) {
             page_id:$('body').data('fx_page_id'),
             fx_admin:true
         }, {
+            view:'horizontal',
             onfinish:function() {
                 $fx.front.reload_infoblock(ib_node);
                 $fx.front.enable_hilight();
