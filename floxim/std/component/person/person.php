@@ -2,7 +2,7 @@
 class fx_controller_component_person extends fx_controller_component_page {
     public function do_list_infoblock() {
         $this->_with_contacts();
-        return parent::do_listing();
+        return parent::do_list_infoblock();
     }
     public function do_record() {
         $this->_with_contacts();
