@@ -142,15 +142,13 @@ class fx_controller_admin_content extends fx_controller_admin {
      */
     public function move($input) {
         $content_type = 'content_'.$input['content_type'];
-        //$content = fx::data($content_type, $input['content_id']);
-        $content = fx::data($content_type)->with('tag')->where('id', $input['content_id'])->one();
+        $content = fx::data($content_type)->where('id', $input['content_id'])->one();
         $next_id = isset($input['next_id']) ? $input['next_id'] : false;
         
         $neighbours = fx::data($content_type)->
                         where('parent_id', $content['parent_id'])->
                         where('infoblock_id', $content['infoblock_id'])->
                         where('id', $content['id'], '!=')->
-                        with('tag')->
                         order('priority')->all();
         $nn = $neighbours->find('id', $next_id);
         

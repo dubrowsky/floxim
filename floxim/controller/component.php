@@ -54,9 +54,14 @@ class fx_controller_component extends fx_controller {
                         }
                 */
                     if (isset($this->input['params']['selected']) && is_array($this->input['params']['selected'])) {
+                        dev_log('delete adf', $this->input['params']['selected']);
+                        foreach ($this->input['params']['selected'] as  $value) {
+                            $existing[] = $value[0];
+                        }
                         $linkers = fx::data('content_select_linker')
                                     ->where('infoblock_id', $this->input['id'])
                                     ->where('parent_id', $this->input['page_id'])
+                                    ->where('linked_id', $existing, 'NOT IN')
                                     ->all();
                         foreach ($linkers as $linker) {
                             $linker->delete();
@@ -131,6 +136,9 @@ class fx_controller_component extends fx_controller {
             ),
         );
         $config['settings'] += $field;
+        // добавляем ручную сортировку для инфоблок-selected
+        $config['settings']['sorting']['values']['manual'] = 
+                        '-'.fx::lang('Manual','controller_component').'-';
         return $config;
     }
     
@@ -407,21 +415,50 @@ class fx_controller_component extends fx_controller {
         $this->set_param('skip_parent_filter', true);
         $this->set_param('skip_infoblock_filter', true);
         $parent_id = fx::env('page')->get('id');
-        $linkers = fx::data('content_select_linker')
-                    ->select('linked_id')
+        /*
+        $ib = fx::data('infoblock')->with('linked_content', $this->_get_finder())->where('id', $ib_id)->all();
+
+        $ib = fx::data('infoblock')->where('id', $this->input['infoblock_id'])->all();
+        $linkers = fx::data('content_select_linker') 
                     ->where('infoblock_id', $this->input['infoblock_id'])
                     ->where('parent_id', $parent_id)
-                    ->get_data()
-                    ->get_values('linked_id');
-        dev_log('linkers', $linkers);
-        if (is_array($linkers)) {
-            $this->listen('query_ready', function($q, $ctr) use ($linkers) {
-                $q->where('id', $linkers, 'IN');
-                dev_log('selected query', $q->show_query());
-            });
-        }
+                    //->order('priority')
+                    //->with('content')
+                    ->all();
+
+        $ib->attache_many($linkers, 'infoblock_id', 'linkers', 'id', 'content');
+       
+        dev_log('Attached ', $ib, $linkers);
+        */
+        $linkers = fx::data('content_select_linker')
+                    //->select('linked_id')
+                    ->where('infoblock_id', $this->input['infoblock_id'])
+                    ->where('parent_id', $parent_id)
+                    ->all();
+                    //->get_data()
+        
+        $this->listen('query_ready', function($q, $ctr) use ($linkers) {
+            $q->where('id', $linkers->get_values('linked_id'));
+            fx::log('sel qery', $q);
+        });
+        $this->listen('items_ready', function($c) use ($linkers) {
+            if ($this->get_param('sorting') === 'manual') {
+                $c->sort(function($a, $b) use ($linkers) {
+                    $a_priority = $linkers->find_one('linked_id', $a['id'])->get('priority');
+                    $b_priority = $linkers->find_one('linked_id', $b['id'])->get('priority');
+                    return $a_priority - $b_priority;
+                });
+                $c->is_sortable = true;
+                
+            }
+            $c->linker_map = array();
+            foreach ($c as $cc) {
+                $c->linker_map []= $linkers->find_one('linked_id', $cc['id']);
+            }
+        });
         $res = $this->do_list();
-        dev_log('selected res',$res);
+        fx::log('selres', $res);
+        //$res = array('items' => $ib->first()->get('linkers'));
         return $res;
     }
     
