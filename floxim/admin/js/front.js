@@ -543,11 +543,14 @@ fx_front.prototype.select_content_essence = function(n) {
     $fx.buttons.bind('delete', function() {
        if (confirm(fx_lang("Вы уверены?"))) {
            $fx.front.disable_infoblock(ib_node);
+           console.log(essence_meta)
+           var ce_type = essence_meta.linker_type || essence_meta.type;
+           var ce_id = essence_meta.linker_id || essence_meta.id;
            $fx.post({
                essence:'content',
                action:'delete_save',
-               content_type:essence_meta.type,
-               content_id:essence_meta.id
+               content_type:ce_type,
+               content_id:ce_id
            }, function () {
                $fx.front.reload_infoblock(ib_node);
            });

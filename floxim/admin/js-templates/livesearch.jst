@@ -39,7 +39,7 @@ html.data('livesearch', ls);
 if (_c.ajax_preload && _c.value) {
     var ids = [];
     $.each(_c.value, function(vk, vv) {
-        ids.push(vv[0]);
+        ids.push(typeof vv === 'Array' ? vv[0] : vv);
     });
     ls.loadValues(ids);
     console.log(_c.value, ids);

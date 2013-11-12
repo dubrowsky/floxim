@@ -173,9 +173,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         
         if (!$is_layout) {
             $controller_name = $controller;
-            $controller = fx::controller($controller);
-            $controller->set_action($action);
-            $controller->set_input($input);
+            $controller = fx::controller($controller, array('infoblock_id' => $infoblock['id']));
             $settings = $controller->get_action_settings($action);
             foreach ($infoblock['params'] as $ib_param => $ib_param_value) {
                 if (isset($settings[$ib_param])) {
@@ -296,7 +294,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             $infoblock->save();
             $i2l['infoblock_id'] = $infoblock['id'];
             $i2l->save();
-            $controller->input['id'] = $i2l['infoblock_id'];
+            $controller->set_param('infoblock_id', $infoblock['id']);
             $controller->after_save();
             $this->response->set_status_ok();
             $this->response->set_prop('infoblock_id', $infoblock['id']);
