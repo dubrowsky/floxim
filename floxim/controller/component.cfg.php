@@ -1,8 +1,7 @@
 <?php
 return array(
     'actions' => array(
-        'list' => array(
-            'disabled' => true,
+        '*list*' => array(
             'settings' => array(
                 'limit' => array(
                     'label' => fx::lang('How many entries to display','controller_component')
@@ -25,7 +24,10 @@ return array(
                 )
             )
         ),
-        'list_infoblock' => array(
+        '*list' => array(
+            'disabled' => true
+        ),
+        '*list_infoblock' => array(
             'name' => '%component%',
             'settings' => array(
                 'parent_type' => array(
@@ -42,10 +44,10 @@ return array(
                 '!pagination' => true
             )
         ),
-        'list_filtered' => array(
+        '*list_filtered' => array(
             'name' => '%component% by filter'
         ),
-        'list_selected' => array(
+        '*list_selected' => array(
             'name' => '%component% selected'
         )
     )

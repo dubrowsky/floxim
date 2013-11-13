@@ -173,7 +173,7 @@ class fx_controller_admin extends fx_controller {
             <div id="fx_admin_panel">
                 <div id="fx_admin_panel_logo"><div class="fx_preloader"></div></div>
                 <div id="fx_admin_main_menu"></div>
-                <div id="fx_admin_additional_menu"></div>
+                <div id="fx_admin_additional_menu"><a class="fx_logout">'.fx::lang('Sign out','system').'</a></div>
                 <div id="fx_admin_clear"></div>
             </div>
             <div id="fx_admin_left">

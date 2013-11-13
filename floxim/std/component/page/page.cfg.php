@@ -1,14 +1,11 @@
 <?
 return array(
     'actions' => array(
-        'list' => array(
-            'disabled' => true
-        ),
-        'list_infoblock' => array(
-            'disabled' => true
-        ),
-        'record' => array(
+        '*record' => array(
             'name' => '%component% record'
+        ),
+        'record, list*' => array(
+            'disabled' => true
         )
     )
 );

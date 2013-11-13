@@ -103,7 +103,7 @@ class fx_data {
         $this->order []= "`".$field."` ".$direction;
         return $this;
     }
-    
+        
     public function with($relation, $finder = null) {
         $this->with []= array($relation, $finder);
         return $this;

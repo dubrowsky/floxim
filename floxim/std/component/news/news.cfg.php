@@ -4,7 +4,10 @@ return array(
         'list' => array(
             'defaults' => array(
                 'limit' => 10
-            )
+            ),
+            'after_insert' => function() {
+                return 'olo';
+            }
         ),
         'list_filtered_featured' => array(
             'defaults' => array(

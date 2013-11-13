@@ -27,58 +27,95 @@ class fx_controller_module_auth extends fx_controller_module {
     }
 
     public static function _cross_site_forms($fields) {
-    	$sites = fx::data('site')->all();
-		$current_site = fx::env('site');
-		foreach ($sites as $site) {
-
-			if ($site['id'] == $current_site['id']) {
-				continue;
+    	$sites = fx::data('site')->where('id', fx::env('site')->get('id'), '!=')->all();
+    	$next_location = $_SERVER['HTTP_REFERER'] ? $_SERVER['HTTP_REFERER'] : '/';
+    	?>
+        <script type="text/javascript" src="<?=FX_JQUERY_PATH?>"></script>
+        <script type="text/javascript">
+			function js_next() {
+				document.location.href = "<?=$next_location?>";
 			}
-
-			?>
-			<form method="POST" action="http://<?=$site['domain']?>/floxim/" target="ifr_<?=$site['id']?>" style="width:5px; height:5px; overflow:hidden;">
-				<?foreach ($fields as $k => $v) {?>
-					<input type="hidden" name="<?=$k?>" value="<?=$v?>" />
-				<?}?>
-				<input type="submit" value="Go" style="position:relative; left:100px;" />
-				<iframe style="border:0;" name="ifr_<?=$site['id']?>" id="ifr_<?=$site['id']?>"></iframe>
-			</form>
-			<?
-		}
+			var count_sites = <?=count($sites)?>;
+			var data = <?=json_encode($fields)?>;
+			var sites = <?=json_encode($sites->get_values('domain', 'id'))?>;
+        	for (var i in sites) {
+        		$.ajax({
+        			type:'post',
+        			url:'http://'+sites[i]+'/floxim/',
+        			data:data,
+        			complete: (function(i) { return function(res) {
+						count_sites--;
+						if (count_sites === 0) {
+							js_next();
+						}
+        			}}) (i)
+        		});
+        	}
+        </script>
+        <?
+        return;
+        foreach ($sites as $site) {
+            if ($site['id'] == $current_site['id']) {
+                continue;
+            }
+            ?>
+            <form method="POST" action="http://<?=$site['domain']?>/floxim/" target="ifr_<?=$site['id']?>" style="width:5px; height:5px; overflow:hidden;">
+                <?foreach ($fields as $k => $v) {?>
+                    <input type="hidden" name="<?=$k?>" value="<?=$v?>" />
+                <?}?>
+                <input type="submit" value="Go" style="position:relative; left:100px;" />
+                <iframe style="border:0;" name="ifr_<?=$site['id']?>" id="ifr_<?=$site['id']?>"></iframe>
+            </form>
+            <?
+        }
         $next_location = $_SERVER['HTTP_REFERER'] ? $_SERVER['HTTP_REFERER'] : '/';
-        if (preg_match("~/floxim/$~i", $next_location)) {
+        if (preg_match("~/floxim/$~i", $next_location) || empty($next_location)) {
             $next_location = '/';
         }
-		?>
-		<script type="text/javascript">
-		function js_next() {
-			document.location.href = "<?=$next_location?>";
-		}
-		var forms = document.getElementsByTagName('form');
-		for (var i = 0; i< forms.length; i++) {
-			var c_form = forms[i];
-			c_form.getElementsByTagName('iframe')[0].onload = (function(f) {
-				return function() {
-					f.parentNode.removeChild(f);
-					if (document.getElementsByTagName('form').length == 0) {
-						js_next();
-					}
-				}
-			})(c_form);
-			c_form.submit();
-		}
-        if (forms.length == 0) {
-            js_next();
+        ?>
+        <script type="text/javascript">
+        function js_next() {
+            alert("<?=$next_location?>");
+            document.location.href = "<?=$next_location?>";
         }
+        var forms = document.getElementsByTagName('form');
+        for (var i = 0; i< forms.length; i++) {
+                var c_form = forms[i];
+                var handler = (function(f) {
+                    return function() {
+                        console.log('loaded', f.getAttribute('action'));
+                        f.parentNode.removeChild(f);
+                        if (document.getElementsByTagName('form').length === 0) {
+                            js_next();
+                        }
+                    };
+                })(c_form);
+                var iframe = c_form.getElementsByTagName('iframe')[0];
+                iframe.onload = handler;
+                iframe.onerror = handler;
+                c_form.submit();
+        }
+        //if (forms.length == 0) {
+        setTimeout(js_next, 10000);
+        //}
 
 		</script>
 		<?
     }
 
     public function init_session($input) {
+    	if (isset($_SERVER['HTTP_ORIGIN'])) {
+			$origin = $_SERVER['HTTP_ORIGIN'];
+			$site = fx::data('site')->get_by_host_name($origin);
+			if (!$site) {
+				return;
+			}
+			header("Access-Control-Allow-Origin: ".$origin);
+		}
     	fx::input()->_COOKIE['fx_sid'] = $input['sid'];
     	$u = new fx_content_user();
     	$u->create_session('cross_authorize', 0, 1);
+    	dev_log('authr', $u, $input, $_SERVER);
     	die();
     }
 

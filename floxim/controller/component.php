@@ -441,8 +441,8 @@ class fx_controller_component extends fx_controller {
             $q->where('id', $linkers->get_values('linked_id'));
             fx::log('sel qery', $q);
         });
-        $this->listen('items_ready', function($c) use ($linkers) {
-            if ($this->get_param('sorting') === 'manual') {
+        $this->listen('items_ready', function($c, $ctr) use ($linkers) {
+            if ($ctr->get_param('sorting') === 'manual') {
                 $c->sort(function($a, $b) use ($linkers) {
                     $a_priority = $linkers->find_one('linked_id', $a['id'])->get('priority');
                     $b_priority = $linkers->find_one('linked_id', $b['id'])->get('priority');
