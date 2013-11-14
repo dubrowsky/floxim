@@ -56,10 +56,11 @@ var fx_front = function () {
         if (node.hasClass('fx_selected')) {
             e.fx_hilight_done = true;
             return;
-            return false;
         }
         $fx.front.outline_block_off($($fx.front.c_hover));
         $fx.front.c_hover = this;
+        var fix_link_ce = node.get(0).nodeName === 'A' || (e.target.nodeName === 'A' && $(e.target).hasClass('fx_template_var') && !$(e.target).hasClass('fx_hilight'));
+
         setTimeout(
             function() {
                 if ($fx.front.c_hover !== node.get(0)) {
@@ -71,6 +72,14 @@ var fx_front = function () {
                 $('.fx_hilight_hover').removeClass('fx_hilight_hover');
                 node.addClass('fx_hilight_hover');
                 $fx.front.outline_block(node);
+                /*
+                if (node.attr('href') !== undefined) {
+                    node.attr('contenteditable', 'true')
+                }
+                */
+                if (fix_link_ce) {
+                    e.target.setAttribute('contenteditable', 'true');
+                }
             }, 
             $fx.front.c_hover ? 100 : 10
         );
@@ -84,6 +93,14 @@ var fx_front = function () {
                     if ($fx.front.c_hover !== node.get(0)) {
                         node.removeClass('fx_hilight_hover');
                         $fx.front.outline_block_off(node);
+                        if (fix_link_ce) {
+                            e.target.setAttribute('contenteditable', 'false');
+                        }
+                        /*
+                        if (node.attr('href') !== undefined) {
+                            node.attr('contenteditable', 'false')
+                        }
+                        */
                     }
                 },
                 100
