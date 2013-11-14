@@ -105,6 +105,7 @@ class fx_controller_component extends fx_controller {
         }
     }
 
+    /*
     public function config_list($config) {
         $sortings = array(
             'created'=> fx::lang('Created','controller_component')
@@ -116,7 +117,9 @@ class fx_controller_component extends fx_controller {
         
         $config['settings']['sorting']['values'] = $sortings;
         return $config;
-    }
+    }*
+     * 
+     */
     
     
     public function config_list_filtered($config) {
@@ -302,6 +305,14 @@ class fx_controller_component extends fx_controller {
     }
     
     public function do_list_infoblock() {
+        $this->listen('query_ready', function($q, $ctr) {
+            if ( ($parent_id = $ctr->get_param('parent_id')) && !($ctr->get_param('skip_parent_filter')) ) {
+                $q->where('parent_id', $parent_id);
+            }
+            if ( ( $infoblock_id = $ctr->get_param('infoblock_id')) && !($ctr->get_param('skip_infoblock_filter')) ) {
+                $q->where('infoblock_id', $infoblock_id);
+            }
+        });
         $items = $this->do_list();
         if (!$this->get_param('is_fake') && fx::env('is_admin')) {
             $infoblock = fx::data('infoblock', $this->get_param('infoblock_id'));
@@ -415,31 +426,13 @@ class fx_controller_component extends fx_controller {
         $this->set_param('skip_parent_filter', true);
         $this->set_param('skip_infoblock_filter', true);
         $parent_id = fx::env('page')->get('id');
-        /*
-        $ib = fx::data('infoblock')->with('linked_content', $this->_get_finder())->where('id', $ib_id)->all();
-
-        $ib = fx::data('infoblock')->where('id', $this->input['infoblock_id'])->all();
-        $linkers = fx::data('content_select_linker') 
-                    ->where('infoblock_id', $this->input['infoblock_id'])
-                    ->where('parent_id', $parent_id)
-                    //->order('priority')
-                    //->with('content')
-                    ->all();
-
-        $ib->attache_many($linkers, 'infoblock_id', 'linkers', 'id', 'content');
-       
-        dev_log('Attached ', $ib, $linkers);
-        */
         $linkers = fx::data('content_select_linker')
-                    //->select('linked_id')
                     ->where('infoblock_id', $this->input['infoblock_id'])
                     ->where('parent_id', $parent_id)
                     ->all();
-                    //->get_data()
         
-        $this->listen('query_ready', function($q, $ctr) use ($linkers) {
+        $this->listen('query_ready', function($q) use ($linkers) {
             $q->where('id', $linkers->get_values('linked_id'));
-            fx::log('sel qery', $q);
         });
         $this->listen('items_ready', function($c, $ctr) use ($linkers) {
             if ($ctr->get_param('sorting') === 'manual') {
@@ -456,10 +449,7 @@ class fx_controller_component extends fx_controller {
                 $c->linker_map []= $linkers->find_one('linked_id', $cc['id']);
             }
         });
-        $res = $this->do_list();
-        fx::log('selres', $res);
-        //$res = array('items' => $ib->first()->get('linkers'));
-        return $res;
+        return $this->do_list();
     }
     
     public function do_list_filtered() {
@@ -633,12 +623,6 @@ class fx_controller_component extends fx_controller {
             } else {
                 $finder->limit($limit);
             }
-        }
-        if ( ($parent_id = $this->get_param('parent_id')) && !($this->get_param('skip_parent_filter')) ) {
-            $finder->where('parent_id', $parent_id);
-        }
-        if ( ( $infoblock_id = $this->get_param('infoblock_id')) && !($this->get_param('skip_infoblock_filter')) ) {
-            $finder->where('infoblock_id', $infoblock_id);
         }
         if ( ($sorting = $this->get_param('sorting'))) {
             $dir = $this->get_param('sorting_dir');

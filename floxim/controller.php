@@ -196,7 +196,7 @@ class fx_controller {
             if (!isset($src['actions'])) {
                 continue;
             }
-            $src_actions = $src['actions'];        
+            $src_actions = $this->_prepare_action_config($src['actions']);
             foreach ($src_actions as $k => $props) {
                 $action_codes = preg_split("~\s*,\s*~", $k);
                 foreach ($action_codes as $ak) {
@@ -227,7 +227,7 @@ class fx_controller {
                 }
             }
         }
-        return $actions;
+        return array('actions' => $actions);
         /*
             $config = array('actions' => $this->_get_real_actions());
             foreach ($sources as $source) {
@@ -345,6 +345,7 @@ class fx_controller {
     
     public function get_actions() {
         $cfg = $this->get_config();
+        fx::log('got cfg', $cfg);
         $res = array();
         foreach ($cfg['actions'] as $action => $info) {
             if (isset($info['disabled']) && $info['disabled']) {

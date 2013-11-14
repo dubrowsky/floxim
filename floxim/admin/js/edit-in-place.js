@@ -98,6 +98,7 @@ fx_edit_in_place.prototype.start = function(meta) {
                     this.is_wysiwyg = true;
                     this.make_wysiwyg();
                 }
+                
                 this.node
                     .attr('contenteditable', 'true')
                     .data('fx_saved_value', this.node.html())

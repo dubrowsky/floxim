@@ -223,7 +223,7 @@ class fx_controller_admin extends fx_controller {
             $page->add_js_text("fx_adminpanel.init(".$js_config->get_config().");");
         }
         
-        $html = '<html class="fx_overlay fx_admin_html"><head><title>Floxim</title></head><body> '.$auth_form.'</body></html>';
+        $html = "<!DOCTYPE html>\n".'<html class="fx_overlay fx_admin_html"><head><title>Floxim</title></head><body> '.$auth_form.'</body></html>';
         $html = $page->post_process($html);
         return $html;
     }

@@ -36,7 +36,8 @@ class fx_controller_module_auth extends fx_controller_module {
         <script type="text/javascript" src="<?=FX_JQUERY_PATH?>"></script>
         <script type="text/javascript">
 			function js_next() {
-				document.location.href = "<?=$next_location?>";
+				alert('d');
+				//document.location.href = "<?=$next_location?>";
 			}
 			var count_sites = <?=count($sites)?>;
 			var data = <?=json_encode($fields)?>;
@@ -70,6 +71,7 @@ class fx_controller_module_auth extends fx_controller_module {
 				return;
 			}
 			header("Access-Control-Allow-Origin: ".$origin);
+			header("Access-Control-Allow-Credentials: true");
 		}
     	fx::input()->_COOKIE['fx_sid'] = $input['sid'];
     	$u = new fx_content_user();

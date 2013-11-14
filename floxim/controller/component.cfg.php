@@ -1,4 +1,11 @@
 <?php
+$sort_fields = $this
+            ->get_component()
+            ->all_fields()
+            ->find('type', fx_field::FIELD_MULTILINK, '!=')
+            ->find('type', fx_field::FIELD_LINK, '!=')
+            ->get_values('description', 'name');
+
 return array(
     'actions' => array(
         '*list*' => array(
@@ -12,8 +19,10 @@ return array(
                     'parent' => array('limit' => '!=0')
                 ),
                 'sorting' => array(
+                    'name' => 'sorting',
                     'label' => fx::lang('Sorting','controller_component'),
-                    'type' => 'select'
+                    'type' => 'select',
+                    'values' => $sort_fields
                 ),
                 'sorting_dir' => array(
                     'name' => 'sorting_dir',
@@ -30,6 +39,9 @@ return array(
         '*list_infoblock' => array(
             'name' => '%component%',
             'settings' => array(
+                'sorting' => array(
+                    'values' => array( array('manual', 'Manual' ) ) + $sort_fields
+                ),
                 'parent_type' => array(
                     'label' => fx::lang('Parent','controller_component'),
                     'type' => 'select',
@@ -45,10 +57,16 @@ return array(
             )
         ),
         '*list_filtered' => array(
-            'name' => '%component% by filter'
+            'name' => '%component% by filter',
+            'settings' => $this->_config_conditions()
         ),
         '*list_selected' => array(
-            'name' => '%component% selected'
+            'name' => '%component% selected',
+            'settings' => array(
+                'sorting' => array(
+                    'values' => array( array('manual', 'Manual' ) ) + $sort_fields
+                )
+            )
         )
     )
 );
