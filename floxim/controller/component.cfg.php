@@ -65,10 +65,20 @@ return array(
         '*list_selected' => array(
             'name' => $component['name'].' selected',
             'settings' => array(
+                'selected' => array (
+                    'name' => 'selected', 
+                    'label' => fx::lang('Selected','controller_component'),
+                    'type' => 'livesearch',
+                    'is_multiple' => true,
+                    'ajax_preload' => true,
+                    'params' => array(
+                        'content_type' => 'content_'.$this->_content_type
+                    ),
+                ),
                 'sorting' => array(
                     'values' => array( array('manual', 'Manual' ) ) + $sort_fields
-                )
-            )
+                ),
+            ),
         )
     )
 );

@@ -39,8 +39,9 @@ html.data('livesearch', ls);
 if (_c.ajax_preload && _c.value) {
     var ids = [];
     $.each(_c.value, function(vk, vv) {
-        ids.push(typeof vv === 'Array' ? vv[0] : vv);
+        //ids.push(typeof vv === 'Array' ? vv[0] : vv);
+        ids.push(vv[0]);
     });
-    ls.loadValues(ids);
-    console.log(_c.value, ids);
+    ls.loadValues( ids);
+    console.log('Livesearch Log', _c.value, ids);
 }
