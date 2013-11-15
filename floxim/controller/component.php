@@ -43,34 +43,32 @@ class fx_controller_component extends fx_controller {
     }
     
     public function after_save() {
+        $ib = fx::data('infoblock', $this->input['infoblock_id']);
+        $this->action = $ib['action'];
         if (isset($this->action)) {
             switch ($this->action) {
                 case 'list_selected':
-                /*
-                        $linkers = fx::data('content_select_linker')
-                                    ->all();
-                        foreach ($linkers as $linker) {
-                            $linker->delete();
-                        }
-                */
-                    if (isset($this->input['params']['selected']) && is_array($this->input['params']['selected'])) {
-                        dev_log('delete adf', $this->input['params']['selected']);
-                        foreach ($this->input['params']['selected'] as  $value) {
-                            $existing[] = $value[0];
+                    if (isset($ib['params']['selected']) && is_array($ib['params']['selected'])) {
+                        foreach ($ib['params']['selected'] as  $value) {
+                            $saving[$value[0]] = true;
                         }
                         $linkers = fx::data('content_select_linker')
-                                    ->where('infoblock_id', $this->input['id'])
-                                    ->where('parent_id', $this->input['page_id'])
-                                    ->where('linked_id', $existing, 'NOT IN')
+                                    ->where('infoblock_id', $ib['id'])
+                                    ->where('parent_id', $ib['page_id'])
                                     ->all();
                         foreach ($linkers as $linker) {
-                            $linker->delete();
+                            if (!in_array($linker['linked_id'], array_keys($saving))) {
+                                $linker->delete();
+                                $linkers->find_remove('id', $linker['id']);
+                            } else {
+                                unset($saving[$linker['linked_id']]);
+                            }
                         }
-                        foreach ($this->input['params']['selected'] as $value) {
+                        foreach (array_keys($saving) as $save) {
                             $linker = fx::data('content_select_linker')->create();
-                            $linker['parent_id'] = $this->input['page_id'];
-                            $linker['infoblock_id'] = $this->input['id'];
-                            $linker['linked_id'] = $value[0];
+                            $linker['parent_id'] = $ib['page_id'];
+                            $linker['infoblock_id'] = $ib['id'];
+                            $linker['linked_id'] = $save;
                             $linker->save();
                         }
                     } else {
@@ -89,11 +87,13 @@ class fx_controller_component extends fx_controller {
         }
     }
     public function after_delete() {
+        $ib = fx::data('infoblock', $this->input['infoblock_id']);
+        $this->action = $ib['action'];
         if (isset($this->action)) {
             switch ($this->action) {
                 case 'list_selected':
                     $linkers = fx::data('content_select_linker')
-                                ->where('infoblock_id', $this->input['id'])
+                                ->where('infoblock_id', $ib['id'])
                                 ->all();
                     foreach ($linkers as $linker) {
                         $linker->delete();
@@ -423,8 +423,8 @@ class fx_controller_component extends fx_controller {
     }
     
     public function do_list_selected() {
-        $this->set_param('skip_parent_filter', true);
-        $this->set_param('skip_infoblock_filter', true);
+        //$this->set_param('skip_parent_filter', true);
+        //$this->set_param('skip_infoblock_filter', true);
         $parent_id = fx::env('page')->get('id');
         $linkers = fx::data('content_select_linker')
                     ->where('infoblock_id', $this->input['infoblock_id'])
@@ -433,6 +433,7 @@ class fx_controller_component extends fx_controller {
         
         $this->listen('query_ready', function($q) use ($linkers) {
             $q->where('id', $linkers->get_values('linked_id'));
+            dev_log('selected query', $q->show_query());
         });
         $this->listen('items_ready', function($c, $ctr) use ($linkers) {
             if ($ctr->get_param('sorting') === 'manual') {
