@@ -10,6 +10,9 @@
             this.prepare_form_data(data);
             this.panel = $('#fx_admin_extra_panel .fx_admin_panel_body');
             this.footer = $('#fx_admin_extra_panel .fx_admin_panel_footer');
+            
+            this.stop();
+            
             this.footer
                     .html('')
                     .css({
@@ -18,7 +21,7 @@
                         padding:'3px'
                     })
                     .show();
-            this.stop();
+            
             var p = this.panel;
             p.css('overflow', 'auto');
             p.parent().css({height:'1px',overflow:'hidden'});
@@ -129,6 +132,7 @@
             p.animate({opacity:0},300, function () {
                 p.hide();
                 footer.hide();
+                console.log('hff');
                 $('#fx_admin_control .editor_panel').show();
             });
         },

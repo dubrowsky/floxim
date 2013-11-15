@@ -53,11 +53,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                     continue;
                 }
                 
-                $action_name = str_replace(
-                    "%component%", 
-                    $c['name'],
-                    $action_info['name']
-                ); 
+                $action_name = $action_info['name'];
                 switch ($controller_type) {
                     case 'widget':
                         $action_type = 'widget';
@@ -95,7 +91,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         ));
         $result = array(
             'fields' => $fields,
-            'dialog_title' => fx::lang('Adding infoblock','system'),
+            'header' => fx::lang('Adding infoblock','system'),
             'dialog_button' => array(
                 array('key' => 'save', 'text' => fx::lang('Next','system'))
             )
@@ -301,8 +297,8 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             return;
         }
     	
-    	$result = array(
-            'dialog_title' => $is_layout ? 
+        $result = array(
+            'header' => $is_layout ? 
                 fx::lang('Page layout','system') : 
                 fx::lang('Infoblock settings','system'). 
                 ', ' . $controller_name . '.' . $action.' #'.$infoblock['id'],
@@ -315,6 +311,17 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                 )
             )
     	);
+        
+        $actions = $controller->get_actions();
+        $action_name = $actions[$action]['name'];
+        
+        if (!$infoblock['id']) {
+            $result['header'] = '<a class="back">'.fx::lang('Adding infoblock','system').'</a>';
+            $result['header'] .= '/ '.$action_name;
+        } else {
+            
+        }
+        
         if ($input['id']) {
             $is_inherited = $infoblock['parent_infoblock_id'] != 0;
             $result['dialog_button'] []= array(

@@ -829,6 +829,10 @@ input.ui-button {
     padding: 10px !important;
 }
 
+.fx_admin_form .form_header {
+    font-size:20px;
+}
+
 .fx_admin_user_edit_form {
     float: left;
     width: 50%;
@@ -1147,6 +1151,12 @@ span.fx_admin_current {
     display: block;
     margin: 3px;
 }
+
+
+.fx_admin_panel_body {
+    background: #f5f5f5;
+}
+
 
 /* HORIZONTAL FORM */
 #fx_admin_control form.fx_form_horizontal .field {
@@ -1851,7 +1861,7 @@ a.fx_var_editable:focus, .fx_var_editable a:focus {
 
 .fx_controller_select .fx_controller_list {
     overflow: auto;
-    max-height: 300px;
+    max-height: 240px;
     width:100%;
     float:left;
     position: relative;

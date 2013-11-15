@@ -6,6 +6,8 @@ $sort_fields = $this
             ->find('type', fx_field::FIELD_LINK, '!=')
             ->get_values('description', 'name');
 
+$component = $this->get_component();
+
 return array(
     'actions' => array(
         '*list*' => array(
@@ -37,7 +39,7 @@ return array(
             'disabled' => true
         ),
         '*list_infoblock' => array(
-            'name' => '%component%',
+            'name' => $component['name'],
             'settings' => array(
                 'sorting' => array(
                     'values' => array( array('manual', 'Manual' ) ) + $sort_fields
@@ -57,11 +59,11 @@ return array(
             )
         ),
         '*list_filtered' => array(
-            'name' => '%component% by filter',
+            'name' => $component['name'].' by filter',
             'settings' => $this->_config_conditions()
         ),
         '*list_selected' => array(
-            'name' => '%component% selected',
+            'name' => $component['name'].' selected',
             'settings' => array(
                 'sorting' => array(
                     'values' => array( array('manual', 'Manual' ) ) + $sort_fields

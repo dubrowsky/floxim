@@ -652,5 +652,16 @@ class fx_controller_component extends fx_controller {
         }
         return array_unique($vars);
     }
+    
+    public function get_actions() {
+        $actions = parent::get_actions();
+        $com = $this->get_component();
+        foreach ($actions as $action => &$info) {
+            if (!isset($info['name'])) {
+                $info['name'] = $com['name'].' / '.$action;
+            }
+        }
+        return $actions;
+    }
 }
 ?>

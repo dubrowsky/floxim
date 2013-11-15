@@ -345,15 +345,17 @@ class fx_controller {
     
     public function get_actions() {
         $cfg = $this->get_config();
-        fx::log('got cfg', $cfg);
         $res = array();
         foreach ($cfg['actions'] as $action => $info) {
             if (isset($info['disabled']) && $info['disabled']) {
                 continue;
             }
+            /*
             if (!isset($info['name'])) {
                 $info['name'] = '%component% / '.$action;
             }
+             * 
+             */
             $res[$action] = $info;
         }
         return $res;

@@ -342,6 +342,11 @@ window.fx_form = window.$fx_form = fx_form;
         $(_form).append('<iframe id="'+settings.form.target+'" name="'+settings.form.target+'" style="display:none;"></iframe><div id="nc_warn_text"></div>');
         this.html('<div id="nc_dialog_error"/>');
         this.append(_form);
+        if (settings.header) {
+            var $form_header = $('<div class="form_header">'+settings.header+'</div>');
+            //$form_header.append(settings.header);
+            _form.append($form_header);
+        }
         $fx_form.draw_fields(settings, _form);
 
         if (options.buttons_essence) {
