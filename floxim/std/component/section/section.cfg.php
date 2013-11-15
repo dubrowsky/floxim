@@ -1,10 +1,10 @@
 <?
 return array(
     'actions' => array(
-        'list' => array(
+        '*list*' => array(
             'defaults' => array(
             	'!parent_type' => 'mount_page_id',
-                'limit' => 0
+                'limit' => 0,
             ),
             'settings' => array(
             	'submenu' => array(
@@ -19,7 +19,7 @@ return array(
             	),
             ),
         ),
-        'list_submenu' => array(
+        '*list_submenu*' => array(
             'name' => 'Submenu',
             'settings' => array(
                 'source_infoblock_id' => array(
