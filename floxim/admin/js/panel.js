@@ -107,7 +107,10 @@
                 {'margin-top':body_offset + 'px'},
                 300
             );
-            $('.fx_outline_style_selected').animate({
+            //$('.fx_outline_style_selected').animate({
+            //    top: (height_delta > 0 ? '+=' : '-=')+ Math.abs(height_delta)
+            //}, 300);
+            $('.panel_overlay').animate({
                 top: (height_delta > 0 ? '+=' : '-=')+ Math.abs(height_delta)
             }, 300);
         },
