@@ -202,10 +202,7 @@ class fx_controller_component extends fx_controller {
         $searchable_fields =  $this
                 ->get_component()
                 ->all_fields()
-                //->find('type', fx_field::FIELD_MULTILINK, '!=')
-                //->find('type', fx_field::FIELD_LINK, '!=')
                 ->find('type', fx_field::FIELD_IMAGE, '!=');
-                //->get_values(array('description', 'type'), 'name');
         foreach ($searchable_fields as $field) {
             $res = array(
                 'description' => $field['description'],
@@ -220,7 +217,6 @@ class fx_controller_component extends fx_controller {
             }
             $fields['conditions']['tpl'][0]['values'][$field['name']] = $res;
         }
-        dev_log('fields', $fields);
         return $fields;
     }  
     

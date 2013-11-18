@@ -256,7 +256,7 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
                     admin_mode:$fx.front.mode,
                     fx_admin:true
                 }, {
-                    view:'horizontal',
+                    view:'vertical',
                     onfinish:function(data) {
                         $fx.front_panel.show_form(data, {
                             view:'horizontal',
@@ -282,17 +282,20 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
                                 );
                             },
                             onready:function($form) {
+                                /*
                                 var back = $t.jQuery(
                                     'input', 
                                     {type:'button',label:'&laquo; back',class:'cancel'}
                                 );
+                                */
+                               var back = $('.form_header a.back', $form);
                                 back.on('click', function() {
                                     infoblock_back();
                                     $('.fx_infoblock_fake').remove();
                                 });
-                                var first_field = $form.find('.field:visible').first();
+                                //var first_field = $form.find('.field:visible').first();
                                 
-                                first_field.before(back);
+                                //first_field.before(back);
                                 
                                 // creating infoblock preview
                                 $fx.front.deselect_item();
@@ -560,7 +563,6 @@ fx_front.prototype.select_content_essence = function(n) {
     $fx.buttons.bind('delete', function() {
        if (confirm(fx_lang("Вы уверены?"))) {
            $fx.front.disable_infoblock(ib_node);
-           console.log(essence_meta)
            var ce_type = essence_meta.linker_type || essence_meta.type;
            var ce_id = essence_meta.linker_id || essence_meta.id;
            $fx.post({

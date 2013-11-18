@@ -316,10 +316,10 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         $action_name = $actions[$action]['name'];
         
         if (!$infoblock['id']) {
-            $result['header'] = '<a class="back">'.fx::lang('Adding infoblock','system').'</a>';
-            $result['header'] .= '/ '.$action_name;
+            $result['header'] = ' <a class="back">'.fx::lang('Adding infoblock','system').'</a>';
+            $result['header'] .= ' / '.$action_name;
         } else {
-            
+            $result['header'] = 'Settings / '.$action_name;
         }
         
         if ($input['id']) {
@@ -507,8 +507,8 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         $tmps = $controller->get_available_templates($layout_name);
         if ( !empty($tmps) ) {
             foreach ( $tmps as $template ) {
-                $templates[$template['full_id']] = $template['name'] . ' (' . $template['full_id'] . ')';
-                //$templates[$template['full_id']] = $template['name'];// . ' (' . $template['full_id'] . ')';
+                //$templates[$template['full_id']] = $template['name'] . ' (' . $template['full_id'] . ')';
+                $templates[$template['full_id']] = $template['name'];
             }
         }
 
@@ -521,7 +521,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         );
         if ($controller_name != 'layout') {
             $fields []= array(
-                'label' => fx::lang('Block wrapper template','system'),
+                'label' => fx::lang('Block wrapper','system'),
                 'name' => 'wrapper',
                 'type' => 'select',
                 'values' => $wrappers,

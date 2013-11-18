@@ -105,11 +105,6 @@ fx_form = {
                 status_block.show();
                 status_block.writeOk( data.text ? data.text : 'Ok');
                 $form.trigger('fx_form_ok');
-                /*
-                if ( data.fields) {
-                    $fx_form.draw_fields(data, $('#nc_dialog_error'));
-                }
-                */
             }
             else {
                 status_block.show();
@@ -344,7 +339,6 @@ window.fx_form = window.$fx_form = fx_form;
         this.append(_form);
         if (settings.header) {
             var $form_header = $('<div class="form_header">'+settings.header+'</div>');
-            //$form_header.append(settings.header);
             _form.append($form_header);
         }
         $fx_form.draw_fields(settings, _form);

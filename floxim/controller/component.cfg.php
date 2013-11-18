@@ -13,7 +13,7 @@ return array(
         '*list*' => array(
             'settings' => array(
                 'limit' => array(
-                    'label' => fx::lang('How many entries to display','controller_component')
+                    'label' => fx::lang('Count entries','controller_component')
                 ),
                 'pagination' => array(
                     'label' => fx::lang('Show pagination?','controller_component'),

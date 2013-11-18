@@ -68,8 +68,9 @@ class fx_controller_admin extends fx_controller {
         if ($this->process_do_return) {
             return $result;
         }
-
-        echo json_encode($result);
+        $res = json_encode($result);
+        fx::log('adm res enc', $res, $result);
+        return $res;
     }
 
     protected function get_status_text() {

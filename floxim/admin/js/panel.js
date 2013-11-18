@@ -132,7 +132,6 @@
             p.animate({opacity:0},300, function () {
                 p.hide();
                 footer.hide();
-                console.log('hff');
                 $('#fx_admin_control .editor_panel').show();
             });
         },

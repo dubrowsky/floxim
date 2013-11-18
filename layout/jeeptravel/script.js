@@ -29,7 +29,6 @@ $(function(){
             //slides.fadeOut();
             slide.fadeIn().addClass('gallery_item_active');
             $('.gallery .switcher li.slideid'+id).addClass('active').siblings().removeClass('active');
-            console.log(id)
             window.location.hash = '#slideid'+id;
         }
     }    

@@ -26,8 +26,6 @@ fx_adminpanel = {
                 $fx.front = new fx_front();
                 var c_mode = $.cookie('fx_front_mode') || 'view';
                 $fx.front.load(c_mode);
-                //document.body.className = document.body.className.replace(/fx_mode_[^\s]+/, '');
-                //$(document.body).addClass('fx_mode_'+$fx.hash.join('_'));
             }
             
             $('html').on('click', '.fx_button', $fx.buttons.form_button_click);
@@ -73,9 +71,9 @@ fx_adminpanel = {
     },
         
     parse_hash: function() {
-        var hash_to_parse = $fx.settings.hash != undefined ? $fx.settings.hash : window.location.hash.slice(1);
+        var hash_to_parse = $fx.settings.hash !== undefined ? $fx.settings.hash : window.location.hash.slice(1);
         
-        if (hash_to_parse == '' && window.location.pathname == '/floxim/') {
+        if (hash_to_parse === '' && window.location.pathname === '/floxim/') {
             hash_to_parse = 'admin.administrate.site.all';
         }
         
@@ -89,11 +87,11 @@ fx_adminpanel = {
         }
         $fx.hash = hash_to_parse.split('.');
           
-        if ( $fx.hash[0] == '' || ($fx.hash[0] != 'page' && $fx.hash[0] != 'admin' )  ) {
+        if ( $fx.hash[0] === '' || ($fx.hash[0] !== 'page' && $fx.hash[0] !== 'admin' )  ) {
             $fx.hash[0] = 'page';
         }
                
-        if ( $fx.hash[1] === undefined || $fx.hash[1] == '' ) {
+        if ( $fx.hash[1] === undefined || $fx.hash[1] === '' ) {
             $fx.hash[1] = 'view';
         }
         $fx.mode = $fx.hash[0]; // page or admin
@@ -106,7 +104,7 @@ fx_adminpanel = {
         $("#fx_admin_additionl_text a").each(function(){
             var link = data.link[current];
             $(this).click(function(){
-                if ( typeof link == 'function' ) {
+                if ( typeof link === 'function' ) {
                     link();
                 }
                 else {
@@ -129,7 +127,7 @@ fx_adminpanel = {
     },
           
     key_down: function ( e ) {
-        if ( e.keyCode == 46 ) {
+        if ( e.keyCode === 46 ) {
             e.stopPropagation();
         }
 
@@ -168,7 +166,7 @@ fx_adminpanel = {
     show_status_text: function ( text, status ) { 
         $("#fx_admin_statustext").removeClass();
         $("#fx_admin_statustext").html("<span>"+text+"</span>").addClass(status).fadeIn('slow');
-        if ( status != 'wait') {
+        if ( status !== 'wait') {
             //window.setTimeout(function() {
                 //$("#fx_admin_statustext").fadeOut('slow');
             //}, 10000);
@@ -183,7 +181,7 @@ fx_adminpanel = {
             font:'bold 22px arial',
             textAlign:'center'
         }).html('обновление страницы...');
-        document.location.href = typeof new_location == 'string' ? new_location : document.location.href.replace(/#.*$/, '');  
+        document.location.href = typeof new_location === 'string' ? new_location : document.location.href.replace(/#.*$/, '');  
     },
         
     post: function ( data, callback ) {
@@ -191,7 +189,7 @@ fx_adminpanel = {
         if (!callback) {
             callback = function(data) {
                 $fx_dialog.open_dialog(data);
-            }
+            };
         }
         $.ajax({
             url: $fx.settings.action_link,
@@ -199,16 +197,17 @@ fx_adminpanel = {
             data: data,
             dataType: "JSON",
             //async: false,
-            success: [function(json) {
-                        if (json.reload) {
-                                $fx.reload(json.reload);
-                                return;
-                        }
-                    },
-                    callback
+            success: [
+                function(json) {
+                    if (json.reload) {
+                        $fx.reload(json.reload);
+                        return;
+                    }
+                },
+                callback
             ],
             error: function(jqXHR, textStatus, errorThrown) {
-                if ( textStatus == 'parsererror') {
+                if ( textStatus === 'parsererror') {
                     $fx.show_status_text( fx_lang('Ошибка сервера:') + jqXHR.responseText, 'error');
                 }
                 return false;

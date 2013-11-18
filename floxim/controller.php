@@ -190,8 +190,12 @@ class fx_controller {
         $actions = $this->_get_real_actions();
         $blocks = array();
         $meta = array();
-        foreach ($sources as $src_num => $src) {
-            $is_own = $src_num === count($sources) - 1;
+        foreach ($sources as $src) {
+            $src_name = null;
+            $my_name = null;
+            preg_match("~/([^/+])/[^/]+$~", $src, $src_name);
+            preg_match("~_([^_]+)~", get_class($this), $my_name);
+            $is_own = $src_name && $my_name && $src_name[1] === $my_name[1];
             $src = include $src;
             if (!isset($src['actions'])) {
                 continue;
@@ -215,7 +219,7 @@ class fx_controller {
                 }
             }
         }
-
+        
         foreach ($blocks as $bn => $block) {
             list($inherit, $bk) = $meta[$bn];
             foreach ($actions as $ak => &$action_props) {
@@ -228,41 +232,6 @@ class fx_controller {
             }
         }
         return array('actions' => $actions);
-        /*
-            $config = array('actions' => $this->_get_real_actions());
-            foreach ($sources as $source) {
-                $level_config = include $source;
-                if (!is_array($level_config)) {
-                    continue;
-                }
-                if (isset($level_config['actions']) && is_array($level_config['actions'])) {
-                    $level_config['actions'] = $this->_prepare_action_config($level_config['actions']);
-                    foreach (array_keys($config['actions']) as $parent_action) {
-                        if (!isset($level_config['actions'][$parent_action])) {
-                            $level_config['actions'][$parent_action] = array();
-                        }
-                    }
-                    $level_config['actions'] = self::_merge_actions($level_config['actions']);
-                }
-                $config = array_replace_recursive($config, $level_config);
-            }
-            foreach ($config['actions'] as $action => &$params) {
-                $method_name = 'config_'.$action;
-                if(method_exists($this, $method_name)) {
-                    $config['actions'][$action] = $this->$method_name($params);
-                }
-                if (!isset($params['settings']) || !is_array($params['settings'])) {
-                    continue;
-                }
-                foreach ($params['settings'] as $param_key => &$param_field) {
-                    if (!isset($param_field['name'])) {
-                        $param_field['name'] = $param_key;
-                    }
-                }
-            }
-            $config['actions'] = self::_merge_actions($config['actions']);
-            return $config;
-        */
     }
 
     protected function _prepare_action_config($actions) {
@@ -345,6 +314,7 @@ class fx_controller {
     
     public function get_actions() {
         $cfg = $this->get_config();
+        fx::log('cfg', get_class($this), $cfg);
         $res = array();
         foreach ($cfg['actions'] as $action => $info) {
             if (isset($info['disabled']) && $info['disabled']) {
