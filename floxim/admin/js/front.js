@@ -59,7 +59,7 @@ var fx_front = function () {
         }
         $fx.front.outline_block_off($($fx.front.c_hover));
         $fx.front.c_hover = this;
-        var fix_link_ce = node.get(0).nodeName === 'A' || (e.target.nodeName === 'A' && $(e.target).hasClass('fx_template_var') && !$(e.target).hasClass('fx_hilight'));
+        var fix_link_ce = (node.get(0).nodeName === 'A' && node.hasClass('fx_template_var')) || (e.target.nodeName === 'A' && $(e.target).hasClass('fx_template_var') && !$(e.target).hasClass('fx_hilight'));
 
         setTimeout(
             function() {
@@ -921,6 +921,8 @@ fx_front.prototype.outline_block = function(n, style) {
         });
     }
     var o = n.offset();
+    var overlay_offset = parseInt($('.panel_overlay').css('top')); 
+    o.top -= overlay_offset > 0 ? overlay_offset : 0 ;
     var nw = n.outerWidth() + 1;
     var nh = n.outerHeight();
     var size = style === 'hover' ? 2 : 2;
@@ -954,7 +956,11 @@ fx_front.prototype.outline_block = function(n, style) {
             type:type,
             vertical: type === 'left' || type === 'right'
         }));
-        $('body').append(m);
+        if ($('body .panel_overlay').length === 0 ) {
+            var overlay = $('<div class="panel_overlay"></div>').css({'position':'absolute', 'top':'0px', 'left':'0px'})
+            $('body').append(overlay)
+        }
+        $('body .panel_overlay').append(m);
         return m;
     }
     var panes = {};
