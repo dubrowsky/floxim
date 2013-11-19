@@ -228,6 +228,13 @@ class fx_controller {
                         ($inherit && substr($ak, 0, strlen($bk)) === $bk) 
                 ) {
                     $action_props = array_replace_recursive($action_props, $block);
+                    if (isset($action_props['settings'])) {
+                        foreach ($action_props['settings'] as $s_key => $s) {
+                            if (!isset($s['name'])) {
+                                $action_props['settings'][$s_key]['name'] = $s_key;
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -314,7 +321,6 @@ class fx_controller {
     
     public function get_actions() {
         $cfg = $this->get_config();
-        fx::log('cfg', get_class($this), $cfg);
         $res = array();
         foreach ($cfg['actions'] as $action => $info) {
             if (isset($info['disabled']) && $info['disabled']) {

@@ -79,6 +79,10 @@ return array(
                     'values' => array( array('manual', 'Manual' ) ) + $sort_fields
                 ),
             ),
+            'defaults' => array(
+                '!pagination' => false,
+                '!limit' => 0
+            )
         )
     )
 );

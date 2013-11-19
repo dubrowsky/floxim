@@ -304,7 +304,8 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
                                 ib_node.data('fx_infoblock', {id:'fake'});
                                 $form.data('ib_node', ib_node);
                                 //$fx.front.scrollTo($ib_node);
-                                $form.on('change', function() {
+                                $form.on('changes', function(e) {
+                                    console.log(e);
                                     if ($form.data('is_waiting')) {
                                         return;
                                     }

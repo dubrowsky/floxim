@@ -50,7 +50,7 @@ class fx_controller_component extends fx_controller {
                 case 'list_selected':
                     if (isset($ib['params']['selected']) && is_array($ib['params']['selected'])) {
                         foreach ($ib['params']['selected'] as  $value) {
-                            $saving[$value[0]] = true;
+                            $saving[$value] = true;
                         }
                         $linkers = fx::data('content_select_linker')
                                     ->where('infoblock_id', $ib['id'])
@@ -122,6 +122,7 @@ class fx_controller_component extends fx_controller {
      */
     
     
+    /*
     public function config_list_filtered($config) {
         $config['settings'] += $this->_config_conditions();
         return $config;
@@ -144,6 +145,8 @@ class fx_controller_component extends fx_controller {
                         '-'.fx::lang('Manual','controller_component').'-';
         return $config;
     }
+     * 
+     */
     
     protected function _config_conditions () {
         $fields['conditions'] = array(
@@ -419,33 +422,45 @@ class fx_controller_component extends fx_controller {
     }
     
     public function do_list_selected() {
-        //$this->set_param('skip_parent_filter', true);
-        //$this->set_param('skip_infoblock_filter', true);
         $parent_id = fx::env('page')->get('id');
-        $linkers = fx::data('content_select_linker')
-                    ->where('infoblock_id', $this->input['infoblock_id'])
-                    ->where('parent_id', $parent_id)
-                    ->all();
         
-        $this->listen('query_ready', function($q) use ($linkers) {
-            $q->where('id', $linkers->get_values('linked_id'));
-            dev_log('selected query', $q->show_query());
-        });
-        $this->listen('items_ready', function($c, $ctr) use ($linkers) {
-            if ($ctr->get_param('sorting') === 'manual') {
-                $c->sort(function($a, $b) use ($linkers) {
-                    $a_priority = $linkers->find_one('linked_id', $a['id'])->get('priority');
-                    $b_priority = $linkers->find_one('linked_id', $b['id'])->get('priority');
-                    return $a_priority - $b_priority;
-                });
-                $c->is_sortable = true;
-                
+        // preview
+        if ( $this->get_param('is_overriden') ) {
+            $content_ids = array();
+            $selected_val  = $this->get_param('selected');
+            if (is_array($selected_val)) {
+                $content_ids = $selected_val;
             }
-            $c->linker_map = array();
-            foreach ($c as $cc) {
-                $c->linker_map []= $linkers->find_one('linked_id', $cc['id']);
-            }
+            $linkers = null;
+        } else {
+            // normal
+            $linkers = fx::data('content_select_linker')
+                        ->where('infoblock_id', $this->input['infoblock_id'])
+                        ->where('parent_id', $parent_id)
+                        ->all();
+            $content_ids = $linkers->get_values('linked_id');
+        }
+        
+        $this->listen('query_ready', function($q) use ($content_ids) {
+            $q->where('id', $content_ids);
         });
+        if ($linkers) {
+            $this->listen('items_ready', function($c, $ctr) use ($linkers) {
+                if ($ctr->get_param('sorting') === 'manual') {
+                    $c->sort(function($a, $b) use ($linkers) {
+                        $a_priority = $linkers->find_one('linked_id', $a['id'])->get('priority');
+                        $b_priority = $linkers->find_one('linked_id', $b['id'])->get('priority');
+                        return $a_priority - $b_priority;
+                    });
+                    $c->is_sortable = true;
+
+                }
+                $c->linker_map = array();
+                foreach ($c as $cc) {
+                    $c->linker_map []= $linkers->find_one('linked_id', $cc['id']);
+                }
+            });
+        }
         return $this->do_list();
     }
     
@@ -524,7 +539,6 @@ class fx_controller_component extends fx_controller {
                                 $ids[]= $v[0];
                             }
                             $relation = $field->get_relation();
-                            dev_log('rels', $relation, $condition);
                             if ($relation[0] === fx_data::MANY_MANY){
                                 $content_ids = fx::data($relation[1])->
                                     where($relation[5], $ids)->

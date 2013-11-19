@@ -69,7 +69,6 @@ class fx_controller_admin extends fx_controller {
             return $result;
         }
         $res = json_encode($result);
-        fx::log('adm res enc', $res, $result);
         return $res;
     }
 
