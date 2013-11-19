@@ -5,11 +5,12 @@
     var children = _c.children || _c.values;
     ?>
     <div>
-        <span class="filter_search">
-            <input type="text" placeholder="Search..." />
-        </span>
-        <span class="filter" data-filter="type">
-            Type: 
+        <div class="filter_box filter_search">
+            <label>&nbsp;</label>
+            <input class="fx_input" type="text" placeholder="Search..." />
+        </div>
+        <div class="filter_box filter" data-filter="type">
+            <label>Type: </label>
             <select class="fx_controller_groups filter_type fx_input">
                 <option value="">-any-</option>
                 <?
@@ -18,9 +19,9 @@
                 });
                 ?>
             </select>
-        </span>
-        <span class="filter" data-filter="controller">
-            Component:
+        </div>
+        <div class="filter_box filter" data-filter="controller">
+            <label>Component:</label>
             <select class="fx_controller_groups fx_input">
                 <option value="">-any-</option>
                 <?
@@ -29,7 +30,7 @@
                 });
                 ?>
             </select>
-        </span>
+        </div>
     </div>
     <div class="fx_controller_list">
         <?
@@ -138,7 +139,6 @@ $('.fx_controller_list', html).on('click', '.sub', function() {
     html.find('.fx_controller_list .fx_admin_selected').removeClass('fx_admin_selected');
     sub.addClass('fx_admin_selected');
     inp.val(sub.data('id'));
-    console.log('selected', inp.val());
     recount_buttons();
 });
 

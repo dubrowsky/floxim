@@ -154,7 +154,7 @@ class fx_template {
 		);
 		return $html;
     }
-    
+    /*
     protected function _apply_modifiers($var, $modifiers) {
     	$val = $var instanceof fx_template_field ? $var->get_value() : $var;
     	echo "~".$val."~";
@@ -178,5 +178,7 @@ class fx_template {
     	//echo "<pre>".htmlspecialchars(print_r($modifiers,1))."</pre>";
     	return $var;
     }
+     * 
+     */
 }
 ?>
