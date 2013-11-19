@@ -34,7 +34,17 @@ class fx_controller_admin_content extends fx_controller_admin {
         }
         
         $this->response->add_fields($fields);
-        $this->response->add_fields($content->get_form_fields(), false, 'content');
+        $content_fields = fx::collection($content->get_form_fields());
+        $tabbed = $content_fields->group('tab');
+        foreach ($tabbed as $tab => $tab_fields) {
+            $this->response->add_tab($tab, fx::data('component', $tab)->get('name'));
+            $this->response->add_fields($tab_fields, $tab, 'content');
+        }
+        /*
+        fx::log('content fields', $content_fields, $tabbed);
+        $this->response->add_fields($content_fields, false, 'content');
+         * 
+         */
 
         if ($input['data_sent']) {
             $content->set_field_values($input['content']);

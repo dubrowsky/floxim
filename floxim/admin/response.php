@@ -152,7 +152,10 @@ class fx_admin_response {
     }
     
     public function add_fields ( $fields, $tab = null, $prefix = null ) {
-        if (!is_array($fields)) {
+        if ($fields instanceof fx_collection) {
+            $fields = $fields->get_data();
+        }
+        if (!is_array($fields) ) {
             return;
         }
         if ( $tab ) {

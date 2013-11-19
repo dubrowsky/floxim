@@ -21,7 +21,7 @@ fx_form = {
             $fx.buttons.draw_buttons(settings.buttons);
         }
 
-        $.each(settings.fields, function(i, json) {        
+        $.each(settings.fields, function(i, json) {
             var target = json.tab
                             ? $('#'+settings.form.id+'_'+json.tab, $form_node)
                             : $form_node;

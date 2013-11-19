@@ -19,6 +19,10 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
         return count($this->data);
     }
     
+    public function get_data() {
+        return $this->data;
+    }
+    
     /*
      * Получить первый элемент коллекции
      */

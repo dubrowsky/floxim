@@ -173,7 +173,9 @@ class fx_content extends fx_essence {
             if ($field['type_of_edit'] == fx_field::EDIT_NONE) {
                 continue;
             }
-            $form_fields[]= $field->get_js_field($this);
+            $jsf = $field->get_js_field($this);
+            $jsf['tab'] = $field['component_id'];
+            $form_fields[]= $jsf;
         }
         return $form_fields;
     }
