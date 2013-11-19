@@ -217,8 +217,9 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
                        action:'add_edit',
                        content_type:c_cnt.type,
                        infoblock_id:c_cnt.infoblock_id,
-                       parent_id:c_cnt.parent_id,
-                    }, {
+                       parent_id:c_cnt.parent_id
+                    }, 
+                        {
                         view:'vertical',
                         onfinish:function() {
                             $fx.front.reload_infoblock(ib);
@@ -284,7 +285,7 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
                             onready:function($form) {
                                 var back = $t.jQuery(
                                     'input', 
-                                    {type:'button',label:'&laquo; back',class:'cancel'}
+                                    {'type':'button','label':'&laquo; back', 'class':'cancel'}
                                 );
                                 back.on('click', function() {
                                     infoblock_back();

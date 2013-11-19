@@ -22,11 +22,11 @@ $fx.popup = function(params) {
         this.$footer = $('<div class="fx_popup_footer" />');
         this.$node.append(this.$footer);
         var cancel_button = $t.jQuery('input', {
-           type:'button',
-           is_submit:false,
-           class:'cancel',
-           name:'cancel',
-           label:'cancel'
+           'type':'button',
+           'is_submit':false,
+           'class':'cancel',
+           'name':'cancel',
+           'label':'cancel'
         });
         cancel_button.on('click', function() {popup.destroy();});
         $('html').on('keyup.fx_popup', function(e) {
