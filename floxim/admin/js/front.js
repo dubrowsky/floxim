@@ -305,7 +305,7 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
                                 ib_node.data('fx_infoblock', {id:'fake'});
                                 $form.data('ib_node', ib_node);
                                 //$fx.front.scrollTo($ib_node);
-                                $form.on('changes', function(e) {
+                                $form.on('change', function(e) {
                                     console.log(e);
                                     if ($form.data('is_waiting')) {
                                         return;
@@ -608,7 +608,10 @@ fx_front.prototype.select_infoblock = function(n) {
             },
             onready:function($form) {
                 $form.data('ib_node', ib_node);
-                $form.on('change', function() {
+                $form.on('change', function(e) {
+                    if (e.target.name === 'livesearch_input') {
+                        return;
+                    }
                     if ($form.data('is_waiting')) {
                         return;
                     }
@@ -623,7 +626,8 @@ fx_front.prototype.select_infoblock = function(n) {
                     );
                 });
             },
-            oncancel:function() {
+            oncancel:function($form) {
+                $fx.front.reload_infoblock($form.data('ib_node'));
                 $fx.front.enable_hilight();
             }
         });

@@ -35,10 +35,10 @@
             p.fx_create_form(data);
             var $form = $('form', p);
             $form.on('fx_form_cancel', function() {
-                $fx.front_panel.hide();
                 if (params.oncancel) {
-                    params.oncancel();
+                    params.oncancel($form);
                 }
+                $fx.front_panel.hide();
             });
             this.panel.on('keydown', function(e) {
                 if (e.which === 27) {
