@@ -29,16 +29,17 @@ class fx_controller_module_auth extends fx_controller_module {
     public static function _cross_site_forms($fields) {
     	$sites = fx::data('site')->where('id', fx::env('site')->get('id'), '!=')->all();
     	$next_location = $_SERVER['HTTP_REFERER'] ? $_SERVER['HTTP_REFERER'] : '/';
+        $current_site = fx::env('site');
     	if (preg_match("~/floxim/$~i", $next_location) || empty($next_location)) {
             $next_location = '/';
         }
+        if (!preg_match('~MSIE~', $_SERVER['HTTP_USER_AGENT'])) {
     	?>
         <script type="text/javascript" src="<?=FX_JQUERY_PATH?>"></script>
         <script type="text/javascript">
 			function js_next() {
-				alert('d');
-				//document.location.href = "<?=$next_location?>";
-			}
+                document.location.href = '<?=$next_location?>';
+            }
 			var count_sites = <?=count($sites)?>;
 			var data = <?=json_encode($fields)?>;
 			var sites = <?=json_encode($sites->get_values('domain', 'id'))?>;
@@ -61,6 +62,51 @@ class fx_controller_module_auth extends fx_controller_module {
         	}
         </script>
         <?
+        } else {
+            ?>
+                <html>
+                    <head></head>
+                    <body>
+            <?
+            $i=0;
+            foreach ($sites as $site) {
+                //if ($i++==0)
+                //    continue;
+                if ($site['id'] == $current_site['id']) {
+                    continue;
+                }
+        ?>
+            <form method="POST" action="http://<?=$site['domain']?>/floxim/" target="ifr_<?=$site['id']?>" style="width:5px; height:5px; overflow:hidden;">
+                <?foreach ($fields as $k => $v) {?>
+                    <input type="hidden" name="<?=$k?>" value="<?=$v?>" />
+                <?}?>
+                <iframe style="border:0;" onload="check()" name="ifr_<?=$site['id']?>" id="ifr_<?=$site['id']?>"></iframe>
+            </form>
+        <?
+            } 
+        ?>
+            <script type="text/javascript">
+                function js_next() {
+                    alert("<?=$next_location?>");
+                    document.location.href = "<?=$next_location?>";
+                }
+                var forms = document.getElementsByTagName('form');
+                var forms_length = forms.length;
+                function check() {
+                    forms_length--;
+                    if (forms_length==0)
+                        js_next();
+                }
+                for (var i = 0; i< forms.length; i++) {
+                        var c_form = forms[i];
+                        var iframe = c_form.getElementsByTagName('iframe')[0];
+                        c_form.submit();
+                }
+            </script>
+            </body>
+        </html>
+        <?
+        }
     }
 
     public function init_session($input) {

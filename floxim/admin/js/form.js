@@ -50,7 +50,7 @@ fx_form = {
             }
             switch (options.key) {
                 case 'cancel':
-                    options.class = 'cancel';
+                    options['class'] = 'cancel';
                     options.is_submit = false;
                     break;
             }
