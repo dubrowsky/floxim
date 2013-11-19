@@ -54,6 +54,7 @@ class fx_controller_component_section extends fx_controller_component_page {
     }
     
     public function do_list_infoblock() {
+        $this->set_param('parent_id', false);
         $c_page_id  = fx::env('page')->get('id');
         $path = fx::env('page')->get_parent_ids();
         $path []= $c_page_id;
@@ -73,9 +74,11 @@ class fx_controller_component_section extends fx_controller_component_page {
                     $q->clear_where('parent_id')->where('parent_id', $path);
                     break;
             }
+            fx::log($q->show_query(), $q->all());
         });
         
         $this->listen('items_ready', function($items, $ctr) use ($path, $submenu_type) {
+            dev_log('Menu items', $items);
             foreach ($items as $item) {
                 if (in_array($item['id'], $path)) {
                     $item['active'] = true;
@@ -101,10 +104,11 @@ class fx_controller_component_section extends fx_controller_component_page {
         $source = $this->get_param('source_infoblock_id');
         $path = fx::env('page')->get_path();
         if (isset($path[1])) {
-            $this->set_param('parent_id', $path[1]->get('id'));
-            $this->set_param('infoblock_id', $source);
+            $this->listen('query_ready', function($q) use ($path, $source){
+                $q->where('parent_id', $path[1]->get('id'))->where('infoblock_id', $source);
+            });
         }
-        
+        fx::log('subm', $this);
         $paths = fx::env('page')->get_parent_ids();
         $paths[] = fx::env('page')->get('id');
         $this->listen('items_ready', function($items, $ctr) use ($paths) {
