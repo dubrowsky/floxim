@@ -112,6 +112,13 @@ function fx_livesearch(node) {
                 data:url.data,
                 success:function(res){
                     livesearch.addSilent = true;
+                    res.results.sort(function(a, b) {
+                        if (ids.indexOf(a.id) < ids.indexOf(b.id) )
+                            return -1;
+                        if (ids.indexOf(a.id) > ids.indexOf(b.id) )
+                            return 1;
+                        return 0;  
+                    });  
                     $.each(res.results, function(index, item) {
                         livesearch.addValue(item.id, item.name, livesearch.inpNames[item.id]);
                     });
@@ -349,7 +356,10 @@ function fx_livesearch(node) {
             });
             if (this.isMultiple) {
                     this.n.find('.livesearch_items').sortable({
-                            items:'.livesearch_item'
+                            items:'.livesearch_item',
+                            stop:function () {
+                                n.trigger('change')
+                            }
                     });
             }
 

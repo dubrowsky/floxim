@@ -74,6 +74,7 @@ return array(
                     'params' => array(
                         'content_type' => 'content_'.$this->_content_type
                     ),
+                    'value'=> $this->_get_selected_values(),
                 ),
                 'sorting' => array(
                     'values' => array( array('manual', 'Manual' ) ) + $sort_fields
