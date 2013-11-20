@@ -101,7 +101,7 @@ class fx_controller {
      * Возвращает массив шаблонов, которые можно использовать для контроллер-экшна
      * Вызывать после инициализации контроллера (с экшном)
      */
-    public function get_available_templates( $layout_name = null ) {
+    public function get_available_templates( $layout_name = null , $area_size = null) {
         if (is_numeric($layout_name)) {
             $layout_names = array(fx::data('layout', $layout_name)->get('keyword'));
         } elseif (is_null($layout_name)) {
@@ -147,6 +147,12 @@ class fx_controller {
                 }
                 if (strpos($this->action, $tpl_of_action) !== 0) {
                     continue;
+                }
+                if ($area_size && isset($tplv['size'])) {
+                    $size = fx_template_suitable::get_size($tplv['size']);
+                    if (!fx_template_suitable::check_sizes($size, $area_size)) {
+                        continue;
+                    }
                 }
                 $result []= $tplv;
             }

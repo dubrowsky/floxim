@@ -816,6 +816,9 @@ class fx_template_processor {
         if ( ($offset = $token->get_prop('offset')) ) {
             $tpl_props['offset'] = $offset;
         }
+        if ( ($size = $token->get_prop('size'))) {
+            $tpl_props['size'] = $size;
+        }
         $this->templates [$token->get_prop('id')]= $tpl_props;
         
         $is_subroot = $token->get_prop('subroot') ? 'true' : 'false';

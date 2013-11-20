@@ -130,6 +130,9 @@ class fx_template_html {
                 if ( $n->offset && $n->end_offset) {
                     $tpl_macro_tag .= ' offset="'.$n->offset[0].','.$n->end_offset[1].'" ';
                 }
+                if ( ($tpl_size = $n->get_attribute('fx:size'))) {
+                    $tpl_macro_tag .= ' size="'.$tpl_size.'" ';
+                }
                 $tpl_macro_tag .= '}';
                 $n->parent->add_child_before(fx_template_html_token::create($tpl_macro_tag), $n);
                 $n->parent->add_child_after(fx_template_html_token::create('{/template}'), $n);

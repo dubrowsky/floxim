@@ -220,7 +220,7 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
                        parent_id:c_cnt.parent_id
                     }, 
                         {
-                        view:'vertical',
+                        view:'cols',
                         onfinish:function() {
                             $fx.front.reload_infoblock(ib);
                             $fx.front.enable_hilight();

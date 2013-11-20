@@ -24,6 +24,18 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             $this->ui->hidden('admin_mode', $input['admin_mode'])
         );
 	
+        fx::env('page', $input['page_id']);
+        $page = fx::data('content_page', $input['page_id']);
+        $layout_id = fx::env('layout');
+        $infoblocks = fx::router('front')->get_page_infoblocks($page['id'], $layout_id);
+        $layout_ib = $infoblocks['layout'][0];
+        $layout_tpl = fx::template($layout_ib->get_visual()->get('template'));
+        $areas = $layout_tpl->get_areas();
+        $area_info = $areas[$input['area']];
+        $area_size = fx_template_suitable::get_size(
+            isset($area_info['size']) ? $area_info['size'] : ''
+        );
+        
         /* Список контроллеров */
         $fields['controller'] = array(
             'type' => 'tree', 
@@ -48,7 +60,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             $actions = $ctrl->get_actions();
             foreach ($actions as $action_code => $action_info) {
                 $act_ctr = fx::controller($controller_name.'.'.$action_code);
-                $act_templates = $act_ctr->get_available_templates(fx::env('layout'));
+                $act_templates = $act_ctr->get_available_templates(fx::env('layout'), $area_size);
                 if (count($act_templates) == 0) {
                     continue;
                 }
