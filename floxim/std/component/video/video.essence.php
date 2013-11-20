@@ -14,6 +14,12 @@ class fx_content_video extends fx_content {
                    $this['embed_html'] = '<iframe width="420" height="315" src="http://www.youtube.com/embed/'.$url.'?wmode=opaque" frameborder="0" allowfullscreen></iframe>';         
                 }
             }
+        } else {
+            if (preg_match('~src="(?P<url>[\/\w.]+)"~', $this['embed_html'], $matches)!=0) {
+                dev_log('video url', $matches['url']);
+                $this['embed_html'] = str_replace($matches['url'], $matches['url'].'?wmode=opaque', $this['embed_html']);
+            }
         }
+        
     }
 }
