@@ -74,11 +74,9 @@ class fx_controller_component_section extends fx_controller_component_page {
                     $q->clear_where('parent_id')->where('parent_id', $path);
                     break;
             }
-            fx::log($q->show_query(), $q->all());
         });
         
         $this->listen('items_ready', function($items, $ctr) use ($path, $submenu_type) {
-            dev_log('Menu items', $items);
             foreach ($items as $item) {
                 if (in_array($item['id'], $path)) {
                     $item['active'] = true;
@@ -108,7 +106,6 @@ class fx_controller_component_section extends fx_controller_component_page {
                 $q->where('parent_id', $path[1]->get('id'))->where('infoblock_id', $source);
             });
         }
-        fx::log('subm', $this);
         $paths = fx::env('page')->get_parent_ids();
         $paths[] = fx::env('page')->get('id');
         $this->listen('items_ready', function($items, $ctr) use ($paths) {

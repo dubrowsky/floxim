@@ -76,21 +76,6 @@ class fx_controller_admin extends fx_controller {
         return fx::lang('Saved','system');
     }
 
-    public function admin_tabs($tabs, $callback_param = null) {
-        $tabs_key = array_keys($tabs);
-        $active_tab = $this->get_active_tab();
-        if (!in_array($active_tab, $tabs_key)) {
-            $active_tab = $tabs_key[0];
-        }
-
-        foreach ($tabs as $tab_key => $tab_name) {
-            $this->response->add_tab($tab_key, $tab_name, ($active_tab == $tab_key));
-        }
-        $this->response->set_change_tab_url();
-
-        call_user_func(array($this, 'tab_'.$active_tab), $callback_param);
-    }
-    
     protected function get_active_tab() {
         return $this->input['params'][1];
     }
@@ -153,7 +138,8 @@ class fx_controller_admin extends fx_controller {
         $css_files = array(
             '/floxim/lib/editors/redactor/redactor.css',
             '/floxim/admin/skins/default/jquery-ui/main.css',
-            '/floxim/admin/skins/default/css/main.css'
+            '/floxim/admin/skins/default/css/main.css',
+            '/floxim/admin/skins/default/css/forms.less',
         );
         foreach ($css_files as $file) {
             $page->add_css_file($file);

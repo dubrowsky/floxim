@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 3.5.8.1
+-- version 3.5.1
 -- http://www.phpmyadmin.net
 --
--- Хост: localhost
--- Время создания: Ноя 15 2013 г., 18:36
--- Версия сервера: 5.5.32-MariaDB
--- Версия PHP: 5.5.4
+-- Хост: 127.0.0.1
+-- Время создания: Ноя 20 2013 г., 16:11
+-- Версия сервера: 5.5.25
+-- Версия PHP: 5.3.13
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- База данных: `floxim`
+-- База данных: `floxim_loc`
 --
 
 -- --------------------------------------------------------
@@ -172,7 +172,7 @@ CREATE TABLE IF NOT EXISTS `fx_content` (
   `site_id` int(11) DEFAULT NULL,
   `parent_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=47 AUTO_INCREMENT=2485 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=47 AUTO_INCREMENT=2492 ;
 
 --
 -- Дамп данных таблицы `fx_content`
@@ -333,7 +333,8 @@ INSERT INTO `fx_content` (`id`, `priority`, `checked`, `created`, `last_updated`
 (2410, 140, 1, '2013-11-11 13:36:59', '2013-11-11 09:36:59', 2367, 'product', 209, 16, 2257),
 (2455, 144, 1, '2013-11-12 16:22:45', '2013-11-12 12:22:45', 2367, 'news', 203, 16, 2254),
 (2463, 145, 1, '2013-11-12 17:58:38', '2013-11-12 13:58:38', 2367, 'contact', 0, 16, 2238),
-(2484, 146, 1, '2013-11-15 18:33:49', '2013-11-15 14:33:49', 2367, 'classifier_linker', 214, 16, 2455);
+(2484, 146, 1, '2013-11-15 18:33:49', '2013-11-15 14:33:49', 2367, 'classifier_linker', 214, 16, 2455),
+(2491, 147, 1, '2013-11-19 08:17:56', '2013-11-19 04:17:56', 2367, 'select_linker', 261, 15, 1883);
 
 -- --------------------------------------------------------
 
@@ -952,9 +953,9 @@ CREATE TABLE IF NOT EXISTS `fx_content_publication` (
 --
 
 INSERT INTO `fx_content_publication` (`id`, `publish_date`, `anounce`, `image`, `text`) VALUES
-(1968, '2013-05-17 12:20:17', '<p class="">\n	         Everyone shoud know! what?</p><p class="">\n	This is «Alyona»!</p>', 383, '<p>\r\n	        They told us this was not logistically possible and a hugely inconsiderate thing to do to a grief stricken family.\r\n</p>\r\n<p>\r\n	        I called them a bunch of a-holes and soccer-kicked the watermelon off the picnic table and into the bushes.\r\n</p>'),
+(1968, '2013-05-17 12:20:17', '<p class="">\n	         Everyone shoud know! what?</p><p class="">\n	This is «Alyona»!</p>', 478, '<p>\r\n	        They told us this was not logistically possible and a hugely inconsiderate thing to do to a grief stricken family.\r\n</p>\r\n<p>\r\n	        I called them a bunch of a-holes and soccer-kicked the watermelon off the picnic table and into the bushes.\r\n</p>'),
 (1976, '2012-04-19 00:00:00', '<p>​Jeep Travel is here to make you laugh.</p>', NULL, '<p>\r\n	 Put your hands up in the air!\r\n</p>'),
-(1996, '2013-10-26 00:00:00', '<p>\n	                                Dominicana Republic''s Afro-tourism with a side of beach!\n</p>', 379, '<p>\r\n	                 On the weekend of Jan 19th, 2013, we left the farm early one morning for Samana via a direct <em>gua-gua</em>.  It left in rising sun at 7 am from nearby Saboneta and arrived there at 10:30 am.\r\n</p>\r\n<p>\r\n	 <img src="/floxim_files/content/me_2.jpg">\r\n</p>\r\n<p>\r\n	              It was a very easy trip with one stop on an uncomfortable and overcrowded bus which was exacerbated by the holiday weekend.  Fortunately it was cheap too, only 300 pesos ($7.50 USD).\r\n</p>\r\n<p>\r\n	              From there we met some friends and went onto Las Galeras which we am sure is one of the more beautiful places on this island.  Very Caribbean with its palm ladden beaches, forested hillsides in the distance, and white sands with colors of the sea you can hardly imagine.\r\n</p>'),
+(1996, '2013-10-26 00:00:00', '<p>\n	                                 Dominicana Republic''s Afro-<b>tourism</b>&nbsp;with a side of beach!</p>', 379, '<p>\r\n	                 On the weekend of Jan 19th, 2013, we left the farm early one morning for Samana via a direct <em>gua-gua</em>.  It left in rising sun at 7 am from nearby Saboneta and arrived there at 10:30 am.\r\n</p>\r\n<p>\r\n	 <img src="/floxim_files/content/me_2.jpg">\r\n</p>\r\n<p>\r\n	              It was a very easy trip with one stop on an uncomfortable and overcrowded bus which was exacerbated by the holiday weekend.  Fortunately it was cheap too, only 300 pesos ($7.50 USD).\r\n</p>\r\n<p>\r\n	              From there we met some friends and went onto Las Galeras which we am sure is one of the more beautiful places on this island.  Very Caribbean with its palm ladden beaches, forested hillsides in the distance, and white sands with colors of the sea you can hardly imagine.\r\n</p>'),
 (2150, '2013-10-31 00:00:00', '<p>​At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</p>', 0, '<p>​Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Sanctus sea sed takimata ut vero voluptua. Stet clita kasd gubergren, no sea takimata sanctus est. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.</p><p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p><p>Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum.</p><p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Sanctus sea sed takimata ut vero voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet.</p>'),
 (2256, '2013-10-20 00:00:00', '<p>\r\n	Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.\r\n</p>', 461, '<p>\r\n	Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Stet clita kasd gubergren, no sea takimata sanctus est. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.\r\n</p>\r\n<p>\r\n	Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\r\n</p>\r\n<p>\r\n	Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.\r\n</p>\r\n<p>\r\n	Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Stet clita kasd gubergren, no sea takimata sanctus est. At vero eos et accusam et justo duo dolores et ea rebum. Sanctus sea sed takimata ut vero voluptua.\r\n</p>\r\n<p>\r\n	Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum.\r\n</p>'),
 (2455, '2013-11-20 00:00:00', '<p>\r\n	 Stet clita kasd gubergren, no sea takimata sanctus est. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. At vero eos et accusam et justo duo dolores et ea rebum. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat.\r\n</p>', 477, '<p>\r\n	 Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. At vero eos et accusam et justo duo dolores et ea rebum.\r\n</p>\r\n<p>\r\n	 At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum.\r\n</p>\r\n<p>\r\n	 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.\r\n</p>\r\n<p>\r\n	 Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.\r\n</p>\r\n<p>\r\n	 Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\r\n</p>');
@@ -1027,6 +1028,13 @@ CREATE TABLE IF NOT EXISTS `fx_content_select_linker` (
   `linked_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Дамп данных таблицы `fx_content_select_linker`
+--
+
+INSERT INTO `fx_content_select_linker` (`id`, `linked_id`) VALUES
+(2491, 1996);
 
 -- --------------------------------------------------------
 
@@ -1210,7 +1218,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_video` (
 --
 
 INSERT INTO `fx_content_video` (`id`, `embed_html`, `description`) VALUES
-(2135, '<iframe width="420" height="315" src="//www.youtube.com/embed/4OGMGNqz15Q" frameborder="0" allowfullscreen></iframe>', '');
+(2135, '<p>​</p><iframe width="420" height="315" src="//www.youtube.com/embed/4OGMGNqz15Q" frameborder="0" allowfullscreen="">\n</iframe>', '<p>\n	Description\n</p>');
 
 -- --------------------------------------------------------
 
@@ -1328,6 +1336,7 @@ CREATE TABLE IF NOT EXISTS `fx_field` (
   `inheritance` smallint(6) NOT NULL DEFAULT '0',
   `type_of_edit` int(11) NOT NULL DEFAULT '1',
   `checked` tinyint(1) NOT NULL DEFAULT '1',
+  `form_tab` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `Checked` (`checked`),
   KEY `component_id` (`component_id`),
@@ -1341,102 +1350,102 @@ CREATE TABLE IF NOT EXISTS `fx_field` (
 -- Дамп данных таблицы `fx_field`
 --
 
-INSERT INTO `fx_field` (`id`, `parent`, `component_id`, `ctpl_id`, `system_table_id`, `widget_id`, `name`, `description`, `type`, `format`, `not_null`, `priority`, `searchable`, `default`, `inheritance`, `type_of_edit`, `checked`) VALUES
-(1, NULL, 1, 0, 0, 0, 'name', 'Screen name', 1, '', 0, 0, 1, '', 0, 1, 1),
-(2, NULL, 1, 0, 0, 0, 'avatar', 'Userpic', 11, '', 0, 0, 0, '', 0, 1, 1),
-(118, NULL, 19, 0, 0, 0, 'text', 'Text', 3, 'a:1:{s:4:"html";s:1:"1";}', 0, 0, 1, '', 0, 1, 1),
-(153, NULL, 1, 0, 0, 0, 'email', 'E-mail', 1, '', 0, 142, 1, NULL, 0, 1, 1),
-(165, NULL, 23, 0, 0, 0, 'url', 'URL', 1, '', 0, 2, 0, '', 0, 1, 1),
-(186, NULL, 32, 0, 0, 0, 'tag_id', 'Tag', 13, 'a:3:{s:6:"target";s:2:"31";s:9:"prop_name";s:3:"tag";s:11:"render_type";s:10:"livesearch";}', 0, 157, 0, '', 0, 1, 1),
-(190, NULL, 23, 0, 0, 0, 'name', 'Name', 1, '', 1, 0, 1, '', 0, 1, 1),
-(191, NULL, 23, 0, 0, 0, 'title', 'Title', 1, '', 0, 158, 0, '', 0, 1, 1),
-(192, NULL, 31, 0, 0, 0, 'counter', 'Usage counter', 2, '', 0, 159, 0, '0', 0, 3, 1),
-(195, NULL, 30, 0, 0, 0, 'tags', 'Tags', 14, 'a:5:{s:11:"render_type";s:5:"table";s:13:"linking_field";s:3:"198";s:16:"linking_datatype";s:2:"32";s:8:"mm_field";s:3:"186";s:11:"mm_datatype";s:2:"31";}', 0, 2, 0, '', 0, 1, 1),
-(196, NULL, 36, 0, 0, 0, 'parent_id', 'Parent', 13, 'a:4:{s:6:"target";s:2:"23";s:9:"prop_name";s:6:"parent";s:9:"is_parent";s:1:"0";s:11:"render_type";s:6:"select";}', 0, 161, 0, '', 0, 3, 1),
-(197, NULL, 31, 0, 0, 0, 'tagposts', 'Tag posts', 14, 'a:1:{s:6:"target";s:3:"186";}', 0, 162, 0, '', 0, 3, 1),
-(198, NULL, 32, 0, 0, 0, 'post_id', 'Page', 13, 'a:4:{s:6:"target";s:2:"30";s:9:"prop_name";s:4:"post";s:9:"is_parent";s:1:"1";s:11:"render_type";s:6:"select";}', 0, 163, 0, '', 0, 3, 1),
-(199, NULL, 46, 0, 0, 0, 'start_date', 'Start date', 8, '', 0, 164, 0, '', 0, 1, 1),
-(200, NULL, 46, 0, 0, 0, 'end_date', 'End date', 8, '', 0, 165, 0, '', 0, 1, 1),
-(201, NULL, 47, 0, 0, 0, 'publish_date', 'Publish date', 8, '', 0, 166, 0, '', 0, 1, 1),
-(202, NULL, 47, 0, 0, 0, 'cover', 'Cover image', 11, '', 0, 167, 0, '', 0, 1, 1),
-(203, NULL, 48, 0, 0, 0, 'photo', 'Image', 11, '', 1, 168, 0, '', 0, 1, 1),
-(204, NULL, 48, 0, 0, 0, 'description', 'Description', 3, '', 0, 169, 0, '', 0, 1, 1),
-(205, NULL, 48, 0, 0, 0, 'copy', 'Copy', 1, '', 0, 170, 0, '', 0, 1, 1),
-(209, NULL, 30, 0, 0, 0, 'metatype', 'meta type', 4, 'a:2:{s:6:"source";s:6:"manual";s:6:"values";a:2:{i:1;a:2:{s:2:"id";s:4:"post";s:5:"value";s:11:"Just a post";}i:2;a:2:{s:2:"id";s:7:"article";s:5:"value";s:24:"Long interesting article";}}}', 0, 171, 0, 'post', 0, 1, 1),
-(210, NULL, 32, 0, 0, 0, 'comment', 'Why the tag is relevant', 1, '', 0, 172, 0, '', 0, 1, 1),
-(212, NULL, 49, 0, 0, 0, 'publish_date', 'Publish date', 8, '', 0, 174, 0, '', 0, 1, 1),
-(213, NULL, 49, 0, 0, 0, 'anounce', 'Anounce', 3, 'a:1:{s:4:"html";s:1:"1";}', 0, 175, 0, '', 0, 1, 1),
-(214, NULL, 49, 0, 0, 0, 'image', 'Image', 11, '', 0, 176, 0, '', 0, 1, 1),
-(215, NULL, 49, 0, 0, 0, 'text', 'Text', 3, 'a:1:{s:4:"html";s:1:"1";}', 0, 177, 0, '', 0, 1, 1),
-(216, NULL, 1, 0, 0, 0, 'is_admin', 'Is admin?', 5, '', 0, 178, 0, '0', 0, 2, 1),
-(218, NULL, 50, 0, 0, 0, 'comment_text', 'Comment Text', 3, 'a:1:{s:5:"nl2br";s:1:"1";}', 1, 180, 0, '', 0, 2, 1),
-(219, NULL, 50, 0, 0, 0, 'publish_date', 'Publish Date', 8, '', 1, 181, 0, '', 0, 2, 1),
-(220, NULL, 50, 0, 0, 0, 'user_name', 'User Name', 1, '', 1, 182, 0, '', 0, 2, 1),
-(221, NULL, 23, 0, 0, 0, 'comments_counter', 'Comments counter', 2, '', 0, 183, 0, '0', 0, 3, 1),
-(222, NULL, 50, 0, 0, 0, 'is_moderated', 'Moderated flag', 5, '', 0, 184, 0, '0', 0, 2, 1),
-(228, NULL, 58, 0, 0, 0, 'question', 'Question', 1, '', 0, 185, 0, '', 0, 1, 1),
-(229, NULL, 58, 0, 0, 0, 'answer', 'Answer', 3, 'a:2:{s:4:"html";s:1:"0";s:5:"nl2br";s:1:"0";}', 0, 186, 0, '', 0, 1, 1),
-(230, NULL, 59, 0, 0, 0, 'embed_html', 'Embed code or link', 3, 'a:2:{s:4:"html";s:1:"0";s:5:"nl2br";s:1:"0";}', 0, 187, 0, '', 0, 1, 1),
-(231, NULL, 59, 0, 0, 0, 'description', 'Description', 3, 'a:2:{s:4:"html";s:1:"0";s:5:"nl2br";s:1:"0";}', 0, 188, 0, '', 0, 1, 1),
-(232, NULL, 60, 0, 0, 0, 'image', 'Image', 11, '', 0, 189, 0, '', 0, 1, 1),
-(233, NULL, 60, 0, 0, 0, 'description', 'Description', 3, 'a:2:{s:4:"html";s:1:"0";s:5:"nl2br";s:1:"0";}', 0, 190, 0, '', 0, 1, 1),
-(234, NULL, 60, 0, 0, 0, 'year', 'Year', 2, '', 0, 191, 0, '2000', 0, 1, 1),
-(235, NULL, 61, 0, 0, 0, 'logo', 'Logo', 11, '', 0, 192, 0, '', 0, 1, 1),
-(236, NULL, 61, 0, 0, 0, 'short_description', 'Short Description', 1, '', 0, 193, 0, '', 0, 1, 1),
-(237, NULL, 61, 0, 0, 0, 'description', 'Description', 3, 'a:2:{s:4:"html";s:1:"0";s:5:"nl2br";s:1:"0";}', 0, 194, 0, '', 0, 1, 1),
-(238, NULL, 62, 0, 0, 0, 'image', 'Image', 11, '', 0, 195, 0, '', 0, 1, 1),
-(239, NULL, 62, 0, 0, 0, 'client', 'Client', 1, '', 0, 196, 0, '', 0, 1, 1),
-(240, NULL, 62, 0, 0, 0, 'short_description', 'Short Description', 1, '', 0, 197, 0, '', 0, 1, 1),
-(241, NULL, 62, 0, 0, 0, 'description', 'Description', 3, 'a:2:{s:4:"html";s:1:"0";s:5:"nl2br";s:1:"0";}', 0, 198, 0, '', 0, 1, 1),
-(242, NULL, 62, 0, 0, 0, 'date', 'Date', 8, '', 0, 199, 0, '', 0, 1, 1),
-(243, NULL, 63, 0, 0, 0, 'position', 'Position', 1, '', 0, 200, 0, '', 0, 1, 1),
-(244, NULL, 63, 0, 0, 0, 'salary_from', 'Salary from', 2, '', 0, 201, 0, '', 0, 1, 1),
-(245, NULL, 63, 0, 0, 0, 'salary_to', 'Salary To', 2, '', 0, 202, 0, '', 0, 1, 1),
-(246, NULL, 63, 0, 0, 0, 'requirements', 'Requirements', 3, 'a:2:{s:4:"html";s:1:"0";s:5:"nl2br";s:1:"0";}', 0, 203, 0, '', 0, 1, 1),
-(247, NULL, 63, 0, 0, 0, 'responsibilities', 'Responsibilities', 3, 'a:2:{s:4:"html";s:1:"0";s:5:"nl2br";s:1:"0";}', 0, 204, 0, '', 0, 1, 1),
-(248, NULL, 63, 0, 0, 0, 'work_conditions', 'Work conditions', 3, 'a:2:{s:4:"html";s:1:"0";s:5:"nl2br";s:1:"0";}', 0, 205, 0, '', 0, 1, 1),
-(249, NULL, 63, 0, 0, 0, 'address', 'Address', 1, '', 0, 206, 0, '', 0, 1, 1),
-(250, NULL, 63, 0, 0, 0, 'phone', 'Phone Number', 1, '', 0, 207, 0, '', 0, 1, 1),
-(251, NULL, 63, 0, 0, 0, 'email', 'Email', 1, '', 0, 208, 0, '', 0, 1, 1),
-(252, NULL, 63, 0, 0, 0, 'contacts_name', 'Contact''s name', 1, '', 0, 209, 0, '', 0, 1, 1),
-(253, NULL, 64, 0, 0, 0, 'counter', 'Counter', 2, '', 0, 210, 0, '0', 0, 1, 1),
-(254, NULL, 65, 0, 0, 0, 'classifier_id', 'Classifier ID', 13, 'a:4:{s:6:"target";s:2:"64";s:9:"prop_name";s:10:"classifier";s:9:"is_parent";s:1:"0";s:11:"render_type";s:10:"livesearch";}', 0, 211, 0, '', 0, 1, 1),
-(255, NULL, 65, 0, 0, 0, 'content_id', 'Content ID', 13, 'a:4:{s:6:"target";s:2:"36";s:9:"prop_name";s:7:"content";s:9:"is_parent";s:1:"1";s:11:"render_type";s:10:"livesearch";}', 0, 212, 0, '', 0, 1, 1),
-(256, NULL, 68, 0, 0, 0, 'tags', 'Tags', 14, 'a:5:{s:11:"render_type";s:10:"livesearch";s:13:"linking_field";s:3:"255";s:16:"linking_datatype";s:2:"65";s:8:"mm_field";s:3:"254";s:11:"mm_datatype";s:2:"66";}', 0, 213, 0, '', 0, 1, 1),
-(257, NULL, 69, 0, 0, 0, 'full_name', 'Full Name', 1, '', 0, 214, 0, '', 0, 1, 1),
-(258, NULL, 69, 0, 0, 0, 'company', 'Company', 1, '', 0, 215, 0, '', 0, 1, 1),
-(259, NULL, 69, 0, 0, 0, 'department', 'Department', 1, '', 0, 216, 0, '', 0, 1, 1),
-(260, NULL, 69, 0, 0, 0, 'photo', 'Photo', 11, '', 0, 217, 0, '', 0, 1, 1),
-(261, NULL, 69, 0, 0, 0, 'short_description', 'Short Description', 1, '', 0, 218, 0, '', 0, 1, 1),
-(262, NULL, 69, 0, 0, 0, 'description', 'Description', 3, 'a:2:{s:4:"html";s:1:"0";s:5:"nl2br";s:1:"0";}', 0, 219, 0, '', 0, 1, 1),
-(263, NULL, 69, 0, 0, 0, 'birthday', 'Birthday', 8, '', 0, 220, 0, '', 0, 1, 1),
-(264, NULL, 70, 0, 0, 0, 'value', 'Value', 1, '', 0, 222, 0, '', 0, 1, 1),
-(265, NULL, 70, 0, 0, 0, 'contact_type', 'Type (e.g. ICQ, Skype, Jabber)', 1, '', 0, 221, 0, '', 0, 1, 1),
-(269, NULL, 69, 0, 0, 0, 'contacts', 'Contacts', 14, 'a:3:{s:11:"render_type";s:5:"table";s:13:"linking_field";s:3:"196";s:16:"linking_datatype";s:2:"70";}', 0, 223, 0, '', 0, 1, 1),
-(270, NULL, 71, 0, 0, 0, 'image', 'Image', 11, '', 0, 224, 0, '', 0, 1, 1),
-(271, NULL, 71, 0, 0, 0, 'description', 'Description', 3, 'a:2:{s:4:"html";s:1:"0";s:5:"nl2br";s:1:"0";}', 0, 225, 0, '', 0, 1, 1),
-(272, NULL, 71, 0, 0, 0, 'tags', 'Tags', 14, 'a:5:{s:11:"render_type";s:10:"livesearch";s:13:"linking_field";s:3:"255";s:16:"linking_datatype";s:2:"65";s:8:"mm_field";s:3:"254";s:11:"mm_datatype";s:2:"72";}', 0, 226, 0, '', 0, 1, 1),
-(273, NULL, 73, 0, 0, 0, 'embed_html', 'Embed code or link', 3, 'a:2:{s:4:"html";s:1:"0";s:5:"nl2br";s:1:"0";}', 0, 227, 0, '', 0, 1, 1),
-(274, NULL, 73, 0, 0, 0, 'description', 'Description', 3, 'a:2:{s:4:"html";s:1:"0";s:5:"nl2br";s:1:"0";}', 0, 228, 0, '', 0, 1, 1),
-(275, NULL, 73, 0, 0, 0, 'tags', 'Tags', 14, 'a:5:{s:11:"render_type";s:10:"livesearch";s:13:"linking_field";s:3:"255";s:16:"linking_datatype";s:2:"65";s:8:"mm_field";s:3:"254";s:11:"mm_datatype";s:2:"74";}', 0, 229, 0, '', 0, 1, 1),
-(276, NULL, 75, 0, 0, 0, 'reference', 'Reference', 1, '', 0, 230, 0, '', 0, 1, 1),
-(277, NULL, 75, 0, 0, 0, 'description', 'Description', 3, 'a:2:{s:4:"html";s:1:"0";s:5:"nl2br";s:1:"0";}', 0, 231, 0, '', 0, 1, 1),
-(278, NULL, 75, 0, 0, 0, 'short_description', 'Short Description', 1, '', 0, 232, 0, '', 0, 1, 1),
-(279, NULL, 75, 0, 0, 0, 'image', 'Image', 11, '', 0, 233, 0, '', 0, 1, 1),
-(280, NULL, 75, 0, 0, 0, 'price', 'Price', 7, '', 0, 234, 0, '', 0, 1, 1),
-(281, NULL, 75, 0, 0, 0, 'is_featured', 'Featured', 5, '', 0, 235, 0, '0', 0, 1, 1),
-(282, NULL, 69, 0, 0, 0, 'position', 'Position', 1, '', 0, 236, 0, '', 0, 1, 1),
-(283, NULL, 76, 0, 0, 0, 'counter', 'Counter', 2, '', 0, 237, 0, '0', 0, 1, 1),
-(284, NULL, 75, 0, 0, 0, 'categories', 'Categories', 14, 'a:5:{s:11:"render_type";s:10:"livesearch";s:13:"linking_field";s:3:"255";s:16:"linking_datatype";s:2:"65";s:8:"mm_field";s:3:"254";s:11:"mm_datatype";s:2:"76";}', 0, 238, 0, '', 0, 1, 1),
-(285, NULL, 68, 0, 0, 0, 'on_main', 'On main', 5, '', 0, 239, 0, '', 0, 1, 1),
-(286, NULL, 69, 0, 0, 0, 'is_featured', 'Featured', 5, '', 0, 240, 0, '0', 0, 1, 1),
-(287, NULL, 60, 0, 0, 0, 'short_description', 'Short Description', 1, '', 0, 241, 0, '', 0, 1, 1),
-(288, NULL, 62, 0, 0, 0, 'is_featured', 'Featured', 5, '', 0, 242, 0, '0', 0, 1, 1),
-(289, NULL, 1, 0, 0, 0, 'password', 'Password', 1, '', 0, 243, 0, '', 0, 1, 1),
-(290, NULL, 36, 0, 0, 0, 'created', 'Created date', 8, '', 0, 244, 0, '', 0, 3, 1),
-(291, NULL, 36, 0, 0, 0, 'user_id', 'User', 13, 'a:4:{s:6:"target";s:1:"1";s:9:"prop_name";s:4:"user";s:9:"is_parent";s:1:"0";s:11:"render_type";s:10:"livesearch";}', 0, 245, 0, '', 0, 3, 1),
-(292, NULL, 36, 0, 0, 0, 'site_id', 'Site', 13, 'a:4:{s:6:"target";s:4:"site";s:9:"prop_name";s:4:"site";s:9:"is_parent";s:1:"0";s:11:"render_type";s:10:"livesearch";}', 0, 246, 0, '', 0, 3, 1),
-(294, NULL, 77, 0, 0, 0, 'linked_id', 'Linking content id', 13, 'a:4:{s:6:"target";s:2:"36";s:9:"prop_name";s:7:"content";s:9:"is_parent";s:1:"0";s:11:"render_type";s:10:"livesearch";}', 0, 247, 0, '', 0, 1, 1);
+INSERT INTO `fx_field` (`id`, `parent`, `component_id`, `ctpl_id`, `system_table_id`, `widget_id`, `name`, `description`, `type`, `format`, `not_null`, `priority`, `searchable`, `default`, `inheritance`, `type_of_edit`, `checked`, `form_tab`) VALUES
+(1, NULL, 1, 0, 0, 0, 'name', 'Screen name', 1, '', 0, 0, 1, '', 0, 1, 1, 0),
+(2, NULL, 1, 0, 0, 0, 'avatar', 'Userpic', 11, '', 0, 0, 0, '', 0, 1, 1, 0),
+(118, NULL, 19, 0, 0, 0, 'text', 'Text', 3, 'a:1:{s:4:"html";s:1:"1";}', 0, 0, 1, '', 0, 1, 1, 0),
+(153, NULL, 1, 0, 0, 0, 'email', 'E-mail', 1, '', 0, 142, 1, NULL, 0, 1, 1, 0),
+(165, NULL, 23, 0, 0, 0, 'url', 'URL', 1, '', 0, 2, 0, '', 0, 1, 1, 0),
+(186, NULL, 32, 0, 0, 0, 'tag_id', 'Tag', 13, 'a:3:{s:6:"target";s:2:"31";s:9:"prop_name";s:3:"tag";s:11:"render_type";s:10:"livesearch";}', 0, 157, 0, '', 0, 1, 1, 0),
+(190, NULL, 23, 0, 0, 0, 'name', 'Name', 1, '', 1, 0, 1, '', 0, 1, 1, 0),
+(191, NULL, 23, 0, 0, 0, 'title', 'Title', 1, '', 0, 158, 0, '', 0, 1, 1, 0),
+(192, NULL, 31, 0, 0, 0, 'counter', 'Usage counter', 2, '', 0, 159, 0, '0', 0, 3, 1, 0),
+(195, NULL, 30, 0, 0, 0, 'tags', 'Tags', 14, 'a:5:{s:11:"render_type";s:10:"livesearch";s:13:"linking_field";s:3:"198";s:16:"linking_datatype";s:2:"32";s:8:"mm_field";s:3:"186";s:11:"mm_datatype";s:2:"31";}', 0, 2, 0, '', 0, 1, 1, 2),
+(196, NULL, 36, 0, 0, 0, 'parent_id', 'Parent', 13, 'a:4:{s:6:"target";s:2:"23";s:9:"prop_name";s:6:"parent";s:9:"is_parent";s:1:"0";s:11:"render_type";s:6:"select";}', 0, 161, 0, '', 0, 3, 1, 0),
+(197, NULL, 31, 0, 0, 0, 'tagposts', 'Tag posts', 14, 'a:1:{s:6:"target";s:3:"186";}', 0, 162, 0, '', 0, 3, 1, 0),
+(198, NULL, 32, 0, 0, 0, 'post_id', 'Page', 13, 'a:4:{s:6:"target";s:2:"30";s:9:"prop_name";s:4:"post";s:9:"is_parent";s:1:"1";s:11:"render_type";s:6:"select";}', 0, 163, 0, '', 0, 3, 1, 0),
+(199, NULL, 46, 0, 0, 0, 'start_date', 'Start date', 8, '', 0, 164, 0, '', 0, 1, 1, 0),
+(200, NULL, 46, 0, 0, 0, 'end_date', 'End date', 8, '', 0, 165, 0, '', 0, 1, 1, 0),
+(201, NULL, 47, 0, 0, 0, 'publish_date', 'Publish date', 8, '', 0, 166, 0, '', 0, 1, 1, 0),
+(202, NULL, 47, 0, 0, 0, 'cover', 'Cover image', 11, '', 0, 167, 0, '', 0, 1, 1, 0),
+(203, NULL, 48, 0, 0, 0, 'photo', 'Image', 11, '', 1, 168, 0, '', 0, 1, 1, 0),
+(204, NULL, 48, 0, 0, 0, 'description', 'Description', 3, '', 0, 169, 0, '', 0, 1, 1, 0),
+(205, NULL, 48, 0, 0, 0, 'copy', 'Copy', 1, '', 0, 170, 0, '', 0, 1, 1, 0),
+(209, NULL, 30, 0, 0, 0, 'metatype', 'meta type', 4, 'a:2:{s:6:"source";s:6:"manual";s:6:"values";a:2:{i:1;a:2:{s:2:"id";s:4:"post";s:5:"value";s:11:"Just a post";}i:2;a:2:{s:2:"id";s:7:"article";s:5:"value";s:24:"Long interesting article";}}}', 0, 171, 0, 'post', 0, 1, 1, 2),
+(210, NULL, 32, 0, 0, 0, 'comment', 'Why the tag is relevant', 1, '', 0, 172, 0, '', 0, 1, 1, 0),
+(212, NULL, 49, 0, 0, 0, 'publish_date', 'Publish date', 8, '', 0, 174, 0, '', 0, 1, 1, 1),
+(213, NULL, 49, 0, 0, 0, 'anounce', 'Anounce', 3, 'a:2:{s:4:"html";s:1:"1";s:5:"nl2br";s:1:"0";}', 0, 175, 0, '', 0, 1, 1, 2),
+(214, NULL, 49, 0, 0, 0, 'image', 'Image', 11, '', 0, 176, 0, '', 0, 1, 1, 2),
+(215, NULL, 49, 0, 0, 0, 'text', 'Text', 3, 'a:2:{s:4:"html";s:1:"1";s:5:"nl2br";s:1:"0";}', 0, 177, 0, '', 0, 1, 1, 3),
+(216, NULL, 1, 0, 0, 0, 'is_admin', 'Is admin?', 5, '', 0, 178, 0, '0', 0, 2, 1, 0),
+(218, NULL, 50, 0, 0, 0, 'comment_text', 'Comment Text', 3, 'a:1:{s:5:"nl2br";s:1:"1";}', 1, 180, 0, '', 0, 2, 1, 0),
+(219, NULL, 50, 0, 0, 0, 'publish_date', 'Publish Date', 8, '', 1, 181, 0, '', 0, 2, 1, 0),
+(220, NULL, 50, 0, 0, 0, 'user_name', 'User Name', 1, '', 1, 182, 0, '', 0, 2, 1, 0),
+(221, NULL, 23, 0, 0, 0, 'comments_counter', 'Comments counter', 2, '', 0, 183, 0, '0', 0, 3, 1, 0),
+(222, NULL, 50, 0, 0, 0, 'is_moderated', 'Moderated flag', 5, '', 0, 184, 0, '0', 0, 2, 1, 0),
+(228, NULL, 58, 0, 0, 0, 'question', 'Question', 1, '', 0, 185, 0, '', 0, 1, 1, 0),
+(229, NULL, 58, 0, 0, 0, 'answer', 'Answer', 3, 'a:2:{s:4:"html";s:1:"0";s:5:"nl2br";s:1:"0";}', 0, 186, 0, '', 0, 1, 1, 0),
+(230, NULL, 59, 0, 0, 0, 'embed_html', 'Embed code or link', 3, 'a:2:{s:4:"html";s:1:"0";s:5:"nl2br";s:1:"0";}', 0, 187, 0, '', 0, 1, 1, 0),
+(231, NULL, 59, 0, 0, 0, 'description', 'Description', 3, 'a:2:{s:4:"html";s:1:"0";s:5:"nl2br";s:1:"0";}', 0, 188, 0, '', 0, 1, 1, 0),
+(232, NULL, 60, 0, 0, 0, 'image', 'Image', 11, '', 0, 189, 0, '', 0, 1, 1, 0),
+(233, NULL, 60, 0, 0, 0, 'description', 'Description', 3, 'a:2:{s:4:"html";s:1:"0";s:5:"nl2br";s:1:"0";}', 0, 190, 0, '', 0, 1, 1, 0),
+(234, NULL, 60, 0, 0, 0, 'year', 'Year', 2, '', 0, 191, 0, '2000', 0, 1, 1, 0),
+(235, NULL, 61, 0, 0, 0, 'logo', 'Logo', 11, '', 0, 192, 0, '', 0, 1, 1, 0),
+(236, NULL, 61, 0, 0, 0, 'short_description', 'Short Description', 1, '', 0, 193, 0, '', 0, 1, 1, 0),
+(237, NULL, 61, 0, 0, 0, 'description', 'Description', 3, 'a:2:{s:4:"html";s:1:"0";s:5:"nl2br";s:1:"0";}', 0, 194, 0, '', 0, 1, 1, 0),
+(238, NULL, 62, 0, 0, 0, 'image', 'Image', 11, '', 0, 195, 0, '', 0, 1, 1, 0),
+(239, NULL, 62, 0, 0, 0, 'client', 'Client', 1, '', 0, 196, 0, '', 0, 1, 1, 0),
+(240, NULL, 62, 0, 0, 0, 'short_description', 'Short Description', 1, '', 0, 197, 0, '', 0, 1, 1, 0),
+(241, NULL, 62, 0, 0, 0, 'description', 'Description', 3, 'a:2:{s:4:"html";s:1:"0";s:5:"nl2br";s:1:"0";}', 0, 198, 0, '', 0, 1, 1, 0),
+(242, NULL, 62, 0, 0, 0, 'date', 'Date', 8, '', 0, 199, 0, '', 0, 1, 1, 0),
+(243, NULL, 63, 0, 0, 0, 'position', 'Position', 1, '', 0, 200, 0, '', 0, 1, 1, 0),
+(244, NULL, 63, 0, 0, 0, 'salary_from', 'Salary from', 2, '', 0, 201, 0, '', 0, 1, 1, 0),
+(245, NULL, 63, 0, 0, 0, 'salary_to', 'Salary To', 2, '', 0, 202, 0, '', 0, 1, 1, 0),
+(246, NULL, 63, 0, 0, 0, 'requirements', 'Requirements', 3, 'a:2:{s:4:"html";s:1:"0";s:5:"nl2br";s:1:"0";}', 0, 203, 0, '', 0, 1, 1, 0),
+(247, NULL, 63, 0, 0, 0, 'responsibilities', 'Responsibilities', 3, 'a:2:{s:4:"html";s:1:"0";s:5:"nl2br";s:1:"0";}', 0, 204, 0, '', 0, 1, 1, 0),
+(248, NULL, 63, 0, 0, 0, 'work_conditions', 'Work conditions', 3, 'a:2:{s:4:"html";s:1:"0";s:5:"nl2br";s:1:"0";}', 0, 205, 0, '', 0, 1, 1, 0),
+(249, NULL, 63, 0, 0, 0, 'address', 'Address', 1, '', 0, 206, 0, '', 0, 1, 1, 0),
+(250, NULL, 63, 0, 0, 0, 'phone', 'Phone Number', 1, '', 0, 207, 0, '', 0, 1, 1, 0),
+(251, NULL, 63, 0, 0, 0, 'email', 'Email', 1, '', 0, 208, 0, '', 0, 1, 1, 0),
+(252, NULL, 63, 0, 0, 0, 'contacts_name', 'Contact''s name', 1, '', 0, 209, 0, '', 0, 1, 1, 0),
+(253, NULL, 64, 0, 0, 0, 'counter', 'Counter', 2, '', 0, 210, 0, '0', 0, 1, 1, 0),
+(254, NULL, 65, 0, 0, 0, 'classifier_id', 'Classifier ID', 13, 'a:4:{s:6:"target";s:2:"64";s:9:"prop_name";s:10:"classifier";s:9:"is_parent";s:1:"0";s:11:"render_type";s:10:"livesearch";}', 0, 211, 0, '', 0, 1, 1, 0),
+(255, NULL, 65, 0, 0, 0, 'content_id', 'Content ID', 13, 'a:4:{s:6:"target";s:2:"36";s:9:"prop_name";s:7:"content";s:9:"is_parent";s:1:"1";s:11:"render_type";s:10:"livesearch";}', 0, 212, 0, '', 0, 1, 1, 0),
+(256, NULL, 68, 0, 0, 0, 'tags', 'Tags', 14, 'a:5:{s:11:"render_type";s:10:"livesearch";s:13:"linking_field";s:3:"255";s:16:"linking_datatype";s:2:"65";s:8:"mm_field";s:3:"254";s:11:"mm_datatype";s:2:"66";}', 0, 213, 0, '', 0, 1, 1, 0),
+(257, NULL, 69, 0, 0, 0, 'full_name', 'Full Name', 1, '', 0, 214, 0, '', 0, 1, 1, 0),
+(258, NULL, 69, 0, 0, 0, 'company', 'Company', 1, '', 0, 215, 0, '', 0, 1, 1, 0),
+(259, NULL, 69, 0, 0, 0, 'department', 'Department', 1, '', 0, 216, 0, '', 0, 1, 1, 0),
+(260, NULL, 69, 0, 0, 0, 'photo', 'Photo', 11, '', 0, 217, 0, '', 0, 1, 1, 0),
+(261, NULL, 69, 0, 0, 0, 'short_description', 'Short Description', 1, '', 0, 218, 0, '', 0, 1, 1, 0),
+(262, NULL, 69, 0, 0, 0, 'description', 'Description', 3, 'a:2:{s:4:"html";s:1:"0";s:5:"nl2br";s:1:"0";}', 0, 219, 0, '', 0, 1, 1, 0),
+(263, NULL, 69, 0, 0, 0, 'birthday', 'Birthday', 8, '', 0, 220, 0, '', 0, 1, 1, 0),
+(264, NULL, 70, 0, 0, 0, 'value', 'Value', 1, '', 0, 222, 0, '', 0, 1, 1, 0),
+(265, NULL, 70, 0, 0, 0, 'contact_type', 'Type (e.g. ICQ, Skype, Jabber)', 1, '', 0, 221, 0, '', 0, 1, 1, 0),
+(269, NULL, 69, 0, 0, 0, 'contacts', 'Contacts', 14, 'a:3:{s:11:"render_type";s:5:"table";s:13:"linking_field";s:3:"196";s:16:"linking_datatype";s:2:"70";}', 0, 223, 0, '', 0, 1, 1, 0),
+(270, NULL, 71, 0, 0, 0, 'image', 'Image', 11, '', 0, 224, 0, '', 0, 1, 1, 0),
+(271, NULL, 71, 0, 0, 0, 'description', 'Description', 3, 'a:2:{s:4:"html";s:1:"0";s:5:"nl2br";s:1:"0";}', 0, 225, 0, '', 0, 1, 1, 0),
+(272, NULL, 71, 0, 0, 0, 'tags', 'Tags', 14, 'a:5:{s:11:"render_type";s:10:"livesearch";s:13:"linking_field";s:3:"255";s:16:"linking_datatype";s:2:"65";s:8:"mm_field";s:3:"254";s:11:"mm_datatype";s:2:"72";}', 0, 226, 0, '', 0, 1, 1, 0),
+(273, NULL, 73, 0, 0, 0, 'embed_html', 'Embed code or link', 3, 'a:2:{s:4:"html";s:1:"0";s:5:"nl2br";s:1:"0";}', 0, 227, 0, '', 0, 1, 1, 0),
+(274, NULL, 73, 0, 0, 0, 'description', 'Description', 3, 'a:2:{s:4:"html";s:1:"0";s:5:"nl2br";s:1:"0";}', 0, 228, 0, '', 0, 1, 1, 0),
+(275, NULL, 73, 0, 0, 0, 'tags', 'Tags', 14, 'a:5:{s:11:"render_type";s:10:"livesearch";s:13:"linking_field";s:3:"255";s:16:"linking_datatype";s:2:"65";s:8:"mm_field";s:3:"254";s:11:"mm_datatype";s:2:"74";}', 0, 229, 0, '', 0, 1, 1, 0),
+(276, NULL, 75, 0, 0, 0, 'reference', 'Reference', 1, '', 0, 230, 0, '', 0, 1, 1, 0),
+(277, NULL, 75, 0, 0, 0, 'description', 'Description', 3, 'a:2:{s:4:"html";s:1:"0";s:5:"nl2br";s:1:"0";}', 0, 231, 0, '', 0, 1, 1, 0),
+(278, NULL, 75, 0, 0, 0, 'short_description', 'Short Description', 1, '', 0, 232, 0, '', 0, 1, 1, 0),
+(279, NULL, 75, 0, 0, 0, 'image', 'Image', 11, '', 0, 233, 0, '', 0, 1, 1, 0),
+(280, NULL, 75, 0, 0, 0, 'price', 'Price', 7, '', 0, 234, 0, '', 0, 1, 1, 0),
+(281, NULL, 75, 0, 0, 0, 'is_featured', 'Featured', 5, '', 0, 235, 0, '0', 0, 1, 1, 0),
+(282, NULL, 69, 0, 0, 0, 'position', 'Position', 1, '', 0, 236, 0, '', 0, 1, 1, 0),
+(283, NULL, 76, 0, 0, 0, 'counter', 'Counter', 2, '', 0, 237, 0, '0', 0, 1, 1, 0),
+(284, NULL, 75, 0, 0, 0, 'categories', 'Categories', 14, 'a:5:{s:11:"render_type";s:10:"livesearch";s:13:"linking_field";s:3:"255";s:16:"linking_datatype";s:2:"65";s:8:"mm_field";s:3:"254";s:11:"mm_datatype";s:2:"76";}', 0, 238, 0, '', 0, 1, 1, 0),
+(285, NULL, 68, 0, 0, 0, 'on_main', 'On main', 5, '', 0, 239, 0, '', 0, 1, 1, 0),
+(286, NULL, 69, 0, 0, 0, 'is_featured', 'Featured', 5, '', 0, 240, 0, '0', 0, 1, 1, 0),
+(287, NULL, 60, 0, 0, 0, 'short_description', 'Short Description', 1, '', 0, 241, 0, '', 0, 1, 1, 0),
+(288, NULL, 62, 0, 0, 0, 'is_featured', 'Featured', 5, '', 0, 242, 0, '0', 0, 1, 1, 0),
+(289, NULL, 1, 0, 0, 0, 'password', 'Password', 1, '', 0, 243, 0, '', 0, 1, 1, 0),
+(290, NULL, 36, 0, 0, 0, 'created', 'Created date', 8, '', 0, 244, 0, '', 0, 3, 1, 0),
+(291, NULL, 36, 0, 0, 0, 'user_id', 'User', 13, 'a:4:{s:6:"target";s:1:"1";s:9:"prop_name";s:4:"user";s:9:"is_parent";s:1:"0";s:11:"render_type";s:10:"livesearch";}', 0, 245, 0, '', 0, 3, 1, 0),
+(292, NULL, 36, 0, 0, 0, 'site_id', 'Site', 13, 'a:4:{s:6:"target";s:4:"site";s:9:"prop_name";s:4:"site";s:9:"is_parent";s:1:"0";s:11:"render_type";s:10:"livesearch";}', 0, 246, 0, '', 0, 3, 1, 0),
+(294, NULL, 77, 0, 0, 0, 'linked_id', 'Linking content id', 13, 'a:4:{s:6:"target";s:2:"36";s:9:"prop_name";s:7:"content";s:9:"is_parent";s:1:"0";s:11:"render_type";s:10:"livesearch";}', 0, 247, 0, '', 0, 1, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -1452,7 +1461,7 @@ CREATE TABLE IF NOT EXISTS `fx_filetable` (
   `size` int(10) unsigned NOT NULL DEFAULT '0',
   `to_delete` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=56 AUTO_INCREMENT=478 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=56 AUTO_INCREMENT=479 ;
 
 --
 -- Дамп данных таблицы `fx_filetable`
@@ -1479,7 +1488,6 @@ INSERT INTO `fx_filetable` (`id`, `real_name`, `path`, `type`, `size`, `to_delet
 (374, '_800_600_90_667819585-IMG_2954.jpg', 'content/800_600_90_667819585-IMG_2954_0.jpg', 'image/jpeg', 39395, 0),
 (378, 'logo.png', 'content/logo_6.png', 'image/png', 5735, 0),
 (379, 'img05.jpg', 'content/img05_1.jpg', 'image/jpeg', 5717, 0),
-(383, 'img09.jpg', 'content/img09_3.jpg', 'image/jpeg', 4587, 0),
 (389, 'bg-portfolio.jpg', 'content/bg-portfolio_0.jpg', 'image/jpeg', 235261, 0),
 (390, '7394.jpg', 'content/7394_0.jpg', 'image/jpeg', 8988, 0),
 (391, 'patch_0.1.1.zip', 'patches/patch_0.1.1_0.zip', 'Image', 696, 0),
@@ -1544,7 +1552,8 @@ INSERT INTO `fx_filetable` (`id`, `real_name`, `path`, `type`, `size`, `to_delet
 (473, 'logo_es.jpg', 'content/logo_es_2.jpg', 'image/jpeg', 23597, 0),
 (475, 'awards-2007.png', 'content/awards-2007_5.png', 'image/png', 12875, 0),
 (476, 'eleganzza-00116508.jpg', 'content/eleganzza-00116508_0.jpg', 'image/jpeg', 11737, 0),
-(477, '5PH4xgbobJk.jpg', 'content/5PH4xgbobJk_0.jpg', 'image/jpeg', 92788, 0);
+(477, '5PH4xgbobJk.jpg', 'content/5PH4xgbobJk_0.jpg', 'image/jpeg', 92788, 0),
+(478, 'img06_0.jpg', 'content/img06_0.jpg', 'image/jpeg', 5396, 0);
 
 -- --------------------------------------------------------
 
@@ -1618,7 +1627,7 @@ CREATE TABLE IF NOT EXISTS `fx_infoblock` (
   `scope` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `page_id` (`page_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=210 AUTO_INCREMENT=261 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=210 AUTO_INCREMENT=262 ;
 
 --
 -- Дамп данных таблицы `fx_infoblock`
@@ -1733,7 +1742,8 @@ INSERT INTO `fx_infoblock` (`id`, `parent_infoblock_id`, `site_id`, `page_id`, `
 (241, 0, 16, 2210, 1, 'Product / On Main', 'component_product', 'list_filtered_featured', 'a:4:{s:5:"limit";s:1:"4";s:10:"pagination";s:1:"0";s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
 (258, 0, 16, 0, 1, 'Product / ', 'component_product', 'list_selected', 'a:5:{s:5:"limit";s:2:"10";s:10:"pagination";s:1:"0";s:7:"sorting";s:7:"created";s:11:"sorting_dir";s:3:"asc";s:8:"selected";a:1:{s:3:"f_1";a:1:{i:0;s:4:"2327";}}}', 'a:2:{s:5:"pages";s:3:"all";s:9:"page_type";s:0:"";}'),
 (259, 0, 16, 2254, 1, 'News / ', 'component_news', 'list_selected', 'a:5:{s:5:"limit";b:0;s:10:"pagination";b:0;s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:4:"desc";s:8:"selected";a:1:{s:3:"f_2";a:1:{i:0;s:4:"2455";}}}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
-(260, 0, 16, 2210, 1, 'News / ', 'component_news', 'list_filtered', 'a:5:{s:5:"limit";b:0;s:10:"pagination";b:0;s:7:"sorting";s:7:"created";s:11:"sorting_dir";s:3:"asc";s:10:"conditions";a:1:{s:5:"new_1";a:3:{s:4:"name";s:7:"on_main";s:8:"operator";s:1:"=";s:5:"value";s:1:"1";}}}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}');
+(260, 0, 16, 2210, 1, 'News / ', 'component_news', 'list_filtered', 'a:5:{s:5:"limit";b:0;s:10:"pagination";b:0;s:7:"sorting";s:7:"created";s:11:"sorting_dir";s:3:"asc";s:10:"conditions";a:1:{s:5:"new_1";a:3:{s:4:"name";s:7:"on_main";s:8:"operator";s:1:"=";s:5:"value";s:1:"1";}}}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
+(261, 0, 15, 1883, 1, 'Blog / ', 'component_blogpost', 'list_selected', 'a:5:{s:5:"limit";b:0;s:10:"pagination";b:0;s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";s:8:"selected";a:1:{i:0;s:4:"1996";}}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}');
 
 -- --------------------------------------------------------
 
@@ -1753,7 +1763,7 @@ CREATE TABLE IF NOT EXISTS `fx_infoblock_visual` (
   `priority` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `infoblock_id` (`infoblock_id`,`layout_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=138 AUTO_INCREMENT=332 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=138 AUTO_INCREMENT=333 ;
 
 --
 -- Дамп данных таблицы `fx_infoblock_visual`
@@ -1892,7 +1902,8 @@ INSERT INTO `fx_infoblock_visual` (`id`, `infoblock_id`, `layout_id`, `wrapper`,
 (312, 241, 9, 'layout_dummy.block_titled_bottom', 'a:1:{s:6:"header";s:17:"Featured Products";}', 'layout_dummy.featured_products', '', 'bottom_wide_block', 0),
 (329, 258, 9, '', '', 'layout_dummy.featured_products', '', 'two_columns_right_block', 15),
 (330, 259, 9, '', '', 'layout_dummy.main_news', '', 'two_columns_right_block', 14),
-(331, 260, 9, 'layout_dummy.block_titled', 'a:1:{s:6:"header";s:4:"News";}', 'layout_dummy.main_news', '', 'center_block', 0);
+(331, 260, 9, 'layout_dummy.block_titled', 'a:1:{s:6:"header";s:4:"News";}', 'layout_dummy.main_news', '', 'center_block', 0),
+(332, 261, 10, 'layout_jeeptravel.block_titled', '', 'component_blogpost.list', '', 'index_center', 3);
 
 -- --------------------------------------------------------
 
@@ -2506,8 +2517,8 @@ CREATE TABLE IF NOT EXISTS `fx_session` (
 --
 
 INSERT INTO `fx_session` (`id`, `user_id`, `session_start`, `session_time`, `ip`, `login_save`, `site_id`, `auth_type`) VALUES
-('40249ffee25101ec68f186cdda1768fd', 2367, 1384427395, 1384612493, 2130706433, 0, 0, 1),
-('b10077ceb01083ed1355173f9e935101', 2367, 1384428436, 1384520354, 2130706433, 0, 0, 1);
+('88b73cc5764c2b6cc985be3d2678492d', 2367, 1384790503, 1384968909, 2130706433, 0, 0, 1),
+('d0aace0e212ed714ea4932f2025b7d25', 2367, 1384785853, 1384876742, 2130706433, 0, 0, 1);
 
 -- --------------------------------------------------------
 

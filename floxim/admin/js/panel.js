@@ -72,7 +72,7 @@
             var p = this.panel.parent();
             var footer_height = this.footer.outerHeight();
             var max_height = Math.round(
-                ($(window).height() - this.second_row_height - footer_height) * 0.6
+                ($(window).height() - this.second_row_height - footer_height) * 0.75
             );
             if (typeof panel_height === 'undefined') {
                 var form = $('form', p);

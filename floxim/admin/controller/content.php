@@ -37,7 +37,7 @@ class fx_controller_admin_content extends fx_controller_admin {
         $content_fields = fx::collection($content->get_form_fields());
         $tabbed = $content_fields->group('tab');
         foreach ($tabbed as $tab => $tab_fields) {
-            $this->response->add_tab($tab, fx::data('component', $tab)->get('name'));
+            $this->response->add_tab($tab, $tab);
             $this->response->add_fields($tab_fields, $tab, 'content');
         }
         /*
@@ -53,7 +53,7 @@ class fx_controller_admin_content extends fx_controller_admin {
         //$this->response->add_form_button('save');
         return array(
             'status' => 'ok', 
-            'dialog_title' => 
+            'header' => 
             	($input['content_id'] ? 
                 	fx::lang('Editing ', 'system') :
                 	fx::lang('Adding new ', 'system')

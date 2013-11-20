@@ -757,154 +757,9 @@ input.ui-button {
     min-width: 120px;
 }
 
-#fx_admin_content .fx_admin_form {
-    padding: 20px;
-}
-
-.fx_admin_form a, .fx_admin_form .ui-state-default a {
-    color: #28abd0;
-}
-
-.fx_admin_form .ui-state-active a {
-    color: #333;
-}
-
-.fx_admin_form, .fx_admin_form .ui-widget input, .fx_admin_form .ui-widget select.fx_input, .fx_admin_form .ui-widget textarea.fx_input, .fx_admin_form .ui-widget button {
-    font-size: 13px;
-    font-family: Tahoma, sans-serif;
-}
-
-.fx_admin_form .field {
-	clear: both;
-}
-
-.fx_admin_form label {
-    font-size: 14px;
-    color: #333;
-}
-
-.fx_admin_form input.fx_input, .fx_admin_form select.fx_input, .fx_admin_form textarea.fx_input {
-    display: block;
-    margin: 7px 0 0;
-}
-
-.fx_admin_form input[type=text].fx_input, .fx_admin_form select.fx_input {
-    width: 50%;
-}
-
-.fx_admin_form select.fx_input {
-    margin-bottom: 12px;
-    padding: 0;
-}
-
-.fx_admin_form textarea.fx_input {
-    width: 95%;
-}
-
-.fx_admin_form #colorpickerHolder2 input {
-    border: 0 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-}
-
-.fx_admin_form label input[type=checkbox], .fx_admin_form label input[type=radio] {
-    display: inline !important;
-    margin: 0 5px 0 0;
-}
-
-.fx_admin_form input.fx_input, .fx_admin_form textarea.fx_input {
-    margin-bottom: 10px;
-    padding: .4em;
-}
-
-.fx_admin_form .fx_file_choice {
-    border: 1px solid #C6C7C3;
-    padding: 0 0 10px 5px;
-}
-
-.fx_admin_form .fx_file_list .fx_itemselect_item {
-    float: left !important;
-    height: 200px !important;
-    width: 200px !important;
-    padding: 10px !important;
-}
-
-.fx_admin_form .form_header {
-    font-size:20px;
-    margin-bottom: 17px;
-}
-
-.fx_admin_form .form_header a {
-    cursor:pointer;
-}
-
 .fx_admin_user_edit_form {
     float: left;
     width: 50%;
-}
-
-.nc_container_child_iconselect {
-    height: 320px;
-    overflow-y: auto;
-    border: 1pt solid #ccc;
-    padding: 0 10px 10px;
-}
-
-.fx_iconselect {
-    float: left;
-    border: 1px solid #BCBCBC;
-    width: 270px;
-    margin: 0 0 10px;
-    padding: 5px;
-}
-
-.fx_iconselect .items {
-    max-height: 250px;
-    overflow-y: auto;
-    border-top: 1pt solid #BCBCBC;
-    padding-top: 10px;
-}
-
-.fx_iconselect .item {
-    float: left;
-    width: 250px;
-    height: 50px;
-    margin: 0 0 10px;
-}
-
-.fx_iconselect .item:hover * {
-    color: #000;
-    cursor: pointer;
-}
-
-.fx_iconselect .item img {
-    float: left;
-    width: 32px;
-    height: 32px;
-    margin: 0 10px 0 0;
-}
-
-.fx_iconselect .name {
-    height: 32px;
-    font-weight: bold;
-    line-height: 27px;
-}
-
-.fx_iconselect .selected {
-    background: #ccc;
-}
-
-.fx_iconselect .divider {
-    clear: both;
-}
-
-.fx_iconselect .fx_iconselect_filter input {
-    float: right;
-    width: 250px;
-    background: url(../images/search_icon.png) no-repeat scroll 0 0 transparent;
-    background-position: right;
-    background-color: #FFF;
-    padding: 2px 5px !important;
 }
 
 .fx_list_filter {
@@ -1021,10 +876,6 @@ input.ui-button {
     width: 40%;
 }
 
-label[id^=nc_form_field_] {
-    clear: both;
-}
-
 span.fx_admin_current {
     font-weight: normal !important;
 }
@@ -1133,10 +984,6 @@ span.fx_admin_current {
     cursor: pointer;
 }
 
-.fx_admin_form .fx_admin_radio_label, .fx_admin_form .fx_admin_checkbox_label {
-    font-weight: normal !important;
-    font-size: 12px !important;
-}
 
 .fx_admin_child_fields {
     margin-left: 20px;
@@ -1160,126 +1007,6 @@ span.fx_admin_current {
 
 .fx_admin_panel_body {
     background: #f5f5f5;
-}
-
-
-/* HORIZONTAL FORM */
-#fx_admin_control form.fx_form_horizontal .field {
-    display: inline-block;
-    vertical-align: top;
-    margin-right: 15px;
-}
-
-#fx_admin_control .fx_form_horizontal .form_label, 
-#fx_admin_control .fx_form_horizontal label, 
-#fx_admin_control .fx_form_horizontal input, 
-#fx_admin_control .fx_form_horizontal select, 
-#fx_admin_control .fx_form_horizontal textarea {
-    display: inline;
-    font-size: 11px;
-    width: auto;
-    margin: 0;
-}
-
-#fx_admin_control .fx_form_horizontal label {
-    font-size:10px;
-    text-transform: uppercase;
-}
-
-#fx_admin_control .fx_form_horizontal .fx_input {
-    max-width: 135px;
-}
-
-
-#fx_admin_extra_panel form.fx_form_horizontal .field_text .input_container {
-    overflow:hidden;
-    max-width:150px;
-}
-
-
-#fx_admin_extra_panel .redactor_toolbar {
-    left:0;
-    top:0;
-    border: none;
-    border-bottom: 1px solid #e1e1e1 !important;
-}
-
-#fx_admin_control form.fx_form_horizontal .redactor_toolbar {
-    background: #FFF !important;
-    border:none !important;
-    top:2px;
-    left:10px;
-}
-
-
-#fx_admin_extra_panel .redactor_toolbar .redactor_separator {
-    border-right:none;
-    height:31px;
-}
-
-
-#fx_admin_extra_panel .redactor_box {
-    max-width:470px;
-}
-
-#fx_admin_extra_panel .redactor_editor {
-    max-height:300px;
-}
-
-#fx_admin_extra_panel .fx_admin_form .form_label {
-    display:block;
-    min-height:16px;
-}
-
-#fx_admin_extra_panel .livesearch_items {
-    width:auto;
-    background:#FFF;
-}
-
-#fx_admin_extra_panel .fx_image_field img {
-    height:50px;
-    margin-right:10px;
-    float:left;
-}
-
-#fx_admin_extra_panel .fx_image_field .fx_admin_button_text {
-    margin-right:10px;
-}
-
-#fx_admin_extra_panel form>.fx_admin_button_text {
-    float:none;
-    display:inline-block;
-    margin-top:16px;
-    margin-right:15px;
-    vertical-align: top;
-}
-
-/* VERTICAL FORM */
-#fx_admin_extra_panel form.fx_form_vertical .field {
-    margin-bottom:10px;
-    overflow: hidden;
-}
-#fx_admin_extra_panel form.fx_form_vertical .form_label {
-    float:left;
-    width:10%;
-    margin-top:0;
-    margin-right:1%;
-    text-align: right;
-}
-
-#fx_admin_extra_panel form.fx_form_vertical .input_container {
-    float:left;
-    width:70%;
-}
-
-#fx_admin_extra_panel form.fx_form_vertical .fx_input {
-    margin-top:0;
-    margin-bottom: 0;
-}
-
-
-.fx_button {
-    margin-right: 5px;
 }
 
 
@@ -1415,42 +1142,6 @@ li ul .fx_tree_label .fx_tree_title {
     font-weight: normal;
 }
 
-/* INLINE RADIO LIST */
-.inline .fx_admin_radio_label {
-    display: inline;
-    padding-right: 12px;
-}
-
-.right_pane {
-    width: 640px;
-    float: right;
-}
-
-.fx_admin_form .left_pane {
-    width: 240px;
-    float: left;
-    clear: left;
-}
-
-.right_pane .fx_list_filter {
-    margin-top: 0;
-}
-
-.fx_admin_form .form_label {
-    margin-bottom: 7px;
-    margin-top: 14px;
-}
-
-.fx_hilight {
-    /*outline: 1px dotted rgba(0, 255, 0, 0.8);*/
-    /*outline-offset: -1px;*/
-}
-/*
-.fx_hilight_hover {
-    outline: 1px solid #0F0;
-}
-*/
-
 .fx_no_hilight {
     opacity:0.3;
 }
@@ -1464,12 +1155,6 @@ li ul .fx_tree_label .fx_tree_title {
 .fx_hilight_empty_inline {
 	display:inline-block;
 }
-/*
-.fx_area.fx_hilight_hover, .fx_infoblock.fx_hilight_hover {
-    outline: 1px solid #00F;
-    outline-offset:2px;
-}
-*/
 
 img.fx_hilight {
     min-width: 5px;
@@ -1478,8 +1163,6 @@ img.fx_hilight {
 
 .fx_selected, .fx_selected:focus {
     outline:none;
-    /*outline: 4px solid rgba(255, 255, 0, 0.5) !important;*/
-    /*outline-offset: -4px !important;*/
 }
 
 .fx_empty_infoblock {
@@ -1620,72 +1303,6 @@ body div.fx_overlay, body div.fx_overlay table {
     color: red;
 }
 
-#fx_admin_fields {
-    position: relative;
-    top: -6px;
-}
-
-#fx_admin_fields .field {
-    float: left;
-    min-width: 40px;
-    margin-right:15px;
-    margin-left:15px;
-}
-
-#fx_admin_fields .fx_image_field {
-    background: #FFF;
-}
-
-.fx_overlay .fx_image_field img {
-    max-height:100px;
-    max-width:150px;
-}
-
-#fx_admin_fields .fx_image_field img {
-    max-height:34px;
-    float: left;
-    margin-right: 10px;
-}
-
-#fx_admin_fields .fx_image_field .preview .fx_admin_button_text {
-    margin-right:10px;
-    margin-top:6px;
-}
-
-.fx_overlay .fx_image_field .file_input {
-    overflow: hidden;
-    width:1px;
-    height:1px;
-    display:inline-block;
-    float:left;
-}
-
-#fx_admin_fields .fx_input, #fx_admin_extra_panel .fx_input {
-    margin-top:6px;
-    border:1px solid #e1e1e1;
-    padding:5px 3px 4px 3px;
-    font-size:11px;
-}
-
-#fx_admin_extra_panel input[type="text"].fx_input, #fx_admin_extra_panel select.fx_input {
-    box-sizing: border-box;
-    height: 28px;
-}
-
-#fx_admin_extra_panel .livesearch {
-    max-width:600px;
-}
-
-.fx_overlay .ui-datepicker-current-day {
-    background: #FF0;
-}
-
-#fx_admin_control .editor_panel {
-    float: left;
-    position: relative;
-    top: -4px;
-}
-
 .fx_var_editable {
     -webkit-line-break: normal;
     word-wrap: normal;
@@ -1720,11 +1337,11 @@ a.fx_var_editable:focus, .fx_var_editable a:focus {
     margin: auto;
     padding: 1%;
 }
-    #fx_admin_statustext > span {
-        display: inline-block;
-        width: 100%;
-        word-wrap: break-word;
-    }
+#fx_admin_statustext > span {
+    display: inline-block;
+    width: 100%;
+    word-wrap: break-word;
+}
 
 #fx_admin_control #fx_admin_additionl_text a, #fx_dialog_file_existing img {
     cursor: pointer;
@@ -1734,27 +1351,7 @@ a.fx_var_editable:focus, .fx_var_editable a:focus {
     border: 1px solid green;
     color: green;
 }
-
-#fx_admin_submenu .fx_admin_submenu_items_full a.fx_admin_submenu_parent,
-.fx_admin_form .fx_admin_multi_checkbox input {
-    margin-bottom: 0;
-}
-
-#nc_upload_target, .fx_admin_form .fx_file_list {
-    display: none;
-}
-
-.fx_admin_form .fx_file_choice span, .fx_layer_name span {
-    border-bottom: 1px dashed #2A6DA0;
-    color: #2A6DA0;
-    cursor: pointer;
-}
-
-.fx_admin_form_datetime input, .fx_admin_form .fx_admin_checkbox_label {
-    display: inline;
-}
-
-.fx_iconselect .fx_iconselect_filter select, .fx_admin_colorbasic div {
+.fx_admin_colorbasic div {
     float: left;
 }
 
@@ -1765,16 +1362,6 @@ a.fx_var_editable:focus, .fx_var_editable a:focus {
 .fx_list .fx_admin_selected, .fx_tree .fx_admin_selected {
     background: #edf3f5;
     outline: none !important;
-}
-
-.fx_admin_store_item h2, .fx_admin_store_item h3, .fx_admin_store_item p {
-    margin: 0 0 0 60px;
-}
-
-.fx_dialog_store_button, .fx_dialog_edit_button, .fx_dialog_upload_button {
-    background: #9ED345 !important;
-    border: 1px solid #A2ADB3 !important;
-    text-shadow: 0 1px 0 rgba(83, 124, 35, 0.8) !important;
 }
 
 .fx_preview_placeholder_hover, .fx_overlay .ui-datepicker-today {
@@ -1832,17 +1419,6 @@ a.fx_var_editable:focus, .fx_var_editable a:focus {
     position: relative;
 }
 
-.fx_admin_form .fx_fieldset .fx_fieldset_label label {
-    font-size:12px;
-}
-
-.fx_admin_form .fx_fieldset input[type="text"], 
-.fx_admin_form .fx_fieldset select,
-.fx_admin_form .fx_fieldset textarea {
-    width:auto;
-    margin:0;
-}
-
 .fx_infoblock_placeholder {
     min-height: 5px;
     min-width: 50px;
@@ -1867,6 +1443,8 @@ a.fx_var_editable:focus, .fx_var_editable a:focus {
     overflow:hidden;
     opacity:0.5;
 }
+
+/* controller-action selector ui */
 
 .fx_controller_select .filter_box {
     float:left;
@@ -1940,16 +1518,6 @@ a.fx_var_editable:focus, .fx_var_editable a:focus {
     color:#666;
 }
 
-.fx_overlay .CodeMirror {
-    border: 1px solid #eee;
-    height: auto;
-}
-.fx_overlay .CodeMirror-scroll {
-    overflow-y: hidden;
-    overflow-x: auto;
-    height:auto;
-}
-
 .fx_var_editable::selection, .fx_var_editable *::selection {
     background: #FFA;
 }
@@ -1970,29 +1538,7 @@ a.fx_var_editable:focus, .fx_var_editable a:focus {
     clear:both;
 }
 
-#fx_admin_extra_panel form {
-    padding:10px;
-    overflow:auto;
-}
 
-
-
-.fx_overlay .field_hidden {
-    display:none !important;
-}
-
-.fx_overlay .visual_wrapper .variant {
-    border: 1px solid #CCC;
-    border-radius: 2px;
-    padding: 2px 5px;
-    margin-right: 5px; 
-    display:inline-block; 
-    cursor:pointer;
-}
-
-.fx_overlay .visual_wrapper .variant.active {
-    border:2px solid #000;
-}
 
 .fx_outline_pane {
     position:absolute;

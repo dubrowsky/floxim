@@ -34,7 +34,7 @@ class fx_system_page extends fx_system {
     }
 
     public function add_file($file) {
-        if (substr($file, strlen($file) - 4) == '.css') {
+        if (preg_match("~\.(?:less|css)$~", $file)) {
             return $this->add_css_file($file);
         }
         if (substr($file, strlen($file) - 3) == '.js') {
@@ -43,6 +43,24 @@ class fx_system_page extends fx_system {
     }
 
     public function add_css_file($file) {
+        if (preg_match("~\.less$~", $file)) {
+            $doc_root = fx::config()->DOCUMENT_ROOT;
+            $http_path = fx::config()->HTTP_FILES_PATH;
+            $full_path = $doc_root.$http_path;
+            if (!file_exists($doc_root.$file)) {
+                return;
+            }
+            
+            require_once $doc_root.'/floxim/lib/lessphp/lessc.inc.php';
+            $target_file_name = md5($file).'.css';
+            $this->_files_css[]= $http_path.$target_file_name;
+            //$fh = fopen($full_path.$target_file_name, 'w');
+            $less = new lessc();
+            $less->checkedCompile($doc_root.$file, $full_path.$target_file_name);
+            //fputs($fh, $bundle_content);
+            //fclose($fh);
+            return;
+        }
         $this->_files_css[] = $file;
     }
 

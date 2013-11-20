@@ -169,12 +169,14 @@ class fx_content extends fx_essence {
     public function get_form_fields() {
         $all_fields = $this->get_fields();
         $form_fields = array();
+        $coms = array();
         foreach ($all_fields as $field) {
             if ($field['type_of_edit'] == fx_field::EDIT_NONE) {
                 continue;
             }
             $jsf = $field->get_js_field($this);
-            $jsf['tab'] = $field['component_id'];
+            $coms [$field['component_id']] = 1;
+            $jsf['tab'] = $field['form_tab'] ? $field['form_tab'] : count($coms);
             $form_fields[]= $jsf;
         }
         return $form_fields;

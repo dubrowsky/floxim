@@ -551,7 +551,7 @@ fx_front.prototype.select_content_essence = function(n) {
                 content_id: essence_meta.id
             }, 
             {
-                view:'horizontal',
+                view:'cols',
                 onfinish: function() {
                     $fx.front.reload_infoblock(ib_node);
                     $fx.front.enable_hilight();
