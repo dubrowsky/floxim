@@ -214,7 +214,7 @@ function fx_livesearch(node) {
             n.remove();
             this.enableAdd();
             this.Suggest.url = this.getUrl();
-            this.input.trigger('change');
+            this.n.trigger('change');
 	};
 	
 	this.getValueNode = function() {
@@ -492,7 +492,6 @@ function fx_suggest (params) {
             url_cache_key = url;
             request_params.url = url;
         } else {
-            //console.log('complex url', this);
             url = this.url.url;
             url = url.replace(/\%s/, encodeURIComponent(term));
             request_params.url = url;
