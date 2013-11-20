@@ -48,6 +48,7 @@ class fx_controller_component extends fx_controller {
         if (isset($this->action)) {
             switch ($this->action) {
                 case 'list_selected':
+                        //dev_log($ib['params']['selected']);
                     if (isset($ib['params']['selected']) && is_array($ib['params']['selected'])) {
                         foreach ($ib['params']['selected'] as  $value) {
                             $saving[$value] = true;
@@ -61,6 +62,9 @@ class fx_controller_component extends fx_controller {
                                 $linker->delete();
                                 $linkers->find_remove('id', $linker['id']);
                             } else {
+                                //dev_log('order', array_search($linker['linked_id'], $ib['params']['selected']), $linker['linked_id']);
+                                $linker['priority'] = array_search($linker['linked_id'], $ib['params']['selected']);
+                                $linker->save();
                                 unset($saving[$linker['linked_id']]);
                             }
                         }
@@ -69,16 +73,21 @@ class fx_controller_component extends fx_controller {
                             $linker['parent_id'] = $ib['page_id'];
                             $linker['infoblock_id'] = $ib['id'];
                             $linker['linked_id'] = $save;
+                            $linker['priority'] = array_search($save, $ib['params']['selected']);
                             $linker->save();
                         }
                     } else {
                         $linkers = fx::data('content_select_linker')
-                                    ->where('infoblock_id', $this->input['id'])
+                                    ->where('infoblock_id', $ib['id'])
                                     ->all();
                         foreach ($linkers as $linker) {
                             $linker->delete();
                         }
                     }
+                    $params = $ib['params'];
+                    unset($params['selected']);
+                    $ib['params'] = $params;
+                    $ib->save();
                     break;
                 
                 default:
@@ -86,6 +95,15 @@ class fx_controller_component extends fx_controller {
             }
         }
     }
+
+    protected function _get_selected_values () {
+        $linkers = fx::data('content_select_linker')
+            ->where('infoblock_id', $this->input['infoblock_id'])
+            ->order('priority')
+            ->get_data()->get_values('linked_id');
+        return $linkers;
+    }
+
     public function after_delete() {
         $ib = fx::data('infoblock', $this->input['infoblock_id']);
         $this->action = $ib['action'];
@@ -458,6 +476,17 @@ class fx_controller_component extends fx_controller {
                 $c->linker_map = array();
                 foreach ($c as $cc) {
                     $c->linker_map []= $linkers->find_one('linked_id', $cc['id']);
+                }
+            });
+        } else {
+
+            $this->listen('items_ready', function($c, $ctr) use ($content_ids) {
+                if ($ctr->get_param('sorting') === 'manual') {
+                    $c->sort(function($a, $b) use ($content_ids) {
+                        $a_priority = array_search($a['id'], $content_ids);
+                        $b_priority = array_search($b['id'], $content_ids);
+                        return $a_priority - $b_priority;
+                    });
                 }
             });
         }
