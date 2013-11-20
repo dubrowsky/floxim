@@ -306,12 +306,7 @@ class fx_field_multilink extends fx_field_baze {
         }
         $linker_infoblock_id = null;
         foreach ($this->value as $item_id => $item_props) {
-            if (is_numeric($item_id)) {
-                $linked_item = $existing_items->find_one('id', $item_id);
-            } 
-            // значение ключа не числовое, значит надо создать объект, на который ссылаемся
-            else {
-                // получаем инфоблок, куда добавлять новую сущность
+            if (!$linked_item = $existing_items->find_one('id', $item_id)) {
                 if (!$linker_infoblock_id) {
                     $linker_infoblock_id = $content->get_link_field_infoblock($this['id']);
                 }
