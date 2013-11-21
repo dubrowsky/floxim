@@ -43,8 +43,21 @@ function fx_check_env() {
 	}
 
 	if (!fx_check_version()) {
-		$errors['errors']['version'] = "5.3+ php version require.";
+		$errors['errors']['version'] = "5.3+ php version required.";
 	}
+
+	if (!fx_curl_exists()) {
+		$errors['errors']['curl'] = 'curl doesn\'t exist';
+	}
+
+	if (!fx_check_pdo()) {
+		$errors['errors']['pdo'] = 'PDO & pdo_mysql extension required.';
+	}
+
+	if (!fx_check_gd()){
+		$errors['errors']['gd'] = 'GD doesn\'t exist or version lower than 2.0';
+	}
+
 	try {
 		if (!in_array('mod_rewrite', apache_get_modules())) {
 			$errors['warnings']['rewrite'] = 'mod_rewrite not enable.';	
@@ -70,6 +83,27 @@ function fx_check_writable() {
 	unlink($test_name);
 }
 
+function fx_check_pdo () {
+	if (extension_loaded('pdo') && extension_loaded('pdo_mysql')) {
+		return true;
+	}
+	return false;
+}
+
+function fx_check_gd () {
+    if (function_exists('gd_info')) {
+        $gd = gd_info();
+        preg_match('/\d/', $gd['GD Version'], $match);
+        $gd = $match[0];
+        if ($gd < 2) {
+        	return false;
+        }
+    } else {
+    	return false;
+    }
+    return true;
+}
+
 function fx_check_version() {
 	$v_str = phpversion();
 	preg_match('~^\d+.\d~', $v_str, $matches);
@@ -78,6 +112,10 @@ function fx_check_version() {
 
 function fx_zip_exists () {
 	return function_exists('zip_open');
+}
+
+function fx_curl_exists () {
+	return function_exists('curl_version');
 }
 
 function fx_unzip($file, $dir) {
