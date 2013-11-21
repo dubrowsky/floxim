@@ -6,27 +6,53 @@ function fx_run_remote() {
 	$floxim_version = '0.1.0';
 	$file = 'floxim_'.$floxim_version.'.zip';
 	
-	if (!fx_check_docroot()) {
-		echo "Please, put installer file into your document root directory (<b>".$_SERVER['DOCUMENT_ROOT'].'</b>)';
-		die();
+	$errors = fx_check_env();
+	if (!empty($errors)) {
+		if (isset($errors['warnings'])){
+			foreach ($errors['warnings'] as $value) {
+				echo $value.'<br/>';
+			}
+		}
+		if (isset($errors['errors'])){
+			foreach ($errors['errors'] as $value) {
+				echo $value.'<br/>';
+			}
+			die();
+		}
 	}
-	if (fx_check_writable()) {
-		echo "Target directory is not writable by the script. Please change permissions and try again.";
-		die();
-	}
-	
-	if (file_exists($file)) {
-		fx_unzip($file, $_SERVER['DOCUMENT_ROOT'].'/');
-		echo "Package extracted, now you can <a href='/install/'>run installer</a>.";
-		die();
-	}
-	
+
 	$file_data = file_get_contents($get_floxim_path.$file);
 	$fh = fopen($file, 'w');
 	fputs($fh, $file_data);
 	fclose($fh);
 	header("Location: /floxim.php");
 	die();
+}
+
+function fx_check_env() {
+	$errors = array();
+	if (!fx_check_docroot()) {
+		$errors['errors']['docroot'] = "Please, put installer file into your document root directory (<b>".$_SERVER['DOCUMENT_ROOT'].'</b>)';
+	}
+	if (fx_check_writable()) {
+		$errors['errors']['unwritable'] = "Target directory is not writable by the script. Please change permissions and try again.";
+	}
+
+	if (!fx_zip_exists()) {
+		$errors['errors']['zip'] = "zip_open function doesn't exist.";
+	}
+
+	if (!fx_check_version()) {
+		$errors['errors']['version'] = "5.3+ php version require.";
+	}
+	try {
+		if (!in_array('mod_rewrite', apache_get_modules())) {
+			$errors['warnings']['rewrite'] = 'mod_rewrite not enable.';	
+		}
+	} catch (Exeption $e) {
+		$errors['warnings']['apache']='We recommend to use Apache server.';
+	}
+	return $errors;
 }
 
 function fx_check_docroot() {
@@ -42,6 +68,16 @@ function fx_check_writable() {
 	}
 	fclose($test_f);
 	unlink($test_name);
+}
+
+function fx_check_version() {
+	$v_str = phpversion();
+	preg_match('~^\d+.\d~', $v_str, $matches);
+	return (float)$matches[0]>=5.3;
+}
+
+function fx_zip_exists () {
+	return function_exists('zip_open');
 }
 
 function fx_unzip($file, $dir) {
