@@ -34,6 +34,19 @@ class fx_content extends fx_essence {
     public function get_component_id() {
         return $this->component_id;
     }
+    
+    public function is_instanceof($type) {
+        if ($this['type'] == $type) {
+            return true;
+        }
+        $chain = fx::data('component', $this->get_component_id())->get_chain();
+        foreach ($chain as $com) {
+            if ($com['keyword'] == $type) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     /*
     protected function _add_history_operation($type, $data = array()) {

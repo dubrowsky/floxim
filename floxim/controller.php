@@ -197,10 +197,11 @@ class fx_controller {
         $blocks = array();
         $meta = array();
         foreach ($sources as $src) {
+            $src_file = $src;
             $src_name = null;
             $my_name = null;
-            preg_match("~/([^/+])/[^/]+$~", $src, $src_name);
-            preg_match("~_([^_]+)~", get_class($this), $my_name);
+            preg_match("~/([^/]+?)/[^/]+$~", $src, $src_name);
+            preg_match("~_([^_]+)$~", get_class($this), $my_name);
             $is_own = $src_name && $my_name && $src_name[1] === $my_name[1];
             $src = include $src;
             if (!isset($src['actions'])) {
@@ -332,12 +333,6 @@ class fx_controller {
             if (isset($info['disabled']) && $info['disabled']) {
                 continue;
             }
-            /*
-            if (!isset($info['name'])) {
-                $info['name'] = '%component% / '.$action;
-            }
-             * 
-             */
             $res[$action] = $info;
         }
         return $res;

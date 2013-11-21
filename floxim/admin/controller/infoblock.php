@@ -64,6 +64,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             );
             $ctrl = fx::controller($controller_name);
             $actions = $ctrl->get_actions();
+            //fx::log($controller_name, $actions);
             foreach ($actions as $action_code => $action_info) {
                 if (isset($action_info['check_context'])) {
                     $is_avail = call_user_func($action_info['check_context'], $page);
