@@ -20,21 +20,27 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             $this->ui->hidden('essence', 'infoblock'),
             $this->ui->hidden('fx_admin', true),
             $this->ui->hidden('area', $input['area']),
+            $this->ui->hidden('area_size', $input['area_size']),
             $this->ui->hidden('page_id', $input['page_id']),
             $this->ui->hidden('admin_mode', $input['admin_mode'])
         );
 	
         fx::env('page', $input['page_id']);
         $page = fx::data('content_page', $input['page_id']);
-        $layout_id = fx::env('layout');
-        $infoblocks = fx::router('front')->get_page_infoblocks($page['id'], $layout_id);
-        $layout_ib = $infoblocks['layout'][0];
-        $layout_tpl = fx::template($layout_ib->get_visual()->get('template'));
-        $areas = $layout_tpl->get_areas();
-        $area_info = $areas[$input['area']];
-        $area_size = fx_template_suitable::get_size(
-            isset($area_info['size']) ? $area_info['size'] : ''
-        );
+        
+        if (!isset($input['area_size'])) {
+            $layout_id = fx::env('layout');
+            $infoblocks = fx::router('front')->get_page_infoblocks($page['id'], $layout_id);
+            $layout_ib = $infoblocks['layout'][0];
+            $layout_tpl = fx::template($layout_ib->get_visual()->get('template'));
+            $areas = $layout_tpl->get_areas();
+            $area_info = $areas[$input['area']];
+            $area_size = fx_template_suitable::get_size(
+                isset($area_info['size']) ? $area_info['size'] : ''
+            );
+        } else {
+            $area_size = fx_template_suitable::get_size($input['area_size']);
+        }
         
         /* Список контроллеров */
         $fields['controller'] = array(
@@ -59,6 +65,12 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             $ctrl = fx::controller($controller_name);
             $actions = $ctrl->get_actions();
             foreach ($actions as $action_code => $action_info) {
+                if (isset($action_info['check_context'])) {
+                    $is_avail = call_user_func($action_info['check_context'], $page);
+                    if (!$is_avail) {
+                        continue;
+                    }
+                }
                 $act_ctr = fx::controller($controller_name.'.'.$action_code);
                 $act_templates = $act_ctr->get_available_templates(fx::env('layout'), $area_size);
                 if (count($act_templates) == 0) {
@@ -201,7 +213,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             $this->response->add_fields($settings, false, 'params');
         }
         
-        $format_fields = $this->_get_format_fields($infoblock);
+        $format_fields = $this->_get_format_fields($infoblock, $input['area_size']);
 
         if (!$is_layout) {
             //$this->response->add_tab('visual', fx::lang('How to show','system'));
@@ -484,7 +496,10 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
     /*
      * Получение полей формы для вкладки "Как показывать"
      */
-    protected function _get_format_fields(fx_infoblock $infoblock) {
+    protected function _get_format_fields(fx_infoblock $infoblock, $area_size = null) {
+        if ($area_size) {
+            $area_size = fx_template_suitable::get_size($area_size);
+        }
         $i2l = $infoblock->get_visual();
         $fields = array(
             array(
@@ -516,7 +531,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
 
         // Собираем доступные шаблоны
         $controller = fx::controller($controller_name.'.'.$action_name);
-        $tmps = $controller->get_available_templates($layout_name);
+        $tmps = $controller->get_available_templates($layout_name, $area_size);
         if ( !empty($tmps) ) {
             foreach ( $tmps as $template ) {
                 //$templates[$template['full_id']] = $template['name'] . ' (' . $template['full_id'] . ')';

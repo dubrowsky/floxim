@@ -2,7 +2,8 @@
     class="gallery fx_not_sortable" 
     fx:template="index_slider" 
     fx:name="Slider" 
-    fx:of="page.list">
+    fx:of="page.list"
+    fx:size="high,wide">
     <div 
         fx:each="$items"
         class="gallery_item {if $item_is_first} gallery_item_active{/if} slideid{$id}">
