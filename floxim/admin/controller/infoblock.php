@@ -300,6 +300,8 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             if (!is_array($infoblock['scope'])) {
                 $infoblock['scope'] = array();
             }
+            list($scope_page_id, $scope_pages, $scope_page_type) = explode("-", $input['scope']['complex_scope']);
+            /*
             if ($input['scope']['page_id'] == 0) {
                 $input['scope']['pages'] = 'all';
             }
@@ -308,7 +310,14 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                 'page_type' => $input['scope']['page_type']
             );
             $infoblock['scope'] = $ib_scope;
-            $infoblock['page_id'] = $input['scope']['page_id'];
+             * 
+             */
+            $infoblock['scope'] = array(
+                'pages' => $scope_pages,
+                'page_type' => $scope_page_type
+            );
+            //$infoblock['page_id'] = $input['scope']['page_id'];
+            $infoblock['page_id'] = $scope_page_id;
             
             $i2l['wrapper'] = fx::dig($input, 'visual.wrapper');
             $i2l['template'] = fx::dig($input, 'visual.template');
@@ -337,8 +346,10 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             )
     	);
         
-        $actions = $controller->get_actions();
-        $action_name = $actions[$action]['name'];
+        if (!$is_layout) {
+            $actions = $controller->get_actions();
+            $action_name = $actions[$action]['name'];
+        }
         
         if (!$infoblock['id']) {
             $result['header'] = ' <a class="back">'.fx::lang('Adding infoblock','system').'</a>';
@@ -412,6 +423,72 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             $defaults = array();
         }
         $fields = array();
+        
+        // ACHTUNG
+        
+        // format: [page_id]-[descendants|children|this]-[|type_id]
+        
+        
+        $path_ids = $c_page->get_parent_ids();
+        $path = fx::data('content_page', $path_ids);
+        $path []= $c_page;
+        $path_count = count($path);
+        $c_type = $c_page['type'];
+        
+        list($cib_page_id, $cib_pages, $cib_page_type) = array(
+            $infoblock['page_id'], 
+            $infoblock['scope']['pages'],
+            $infoblock['scope']['page_type']
+        );
+        
+        if ($cib_page_id == 0) {
+            $cib_page_id = $path[0]['id'];
+        }
+        if ($cib_pages == 'this') {
+            $cib_page_type = '';
+        } 
+        if ($cib_pages == 'all') {
+            $cib_pages = 'descendants';
+        }
+        
+        $c_scope_code = $cib_page_id.'-'.$cib_pages.'-'.$cib_page_type;
+        
+        $vals = array();
+        
+        foreach ($path as $i => $pi) {
+            $sep = str_repeat(" -- ", $i);
+            $pn = '"'.$pi['name'].'"';
+            $is_last = $i === $path_count - 1;
+            if ($i === 0) {
+                $vals []= array($pi['id'].'-descendants-', 'All pages');
+                if ($path_count > 1) {
+                    $vals []= array($pi['id'].'-children-'.$c_type, 'All pages of type '.$c_type);
+                }
+            }
+            if ($is_last) {
+                $vals []= array($pi['id'].'-this-', $sep.$pn.' only');
+            } else {
+                $vals []= array($pi['id'].'-children-', $sep.$pn.' children only');
+            }
+            if ($i !== 0 ) {
+                $vals []= array($pi['id'].'-descendants-', $sep.$pn.' and children');
+            }
+            if (!$is_last) {
+                $vals []= array(
+                    $pi['id'].'-children-'.$c_type, 
+                    $sep.$pn.' children of type '.$c_type
+                );
+            }
+        }
+        $fields []= array(
+            'type' => 'select',
+            'label' => 'Scope',
+            'name' => 'complex_scope',
+            'values' => $vals,
+            'value' => $c_scope_code
+        );
+        return $fields;
+        // EOF ACHTUNG
         
         if ($admin_mode == 'design') {
             $index_page_id = fx::env('site')->get('index_page_id');

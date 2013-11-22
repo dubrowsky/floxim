@@ -63,6 +63,7 @@ if (_c.values) {
 
 <!--jquery-->
 var list =  html;
+
 $('.fx_list_filter input', list).keyup(function(){
     var t = $(this).val().toLowerCase();
     $('.fx_list_row', list).each(function(){
@@ -172,7 +173,19 @@ var labels_length = $t.countLength(_o.labels);
 var i = 0;
 $.each(_o.labels, function(label_key, label) {
     i++;
-    ?><td class="fx_list_cell<?=i == labels_length ? ' fx_list_cell_last' : ''?>"><?=$t.list_field_cell(_c[label_key], {label:label,row:_c})?></td><?
+    var level_padding = 0;
+    if (_c[label_key].level) {
+        level_padding = 25*_c[label_key].level;
+    }
+    ?>
+        <td class="
+                fx_list_cell
+                fx_list_cell_<?=label_key?>
+                <?=i == labels_length ? ' fx_list_cell_last' : ''?>"
+                <?=level_padding ? 'style="padding-left:'+level_padding+'px;"' : ''?>
+                >
+            <?=$t.list_field_cell(_c[label_key], {label:label,row:_c})?>
+        </td><?
 });
 ?>
 
@@ -190,9 +203,6 @@ $.each(_o.labels, function(label_key, label) {
     }?></h2><?
     if (_c.text) {
         ?><p class="fx_list_text"><?=_c.text?></p><?
-    }
-    if (_c.buttons) {
-        print($t.list_field_cell(_c.buttons,{type:'buttons'}));
     }
     ?>
 </td>

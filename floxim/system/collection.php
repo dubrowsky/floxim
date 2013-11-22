@@ -386,6 +386,31 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
         return $this;
     }
     
+    public function make_tree($parent_field = 'parent_id', $children_field = 'children', $id_field = 'id') {
+        $index_by_parent = array();
+        
+        foreach ($this as $item) {
+            $pid = $item[$parent_field];
+            if (!isset($index_by_parent[$pid])) {
+                $index_by_parent[$pid] = fx::collection();
+                $index_by_parent[$pid]->is_sortable = $this->is_sortable;
+            }
+            $index_by_parent[$pid] []= $item;
+        }
+        foreach ($this as $item) {
+            if (isset($index_by_parent[$item[$id_field]])) {
+                $item[$children_field] = $index_by_parent[$item[$id_field]];
+                $this->find_remove(
+                    $id_field,
+                    $index_by_parent[$item[$id_field]]->get_values($id_field)
+                );
+            } else {
+                $item[$children_field] = null;
+            }
+        }
+        return $this;
+    }
+    
     /* IteratorAggregate */
     
     public function getIterator() {

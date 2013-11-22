@@ -8,6 +8,10 @@ $sort_fields = $this
 
 $component = $this->get_component();
 
+$content_exists = fx::data('content_'.$component['keyword'])
+                            ->where('site_id', fx::env('site')->get('id'))
+                            ->one();
+
 return array(
     'actions' => array(
         '*list*' => array(
@@ -84,6 +88,14 @@ return array(
                 '!pagination' => false,
                 '!limit' => 0
             )
+        ),
+        '*list_filtered*, *list_selected*, *listing_by*' => array(
+            'check_context' => function() use ($content_exists) {
+                return $content_exists;
+            }
+        ),
+        '*listing_by' => array(
+            'disabled' => 1
         )
     )
 );
