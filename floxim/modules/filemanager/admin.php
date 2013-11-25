@@ -189,8 +189,11 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
             }
         }
         $fields[]= array('type' => 'hidden', 'name' => 'essence', 'value' => 'module_filemanager');
+        $fields[]= array('type' => 'hidden', 'name' => 'fx_admin', 'value' => true);
+        $fields[] = array('type' => 'hidden', 'name' => 'posting', 'value' => 1);
         $this->response->add_fields($fields);
         $this->response->submenu->set_menu('tools')->set_subactive('filemanager');
+        $perms = fx::files()->get_perm($filename);
         $this->response->add_form_button('save');
     }
 
@@ -263,7 +266,7 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
     }
 
     public function edit($input) {
-        $filename = $input['id'];
+        $filename = $input['file_name'];
         if (!$filename) {
             $result['status'] = 'error';
             $result['text'] = fx::lang('Do not pass the file name!','system');
@@ -323,6 +326,7 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
     }
 
     public function edit_save($input) {
+        dev_log('Edit Save', $input );
         $filename = $input['filename'];
         if (!$filename) {
             return array('status' => 'error', 'text' => fx::lang('Not all fields are transferred!','system'));
