@@ -40,6 +40,10 @@ class fx_controller_component extends fx_controller {
             }
         }
         return $sources;
+    } 
+
+    public function get_controller_name(){
+        return $this->_content_type;
     }
     
     public function after_save() {
