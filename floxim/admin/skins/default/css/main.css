@@ -793,6 +793,18 @@ input.ui-button {
     color: #666;
 }
 
+.fx_list_table .fx_list_cell_buttons {
+    padding:5px;
+}
+
+.fx_list_buttons {
+    display:none;
+}
+
+.fx_admin_selected .fx_list_buttons {
+    display:block;
+}
+
 .fx_tab {
     position: relative;
     padding-bottom: 5px;
