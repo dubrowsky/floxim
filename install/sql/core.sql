@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Nov 26, 2013 at 02:14 PM
+-- Generation Time: Nov 26, 2013 at 03:00 PM
 -- Server version: 5.5.34
 -- PHP Version: 5.3.10-1ubuntu3.8
 
@@ -180,8 +180,6 @@ INSERT INTO `fx_content` (`id`, `priority`, `checked`, `created`, `last_updated`
 (112, 0, 1, '2013-04-24 14:12:36', '2013-04-29 12:01:11', 99, 'text', 16, 1, 2),
 (1883, 0, 1, '2013-06-08 17:03:02', '2013-06-08 09:03:02', 99, 'page', 0, 15, NULL),
 (1887, 3, 1, '2013-06-10 02:17:40', '2013-07-14 03:19:45', 99, 'section', 69, 15, 1883),
-(1889, 1, 1, '2013-06-10 02:26:56', '2013-07-14 03:39:35', 99, 'section', 69, 15, 1883),
-(1890, 2, 1, '2013-06-10 02:27:12', '2013-07-14 03:39:35', 99, 'section', 69, 15, 1883),
 (1891, 1, 1, '2013-06-10 11:38:10', '2013-08-21 17:35:44', 99, 'travel_route', 70, 15, 1883),
 (1892, 2, 1, '2013-06-10 12:17:59', '2013-08-21 17:35:44', 99, 'travel_route', 70, 15, 1883),
 (1898, 1, 1, '2013-06-11 13:15:18', '2013-09-10 13:03:24', 99, 'section', 76, 15, 1883),
@@ -191,24 +189,10 @@ INSERT INTO `fx_content` (`id`, `priority`, `checked`, `created`, `last_updated`
 (1902, 0, 1, '2013-06-13 01:24:02', '2013-06-12 17:24:02', 99, 'section', 77, 15, 1887),
 (1903, 0, 1, '2013-06-13 01:24:43', '2013-06-12 17:24:43', 99, 'text', 74, 15, 1887),
 (1910, 0, 1, '2013-06-13 04:55:44', '2013-06-12 20:55:44', 99, 'text', 74, 15, 1902),
-(1912, 1, 1, '2013-06-13 05:29:37', '2013-06-12 21:58:48', 99, 'gallery', 79, 15, 1889),
-(1914, 6, 1, '2013-06-13 05:32:07', '2013-06-12 21:58:48', 99, 'gallery', 79, 15, 1889),
-(1916, 4, 1, '2013-06-13 05:33:58', '2013-06-12 21:58:48', 99, 'gallery', 79, 15, 1889),
-(1917, 3, 1, '2013-06-13 05:34:31', '2013-06-12 21:58:48', 99, 'gallery', 79, 15, 1889),
-(1919, 2, 1, '2013-06-17 04:08:53', '2013-06-16 21:00:18', 99, 'photo', 81, 15, 1916),
-(1923, 5, 1, '2013-06-17 04:26:42', '2013-06-16 21:00:06', 99, 'photo', 81, 15, 1916),
-(1924, 0, 1, '2013-06-17 06:24:59', '2013-06-16 22:24:59', 99, 'text', 74, 15, 1916),
-(1925, 4, 1, '2013-06-17 06:30:30', '2013-07-14 03:19:38', 99, 'section', 69, 15, 1883),
 (1933, 4, 1, '2013-06-18 16:02:50', '2013-07-01 06:18:13', 99, 'tag', 83, 15, 1925),
 (1968, 3, 1, '2013-06-21 13:45:59', '2013-06-24 03:13:17', 99, 'blogpost', 82, 15, 1925),
 (1976, 1, 1, '2013-06-21 14:18:44', '2013-06-24 03:13:17', 99, 'blogpost', 82, 15, 1925),
 (1996, 0, 1, '2013-07-01 16:35:39', '2013-07-01 08:35:39', 99, 'blogpost', 82, 15, 1925),
-(2021, 0, 1, '2013-07-12 15:03:23', '2013-07-12 07:03:23', 99, 'photo', 81, 15, 1912),
-(2022, 0, 1, '2013-07-12 15:44:26', '2013-07-12 07:44:26', 99, 'photo', 81, 15, 1914),
-(2023, 0, 1, '2013-07-12 15:47:42', '2013-07-12 07:47:42', 99, 'photo', 81, 15, 1917),
-(2025, 0, 1, '2013-07-12 16:13:25', '2013-07-12 08:13:26', 99, 'photo', 81, 15, 1912),
-(2026, 0, 1, '2013-07-12 16:18:28', '2013-07-12 08:18:28', 99, 'photo', 81, 15, 1917),
-(2027, 0, 1, '2013-07-13 15:39:32', '2013-07-13 07:39:32', 99, 'text', 74, 15, 1890),
 (2028, 0, 1, '2013-07-13 17:11:06', '2013-07-13 09:11:06', 99, 'tag', 83, 15, 1925),
 (2029, 0, 1, '2013-07-13 17:11:06', '2013-07-13 09:11:06', 99, 'tagpost', 84, 15, 1976),
 (2032, 1, 1, '2013-07-13 17:14:40', '2013-07-19 20:49:31', 99, 'tagpost', 84, 15, 1968),
@@ -237,17 +221,6 @@ INSERT INTO `fx_content` (`id`, `priority`, `checked`, `created`, `last_updated`
 (2083, 3, 1, '2013-08-26 20:36:55', '2013-09-02 14:25:20', 99, 'tagpost', 84, 15, 1996),
 (2084, 5, 1, '2013-09-06 18:03:04', '2013-09-06 14:51:16', 99, 'tagpost', 84, 15, 1996),
 (2128, 23, 1, '2013-09-25 19:03:04', '2013-09-25 15:03:04', 99, 'comment', 127, 15, 1996),
-(2132, 24, 1, '2013-09-30 17:31:24', '2013-09-30 13:31:24', 99, 'section', 69, 15, 1883),
-(2133, 25, 1, '2013-09-30 17:32:26', '2013-09-30 13:32:26', 99, 'faq', 131, 15, 2132),
-(2134, 26, 1, '2013-09-30 17:39:51', '2013-09-30 13:39:51', 99, 'section', 69, 15, 1883),
-(2135, 27, 1, '2013-09-30 17:44:31', '2013-09-30 13:44:31', 99, 'video', 133, 15, 2134),
-(2139, 28, 1, '2013-10-01 15:39:47', '2013-10-01 11:39:47', 99, 'section', 69, 15, 1883),
-(2141, 30, 1, '2013-10-01 17:53:13', '2013-10-01 13:53:13', 99, 'section', 69, 15, 1883),
-(2142, 31, 1, '2013-10-01 17:54:23', '2013-10-01 13:54:23', 99, 'company', 136, 15, 2141),
-(2143, 32, 1, '2013-10-01 18:10:41', '2013-10-01 14:10:41', 99, 'section', 69, 15, 1883),
-(2146, 1, 1, '2013-10-02 15:18:18', '2013-11-14 11:57:11', 99, 'section', 141, 15, 1883),
-(2147, 36, 1, '2013-10-02 15:20:39', '2013-10-02 11:20:39', 99, 'vacancy', 142, 15, 2146),
-(2148, 37, 1, '2013-10-02 15:23:27', '2013-10-02 11:23:27', 99, 'vacancy', 142, 15, 2146),
 (2149, 3, 1, '2013-10-02 17:18:17', '2013-11-14 12:18:26', 99, 'section', 141, 15, 1883),
 (2150, 39, 1, '2013-10-02 17:20:03', '2013-10-02 13:20:03', 99, 'news', 147, 15, 2149),
 (2177, 40, 1, '2013-10-02 18:13:30', '2013-10-02 14:38:11', 99, 'news_tag', 0, 15, 2149),
@@ -460,13 +433,6 @@ CREATE TABLE IF NOT EXISTS `fx_content_company` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Dumping data for table `fx_content_company`
---
-
-INSERT INTO `fx_content_company` (`id`, `logo`, `short_description`, `description`) VALUES
-(2142, 427, 'Floxim', '<p></p><p>Lost Of FloximsLost Of FloximsLost Of FloximsLost Of FloximsLost Of FloximsLost Of FloximsLost Of FloximsLost Of FloximsLost Of FloximsLost Of FloximsLost Of Floxims</p>');
-
 -- --------------------------------------------------------
 
 --
@@ -548,7 +514,6 @@ CREATE TABLE IF NOT EXISTS `fx_content_faq` (
 --
 
 INSERT INTO `fx_content_faq` (`id`, `question`, `answer`) VALUES
-(2133, 'WTF?', '<p>Just, in case. ...</p>'),
 (2236, 'Stet clita kasd gubergren?', '<p>Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.&nbsp;</p>');
 
 -- --------------------------------------------------------
@@ -563,16 +528,6 @@ CREATE TABLE IF NOT EXISTS `fx_content_gallery` (
   `cover` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `fx_content_gallery`
---
-
-INSERT INTO `fx_content_gallery` (`id`, `publish_date`, `cover`) VALUES
-(1912, '2013-05-10 00:00:00', 366),
-(1914, '2012-09-12 00:00:00', 368),
-(1916, '2012-10-08 00:00:00', 346),
-(1917, '2011-11-08 00:00:00', 371);
 
 -- --------------------------------------------------------
 
@@ -621,8 +576,6 @@ INSERT INTO `fx_content_page` (`id`, `url`, `name`, `title`, `comments_counter`)
 (16, '/contacts/', 'Contacts', NULL, NULL),
 (1883, '/', 'Jeep Travels', 'Jeep Travels: super travels!', NULL),
 (1887, '/about', 'About', NULL, NULL),
-(1889, '/portfolio/', 'Portfolio', NULL, NULL),
-(1890, '/contacts', 'Contacts', NULL, NULL),
 (1891, '/summer-rally', 'Mangyshlak: The Great Step', '', NULL),
 (1892, '/paris-dakar', 'Argentina – Chilix', '', NULL),
 (1898, 'http://facebook.com/', 'Facebook', NULL, NULL),
@@ -630,11 +583,6 @@ INSERT INTO `fx_content_page` (`id`, `url`, `name`, `title`, `comments_counter`)
 (1900, 'http://instagram.com', 'Instagram', NULL, NULL),
 (1901, 'http://youtube.com', 'YouTube', NULL, NULL),
 (1902, '/test', 'Take part in our events', NULL, NULL),
-(1912, '/Kiev', 'Kiev', '', NULL),
-(1914, '/Dominikanskaya-respublika', 'Dominicana', '', NULL),
-(1916, '/gaityanski-holyday', 'Haiti', '', NULL),
-(1917, '/Pereslavl-Zalesskiy', 'Namibia', '', NULL),
-(1925, '/Blog', 'Our blog', NULL, NULL),
 (1933, '/tag-ivan-kurochkin', 'John Kurochkin', 'News about John', NULL),
 (1968, '/funeral', 'Our funeral instructions', '', NULL),
 (1976, '/hi', 'Hello world!', '', NULL),
@@ -654,16 +602,6 @@ INSERT INTO `fx_content_page` (`id`, `url`, `name`, `title`, `comments_counter`)
 (2079, '/Level-5-1', '5 level wow!', '', NULL),
 (2081, '/ALter-sub-2', 'Alter menu item', '', NULL),
 (2082, '/Dooops', 'Dooops', '', NULL),
-(2132, '/faq', 'FAQ', 'FAQ', 0),
-(2133, '/wtf', 'Wtf?', 'Wtf?', 0),
-(2134, '/videos', 'Videos', 'Videos', 0),
-(2139, '/awards', 'Awards', 'Awards', 0),
-(2141, '/Companies', 'Companies', 'Companies', 0),
-(2142, '/Floxim', 'Floxim', 'Floxim', 0),
-(2143, '/projects', 'Projects', 'Projects', 0),
-(2146, '/vacancies-2', 'Vacancies', 'Vacancies', 0),
-(2147, '/ceo', 'CEO', 'CEO', 0),
-(2148, '/cio', 'CIO', 'CIO', 0),
 (2149, '/news', 'Neaws', 'News', 0),
 (2150, '/Test-3', 'Test', 'Test', 0),
 (2151, '/test-4', 'test', NULL, 0),
@@ -776,13 +714,6 @@ CREATE TABLE IF NOT EXISTS `fx_content_photo` (
 --
 
 INSERT INTO `fx_content_photo` (`id`, `photo`, `description`, `copy`) VALUES
-(1919, 105, 'Haitian people.', 'Dmitry Medvedev'),
-(1923, 116, 'Haitian Pussy Riot', NULL),
-(2021, 361, 'Kiev', ''),
-(2022, 367, '', ''),
-(2023, 369, 'Swakopmund', ''),
-(2025, 373, 'Ukranian steppe', ''),
-(2026, 374, 'Beautiful evening', ''),
 (2058, 390, 'Это же Саша Васильев!', ''),
 (2214, 432, 'Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Sanctus sea sed takimata ut vero voluptua. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.', 'Sanctus sea sed takimata'),
 (2215, 433, 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Quis aute iure reprehenderit inUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi ', 'Lorem ipsum dolor sit'),
@@ -915,14 +846,11 @@ INSERT INTO `fx_content_section` (`id`) VALUES
 (3),
 (16),
 (1887),
-(1889),
-(1890),
 (1898),
 (1899),
 (1900),
 (1901),
 (1902),
-(1925),
 (2072),
 (2073),
 (2074),
@@ -933,12 +861,6 @@ INSERT INTO `fx_content_section` (`id`) VALUES
 (2079),
 (2081),
 (2082),
-(2132),
-(2134),
-(2139),
-(2141),
-(2143),
-(2146),
 (2149),
 (2179),
 (2181),
@@ -1004,8 +926,6 @@ INSERT INTO `fx_content_text` (`id`, `text`) VALUES
 (112, '<p>Put your content here!​</p>'),
 (1903, '<p>\n	The adventure began back in 1977, when Thierry Sabine got lost on his motorbike in the Libyan desert during the Abidjan-Nice Rally. Saved from the sands in extremis, he returned to France still in thrall to this landscape and promising himself he would share his fascination with as many people as possible. He proceeded to come up with a route starting in Europe, continuing to Algiers and crossing Agadez before eventually finishing at Dakar. The founder coined a motto for his inspiration: "A challenge for those who go. A dream for those who stay behind." Courtesy of his great conviction and that modicum of madness peculiar to all great ideas, the plan quickly became a reality. Since then, the Paris-Dakar, a unique event sparked by the spirit of adventure, open to all riders and carrying a message of friendship between all men, has never failed to challenge, surprise and excite. Over the course of almost thirty years, it has generated innumerable sporting and human stories.</p><p>(c) <a href="http://www.dakar.com">www.dakar.com</a></p>'),
 (1910, '<p class="">\n	Everyone can join our team! Please, feel free to contact us for a details.</p>'),
-(1924, '<p></p><p>Port-au-Prince, Haiti. Here we are!&nbsp;</p><p></p>'),
-(2027, '<p>\r\n	Have questions? Need more information?\r\n</p>\r\n<p>\r\n	Send a starter inquiry to <a href="http://mailto:info@jeeptravel.loc">info@jeeptravel.loc</a>\r\n</p>'),
 (2047, '<p>\r\n	We are going to post many sad  but interesting posts under the "funeral" tag. Stay idle.\r\n</p>'),
 (2059, '<p>\n	Feel free to subscribe our&nbsp;<a href="/Blog?rss" target="_blank">​RSS</a>&nbsp;chanel!</p>'),
 (2062, '<p>\r\n	Welcome welcome welcom!\r\n</p>'),
@@ -1090,8 +1010,6 @@ CREATE TABLE IF NOT EXISTS `fx_content_vacancy` (
 --
 
 INSERT INTO `fx_content_vacancy` (`id`, `position`, `salary_from`, `salary_to`, `requirements`, `responsibilities`, `work_conditions`, `address`, `phone`, `email`, `contacts_name`) VALUES
-(2147, 'CEO', 7000, 15000, '<p></p><ul>\n<li>asdfasd​</li><li>asdfasdf</li><li>asdfasdf</li><li>asdf</li><li>asdf<br><br></li></ul>', '<ul><li>asdfasdf<br></li><li>asdfasdf</li><li>asdfasdf</li><li>asdf​<br></li></ul>', '<p></p><ul>\n<li>sadfasdf​<br></li><li>asdfasdf</li><li>asdfasdf</li><li>asdfasdf</li></ul>', 'anywhere str. 4-5-1', '777777', 'ceo@ceo.ru', 'Ivanov I. P.'),
-(2148, 'CIO', 5000, 7000, 'Be CIO', 'Be CIO', 'Be CIO', 'anywhere str. 4-5-1', '777777', 'ceo@ceo.ru', 'Ivanov I. P.'),
 (2249, 'At vero eos et', 1234, 5446, 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.', 'Stet clita kasd gubergren, no sea takimata sanctus est. Sanctus sea sed takimata ut vero voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.', 'Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.', 'anywhere str. 4-5-1', '777777', 'ceo@ceo.ru', 'Ivanov I. P.'),
 (2250, 'Quis aute iure', 7567, 7807890, ' Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.', 'Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Stet clita kasd gubergren, no sea takimata sanctus est. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. At vero eos et accusam et justo duo dolores et ea rebum.', 'At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est.', 'Sanctus sea sed takimata', '2425236346', 'ceo@ceo.ru', 'Ivanov I. P.');
 
@@ -1113,7 +1031,6 @@ CREATE TABLE IF NOT EXISTS `fx_content_video` (
 --
 
 INSERT INTO `fx_content_video` (`id`, `embed_html`, `description`) VALUES
-(2135, '<p>​</p><iframe width="420" height="315" src="//www.youtube.com/embed/4OGMGNqz15Q" frameborder="0" allowfullscreen="">\n</iframe>', '<p>\n	Description\n</p>'),
 (2493, '<iframe width="560" height="315" src="//www.youtube.com/embed/gOMvXngEHmw?wmode=opaque" frameborder="0" allowfullscreen></iframe>', '');
 
 -- --------------------------------------------------------
@@ -1333,22 +1250,11 @@ CREATE TABLE IF NOT EXISTS `fx_filetable` (
 INSERT INTO `fx_filetable` (`id`, `real_name`, `path`, `type`, `size`, `to_delete`) VALUES
 (56, 'bg-portfolio.jpg', 'content/bg-portfolio_1.jpg', 'image/jpeg', 235261, 0),
 (60, 'bg-portfolio.jpg', 'content/bg-portfolio_3.jpg', 'image/jpeg', 235261, 0),
-(105, 'portfolio_photo.jpg', 'content/portfolio_photo_0.jpg', 'image/jpeg', 238783, 0),
-(116, 'NOMADE-RIDDIM-VOL.031.jpg', 'content/NOMADE-RIDDIM-VOL.031_0.jpg', 'image/jpeg', 422922, 0),
 (164, 'гроза.jpg', 'content/groza_1.jpg', 'image/jpeg', 172197, 0),
 (345, 'img01.jpg', 'content/img01_1.jpg', 'image/jpeg', 219265, 0),
-(346, 'bg-portfolio.jpg', 'content/bg-portfolio_4.jpg', 'image/jpeg', 235261, 0),
 (356, '_logo.png', 'content/logo_3.png', 'image/png', 2627, 0),
 (357, 'bg-portfolio.jpg', 'content/bg-portfolio_6.jpg', 'image/jpeg', 235261, 0),
 (358, 'bg-company.jpg', 'content/bg-company_2.jpg', 'image/jpeg', 68376, 0),
-(361, 'aborigeny_1.jpg', 'content/aborigeny_1.jpg', 'image/jpeg', 102971, 0),
-(366, 'foto.jpg', 'content/foto_1.jpg', 'image/jpeg', 47794, 0),
-(367, 'jeep-safari-2.jpg', 'content/jeep-safari-2_0.jpg', 'image/jpeg', 110257, 0),
-(368, 'jeep-safari-2.jpg', 'content/jeep-safari-2_1.jpg', 'image/jpeg', 110257, 0),
-(369, 'Rickus Vermeulen Jeep.jpg', 'content/Rickus_Vermeulen_Jeep_0.jpg', 'image/jpeg', 46915, 0),
-(371, 'Rickus Vermeulen Jeep.jpg', 'content/Rickus_Vermeulen_Jeep_2.jpg', 'image/jpeg', 46915, 0),
-(373, 'foto.jpg', 'content/foto_2.jpg', 'image/jpeg', 47794, 0),
-(374, '_800_600_90_667819585-IMG_2954.jpg', 'content/800_600_90_667819585-IMG_2954_0.jpg', 'image/jpeg', 39395, 0),
 (378, 'logo.png', 'content/logo_6.png', 'image/png', 5735, 0),
 (379, 'img05.jpg', 'content/img05_1.jpg', 'image/jpeg', 5717, 0),
 (389, 'bg-portfolio.jpg', 'content/bg-portfolio_0.jpg', 'image/jpeg', 235261, 0),
@@ -1386,7 +1292,6 @@ INSERT INTO `fx_filetable` (`id`, `real_name`, `path`, `type`, `size`, `to_delet
 (421, 'art_stub_3.jpg', 'content/art_stub_3_0.jpg', 'image/jpeg', 26120, 0),
 (422, 'oblako_edit.png', 'content/oblako_edit_0.png', 'image/png', 17575, 0),
 (423, 'pic_cf234a6d1cee7008e148c859472470e8.jpg', 'content/pic_cf234a6d1cee7008e148c859472470e8_0.jpg', 'image/jpeg', 41026, 0),
-(427, 'awards-2007.png', 'content/awards-2007_1.png', 'image/png', 12875, 0),
 (429, 'pic_cf234a6d1cee7008e148c859472470e8.jpg', 'content/pic_cf234a6d1cee7008e148c859472470e8_2.jpg', 'image/jpeg', 41026, 0),
 (432, 'pic_cf234a6d1cee7008e148c859472470e8.jpg', 'content/pic_cf234a6d1cee7008e148c859472470e8_5.jpg', 'image/jpeg', 41026, 0),
 (433, 'pic_cf234a6d1cee7008e148c859472470e8.jpg', 'content/pic_cf234a6d1cee7008e148c859472470e8_6.jpg', 'image/jpeg', 41026, 0),
@@ -1516,36 +1421,15 @@ INSERT INTO `fx_infoblock` (`id`, `parent_infoblock_id`, `site_id`, `page_id`, `
 (76, 0, 15, 1883, 1, 'Social networks', 'component_section', 'list_infoblock', 'a:1:{s:7:"submenu";s:4:"none";}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
 (77, 0, 15, 1887, 1, 'Menu / About', 'component_section', 'list_infoblock', 'a:1:{s:7:"submenu";s:4:"none";}', 'a:2:{s:5:"pages";s:11:"descendants";s:9:"page_type";s:0:"";}'),
 (78, 0, 15, 0, 1, ' Breadcrumbs', 'component_section', 'breadcrumbs', 'a:2:{s:11:"header_only";b:0;s:13:"hide_on_index";s:1:"1";}', 'a:2:{s:5:"pages";s:3:"all";s:9:"page_type";s:0:"";}'),
-(79, 0, 15, 1889, 1, 'Our gallery', 'component_gallery', 'list_infoblock', 'a:6:{s:5:"limit";s:1:"0";s:15:"show_pagination";s:1:"1";s:7:"sorting";s:12:"publish_date";s:11:"sorting_dir";s:4:"desc";s:11:"parent_type";s:13:"mount_page_id";s:9:"parent_id";s:0:"";}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
-(80, 67, 15, 1889, 1, '', '', '', 'a:0:{}', 'a:2:{s:5:"pages";s:11:"descendants";s:9:"page_type";s:0:"";}'),
-(81, 0, 15, 1889, 1, 'Photo list', 'component_photo', 'list_infoblock', 'a:6:{s:5:"limit";s:0:"";s:15:"show_pagination";b:0;s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";s:11:"parent_type";s:15:"current_page_id";s:9:"parent_id";s:0:"";}', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:7:"gallery";}'),
-(82, 0, 15, 1925, 1, 'Blog posts', 'component_blogpost', 'list_infoblock', 'a:7:{s:5:"limit";s:1:"2";s:15:"show_pagination";s:1:"1";s:7:"sorting";s:12:"publish_date";s:11:"sorting_dir";s:4:"desc";s:11:"parent_type";s:13:"mount_page_id";s:9:"parent_id";s:0:"";s:19:"field_195_infoblock";s:2:"84";}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
 (83, 0, 15, 1925, 1, 'Tag cloud', 'component_tag', 'list_infoblock', 'a:6:{s:5:"limit";s:0:"";s:15:"show_pagination";b:0;s:7:"sorting";s:4:"name";s:11:"sorting_dir";s:3:"asc";s:11:"parent_type";s:13:"mount_page_id";s:9:"parent_id";s:0:"";}', 'a:2:{s:5:"pages";s:11:"descendants";s:9:"page_type";s:0:"";}'),
-(84, 0, 15, 1925, 1, 'Post tags', 'component_tagpost', 'list_infoblock', 'a:7:{s:5:"limit";s:0:"";s:15:"show_pagination";b:0;s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";s:11:"parent_type";s:15:"current_page_id";s:9:"parent_id";s:0:"";i:0;b:0;}', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:8:"blogpost";}'),
 (85, 0, 15, 1883, 1, 'Photo / mirror', 'component_photo', 'list_filtered', 'a:6:{s:5:"limit";s:1:"3";s:15:"show_pagination";s:1:"1";s:7:"sorting";s:7:"created";s:11:"sorting_dir";s:4:"desc";s:8:"from_all";s:1:"1";s:9:"parent_id";s:0:"";}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
-(86, 0, 15, 1925, 1, 'Blog calendar', 'component_blogpost', 'calendar', 'a:0:{}', 'a:2:{s:5:"pages";s:11:"descendants";s:9:"page_type";s:0:"";}'),
-(87, 0, 15, 1925, 1, 'Separate blog post', 'component_blogpost', 'record', 'a:0:{}', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:8:"blogpost";}'),
 (99, 71, 15, 1883, 1, '', '', '', 'a:0:{}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
 (100, 99, 15, 1883, 1, '', '', '', 'a:0:{}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
 (104, 0, 15, 1883, 1, 'Text in sidebar', 'component_text', 'list_infoblock', 'a:1:{s:11:"parent_type";s:15:"current_page_id";}', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:0:"";}'),
-(117, 0, 15, 1925, 1, 'Blog / By tag', 'component_blogpost', 'listing_by_tag', 'a:0:{}', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:3:"tag";}'),
-(118, 0, 15, 1887, 1, 'Blog / Recent', 'component_blogpost', 'list_filtered', 'a:6:{s:5:"limit";s:1:"3";s:15:"show_pagination";b:0;s:7:"sorting";s:12:"publish_date";s:11:"sorting_dir";s:4:"desc";s:8:"from_all";s:1:"1";s:9:"parent_id";s:0:"";}', 'a:2:{s:5:"pages";s:11:"descendants";s:9:"page_type";s:0:"";}'),
 (121, 0, 15, 1891, 1, 'Image / List', 'component_photo', 'list_infoblock', 'a:6:{s:5:"limit";s:2:"10";s:15:"show_pagination";b:0;s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";s:11:"parent_type";s:15:"current_page_id";s:9:"parent_id";s:0:"";}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
 (126, 0, 15, 2075, 1, 'Navigation / Alter sub', 'component_section', 'list_infoblock', 'a:1:{s:7:"submenu";s:4:"none";}', 'a:2:{s:5:"pages";s:11:"descendants";s:9:"page_type";s:0:"";}'),
 (127, 0, 15, 1925, 1, 'Comment / List', 'component_comment', 'list_infoblock', 'a:6:{s:5:"limit";s:0:"";s:15:"show_pagination";b:0;s:7:"sorting";s:12:"publish_date";s:11:"sorting_dir";s:3:"asc";s:11:"parent_type";s:15:"current_page_id";s:9:"parent_id";s:0:"";}', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:8:"blogpost";}'),
 (128, 0, 15, 1925, 1, 'Comment / add', 'component_comment', 'add', 'a:1:{s:19:"target_infoblock_id";s:3:"127";}', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:8:"blogpost";}'),
-(131, 0, 15, 2132, 1, '', 'component_faq', 'list_infoblock', 'a:6:{s:5:"limit";s:2:"10";s:15:"show_pagination";s:1:"1";s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";s:11:"parent_type";s:15:"current_page_id";s:9:"parent_id";s:0:"";}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
-(132, 0, 15, 2132, 1, '', 'component_faq', 'record', 'a:0:{}', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:3:"faq";}'),
-(133, 0, 15, 2134, 1, '', 'component_video', 'list_infoblock', 'a:6:{s:5:"limit";s:2:"10";s:15:"show_pagination";s:1:"1";s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";s:11:"parent_type";s:15:"current_page_id";s:9:"parent_id";s:0:"";}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
-(134, 0, 15, 2139, 1, '', 'component_award', 'list_infoblock', 'a:6:{s:5:"limit";s:2:"10";s:15:"show_pagination";s:1:"1";s:7:"sorting";s:4:"year";s:11:"sorting_dir";s:4:"desc";s:11:"parent_type";s:15:"current_page_id";s:9:"parent_id";s:0:"";}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
-(135, 0, 15, 2139, 1, '', 'component_award', 'record', 'a:0:{}', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:5:"award";}'),
-(136, 0, 15, 2141, 1, '', 'component_company', 'list_infoblock', 'a:6:{s:5:"limit";s:2:"10";s:15:"show_pagination";s:1:"1";s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";s:11:"parent_type";s:15:"current_page_id";s:9:"parent_id";s:0:"";}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
-(137, 0, 15, 2141, 1, '', 'component_company', 'record', 'a:0:{}', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:7:"company";}'),
-(138, 0, 15, 2143, 1, '', 'component_project', 'list_infoblock', 'a:6:{s:5:"limit";s:2:"10";s:15:"show_pagination";s:1:"1";s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";s:11:"parent_type";s:15:"current_page_id";s:9:"parent_id";s:0:"";}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
-(139, 0, 15, 2143, 1, '', 'component_project', 'record', 'a:0:{}', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:7:"project";}'),
-(141, 0, 15, 1883, 1, '', 'component_section', 'list_infoblock', 'a:1:{s:7:"submenu";s:4:"none";}', 'a:2:{s:5:"pages";s:11:"descendants";s:9:"page_type";N;}'),
-(142, 0, 15, 2146, 1, '', 'component_vacancy', 'list_infoblock', 'a:6:{s:5:"limit";s:2:"10";s:15:"show_pagination";s:1:"1";s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";s:11:"parent_type";s:15:"current_page_id";s:9:"parent_id";s:0:"";}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
-(143, 0, 15, 2146, 1, '', 'component_vacancy', 'record', 'a:0:{}', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:7:"vacancy";}'),
 (144, 0, 15, 0, 1, '', 'component_publication', 'calendar', 'a:0:{}', 'a:2:{s:5:"pages";s:3:"all";s:9:"page_type";s:11:"publication";}'),
 (147, 0, 15, 2149, 1, '', 'component_news', 'list_infoblock', 'a:6:{s:5:"limit";s:2:"10";s:15:"show_pagination";s:1:"1";s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";s:11:"parent_type";s:15:"current_page_id";s:9:"parent_id";s:0:"";}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
 (148, 0, 15, 2149, 1, '', 'component_news', 'record', 'a:0:{}', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:4:"news";}'),
@@ -1604,8 +1488,7 @@ INSERT INTO `fx_infoblock` (`id`, `parent_infoblock_id`, `site_id`, `page_id`, `
 (241, 0, 16, 2210, 1, 'Product / On Main', 'component_product', 'list_filtered_featured', 'a:4:{s:5:"limit";s:1:"4";s:10:"pagination";s:1:"0";s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
 (258, 0, 16, 0, 1, 'Product / ', 'component_product', 'list_selected', 'a:5:{s:5:"limit";s:2:"10";s:10:"pagination";s:1:"0";s:7:"sorting";s:7:"created";s:11:"sorting_dir";s:3:"asc";s:8:"selected";a:1:{s:3:"f_1";a:1:{i:0;s:4:"2327";}}}', 'a:2:{s:5:"pages";s:3:"all";s:9:"page_type";s:0:"";}'),
 (259, 0, 16, 2254, 1, 'News / ', 'component_news', 'list_selected', 'a:5:{s:5:"limit";b:0;s:10:"pagination";b:0;s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:4:"desc";s:8:"selected";a:1:{s:3:"f_2";a:1:{i:0;s:4:"2455";}}}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
-(260, 0, 16, 2210, 1, 'News / ', 'component_news', 'list_filtered', 'a:5:{s:5:"limit";b:0;s:10:"pagination";b:0;s:7:"sorting";s:7:"created";s:11:"sorting_dir";s:3:"asc";s:10:"conditions";a:1:{s:5:"new_1";a:3:{s:4:"name";s:7:"on_main";s:8:"operator";s:1:"=";s:5:"value";s:1:"1";}}}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
-(261, 0, 15, 1883, 1, 'Blog / ', 'component_blogpost', 'list_selected', 'a:5:{s:5:"limit";b:0;s:10:"pagination";b:0;s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";s:8:"selected";a:1:{i:0;s:4:"1996";}}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}');
+(260, 0, 16, 2210, 1, 'News / ', 'component_news', 'list_filtered', 'a:5:{s:5:"limit";b:0;s:10:"pagination";b:0;s:7:"sorting";s:7:"created";s:11:"sorting_dir";s:3:"asc";s:10:"conditions";a:1:{s:5:"new_1";a:3:{s:4:"name";s:7:"on_main";s:8:"operator";s:1:"=";s:5:"value";s:1:"1";}}}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}');
 
 -- --------------------------------------------------------
 
@@ -1675,36 +1558,15 @@ INSERT INTO `fx_infoblock_visual` (`id`, `infoblock_id`, `layout_id`, `wrapper`,
 (154, 74, 1, '', '', 'component_text.list', '', 'content', 1),
 (155, 77, 10, 'layout_jeeptravel.block_titled', 'a:1:{s:6:"header";s:13:"Jeep Travels:";}', 'layout_jeeptravel.side_menu', '', 'sidebar', 4),
 (156, 78, 10, '', '', 'component_section.breadcrumbs', '', 'content', 1),
-(157, 79, 10, '', '', 'layout_jeeptravel.pages_by_year', '', 'content', 5),
-(158, 80, 10, '', '', 'layout_jeeptravel.full', '', '', 0),
-(159, 81, 10, '', '', 'component_photo.listing_slider', '', 'content', 6),
-(160, 82, 10, '', '', 'component_blogpost.list', 'a:8:{s:13:"bg_photo_1976";s:0:"";s:10:"tags_label";s:10:"Post tags:";s:12:"posted_under";s:11:"Entry tags:";s:9:"blog_name";s:21:"Jeep Travel blog feed";s:16:"blog_description";s:27:"Our blog is so interesting!";s:16:"rss_posted_under";s:11:"Entry tags:";s:20:"pagination_separator";s:4:"· ";s:9:"next_page";s:2:"»";}', 'content', 2),
 (161, 83, 10, 'layout_jeeptravel.block_titled', 'a:1:{s:6:"header";s:4:"Tags";}', 'component_tag.tag_list', '', 'sidebar', 2),
-(162, 84, 10, '', '', 'component_tagpost.list', '', 'content', 4),
 (163, 85, 10, 'layout_jeeptravel.block_titled', 'a:1:{s:6:"header";s:6:"Photos";}', 'layout_jeeptravel.index_photo_anounces', 'a:2:{s:10:"image_1916";s:0:"";s:10:"image_1913";s:0:"";}', 'index_left', 1),
-(164, 86, 10, 'layout_jeeptravel.block_titled', 'a:1:{s:6:"header";s:7:"Archive";}', 'component_blogpost.calendar', 'a:1:{s:6:"expand";s:4:"true";}', 'sidebar', 3),
-(165, 87, 10, '', '', 'auto.auto', 'a:1:{s:10:"tags_label";s:16:"Entry tagged by:";}', 'content', 3),
 (170, 99, 10, '', '', 'layout_jeeptravel.index', '', '', 0),
 (171, 100, 10, '', '', 'layout_jeeptravel.index', '', '', 0),
 (175, 104, 10, '', '', 'component_text.list', '', 'sidebar', 1),
-(188, 117, 10, '', '', 'component_blogpost.list', '', 'content', 9),
-(189, 118, 10, 'layout_jeeptravel.block_titled', 'a:1:{s:6:"header";s:19:"Recent blog entries";}', 'component_page.list', '', 'sidebar', 5),
 (192, 121, 10, '', '', 'component_photo', '', 'content', 10),
 (197, 126, 10, 'layout_jeeptravel.block_titled', 'a:1:{s:6:"header";s:8:"Alt menu";}', 'component_section.listing_deep', '', 'content', 11),
 (198, 127, 10, 'layout_jeeptravel.block_titled', 'a:1:{s:6:"header";s:8:"Comments";}', 'component_comment.list', '', 'content', 12),
 (199, 128, 10, 'layout_jeeptravel.block_titled', 'a:1:{s:6:"header";s:11:"Add Comment";}', 'component_comment.add', '', 'content', 13),
-(202, 131, 10, '', '', 'component_faq.list', '', 'content', 14),
-(203, 132, 10, '', '', 'component_faq.record', '', 'content', 15),
-(204, 133, 10, '', '', 'component_video.list', '', 'content', 16),
-(205, 134, 10, '', '', 'component_award.list', '', 'content', 17),
-(206, 135, 10, '', '', 'component_award.record', '', 'content', 18),
-(207, 136, 10, '', '', 'component_company.list', '', 'content', 19),
-(208, 137, 10, '', '', 'component_company.record', '', 'content', 20),
-(209, 138, 10, '', '', 'component_project.list', '', 'content', 21),
-(210, 139, 10, '', '', 'component_project.record', '', 'content', 22),
-(212, 141, 10, '', '', 'layout_jeeptravel.top_menu', '', 'footer', 3),
-(213, 142, 10, '', '', 'component_vacancy.list', '', 'content', 23),
-(214, 143, 10, '', '', 'component_vacancy.record', '', 'content', 24),
 (215, 144, 10, '', '', 'component_publication.calendar', '', 'sidebar', 6),
 (218, 147, 10, '', '', 'component_news.list', 'a:1:{s:10:"tags_label";s:5:"Tags:";}', 'content', 25),
 (219, 148, 10, '', '', 'component_news.record', '', 'content', 26),
@@ -1763,8 +1625,7 @@ INSERT INTO `fx_infoblock_visual` (`id`, `infoblock_id`, `layout_id`, `wrapper`,
 (312, 241, 9, 'layout_dummy.block_titled_bottom', 'a:1:{s:6:"header";s:17:"Featured Products";}', 'layout_dummy.featured_products', '', 'bottom_wide_block', 0),
 (329, 258, 9, '', '', 'layout_dummy.featured_products', '', 'two_columns_right_block', 15),
 (330, 259, 9, '', '', 'layout_dummy.main_news', '', 'two_columns_right_block', 14),
-(331, 260, 9, 'layout_dummy.block_titled', 'a:1:{s:6:"header";s:4:"News";}', 'layout_dummy.main_news', '', 'center_block', 0),
-(332, 261, 10, 'layout_jeeptravel.block_titled', '', 'component_blogpost.list', '', 'index_center', 3);
+(331, 260, 9, 'layout_dummy.block_titled', 'a:1:{s:6:"header";s:4:"News";}', 'layout_dummy.main_news', '', 'center_block', 0);
 
 -- --------------------------------------------------------
 
@@ -2378,7 +2239,7 @@ CREATE TABLE IF NOT EXISTS `fx_session` (
 --
 
 INSERT INTO `fx_session` (`id`, `user_id`, `session_start`, `session_time`, `ip`, `login_save`, `site_id`, `auth_type`) VALUES
-('c99ee250ea37581c14c88918af2974a4', 2367, 1385370801, 1385545221, 2130706433, 0, 0, 1);
+('c99ee250ea37581c14c88918af2974a4', 2367, 1385370801, 1385549590, 2130706433, 0, 0, 1);
 
 -- --------------------------------------------------------
 
