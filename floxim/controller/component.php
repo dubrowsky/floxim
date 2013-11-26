@@ -127,49 +127,6 @@ class fx_controller_component extends fx_controller {
         }
     }
 
-    /*
-    public function config_list($config) {
-        $sortings = array(
-            'created'=> fx::lang('Created','controller_component')
-        ) + $this
-            ->get_component()
-            ->all_fields()
-            ->find('type', fx_field::FIELD_MULTILINK, '!=')
-            ->get_values('description', 'name');
-        
-        $config['settings']['sorting']['values'] = $sortings;
-        return $config;
-    }*
-     * 
-     */
-    
-    
-    /*
-    public function config_list_filtered($config) {
-        $config['settings'] += $this->_config_conditions();
-        return $config;
-    }
-
-    public function config_list_selected($config) {
-        $field['selected'] = array (
-            'name' => 'selected', 
-            'label' => fx::lang('Selected','controller_component'),
-            'type' => 'livesearch',
-            'is_multiple' => true,
-            'ajax_preload' => true,
-            'params' => array(
-                'content_type' => 'content_'.$this->_content_type
-            ),
-        );
-        $config['settings'] += $field;
-        // добавляем ручную сортировку для инфоблок-selected
-        $config['settings']['sorting']['values']['manual'] = 
-                        '-'.fx::lang('Manual','controller_component').'-';
-        return $config;
-    }
-     * 
-     */
-    
     protected function _config_conditions () {
         $fields['conditions'] = array(
             'name' => 'conditions',
@@ -245,7 +202,7 @@ class fx_controller_component extends fx_controller {
         return $fields;
     }  
     
-    public function config_list_infoblock($config) {
+    public function get_target_config_fields() {
         
         /*
          * Ниже код, который добывает допустимые инфоблоки для полей-ссылок
@@ -258,6 +215,8 @@ class fx_controller_component extends fx_controller {
                             find('type', array(fx_field::FIELD_LINK, fx_field::FIELD_MULTILINK))->
                             find('type_of_edit', fx_field::EDIT_NONE, fx_collection::FILTER_NEQ);
         
+        $fields = array();
+        fx::log('getting confs', $link_fields, $this);
         foreach ($link_fields as $lf) {
             if ($lf['type'] == fx_field::FIELD_LINK) {
                 $target_com_id = $lf['format']['target'];
@@ -274,6 +233,7 @@ class fx_controller_component extends fx_controller {
             $com_infoblocks = fx::data('infoblock')->
                     where('site_id', fx::env('site')->get('id'))->
                     get_content_infoblocks($target_com['keyword']);
+            
             $ib_values = array();
             foreach ($com_infoblocks as $ib) {
                 $ib_values []= array($ib['id'], $ib['name']);
@@ -284,7 +244,7 @@ class fx_controller_component extends fx_controller {
             $c_ib_field = array(
                 'name' => 'field_'.$lf['id'].'_infoblock'
             );
-            if (count($ib_values) === 1) {
+            if (count($ib_values) === 1 && false) {
                 $c_ib_field += array(
                     'type' => 'hidden',
                     'value' => $ib_values[0][0]
@@ -297,12 +257,10 @@ class fx_controller_component extends fx_controller {
                                 .' "'.$lf['description'].'"'
                 );
             }
-            $config['settings'][$c_ib_field['name']]= $c_ib_field;
+            $fields[$c_ib_field['name']]= $c_ib_field;
         }
-        // добавляем ручную сортировку для инфоблок-листинга
-        $config['settings']['sorting']['values']['manual'] = 
-                        '-'.fx::lang('Manual','controller_component').'-';
-        return $config;
+        fx::log('tarfs', $fields);
+        return $fields;
     }
     
     public function do_record() {

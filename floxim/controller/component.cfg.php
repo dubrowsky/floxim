@@ -57,7 +57,7 @@ return array(
                     ),
                     'parent' => array('scope[pages]' => '!=this')
                 )
-            ),
+            ) + $this->get_target_config_fields(),
             'defaults' => array(
                 '!pagination' => true
             )
