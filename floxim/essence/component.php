@@ -123,7 +123,7 @@ class fx_component extends fx_essence {
             CREATE TABLE IF NOT EXISTS `{{content_".$this['keyword']."}}` (
             `id` int(11) NOT NULL,
             PRIMARY KEY (`id`)
-            ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;";
+            ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;";
         fx::db()->query($sql);
     }
 
