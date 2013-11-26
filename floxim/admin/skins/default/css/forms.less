@@ -1,3 +1,9 @@
+.fx_shadow () {
+    -webkit-box-shadow: 0px 5px 12px rgba(50, 50, 50, 0.56);
+    -moz-box-shadow:    0px 5px 12px rgba(50, 50, 50, 0.56);
+    box-shadow:         0px 5px 12px rgba(50, 50, 50, 0.56);
+}
+
 .fx_admin_form {
     padding: 20px;
 }
@@ -353,3 +359,20 @@
 .fx_overlay .visual_wrapper .variant.active {
     border:2px solid #000;
 }
+
+.fx_popup {
+    padding: 10px;
+    z-index: 3010;
+    background-color: #FFF;
+    border: 1px solid #e4e6e6;
+    .fx_shadow;
+    .fx_popup_arrow {
+        display: block;
+        background: url(/floxim/admin/skins/default/images/popup_arrow.png) no-repeat 0 0;
+        width: 13px;
+        height: 8px;
+        position: absolute;
+        top: -8px;
+    }
+}
+

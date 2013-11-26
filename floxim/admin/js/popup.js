@@ -6,12 +6,12 @@ $fx.popup = function(params) {
     this.create = function() {
         this.$node = $('<div class="fx_overlay fx_popup" />');
         $('body').append(this.$node);
-        this.$node.css({
+        /*this.$node.css({
             'z-index':'3010',
             background:'#FFF',
             overflow:'auto',
             'box-shadow':'0px 0px 12px rgba(50, 50, 50, 0.77)'
-        });
+        });*/
         if (this.params.maxWidth) {
             this.$node.css('max-width', this.params.maxWidth +"px");
         }
@@ -21,6 +21,8 @@ $fx.popup = function(params) {
         this.$node.append(this.$body);
         this.$footer = $('<div class="fx_popup_footer" />');
         this.$node.append(this.$footer);
+        this.$arrow = $('<div class="fx_popup_arrow" />');
+        this.$node.append(this.$arrow);
         var cancel_button = $t.jQuery('input', {
            'type':'button',
            'is_submit':false,
@@ -66,6 +68,7 @@ $fx.popup = function(params) {
     this.position = function() {
         this.$node.css('left', 0);
         if (this.$target) {
+            var arrow = this.$node.find('.fx_popup_arrow');
             var to = this.$target.offset();
             var is_fixed = false;
             var $cp = this.$target;
@@ -84,12 +87,13 @@ $fx.popup = function(params) {
             }
             var positions = {
                 top:to.top + this.$target.height() + 10 ,
-                left: (to.left + this.$target.width()/2 - this.$node.width() / 2)
+                //left: (to.left + this.$target.width()/2 - this.$node.width() / 2)
+                left: to.left
             };
-            console.log(positions);
             if (positions.left < 0) {
                 positions.left = 5;
             } else if (positions.left + this.$node.width() > $(window).width()) {
+                arrow.css('left', $(window).width() - this.$node.width() - 10);
                 positions.left = $(window).width() - this.$node.width() - 5;
             }
             this.$node.css({
