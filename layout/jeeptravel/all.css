@@ -596,6 +596,8 @@ section .btn-next.active { background-position: -46px 0; }
     padding: 5px 8px;
     color: #959a9e;
     border: 0;
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
     box-sizing: content-box;
     font: italic 14px/16px 'CalibriLight', Arial, sans-serif;
 }
