@@ -119,8 +119,18 @@ class fx_controller_admin_content extends fx_controller_admin {
         if (!$content) {
             return;
         }
+        $current_page_path = fx::data('content_page' , $input['page_id'])->get_path()->get_values('id');
+        $response = array('status'=>'ok');
+        if ($content->is_instanceof('page') && is_array($current_page_path) && in_array($content['id'], $current_page_path) ) {
+            if ($content['parent_id'] == 0){
+                $response['reload'] = '/';
+            } else {
+                $parent_page = fx::data('content_page', $content['parent_id']);
+                $response['reload'] = $parent_page['url'];
+            }
+        }
         $content->delete();
-        return array('status' => 'ok');
+        return $response;
     }
     
     public function livesearch($input) {

@@ -588,7 +588,8 @@ fx_front.prototype.select_content_essence = function(n) {
                essence:'content',
                action:'delete_save',
                content_type:ce_type,
-               content_id:ce_id
+               content_id:ce_id,
+               page_id:$('body').data('fx_page_id')
            }, function () {
                $fx.front.reload_infoblock(ib_node);
            });
