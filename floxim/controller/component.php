@@ -505,7 +505,6 @@ class fx_controller_component extends fx_controller {
                             $condition['operator'] = 'RAW';
                             break;
                     }
-                    
                     if ($field['type'] == fx_field::FIELD_LINK){
                         if (!isset($condition['value'])) {
                             $error = true;
@@ -522,12 +521,14 @@ class fx_controller_component extends fx_controller {
                             }
                         }
                     }
+
                     if ($field['type'] == fx_field::FIELD_MULTILINK) {
+
                         if (!isset($condition['value']) || !is_array($condition['value'])) {
                             $error = true;
                         } else {
                             foreach ($condition['value'] as $v) {
-                                $ids[]= $v[0];
+                                $ids[]= $v;
                             }
                             $relation = $field->get_relation();
                             if ($relation[0] === fx_data::MANY_MANY){
@@ -558,6 +559,7 @@ class fx_controller_component extends fx_controller {
                     }
                 }
             }
+            dev_log('cond list', $q->show_query());
         });
         $res = $this->do_list();
         return $res;
