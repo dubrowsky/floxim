@@ -562,10 +562,18 @@ function fx_suggest (params) {
 		this.boxVisible = true;
 		var node = this.offsetNode;
 		this.box.show();
-		this.box.offset({
-				top:node.offset().top + node.height() + 5,
-				left:node.offset().left
-		});
+        this.box.offset({
+                top:node.offset().top + node.height() + 4,
+                left:node.offset().left
+        });
+        var tmp_box = this.box;
+        setTimeout (
+            function () {
+                tmp_box.offset({
+                        top:tmp_box.offset().top+1,
+                });
+            }
+        , 1)
 		this.box.css({
 			width:node.width()-10+'px'
 		});
