@@ -459,23 +459,25 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             $sep = str_repeat(" -- ", $i);
             $pn = '"'.$pi['name'].'"';
             $is_last = $i === $path_count - 1;
+            $c_page_id = $pi['id'];
             if ($i === 0) {
-                $vals []= array($pi['id'].'-descendants-', 'All pages');
+                $c_page_id = fx::env('site')->get('index_page_id');
+                $vals []= array($c_page_id.'-descendants-', 'All pages');
                 if ($path_count > 1) {
-                    $vals []= array($pi['id'].'-children-'.$c_type, 'All pages of type '.$c_type);
+                    $vals []= array($c_page_id.'-children-'.$c_type, 'All pages of type '.$c_type);
                 }
             }
             if ($is_last) {
-                $vals []= array($pi['id'].'-this-', $sep.$pn.' only');
+                $vals []= array($c_page_id.'-this-', $sep.$pn.' only');
             } else {
-                $vals []= array($pi['id'].'-children-', $sep.$pn.' children only');
+                $vals []= array($c_page_id.'-children-', $sep.$pn.' children only');
             }
             if ($i !== 0 ) {
-                $vals []= array($pi['id'].'-descendants-', $sep.$pn.' and children');
+                $vals []= array($c_page_id.'-descendants-', $sep.$pn.' and children');
             }
             if (!$is_last) {
                 $vals []= array(
-                    $pi['id'].'-children-'.$c_type, 
+                    $c_page_id.'-children-'.$c_type, 
                     $sep.$pn.' children of type '.$c_type
                 );
             }
