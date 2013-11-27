@@ -93,8 +93,8 @@ $fx.popup = function(params) {
             if (positions.left < 0) {
                 positions.left = 5;
             } else if (positions.left + this.$node.width() > $(window).width()) {
-                arrow.css('left', $(window).width() - this.$node.width() - 10);
-                positions.left = $(window).width() - this.$node.width() - 5;
+                arrow.css('left', to.left);
+                positions.left = $(window).width() - this.$node.outerWidth() - 5;
             }
             this.$node.css({
                 top: positions.top+ 'px',
