@@ -47,6 +47,7 @@ class fx_system_page extends fx_system {
             $doc_root = fx::config()->DOCUMENT_ROOT;
             $http_path = fx::config()->HTTP_FILES_PATH;
             $full_path = $doc_root.$http_path;
+
             if (!file_exists($doc_root.$file)) {
                 return;
             }
@@ -54,6 +55,7 @@ class fx_system_page extends fx_system {
             require_once $doc_root.'/floxim/lib/lessphp/lessc.inc.php';
             $target_file_name = md5($file).'.css';
             $this->_files_css[]= $http_path.$target_file_name;
+            $this->_all_css[] = $http_path.$target_file_name;
             //$fh = fopen($full_path.$target_file_name, 'w');
             $less = new lessc();
             $less->checkedCompile($doc_root.$file, $full_path.$target_file_name);
@@ -64,7 +66,55 @@ class fx_system_page extends fx_system {
         $this->_files_css[] = $file;
     }
 
-    // both simple scrits & scripts from bundles
+    public function add_ccs_bundle ($files, $params = array()) {
+
+        if (fx::config()->IS_DEV_MODE && 1!=1) {
+            foreach ($files as $f) {
+                $this->add_css_file($f);
+            }
+            return;
+        }
+        if (!isset($params['name'])) {
+            $params['name'] = md5(join($files));
+        }
+        $params['name'] .= '.cssgz';
+        $doc_root = fx::config()->DOCUMENT_ROOT;
+        $http_path = fx::config()->HTTP_FILES_PATH.$params['name'];
+        $full_path = $doc_root.$http_path;
+        
+        //$this->_all_css = array_merge($this->_all_css, $files);
+        if (!file_exists($full_path)) {
+            $less_flag = false;
+            $file_content = '';
+            foreach ($files as $file) {
+                if (preg_match("~\.less$~", $file)) {
+                    $less_flag = true;
+                }
+                if (!preg_match("~^http://~i", $file)) {
+                    $file = $doc_root.$file;
+                }
+                $file_content .= file_get_contents($file)."\n";
+            }
+
+            if ($less_flag) {
+                require_once $doc_root.'/floxim/lib/lessphp/lessc.inc.php';
+                $less = new lessc();
+                $file_content = $less->compile($file_content);
+            }
+            $fh = gzopen($full_path, 'wb5');
+            gzwrite($fh, $file_content);
+            gzclose($fh);
+            $fh = fopen(preg_replace("~\.cssgz$~", ".css", $full_path), 'w');
+            fputs($fh, $file_content);
+            fclose($fh);
+        }
+        if (!$this->_accept_gzip()) {
+            $http_path = preg_replace("~\.cssgz$~", ".css", $http_path);
+        }
+        $this->_files_css[]= $http_path;
+    }
+
+    // both simple scripts & scripts from bundles
     protected $_all_js = array();
     
     public function add_js_file($file) {

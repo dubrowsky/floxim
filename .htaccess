@@ -11,6 +11,9 @@ ErrorDocument 404 /floxim/require/e404.php
 AddEncoding gzip .jsgz
 AddType "application/javascript" .jsgz 
 
+AddEncoding gzip .cssgz
+AddType "text/css" .cssgz 
+
 Options -Indexes
 Options +FollowSymLinks
 
