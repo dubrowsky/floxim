@@ -718,9 +718,10 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                 'label' => fx::lang('The infoblock contains some content','system') . ', <b>' . $ib_content->length . '</b> '. fx::lang('items. What should we do with them?','system'),
                 'type' => 'select',
                 'values' => array('unbind' => fx::lang('Unbind/Hide','system'), 'delete' => fx::lang('Delete','system')),
-                'parent' => array('delete_confirm' => true)
+                //'parent' => array('delete_confirm' => true)
             );
         }
+        
         if ($infoblock['controller'] == 'layout' && !$infoblock['parent_infoblock_id']) {
             unset($fields[0]);
             $fields []= array('type' => 'html', 'html' => fx::lang('Layouts can not be deleted','system'));
