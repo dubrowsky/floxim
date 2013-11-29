@@ -511,7 +511,7 @@ class fx_controller_component extends fx_controller {
                         } else {
                             $ids = array();
                             foreach ($condition['value'] as $v) {
-                                $ids[]= $v[0];
+                                $ids[]= $v;
                             }
                             $condition['value'] = $ids;
                             if ($condition['operator'] === '!=') {
