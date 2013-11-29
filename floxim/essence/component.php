@@ -140,13 +140,16 @@ class fx_component extends fx_essence {
     }
 
     protected function delete_content_table() {
+        $contents = fx::data('content_'.$this['keyword'])->all();
+        foreach ($contents as $content) {
+            $content->delete();
+        }
         $sql = "DROP TABLE `{{content_".$this['keyword']."}}`";
         fx::db()->query($sql);
     }
 
     protected function delete_infoblocks() {
-        return;
-        $infoblocks = fx::data('infoblock')->get_all('essence_id', $this['id']);
+        $infoblocks = fx::data('infoblock')->where('controller', 'component_'.$this['keyword'])->all();
         foreach ($infoblocks as $infoblock) {
             $infoblock->delete();
         }
