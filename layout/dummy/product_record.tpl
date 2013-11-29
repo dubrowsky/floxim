@@ -4,12 +4,12 @@
     fx:omit="true" >
     <div
         fx:template="item"
-        class="col-md-12">
+        class="col-xs-12">
         <h1 class="no-top-margin">{$name}</h1>
-        <div class="col-md-6">
+        <div class="col-xs-6">
             <img src="{$image}" alt="{$name}">
         </div>
-        <div class="col-md-6">
+        <div class="col-xs-6">
             <h4 class="no-top-margin">{$reference}</h4>
             <div>
                 {$description}
