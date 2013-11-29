@@ -4639,7 +4639,7 @@ content: none;
 
     to {
         background-position: 0 0;
-    };
+    }
 }
 
 @-moz-keyframes progress-bar-stripes {
@@ -4649,7 +4649,7 @@ content: none;
 
     to {
         background-position: 0 0;
-    };
+    }
 }
 
 @-o-keyframes progress-bar-stripes {
@@ -4659,7 +4659,7 @@ content: none;
 
     to {
         background-position: 40px 0;
-    };
+    }
 }
 
 @keyframes progress-bar-stripes {
@@ -4669,7 +4669,7 @@ content: none;
 
     to {
         background-position: 0 0;
-    };
+    }
 }
 
 .bootstrap .progress {

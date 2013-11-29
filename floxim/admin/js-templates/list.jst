@@ -174,6 +174,9 @@ var i = 0;
 $.each(_o.labels, function(label_key, label) {
     i++;
     var level_padding = 0;
+    if  (!_c[label_key]) {
+        return;
+    }
     if (_c[label_key].level) {
         level_padding = 25*_c[label_key].level;
     }
