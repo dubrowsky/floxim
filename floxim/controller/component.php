@@ -460,106 +460,112 @@ class fx_controller_component extends fx_controller {
         $this->set_param('skip_infoblock_filter', true);
         $this->listen('query_ready', function($q, $ctr) {
             $fields = $ctr->get_component()->all_fields();
-            $conditions = $ctr->get_param('conditions');
-            if (isset($conditions) && is_array($conditions)) {
-                foreach ($conditions as $condition) {
-                    $field = $fields->find_one('name', $condition['name']);
-                    $error = false;
-                    switch ($condition['operator']) {
-                        case 'contains':
-                            $condition['value'] = '%'.$condition['value'].'%'; 
-                            $condition['operator'] = 'LIKE';
-                            break;
-                        case 'next': 
-                            if (isset($condition['value']) && !empty($condition['value'])) {
-                                $q->where(
-                                    $condition['name'], 
-                                    '> NOW()', 
-                                    'RAW'
-                                );
-                                $condition['value'] = '< NOW() + INTERVAL '.$condition['value'].' '.$condition['interval']; 
-                                $condition['operator'] = 'RAW';
-                            } else {
-                                $error = true;
-                            }
-                            break;
-                        case 'last': 
-                            if (isset($condition['value']) && !empty($condition['value'])) {
-                                $q->where(
-                                    $condition['name'], 
-                                    '< NOW()', 
-                                    'RAW'
-                                );
-                                $condition['value'] = '> NOW() - INTERVAL '.$condition['value'].' '.$condition['interval']; 
-                                $condition['operator'] = 'RAW';
-                            } else {
-                                $error = true;
-                            }
-                            break;
-                        case 'in_future': 
-                            $condition['value'] = '> NOW()'; 
-                            $condition['operator'] = 'RAW';
-                            break;
-                        case 'in_past': 
-                            $condition['value'] = '< NOW()'; 
-                            $condition['operator'] = 'RAW';
-                            break;
-                    }
-                    if ($field['type'] == fx_field::FIELD_LINK){
-                        if (!isset($condition['value'])) {
-                            $error = true;
-                        } else {
-                            $ids = array();
-                            foreach ($condition['value'] as $v) {
-                                $ids[]= $v;
-                            }
-                            $condition['value'] = $ids;
-                            if ($condition['operator'] === '!=') {
-                                $condition['operator'] = 'NOT IN';
-                            } elseif ($condition['operator'] === '=') {
-                                $condition['operator'] = 'IN';
-                            }
-                        }
-                    }
+            $conditions = fx::collection($ctr->get_param('conditions'));
+            if (!$conditions->find_one('name', 'site_id')) {
+                $conditions[]= array(
+                    'name' => 'site_id',
+                    'operator' => '=',
+                    'value' => array(fx::env('site')->get('id'))
+                );
+            }
 
-                    if ($field['type'] == fx_field::FIELD_MULTILINK) {
-
-                        if (!isset($condition['value']) || !is_array($condition['value'])) {
-                            $error = true;
+            foreach ($conditions as $condition) {
+                $field = $fields->find_one('name', $condition['name']);
+                $error = false;
+                switch ($condition['operator']) {
+                    case 'contains':
+                        $condition['value'] = '%'.$condition['value'].'%'; 
+                        $condition['operator'] = 'LIKE';
+                        break;
+                    case 'next': 
+                        if (isset($condition['value']) && !empty($condition['value'])) {
+                            $q->where(
+                                $condition['name'], 
+                                '> NOW()', 
+                                'RAW'
+                            );
+                            $condition['value'] = '< NOW() + INTERVAL '.$condition['value'].' '.$condition['interval']; 
+                            $condition['operator'] = 'RAW';
                         } else {
-                            foreach ($condition['value'] as $v) {
-                                $ids[]= $v;
-                            }
-                            $relation = $field->get_relation();
-                            if ($relation[0] === fx_data::MANY_MANY){
-                                $content_ids = fx::data($relation[1])->
-                                    where($relation[5], $ids)->
-                                    select('content_id')->
-                                    get_data()->get_values('content_id');
-                            } else {
-                                $content_ids = fx::data($relation[1])->
-                                    where('id', $ids)->
-                                    select($relation[2])->get_data()->get_values($relation[2]);
-                            }
-                            $condition['name'] = 'id';    
-                            $condition['value'] = $content_ids;
-                            if ($condition['operator'] === '!=') {
-                                $condition['operator'] = 'NOT IN';
-                            } elseif ($condition['operator'] === '=') {
-                                $condition['operator'] = 'IN';
-                            }
+                            $error = true;
                         }
-                    }
-                    if (!$error) {
-                        $q->where(
-                            $condition['name'], 
-                            $condition['value'], 
-                            $condition['operator']
-                        );
+                        break;
+                    case 'last': 
+                        if (isset($condition['value']) && !empty($condition['value'])) {
+                            $q->where(
+                                $condition['name'], 
+                                '< NOW()', 
+                                'RAW'
+                            );
+                            $condition['value'] = '> NOW() - INTERVAL '.$condition['value'].' '.$condition['interval']; 
+                            $condition['operator'] = 'RAW';
+                        } else {
+                            $error = true;
+                        }
+                        break;
+                    case 'in_future': 
+                        $condition['value'] = '> NOW()'; 
+                        $condition['operator'] = 'RAW';
+                        break;
+                    case 'in_past': 
+                        $condition['value'] = '< NOW()'; 
+                        $condition['operator'] = 'RAW';
+                        break;
+                }
+                if ($field['type'] == fx_field::FIELD_LINK){
+                    if (!isset($condition['value'])) {
+                        $error = true;
+                    } else {
+                        $ids = array();
+                        foreach ($condition['value'] as $v) {
+                            $ids[]= $v;
+                        }
+                        $condition['value'] = $ids;
+                        if ($condition['operator'] === '!=') {
+                            $condition['operator'] = 'NOT IN';
+                        } elseif ($condition['operator'] === '=') {
+                            $condition['operator'] = 'IN';
+                        }
                     }
                 }
+
+                if ($field['type'] == fx_field::FIELD_MULTILINK) {
+
+                    if (!isset($condition['value']) || !is_array($condition['value'])) {
+                        $error = true;
+                    } else {
+                        foreach ($condition['value'] as $v) {
+                            $ids[]= $v;
+                        }
+                        $relation = $field->get_relation();
+                        if ($relation[0] === fx_data::MANY_MANY){
+                            $content_ids = fx::data($relation[1])->
+                                where($relation[5], $ids)->
+                                select('content_id')->
+                                get_data()->get_values('content_id');
+                        } else {
+                            $content_ids = fx::data($relation[1])->
+                                where('id', $ids)->
+                                select($relation[2])->get_data()->get_values($relation[2]);
+                        }
+                        $condition['name'] = 'id';    
+                        $condition['value'] = $content_ids;
+                        if ($condition['operator'] === '!=') {
+                            $condition['operator'] = 'NOT IN';
+                        } elseif ($condition['operator'] === '=') {
+                            $condition['operator'] = 'IN';
+                        }
+                    }
+                }
+                if (!$error) {
+                    $q->where(
+                        $condition['name'], 
+                        $condition['value'], 
+                        $condition['operator']
+                    );
+                }
             }
-            dev_log('cond list', $q->show_query());
+            //dev_log('cond list', $q->show_query());
         });
         $res = $this->do_list();
         return $res;
