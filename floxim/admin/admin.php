@@ -141,9 +141,13 @@ class fx_controller_admin extends fx_controller {
             '/floxim/admin/skins/default/css/main.css',
             '/floxim/admin/skins/default/css/forms.less',
         );
+        $page->add_css_bundle($css_files);
+        /*
         foreach ($css_files as $file) {
             $page->add_css_file($file);
         }
+         * 
+         */
     }
     
     /**

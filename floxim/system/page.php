@@ -66,7 +66,7 @@ class fx_system_page extends fx_system {
         $this->_files_css[] = $file;
     }
 
-    public function add_ccs_bundle ($files, $params = array()) {
+    public function add_css_bundle ($files, $params = array()) {
 
         if (fx::config()->IS_DEV_MODE && 1!=1) {
             foreach ($files as $f) {
@@ -90,11 +90,34 @@ class fx_system_page extends fx_system {
                 if (preg_match("~\.less$~", $file)) {
                     $less_flag = true;
                 }
-                if (!preg_match("~^http://~i", $file)) {
+                //echo $file."<br />";
+                
+                if (preg_match("~^http://~i", $file)) {
+                    $file_contents = file_get_contents($file);
+                } else {
+                    $http_base = preg_replace("~[^/]+$~", '', $file);
                     $file = $doc_root.$file;
+                    $file_contents = file_get_contents($file);
+                    
+                    $file_contents = preg_replace_callback(
+                        '~(url\([\'\"]?)([^/][^\)]+)~i', 
+                        function($matches) use ($http_base) {
+                            //fx::debug($matches);
+                            if (preg_match("~data\:~", $matches[0])) {
+                                return $matches[0];
+                            }
+                            return $matches[1].$http_base.$matches[2];
+                            fx::debug($matches);
+                        }, 
+                        $file_contents
+                    );
+                    //preg_match_all('~url\([\'\"]?[^/]~i', $file_contents, $urls);
+                    //fx::debug($urls);
                 }
-                $file_content .= file_get_contents($file)."\n";
+                //fx::debug($file_contents);
+                $file_content .= $file_contents."\n";
             }
+            //die();
 
             if ($less_flag) {
                 require_once $doc_root.'/floxim/lib/lessphp/lessc.inc.php';
@@ -108,6 +131,7 @@ class fx_system_page extends fx_system {
             fputs($fh, $file_content);
             fclose($fh);
         }
+        //die();
         if (!$this->_accept_gzip()) {
             $http_path = preg_replace("~\.cssgz$~", ".css", $http_path);
         }

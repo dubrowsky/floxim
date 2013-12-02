@@ -1,8 +1,7 @@
 .ui-widget-overlay {
     z-index: 16777268;
     background: #666;
-    opacity: .25;
-    filter: Alpha(Opacity=25);
+    opacity: 0.25;
 }
 
 .ui-button-text-only .ui-button-text {
@@ -671,8 +670,7 @@ input.ui-button {
 }
 
 .fx_admin_button.fx_admin_notavailable, .fx_admin_button_text.fx_admin_notavailable {
-    opacity: .16;
-    filter: progid: DXImageTransform.Microsoft.Alpha(opacity=16);
+    opacity: 0.16;
 }
 
 /* выпадающее меню*/
@@ -745,7 +743,6 @@ input.ui-button {
     z-index: 3000;
     position: relative;
     opacity: 1;
-    filter: progid: DXImageTransform.Microsoft.Alpha(opacity=100);
 }
 
 .nc_editor input {
