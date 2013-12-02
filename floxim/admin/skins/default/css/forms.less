@@ -10,6 +10,7 @@
 
 .fx_admin_form a, .fx_admin_form .ui-state-default a {
     color: #28abd0;
+    cursor: pointer;
 }
 
 .fx_admin_form .ui-state-active a {
@@ -177,6 +178,7 @@
     .livesearch_items {
         width:auto;
         background:#FFF;
+        height: 28px;
     }
 
     .fx_image_field {
@@ -321,6 +323,11 @@
     font-size:12px;
 }
 
+.fx_admin_form .fx_fieldset_add {
+    margin:5px 0; 
+    display: inline-block;
+} 
+
 .fx_admin_form .fx_fieldset input[type="text"], 
 .fx_admin_form .fx_fieldset select,
 .fx_admin_form .fx_fieldset textarea {
@@ -373,6 +380,16 @@
         height: 8px;
         position: absolute;
         top: -8px;
+    }
+    input[type='text'].fx_input {
+        &.short {
+            max-width: 120px !important;
+        }
+        max-width: 200px !important;
+        width: 200px !important;
+    }
+    select.fx_input[name*='operator'] {
+        width: 100% !important;
     }
 }
 

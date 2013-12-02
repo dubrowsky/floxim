@@ -23,7 +23,7 @@ $fx.popup = function(params) {
         this.$node.append(this.$footer);
         this.$arrow = $('<div class="fx_popup_arrow" />');
         this.$node.append(this.$arrow);
-        var cancel_button = $t.jQuery('input', {
+        /*var cancel_button = $t.jQuery('input', {
            'type':'button',
            'is_submit':false,
            'class':'cancel',
@@ -36,7 +36,7 @@ $fx.popup = function(params) {
                 popup.destroy();
             }
         });
-        this.$footer.append(cancel_button);
+        this.$footer.append(cancel_button);*/
         var ok_button = $t.jQuery('input', {
            type:'button',
            is_submit:true,

@@ -1218,7 +1218,7 @@ body div.fx_overlay, body div.fx_overlay table {
 
 .livesearch_items {
     overflow: hidden;
-    border: 1px solid #CCC;
+    border: 1px solid #e1e1e1;
     width: 100%;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
