@@ -1512,10 +1512,18 @@ a.fx_var_editable:focus, .fx_var_editable a:focus {
 
 .fx_controller_select .sub .pic {
     float:left;
-    background:#CCC;
     width:30px;
     height:30px;
+    font-size: 18px;
+    line-height: 45px;
+    position: relative;
 }
+    .fx_controller_select .sub .pic .sign {
+        position: absolute;
+        top: 0;
+        right: 0;
+        font-size: 12px;
+    }
 
 .fx_controller_select .sub .body {
     margin-left:37px;
