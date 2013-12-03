@@ -70,6 +70,13 @@ class fx_controller {
     protected $_action_prefix = '';
 
 
+    static private function _get_abbr($name) {
+        $vowels = array('a', 'e', 'i', 'o', 'u', 'y');
+        $head = substr($name,0,1);
+        $tail = substr(str_replace($vowels, '', strtolower(substr($name,1))), 0, 2);
+        return $head.$tail;
+    }
+
     public function get_action_method() {
         $actions = explode('_', $this->action);
         while($actions){

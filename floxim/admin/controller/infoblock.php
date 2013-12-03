@@ -97,7 +97,9 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                     'metadata' => array(
                         'id' => $controller_type.'_'.$c['keyword'].'.'.$action_code,
                         'description' => $action_info['description'],
-                        'type' => $action_type
+                        'type' => $action_type,
+                        'icon' => $action_info['icon'],
+                        'icon_extra' => $action_info['icon_extra'],
                     )
                 );
             }

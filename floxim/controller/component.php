@@ -11,6 +11,7 @@ class fx_controller_component extends fx_controller {
         }
     }
     
+
     public function process() {
         $this->listen('before_action_run', array($this, '_count_parent_id'));
         $result = parent::process();
