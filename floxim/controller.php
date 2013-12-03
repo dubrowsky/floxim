@@ -196,13 +196,10 @@ class fx_controller {
         $actions = $this->_get_real_actions();
         $blocks = array();
         $meta = array();
+        $my_name = $this->get_controller_name(true);
         foreach ($sources as $src) {
-            $src_file = $src;
             $src_name = null;
-            $my_name = null;
             preg_match("~/([^/]+?)/[^/]+$~", $src, $src_name);
-            //preg_match("~_([^_]+)$~", get_class($this), $my_name);
-            $my_name = $this->get_controller_name();
             $is_own = $src_name && $my_name && $src_name[1] === $my_name;
             $src = include $src;
             if (!isset($src['actions'])) {
@@ -249,8 +246,12 @@ class fx_controller {
         return array('actions' => $actions);
     }
 
-    public function get_controller_name(){
-        return preg_replace('~^[^\W_]+_[^\W_]+_~', '', get_class($this));
+    public function get_controller_name($no_type = false){
+        $name = preg_replace('~^[^\W_]+_[^\W_]+_~', '', get_class($this));
+        if ($no_type) {
+            $name = preg_replace("~(widget_|component_)~", '', $name);
+        }
+        return $name;
     }
 
     protected function _prepare_action_config($actions) {
