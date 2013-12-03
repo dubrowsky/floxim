@@ -15,6 +15,7 @@ $content_exists = fx::data('content_'.$component['keyword'])
 return array(
     'actions' => array(
         '*list*' => array(
+            'icon' => self::_get_abbr($component['name']),
             'settings' => array(
                 'limit' => array(
                     'label' => fx::lang('Count entries','controller_component')
@@ -64,10 +65,12 @@ return array(
         ),
         '*list_filtered' => array(
             'name' => $component['name'].' by filter',
+            'icon_extra' => 'fil',
             'settings' => $this->_config_conditions()
         ),
         '*list_selected' => array(
             'name' => $component['name'].' selected',
+            'icon_extra' => 'sel',
             'settings' => array(
                 'selected' => array (
                     'name' => 'selected', 

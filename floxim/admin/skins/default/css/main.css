@@ -1512,25 +1512,33 @@ a.fx_var_editable:focus, .fx_var_editable a:focus {
 
 .fx_controller_select .sub .pic {
     float:left;
-    width:30px;
-    height:30px;
+    width:50px;
+    height:50px;
     font-size: 18px;
-    line-height: 45px;
     position: relative;
+    text-transform: capitalize;
 }
+    .fx_controller_select .sub .pic .icon {
+        position: absolute;
+        bottom: 0;
+        left: 5px;
+    }
     .fx_controller_select .sub .pic .sign {
         position: absolute;
-        top: 0;
-        right: 0;
+        top: 10px;
+        right: 5px;
         font-size: 12px;
+        text-transform: none;
     }
 
 .fx_controller_select .sub .body {
-    margin-left:37px;
+    float: left;
+    margin-left: 10px;
 }
 
 .fx_controller_select .sub .title {
     margin-bottom:5px;
+    text-transform: capitalize;
 }
 
 .fx_controller_select .sub .description {
