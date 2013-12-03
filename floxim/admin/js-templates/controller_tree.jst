@@ -37,8 +37,41 @@
         for (var i = 0; i < children.length; i++){
             var child = children[i];
             var subs = child.children;
+            var bg_color;
+            var sub_name;
+            var text_color;
             for (var j = 0; j < subs.length; j++) {
                 var sub = subs[j];
+                if (sub.data !== null) {
+                    var pic = sub.data.slice(0,2);
+                } else {
+                    var pic = '';
+                }
+                if (sub.metadata.id !== null) {
+                    if (sub.metadata.id.match(/list_infoblock/) !== null) {
+                        var sign = '';
+                    } else
+                        var sign = 'm';
+                }
+                if (
+                    bg_color === undefined || 
+                    sub_name === undefined ||
+                    text_color === undefined ||
+                    sub_name !== sub.metadata.id.replace(/.\w+$/, '')
+                    ) {
+                    sub_name = sub.metadata.id.replace(/.\w+$/, '');
+                    bg_color = (function () {
+                        var letters = '0123456789ABCDEF'.split('');
+                        var color = '#';
+                        for (var i = 0; i < 6; i++ ) {
+                            color += letters[Math.round(Math.random() * 15)];
+                        }
+                        return color;
+                    })();
+                    text_color = (function (hexcolor){
+                        return (parseInt(hexcolor, 16) > 0xffffff/2) ? 'black':'white';
+                    })(bg_color);
+                }
                 ?>
                 <div 
                     class="
@@ -46,7 +79,10 @@
                         controller_<?=child.metadata.id?> 
                         type_<?=sub.metadata.type?>" data-id="<?=sub.metadata.id?>">
                     <div class="sub_data">
-                        <div class="pic"></div>
+                        <div class="pic" style="background-color: <?=bg_color?>; color:<?=text_color?>;">
+                        <?=pic?>
+                        <div class="sign"><?=sign?></div>
+                        </div>
                         <div class="body">
                             <div class="title"><?=sub.data?></div>
                             <div class="description"><?=sub.metadata.description?></div>

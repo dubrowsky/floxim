@@ -56,11 +56,14 @@ class fx_system_page extends fx_system {
             $target_file_name = md5($file).'.css';
             $this->_files_css[]= $http_path.$target_file_name;
             $this->_all_css[] = $http_path.$target_file_name;
-            //$fh = fopen($full_path.$target_file_name, 'w');
+            $fh = fopen($full_path.$target_file_name, 'w');
+            $http_base = preg_replace("~[^/]+$~", '', $file);
+            $file_content = file_get_contents($doc_root.$file);
+            $file_content = $this->_css_url_replace($file_content, $http_base);
             $less = new lessc();
-            $less->checkedCompile($doc_root.$file, $full_path.$target_file_name);
-            //fputs($fh, $bundle_content);
-            //fclose($fh);
+            $file_content = $less->compile($file_content);
+            fputs($fh, $file_content);
+            fclose($fh);
             return;
         }
         $this->_files_css[] = $file;
@@ -68,7 +71,7 @@ class fx_system_page extends fx_system {
 
     public function add_css_bundle ($files, $params = array()) {
 
-        if (fx::config()->IS_DEV_MODE && 1!=1) {
+        if (fx::config()->IS_DEV_MODE) {
             foreach ($files as $f) {
                 $this->add_css_file($f);
             }
@@ -98,8 +101,8 @@ class fx_system_page extends fx_system {
                     $http_base = preg_replace("~[^/]+$~", '', $file);
                     $file = $doc_root.$file;
                     $file_contents = file_get_contents($file);
-                    
-                    $file_contents = preg_replace_callback(
+                    $file_contents = $this->_css_url_replace($file_contents, $http_base);
+                    /*$file_contents = preg_replace_callback(
                         '~(url\([\'\"]?)([^/][^\)]+)~i', 
                         function($matches) use ($http_base) {
                             //fx::debug($matches);
@@ -107,10 +110,9 @@ class fx_system_page extends fx_system {
                                 return $matches[0];
                             }
                             return $matches[1].$http_base.$matches[2];
-                            fx::debug($matches);
                         }, 
                         $file_contents
-                    );
+                    );*/
                     //preg_match_all('~url\([\'\"]?[^/]~i', $file_contents, $urls);
                     //fx::debug($urls);
                 }
@@ -136,6 +138,21 @@ class fx_system_page extends fx_system {
             $http_path = preg_replace("~\.cssgz$~", ".css", $http_path);
         }
         $this->_files_css[]= $http_path;
+    }
+
+    protected function _css_url_replace ($file, $http_base) {
+        $file = preg_replace_callback(
+            '~(url\([\'\"]?)([^/][^\)]+)~i', 
+            function($matches) use ($http_base) {
+                //fx::debug($matches);
+                if (preg_match("~data\:~", $matches[0])) {
+                    return $matches[0];
+                }
+                return $matches[1].$http_base.$matches[2];
+            }, 
+            $file
+        );
+        return $file;
     }
 
     // both simple scripts & scripts from bundles
