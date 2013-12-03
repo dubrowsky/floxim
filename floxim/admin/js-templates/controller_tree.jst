@@ -34,6 +34,8 @@
     </div>
     <div class="fx_controller_list">
         <?
+        var c = 0;
+        var colors = ['#A8B5E1' ,'#1BEEC4' ,'#77C680' ,'#E4C45A' ,'#D9D1C6' ,'#AE8D97' ,'#E6CCF1' ,'#6C3777' ,'#72D122' ,'#14D1EE' ,'#0348CC' ,'#A5D421' ,'#9E9269' ,'#877EEE' ,'#2FD94E' ,'#372ECF' ,'#E593CD' ,'#B53278' ,'#0B5BD6' ,'#143C86' ,'#C541E9' ,'#486ADB'];
         for (var i = 0; i < children.length; i++){
             var child = children[i];
             var subs = child.children;
@@ -43,6 +45,7 @@
             for (var j = 0; j < subs.length; j++) {
                 var sub = subs[j];
                 if (sub.data !== null) {
+                    console.log(sub);
                     var pic = sub.data.slice(0,2);
                 } else {
                     var pic = '';
@@ -60,15 +63,15 @@
                     sub_name !== sub.metadata.id.replace(/.\w+$/, '')
                     ) {
                     sub_name = sub.metadata.id.replace(/.\w+$/, '');
-                    bg_color = (function () {
+                    /*bg_color = (function () {
                         var letters = '0123456789ABCDEF'.split('');
                         var color = '#';
                         for (var i = 0; i < 6; i++ ) {
                             color += letters[Math.round(Math.random() * 15)];
                         }
                         return color;
-                    })();
-
+                    })();*/
+                    bg_color = colors[c++%colors.length];
                     text_color = (function (hexcolor){
                         return (parseInt('0x'+hexcolor.slice(1,7), 16) > 0xffffff/2) ? 'black':'white';
                     })(bg_color);
