@@ -68,8 +68,9 @@
                         }
                         return color;
                     })();
+
                     text_color = (function (hexcolor){
-                        return (parseInt(hexcolor, 16) > 0xffffff/2) ? 'black':'white';
+                        return (parseInt('0x'+hexcolor.slice(1,7), 16) > 0xffffff/2) ? 'black':'white';
                     })(bg_color);
                 }
                 ?>
