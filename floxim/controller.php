@@ -246,11 +246,8 @@ class fx_controller {
         return array('actions' => $actions);
     }
 
-    public function get_controller_name($no_type = false){
-        $name = preg_replace('~^[^\W_]+_[^\W_]+_~', '', get_class($this));
-        if ($no_type) {
-            $name = preg_replace("~(widget_|component_)~", '', $name);
-        }
+    public function get_controller_name(){
+        $name = preg_replace('~^[^\W_]+_[^\W_]+_[^\W_]+_~', '', get_class($this));
         return $name;
     }
 
