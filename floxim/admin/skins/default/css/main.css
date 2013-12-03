@@ -1496,8 +1496,8 @@ a.fx_var_editable:focus, .fx_var_editable a:focus {
     border:1px solid #e1e1e1;
     background:#FFF;
     overflow: hidden;
-    height: 46px;
-    padding: 7px;
+    /*height: 46px;
+    padding: 7px;*/
 }
 
 .fx_controller_select .sub:hover .sub_data{
@@ -1534,6 +1534,7 @@ a.fx_var_editable:focus, .fx_var_editable a:focus {
 .fx_controller_select .sub .body {
     float: left;
     margin-left: 10px;
+    margin-top: 10px;
 }
 
 .fx_controller_select .sub .title {
