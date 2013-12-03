@@ -34,6 +34,19 @@ class fx_content extends fx_essence {
     public function get_component_id() {
         return $this->component_id;
     }
+    
+    public function is_instanceof($type) {
+        if ($this['type'] == $type) {
+            return true;
+        }
+        $chain = fx::data('component', $this->get_component_id())->get_chain();
+        foreach ($chain as $com) {
+            if ($com['keyword'] == $type) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     /*
     protected function _add_history_operation($type, $data = array()) {
@@ -169,11 +182,15 @@ class fx_content extends fx_essence {
     public function get_form_fields() {
         $all_fields = $this->get_fields();
         $form_fields = array();
+        $coms = array();
         foreach ($all_fields as $field) {
             if ($field['type_of_edit'] == fx_field::EDIT_NONE) {
                 continue;
             }
-            $form_fields[]= $field->get_js_field($this);
+            $jsf = $field->get_js_field($this);
+            $coms [$field['component_id']] = 1;
+            $jsf['tab'] = $field['form_tab'] ? $field['form_tab'] : count($coms);
+            $form_fields[]= $jsf;
         }
         return $form_fields;
     }

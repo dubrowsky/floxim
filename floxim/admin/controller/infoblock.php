@@ -20,10 +20,28 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             $this->ui->hidden('essence', 'infoblock'),
             $this->ui->hidden('fx_admin', true),
             $this->ui->hidden('area', $input['area']),
+            $this->ui->hidden('area_size', $input['area_size']),
             $this->ui->hidden('page_id', $input['page_id']),
             $this->ui->hidden('admin_mode', $input['admin_mode'])
         );
 	
+        fx::env('page', $input['page_id']);
+        $page = fx::data('content_page', $input['page_id']);
+        
+        if (!isset($input['area_size'])) {
+            $layout_id = fx::env('layout');
+            $infoblocks = fx::router('front')->get_page_infoblocks($page['id'], $layout_id);
+            $layout_ib = $infoblocks['layout'][0];
+            $layout_tpl = fx::template($layout_ib->get_visual()->get('template'));
+            $areas = $layout_tpl->get_areas();
+            $area_info = $areas[$input['area']];
+            $area_size = fx_template_suitable::get_size(
+                isset($area_info['size']) ? $area_info['size'] : ''
+            );
+        } else {
+            $area_size = fx_template_suitable::get_size($input['area_size']);
+        }
+        
         /* Список контроллеров */
         $fields['controller'] = array(
             'type' => 'tree', 
@@ -46,18 +64,21 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             );
             $ctrl = fx::controller($controller_name);
             $actions = $ctrl->get_actions();
+            //fx::log($controller_name, $actions);
             foreach ($actions as $action_code => $action_info) {
+                if (isset($action_info['check_context'])) {
+                    $is_avail = call_user_func($action_info['check_context'], $page);
+                    if (!$is_avail) {
+                        continue;
+                    }
+                }
                 $act_ctr = fx::controller($controller_name.'.'.$action_code);
-                $act_templates = $act_ctr->get_available_templates(fx::env('layout'));
+                $act_templates = $act_ctr->get_available_templates(fx::env('layout'), $area_size);
                 if (count($act_templates) == 0) {
                     continue;
                 }
                 
-                $action_name = str_replace(
-                    "%component%", 
-                    $c['name'],
-                    $action_info['name']
-                ); 
+                $action_name = $action_info['name'];
                 switch ($controller_type) {
                     case 'widget':
                         $action_type = 'widget';
@@ -95,7 +116,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         ));
         $result = array(
             'fields' => $fields,
-            'dialog_title' => fx::lang('Adding infoblock','system'),
+            'header' => fx::lang('Adding infoblock','system'),
             'dialog_button' => array(
                 array('key' => 'save', 'text' => fx::lang('Next','system'))
             )
@@ -173,9 +194,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         
         if (!$is_layout) {
             $controller_name = $controller;
-            $controller = fx::controller($controller);
-            $controller->set_action($action);
-            $controller->set_input($input);
+            $controller = fx::controller($controller, array('infoblock_id' => $infoblock['id']));
             $settings = $controller->get_action_settings($action);
             foreach ($infoblock['params'] as $ib_param => $ib_param_value) {
                 if (isset($settings[$ib_param])) {
@@ -195,7 +214,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             $this->response->add_fields($settings, false, 'params');
         }
         
-        $format_fields = $this->_get_format_fields($infoblock);
+        $format_fields = $this->_get_format_fields($infoblock, $input['area_size']);
 
         if (!$is_layout) {
             //$this->response->add_tab('visual', fx::lang('How to show','system'));
@@ -281,6 +300,8 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             if (!is_array($infoblock['scope'])) {
                 $infoblock['scope'] = array();
             }
+            list($scope_page_id, $scope_pages, $scope_page_type) = explode("-", $input['scope']['complex_scope']);
+            /*
             if ($input['scope']['page_id'] == 0) {
                 $input['scope']['pages'] = 'all';
             }
@@ -289,22 +310,29 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                 'page_type' => $input['scope']['page_type']
             );
             $infoblock['scope'] = $ib_scope;
-            $infoblock['page_id'] = $input['scope']['page_id'];
+             * 
+             */
+            $infoblock['scope'] = array(
+                'pages' => $scope_pages,
+                'page_type' => $scope_page_type
+            );
+            //$infoblock['page_id'] = $input['scope']['page_id'];
+            $infoblock['page_id'] = $scope_page_id;
             
             $i2l['wrapper'] = fx::dig($input, 'visual.wrapper');
             $i2l['template'] = fx::dig($input, 'visual.template');
             $infoblock->save();
             $i2l['infoblock_id'] = $infoblock['id'];
             $i2l->save();
-            $controller->input['id'] = $i2l['infoblock_id'];
+            $controller->set_param('infoblock_id', $infoblock['id']);
             $controller->after_save();
             $this->response->set_status_ok();
             $this->response->set_prop('infoblock_id', $infoblock['id']);
             return;
         }
     	
-    	$result = array(
-            'dialog_title' => $is_layout ? 
+        $result = array(
+            'header' => $is_layout ? 
                 fx::lang('Page layout','system') : 
                 fx::lang('Infoblock settings','system'). 
                 ', ' . $controller_name . '.' . $action.' #'.$infoblock['id'],
@@ -317,6 +345,19 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                 )
             )
     	);
+        
+        if (!$is_layout) {
+            $actions = $controller->get_actions();
+            $action_name = $actions[$action]['name'];
+        }
+        
+        if (!$infoblock['id']) {
+            $result['header'] = ' <a class="back">'.fx::lang('Adding infoblock','system').'</a>';
+            $result['header'] .= ' / '.$action_name;
+        } else {
+            $result['header'] = 'Settings / '.$action_name;
+        }
+        
         if ($input['id']) {
             $is_inherited = $infoblock['parent_infoblock_id'] != 0;
             $result['dialog_button'] []= array(
@@ -382,6 +423,74 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             $defaults = array();
         }
         $fields = array();
+        
+        // ACHTUNG
+        
+        // format: [page_id]-[descendants|children|this]-[|type_id]
+        
+        
+        $path_ids = $c_page->get_parent_ids();
+        $path = fx::data('content_page', $path_ids);
+        $path []= $c_page;
+        $path_count = count($path);
+        $c_type = $c_page['type'];
+        
+        list($cib_page_id, $cib_pages, $cib_page_type) = array(
+            $infoblock['page_id'], 
+            $infoblock['scope']['pages'],
+            $infoblock['scope']['page_type']
+        );
+        
+        if ($cib_page_id == 0) {
+            $cib_page_id = $path[0]['id'];
+        }
+        if ($cib_pages == 'this') {
+            $cib_page_type = '';
+        } 
+        if ($cib_pages == 'all') {
+            $cib_pages = 'descendants';
+        }
+        
+        $c_scope_code = $cib_page_id.'-'.$cib_pages.'-'.$cib_page_type;
+        
+        $vals = array();
+        
+        foreach ($path as $i => $pi) {
+            $sep = str_repeat(" -- ", $i);
+            $pn = '"'.$pi['name'].'"';
+            $is_last = $i === $path_count - 1;
+            $c_page_id = $pi['id'];
+            if ($i === 0) {
+                $c_page_id = fx::env('site')->get('index_page_id');
+                $vals []= array($c_page_id.'-descendants-', 'All pages');
+                if ($path_count > 1) {
+                    $vals []= array($c_page_id.'-children-'.$c_type, 'All pages of type '.$c_type);
+                }
+            }
+            if ($is_last) {
+                $vals []= array($c_page_id.'-this-', $sep.$pn.' only');
+            } else {
+                $vals []= array($c_page_id.'-children-', $sep.$pn.' children only');
+            }
+            if ($i !== 0 ) {
+                $vals []= array($c_page_id.'-descendants-', $sep.$pn.' and children');
+            }
+            if (!$is_last) {
+                $vals []= array(
+                    $c_page_id.'-children-'.$c_type, 
+                    $sep.$pn.' children of type '.$c_type
+                );
+            }
+        }
+        $fields []= array(
+            'type' => 'select',
+            'label' => 'Scope',
+            'name' => 'complex_scope',
+            'values' => $vals,
+            'value' => $c_scope_code
+        );
+        return $fields;
+        // EOF ACHTUNG
         
         if ($admin_mode == 'design') {
             $index_page_id = fx::env('site')->get('index_page_id');
@@ -467,7 +576,10 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
     /*
      * Получение полей формы для вкладки "Как показывать"
      */
-    protected function _get_format_fields(fx_infoblock $infoblock) {
+    protected function _get_format_fields(fx_infoblock $infoblock, $area_size = null) {
+        if ($area_size) {
+            $area_size = fx_template_suitable::get_size($area_size);
+        }
         $i2l = $infoblock->get_visual();
         $fields = array(
             array(
@@ -499,11 +611,11 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
 
         // Собираем доступные шаблоны
         $controller = fx::controller($controller_name.'.'.$action_name);
-        $tmps = $controller->get_available_templates($layout_name);
+        $tmps = $controller->get_available_templates($layout_name, $area_size);
         if ( !empty($tmps) ) {
             foreach ( $tmps as $template ) {
-                $templates[$template['full_id']] = $template['name'] . ' (' . $template['full_id'] . ')';
-                //$templates[$template['full_id']] = $template['name'];// . ' (' . $template['full_id'] . ')';
+                //$templates[$template['full_id']] = $template['name'] . ' (' . $template['full_id'] . ')';
+                $templates[$template['full_id']] = $template['name'];
             }
         }
 
@@ -516,7 +628,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         );
         if ($controller_name != 'layout') {
             $fields []= array(
-                'label' => fx::lang('Block wrapper template','system'),
+                'label' => fx::lang('Block wrapper','system'),
                 'name' => 'wrapper',
                 'type' => 'select',
                 'values' => $wrappers,
@@ -608,9 +720,10 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                 'label' => fx::lang('The infoblock contains some content','system') . ', <b>' . $ib_content->length . '</b> '. fx::lang('items. What should we do with them?','system'),
                 'type' => 'select',
                 'values' => array('unbind' => fx::lang('Unbind/Hide','system'), 'delete' => fx::lang('Delete','system')),
-                'parent' => array('delete_confirm' => true)
+                //'parent' => array('delete_confirm' => true)
             );
         }
+        
         if ($infoblock['controller'] == 'layout' && !$infoblock['parent_infoblock_id']) {
             unset($fields[0]);
             $fields []= array('type' => 'html', 'html' => fx::lang('Layouts can not be deleted','system'));

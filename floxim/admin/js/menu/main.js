@@ -38,7 +38,6 @@ fx_main_menu.prototype.load_items = function () {
         var item_offset = item.offset();
         sub.css({
             position:'absolute',
-            top: (item_offset.top+item.height()) + 'px',
             left: item_offset.left + 'px'
         });
         sub.show();

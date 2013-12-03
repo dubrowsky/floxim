@@ -125,18 +125,6 @@ class fx_admin_ui {
         return $result;
     }
 
-    public function admin_tabs ( $tabs, $active_tab, $callback_object, $callback_param = null ) {
-        $tabs_key = array_keys($tabs);
-        if (!in_array($active_tab, $tabs_key)) $active_tab = $tabs_key[0];
-        $tabs[$active_tab]['active'] = true;
-        $tabs['change_url'] = true;
-        
-        $result = call_user_func(array($callback_object, 'tab_' . $active_tab), $callback_param);
-        $result['tabs'] = $tabs;
-        
-        return $result;
-    }
-    
     public function tree ( $values , $name = 'tree') {
         return array('type' => 'tree', 'values' => $values, 'filter' => true, 'name' => $name);
     }

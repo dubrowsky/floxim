@@ -107,19 +107,6 @@ class fx_admin_response {
             }
         }
         $this->buttons = array_merge($this->buttons, $buttons);
-        dev_log($this->buttons, $buttons);
-        /*
-        $this->buttons = array_map(
-            function($b) {
-                if (is_string($b)) {
-                    $b = trim($b);
-                }
-                return $b;
-            }, 
-            $this->buttons
-        );
-         * 
-         */
     }
     
     public function add_pulldown_item($button, $name, $options) {
@@ -152,7 +139,10 @@ class fx_admin_response {
     }
     
     public function add_fields ( $fields, $tab = null, $prefix = null ) {
-        if (!is_array($fields)) {
+        if ($fields instanceof fx_collection) {
+            $fields = $fields->get_data();
+        }
+        if (!is_array($fields) ) {
             return;
         }
         if ( $tab ) {
@@ -184,11 +174,6 @@ class fx_admin_response {
         $item = array('name' => $name);
         if ($active) $item['active'] = 1;
         $this->tabs[$tab] = $item;
-    }
-
-    public function set_change_tab_url() {
-        $this->add_tab('change_url', 'change_url');
-        //$this->tabs['change_url'] = 1;
     }
     
     public function set_essence ( $essence ) {

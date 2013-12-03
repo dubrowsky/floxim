@@ -5,7 +5,7 @@
     <a
         fx:each="$items"
         href="{$url}"
-        class="col-md-3 thumbnail">
+        class="col-xs-3 thumbnail">
         <img src="{$image|'height:190,crop:middle'}" alt="{$name}">
         <div class="caption text-center">
             <h4>{$name}</h4>

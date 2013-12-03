@@ -16,6 +16,7 @@ class fx_router_infoblock extends fx_router {
         $infoblock_overs = null;
         if (fx::is_admin() && isset($_POST['override_infoblock'])) {
             parse_str($_POST['override_infoblock'], $infoblock_overs);
+            $infoblock_overs['params']['is_overriden'] = true;
         }
         $controller = fx::controller(
             'infoblock.render', 

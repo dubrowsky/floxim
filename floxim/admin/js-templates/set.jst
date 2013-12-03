@@ -176,13 +176,15 @@ html.on('change', '.input_cell_1 select.date_operator', function() {
         case 'in_future':
         case 'in_past':
             var cells = $(this).parent().parent().find('[class*="input_cell"]').not('.input_cell_0').not('.input_cell_1');
-            cells.remove();
+            cells.empty();
         break;
         case 'next':
         case 'last':
             var cells = $(this).parent().parent().find('[class*="input_cell"]').not('.input_cell_0').not('.input_cell_1');
             cells.remove();
-            $(this).parent().after('<td class="input_cell_2"><input type="text" class="fx_input" style = "width: 40px;" name="params[conditions]['+name+'][value]" id="params[conditions]['+name+'][value]" value=""></td>').next().after('<td class="input_cell_3"></td>');
+            $(this).parent()
+            .after('<td class="input_cell_2"><input type="text" class="fx_input short" name="params[conditions]['+name+'][value]" id="params[conditions]['+name+'][value]" value=""></td>')
+            //.next().after('<td class="input_cell_3"></td>');
             var select = $t.jQuery(
                 'input', {
                     'type':'select', 
@@ -191,7 +193,7 @@ html.on('change', '.input_cell_1 select.date_operator', function() {
                         intervals
                     }
             );
-            $(this).parent().parent().find('.input_cell_3').append(select)
+            $(this).parent().parent().find('.input_cell_2').append(select)
         break;
         default:
             var cells = $(this).parent().parent().find('[class*="input_cell"]').not('.input_cell_0').not('.input_cell_1');

@@ -5,11 +5,12 @@
     var children = _c.children || _c.values;
     ?>
     <div>
-        <span class="filter_search">
-            <input type="text" placeholder="Search..." />
-        </span>
-        <span class="filter" data-filter="type">
-            Type: 
+        <div class="filter_box filter_search">
+            <label>&nbsp;</label>
+            <input class="fx_input" type="text" placeholder="Search..." />
+        </div>
+        <div class="filter_box filter" data-filter="type">
+            <label>Type: </label>
             <select class="fx_controller_groups filter_type fx_input">
                 <option value="">-any-</option>
                 <?
@@ -18,9 +19,9 @@
                 });
                 ?>
             </select>
-        </span>
-        <span class="filter" data-filter="controller">
-            Component:
+        </div>
+        <div class="filter_box filter" data-filter="controller">
+            <label>Component:</label>
             <select class="fx_controller_groups fx_input">
                 <option value="">-any-</option>
                 <?
@@ -29,7 +30,7 @@
                 });
                 ?>
             </select>
-        </span>
+        </div>
     </div>
     <div class="fx_controller_list">
         <?
@@ -38,6 +39,26 @@
             var subs = child.children;
             for (var j = 0; j < subs.length; j++) {
                 var sub = subs[j];
+                if (sub.data !== null) {
+                    var pic = sub.data.slice(0,2);
+                } else {
+                    var pic = '';
+                }
+                if (sub.metadata.id !== null) {
+                    if (sub.metadata.id.match(/list_infoblock/) !== null) {
+                        var sign = '';
+                    } else
+                        var sign = 'm';
+                }
+
+                var color = (function () {
+                    var letters = '0123456789ABCDEF'.split('');
+                    var color = '#';
+                    for (var i = 0; i < 6; i++ ) {
+                        color += letters[Math.round(Math.random() * 15)];
+                    }
+                    return color;
+                })();
                 ?>
                 <div 
                     class="
@@ -45,7 +66,10 @@
                         controller_<?=child.metadata.id?> 
                         type_<?=sub.metadata.type?>" data-id="<?=sub.metadata.id?>">
                     <div class="sub_data">
-                        <div class="pic"></div>
+                        <div class="pic" style="color: <?=color?>;">
+                        <?=pic?>
+                        <div class="sign"><?=sign?></div>
+                        </div>
                         <div class="body">
                             <div class="title"><?=sub.data?></div>
                             <div class="description"><?=sub.metadata.description?></div>
@@ -138,7 +162,6 @@ $('.fx_controller_list', html).on('click', '.sub', function() {
     html.find('.fx_controller_list .fx_admin_selected').removeClass('fx_admin_selected');
     sub.addClass('fx_admin_selected');
     inp.val(sub.data('id'));
-    console.log('selected', inp.val());
     recount_buttons();
 });
 

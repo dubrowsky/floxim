@@ -24,8 +24,6 @@ class fx_controller_component_publication extends fx_controller_component {
         return $fields;
     }
     public function do_calendar() {
-        $this->set_param('skip_parent_filter', true);
-        $this->set_param('skip_infoblock_filter', true);
         $months = $this->_get_finder()->
             select('DATE_FORMAT(`publish_date`, "%m") as month')->
             select('DATE_FORMAT(`publish_date`, "%Y") as year')->

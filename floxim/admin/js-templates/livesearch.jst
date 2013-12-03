@@ -1,7 +1,10 @@
 <!--[input ? _c.type == 'livesearch']-->
+<?
+var f_postfix = _c.name_postfix ? '['+_c.name_postfix+']' : '';
+?>
 <div class="livesearch" 
     data-params="<?=$t.json_att(_c.params)?>" 
-    data-prototype_name="<?=_c.name?>[prototype][<?=_c.name_postfix?>]"
+    data-prototype_name="<?=_c.name?>[prototype]<?=f_postfix?>"
     data-is_multiple="<?=(_c.is_multiple ? 'Y' : 'N')?>">
     <?
     if (_c.is_multiple) {
@@ -9,7 +12,7 @@
             console.log(_c.value);
             $.each(_c.value, function(vi, vv) {
                 ?><input class="preset_value" type="hidden" 
-                    name="<?=_c.name?>[<?=vv.value_id?>][<?=_c.name_postfix?>]"
+                    name="<?=_c.name?>[<?=vv.value_id?>]<?=f_postfix?>"
                     value="<?=vv.id?>"
                     data-name="<?=vv.name?>" /><?
             });
@@ -37,10 +40,5 @@ var ls = new fx_livesearch(html);
 html.data('livesearch', ls);
 
 if (_c.ajax_preload && _c.value) {
-    var ids = [];
-    $.each(_c.value, function(vk, vv) {
-        ids.push(vv[0]);
-    });
-    ls.loadValues(ids);
-    console.log(_c.value, ids);
+    ls.loadValues( _c.value);
 }

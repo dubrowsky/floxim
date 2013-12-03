@@ -60,6 +60,20 @@ class fx_controller_admin_field extends fx_controller_admin {
         $fields[] = $this->ui->input('name', fx::lang('Field keyword','system'), $info['name']);
         $fields[] = $this->ui->input('description', fx::lang('Description','system'), $info['description']);
         
+        $fields []= array(
+            'type' => 'select',
+            'name' => 'form_tab',
+            'label' => 'Form col',
+            'values' => array(
+                array('', '-auto-'),
+                array(1, '1'),
+                array(2, '2'),
+                array(3, '3'),
+                array(4, '4')
+            ),
+            'value' => $info['form_tab']
+        );
+        
         $finder = fx_data::optional('datatype');
         foreach ($finder->get_all() as $v ) {
             $values[$v['id']] = fx::lang("FX_ADMIN_FIELD_".strtoupper($v['name']), 'system');
@@ -97,7 +111,7 @@ class fx_controller_admin_field extends fx_controller_admin {
     }
     
     public function add_save( $input ) {
-        $params = array('format', 'type', 'not_null', 'searchable', 'default', 'type_of_edit');
+        $params = array('format', 'type', 'not_null', 'searchable', 'default', 'type_of_edit', 'form_tab');
         $data['name'] = trim($input['name']);
         $data['description'] = trim($input['description']);
         foreach ( $params as $v ) {
@@ -140,7 +154,7 @@ class fx_controller_admin_field extends fx_controller_admin {
     public function edit_save ( $input ) {
         $field = fx::data('field')->get_by_id( $input['id']);
 
-        $params = array('name', 'description', 'format', 'type', 'not_null', 'searchable', 'default', 'type_of_edit');
+        $params = array('name', 'description', 'format', 'type', 'not_null', 'searchable', 'default', 'type_of_edit', 'form_tab');
         $input['name'] = trim($input['name']);
         $input['description'] = trim($input['description']);
         foreach ( $params as $v ) {

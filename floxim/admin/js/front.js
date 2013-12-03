@@ -56,10 +56,11 @@ var fx_front = function () {
         if (node.hasClass('fx_selected')) {
             e.fx_hilight_done = true;
             return;
-            return false;
         }
         $fx.front.outline_block_off($($fx.front.c_hover));
         $fx.front.c_hover = this;
+        var fix_link_ce = (node.get(0).nodeName === 'A' && node.hasClass('fx_template_var')) || (e.target.nodeName === 'A' && $(e.target).hasClass('fx_template_var') && !$(e.target).hasClass('fx_hilight'));
+
         setTimeout(
             function() {
                 if ($fx.front.c_hover !== node.get(0)) {
@@ -71,6 +72,14 @@ var fx_front = function () {
                 $('.fx_hilight_hover').removeClass('fx_hilight_hover');
                 node.addClass('fx_hilight_hover');
                 $fx.front.outline_block(node);
+                /*
+                if (node.attr('href') !== undefined) {
+                    node.attr('contenteditable', 'true')
+                }
+                */
+                if (fix_link_ce) {
+                    e.target.setAttribute('contenteditable', 'true');
+                }
             }, 
             $fx.front.c_hover ? 100 : 10
         );
@@ -84,6 +93,14 @@ var fx_front = function () {
                     if ($fx.front.c_hover !== node.get(0)) {
                         node.removeClass('fx_hilight_hover');
                         $fx.front.outline_block_off(node);
+                        if (fix_link_ce) {
+                            e.target.setAttribute('contenteditable', 'false');
+                        }
+                        /*
+                        if (node.attr('href') !== undefined) {
+                            node.attr('contenteditable', 'false')
+                        }
+                        */
                     }
                 },
                 100
@@ -176,6 +193,21 @@ fx_front.prototype.enable_hilight = function(){
     this.hilight_disabled = false;
 };
 
+fx_front.prototype.get_area_size = function($area_node) {
+    var meta = $area_node.data('fx_area');
+    if (typeof meta.size === 'undefined') {
+        // Хорошо бы вычислять
+        var full_size = 1000;
+        if ($area_node.outerWidth() < full_size*0.5) {
+            meta.size = 'narrow';
+        } else {
+            meta.size = '';
+        }
+        $area_node.data('fx_area', meta);
+    }
+    return meta.size;
+};
+
 fx_front.prototype.redraw_add_button = function(node, mode) {
     $fx.buttons.unbind('add');
     var buttons = [];
@@ -200,9 +232,10 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
                        action:'add_edit',
                        content_type:c_cnt.type,
                        infoblock_id:c_cnt.infoblock_id,
-                       parent_id:c_cnt.parent_id,
-                    }, {
-                        view:'vertical',
+                       parent_id:c_cnt.parent_id
+                    }, 
+                        {
+                        view:'cols',
                         onfinish:function() {
                             $fx.front.reload_infoblock(ib);
                             $fx.front.enable_hilight();
@@ -223,6 +256,7 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
     ib.data('content_adders', adders);
     var area_node = node.closest('.fx_area');
     var area_meta = area_node.data('fx_area');
+    area_meta.size = $fx.front.get_area_size(area_node);
     if (area_meta) {
         buttons.push({
             name:'Add new infoblock to '+area_meta.id,
@@ -236,10 +270,11 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
                     action:'select_controller',
                     page_id:$('body').data('fx_page_id'),
                     area:area_meta.id,
+                    area_size:area_meta.size,
                     admin_mode:$fx.front.mode,
                     fx_admin:true
                 }, {
-                    view:'horizontal',
+                    view:'vertical',
                     onfinish:function(data) {
                         $fx.front_panel.show_form(data, {
                             view:'horizontal',
@@ -265,17 +300,20 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
                                 );
                             },
                             onready:function($form) {
+                                /*
                                 var back = $t.jQuery(
                                     'input', 
-                                    {type:'button',label:'&laquo; back',class:'cancel'}
+                                    {'type':'button','label':'&laquo; back', 'class':'cancel'}
                                 );
+                                */
+                               var back = $('.form_header a.back', $form);
                                 back.on('click', function() {
                                     infoblock_back();
                                     $('.fx_infoblock_fake').remove();
                                 });
-                                var first_field = $form.find('.field:visible').first();
+                                //var first_field = $form.find('.field:visible').first();
                                 
-                                first_field.before(back);
+                                //first_field.before(back);
                                 
                                 // creating infoblock preview
                                 $fx.front.deselect_item();
@@ -284,7 +322,8 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
                                 ib_node.data('fx_infoblock', {id:'fake'});
                                 $form.data('ib_node', ib_node);
                                 //$fx.front.scrollTo($ib_node);
-                                $form.on('change', function() {
+                                $form.on('change', function(e) {
+                                    console.log(e);
                                     if ($form.data('is_waiting')) {
                                         return;
                                     }
@@ -529,7 +568,7 @@ fx_front.prototype.select_content_essence = function(n) {
                 content_id: essence_meta.id
             }, 
             {
-                view:'vertical',
+                view:'cols',
                 onfinish: function() {
                     $fx.front.reload_infoblock(ib_node);
                     $fx.front.enable_hilight();
@@ -543,11 +582,14 @@ fx_front.prototype.select_content_essence = function(n) {
     $fx.buttons.bind('delete', function() {
        if (confirm(fx_lang("Вы уверены?"))) {
            $fx.front.disable_infoblock(ib_node);
+           var ce_type = essence_meta.linker_type || essence_meta.type;
+           var ce_id = essence_meta.linker_id || essence_meta.id;
            $fx.post({
                essence:'content',
                action:'delete_save',
-               content_type:essence_meta.type,
-               content_id:essence_meta.id
+               content_type:ce_type,
+               content_id:ce_id,
+               page_id:$('body').data('fx_page_id')
            }, function () {
                $fx.front.reload_infoblock(ib_node);
            });
@@ -568,6 +610,9 @@ fx_front.prototype.select_infoblock = function(n) {
         if (!ib) {
             return;
         }
+        var area_node = ib_node.closest('.fx_area');
+        var area_size = $fx.front.get_area_size(area_node);
+        
         $fx.front.disable_hilight();
         $fx.front_panel.load_form({
             essence:'infoblock',
@@ -575,7 +620,8 @@ fx_front.prototype.select_infoblock = function(n) {
             id:ib.id,
             visual_id:ib.visual_id,
             page_id:$('body').data('fx_page_id'),
-            fx_admin:true
+            fx_admin:true,
+            area_size:area_size
         }, {
             view:'horizontal',
             onfinish:function() {
@@ -584,7 +630,10 @@ fx_front.prototype.select_infoblock = function(n) {
             },
             onready:function($form) {
                 $form.data('ib_node', ib_node);
-                $form.on('change', function() {
+                $form.on('change', function(e) {
+                    if (e.target.name === 'livesearch_input') {
+                        return;
+                    }
                     if ($form.data('is_waiting')) {
                         return;
                     }
@@ -599,7 +648,8 @@ fx_front.prototype.select_infoblock = function(n) {
                     );
                 });
             },
-            oncancel:function() {
+            oncancel:function($form) {
+                $fx.front.reload_infoblock($form.data('ib_node'));
                 $fx.front.enable_hilight();
             }
         });
@@ -901,6 +951,8 @@ fx_front.prototype.outline_block = function(n, style) {
         });
     }
     var o = n.offset();
+    var overlay_offset = parseInt($('.panel_overlay').css('top')); 
+    o.top -= overlay_offset > 0 ? overlay_offset : 0 ;
     var nw = n.outerWidth() + 1;
     var nh = n.outerHeight();
     var size = style === 'hover' ? 2 : 2;
@@ -934,7 +986,11 @@ fx_front.prototype.outline_block = function(n, style) {
             type:type,
             vertical: type === 'left' || type === 'right'
         }));
-        $('body').append(m);
+        if ($('body .panel_overlay').length === 0 ) {
+            var overlay = $('<div class="panel_overlay"></div>').css({'position':'absolute', 'top':'0px', 'left':'0px'})
+            $('body').append(overlay)
+        }
+        $('body .panel_overlay').append(m);
         return m;
     }
     var panes = {};

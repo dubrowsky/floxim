@@ -101,7 +101,7 @@ class fx_controller {
      * Возвращает массив шаблонов, которые можно использовать для контроллер-экшна
      * Вызывать после инициализации контроллера (с экшном)
      */
-    public function get_available_templates( $layout_name = null ) {
+    public function get_available_templates( $layout_name = null , $area_size = null) {
         if (is_numeric($layout_name)) {
             $layout_names = array(fx::data('layout', $layout_name)->get('keyword'));
         } elseif (is_null($layout_name)) {
@@ -148,6 +148,12 @@ class fx_controller {
                 if (strpos($this->action, $tpl_of_action) !== 0) {
                     continue;
                 }
+                if ($area_size && isset($tplv['size'])) {
+                    $size = fx_template_suitable::get_size($tplv['size']);
+                    if (!fx_template_suitable::check_sizes($size, $area_size)) {
+                        continue;
+                    }
+                }
                 $result []= $tplv;
             }
         }
@@ -187,39 +193,64 @@ class fx_controller {
     
     public function get_config() {
         $sources = $this->_get_config_sources();
-        $config = array('actions' => $this->_get_real_actions());
-        foreach ($sources as $source) {
-            $level_config = include $source;
-            if (!is_array($level_config)) {
+        $actions = $this->_get_real_actions();
+        $blocks = array();
+        $meta = array();
+        foreach ($sources as $src) {
+            $src_file = $src;
+            $src_name = null;
+            $my_name = null;
+            preg_match("~/([^/]+?)/[^/]+$~", $src, $src_name);
+            //preg_match("~_([^_]+)$~", get_class($this), $my_name);
+            $my_name = $this->get_controller_name();
+            $is_own = $src_name && $my_name && $src_name[1] === $my_name;
+            $src = include $src;
+            if (!isset($src['actions'])) {
                 continue;
             }
-            if (isset($level_config['actions']) && is_array($level_config['actions'])) {
-                $level_config['actions'] = $this->_prepare_action_config($level_config['actions']);
-                foreach (array_keys($config['actions']) as $parent_action) {
-                    if (!isset($level_config['actions'][$parent_action])) {
-                        $level_config['actions'][$parent_action] = array();
+            $src_actions = $this->_prepare_action_config($src['actions']);
+            foreach ($src_actions as $k => $props) {
+                $action_codes = preg_split("~\s*,\s*~", $k);
+                foreach ($action_codes as $ak) {
+                    $inherit_vertical = preg_match("~^\*~", $ak);
+                    // родительские блоки без вертикального наследования не используем
+                    if (!$is_own && !$inherit_vertical) {
+                        continue;
+                    }
+                    $inherit_horizontal = preg_match("~\*$~", $ak);
+                    $action_code = trim($ak, '*');
+                    $blocks []= $props;
+                    $meta []= array($inherit_horizontal, $action_code);
+                    if (!isset($actions[$action_code])) {
+                        $actions[$action_code] = array();
                     }
                 }
-                $level_config['actions'] = self::_merge_actions($level_config['actions']);
             }
-            $config = array_replace_recursive($config, $level_config);
         }
-        foreach ($config['actions'] as $action => &$params) {
-            $method_name = 'config_'.$action;
-            if(method_exists($this, $method_name)) {
-                $config['actions'][$action] = $this->$method_name($params);
-            }
-            if (!isset($params['settings']) || !is_array($params['settings'])) {
-                continue;
-            }
-            foreach ($params['settings'] as $param_key => &$param_field) {
-                if (!isset($param_field['name'])) {
-                    $param_field['name'] = $param_key;
+        
+        foreach ($blocks as $bn => $block) {
+            list($inherit, $bk) = $meta[$bn];
+            foreach ($actions as $ak => &$action_props) {
+                if (
+                        $ak === $bk || 
+                        ($inherit && substr($ak, 0, strlen($bk)) === $bk) 
+                ) {
+                    $action_props = array_replace_recursive($action_props, $block);
+                    if (isset($action_props['settings'])) {
+                        foreach ($action_props['settings'] as $s_key => $s) {
+                            if (!isset($s['name'])) {
+                                $action_props['settings'][$s_key]['name'] = $s_key;
+                            }
+                        }
+                    }
                 }
             }
         }
-        $config['actions'] = self::_merge_actions($config['actions']);
-        return $config;
+        return array('actions' => $actions);
+    }
+
+    public function get_controller_name(){
+        return preg_replace('~^[^\W_]+_[^\W_]+_~', '', get_class($this));
     }
 
     protected function _prepare_action_config($actions) {
@@ -267,7 +298,7 @@ class fx_controller {
     }
     
 
-    protected function _get_real_actions() {
+    public function _get_real_actions() {
         $class = new ReflectionClass(get_class($this));
         $methods = $class->getMethods(ReflectionMethod::IS_PUBLIC);
         $props = $class->getDefaultProperties();
@@ -306,9 +337,6 @@ class fx_controller {
         foreach ($cfg['actions'] as $action => $info) {
             if (isset($info['disabled']) && $info['disabled']) {
                 continue;
-            }
-            if (!isset($info['name'])) {
-                $info['name'] = '%component% / '.$action;
             }
             $res[$action] = $info;
         }

@@ -10,6 +10,9 @@
             this.prepare_form_data(data);
             this.panel = $('#fx_admin_extra_panel .fx_admin_panel_body');
             this.footer = $('#fx_admin_extra_panel .fx_admin_panel_footer');
+            
+            this.stop();
+            
             this.footer
                     .html('')
                     .css({
@@ -18,7 +21,7 @@
                         padding:'3px'
                     })
                     .show();
-            this.stop();
+            
             var p = this.panel;
             p.css('overflow', 'auto');
             p.parent().css({height:'1px',overflow:'hidden'});
@@ -32,10 +35,10 @@
             p.fx_create_form(data);
             var $form = $('form', p);
             $form.on('fx_form_cancel', function() {
-                $fx.front_panel.hide();
                 if (params.oncancel) {
-                    params.oncancel();
+                    params.oncancel($form);
                 }
+                $fx.front_panel.hide();
             });
             this.panel.on('keydown', function(e) {
                 if (e.which === 27) {
@@ -69,7 +72,7 @@
             var p = this.panel.parent();
             var footer_height = this.footer.outerHeight();
             var max_height = Math.round(
-                ($(window).height() - this.second_row_height - footer_height) * 0.6
+                ($(window).height() - this.second_row_height - footer_height) * 0.75
             );
             if (typeof panel_height === 'undefined') {
                 var form = $('form', p);
@@ -104,7 +107,10 @@
                 {'margin-top':body_offset + 'px'},
                 300
             );
-            $('.fx_outline_style_selected').animate({
+            //$('.fx_outline_style_selected').animate({
+            //    top: (height_delta > 0 ? '+=' : '-=')+ Math.abs(height_delta)
+            //}, 300);
+            $('.panel_overlay').animate({
                 top: (height_delta > 0 ? '+=' : '-=')+ Math.abs(height_delta)
             }, 300);
         },

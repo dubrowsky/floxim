@@ -1,14 +1,14 @@
 <?
 return array(
     'actions' => array(
-        'list' => array(
-            'disabled' => true
+        '*record' => array(
+            'name' => $component['name'].' record',
+            'check_context' => function($page) use ($component) {
+                return $page['type'] === $component['keyword'];
+            }
         ),
-        'list_infoblock' => array(
+        'record, list*' => array(
             'disabled' => true
-        ),
-        'record' => array(
-            'name' => '%component% record'
         )
     )
 );

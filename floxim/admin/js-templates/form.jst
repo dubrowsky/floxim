@@ -244,3 +244,23 @@ html.find('select.extendable').change(function() {
         </div>
     <?}?>
 </div>
+
+<!--[form_cols]-->
+<table class="fx_form_cols_table">
+    <tr>
+    <?
+    $.each(_c.tabs, function(k,v) {
+        ?>
+        <td 
+            class="fx_tab_data fx_tab_data_<?=k?>" 
+            id="<?=_c.form.id?>_<?=k?>">
+        </td>
+        <?
+    });
+    ?>
+    </tr>
+</table>
+
+<!--jquery-->
+$('td', html).first().addClass('fx_tab_data_first');
+$('td', html).last().addClass('fx_tab_data_last');

@@ -9,8 +9,55 @@ class fx_controller_admin_component extends fx_controller_admin {
         $essence = $this->essence_type;
         $finder = fx::data($essence);
         if ($input['params'][0]) {
-            $finder->where('MD5(`group`)', $input['params'][0]);
+            //$finder->where('MD5(`group`)', $input['params'][0]);
         }
+        
+        $tree = $finder->get_tree();
+        
+        $field = array('type' => 'list', 'filter' => true);
+        $field['labels'] = array(
+            'name' => fx::lang('Name', 'system'), 
+            'buttons' => array('type' => 'buttons')
+        );
+        $field['values'] = array();
+        $field['essence'] = $essence;
+        
+        $append_coms = function($coll, $level) use (&$field, &$append_coms) {
+            foreach ($coll as $v) {
+                $submenu = fx_controller_admin_component::get_component_submenu($v);
+                $submenu_first = current($submenu);
+                $r = array(
+                    'id' => $v['id'],
+                    'name' => array(
+                        'name' => $v['name'],
+                        'url' => $submenu_first['url'],
+                        'level' => $level
+                    )
+                );
+
+                $r['buttons'] = array();
+                foreach ($submenu as $submenu_item) {
+                    if (!$submenu_item['parent']) {
+                        $r['buttons'] []= array(
+                            'type' => 'button', 
+                            'label' => $submenu_item['title'], 
+                            'url' => $submenu_item['url']
+                        );
+                    }
+                }
+
+                $field['values'][] = $r;
+                if (isset($v['children'])) {
+                    $append_coms($v['children'], $level+1);
+                }
+            }
+        };
+        
+        $append_coms($tree, 0);
+        
+        /*
+        fx::log('tree', $tree);
+         
         $components = $finder->all();
 
         $field = array('type' => 'list', 'filter' => true);
@@ -44,6 +91,8 @@ class fx_controller_admin_component extends fx_controller_admin {
             
             $field['values'][] = $r;
         }
+         * 
+         */
         $fields[] = $field;
 
         $this->response->add_buttons(array(

@@ -44,7 +44,8 @@ class fx_controller_infoblock extends fx_controller {
         }
         
         if (isset($ib_overs['params'])) {
-            $params = array_merge($params, $ib_overs['params']);
+            //$params = array_merge($params, $ib_overs['params']);
+            $params = $ib_overs['params'];
         }
         
         $params['ajax_mode'] = $this->get_param('ajax_mode');

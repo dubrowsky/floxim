@@ -68,29 +68,14 @@ class fx_controller_admin extends fx_controller {
         if ($this->process_do_return) {
             return $result;
         }
-
-        echo json_encode($result);
+        $res = json_encode($result);
+        return $res;
     }
 
     protected function get_status_text() {
         return fx::lang('Saved','system');
     }
 
-    public function admin_tabs($tabs, $callback_param = null) {
-        $tabs_key = array_keys($tabs);
-        $active_tab = $this->get_active_tab();
-        if (!in_array($active_tab, $tabs_key)) {
-            $active_tab = $tabs_key[0];
-        }
-
-        foreach ($tabs as $tab_key => $tab_name) {
-            $this->response->add_tab($tab_key, $tab_name, ($active_tab == $tab_key));
-        }
-        $this->response->set_change_tab_url();
-
-        call_user_func(array($this, 'tab_'.$active_tab), $callback_param);
-    }
-    
     protected function get_active_tab() {
         return $this->input['params'][1];
     }
@@ -153,11 +138,16 @@ class fx_controller_admin extends fx_controller {
         $css_files = array(
             '/floxim/lib/editors/redactor/redactor.css',
             '/floxim/admin/skins/default/jquery-ui/main.css',
-            '/floxim/admin/skins/default/css/main.css'
+            '/floxim/admin/skins/default/css/main.css',
+            '/floxim/admin/skins/default/css/forms.less',
         );
+        $page->add_css_bundle($css_files);
+        /*
         foreach ($css_files as $file) {
             $page->add_css_file($file);
         }
+         * 
+         */
     }
     
     /**
@@ -173,7 +163,7 @@ class fx_controller_admin extends fx_controller {
             <div id="fx_admin_panel">
                 <div id="fx_admin_panel_logo"><div class="fx_preloader"></div></div>
                 <div id="fx_admin_main_menu"></div>
-                <div id="fx_admin_additional_menu"></div>
+                <div id="fx_admin_additional_menu"><a class="fx_logout">'.fx::lang('Sign out','system').'</a></div>
                 <div id="fx_admin_clear"></div>
             </div>
             <div id="fx_admin_left">
@@ -223,7 +213,7 @@ class fx_controller_admin extends fx_controller {
             $page->add_js_text("fx_adminpanel.init(".$js_config->get_config().");");
         }
         
-        $html = '<html class="fx_overlay fx_admin_html"><head><title>Floxim</title></head><body> '.$auth_form.'</body></html>';
+        $html = "<!DOCTYPE html>\n".'<html class="fx_overlay fx_admin_html"><head><title>Floxim</title></head><body> '.$auth_form.'</body></html>';
         $html = $page->post_process($html);
         return $html;
     }

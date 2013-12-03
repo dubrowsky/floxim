@@ -211,6 +211,32 @@ class fx_template_suitable {
         return array('relevance' => $total_relevance, 'map' => $map);
     }
     
+    public static function get_size($size) {
+        $res = array('width' => 'any', 'height' => 'any');
+        if (empty($size)) {
+            return $res;
+        }
+        $width = null;
+        $height = null;
+        if (preg_match('~wide|narrow~', $size, $width)) {
+            $res['width'] = $width[0];
+        }
+        if (preg_match('~high|low~', $size, $height)) {
+            $res['height'] = $height[0];
+        }
+        return $res;
+    }
+    
+    public static function check_sizes($block, $area) {
+        if ($area['width'] === 'narrow' && $block['width'] ==='wide') {
+            return false;
+        }
+        if ($area['height'] === 'low' && $block['height'] === 'high') {
+            return false;
+        }
+        return true;
+    }
+    
     protected function _get_size($block) {
         $res = array('width' => 'any', 'height' => 'any');
         if (!isset($block['size'])) {

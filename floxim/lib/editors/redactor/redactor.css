@@ -300,7 +300,6 @@ body .redactor_box_fullscreen {
 	font-size: 0;
 	font-family: Helvetica, Arial, Verdana, Tahoma, sans-serif !important;
 	line-height: 0 !important;
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafafa', endColorstr='#d3d3d3',GradientType=0 );
 
 }
 .redactor_toolbar:after {
@@ -539,8 +538,6 @@ body .redactor_toolbar li a.redactor_btn_pre		 		{ background-position: -875px; 
 
 	background-color: #333 !important;
 	opacity: 0.50;
-
-	-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
 	filter:alpha(opacity=50);
 }
 
@@ -563,7 +560,6 @@ body .redactor_toolbar li a.redactor_btn_pre		 		{ background-position: -875px; 
 	text-shadow: 0 1px 0 #fff;
 	font-size: 12px !important;
 	font-family: Helvetica, Arial, Verdana, Tahoma, sans-serif;
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f7f7f7', endColorstr='#e2e2e2',GradientType=0 );
 }
 #redactor_modal header {
 	padding: 11px 30px 0 15px;
@@ -719,7 +715,6 @@ body .redactor_toolbar li a.redactor_btn_pre		 		{ background-position: -875px; 
 	font-size: 12px;
 	font-family: Helvetica, Arial, Verdana, Tahoma, sans-serif;
 	line-height: 1;
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#e1e1e1', GradientType=0);
 	cursor: pointer;
 }
 .redactor_modal_btn:hover {

@@ -25,11 +25,9 @@ $(function(){
         var slides = $('.gallery .gallery_item');
         var slide = $('.gallery .gallery_item.slideid'+id);
         if (slide.length>0) {
-            slides.filter(':visible').stop().fadeOut().removeClass('gallery_item_active');
-            //slides.fadeOut();
+            slides.fadeOut().removeClass('gallery_item_active');
             slide.fadeIn().addClass('gallery_item_active');
             $('.gallery .switcher li.slideid'+id).addClass('active').siblings().removeClass('active');
-            console.log(id)
             window.location.hash = '#slideid'+id;
         }
     }    

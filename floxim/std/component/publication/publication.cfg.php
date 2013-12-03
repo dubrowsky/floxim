@@ -1,10 +1,11 @@
-<?
+<?php
 return array(
     'actions' => array(
-        'list' => array(
-            'defaults' => array(
-                'limit' => 66
-            )
+        '*listing_by_tag' => array(
+            'name' => $component['name'].' by tag',
+            'check_context' => function($page) {
+                return $page->is_instanceof('tag');
+            }
         )
     )
 );

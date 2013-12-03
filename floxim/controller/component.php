@@ -40,42 +40,58 @@ class fx_controller_component extends fx_controller {
             }
         }
         return $sources;
+    } 
+
+    public function get_controller_name(){
+        return $this->_content_type;
     }
     
     public function after_save() {
+        $ib = fx::data('infoblock', $this->input['infoblock_id']);
+        $this->action = $ib['action'];
         if (isset($this->action)) {
             switch ($this->action) {
                 case 'list_selected':
-                /*
+                        //dev_log($ib['params']['selected']);
+                    if (isset($ib['params']['selected']) && is_array($ib['params']['selected'])) {
+                        foreach ($ib['params']['selected'] as  $value) {
+                            $saving[$value] = true;
+                        }
                         $linkers = fx::data('content_select_linker')
+                                    ->where('infoblock_id', $ib['id'])
+                                    ->where('parent_id', $ib['page_id'])
                                     ->all();
                         foreach ($linkers as $linker) {
-                            $linker->delete();
+                            if (!in_array($linker['linked_id'], array_keys($saving))) {
+                                $linker->delete();
+                                $linkers->find_remove('id', $linker['id']);
+                            } else {
+                                //dev_log('order', array_search($linker['linked_id'], $ib['params']['selected']), $linker['linked_id']);
+                                $linker['priority'] = array_search($linker['linked_id'], $ib['params']['selected']);
+                                $linker->save();
+                                unset($saving[$linker['linked_id']]);
+                            }
                         }
-                */
-                    if (isset($this->input['params']['selected']) && is_array($this->input['params']['selected'])) {
-                        $linkers = fx::data('content_select_linker')
-                                    ->where('infoblock_id', $this->input['id'])
-                                    ->where('parent_id', $this->input['page_id'])
-                                    ->all();
-                        foreach ($linkers as $linker) {
-                            $linker->delete();
-                        }
-                        foreach ($this->input['params']['selected'] as $value) {
+                        foreach (array_keys($saving) as $save) {
                             $linker = fx::data('content_select_linker')->create();
-                            $linker['parent_id'] = $this->input['page_id'];
-                            $linker['infoblock_id'] = $this->input['id'];
-                            $linker['linked_id'] = $value[0];
+                            $linker['parent_id'] = $ib['page_id'];
+                            $linker['infoblock_id'] = $ib['id'];
+                            $linker['linked_id'] = $save;
+                            $linker['priority'] = array_search($save, $ib['params']['selected']);
                             $linker->save();
                         }
                     } else {
                         $linkers = fx::data('content_select_linker')
-                                    ->where('infoblock_id', $this->input['id'])
+                                    ->where('infoblock_id', $ib['id'])
                                     ->all();
                         foreach ($linkers as $linker) {
                             $linker->delete();
                         }
                     }
+                    $params = $ib['params'];
+                    unset($params['selected']);
+                    $ib['params'] = $params;
+                    $ib->save();
                     break;
                 
                 default:
@@ -83,12 +99,23 @@ class fx_controller_component extends fx_controller {
             }
         }
     }
+
+    protected function _get_selected_values () {
+        $linkers = fx::data('content_select_linker')
+            ->where('infoblock_id', $this->input['infoblock_id'])
+            ->order('priority')
+            ->get_data()->get_values('linked_id');
+        return $linkers;
+    }
+
     public function after_delete() {
+        $ib = fx::data('infoblock', $this->input['infoblock_id']);
+        $this->action = $ib['action'];
         if (isset($this->action)) {
             switch ($this->action) {
                 case 'list_selected':
                     $linkers = fx::data('content_select_linker')
-                                ->where('infoblock_id', $this->input['id'])
+                                ->where('infoblock_id', $ib['id'])
                                 ->all();
                     foreach ($linkers as $linker) {
                         $linker->delete();
@@ -100,40 +127,6 @@ class fx_controller_component extends fx_controller {
         }
     }
 
-    public function config_list($config) {
-        $sortings = array(
-            'created'=> fx::lang('Created','controller_component')
-        ) + $this
-            ->get_component()
-            ->all_fields()
-            ->find('type', fx_field::FIELD_MULTILINK, '!=')
-            ->get_values('description', 'name');
-        
-        $config['settings']['sorting']['values'] = $sortings;
-        return $config;
-    }
-    
-    
-    public function config_list_filtered($config) {
-        $config['settings'] += $this->_config_conditions();
-        return $config;
-    }
-
-    public function config_list_selected($config) {
-        $field['selected'] = array (
-            'name' => 'selected', 
-            'label' => fx::lang('Selected','controller_component'),
-            'type' => 'livesearch',
-            'is_multiple' => true,
-            'ajax_preload' => true,
-            'params' => array(
-                'content_type' => 'content_'.$this->_content_type
-            ),
-        );
-        $config['settings'] += $field;
-        return $config;
-    }
-    
     protected function _config_conditions () {
         $fields['conditions'] = array(
             'name' => 'conditions',
@@ -191,10 +184,7 @@ class fx_controller_component extends fx_controller {
         $searchable_fields =  $this
                 ->get_component()
                 ->all_fields()
-                //->find('type', fx_field::FIELD_MULTILINK, '!=')
-                //->find('type', fx_field::FIELD_LINK, '!=')
                 ->find('type', fx_field::FIELD_IMAGE, '!=');
-                //->get_values(array('description', 'type'), 'name');
         foreach ($searchable_fields as $field) {
             $res = array(
                 'description' => $field['description'],
@@ -209,11 +199,10 @@ class fx_controller_component extends fx_controller {
             }
             $fields['conditions']['tpl'][0]['values'][$field['name']] = $res;
         }
-        dev_log('fields', $fields);
         return $fields;
     }  
     
-    public function config_list_infoblock($config) {
+    public function get_target_config_fields() {
         
         /*
          * Ниже код, который добывает допустимые инфоблоки для полей-ссылок
@@ -226,6 +215,8 @@ class fx_controller_component extends fx_controller {
                             find('type', array(fx_field::FIELD_LINK, fx_field::FIELD_MULTILINK))->
                             find('type_of_edit', fx_field::EDIT_NONE, fx_collection::FILTER_NEQ);
         
+        $fields = array();
+        fx::log('getting confs', $link_fields, $this);
         foreach ($link_fields as $lf) {
             if ($lf['type'] == fx_field::FIELD_LINK) {
                 $target_com_id = $lf['format']['target'];
@@ -242,6 +233,7 @@ class fx_controller_component extends fx_controller {
             $com_infoblocks = fx::data('infoblock')->
                     where('site_id', fx::env('site')->get('id'))->
                     get_content_infoblocks($target_com['keyword']);
+            
             $ib_values = array();
             foreach ($com_infoblocks as $ib) {
                 $ib_values []= array($ib['id'], $ib['name']);
@@ -252,7 +244,7 @@ class fx_controller_component extends fx_controller {
             $c_ib_field = array(
                 'name' => 'field_'.$lf['id'].'_infoblock'
             );
-            if (count($ib_values) === 1) {
+            if (count($ib_values) === 1 && false) {
                 $c_ib_field += array(
                     'type' => 'hidden',
                     'value' => $ib_values[0][0]
@@ -265,12 +257,10 @@ class fx_controller_component extends fx_controller {
                                 .' "'.$lf['description'].'"'
                 );
             }
-            $config['settings'][$c_ib_field['name']]= $c_ib_field;
+            $fields[$c_ib_field['name']]= $c_ib_field;
         }
-        // добавляем ручную сортировку для инфоблок-листинга
-        $config['settings']['sorting']['values']['manual'] = 
-                        '-'.fx::lang('Manual','controller_component').'-';
-        return $config;
+        fx::log('tarfs', $fields);
+        return $fields;
     }
     
     public function do_record() {
@@ -294,6 +284,14 @@ class fx_controller_component extends fx_controller {
     }
     
     public function do_list_infoblock() {
+        $this->listen('query_ready', function($q, $ctr) {
+            if ( ($parent_id = $ctr->get_param('parent_id')) && !($ctr->get_param('skip_parent_filter')) ) {
+                $q->where('parent_id', $parent_id);
+            }
+            if ( ( $infoblock_id = $ctr->get_param('infoblock_id')) && !($ctr->get_param('skip_infoblock_filter')) ) {
+                $q->where('infoblock_id', $infoblock_id);
+            }
+        });
         $items = $this->do_list();
         if (!$this->get_param('is_fake') && fx::env('is_admin')) {
             $infoblock = fx::data('infoblock', $this->get_param('infoblock_id'));
@@ -404,25 +402,57 @@ class fx_controller_component extends fx_controller {
     }
     
     public function do_list_selected() {
-        $this->set_param('skip_parent_filter', true);
-        $this->set_param('skip_infoblock_filter', true);
         $parent_id = fx::env('page')->get('id');
-        $linkers = fx::data('content_select_linker')
-                    ->select('linked_id')
-                    ->where('infoblock_id', $this->input['infoblock_id'])
-                    ->where('parent_id', $parent_id)
-                    ->get_data()
-                    ->get_values('linked_id');
-        dev_log('linkers', $linkers);
-        if (is_array($linkers)) {
-            $this->listen('query_ready', function($q, $ctr) use ($linkers) {
-                $q->where('id', $linkers, 'IN');
-                dev_log('selected query', $q->show_query());
+        
+        // preview
+        if ( $this->get_param('is_overriden') ) {
+            $content_ids = array();
+            $selected_val  = $this->get_param('selected');
+            if (is_array($selected_val)) {
+                $content_ids = $selected_val;
+            }
+            $linkers = null;
+        } else {
+            // normal
+            $linkers = fx::data('content_select_linker')
+                        ->where('infoblock_id', $this->input['infoblock_id'])
+                        ->where('parent_id', $parent_id)
+                        ->all();
+            $content_ids = $linkers->get_values('linked_id');
+        }
+        
+        $this->listen('query_ready', function($q) use ($content_ids) {
+            $q->where('id', $content_ids);
+        });
+        if ($linkers) {
+            $this->listen('items_ready', function($c, $ctr) use ($linkers) {
+                if ($ctr->get_param('sorting') === 'manual') {
+                    $c->sort(function($a, $b) use ($linkers) {
+                        $a_priority = $linkers->find_one('linked_id', $a['id'])->get('priority');
+                        $b_priority = $linkers->find_one('linked_id', $b['id'])->get('priority');
+                        return $a_priority - $b_priority;
+                    });
+                    $c->is_sortable = true;
+
+                }
+                $c->linker_map = array();
+                foreach ($c as $cc) {
+                    $c->linker_map []= $linkers->find_one('linked_id', $cc['id']);
+                }
+            });
+        } else {
+
+            $this->listen('items_ready', function($c, $ctr) use ($content_ids) {
+                if ($ctr->get_param('sorting') === 'manual') {
+                    $c->sort(function($a, $b) use ($content_ids) {
+                        $a_priority = array_search($a['id'], $content_ids);
+                        $b_priority = array_search($b['id'], $content_ids);
+                        return $a_priority - $b_priority;
+                    });
+                }
             });
         }
-        $res = $this->do_list();
-        dev_log('selected res',$res);
-        return $res;
+        return $this->do_list();
     }
     
     public function do_list_filtered() {
@@ -430,105 +460,112 @@ class fx_controller_component extends fx_controller {
         $this->set_param('skip_infoblock_filter', true);
         $this->listen('query_ready', function($q, $ctr) {
             $fields = $ctr->get_component()->all_fields();
-            $conditions = $ctr->get_param('conditions');
-            if (isset($conditions) && is_array($conditions)) {
-                foreach ($conditions as $condition) {
-                    $field = $fields->find_one('name', $condition['name']);
-                    $error = false;
-                    switch ($condition['operator']) {
-                        case 'contains':
-                            $condition['value'] = '%'.$condition['value'].'%'; 
-                            $condition['operator'] = 'LIKE';
-                            break;
-                        case 'next': 
-                            if (isset($condition['value']) && !empty($condition['value'])) {
-                                $q->where(
-                                    $condition['name'], 
-                                    '> NOW()', 
-                                    'RAW'
-                                );
-                                $condition['value'] = '< NOW() + INTERVAL '.$condition['value'].' '.$condition['interval']; 
-                                $condition['operator'] = 'RAW';
-                            } else {
-                                $error = true;
-                            }
-                            break;
-                        case 'last': 
-                            if (isset($condition['value']) && !empty($condition['value'])) {
-                                $q->where(
-                                    $condition['name'], 
-                                    '< NOW()', 
-                                    'RAW'
-                                );
-                                $condition['value'] = '> NOW() - INTERVAL '.$condition['value'].' '.$condition['interval']; 
-                                $condition['operator'] = 'RAW';
-                            } else {
-                                $error = true;
-                            }
-                            break;
-                        case 'in_future': 
-                            $condition['value'] = '> NOW()'; 
+            $conditions = fx::collection($ctr->get_param('conditions'));
+            if (!$conditions->find_one('name', 'site_id')) {
+                $conditions[]= array(
+                    'name' => 'site_id',
+                    'operator' => '=',
+                    'value' => array(fx::env('site')->get('id'))
+                );
+            }
+
+            foreach ($conditions as $condition) {
+                $field = $fields->find_one('name', $condition['name']);
+                $error = false;
+                switch ($condition['operator']) {
+                    case 'contains':
+                        $condition['value'] = '%'.$condition['value'].'%'; 
+                        $condition['operator'] = 'LIKE';
+                        break;
+                    case 'next': 
+                        if (isset($condition['value']) && !empty($condition['value'])) {
+                            $q->where(
+                                $condition['name'], 
+                                '> NOW()', 
+                                'RAW'
+                            );
+                            $condition['value'] = '< NOW() + INTERVAL '.$condition['value'].' '.$condition['interval']; 
                             $condition['operator'] = 'RAW';
-                            break;
-                        case 'in_past': 
-                            $condition['value'] = '< NOW()'; 
+                        } else {
+                            $error = true;
+                        }
+                        break;
+                    case 'last': 
+                        if (isset($condition['value']) && !empty($condition['value'])) {
+                            $q->where(
+                                $condition['name'], 
+                                '< NOW()', 
+                                'RAW'
+                            );
+                            $condition['value'] = '> NOW() - INTERVAL '.$condition['value'].' '.$condition['interval']; 
                             $condition['operator'] = 'RAW';
-                            break;
-                    }
-                    
-                    if ($field['type'] == fx_field::FIELD_LINK){
-                        if (!isset($condition['value'])) {
-                            $error = true;
                         } else {
-                            $ids = array();
-                            foreach ($condition['value'] as $v) {
-                                $ids[]= $v[0];
-                            }
-                            $condition['value'] = $ids;
-                            if ($condition['operator'] === '!=') {
-                                $condition['operator'] = 'NOT IN';
-                            } elseif ($condition['operator'] === '=') {
-                                $condition['operator'] = 'IN';
-                            }
-                        }
-                    }
-                    if ($field['type'] == fx_field::FIELD_MULTILINK) {
-                        if (!isset($condition['value']) || !is_array($condition['value'])) {
                             $error = true;
-                        } else {
-                            foreach ($condition['value'] as $v) {
-                                $ids[]= $v[0];
-                            }
-                            $relation = $field->get_relation();
-                            dev_log('rels', $relation, $condition);
-                            if ($relation[0] === fx_data::MANY_MANY){
-                                $content_ids = fx::data($relation[1])->
-                                    where($relation[5], $ids)->
-                                    select('content_id')->
-                                    get_data()->get_values('content_id');
-                            } else {
-                                $content_ids = fx::data($relation[1])->
-                                    where('id', $ids)->
-                                    select($relation[2])->get_data()->get_values($relation[2]);
-                            }
-                            $condition['name'] = 'id';    
-                            $condition['value'] = $content_ids;
-                            if ($condition['operator'] === '!=') {
-                                $condition['operator'] = 'NOT IN';
-                            } elseif ($condition['operator'] === '=') {
-                                $condition['operator'] = 'IN';
-                            }
                         }
-                    }
-                    if (!$error) {
-                        $q->where(
-                            $condition['name'], 
-                            $condition['value'], 
-                            $condition['operator']
-                        );
+                        break;
+                    case 'in_future': 
+                        $condition['value'] = '> NOW()'; 
+                        $condition['operator'] = 'RAW';
+                        break;
+                    case 'in_past': 
+                        $condition['value'] = '< NOW()'; 
+                        $condition['operator'] = 'RAW';
+                        break;
+                }
+                if ($field['type'] == fx_field::FIELD_LINK){
+                    if (!isset($condition['value'])) {
+                        $error = true;
+                    } else {
+                        $ids = array();
+                        foreach ($condition['value'] as $v) {
+                            $ids[]= $v;
+                        }
+                        $condition['value'] = $ids;
+                        if ($condition['operator'] === '!=') {
+                            $condition['operator'] = 'NOT IN';
+                        } elseif ($condition['operator'] === '=') {
+                            $condition['operator'] = 'IN';
+                        }
                     }
                 }
+
+                if ($field['type'] == fx_field::FIELD_MULTILINK) {
+
+                    if (!isset($condition['value']) || !is_array($condition['value'])) {
+                        $error = true;
+                    } else {
+                        foreach ($condition['value'] as $v) {
+                            $ids[]= $v;
+                        }
+                        $relation = $field->get_relation();
+                        if ($relation[0] === fx_data::MANY_MANY){
+                            $content_ids = fx::data($relation[1])->
+                                where($relation[5], $ids)->
+                                select('content_id')->
+                                get_data()->get_values('content_id');
+                        } else {
+                            $content_ids = fx::data($relation[1])->
+                                where('id', $ids)->
+                                select($relation[2])->get_data()->get_values($relation[2]);
+                        }
+                        $condition['name'] = 'id';    
+                        $condition['value'] = $content_ids;
+                        if ($condition['operator'] === '!=') {
+                            $condition['operator'] = 'NOT IN';
+                        } elseif ($condition['operator'] === '=') {
+                            $condition['operator'] = 'IN';
+                        }
+                    }
+                }
+                if (!$error) {
+                    $q->where(
+                        $condition['name'], 
+                        $condition['value'], 
+                        $condition['operator']
+                    );
+                }
             }
+            //dev_log('cond list', $q->show_query());
         });
         $res = $this->do_list();
         return $res;
@@ -597,12 +634,6 @@ class fx_controller_component extends fx_controller {
                 $finder->limit($limit);
             }
         }
-        if ( ($parent_id = $this->get_param('parent_id')) && !($this->get_param('skip_parent_filter')) ) {
-            $finder->where('parent_id', $parent_id);
-        }
-        if ( ( $infoblock_id = $this->get_param('infoblock_id')) && !($this->get_param('skip_infoblock_filter')) ) {
-            $finder->where('infoblock_id', $infoblock_id);
-        }
         if ( ($sorting = $this->get_param('sorting'))) {
             $dir = $this->get_param('sorting_dir');
             if ($sorting === 'manual') {
@@ -630,6 +661,17 @@ class fx_controller_component extends fx_controller {
             $vars []= 'component_'.$chain_item['keyword'];
         }
         return array_unique($vars);
+    }
+    
+    public function get_actions() {
+        $actions = parent::get_actions();
+        $com = $this->get_component();
+        foreach ($actions as $action => &$info) {
+            if (!isset($info['name'])) {
+                $info['name'] = $com['name'].' / '.$action;
+            }
+        }
+        return $actions;
     }
 }
 ?>

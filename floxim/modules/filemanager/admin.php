@@ -10,7 +10,7 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
         $this->add_node('filemanager', fx::lang('File-manager','system'), 'module_filemanager.ls');
     }
 
-    protected $root_name = 'корневой каталог'; // название корня для пути
+    protected $root_name = 'root'; // название корня для пути
     protected $base_path = ''; // путь к корню, выше не вылезаем
     protected $file_filters = array(); // фильтры, какие файлы показываем - отрицание так: "!~\.php$~i"
     protected $base_url_template = '#admin.module_filemanager.#action#(#params#)'; // шаблон урл, подстановки - #action# и #params#
@@ -85,9 +85,10 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
      * листинг директории
      */
     public function ls($input) {
-        // директория, которую просматриваем
-        $dir = $this->path;
 
+        // директория, которую просматриваем
+        //$dir = $this->path;
+        $dir = isset($input['params'][0]) ? $input['params'][0] : false;
         // каталог без базового (с ограничением)
         $rel_dir = $this->_trim_path($dir);
 
@@ -101,7 +102,6 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
         $ar['labels'] = array('name' => FX_ADMIN_NAME, 'type' => fx::lang('Type','system'), 'size' => fx::lang('Size','system'), 'permission' => fx::lang('Permissions','system'));
 
         $ls_res = fx::files()->ls(($dir ? $dir : '/'), false, true);
-
         if ($dir && $rel_dir) {
             $pos = strrpos($dir, '/');
             $parent_dir = $pos ? substr($dir, 0, $pos) : '';
@@ -154,8 +154,8 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
 
     public function editor($input) {
         // директория, которую просматриваем
-        //$filename = $input['params'][0];
-        $filename = $this->path;
+        $filename = isset($input['params'][0]) ? $input['params'][0] : false ;
+        //$filename = $this->path;
 
         if (!$filename) {
             $result['status'] = 'error';
@@ -189,8 +189,11 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
             }
         }
         $fields[]= array('type' => 'hidden', 'name' => 'essence', 'value' => 'module_filemanager');
+        $fields[]= array('type' => 'hidden', 'name' => 'fx_admin', 'value' => true);
+        $fields[] = array('type' => 'hidden', 'name' => 'posting', 'value' => 1);
         $this->response->add_fields($fields);
         $this->response->submenu->set_menu('tools')->set_subactive('filemanager');
+        $perms = fx::files()->get_perm($filename);
         $this->response->add_form_button('save');
     }
 
@@ -263,7 +266,7 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
     }
 
     public function edit($input) {
-        $filename = $input['id'];
+        $filename = $input['file_name'];
         if (!$filename) {
             $result['status'] = 'error';
             $result['text'] = fx::lang('Do not pass the file name!','system');
@@ -323,6 +326,7 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
     }
 
     public function edit_save($input) {
+        dev_log('Edit Save', $input );
         $filename = $input['filename'];
         if (!$filename) {
             return array('status' => 'error', 'text' => fx::lang('Not all fields are transferred!','system'));

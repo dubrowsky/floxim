@@ -1,5 +1,4 @@
-
-<div fx:template="supertext" fx:of="text.list">
+<div fx:template="supertext" fx:of="text.list" fx:size="high">
     <b>Super per dooper</b>
     <div fx:template="item">
         M... {$text}

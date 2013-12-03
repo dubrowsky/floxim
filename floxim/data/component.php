@@ -90,5 +90,10 @@ class fx_data_component extends fx_data {
         $res = $recursive_get($root);
         return $res;
     }
+    
+    public function get_tree() {
+        $items = $this->all();
+        return $items->make_tree();
+    }
 }
 ?>

@@ -816,6 +816,9 @@ class fx_template_processor {
         if ( ($offset = $token->get_prop('offset')) ) {
             $tpl_props['offset'] = $offset;
         }
+        if ( ($size = $token->get_prop('size'))) {
+            $tpl_props['size'] = $size;
+        }
         $this->templates [$token->get_prop('id')]= $tpl_props;
         
         $is_subroot = $token->get_prop('subroot') ? 'true' : 'false';
@@ -870,15 +873,17 @@ class fx_template_processor {
         ob_start();
         echo '<'."?\n";
         echo 'class fx_template_'.$this->_class_code." extends fx_template {\n";
-        if ( ($source_dir = $this->source_dir ) ) {
-            $template_dir = $this->template_dir;
-            echo 'protected $_source_dir = "'.$source_dir.'";'."\n";
-        }
         
         $tpl_var = array();
         foreach ( $this->templates as $tpl_name => $tpl) {
+            
             echo $this->pad()."public function tpl_".$tpl_name.'() {'."\n";
-            if (isset($template_dir)) {
+            if (isset($tpl['file'])) {
+                $template_dir = preg_replace(
+                        "~/[^/]+$~", 
+                        '',
+                        str_replace($_SERVER['DOCUMENT_ROOT'], '', $tpl['file'])
+                ).'/';
                 echo $this->pad(2)."\$template_dir = '".$template_dir."';\n";
             }
             echo "\$_is_admin = fx::is_admin();\n";

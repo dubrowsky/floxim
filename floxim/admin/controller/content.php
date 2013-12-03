@@ -34,7 +34,17 @@ class fx_controller_admin_content extends fx_controller_admin {
         }
         
         $this->response->add_fields($fields);
-        $this->response->add_fields($content->get_form_fields(), false, 'content');
+        $content_fields = fx::collection($content->get_form_fields());
+        $tabbed = $content_fields->group('tab');
+        foreach ($tabbed as $tab => $tab_fields) {
+            $this->response->add_tab($tab, $tab);
+            $this->response->add_fields($tab_fields, $tab, 'content');
+        }
+        /*
+        fx::log('content fields', $content_fields, $tabbed);
+        $this->response->add_fields($content_fields, false, 'content');
+         * 
+         */
 
         if ($input['data_sent']) {
             $content->set_field_values($input['content']);
@@ -43,7 +53,7 @@ class fx_controller_admin_content extends fx_controller_admin {
         //$this->response->add_form_button('save');
         return array(
             'status' => 'ok', 
-            'dialog_title' => 
+            'header' => 
             	($input['content_id'] ? 
                 	fx::lang('Editing ', 'system') :
                 	fx::lang('Adding new ', 'system')
@@ -109,8 +119,18 @@ class fx_controller_admin_content extends fx_controller_admin {
         if (!$content) {
             return;
         }
+        $current_page_path = fx::data('content_page' , $input['page_id'])->get_path()->get_values('id');
+        $response = array('status'=>'ok');
+        if ($content->is_instanceof('page') && is_array($current_page_path) && in_array($content['id'], $current_page_path) ) {
+            if ($content['parent_id'] == 0){
+                $response['reload'] = '/';
+            } else {
+                $parent_page = fx::data('content_page', $content['parent_id']);
+                $response['reload'] = $parent_page['url'];
+            }
+        }
         $content->delete();
-        return array('status' => 'ok');
+        return $response;
     }
     
     public function livesearch($input) {
@@ -142,15 +162,13 @@ class fx_controller_admin_content extends fx_controller_admin {
      */
     public function move($input) {
         $content_type = 'content_'.$input['content_type'];
-        //$content = fx::data($content_type, $input['content_id']);
-        $content = fx::data($content_type)->with('tag')->where('id', $input['content_id'])->one();
+        $content = fx::data($content_type)->where('id', $input['content_id'])->one();
         $next_id = isset($input['next_id']) ? $input['next_id'] : false;
         
         $neighbours = fx::data($content_type)->
                         where('parent_id', $content['parent_id'])->
                         where('infoblock_id', $content['infoblock_id'])->
                         where('id', $content['id'], '!=')->
-                        with('tag')->
                         order('priority')->all();
         $nn = $neighbours->find('id', $next_id);
         
