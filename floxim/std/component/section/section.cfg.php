@@ -2,6 +2,7 @@
 return array(
     'actions' => array(
         '*list*' => array(
+            'icon' => 'Nav',
             'defaults' => array(
             	'!parent_type' => 'mount_page_id',
                 'limit' => 0,
@@ -21,12 +22,17 @@ return array(
         ),
         '*list_submenu*' => array(
             'name' => 'Submenu',
+            'icon_extra' => 'sub',
             'settings' => array(
                 'source_infoblock_id' => array(
                         'label' => fx::lang('Source infoblock','component_section'),
                         'type' => 'select',
                 ),
             ),
+        ),
+        'breadcrumbs' => array(
+            'icon' => 'Nav',
+            'icon_extra' => 'bre',
         ),
     )
 );
