@@ -2,6 +2,11 @@ body {
 	margin: 0;
 	padding: 0;
 	font-size: 100%;
+	* {font-family: 'Nixie One';}
+}
+
+img {
+    vertical-align: middle;
 }
 
 .wrapper {
@@ -145,7 +150,7 @@ body {
 
 				.caption {
 					position: absolute;
-					bottom: 4px;
+					bottom: 0;
 					width: 70%;
 					h2 {
 						max-width: 70%;
@@ -157,7 +162,7 @@ body {
 							margin: 0;
 							padding: 0;
 							background-color: rgba(255, 255, 255, 0.7);
-							padding: 0.7em;
+							padding: 0.4em;
 							margin-bottom: 0.31em;
 						}
 					}
@@ -357,20 +362,21 @@ body {
 							background-color: #e9e9e8;
 
 							form {
+								float: right;
 								.input-group {
 									float: left;
 									position: relative;
 									margin-right: 20px;
 
 									&.remember {
-										width: 80px;
+										width: 90px;
 										position: relative;
 										top:13px;
 									}
 
 									label {
 										position: absolute;
-										font-size: 0.625em;
+										font-size: 0.7em;
 										top: -1.3em;
 									}
 									input[type="password"], input[type="text"] {
