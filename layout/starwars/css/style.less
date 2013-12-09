@@ -1,6 +1,7 @@
 body {
 	margin: 0;
 	padding: 0;
+	font-size: 100%;
 }
 
 .wrapper {
@@ -12,10 +13,11 @@ body {
 		position: relative;
 		z-index: 0;
 		h1 {
-			font-size: 40px;
+			font-size: 3.5em;
 			font-weight: normal;
 		}
-
+		&.one-column {
+		}
 		&.two-column {
 			.left-column {
 				width: 23%;
@@ -24,7 +26,80 @@ body {
 				width: 77%;
 			}
 		}
-		.left-column, .main-column {
+
+		&.three-column {
+			.left-column {
+				width: 25%;
+			}
+			.main-column {
+				width: 50%;
+				h2 {
+					margin: 0;
+					padding: 0;
+				}
+			}
+			.right-column {
+				width: 25%;
+			}
+		}
+		.header {
+			h1 {
+				float:left;
+			}
+			.calendar {
+				float: left;
+				font-size: 1.9em;
+				margin-left: 2%;
+				margin-top: 1.5em;
+				a {
+					margin-right: 1.3em;
+					color: #33ccff;	
+				}
+			}
+		}
+		.img {
+			width: 80%;
+			padding: 5% 10%;
+			img {
+				width: 100%;
+			}
+		}
+
+		.news-list {
+			width: 100%;
+			position: relative;
+			.news-list-item {
+				width: 100%;
+				margin-bottom: 1.3em;
+				.date {
+					font-size: 0.8em;
+					color: #888888;
+				}
+				a {
+					color: #33ccff;
+				}
+				.badge {
+					float: left;
+					margin-top: 1em;
+					position: relative;
+					padding: 0.1em 0.2em;
+					left: -0.2em;
+					color: white;
+					background-color: #33ccff;
+				}
+			}
+			.more {
+				float: left;
+				display: block;
+				width: 100%;
+				font-size: 3em;
+				text-align: left;
+				color: #33ccff;
+				text-decoration: none;	
+			}
+		}
+
+		.left-column, .main-column, .right-column {
 			float: left;
 		}
 
@@ -52,7 +127,7 @@ body {
 
 				a {
 					text-decoration: none;
-					font-size: 20px;
+					font-size: 1.25em;
 					color: #888888;
 				}
 			}
@@ -74,7 +149,7 @@ body {
 					width: 70%;
 					h2 {
 						max-width: 70%;
-						font-size: 60px;
+						font-size: 3.75em;
 						font-weight: normal;
 						margin: 0;
 						padding: 0;
@@ -82,15 +157,15 @@ body {
 							margin: 0;
 							padding: 0;
 							background-color: rgba(255, 255, 255, 0.7);
-							padding: 20px;
-							margin-bottom: 5px;
+							padding: 0.7em;
+							margin-bottom: 0.31em;
 						}
 					}
 
 					.text {
 						padding: 20px;
 						background-color: #33ccff;
-						font-size: 40px;
+						font-size: 2.5em;
 						color: white;
 						p {
 							margin: 0;
@@ -105,7 +180,7 @@ body {
 
 		.featured-list {
 			width: 100%;
-			margin-top: 20px;
+			margin-top: 2%;
 			position: relative;
 			.featured-item {
 				position: relative;
@@ -122,10 +197,39 @@ body {
 				.caption {
 					position: absolute;
 					background-color: rgba(255, 255, 255, 0.7);
-					padding: 5px;
-					font-size: 40px;
+					padding: 0.2em;
+					font-size: 2.5em;
 					bottom: 15px;
 				}
+			}
+			&.four-items {
+				.featured-item {
+					width: 23%;
+					margin-right: 2.65%;
+					&.last {
+						float: right;
+						margin-right: 0;
+					}
+					.caption {
+						position: relative;
+						background-color: white;
+						padding: 0.3em 0.2em;
+						font-size: 1.2em;
+						bottom: auto;
+						a {
+							color: #33ccff;
+						}
+					}
+				}
+			}
+			.more {
+				float: left;
+				display: block;
+				width: 100%;
+				font-size: 3em;
+				text-align: right;
+				color: #33ccff;
+				text-decoration: none;	
 			}
 		}
 
@@ -171,7 +275,7 @@ body {
 				a {
 					color: white;
 					text-decoration: none;
-					font-size: 17px;
+					font-size: 1em;
 				}
 
 				.menu-sub-items {
@@ -208,7 +312,7 @@ body {
 			margin-right: 60px;
 			margin-top: 7.5px;
 			color: #cccccc;
-			font-size: 17px;
+			font-size: 1em;
 			line-height: 25px;
 			text-decoration: none;
 		}
@@ -266,8 +370,8 @@ body {
 
 									label {
 										position: absolute;
-										font-size: 10px;
-										top: -14px;
+										font-size: 0.625em;
+										top: -1.3em;
 									}
 									input[type="password"], input[type="text"] {
 										height: 30px;
@@ -360,7 +464,7 @@ body {
 
 		.copyright {
 			float: right;
-			font-size: 12px;
+			font-size: 0.75em;
 			color: #cccccc;
 			line-height: 20px;
 		}
@@ -377,7 +481,7 @@ body {
 
 				a {
 					color: #cccccc;
-					font-size: 12px;
+					font-size: 0.75em;
 				}
 
 			}
@@ -405,7 +509,7 @@ body {
 				a {
 					color: white;
 					text-decoration: none;
-					font-size: 25px;
+					font-size: 1.56em;
 				}
 				.footer-menu-sub-items {
 					padding: 0;
@@ -417,7 +521,7 @@ body {
 						a {
 							text-decoration: underline;
 							color: #999999;
-							font-size: 16px;
+							font-size: 1em;
 						}
 					}
 				}
