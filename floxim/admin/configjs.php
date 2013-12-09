@@ -20,7 +20,7 @@ class fx_admin_configjs {
         'develop' => array(
             'name' => fx::lang('Development', 'system'),
             'key' => 'develop',
-            'href' => '/floxim/#admin.component.group'
+            'href' => '/floxim/#admin.component.all'
         ), 
         'site' => array(
             'name' => fx::env('site')->get('domain'),

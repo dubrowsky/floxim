@@ -78,7 +78,7 @@
                         class="places" 
                         fx:name="Pages by year"
                         fx:template="pages_by_year" 
-                        fx:of="component_page.listing">
+                        fx:of="page.list">
                         <div 
                             fx:each="{$items->group('publish_date | fx::date : "Y"') as $year => $pages}" 
                             class="col"
@@ -108,7 +108,7 @@
                     <div class="l-side" fx:area="index_left">
                         <ul 
                             fx:template="index_photo_anounces" 
-                            fx:of="component_photo.listing" 
+                            fx:of="component_photo.list" 
                             class="photo_anounces">
                             <li fx:template="item">
                                 <?
@@ -128,7 +128,7 @@
                             <h2>{%header}Header{/%}</h2>
                             {$content}
                         </div>
-                        <ul fx:template="index_link_list" fx:of="component_page.listing" fx:name="Simple link list">
+                        <ul fx:template="index_link_list" fx:of="page.list" fx:name="Simple link list">
                             <li fx:template="item"><a href="{$url}">{$name}</a></li>
                         </ul>
                         

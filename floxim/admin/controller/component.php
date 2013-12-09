@@ -3,14 +3,11 @@
 class fx_controller_admin_component extends fx_controller_admin {
 
     /**
-     * Список всех компонентов И ВИДЖЕТОВ (!) или компонентов определенной группы
+     * Список всех компонентов
      */
-    public function group($input) {
+    public function all() {
         $essence = $this->essence_type;
         $finder = fx::data($essence);
-        if ($input['params'][0]) {
-            //$finder->where('MD5(`group`)', $input['params'][0]);
-        }
         
         $tree = $finder->get_tree();
         
@@ -55,44 +52,6 @@ class fx_controller_admin_component extends fx_controller_admin {
         
         $append_coms($tree, 0);
         
-        /*
-        fx::log('tree', $tree);
-         
-        $components = $finder->all();
-
-        $field = array('type' => 'list', 'filter' => true);
-        $field['labels'] = array(
-            'name' => fx::lang('Name', 'system'), 
-            'buttons' => array('type' => 'buttons')
-        );
-        $field['values'] = array();
-        $field['essence'] = $essence;
-        foreach ($components as $v) {
-            $submenu = self::get_component_submenu($v);
-            $submenu_first = current($submenu);
-            $r = array(
-                'id' => $v['id'],
-                'name' => array(
-                    'name' => $v['name'],
-                    'url' => $submenu_first['url']
-                )
-            );
-            
-            $r['buttons'] = array();
-            foreach ($submenu as $submenu_item) {
-                if (!$submenu_item['parent']) {
-                    $r['buttons'] []= array(
-                        'type' => 'button', 
-                        'label' => $submenu_item['title'], 
-                        'url' => $submenu_item['url']
-                    );
-                }
-            }
-            
-            $field['values'][] = $r;
-        }
-         * 
-         */
         $fields[] = $field;
 
         $this->response->add_buttons(array(
@@ -106,14 +65,8 @@ class fx_controller_admin_component extends fx_controller_admin {
         
         $result = array('fields' => $fields);
 
-        $this->response->breadcrumb->add_item(self::_essence_types($essence), '#admin.'.$essence.'.group');
-        if ($input['params'][0]) {
-            $this->response->submenu->set_menu($essence.'group-'.md5($components[0]['group']));
-            $this->response->breadcrumb->add_item($components[0]['group']);
-        }
-        else {
-            $this->response->submenu->set_menu($essence);
-        }
+        $this->response->breadcrumb->add_item(self::_essence_types($essence), '#admin.'.$essence.'.all');
+        $this->response->submenu->set_menu($essence);
         return $result;
     }
     
@@ -129,7 +82,8 @@ class fx_controller_admin_component extends fx_controller_admin {
                 'templates' => fx::lang('Templates', 'system')
             ), 
             'widget' => array(
-                'settings' => fx::lang('Settings','system')
+                'settings' => fx::lang('Settings','system'),
+                'templates' => fx::lang('Templates', 'system')
             )
         );
 		
@@ -155,8 +109,10 @@ class fx_controller_admin_component extends fx_controller_admin {
 	return $res;
     }
     
-    protected function _get_component_templates($component) {
-        $controller_name = 'component_'.$component['keyword'];
+    protected function _get_component_templates($ctr_essence) {
+        fx::log('get tmps for', $ctr_essence);
+        $ctr_type = ($ctr_essence instanceof fx_widget ? 'widget' : 'component');
+        $controller_name = $ctr_type.'_'.$ctr_essence['keyword'];
         $controller = fx::controller($controller_name);
         $actions = $controller->get_actions();
         $templates = array();
@@ -201,7 +157,7 @@ class fx_controller_admin_component extends fx_controller_admin {
         
         $this->response->breadcrumb->add_item(
             self::_essence_types($essence), 
-            '#admin.'.$essence.'.group'
+            '#admin.'.$essence.'.all'
         );
         $this->response->breadcrumb->add_item(
             fx::lang('Add new '.$essence, 'system')
@@ -265,8 +221,7 @@ class fx_controller_admin_component extends fx_controller_admin {
     	$essence_code = str_replace('fx_','',get_class($component));
     	$submenu = self::get_component_submenu($component);
         $submenu_first = current($submenu);
-    	$breadcrumb->add_item(self::_essence_types($essence_code), '#admin.'.$essence_code.'.group');
-        $breadcrumb->add_item($component['group'], '#admin.'.$essence_code.'.group('.md5($component['group']).')');
+    	$breadcrumb->add_item(self::_essence_types($essence_code), '#admin.'.$essence_code.'.all');
         $breadcrumb->add_item($component['name'], $submenu_first['url']);
         if (isset($submenu[$action])) {
 			$breadcrumb->add_item($submenu[$action]['title'], $submenu[$action]['url']);
@@ -378,6 +333,7 @@ class fx_controller_admin_component extends fx_controller_admin {
     }
     
     public function templates($component, $input) {
+        $ctr_type = $component instanceof fx_widget ? 'widget' : 'component';
         $this->response->submenu->set_subactive('templates');
         if (isset($input['params'][2])) {
             return $this->template(array('template_full_id' => $input['params'][2]));
@@ -398,20 +354,26 @@ class fx_controller_admin_component extends fx_controller_admin {
         $field['values'] = array();
         foreach ($templates as $tpl) {
             $r = array(
-				'id' => $tpl['full_id'],
-				'name' => array(
+                'id' => $tpl['full_id'],
+                'name' => array(
                     'name' => $tpl['name'],
-                    'url' => 'component.edit('.$component['id'].',templates,'.$tpl['full_id'].')', 
+                    'url' => $ctr_type.'.edit('.$component['id'].',templates,'.$tpl['full_id'].')', 
                 ),
                 'action' => preg_replace("~^.+\.~", '', $tpl['of']),
                 'used' => count($visuals->find('template', $tpl['full_id']))
-			);
-            $owner_com = preg_replace("~\..+$~", '', $tpl['of']);
-            $owner_com = preg_replace("~^component_~", '', $owner_com);
-            if ($owner_com == $component['keyword']) {
+            );
+            //$owner_com = preg_replace("~\..+$~", '', $tpl['of']);
+            //$owner_com = preg_replace("~^(component|widget)_~", '', $owner_com);
+            $owner_ctr_match = null;
+            preg_match("~^(component_|widget_)?(.+?)\..+$~", $tpl['of'], $owner_ctr_match);
+            $owner_ctr = $owner_ctr_match ? $owner_ctr_match[2] : null;
+            
+            fx::log('ownc', $owner_ctr, $tpl['of']);
+            
+            if ($owner_ctr == $component['keyword']) {
                 $r['type'] = 'Own template';
             } else {
-                $r['type'] = 'Inherited from '.$owner_com;               
+                $r['type'] = 'Inherited from '.$owner_ctr;
             }
             if (preg_match("~^layout_~", $tpl['full_id'])) {
                 $layout_code = 
@@ -424,12 +386,12 @@ class fx_controller_admin_component extends fx_controller_admin {
                                 one()->
                                 get('name') . ' (layout)';
             } else {
-                $com_code = 
+                $ctr_code = 
                     preg_replace('~\..+$~', '', 
-                        preg_replace('~component_~', '', $tpl['full_id'])
+                        preg_replace('~^(component_|widget_)~', '', $tpl['full_id'])
                     );
                 $r['source'] = 
-                           fx::data('component', $com_code)->get('name');
+                    fx::data($ctr_type, $ctr_code)->get('name');
             }
             $r['file'] = str_replace(fx::config()->DOCUMENT_ROOT, '', $tpl['file']);
             $field['values'][] = $r;
@@ -537,7 +499,7 @@ class fx_controller_admin_component extends fx_controller_admin {
         $fields[] = array('type' => 'hidden', 'name' => 'phase', 'value' => 'settings');
         $fields[] = array('type' => 'hidden', 'name' => 'id', 'value' => $component['id']);
         
-        $this->response->submenu->set_subactive('settings-'.$component['id']);
+        $this->response->submenu->set_subactive('settings');
         $fields[] = $this->ui->hidden('essence', 'component');
         $fields[] = $this->ui->hidden('action', 'edit_save');
 

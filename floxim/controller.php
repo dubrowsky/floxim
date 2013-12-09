@@ -70,10 +70,18 @@ class fx_controller {
     protected $_action_prefix = '';
 
 
-    static private function _get_abbr($name) {
+    static protected function _get_abbr($name) {
         $vowels = array('a', 'e', 'i', 'o', 'u', 'y');
         $head = substr($name,0,1);
-        $tail = substr(str_replace($vowels, '', strtolower(substr($name,1))), 0, 2);
+        $words = explode(" ", $name);
+        if (count($words) > 1) {
+            $tail = substr($name, 1, 1).'.'.substr($words[1], 0, 1);
+        } else {
+            $tail = substr(str_replace($vowels, '', strtolower(substr($name,1))), 0, 2);
+            if (strlen($name) > 2 && strlen($tail) < 2) {
+                $tail = substr($name, 1, 2);
+            }
+        }
         return $head.$tail;
     }
 
@@ -237,7 +245,10 @@ class fx_controller {
             foreach ($actions as $ak => &$action_props) {
                 if (
                         $ak === $bk || 
-                        ($inherit && substr($ak, 0, strlen($bk)) === $bk) 
+                        (
+                            $inherit && 
+                            ($bk === '.' || substr($ak, 0, strlen($bk)) === $bk)
+                        )
                 ) {
                     $action_props = array_replace_recursive($action_props, $block);
                     if (isset($action_props['settings'])) {
@@ -250,6 +261,7 @@ class fx_controller {
                 }
             }
         }
+        unset($actions['.']);
         return array('actions' => $actions);
     }
 

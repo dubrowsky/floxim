@@ -217,7 +217,6 @@ class fx_controller_component extends fx_controller {
                             find('type_of_edit', fx_field::EDIT_NONE, fx_collection::FILTER_NEQ);
         
         $fields = array();
-        fx::log('getting confs', $link_fields, $this);
         foreach ($link_fields as $lf) {
             if ($lf['type'] == fx_field::FIELD_LINK) {
                 $target_com_id = $lf['format']['target'];
@@ -260,7 +259,6 @@ class fx_controller_component extends fx_controller {
             }
             $fields[$c_ib_field['name']]= $c_ib_field;
         }
-        fx::log('tarfs', $fields);
         return $fields;
     }
     

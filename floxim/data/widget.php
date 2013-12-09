@@ -11,6 +11,10 @@ class fx_data_widget extends fx_data {
         
         return $result;
     }
+    
+    public function get_by_id($id) {
+        return $this->where(is_numeric($id) ? 'id' : 'keyword', $id)->one();
+    }
 
 }
 

@@ -384,7 +384,6 @@ class fx_data {
      */
     public function get_by_id($id) {
         return $this->where('id', $id)->one();
-    	return $this->get('id', $id);
     }
     
     /**

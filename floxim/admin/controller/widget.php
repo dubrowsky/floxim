@@ -1,6 +1,55 @@
 <?php
 
 class fx_controller_admin_widget extends fx_controller_admin_component {
+    
+    public function all() {
+        $field = array('type' => 'list', 'filter' => true);
+        $field['labels'] = array(
+            'name' => fx::lang('Name', 'system'), 
+            'buttons' => array('type' => 'buttons')
+        );
+        $field['values'] = array();
+        $field['essence'] = 'widget';
+        $widgets = fx::data('widget')->all();
+        foreach ($widgets as $widget) {
+            $submenu = fx_controller_admin_component::get_component_submenu($widget);
+            $submenu_first = current($submenu);
+            $r = array(
+                'id' => $widget['id'],
+                'name' => array(
+                    'name' => $widget['name'],
+                    'url' => $submenu_first['url']
+                )
+            );
+
+            $r['buttons'] = array();
+            foreach ($submenu as $submenu_item) {
+                //if (!$submenu_item['parent']) {
+                    $r['buttons'] []= array(
+                        'type' => 'button', 
+                        'label' => $submenu_item['title'], 
+                        'url' => $submenu_item['url']
+                    );
+                //}
+            }
+
+            $field['values'][] = $r;
+        }
+        $this->response->add_buttons(array(
+            array(
+                'key' => "add", 
+                'title' => fx::lang('Add new widget', 'system'),
+                'url' => '#admin.widget.add'
+            ),
+            "delete"
+        ));
+        
+        $result = array('fields' => array($field));
+
+        $this->response->breadcrumb->add_item(self::_essence_types('widget'), '#admin.widget.all');
+        $this->response->submenu->set_menu('widget');
+        return $result;
+    }
 
     public function add($input) {
         $fields = array();
@@ -23,12 +72,18 @@ class fx_controller_admin_widget extends fx_controller_admin_component {
 
         $fields[] = $this->ui->hidden('source', $input['source']);
         $fields[] = $this->ui->hidden('posting');
+        
+        $this->response->breadcrumb->add_item(
+            self::_essence_types('widget'), 
+            '#admin.widget.all'
+        );
+        $this->response->breadcrumb->add_item(
+            fx::lang('Add new widget', 'system')
+        );
+        
+        $this->response->submenu->set_menu('widget');
 
         return array('fields' => $fields);
-    }
-
-    public function store($input) {
-        return $this->ui->store('widget', $input['filter'], $input['reason'], $input['position']);
     }
 
     public function add_save($input) {
@@ -60,22 +115,6 @@ class fx_controller_admin_widget extends fx_controller_admin_component {
             if ($widget['id']) {
                 $widget->delete();
             }
-        }
-
-        return $result;
-    }
-
-     public function store_save($input) {
-        $store = new fx_admin_store();
-        $file = $store->get_file($input['store_id']);
-
-        $result = array('status' => 'ok');
-        try {
-            $imex = new fx_import();
-            $imex->import_by_content($file);
-        } catch (Exception $e) {
-            $result = array('status' => 'error');
-            $result['text'][] = $e->getMessage();
         }
 
         return $result;
@@ -118,15 +157,12 @@ class fx_controller_admin_widget extends fx_controller_admin_component {
 
         $fields[] = array('type' => 'hidden', 'name' => 'phase', 'value' => 'settings');
         $fields[] = array('type' => 'hidden', 'name' => 'id', 'value' => $widget['id']);
+        
+        $this->response->submenu->set_subactive('settings');
+        $fields[] = $this->ui->hidden('essence', 'widget');
+        $fields[] = $this->ui->hidden('action', 'edit_save');
+        
         return array('fields' => $fields, 'form_button' => array('save'));
     }
-
-    protected function get_functions() {
-        $function = array();
-        $function[] = array('name' => 'record', 'type' => 'html');
-        $function[] = array('name' => 'settings', 'type' => 'php');
-        return $function;
-    }
-
 }
 ?>

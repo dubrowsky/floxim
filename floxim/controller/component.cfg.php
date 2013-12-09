@@ -14,8 +14,10 @@ $content_exists = fx::data('content_'.$component['keyword'])
 
 return array(
     'actions' => array(
+        '*.*' => array(
+            'icon' => self::_get_abbr($component['name'])
+        ),
         '*list*' => array(
-            'icon' => self::_get_abbr($component['name']),
             'settings' => array(
                 'limit' => array(
                     'label' => fx::lang('Count entries','controller_component')

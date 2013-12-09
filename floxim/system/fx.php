@@ -57,11 +57,11 @@ class fx {
         $component = null;
         
         if (preg_match("~^content~", $datatype)) {
-        	if ($datatype == 'content') {
-        		$component = fx::data('component', 'content');
-        	} else {
-        		$component = fx::data('component', preg_replace("~^content_~", '', $datatype));
-        	}
+            if ($datatype == 'content') {
+                $component = fx::data('component', 'content');
+            } else {
+                $component = fx::data('component', preg_replace("~^content_~", '', $datatype));
+            }
         }
         
         // look for data-* class in cache
@@ -80,11 +80,11 @@ class fx {
             } catch (Exception $e) {
                 // Файндер для контента, класс не определен
                 if ($component) {
-                        $data_finder = new fx_data_content();
-                        $data_classes_cache[$datatype] = 'fx_data_content';
+                    $data_finder = new fx_data_content();
+                    $data_classes_cache[$datatype] = 'fx_data_content';
                 } elseif (preg_match("~^field_~", $datatype)) {
-                        $data_finder = new fx_data_field();
-                        $data_classes_cache[$datatype] = 'fx_data_field';
+                    $data_finder = new fx_data_field();
+                    $data_classes_cache[$datatype] = 'fx_data_field';
                 }
             }
             if (is_null($data_finder)) {
@@ -94,7 +94,7 @@ class fx {
         }
 		
         if ($component) {
-                $data_finder->set_component($component['id']);
+            $data_finder->set_component($component['id']);
         }
 		
         if (func_num_args() == 2) {
