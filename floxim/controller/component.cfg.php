@@ -12,6 +12,8 @@ $content_exists = fx::data('content_'.$component['keyword'])
                             ->where('site_id', fx::env('site')->get('id'))
                             ->one();
 
+fx::log('get com cfg', $this);;
+
 return array(
     'actions' => array(
         '*.*' => array(
