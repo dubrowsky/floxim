@@ -59,7 +59,6 @@ class fx_controller_admin_layout extends fx_controller_admin {
         ));
 
         $result = array('fields' => $fields);
-
         $this->response->submenu->set_menu('layout');
         return $result;
     }
@@ -68,6 +67,7 @@ class fx_controller_admin_layout extends fx_controller_admin {
         $input['source'] = 'new';
         $fields = array(
             $this->ui->hidden('action', 'add'),
+            $this->ui->hidden('essence', 'layout'),
             array('name' => 'name', 'label' => fx::lang('Layout name','system')),
             array('name' => 'keyword', 'label' => fx::lang('Layout keyword','system')),
             $this->ui->hidden('source', $input['source']),
@@ -88,6 +88,7 @@ class fx_controller_admin_layout extends fx_controller_admin {
     
 
     public function add_save($input) {
+        dev_log('add layout');
         $result = array('status' => 'ok');
         $keyword = trim($input['keyword']);
         $name = trim($input['name']);
@@ -164,11 +165,9 @@ class fx_controller_admin_layout extends fx_controller_admin {
         }
 
         $fields[] = $ar;
-
         $buttons = array("add", "delete");
         $buttons_action['add']['options']['parent_id'] = $template['id'];
         $result = array('fields' => $fields, 'buttons' => $buttons, 'buttons_action' => $buttons_action, 'essence' => 'layout');
-
         return $result;
     }
     

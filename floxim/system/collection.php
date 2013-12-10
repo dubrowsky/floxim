@@ -31,6 +31,10 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
             return $di;
         }
     }
+
+    public function last(){ 
+        return end($this->data);
+    }
     
     /*
      * Создает новую коллекцию с результатами
