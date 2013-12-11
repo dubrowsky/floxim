@@ -45,7 +45,10 @@
 					{%phone}8.800.213.43.34{/%}
 				</a>
 				<ul class="icons"  fx:area="icons_area" fx:size="narrow,low">
-					<li class="icon on login" fx:template="authform_popup" fx:of="widget_authform.show" >
+					<li class="icon search">
+						<a href="#"></a>
+					</li>
+					<li class="icon <? echo fx::env('user') ? 'on' : 'off' ;?> login" fx:template="authform_popup" fx:of="widget_authform.show" >
 						<a></a>
 						<div class="auth_form">
 							<form  method="POST" action="/floxim/" >
@@ -68,9 +71,6 @@
 								</div>
 							</form>
 						</div>
-					</li>
-					<li class="icon search">
-						<a href="#"></a>
 					</li>
 				</ul>
 			</div>
