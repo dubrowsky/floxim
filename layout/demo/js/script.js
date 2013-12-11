@@ -1,5 +1,5 @@
 (function () {
-	$('html').on('click', '.icon.login a', function (e) {
+	$('html').on('click', '.icon.login a.off', function (e) {
 		e.preventDefault();
 		var node = $(this).parent();
 		var nav = node.parent().parent().parent();

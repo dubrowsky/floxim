@@ -3,7 +3,7 @@
 <head>
     <meta fx:layout="two_columns" fx:name="Two columns" content="two_columns" />
     <meta fx:layout="three_columns" fx:name="Three columns" content="three_columns" />
-    <meta fx:layout="one_column" fx:name="Full width" content="one_column" />
+    <meta fx:layout="one_column" fx:name="Full width" content="one_columns" />
     {js}
         FX_JQUERY_PATH
         js/script.js
@@ -79,8 +79,12 @@
 			<div class="header">
 				<h1 fx:each="$path->last()">{$name}</h1>
 				<div class="calendar" fx:area="header_links" fx:size="narrow,low">
-					<a href="#">last week</a>
-					<a href="#">last month</a>
+					<div 
+						fx:omit="true"
+						fx:template="top_links"
+						fx:of="section.list">
+						<a fx:each="$items" href="{$url}">{$name}</a>
+					</div>
 				</div>
 				<div style="clear:both;"></div>
 			</div>
@@ -88,12 +92,12 @@
 				<ul 
 				    fx:template="left_menu"
 					fx:name="Left menu"
-				    fx:of="section.list"
+				    fx:of="page.list"
 				    class="sub-menu">
 					<li fx:template="inactive" class="sub-menu-item">
 						<a href="{$url}">{$name}</a>
 					</li>
-					<li fx:template="inactive" class="sub-menu-item active">
+					<li fx:template="active" class="sub-menu-item active">
 						<a href="{$url}">{$name}</a>
 					</li>
 				</ul>
@@ -132,7 +136,7 @@
 				    fx:template="featured_products_list"
 				    fx:of="product.list"
 				    class="featured-list">
-					<div fx:each="$items" class="featured-item">
+					<div fx:each="$items" class="featured-item {if $item_index%3==0}last{/if}">
 						<a href="{$url}">
 							<img src="{$image}">
 						</a>
@@ -146,10 +150,8 @@
 		</section>
 		<section fx:if="$one_columns" class="one-column">
 			<div class="header">
-				<h1>Today</h1>
-				<div class="calendar">
-					<a href="#">last week</a>
-					<a href="#">last month</a>
+				<h1 fx:each="$path->last()">{$name}</h1>
+				<div class="calendar" fx:area="header_links" fx:size="narrow,low">
 				</div>
 				<div style="clear:both;"></div>
 			</div>
@@ -175,25 +177,23 @@
 				    class="featured-list four-items">
 					<div 
 						fx:template="item" 
-						class="featured-item">
-						<img src="{$image}">
+						class="featured-item {if $item_index%4 == 0}last{/if}">
+						<img fx:if="$image" src="{$image}">
 						<div class="caption">
 							{$anounce}
 							<a href="{$url}">{$name}</a>
 						</div>
 					</div>
 
-					<a class="more" href="#">more news</a>
+					<a class="more" href="{%more}">{%More_news}More news{/%}</a>
 				</div>
 			</div>
 			<div style="clear: both;"></div>
 		</section>
 		<section fx:if="$three_columns" class="three-column">
 			<div class="header">
-				<h1>Today</h1>
-				<div class="calendar">
-					<a href="#">last week</a>
-					<a href="#">last month</a>
+				<h1 fx:each="$path->last()">{$name}</h1>
+				<div class="calendar" fx:area="header_links" fx:size="narrow,low">
 				</div>
 				<div style="clear:both;"></div>
 			</div>
@@ -213,14 +213,12 @@
 						<a class="badge">Space Times</a>
 						<div style="clear:both;"></div>
 					</div>
-					<a class="more" href="#">more press</a>
+					<a class="more" href="{%more}">{%More_news}More news{/%}</a>
 				</div>
 			</div>
-			<div class="main-column" fx:area="main_column" fx:size="wide,high">
-				<h2>Pod Classification</h2>
-				<div class="img">
-					<img src="img/download.jpg" alt="">
-				</div>
+			<div class="main-column">
+				<h2>{%sub_header}Pod Classes{/%}</h2>
+				<div fx:area="main_column" fx:size="wide,high"></div>
 			</div>
 			<div class="right-column" fx:area="right_column" fx:size="narrow,high">
 				<div class="img">
