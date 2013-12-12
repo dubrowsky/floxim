@@ -828,7 +828,13 @@ class fx_template_processor {
             $name = $token->get_prop('id');
         }
         $of = $token->get_prop('of');
+        if ($of == 'menu') {
+            $of = 'section.list';
+        }
+        
         $is_magic_of = in_array($of, array('block', 'menu'));
+        
+        
         if (!$of) {
             if ($this->_controller_type == 'layout') {
                 $of = 'layout.show';

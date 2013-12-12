@@ -49,6 +49,9 @@ return array(
         ),
         '*list_infoblock' => array(
             'name' => $component['name'],
+            'install' => function() {
+                
+            },
             'settings' => array(
                 'sorting' => array(
                     'values' => array( array('manual', 'Manual' ) ) + $sort_fields

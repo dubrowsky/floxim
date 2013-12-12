@@ -222,6 +222,7 @@ class fx_controller {
         $my_name = $this->get_controller_name();
         foreach ($sources as $src) {
             $src_name = null;
+            $src_hash = md5($src);
             preg_match("~/([^/]+?)/[^/]+$~", $src, $src_name);
             $is_own = $src_name && $my_name && $src_name[1] === $my_name;
             $src = include $src;
@@ -239,6 +240,12 @@ class fx_controller {
                     }
                     $inherit_horizontal = preg_match("~\*$~", $ak);
                     $action_code = trim($ak, '*');
+                    if (isset($props['install']) && !is_array($props['install'])) {
+                        $props['install'] = array($src_hash => $props['install']);
+                    }
+                    if (isset($props['delete']) && !is_array($props['delete'])) {
+                        $props['delete'] = array($src_hash => $props['delete']);
+                    }
                     $blocks []= $props;
                     $meta []= array($inherit_horizontal, $action_code);
                     if (!isset($actions[$action_code])) {
@@ -383,8 +390,10 @@ class fx_controller {
         }
         $config = $full_config['actions'][$action];
         if ($is_new && isset($config['install'])) {
-            if (is_callable($config['install'])) {
-                call_user_func($config['install'], $infoblock, $this);
+            foreach ($config['install'] as $install_callback) {
+                if (is_callable($install_callback)) {
+                    call_user_func($install_callback, $infoblock, $this);
+                }
             }
         }
     }
@@ -401,7 +410,11 @@ class fx_controller {
         }
         $config = $full_config['actions'][$action];
         if (isset($config['delete'])) {
-            call_user_func($config['delete'], $infoblock, $this);
+            foreach ($config['delete'] as $delete_callback) {
+                if (is_callable($delete_callback)) {
+                    call_user_func($delete_callback, $infoblock, $this);
+                }
+            }
         }
     }
 }

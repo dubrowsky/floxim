@@ -22,8 +22,8 @@
                 <div class="header_area" fx:area="header" fx:size="wide,low">
                     <nav 
                         fx:template="top_menu"
-						fx:name="Main menu"
-                        fx:of="component_section.listing"
+                        fx:name="Main Menu"
+                        fx:of="menu"
                         class="top_menu">
                         <ul>
                             <li fx:template="inactive">
