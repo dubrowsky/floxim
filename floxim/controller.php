@@ -50,6 +50,10 @@ class fx_controller {
     	return $this;
     }
 
+    public function after_save () {
+        
+    }
+
     /**
      * Возвращает результат выполнения действия контроллером
      * @return array|string массив с результатами работы контроллера
@@ -157,6 +161,8 @@ class fx_controller {
                     continue;
                 }
                 list($tpl_of_controller, $tpl_of_action) = $of_parts;
+                if (preg_match('~_layout$~', $tpl_of_controller))
+                    $tpl_of_controller = 'layout';
                 if ( !in_array($tpl_of_controller, $controller_variants)) {
                     continue;
                 }
@@ -184,10 +190,12 @@ class fx_controller {
     
     public function get_action_settings($action) {
         $cfg = $this->get_config();
+        dev_log('get act', $action, $this, $cfg);
         if (!isset($cfg['actions'][$action])) {
             return;
         }
         $params = $cfg['actions'][$action];
+        // А точно нужно возвращать Null?
         if (!isset($params['settings'])) {
             return;
         }

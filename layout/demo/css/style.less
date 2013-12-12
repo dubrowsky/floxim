@@ -106,6 +106,7 @@ img {
 
 		.left-column, .main-column, .right-column {
 			float: left;
+			min-height:8px;
 		}
 
 		.sub-menu {
@@ -141,7 +142,29 @@ img {
 
 		.slider {
 			width: 100%;
+			position: relative;
+			.btn-prev, .btn-next {
+				position: absolute;
+				top: 50%;
+				text-indent: -9999px;
+				height: 40px;
+				width: 35px;
+				background-repeat: no-repeat;
+				background-image: url(../img/arrows.png);
+			}
+			.btn-next {
+				right: 0;
+				background-position: -37px;
+			}
+			.switcher {
+				display: none;
+			}
 			.slide {
+
+				&.slide_active {
+					display: block;
+				}
+				display: none;
 				width: 100%;
 				position: relative;
 				img {
@@ -253,12 +276,17 @@ img {
 			position: relative;
 			top: -3px;
 		}
-
+		.menu-area {
+			float: left;
+			min-width: 50%;
+			max-width: 60%;
+			margin-left: 9%;
+			height: 40px;
+		}
 		.main-menu {
 			float: left;
 			margin: 0;
 			padding: 0;
-			margin-left: 90px;
 			list-style: none;
 			height: 40px;
 			line-height: 40px;
@@ -473,6 +501,11 @@ img {
 			font-size: 0.75em;
 			color: #cccccc;
 			line-height: 20px;
+		}
+
+		.footer-links-area {
+			float: right;
+			min-width: 10%;
 		}
 
 		.links {
