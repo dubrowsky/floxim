@@ -50,6 +50,69 @@ class fx_controller_component_section extends fx_controller_component_page {
         return parent::do_list_infoblock();
     }
 
+    public function do_list_filtered () {
+        $c_page_id  = fx::env('page')->get('id');
+        $path = fx::env('page')->get_parent_ids();
+        $path []= $c_page_id;
+        $submenu_type = $this->get_param('submenu');
+        $this->listen('query_ready', function($q) use ($path, $submenu_type) {
+            switch ($submenu_type) {
+                case 'all':
+                    $q->clear_where('parent_id');
+                    break;
+                case 'active':
+                    $q->clear_where('parent_id')->where('parent_id', $path);
+                    break;
+            }
+        });
+        $this->listen('items_ready', function($items) use ($path, $submenu_type) {
+            $items->make_tree();
+            if ($submenu_type == 'none')
+                $items->apply(function($item){
+                    unset($item['children']);
+                });
+        });
+        return parent::do_list_filtered();
+    }
+
+    public function do_list_selected () {
+        $c_page_id  = fx::env('page')->get('id');
+        $path = fx::env('page')->get_parent_ids();
+        $path []= $c_page_id;
+        $submenu_type = $this->get_param('submenu');
+        $this->listen('query_ready', function($q) use ($path, $submenu_type) {
+            switch ($submenu_type) {
+                case 'all':
+                    $q->clear_where('parent_id');
+                    break;
+                case 'active':
+                    $q->clear_where('parent_id')->where('parent_id', $path);
+                    break;
+            }
+        });
+        $ctr = $this;
+        $recurcive_children = function ($items) use (&$recurcive_children, $ctr) {
+            $sub_items = $ctr
+                    ->get_finder()
+                    ->where('parent_id', $items->get_values('id'))
+                    ->all();
+            if (!count($sub_items)>0) {
+                return;
+            }
+            $items->attache_many($sub_items, 'parent_id', 'children');
+            $recurcive_children($sub_items);
+
+        };
+        $this->listen('items_ready', function ($items) use ($recurcive_children, $submenu_type) {
+            $recurcive_children($items);
+            if ($submenu_type == 'none')
+                $items->apply(function($item){
+                    unset($item['children']);
+                });
+        });
+        return parent::do_list_selected();
+    }
+
     public function do_list_submenu() {
         $source = $this->get_param('source_infoblock_id');
         $path = fx::env('page')->get_path();

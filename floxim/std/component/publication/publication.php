@@ -42,7 +42,7 @@ class fx_controller_component_publication extends fx_controller_component {
         return $fields;
     }
     public function do_calendar() {
-        $months = $this->_get_finder()->
+        $months = $this->get_finder()->
             select('DATE_FORMAT(`publish_date`, "%m") as month')->
             select('DATE_FORMAT(`publish_date`, "%Y") as year')->
             select('COUNT(DISTINCT({{content}}.id)) as `count`')->

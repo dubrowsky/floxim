@@ -278,7 +278,7 @@ class fx_controller_component extends fx_controller {
     }
     
     public function do_list() {
-        $f = $this->_get_finder();
+        $f = $this->get_finder();
         $this->trigger('query_ready', $f);
         $items = $f->all();
         if (count($items) === 0) {
@@ -351,7 +351,7 @@ class fx_controller_component extends fx_controller {
         if (!$this->get_param('show_pagination')){
             return null;
         }
-        $total_rows = $this->_get_finder()->get_found_rows();
+        $total_rows = $this->get_finder()->get_found_rows();
         if ($total_rows == 0) {
             return null;
         }
@@ -618,14 +618,14 @@ class fx_controller_component extends fx_controller {
     }
     
     
-    protected $_finder = null;
+    //protected $_finder = null;
     /**
      * @return fx_data_content data finder
      */
-    protected function _get_finder() {
-        if ($this->_finder) {
-            return $this->_finder;
-        }
+    public function get_finder() {
+        //if ($this->_finder) {
+        //    return $this->_finder;
+        //}
         $finder = fx::data('content_'.$this->get_content_type());
         $show_pagination = $this->get_param('pagination');
         $c_page = $this->_get_current_page_number();
@@ -654,7 +654,7 @@ class fx_controller_component extends fx_controller {
             }
             $finder->order($sorting, $dir);
         }
-        $this->_finder = $finder;
+        //$this->_finder = $finder;
         return $finder;
     }
     

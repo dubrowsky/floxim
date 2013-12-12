@@ -20,9 +20,9 @@ class fx_controller_component_comment extends fx_controller_component
         }
         return $field;
     }
-    protected function _get_finder()
+    public function get_finder()
     {
-        $finder = parent::_get_finder();
+        $finder = parent::get_finder();
         
         if (!fx::is_admin()) {
             if ($own_comments = $this->_get_own_comments()) {

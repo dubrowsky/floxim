@@ -30,10 +30,10 @@
 					    class="main-menu">
 						<li 
 							fx:each="$items" 
-							class="menu-item {if $active} active{/if}{if $children} dropdown{/if}">
+							class="menu-item {if $children} dropdown{/if}">
 							<a href="{$url}">{$name}</a>
 							<ul fx:if="$children" class="menu-sub-items">
-								<li fx:each="$children" fx:prefix="child" class="menu-sub-item">
+								<li fx:each="$children" fx:prefix="child" class="{if $child_active} active{/if} menu-sub-item">
 									<a href="{$child_url}">{$child_name}</a>
 								</li>
 							</ul>
@@ -77,7 +77,8 @@
 		</nav>
 		<section fx:if="$two_columns" class="two-column">
 			<div class="header">
-				<h1 fx:each="$path->last()">{$name}</h1>
+				<h1 fx:each="$current_page">{$name}</h1>
+				
 				<div class="calendar" fx:area="header_links" fx:size="narrow,low">
 					<div 
 						fx:omit="true"
@@ -221,8 +222,11 @@
 				<div fx:area="main_column" fx:size="wide,high"></div>
 			</div>
 			<div class="right-column" fx:area="right_column" fx:size="narrow,high">
-				<div class="img">
-					<img src="img/banner.png" alt="">
+				<div 
+					fx:template="simple_img"
+					fx:of="photo.list" 
+					class="img">
+					<img fx:each="$items" src="{$photo}" alt="{$copy}"/>
 				</div>
 			</div>
 			<div style="clear:both;"></div>
@@ -266,6 +270,7 @@
 						fx:each="$items"  
 						class="footer-menu-item">
 						<a href="{$url}">{$name}</a>
+						<?dev_log('tpl', $children);?>
 						<ul fx:if="$children" class="footer-menu-sub-items" >
 							<li 
 								fx:each="$children" 

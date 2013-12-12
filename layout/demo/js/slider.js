@@ -25,8 +25,8 @@ $(function(){
         var slides = $('.slider .slide');
         var slide = $('.slider .slide.slideid'+id);
         if (slide.length>0) {
-            slides.fadeOut().removeClass('slide_active');
-            slide.fadeIn().addClass('slide_active');
+            slides.removeClass('slide_active').fadeOut();
+            slide.fadeIn('slow', function() {slide.addClass('slide_active')});
             $('.slider .switcher li.slideid'+id).addClass('active').siblings().removeClass('active');
             window.location.hash = '#slideid'+id;
         }
