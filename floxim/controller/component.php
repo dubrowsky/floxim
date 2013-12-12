@@ -43,17 +43,21 @@ class fx_controller_component extends fx_controller {
         return $sources;
     } 
 
-    public function get_controller_name(){
-        return $this->_content_type;
+    public function get_controller_name($with_type = false){
+        $name = $this->_content_type;
+        if ($with_type) {
+            $name = 'component_'.$name;
+        }
+        return $name;
     }
     
-    public function after_save() {
+    public function after_save_infoblock($is_new) {
+        parent::after_save_infoblock($is_new);
         $ib = fx::data('infoblock', $this->input['infoblock_id']);
         $this->action = $ib['action'];
         if (isset($this->action)) {
             switch ($this->action) {
                 case 'list_selected':
-                        //dev_log($ib['params']['selected']);
                     if (isset($ib['params']['selected']) && is_array($ib['params']['selected'])) {
                         foreach ($ib['params']['selected'] as  $value) {
                             $saving[$value] = true;
@@ -109,7 +113,8 @@ class fx_controller_component extends fx_controller {
         return $linkers;
     }
 
-    public function after_delete() {
+    public function before_delete_infoblock() {
+        parent::before_delete_infoblock();
         $ib = fx::data('infoblock', $this->input['infoblock_id']);
         $this->action = $ib['action'];
         if (isset($this->action)) {
@@ -200,6 +205,11 @@ class fx_controller_component extends fx_controller {
             }
             $fields['conditions']['tpl'][0]['values'][$field['name']] = $res;
         }
+        $fields['conditions']['tpl'][0]['values']['infoblock_id'] = array(
+            'description' => 'Infoblock',
+            'type' => 'link',
+            'content_type' => 'infoblock'
+        );
         return $fields;
     }  
     

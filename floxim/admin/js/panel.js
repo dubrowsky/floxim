@@ -47,8 +47,10 @@
                 }
             });
             $form.on('fx_form_sent', function(e, data) {
+                console.log('finish hidng');
                 $fx.front_panel.hide();
                 if (params.onfinish) {
+                    console.log('call onf', params.onfinish);
                     params.onfinish(data);
                 }
             });

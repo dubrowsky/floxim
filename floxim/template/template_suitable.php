@@ -38,10 +38,15 @@ class fx_template_suitable {
         }
         
         $source_layout_id = $c_layout_id;
-        
-        $this->_adjust_layout_visual($layout_ib, $layout_id, $source_layout_id);
+        //fx::debug($layout_ib);
+        if ($layout_ib->get_visual()->get('is_stub')) {
+            $this->_adjust_layout_visual($layout_ib, $layout_id, $source_layout_id);
+        }
         $layout_visual = $layout_ib->get_visual();
         $area_map = $layout_visual['area_map'];
+        
+        $c_areas = fx::template($layout_ib->get_prop_inherited('visual.template'))->get_areas();
+        
         foreach ($infoblocks as $ib) {
             $ib_visual = $ib->get_visual($layout_id);
             if (!$ib_visual['is_stub'] ) {
@@ -53,6 +58,9 @@ class fx_template_suitable {
                 $ib_visual['area'] = $area_map[$old_area];
                 $ib_visual['priority'] = $ib->get_prop_inherited('visual.priority', $source_layout_id);
                 //$old_visual['priority'];
+            } else {
+                //fx::debug($c_areas);
+                //die();
             }
             $ib_controller = fx::controller(
                     $ib->get_prop_inherited('controller'),
@@ -61,17 +69,36 @@ class fx_template_suitable {
             );
             $controller_templates = $ib_controller->get_available_templates($layout['keyword']);
             $old_template = $ib->get_prop_inherited('visual.template', $source_layout_id);
+            $used_template_props = null;
             foreach ($controller_templates as $c_tpl) {
                 if ($c_tpl['full_id'] == $old_template) {
                     $ib_visual['template'] = $c_tpl['full_id'];
+                    $used_template_props = $c_tpl;
                     break;
                 }
             }
             if (!isset($ib_visual['template'])) {
                 $ib_visual['template'] = $controller_templates[0]['full_id'];
+                $used_template_props = $controller_templates[0];
+            }
+            
+            if (!$ib_visual['area']) {
+                //fx::debug($used_template_props);
+                $block_size = self::get_size( $used_template_props['size']);
+                //fx::debug($c_areas);
+                foreach ($c_areas as $ca) {
+                    $area_size = self::get_size($ca['size']);
+                    //fx::debug($block_size, $area_size);
+                    if (self::check_sizes($block_size, $area_size)) {
+                        $ib_visual['area'] = $ca['id'];
+                        break;
+                    }
+                }
             }
             
             unset($ib_visual['is_stub']);
+            //fx::debug('ibv red', $ib_visual);
+            //die();
             $ib_visual->save();
         }
     }

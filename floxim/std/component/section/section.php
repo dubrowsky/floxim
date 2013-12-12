@@ -15,7 +15,7 @@ class fx_controller_component_section extends fx_controller_component_page {
             $this->set_param('parent_type', 'mount_page_id');
         }
         
-        $this->set_param('sorting', 'manual');
+        //$this->set_param('sorting', 'manual');
         
         $this->listen('query_ready', function($q) use ($path, $submenu_type) {
             switch ($submenu_type) {

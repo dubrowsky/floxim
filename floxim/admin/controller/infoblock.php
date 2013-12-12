@@ -288,7 +288,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             }
             $infoblock['name'] = $input['name'];
             $action_params = array();
-            if (!$is_layout) {
+            if (!$is_layout && $settings && is_array($settings)) {
                 foreach (array_keys($settings) as $setting_key) {
                     if (isset($input['params'][$setting_key])) {
                         $action_params[$setting_key] = $input['params'][$setting_key];
@@ -302,31 +302,20 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                 $infoblock['scope'] = array();
             }
             list($scope_page_id, $scope_pages, $scope_page_type) = explode("-", $input['scope']['complex_scope']);
-            /*
-            if ($input['scope']['page_id'] == 0) {
-                $input['scope']['pages'] = 'all';
-            }
-            $ib_scope = array(
-                'pages' => $input['scope']['pages'],
-                'page_type' => $input['scope']['page_type']
-            );
-            $infoblock['scope'] = $ib_scope;
-             * 
-             */
             $infoblock['scope'] = array(
                 'pages' => $scope_pages,
                 'page_type' => $scope_page_type
             );
-            //$infoblock['page_id'] = $input['scope']['page_id'];
             $infoblock['page_id'] = $scope_page_id;
             
             $i2l['wrapper'] = fx::dig($input, 'visual.wrapper');
             $i2l['template'] = fx::dig($input, 'visual.template');
+            $is_new_infoblock = !$infoblock['id'];
             $infoblock->save();
             $i2l['infoblock_id'] = $infoblock['id'];
             $i2l->save();
             $controller->set_param('infoblock_id', $infoblock['id']);
-            $controller->after_save();
+            $controller->after_save_infoblock($is_new_infoblock);
             $this->response->set_status_ok();
             $this->response->set_prop('infoblock_id', $infoblock['id']);
             return;
@@ -698,11 +687,12 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
     public function delete_infoblock($input) {
         /* @var $infoblock fx_infoblock */
         $infoblock = fx::data('infoblock', $input['id']);
-        $controller = $infoblock->get_prop_inherited('controller');
+        $controller_name = $infoblock->get_prop_inherited('controller');
         $action = $infoblock->get_prop_inherited('action');
-        $controller = fx::controller($controller);
+        $controller = fx::controller($controller_name);
         $controller->set_action($action);
         $controller->set_input($input);
+        $controller->set_param('infoblock_id', $infoblock['id']);
         $fields = array(
             array(
                 'label' => fx::lang('I am REALLY sure','system'),
@@ -737,9 +727,8 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                     $ci->delete();
                 }
             }
-
+            $controller->before_delete_infoblock();
             $infoblock->delete();
-            $controller->after_delete();
         }
     }
     

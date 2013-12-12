@@ -211,7 +211,7 @@ class fx_controller {
         $actions = $this->_get_real_actions();
         $blocks = array();
         $meta = array();
-        $my_name = $this->get_controller_name(true);
+        $my_name = $this->get_controller_name();
         foreach ($sources as $src) {
             $src_name = null;
             preg_match("~/([^/]+?)/[^/]+$~", $src, $src_name);
@@ -265,8 +265,11 @@ class fx_controller {
         return array('actions' => $actions);
     }
 
-    public function get_controller_name(){
-        $name = preg_replace('~^[^\W_]+_[^\W_]+_[^\W_]+_~', '', get_class($this));
+    public function get_controller_name($with_type = false){
+        $name = preg_replace('~^[^\W_]+_[^\W_]+_~', '', get_class($this));
+        if (!$with_type) {
+            $name = preg_replace('~^[^\W_]+_~', '', $name);
+        }
         return $name;
     }
 
@@ -358,5 +361,39 @@ class fx_controller {
             $res[$action] = $info;
         }
         return $res;
+    }
+    
+    public function after_save_infoblock($is_new) {
+        if (! ($ib_id = $this->get_param('infoblock_id')) ) {
+            return;
+        }
+        $infoblock = fx::data('infoblock', $ib_id);
+        $action = $infoblock['action'];
+        $full_config = $this->get_config();
+        if (!isset($full_config['actions'][$action])) {
+            return;
+        }
+        $config = $full_config['actions'][$action];
+        if ($is_new && isset($config['install'])) {
+            if (is_callable($config['install'])) {
+                call_user_func($config['install'], $infoblock, $this);
+            }
+        }
+    }
+    
+    public function before_delete_infoblock() {
+        if (! ($ib_id = $this->get_param('infoblock_id')) ) {
+            return;
+        }
+        $infoblock = fx::data('infoblock', $ib_id);
+        $action = $infoblock['action'];
+        $full_config = $this->get_config();
+        if (!isset($full_config['actions'][$action])) {
+            return;
+        }
+        $config = $full_config['actions'][$action];
+        if (isset($config['delete'])) {
+            call_user_func($config['delete'], $infoblock, $this);
+        }
     }
 }
