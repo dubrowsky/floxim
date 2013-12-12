@@ -12,7 +12,7 @@ abstract class fx_essence implements ArrayAccess {
     
     protected $validate_errors = array();
     
-    protected function _get_finder() {
+    protected function get_finder() {
         return fx::data($this->get_type());
     }
 
@@ -37,7 +37,7 @@ abstract class fx_essence implements ArrayAccess {
             foreach ($this->modified as $v) {
                 $data[$v] = $this->data[$v];
             }
-            $this->_get_finder()->update($data, array($pk => $this->data[$pk]));
+            $this->get_finder()->update($data, array($pk => $this->data[$pk]));
             $this->_save_multi_links();
             $this->_after_update();
         } // insert
@@ -46,7 +46,7 @@ abstract class fx_essence implements ArrayAccess {
             if ($this->validate() === false) {
                 $this->throw_invalid();
             }
-            $id = $this->_get_finder()->insert($this->data);
+            $id = $this->get_finder()->insert($this->data);
             $this->data['id'] = $id;
             $this->_save_multi_links();
             $this->_after_insert();
@@ -109,7 +109,7 @@ abstract class fx_essence implements ArrayAccess {
     public function delete( $dont_log = false ) {
         $pk = $this->_get_pk();
         $this->_before_delete();
-        $this->_get_finder()->delete($pk, $this->data[$pk]);
+        $this->get_finder()->delete($pk, $this->data[$pk]);
         $this->modified_data = $this->data;
         $this->_after_delete();
         if (!$dont_log) {
@@ -145,7 +145,7 @@ abstract class fx_essence implements ArrayAccess {
     }
 
     protected function _add_history_operation($type, $data = array()) {
-        //fx_history::add_operation($type, str_replace('fx_data_', '', get_class($this->_get_finder())), $this->data[$this->pk], $this->modified_data, $data);
+        //fx_history::add_operation($type, str_replace('fx_data_', '', get_class($this->get_finder())), $this->data[$this->pk], $this->modified_data, $data);
     }
     
     protected function _before_insert () {
@@ -185,7 +185,7 @@ abstract class fx_essence implements ArrayAccess {
          * Если связанные не загружены, просим файндер их загрузить
          */
          
-         $finder = $this->_get_finder();
+         $finder = $this->get_finder();
          $rels = $finder->relations();
         
         if (!isset($rels[$offset])) {
