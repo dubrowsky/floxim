@@ -104,6 +104,220 @@
 				</ul>
 			</div>	
 			<div class="main-column" fx:area="main_column" fx:size="wide,high">
+				<div 
+				    fx:template="product_record"
+				    fx:of="product.record"
+				    fx:omit="true">
+				    <div
+				    	fx:template="item" 
+				    	class="product-record">
+						<div class="photo">
+				            <img src="{$image}" alt="{$name}">
+						</div>
+						<div class="caption">
+							<h2>{$name}</h2>
+							<h3>{$reference}</h3>
+							<div class="desc">{$description}</div>
+							<div class="price">{$price}</div>
+						</div>
+					</div>
+				</div>
+				<div
+					fx:template="news_list_main"
+				    fx:of="news.list"
+				    class="news-list">
+					<div
+						fx:template="item" 
+						class="news-list-item">
+						<div class="photo">
+							<img src="{$image}" alt="{$name}">
+						</div>
+						<div class="caption">
+							<h2><a href="{$url}">{$name}</a></h2>
+							<div class="anounce">
+								{$anounce}
+							</div>
+						</div>
+						<div style="clear:both;"></div>
+					</div>
+				</div>
+				<div
+					fx:template="person_list_main"
+				    fx:of="person.list"
+				    class="person-list">
+					<div
+						fx:template="item" 
+						class="person-list-item">
+						<div class="photo">
+							<img src="{$photo}" alt="{$name}">
+						</div>
+						<div class="caption">
+							<h2><a href="{$url}">{$full_name}</a></h2>
+							<h3>{$position}</h3>
+							<div class="anounce">
+								{$short_description}
+							</div>
+						</div>
+						<div style="clear:both;"></div>
+					</div>
+				</div>
+				<div 
+				    fx:template="vacancy_list"
+				    fx:of="vacancy.list"
+				    class="vacancy-list">
+				    <div fx:template="item" 
+				        class="vacancy-list-item">
+			            <h3 class="no-top-margin"><a href="{$url}">{$position}</a></h3>
+			            <h4>{$salary_from} - {$salary_to}</h4>
+				    </div>
+				</div>
+				<div 
+				    fx:template="vacancy_record"
+				    fx:of="vacancy.record"
+				    fx:omit="true">
+				    <div fx:template="item" 
+				        class="clearfix vacancy-record">
+				        <h1 class="no-top-margin">{$position}</h1>
+				        <div>
+				    	   <div>
+				    	       <h3>{%Responsibilities}Responsibilities{/%}</h3>
+				    	       {$responsibilities}
+				    	   </div>
+				    	   <div>
+				    	       <h3>{%Requirements}Requirements{/%}</h3>
+				    	       {$requirements}
+				    	   </div>
+				    	   <div>
+				    	       <h3>{%conditions}Work Conditions{/%}</h3>
+				    	       {$work_conditions}
+				    	   </div>
+				    	   <div fx:if="$salary_from || $salary_to">
+				    	       {if $salary_from}From {$salary_from} {/if}
+				    	       {if $salary_to}To {$salary_to}{/if}
+				    	   </div>
+				    	   <div>
+				    	       <h3>{%Contacts}Contacts{/%}</h3>
+				    	       <div fx:if="$phone">Phone: {$phone}</div>
+				    	       <div fx:if="$email">Email: {$email}</div>
+				    	       <div fx:if="$contacts_name">{%name}Contact's name{/%}: {$contacts_name}</div>
+				    	   </div>
+				        </div>
+				    </div>
+				</div>
+				<div 
+				    fx:template="award_list"
+				    fx:of="award.list"
+				    class="award-list">
+				    <div fx:template="item" 
+				        class="award-list-item">
+				        <div class="photo">
+				            <img src="{$image|'width:200px,crop:middle'}" alt="{$name}">
+				        </div>
+				        <div class="caption">
+				            <h3 class="no-top-margin"><a href="{$url}">{$name}</a></h3>
+				            <h5>{$year}</h5>
+				        </div>
+				    </div>
+				</div>
+				<div 
+				    fx:template="award_record"
+				    fx:of="award.record">
+				    <div fx:template="item" 
+				        class="award-record">
+				        <h1 class="no-top-margin">{$name}</h1>
+				        <h3>{$year}</h3>
+				        <div>
+				            <img src="{$image}" alt="{$name}" class="pull-left">
+				            <div>{$description}</div>
+				        </div>
+				    </div>
+				</div>
+				<div 
+				    fx:template="project_list"
+				    fx:of="project.list"
+				    class="project-list">
+				    <div fx:template="item" 
+				        class="project-list-item">
+				        <div class="photo">
+				            <img src="{$image|'width:200px,crop:middle'}" alt="{$name}">
+				        </div>
+				        <div class="caption">
+				            <h3 class="no-top-margin"><a href="{$url}">{$name}</a></h3>
+				            <h4>{$client}</h4>
+				            <h5>{$date|'m.Y'}</h5>
+				        </div>
+				    </div>
+				</div>
+				<div 
+				    fx:template="project_record"
+				    fx:of="project.record"
+				    fx:omit="true">
+				    <div fx:template="item" 
+				        class="project-record">
+				        <h1>{$name}</h1>
+				        <h2>{$client}</h2>
+				        <h3>{$date|'m.Y'}</h3>
+				        <div>
+				            <img src="{$image}" alt="{$name}" class="pull-left">
+				            <div>{$description}</div>
+				        </div>
+				    </div>
+				    <div style="clear:both;"></div>
+				</div>
+				<div 
+				    fx:template="person_record"
+				    fx:of="person.record"
+				    fx:omit="true">
+				    <div fx:template="item" 
+				        class="person-record">
+				        <h2>{$position}</h2>
+				        <h3>{$company}</h3>
+				        <div>
+				            <img src="{$photo}" alt="{$full_name}" class="pull-left">
+				            <div>{$description}</div>
+				            {call id="component_contact.entity_contact"}{$items select="$item['contacts']" /}{/call}
+				        </div>
+				        <div style="clear:both;"></div>
+				    </div>
+				</div>
+				<div
+					fx:template="products_list_main"
+				    fx:of="product.list"
+				    class="product-list">
+					<div
+						fx:template="item" 
+						class="product-list-item">
+						<div class="photo">
+							<img src="{$image}" alt="{$name}">
+						</div>
+						<div class="caption">
+							<h2><a href="{$url}">{$name}</a></h2>
+							<div class="desc">
+								{$short_description}
+							</div>
+							<div class="price">{$price}</div>
+						</div>
+						<div style="clear:both;"></div>
+					</div>
+				</div>
+				<div
+					fx:template="news_record"
+				    fx:of="news.record"
+				    fx:omit="true">
+					<div
+						fx:template="item"
+					    class="news-record">
+						<div class="photo">
+							<img src="{$image}" alt="{$name}">
+						</div>
+						<div class="caption">
+							<h2>{$name}</h2>
+							<div class="text">
+								{$text}
+							</div>
+						</div>
+					</div>
+				</div>
 				<div
 				    fx:template="index_slider" 
 				    fx:name="Slider" 
@@ -145,6 +359,7 @@
 							{$price}
 						</div>
 					</div>
+					<div style="clear:both;"></div>
 				</div>
 			</div>
 			<div style="clear: both;"></div>
@@ -211,14 +426,15 @@
 							{$anounce}
 							<a href="{$url}">{$name}</a>
 						</div>
-						<a class="badge">Space Times</a>
+						{if $tags}
+						<a class="badge" fx:each="$tags->first()">{$name}</a>
+						{/if}
 						<div style="clear:both;"></div>
 					</div>
 					<a class="more" href="{%more}">{%More_news}More news{/%}</a>
 				</div>
 			</div>
 			<div class="main-column">
-				<h2>{%sub_header}Pod Classes{/%}</h2>
 				<div fx:area="main_column" fx:size="wide,high"></div>
 			</div>
 			<div class="right-column" fx:area="right_column" fx:size="narrow,high">
