@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 3.4.10.1deb1
+-- version 3.5.1
 -- http://www.phpmyadmin.net
 --
--- Host: localhost
--- Generation Time: Dec 16, 2013 at 02:43 PM
--- Server version: 5.5.34
--- PHP Version: 5.3.10-1ubuntu3.9
+-- Хост: 127.0.0.1
+-- Время создания: Дек 16 2013 г., 14:56
+-- Версия сервера: 5.5.25
+-- Версия PHP: 5.3.13
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,13 +17,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `floxim`
+-- База данных: `floxim_loc`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_auth_external`
+-- Структура таблицы `fx_auth_external`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_auth_external` (
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `fx_auth_external` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_classificator`
+-- Структура таблицы `fx_classificator`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_classificator` (
@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS `fx_classificator` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_classificator_cities`
+-- Структура таблицы `fx_classificator_cities`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_classificator_cities` (
@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS `fx_classificator_cities` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_classificator_country`
+-- Структура таблицы `fx_classificator_country`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_classificator_country` (
@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS `fx_classificator_country` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_classificator_region`
+-- Структура таблицы `fx_classificator_region`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_classificator_region` (
@@ -99,7 +99,7 @@ CREATE TABLE IF NOT EXISTS `fx_classificator_region` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_component`
+-- Структура таблицы `fx_component`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_component` (
@@ -117,7 +117,7 @@ CREATE TABLE IF NOT EXISTS `fx_component` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=100 AUTO_INCREMENT=79 ;
 
 --
--- Dumping data for table `fx_component`
+-- Дамп данных таблицы `fx_component`
 --
 
 INSERT INTO `fx_component` (`id`, `keyword`, `name`, `description`, `group`, `icon`, `store_id`, `parent_id`, `item_name`) VALUES
@@ -152,7 +152,7 @@ INSERT INTO `fx_component` (`id`, `keyword`, `name`, `description`, `group`, `ic
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content`
+-- Структура таблицы `fx_content`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content` (
@@ -167,10 +167,10 @@ CREATE TABLE IF NOT EXISTS `fx_content` (
   `site_id` int(11) DEFAULT NULL,
   `parent_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=47 AUTO_INCREMENT=2603 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=47 AUTO_INCREMENT=2600 ;
 
 --
--- Dumping data for table `fx_content`
+-- Дамп данных таблицы `fx_content`
 --
 
 INSERT INTO `fx_content` (`id`, `priority`, `checked`, `created`, `last_updated`, `user_id`, `type`, `infoblock_id`, `site_id`, `parent_id`) VALUES
@@ -330,15 +330,12 @@ INSERT INTO `fx_content` (`id`, `priority`, `checked`, `created`, `last_updated`
 (2596, 200, 1, '2013-12-13 18:26:33', '2013-12-13 14:26:33', 2367, 'section', 284, 17, 2562),
 (2597, 201, 1, '2013-12-13 18:27:51', '2013-12-13 14:27:51', 2367, 'project', 331, 17, 2596),
 (2598, 202, 1, '2013-12-13 18:50:09', '2013-12-13 14:50:09', 2367, 'section', 284, 17, 2562),
-(2599, 203, 1, '2013-12-13 18:51:00', '2013-12-13 14:51:00', 2367, 'award', 333, 17, 2598),
-(2600, 204, 1, '2013-12-16 13:17:37', '2013-12-16 09:17:37', 2367, 'contact', 0, 17, 2592),
-(2601, 205, 1, '2013-12-16 14:09:00', '2013-12-16 10:09:00', 2367, 'section', 335, 17, 2567),
-(2602, 206, 1, '2013-12-16 14:09:11', '2013-12-16 10:09:11', 2367, 'section', 335, 17, 2567);
+(2599, 203, 1, '2013-12-13 18:51:00', '2013-12-13 14:51:00', 2367, 'award', 333, 17, 2598);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_award`
+-- Структура таблицы `fx_content_award`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_award` (
@@ -351,7 +348,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_award` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `fx_content_award`
+-- Дамп данных таблицы `fx_content_award`
 --
 
 INSERT INTO `fx_content_award` (`id`, `image`, `description`, `year`, `short_description`) VALUES
@@ -362,7 +359,7 @@ INSERT INTO `fx_content_award` (`id`, `image`, `description`, `year`, `short_des
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_classifier`
+-- Структура таблицы `fx_content_classifier`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_classifier` (
@@ -371,7 +368,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_classifier` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `fx_content_classifier`
+-- Дамп данных таблицы `fx_content_classifier`
 --
 
 INSERT INTO `fx_content_classifier` (`id`) VALUES
@@ -391,7 +388,7 @@ INSERT INTO `fx_content_classifier` (`id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_classifier_linker`
+-- Структура таблицы `fx_content_classifier_linker`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_classifier_linker` (
@@ -402,7 +399,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_classifier_linker` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `fx_content_classifier_linker`
+-- Дамп данных таблицы `fx_content_classifier_linker`
 --
 
 INSERT INTO `fx_content_classifier_linker` (`id`, `classifier_id`, `content_id`) VALUES
@@ -431,7 +428,7 @@ INSERT INTO `fx_content_classifier_linker` (`id`, `classifier_id`, `content_id`)
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_comment`
+-- Структура таблицы `fx_content_comment`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_comment` (
@@ -444,7 +441,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_comment` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `fx_content_comment`
+-- Дамп данных таблицы `fx_content_comment`
 --
 
 INSERT INTO `fx_content_comment` (`id`, `comment_text`, `publish_date`, `user_name`, `is_moderated`) VALUES
@@ -453,7 +450,7 @@ INSERT INTO `fx_content_comment` (`id`, `comment_text`, `publish_date`, `user_na
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_company`
+-- Структура таблицы `fx_content_company`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_company` (
@@ -467,7 +464,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_company` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_complex_photo`
+-- Структура таблицы `fx_content_complex_photo`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_complex_photo` (
@@ -478,7 +475,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_complex_photo` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `fx_content_complex_photo`
+-- Дамп данных таблицы `fx_content_complex_photo`
 --
 
 INSERT INTO `fx_content_complex_photo` (`id`, `image`, `description`) VALUES
@@ -487,7 +484,7 @@ INSERT INTO `fx_content_complex_photo` (`id`, `image`, `description`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_complex_video`
+-- Структура таблицы `fx_content_complex_video`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_complex_video` (
@@ -499,7 +496,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_complex_video` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `fx_content_complex_video`
+-- Дамп данных таблицы `fx_content_complex_video`
 --
 
 INSERT INTO `fx_content_complex_video` (`id`, `embed_html`, `description`, `tags`) VALUES
@@ -509,7 +506,7 @@ INSERT INTO `fx_content_complex_video` (`id`, `embed_html`, `description`, `tags
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_contact`
+-- Структура таблицы `fx_content_contact`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_contact` (
@@ -520,18 +517,17 @@ CREATE TABLE IF NOT EXISTS `fx_content_contact` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `fx_content_contact`
+-- Дамп данных таблицы `fx_content_contact`
 --
 
 INSERT INTO `fx_content_contact` (`id`, `value`, `contact_type`) VALUES
 (2247, '+7918687162', 'Phone'),
-(2463, '5252525', 'ICQ'),
-(2600, '23442667', 'Phone');
+(2463, '5252525', 'ICQ');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_faq`
+-- Структура таблицы `fx_content_faq`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_faq` (
@@ -542,7 +538,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_faq` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `fx_content_faq`
+-- Дамп данных таблицы `fx_content_faq`
 --
 
 INSERT INTO `fx_content_faq` (`id`, `question`, `answer`) VALUES
@@ -551,7 +547,7 @@ INSERT INTO `fx_content_faq` (`id`, `question`, `answer`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_gallery`
+-- Структура таблицы `fx_content_gallery`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_gallery` (
@@ -564,7 +560,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_gallery` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_news`
+-- Структура таблицы `fx_content_news`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_news` (
@@ -574,7 +570,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_news` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `fx_content_news`
+-- Дамп данных таблицы `fx_content_news`
 --
 
 INSERT INTO `fx_content_news` (`id`, `on_main`) VALUES
@@ -591,7 +587,7 @@ INSERT INTO `fx_content_news` (`id`, `on_main`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_page`
+-- Структура таблицы `fx_content_page`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_page` (
@@ -605,7 +601,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_page` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=62;
 
 --
--- Dumping data for table `fx_content_page`
+-- Дамп данных таблицы `fx_content_page`
 --
 
 INSERT INTO `fx_content_page` (`id`, `url`, `name`, `title`, `comments_counter`) VALUES
@@ -719,14 +715,12 @@ INSERT INTO `fx_content_page` (`id`, `url`, `name`, `title`, `comments_counter`)
 (2596, '/Projects', 'Projects', 'Projects', 0),
 (2597, '/Quis-aute-iure-reprehenderit-2', 'Quis aute iure reprehenderit', 'Quis aute iure reprehenderit', 0),
 (2598, '/Awards', 'Awards', 'Awards', 0),
-(2599, '/Excepteur-sint-obcaecat-cupiditat', 'Excepteur sint obcaecat cupiditat', 'Excepteur sint obcaecat cupiditat', 0),
-(2601, '/last-week', 'last week', 'last week', 0),
-(2602, '/last-month', 'last month', 'last month', 0);
+(2599, '/Excepteur-sint-obcaecat-cupiditat', 'Excepteur sint obcaecat cupiditat', 'Excepteur sint obcaecat cupiditat', 0);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_person`
+-- Структура таблицы `fx_content_person`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_person` (
@@ -744,7 +738,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_person` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `fx_content_person`
+-- Дамп данных таблицы `fx_content_person`
 --
 
 INSERT INTO `fx_content_person` (`id`, `full_name`, `company`, `department`, `photo`, `short_description`, `description`, `birthday`, `position`, `is_featured`) VALUES
@@ -755,7 +749,7 @@ INSERT INTO `fx_content_person` (`id`, `full_name`, `company`, `department`, `ph
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_photo`
+-- Структура таблицы `fx_content_photo`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_photo` (
@@ -767,7 +761,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_photo` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `fx_content_photo`
+-- Дамп данных таблицы `fx_content_photo`
 --
 
 INSERT INTO `fx_content_photo` (`id`, `photo`, `description`, `copy`) VALUES
@@ -784,7 +778,7 @@ INSERT INTO `fx_content_photo` (`id`, `photo`, `description`, `copy`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_product`
+-- Структура таблицы `fx_content_product`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_product` (
@@ -799,7 +793,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_product` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `fx_content_product`
+-- Дамп данных таблицы `fx_content_product`
 --
 
 INSERT INTO `fx_content_product` (`id`, `reference`, `description`, `short_description`, `image`, `price`, `is_featured`) VALUES
@@ -815,7 +809,7 @@ INSERT INTO `fx_content_product` (`id`, `reference`, `description`, `short_descr
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_product_category`
+-- Структура таблицы `fx_content_product_category`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_product_category` (
@@ -825,7 +819,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_product_category` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `fx_content_product_category`
+-- Дамп данных таблицы `fx_content_product_category`
 --
 
 INSERT INTO `fx_content_product_category` (`id`, `counter`) VALUES
@@ -841,7 +835,7 @@ INSERT INTO `fx_content_product_category` (`id`, `counter`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_project`
+-- Структура таблицы `fx_content_project`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_project` (
@@ -856,7 +850,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_project` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `fx_content_project`
+-- Дамп данных таблицы `fx_content_project`
 --
 
 INSERT INTO `fx_content_project` (`id`, `image`, `client`, `short_description`, `description`, `date`, `is_featured`) VALUES
@@ -868,7 +862,7 @@ INSERT INTO `fx_content_project` (`id`, `image`, `client`, `short_description`, 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_publication`
+-- Структура таблицы `fx_content_publication`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_publication` (
@@ -881,7 +875,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_publication` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `fx_content_publication`
+-- Дамп данных таблицы `fx_content_publication`
 --
 
 INSERT INTO `fx_content_publication` (`id`, `publish_date`, `anounce`, `image`, `text`) VALUES
@@ -890,15 +884,15 @@ INSERT INTO `fx_content_publication` (`id`, `publish_date`, `anounce`, `image`, 
 (2455, '2013-11-20 00:00:00', '<p>\r\n	 Stet clita kasd gubergren, no sea takimata sanctus est. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. At vero eos et accusam et justo duo dolores et ea rebum. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat.\r\n</p>', 479, '<p>\r\n	 Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. At vero eos et accusam et justo duo dolores et ea rebum.\r\n</p>\r\n<p>\r\n	 At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum.\r\n</p>\r\n<p>\r\n	 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.\r\n</p>\r\n<p>\r\n	 Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.\r\n</p>\r\n<p>\r\n	 Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\r\n</p>'),
 (2499, '2013-11-15 00:00:00', '<p>\r\n	Consetetur sadipscing elitr sed\r\n</p>', 0, '<p>\r\n	Consetetur sadipscing elitr sed\r\n</p>'),
 (2500, '2013-11-08 00:00:00', '<p>\r\n	Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.\r\n</p>', 0, '<p>\r\n	Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.\r\n</p>'),
-(2571, '2013-10-02 00:00:00', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr</span>\r\n</p>', 504, '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</span>\r\n</p>'),
-(2572, '2013-12-06 00:00:00', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, </span>\r\n</p>', 505, '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</span>\r\n</p>'),
-(2573, '2013-12-15 00:00:00', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</span>\r\n</p>', 506, '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum.</span>\r\n</p>'),
-(2574, '2013-12-04 00:00:00', '<p>\r\n	 <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum.</span>\r\n</p>', 507, '<p>\r\n	 <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</span>\r\n</p>');
+(2571, '0000-00-00 00:00:00', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr</span>\r\n</p>', 504, '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</span>\r\n</p>'),
+(2572, '0000-00-00 00:00:00', '<p>\r\n	 <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, </span>\r\n</p>', 505, '<p>\r\n	 <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</span>\r\n</p>'),
+(2573, '0000-00-00 00:00:00', '<p>\r\n	 <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</span>\r\n</p>', 506, '<p>\r\n	 <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum.</span>\r\n</p>'),
+(2574, '0000-00-00 00:00:00', '<p>\r\n	 <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum.</span>\r\n</p>', 507, '<p>\r\n	 <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</span>\r\n</p>');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_section`
+-- Структура таблицы `fx_content_section`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_section` (
@@ -907,7 +901,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_section` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=7;
 
 --
--- Dumping data for table `fx_content_section`
+-- Дамп данных таблицы `fx_content_section`
 --
 
 INSERT INTO `fx_content_section` (`id`) VALUES
@@ -948,14 +942,12 @@ INSERT INTO `fx_content_section` (`id`) VALUES
 (2591),
 (2593),
 (2596),
-(2598),
-(2601),
-(2602);
+(2598);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_select_linker`
+-- Структура таблицы `fx_content_select_linker`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_select_linker` (
@@ -965,7 +957,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_select_linker` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `fx_content_select_linker`
+-- Дамп данных таблицы `fx_content_select_linker`
 --
 
 INSERT INTO `fx_content_select_linker` (`id`, `linked_id`) VALUES
@@ -986,7 +978,7 @@ INSERT INTO `fx_content_select_linker` (`id`, `linked_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_tag`
+-- Структура таблицы `fx_content_tag`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_tag` (
@@ -995,7 +987,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_tag` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `fx_content_tag`
+-- Дамп данных таблицы `fx_content_tag`
 --
 
 INSERT INTO `fx_content_tag` (`id`) VALUES
@@ -1007,7 +999,7 @@ INSERT INTO `fx_content_tag` (`id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_text`
+-- Структура таблицы `fx_content_text`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_text` (
@@ -1017,7 +1009,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_text` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=1199;
 
 --
--- Dumping data for table `fx_content_text`
+-- Дамп данных таблицы `fx_content_text`
 --
 
 INSERT INTO `fx_content_text` (`id`, `text`) VALUES
@@ -1036,7 +1028,7 @@ INSERT INTO `fx_content_text` (`id`, `text`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_travel_route`
+-- Структура таблицы `fx_content_travel_route`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_travel_route` (
@@ -1047,7 +1039,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_travel_route` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `fx_content_travel_route`
+-- Дамп данных таблицы `fx_content_travel_route`
 --
 
 INSERT INTO `fx_content_travel_route` (`id`, `start_date`, `end_date`) VALUES
@@ -1057,7 +1049,7 @@ INSERT INTO `fx_content_travel_route` (`id`, `start_date`, `end_date`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_user`
+-- Структура таблицы `fx_content_user`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_user` (
@@ -1077,7 +1069,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=104;
 
 --
--- Dumping data for table `fx_content_user`
+-- Дамп данных таблицы `fx_content_user`
 --
 
 INSERT INTO `fx_content_user` (`id`, `email`, `login`, `name`, `registration_code`, `avatar`, `forum_messages`, `pa_balance`, `auth_hash`, `is_admin`, `password`) VALUES
@@ -1086,7 +1078,7 @@ INSERT INTO `fx_content_user` (`id`, `email`, `login`, `name`, `registration_cod
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_vacancy`
+-- Структура таблицы `fx_content_vacancy`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_vacancy` (
@@ -1105,19 +1097,19 @@ CREATE TABLE IF NOT EXISTS `fx_content_vacancy` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `fx_content_vacancy`
+-- Дамп данных таблицы `fx_content_vacancy`
 --
 
 INSERT INTO `fx_content_vacancy` (`id`, `position`, `salary_from`, `salary_to`, `requirements`, `responsibilities`, `work_conditions`, `address`, `phone`, `email`, `contacts_name`) VALUES
 (2249, 'At vero eos et', 1234, 5446, 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.', 'Stet clita kasd gubergren, no sea takimata sanctus est. Sanctus sea sed takimata ut vero voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.', 'Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.', 'anywhere str. 4-5-1', '777777', 'ceo@ceo.ru', 'Ivanov I. P.'),
 (2250, 'Quis aute iure', 7567, 7807890, ' Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.', 'Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Stet clita kasd gubergren, no sea takimata sanctus est. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. At vero eos et accusam et justo duo dolores et ea rebum.', 'At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est.', 'Sanctus sea sed takimata', '2425236346', 'ceo@ceo.ru', 'Ivanov I. P.'),
-(2594, 'Consetetur sadipscing elitr sed', 200, 1700, 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.', 'Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis.', 'At vero eos et accusam et justo duo dolores et ea rebum. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis.', 'Lorem ipsum dolor sit', '67576567', '', ''),
+(2594, 'Consetetur sadipscing elitr sed', 200, 1700, '<p>\r\n	Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.\r\n</p>', '<p>\r\n	Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis.\r\n</p>', '<p>\r\n	At vero eos et accusam et justo duo dolores et ea rebum. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis.\r\n</p>', 'Lorem ipsum dolor sit', '67576567', '', ''),
 (2595, 'Stet clita kasd gubergren', 500, 2700, 'Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.', ' Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua.', 'Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis. At vero eos et accusam et justo duo dolores et ea rebum. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.', 'Duis autem vel eum', '23123123', 'zuynew@yandex.ru', 'asd');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_video`
+-- Структура таблицы `fx_content_video`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_video` (
@@ -1128,7 +1120,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_video` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `fx_content_video`
+-- Дамп данных таблицы `fx_content_video`
 --
 
 INSERT INTO `fx_content_video` (`id`, `embed_html`, `description`) VALUES
@@ -1137,7 +1129,7 @@ INSERT INTO `fx_content_video` (`id`, `embed_html`, `description`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_controller`
+-- Структура таблицы `fx_controller`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_controller` (
@@ -1151,7 +1143,7 @@ CREATE TABLE IF NOT EXISTS `fx_controller` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_crontask`
+-- Структура таблицы `fx_crontask`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_crontask` (
@@ -1171,7 +1163,7 @@ CREATE TABLE IF NOT EXISTS `fx_crontask` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_datatype`
+-- Структура таблицы `fx_datatype`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_datatype` (
@@ -1185,7 +1177,7 @@ CREATE TABLE IF NOT EXISTS `fx_datatype` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=204 AUTO_INCREMENT=15 ;
 
 --
--- Dumping data for table `fx_datatype`
+-- Дамп данных таблицы `fx_datatype`
 --
 
 INSERT INTO `fx_datatype` (`id`, `name`, `priority`, `searchable`, `not_null`, `default`) VALUES
@@ -1205,7 +1197,7 @@ INSERT INTO `fx_datatype` (`id`, `name`, `priority`, `searchable`, `not_null`, `
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_field`
+-- Структура таблицы `fx_field`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_field` (
@@ -1237,7 +1229,7 @@ CREATE TABLE IF NOT EXISTS `fx_field` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=95 AUTO_INCREMENT=296 ;
 
 --
--- Dumping data for table `fx_field`
+-- Дамп данных таблицы `fx_field`
 --
 
 INSERT INTO `fx_field` (`id`, `parent`, `component_id`, `ctpl_id`, `system_table_id`, `widget_id`, `name`, `description`, `type`, `format`, `not_null`, `priority`, `searchable`, `default`, `inheritance`, `type_of_edit`, `checked`, `form_tab`) VALUES
@@ -1284,9 +1276,9 @@ INSERT INTO `fx_field` (`id`, `parent`, `component_id`, `ctpl_id`, `system_table
 (243, NULL, 63, 0, 0, 0, 'position', 'Position', 1, '', 0, 200, 0, '', 0, 1, 1, 0),
 (244, NULL, 63, 0, 0, 0, 'salary_from', 'Salary from', 2, '', 0, 201, 0, '', 0, 1, 1, 0),
 (245, NULL, 63, 0, 0, 0, 'salary_to', 'Salary To', 2, '', 0, 202, 0, '', 0, 1, 1, 0),
-(246, NULL, 63, 0, 0, 0, 'requirements', 'Requirements', 3, 'a:2:{s:4:"html";s:1:"0";s:5:"nl2br";s:1:"0";}', 0, 203, 0, '', 0, 1, 1, 0),
-(247, NULL, 63, 0, 0, 0, 'responsibilities', 'Responsibilities', 3, 'a:2:{s:4:"html";s:1:"0";s:5:"nl2br";s:1:"0";}', 0, 204, 0, '', 0, 1, 1, 0),
-(248, NULL, 63, 0, 0, 0, 'work_conditions', 'Work conditions', 3, 'a:2:{s:4:"html";s:1:"0";s:5:"nl2br";s:1:"0";}', 0, 205, 0, '', 0, 1, 1, 0),
+(246, NULL, 63, 0, 0, 0, 'requirements', 'Requirements', 3, 'a:2:{s:4:"html";s:1:"1";s:5:"nl2br";s:1:"0";}', 0, 203, 0, '', 0, 1, 1, 4),
+(247, NULL, 63, 0, 0, 0, 'responsibilities', 'Responsibilities', 3, 'a:2:{s:4:"html";s:1:"1";s:5:"nl2br";s:1:"0";}', 0, 204, 0, '', 0, 1, 1, 3),
+(248, NULL, 63, 0, 0, 0, 'work_conditions', 'Work conditions', 3, 'a:2:{s:4:"html";s:1:"1";s:5:"nl2br";s:1:"0";}', 0, 205, 0, '', 0, 1, 1, 3),
 (249, NULL, 63, 0, 0, 0, 'address', 'Address', 1, '', 0, 206, 0, '', 0, 1, 1, 0),
 (250, NULL, 63, 0, 0, 0, 'phone', 'Phone Number', 1, '', 0, 207, 0, '', 0, 1, 1, 0),
 (251, NULL, 63, 0, 0, 0, 'email', 'Email', 1, '', 0, 208, 0, '', 0, 1, 1, 0),
@@ -1331,7 +1323,7 @@ INSERT INTO `fx_field` (`id`, `parent`, `component_id`, `ctpl_id`, `system_table
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_filetable`
+-- Структура таблицы `fx_filetable`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_filetable` (
@@ -1345,7 +1337,7 @@ CREATE TABLE IF NOT EXISTS `fx_filetable` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=56 AUTO_INCREMENT=518 ;
 
 --
--- Dumping data for table `fx_filetable`
+-- Дамп данных таблицы `fx_filetable`
 --
 
 INSERT INTO `fx_filetable` (`id`, `real_name`, `path`, `type`, `size`, `to_delete`) VALUES
@@ -1450,7 +1442,7 @@ INSERT INTO `fx_filetable` (`id`, `real_name`, `path`, `type`, `size`, `to_delet
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_group`
+-- Структура таблицы `fx_group`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_group` (
@@ -1460,7 +1452,7 @@ CREATE TABLE IF NOT EXISTS `fx_group` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=197 AUTO_INCREMENT=4 ;
 
 --
--- Dumping data for table `fx_group`
+-- Дамп данных таблицы `fx_group`
 --
 
 INSERT INTO `fx_group` (`id`, `name`) VALUES
@@ -1471,7 +1463,7 @@ INSERT INTO `fx_group` (`id`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_history`
+-- Структура таблицы `fx_history`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_history` (
@@ -1486,7 +1478,7 @@ CREATE TABLE IF NOT EXISTS `fx_history` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_history_item`
+-- Структура таблицы `fx_history_item`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_history_item` (
@@ -1503,7 +1495,7 @@ CREATE TABLE IF NOT EXISTS `fx_history_item` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_infoblock`
+-- Структура таблицы `fx_infoblock`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_infoblock` (
@@ -1519,10 +1511,10 @@ CREATE TABLE IF NOT EXISTS `fx_infoblock` (
   `scope` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `page_id` (`page_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=210 AUTO_INCREMENT=338 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=210 AUTO_INCREMENT=335 ;
 
 --
--- Dumping data for table `fx_infoblock`
+-- Дамп данных таблицы `fx_infoblock`
 --
 
 INSERT INTO `fx_infoblock` (`id`, `parent_infoblock_id`, `site_id`, `page_id`, `checked`, `name`, `controller`, `action`, `params`, `scope`) VALUES
@@ -1635,15 +1627,12 @@ INSERT INTO `fx_infoblock` (`id`, `parent_infoblock_id`, `site_id`, `page_id`, `
 (331, 0, 17, 2596, 1, 'Project / ', 'component_project', 'list_infoblock', 'a:5:{s:5:"limit";s:0:"";s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";s:11:"parent_type";s:15:"current_page_id";s:16:"create_record_ib";s:1:"0";}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
 (332, 0, 17, 2596, 1, 'Project / Single entry', 'component_project', 'record', 'a:0:{}', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:7:"project";}'),
 (333, 0, 17, 2598, 1, 'Award / ', 'component_award', 'list_infoblock', 'a:5:{s:5:"limit";s:0:"";s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";s:11:"parent_type";s:15:"current_page_id";s:16:"create_record_ib";s:1:"0";}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
-(334, 0, 17, 2598, 1, 'Award / Single entry', 'component_award', 'record', 'a:0:{}', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:5:"award";}'),
-(335, 0, 17, 2567, 1, 'Navigation / ', 'component_section', 'list_infoblock', 'a:1:{s:7:"submenu";s:4:"none";}', 'a:2:{s:5:"pages";s:11:"descendants";s:9:"page_type";s:0:"";}'),
-(336, 0, 17, 2601, 1, 'News / last week', 'component_news', 'list_filtered', 'a:5:{s:5:"limit";s:0:"";s:10:"pagination";s:1:"0";s:7:"sorting";s:12:"publish_date";s:11:"sorting_dir";s:3:"asc";s:10:"conditions";a:1:{s:5:"new_1";a:4:{s:4:"name";s:12:"publish_date";s:8:"operator";s:4:"last";s:5:"value";s:1:"1";s:8:"interval";s:4:"WEEK";}}}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
-(337, 0, 17, 2602, 1, 'News / ', 'component_news', 'list_filtered', 'a:5:{s:5:"limit";s:0:"";s:10:"pagination";s:1:"0";s:7:"sorting";s:12:"publish_date";s:11:"sorting_dir";s:3:"asc";s:10:"conditions";a:1:{s:5:"new_1";a:4:{s:4:"name";s:12:"publish_date";s:8:"operator";s:4:"last";s:5:"value";s:1:"1";s:8:"interval";s:5:"MONTH";}}}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}');
+(334, 0, 17, 2598, 1, 'Award / Single entry', 'component_award', 'record', 'a:0:{}', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:5:"award";}');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_infoblock_visual`
+-- Структура таблицы `fx_infoblock_visual`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_infoblock_visual` (
@@ -1658,10 +1647,10 @@ CREATE TABLE IF NOT EXISTS `fx_infoblock_visual` (
   `priority` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `infoblock_id` (`infoblock_id`,`layout_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=138 AUTO_INCREMENT=410 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=138 AUTO_INCREMENT=407 ;
 
 --
--- Dumping data for table `fx_infoblock_visual`
+-- Дамп данных таблицы `fx_infoblock_visual`
 --
 
 INSERT INTO `fx_infoblock_visual` (`id`, `infoblock_id`, `layout_id`, `wrapper`, `wrapper_visual`, `template`, `template_visual`, `area`, `priority`) VALUES
@@ -1786,15 +1775,12 @@ INSERT INTO `fx_infoblock_visual` (`id`, `infoblock_id`, `layout_id`, `wrapper`,
 (403, 331, 11, '', '', 'layout_demo.project_list', '', 'main_column', 17),
 (404, 332, 11, '', '', 'layout_demo.project_record', '', 'main_column', 18),
 (405, 333, 11, '', '', 'layout_demo.award_list', '', 'main_column', 19),
-(406, 334, 11, '', '', 'layout_demo.award_record', '', 'main_column', 20),
-(407, 335, 11, '', '', 'layout_demo.top_links', '', 'header_links', 1),
-(408, 336, 11, '', '', 'layout_demo.news_list_main', '', 'main_column', 21),
-(409, 337, 11, '', '', 'layout_demo.news_list_main', '', 'main_column', 22);
+(406, 334, 11, '', '', 'layout_demo.award_record', '', 'main_column', 20);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_lang_string`
+-- Структура таблицы `fx_lang_string`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_lang_string` (
@@ -1807,7 +1793,7 @@ CREATE TABLE IF NOT EXISTS `fx_lang_string` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=486 ;
 
 --
--- Dumping data for table `fx_lang_string`
+-- Дамп данных таблицы `fx_lang_string`
 --
 
 INSERT INTO `fx_lang_string` (`id`, `dict`, `string`, `lang_en`, `lang_ru`) VALUES
@@ -2269,7 +2255,7 @@ INSERT INTO `fx_lang_string` (`id`, `dict`, `string`, `lang_en`, `lang_ru`) VALU
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_layout`
+-- Структура таблицы `fx_layout`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_layout` (
@@ -2280,7 +2266,7 @@ CREATE TABLE IF NOT EXISTS `fx_layout` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=64 AUTO_INCREMENT=12 ;
 
 --
--- Dumping data for table `fx_layout`
+-- Дамп данных таблицы `fx_layout`
 --
 
 INSERT INTO `fx_layout` (`id`, `keyword`, `name`) VALUES
@@ -2292,7 +2278,7 @@ INSERT INTO `fx_layout` (`id`, `keyword`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_mail_template`
+-- Структура таблицы `fx_mail_template`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_mail_template` (
@@ -2308,7 +2294,7 @@ CREATE TABLE IF NOT EXISTS `fx_mail_template` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_module`
+-- Структура таблицы `fx_module`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_module` (
@@ -2324,7 +2310,7 @@ CREATE TABLE IF NOT EXISTS `fx_module` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=68 AUTO_INCREMENT=5 ;
 
 --
--- Dumping data for table `fx_module`
+-- Дамп данных таблицы `fx_module`
 --
 
 INSERT INTO `fx_module` (`id`, `name`, `keyword`, `description`, `installed`, `inside_admin`, `checked`) VALUES
@@ -2335,7 +2321,7 @@ INSERT INTO `fx_module` (`id`, `name`, `keyword`, `description`, `installed`, `i
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_multiselect`
+-- Структура таблицы `fx_multiselect`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_multiselect` (
@@ -2349,7 +2335,7 @@ CREATE TABLE IF NOT EXISTS `fx_multiselect` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_patch`
+-- Структура таблицы `fx_patch`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_patch` (
@@ -2364,7 +2350,7 @@ CREATE TABLE IF NOT EXISTS `fx_patch` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=cp1251 AUTO_INCREMENT=24 ;
 
 --
--- Dumping data for table `fx_patch`
+-- Дамп данных таблицы `fx_patch`
 --
 
 INSERT INTO `fx_patch` (`id`, `to`, `created`, `description`, `from`, `status`, `url`) VALUES
@@ -2376,7 +2362,7 @@ INSERT INTO `fx_patch` (`id`, `to`, `created`, `description`, `from`, `status`, 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_redirect`
+-- Структура таблицы `fx_redirect`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_redirect` (
@@ -2392,7 +2378,7 @@ CREATE TABLE IF NOT EXISTS `fx_redirect` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_session`
+-- Структура таблицы `fx_session`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_session` (
@@ -2409,16 +2395,16 @@ CREATE TABLE IF NOT EXISTS `fx_session` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=126;
 
 --
--- Dumping data for table `fx_session`
+-- Дамп данных таблицы `fx_session`
 --
 
 INSERT INTO `fx_session` (`id`, `user_id`, `session_start`, `session_time`, `ip`, `login_save`, `site_id`, `auth_type`) VALUES
-('049cbaab1d6860974df51df1b7aa2f50', 2367, 1387189720, 1387276824, 2130706433, 0, 0, 1);
+('5ffa2b80c261071235d267ea983887c1', 2367, 1387189875, 1387277706, 2130706433, 0, 0, 1);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_settings`
+-- Структура таблицы `fx_settings`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_settings` (
@@ -2432,7 +2418,7 @@ CREATE TABLE IF NOT EXISTS `fx_settings` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=70 AUTO_INCREMENT=40 ;
 
 --
--- Dumping data for table `fx_settings`
+-- Дамп данных таблицы `fx_settings`
 --
 
 INSERT INTO `fx_settings` (`id`, `key`, `value`, `module`, `site_id`) VALUES
@@ -2479,7 +2465,7 @@ INSERT INTO `fx_settings` (`id`, `key`, `value`, `module`, `site_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_site`
+-- Структура таблицы `fx_site`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_site` (
@@ -2507,7 +2493,7 @@ CREATE TABLE IF NOT EXISTS `fx_site` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=292 AUTO_INCREMENT=18 ;
 
 --
--- Dumping data for table `fx_site`
+-- Дамп данных таблицы `fx_site`
 --
 
 INSERT INTO `fx_site` (`id`, `parent_id`, `name`, `domain`, `layout_id`, `color`, `mirrors`, `priority`, `checked`, `index_page_id`, `error_page_id`, `created`, `last_updated`, `robots`, `disallow_indexing`, `type`, `language`, `offline_text`, `store_id`) VALUES
@@ -2519,7 +2505,7 @@ INSERT INTO `fx_site` (`id`, `parent_id`, `name`, `domain`, `layout_id`, `color`
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_template`
+-- Структура таблицы `fx_template`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_template` (
@@ -2540,7 +2526,7 @@ CREATE TABLE IF NOT EXISTS `fx_template` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_user_group`
+-- Структура таблицы `fx_user_group`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_user_group` (
@@ -2553,7 +2539,7 @@ CREATE TABLE IF NOT EXISTS `fx_user_group` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=13 AUTO_INCREMENT=8 ;
 
 --
--- Dumping data for table `fx_user_group`
+-- Дамп данных таблицы `fx_user_group`
 --
 
 INSERT INTO `fx_user_group` (`id`, `user_id`, `group_id`) VALUES
@@ -2562,7 +2548,7 @@ INSERT INTO `fx_user_group` (`id`, `user_id`, `group_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_widget`
+-- Структура таблицы `fx_widget`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_widget` (
@@ -2579,7 +2565,7 @@ CREATE TABLE IF NOT EXISTS `fx_widget` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=111 AUTO_INCREMENT=4 ;
 
 --
--- Dumping data for table `fx_widget`
+-- Дамп данных таблицы `fx_widget`
 --
 
 INSERT INTO `fx_widget` (`id`, `name`, `keyword`, `description`, `group`, `checked`, `icon`, `embed`, `store_id`) VALUES

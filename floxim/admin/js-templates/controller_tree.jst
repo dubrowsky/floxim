@@ -189,7 +189,7 @@ $('.fx_controller_list', html).on('click', '.sub', function() {
         $.each(_c.values, function(i, v) {
             ?><span 
                 class="variant<?=i === _c.value ? ' active' : ''?>" 
-                data-value="<?=i?>"><?=i === '' ? '-' : cnt?></span><?
+                data-value="<?=i?>" title="<?=i?>"><?=i === '' ? '-' : cnt?></span><?
             cnt++;
         });
     ?>

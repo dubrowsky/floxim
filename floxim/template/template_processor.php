@@ -707,17 +707,35 @@ class fx_template_processor {
     }
     
     protected function _token_template_to_code($token) {
+        //fx::log('tpl2c', $token);
         $this->add_template($token);
     }
     
     protected function _token_area_to_code($token) {
-        $res = '<?=$this->render_area('.var_export($token->get_all_props(),1).')?>';
+        $render_call = '<?=$this->render_area('.var_export($token->get_all_props(),1).');?>';
+        $res = '';
+        //fx::log('a2c', $token->get_children());
+        $render_called = false;
         foreach ($token->get_children() as $child) {
             if ($child->name == 'template') {
                 $child->set_prop('area', $token->get_prop('id'));
+                if (!$render_called) {
+                    $res .= $render_call;
+                    $render_called = true;
+                }
                 $this->add_template($child);
+            } else {
+                $child_code = $this->_get_token_code($child, $token); //$this->_token_to_code($child);
+                //fx::log('ttc', $child, $child_code);
+                $res .= $child_code;
             }
         }
+        if (!$render_called) {
+            $res = $render_call.$res;
+        }
+        //fx::log($token, $res);
+        return $res;
+        return $render_call;
         return $res;
     }
     
@@ -786,10 +804,19 @@ class fx_template_processor {
         return $code;
     }
 
+    protected function _get_token_code($token, $parent) {
+        $method_name = '_token_'.$token->name.'_to_code';
+        if (method_exists($this, $method_name)) {
+            return call_user_func(array($this, $method_name), $token, $parent);
+        }
+        return '';
+    }
 
     protected function _token_to_code(fx_template_token $token) {
         $code = '?>';
         foreach ($token->get_children() as $child) {
+            $code .= $this->_get_token_code($child, $token);
+            /*
             $method_name = '_token_'.$child->name.'_to_code';
             if (method_exists($this, $method_name)) {
                 $code .= call_user_func(array($this, $method_name), $child, $token);
@@ -797,6 +824,8 @@ class fx_template_processor {
             } else {
                 $code .= '/'."* no method for ".$method_name." *".'/';
             }
+             * 
+             */
         }
         $code .= "<?";
         return $code;
@@ -818,6 +847,12 @@ class fx_template_processor {
         }
         if ( ($size = $token->get_prop('size'))) {
             $tpl_props['size'] = $size;
+        }
+        if ( ($suit=  $token->get_prop('suit'))) {
+            $tpl_props['suit'] = $suit;
+        }
+        if (  ($area_id = $token->get_prop('area'))) {
+            $tpl_props['area'] = $area_id;
         }
         $this->templates [$token->get_prop('id')]= $tpl_props;
         

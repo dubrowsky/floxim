@@ -193,7 +193,7 @@ fx_front.prototype.enable_hilight = function(){
     this.hilight_disabled = false;
 };
 
-fx_front.prototype.get_area_size = function($area_node) {
+fx_front.prototype.get_area_meta = function($area_node) {
     var meta = $area_node.data('fx_area');
     if (typeof meta.size === 'undefined') {
         // Хорошо бы вычислять
@@ -205,7 +205,7 @@ fx_front.prototype.get_area_size = function($area_node) {
         }
         $area_node.data('fx_area', meta);
     }
-    return meta.size;
+    return meta;
 };
 
 fx_front.prototype.redraw_add_button = function(node, mode) {
@@ -255,8 +255,7 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
     }
     ib.data('content_adders', adders);
     var area_node = node.closest('.fx_area');
-    var area_meta = area_node.data('fx_area');
-    area_meta.size = $fx.front.get_area_size(area_node);
+    var area_meta = $fx.front.get_area_meta(area_node);
     if (area_meta) {
         buttons.push({
             name:'Add new infoblock to '+area_meta.id,
@@ -269,8 +268,8 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
                     essence:'infoblock',
                     action:'select_controller',
                     page_id:$('body').data('fx_page_id'),
-                    area:area_meta.id,
-                    area_size:area_meta.size,
+                    area:area_meta,
+                    //area_size:area_meta.size,
                     admin_mode:$fx.front.mode,
                     fx_admin:true
                 }, {
@@ -611,7 +610,7 @@ fx_front.prototype.select_infoblock = function(n) {
             return;
         }
         var area_node = ib_node.closest('.fx_area');
-        var area_size = $fx.front.get_area_size(area_node);
+        var area_meta = $fx.front.get_area_meta(area_node);
         
         $fx.front.disable_hilight();
         $fx.front_panel.load_form({
@@ -621,7 +620,8 @@ fx_front.prototype.select_infoblock = function(n) {
             visual_id:ib.visual_id,
             page_id:$('body').data('fx_page_id'),
             fx_admin:true,
-            area_size:area_size
+            //area_size:area_size
+            area:area_meta
         }, {
             view:'horizontal',
             onfinish:function() {
