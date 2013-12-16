@@ -30,10 +30,10 @@
 					    class="main-menu">
 						<li 
 							fx:each="$items" 
-							class="menu-item {if $children} dropdown{/if} {if $active}current{/if}">
+							class="menu-item {if $children} dropdown{/if} {if $item->is_active()}current{/if}">
 							<a href="{$url}">{$name}</a>
 							<ul fx:if="$children" class="menu-sub-items">
-								<li fx:each="$children" fx:prefix="child" class="{if $child_active} active{/if} menu-sub-item">
+								<li fx:each="$children as $child" fx:prefix="child" class="{if $child->is_active()} active {/if} menu-sub-item">
 									<a href="{$child_url}">{$child_name}</a>
 								</li>
 							</ul>
@@ -95,10 +95,7 @@
 					fx:name="Left menu"
 				    fx:of="page.list"
 				    class="sub-menu">
-					<li fx:template="inactive" class="sub-menu-item">
-						<a href="{$url}">{$name}</a>
-					</li>
-					<li fx:template="active" class="sub-menu-item active">
+					<li fx:each="$items" class="sub-menu-item {if $item->is_active()}active{/if}">
 						<a href="{$url}">{$name}</a>
 					</li>
 				</ul>
