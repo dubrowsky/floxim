@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Dec 16, 2013 at 03:49 PM
+-- Generation Time: Dec 16, 2013 at 04:22 PM
 -- Server version: 5.5.34
 -- PHP Version: 5.3.10-1ubuntu3.9
 
@@ -1591,13 +1591,13 @@ INSERT INTO `fx_infoblock` (`id`, `parent_infoblock_id`, `site_id`, `page_id`, `
 (229, 0, 16, 0, 1, 'Auth / Widget', 'widget_authform', 'show', 'a:0:{}', 'a:2:{s:5:"pages";s:3:"all";s:9:"page_type";s:0:"";}'),
 (230, 0, 16, 2210, 1, 'Searchline', 'widget_search', 'show', 'a:0:{}', 'a:2:{s:5:"pages";s:11:"descendants";s:9:"page_type";N;}'),
 (232, 0, 16, 2210, 1, 'Project / On Main', 'component_project', 'list_filtered', 'a:5:{s:5:"limit";s:1:"2";s:10:"pagination";s:1:"0";s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:4:"desc";s:10:"conditions";b:0;}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
-(234, 0, 16, 2210, 1, 'Person / On Main', 'component_person', 'list_filtered', 'a:5:{s:5:"limit";s:0:"";s:10:"pagination";s:1:"0";s:7:"sorting";s:7:"created";s:11:"sorting_dir";s:3:"asc";s:10:"conditions";a:1:{s:5:"new_1";a:3:{s:4:"name";s:11:"is_featured";s:8:"operator";s:1:"=";s:5:"value";s:1:"1";}}}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
+(234, 0, 16, 2210, 1, 'Person / On Main', 'component_person', 'list_filtered', 'a:5:{s:5:"limit";s:1:"1";s:10:"pagination";s:1:"0";s:7:"sorting";s:7:"created";s:11:"sorting_dir";s:3:"asc";s:10:"conditions";b:0;}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
 (235, 0, 16, 2212, 1, 'Award / On Right', 'component_award', 'list_filtered', 'a:5:{s:5:"limit";s:1:"2";s:10:"pagination";s:1:"0";s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";s:10:"conditions";b:0;}', 'a:2:{s:5:"pages";s:11:"descendants";s:9:"page_type";s:0:"";}'),
 (236, 0, 16, 2212, 1, 'Vacancy / On Right', 'component_vacancy', 'list_filtered', 'a:5:{s:5:"limit";s:1:"4";s:10:"pagination";s:1:"0";s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";s:10:"conditions";b:0;}', 'a:2:{s:5:"pages";s:11:"descendants";s:9:"page_type";s:0:"";}'),
 (237, 0, 16, 2212, 1, 'Navigation / ', 'component_section', 'list_submenu', 'a:6:{s:5:"limit";s:1:"0";s:10:"pagination";s:1:"0";s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";s:7:"submenu";s:4:"none";s:19:"source_infoblock_id";s:3:"158";}', 'a:2:{s:5:"pages";s:11:"descendants";s:9:"page_type";s:0:"";}'),
 (241, 0, 16, 2210, 1, 'Product / On Main', 'component_product', 'list_filtered_featured', 'a:4:{s:5:"limit";s:1:"4";s:10:"pagination";s:1:"0";s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
 (258, 0, 16, 0, 1, 'Product / ', 'component_product', 'list_selected', 'a:5:{s:5:"limit";s:2:"10";s:10:"pagination";s:1:"0";s:7:"sorting";s:7:"created";s:11:"sorting_dir";s:3:"asc";s:8:"selected";a:1:{s:3:"f_1";a:1:{i:0;s:4:"2327";}}}', 'a:2:{s:5:"pages";s:3:"all";s:9:"page_type";s:0:"";}'),
-(260, 0, 16, 2210, 1, 'News / ', 'component_news', 'list_filtered', 'a:5:{s:5:"limit";b:0;s:10:"pagination";b:0;s:7:"sorting";s:7:"created";s:11:"sorting_dir";s:3:"asc";s:10:"conditions";a:1:{s:5:"new_1";a:3:{s:4:"name";s:7:"on_main";s:8:"operator";s:1:"=";s:5:"value";s:1:"1";}}}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
+(260, 0, 16, 2210, 1, 'News / ', 'component_news', 'list_filtered', 'a:5:{s:5:"limit";s:1:"1";s:10:"pagination";s:1:"0";s:7:"sorting";s:7:"created";s:11:"sorting_dir";s:3:"asc";s:10:"conditions";b:0;}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
 (262, 0, 17, 0, 1, '', 'layout', 'show', 'a:0:{}', 'a:2:{s:5:"pages";s:11:"descendants";s:9:"page_type";s:0:"";}'),
 (278, 0, 17, 2501, 1, 'Authorization form / Widget', 'widget_authform', 'show', 'a:0:{}', 'a:2:{s:5:"pages";s:11:"descendants";s:9:"page_type";s:0:"";}'),
 (284, 0, 17, 2501, 1, 'Navigation / Main', 'component_section', 'list_infoblock', 'a:1:{s:7:"submenu";s:3:"all";}', 'a:2:{s:5:"pages";s:11:"descendants";s:9:"page_type";s:0:"";}'),
@@ -1748,7 +1748,7 @@ INSERT INTO `fx_infoblock_visual` (`id`, `infoblock_id`, `layout_id`, `wrapper`,
 (308, 237, 9, '', '', 'layout_dummy.left_menu', '', 'columns_left_block', 4),
 (312, 241, 9, 'layout_dummy.block_titled_bottom', 'a:1:{s:6:"header";s:17:"Featured Products";}', 'layout_dummy.featured_products', '', 'bottom_wide_block', 0),
 (329, 258, 9, '', '', 'layout_dummy.featured_products', '', 'two_columns_right_block', 15),
-(331, 260, 9, 'layout_dummy.block_titled', 'a:1:{s:6:"header";s:4:"News";}', 'layout_dummy.main_news', '', 'center_block', 0),
+(331, 260, 9, 'layout_dummy.block_titled', 'a:1:{s:6:"header";s:4:"News";}', 'layout_dummy.main_news', '', 'center_block', 1),
 (334, 262, 11, '', '', 'layout_demo.two_columns', '', '', 0),
 (350, 278, 11, '', '', 'layout_demo.authform_popup', '', 'icons_area', 0),
 (356, 284, 11, '', '', 'layout_demo.top_menu', '', 'top_nav', 1),
@@ -2405,7 +2405,7 @@ CREATE TABLE IF NOT EXISTS `fx_session` (
 --
 
 INSERT INTO `fx_session` (`id`, `user_id`, `session_start`, `session_time`, `ip`, `login_save`, `site_id`, `auth_type`) VALUES
-('049cbaab1d6860974df51df1b7aa2f50', 2367, 1387189720, 1387280988, 2130706433, 0, 0, 1);
+('049cbaab1d6860974df51df1b7aa2f50', 2367, 1387189720, 1387282658, 2130706433, 0, 0, 1);
 
 -- --------------------------------------------------------
 
