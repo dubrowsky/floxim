@@ -30,7 +30,7 @@
 					    class="main-menu">
 						<li 
 							fx:each="$items" 
-							class="menu-item {if $children} dropdown{/if}">
+							class="menu-item {if $children} dropdown{/if} {if $active}current{/if}">
 							<a href="{$url}">{$name}</a>
 							<ul fx:if="$children" class="menu-sub-items">
 								<li fx:each="$children" fx:prefix="child" class="{if $child_active} active{/if} menu-sub-item">
@@ -181,15 +181,15 @@
 				        <div>
 				    	   <div>
 				    	       <h3>{%Responsibilities}Responsibilities{/%}</h3>
-				    	       {$responsibilities}
+				    	       <div>{$responsibilities}</div>
 				    	   </div>
 				    	   <div>
 				    	       <h3>{%Requirements}Requirements{/%}</h3>
-				    	       {$requirements}
+				    	       <div>{$requirements}</div>
 				    	   </div>
 				    	   <div>
 				    	       <h3>{%conditions}Work Conditions{/%}</h3>
-				    	       {$work_conditions}
+				    	       <div>{$work_conditions}</div>
 				    	   </div>
 				    	   <div fx:if="$salary_from || $salary_to">
 				    	       {if $salary_from}From {$salary_from} {/if}
@@ -396,7 +396,7 @@
 						class="featured-item {if $item_index%4 == 0}last{/if}">
 						<img fx:if="$image" src="{$image}">
 						<div class="caption">
-							{$anounce}
+							<p>{$anounce}</p>
 							<a href="{$url}">{$name}</a>
 						</div>
 					</div>
@@ -423,7 +423,7 @@
 						class="news-list-item">
 						<div class="date">{$publish_date|'d.m.Y'}</div>
 						<div class="announce">
-							{$anounce}
+							<p>{$anounce}</p>
 							<a href="{$url}">{$name}</a>
 						</div>
 						{if $tags}

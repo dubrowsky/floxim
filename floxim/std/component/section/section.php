@@ -67,6 +67,10 @@ class fx_controller_component_section extends fx_controller_component_page {
             }
         });
         $this->listen('items_ready', function($items) use ($path, $submenu_type) {
+            foreach ($items as $item) {
+                if (in_array($item['id'], $path))
+                    $item['active'] = true;
+            }
             $items->make_tree();
             if ($submenu_type == 'none')
                 $items->apply(function($item){
