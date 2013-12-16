@@ -12,6 +12,25 @@
     {css}all.css{/css}
     </head>
     <body>
+        <header class="header"
+                fx:area="top" 
+                fx:size="wide,low" 
+                fx:suit="force_block,local">
+                <div 
+                    fx:template="header_block_left" 
+                    fx:of="block"
+                    fx:suit="local" 
+                    class="header_block_left">
+                    {$content}
+                </div>
+                <div 
+                    fx:template="header_block_right" 
+                    fx:suit="local" 
+                    fx:of="block"
+                    class="header_block_right">
+                    {$content}
+                </div>
+        </header>
         <header class="header">
             <div class="wrapper">
                 <div class="logo">
@@ -40,6 +59,9 @@
         <?
         $bg_color = '#000';
         $bg_image = '';
+        if (!isset($path)) {
+            $path = array();
+        }
         
         foreach($path as $path_level => $path_page) {
             if (count($path) > 1 && $path_level == 0) {
@@ -78,6 +100,7 @@
                         class="places" 
                         fx:name="Pages by year"
                         fx:template="pages_by_year" 
+                        fx:size="wide,high"
                         fx:of="page.list">
                         <div 
                             fx:each="{$items->group('publish_date | fx::date : "Y"') as $year => $pages}" 

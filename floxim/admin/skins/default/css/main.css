@@ -1203,7 +1203,8 @@ body div.fx_overlay, body div.fx_overlay table {
 }
 
 .fx_overlay * {
-	line-height:normal;
+    line-height:normal;
+    font-family:Arial;
 }
 
 .fx_fieldset .livesearch {
@@ -1532,9 +1533,10 @@ a.fx_var_editable:focus, .fx_var_editable a:focus {
     }
 
 .fx_controller_select .sub .body {
-    float: left;
-    margin-left: 10px;
-    margin-top: 10px;
+    margin-left: 55px;
+    margin-top: 5px;
+    height:45px;
+    overflow:hidden;
 }
 
 .fx_controller_select .sub .title {
