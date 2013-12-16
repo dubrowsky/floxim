@@ -447,6 +447,12 @@ img {
 .wrapper .nav .main-menu .menu-item.active .menu-sub-items {
   display: block;
 }
+.wrapper .nav .main-menu .menu-item.current {
+  background-color: white;
+}
+.wrapper .nav .main-menu .menu-item.current a {
+  color: #33ccff;
+}
 .wrapper .nav .main-menu .menu-item a {
   color: white;
   text-decoration: none;
