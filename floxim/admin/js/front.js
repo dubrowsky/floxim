@@ -610,7 +610,7 @@ fx_front.prototype.select_infoblock = function(n) {
             return;
         }
         var area_node = ib_node.closest('.fx_area');
-        var area_size = $fx.front.get_area_size(area_node);
+        var area_meta = $fx.front.get_area_meta(area_node);
         
         $fx.front.disable_hilight();
         $fx.front_panel.load_form({
@@ -620,7 +620,8 @@ fx_front.prototype.select_infoblock = function(n) {
             visual_id:ib.visual_id,
             page_id:$('body').data('fx_page_id'),
             fx_admin:true,
-            area_size:area_size
+            //area_size:area_size
+            area:area_meta
         }, {
             view:'horizontal',
             onfinish:function() {
