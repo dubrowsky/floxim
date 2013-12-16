@@ -30,7 +30,8 @@ img {
   width: 23%;
 }
 .wrapper section.two-column .main-column {
-  width: 77%;
+  float: right;
+  width: 75%;
 }
 .wrapper section.three-column .left-column {
   width: 25%;
@@ -131,9 +132,169 @@ img {
   font-size: 1.25em;
   color: #888888;
 }
+.wrapper section .product-record {
+  width: 100%;
+}
+.wrapper section .product-record .photo {
+  width: 30%;
+  float: left;
+}
+.wrapper section .product-record .photo img {
+  width: 100%;
+}
+.wrapper section .product-record .caption {
+  float: right;
+  width: 68%;
+}
+.wrapper section .product-record .caption h2 {
+  margin: 0;
+}
+.wrapper section .product-record .caption .price {
+  margin-top: 1.4em;
+  font-weight: bold;
+  font-size: 1.3em;
+}
+.wrapper section .news-list {
+  width: 100%;
+}
+.wrapper section .news-list .news-list-item {
+  width: 100%;
+  margin-bottom: 1%;
+}
+.wrapper section .news-list .news-list-item .photo {
+  width: 20%;
+  float: left;
+}
+.wrapper section .news-list .news-list-item .photo img {
+  width: 100%;
+}
+.wrapper section .news-list .news-list-item .caption {
+  float: right;
+  width: 78%;
+}
+.wrapper section .news-list .news-list-item .caption h2 {
+  margin-top: 0;
+}
+.wrapper section .person-list {
+  width: 100%;
+}
+.wrapper section .person-list .person-list-item {
+  width: 100%;
+  margin-bottom: 1%;
+}
+.wrapper section .person-list .person-list-item .photo {
+  width: 20%;
+  float: left;
+}
+.wrapper section .person-list .person-list-item .photo img {
+  width: 100%;
+}
+.wrapper section .person-list .person-list-item .caption {
+  float: right;
+  width: 78%;
+}
+.wrapper section .person-list .person-list-item .caption h2 {
+  margin-top: 0;
+}
+.wrapper section .award-list {
+  width: 100%;
+}
+.wrapper section .award-list .award-list-item {
+  width: 100%;
+  margin-bottom: 1%;
+}
+.wrapper section .award-list .award-list-item .photo {
+  width: 20%;
+  float: left;
+}
+.wrapper section .award-list .award-list-item .photo img {
+  width: 100%;
+}
+.wrapper section .award-list .award-list-item .caption {
+  float: right;
+  width: 78%;
+}
+.wrapper section .award-list .award-list-item .caption h2 {
+  margin-top: 0;
+}
+.wrapper section .product-list {
+  width: 100%;
+  margin-top: 2%;
+}
+.wrapper section .product-list .product-list-item {
+  width: 100%;
+  margin-bottom: 1%;
+}
+.wrapper section .product-list .product-list-item .photo {
+  width: 20%;
+  float: left;
+}
+.wrapper section .product-list .product-list-item .photo img {
+  width: 100%;
+}
+.wrapper section .product-list .product-list-item .caption {
+  float: right;
+  width: 78%;
+}
+.wrapper section .product-list .product-list-item .caption h2 {
+  margin-top: 0;
+}
+.wrapper section .product-list .product-list-item .caption .price {
+  font-size: 1.3em;
+  font-weight: bold;
+}
+.wrapper section .project-list {
+  width: 100%;
+}
+.wrapper section .project-list .project-list-item {
+  width: 100%;
+  margin-bottom: 1%;
+}
+.wrapper section .project-list .project-list-item .photo {
+  width: 20%;
+  float: left;
+}
+.wrapper section .project-list .project-list-item .photo img {
+  width: 100%;
+}
+.wrapper section .project-list .project-list-item .caption {
+  float: right;
+  width: 78%;
+}
+.wrapper section .project-list .project-list-item .caption h2 {
+  margin-top: 0;
+}
+.wrapper section .project-list .project-list-item .caption .price {
+  font-size: 1.3em;
+  font-weight: bold;
+}
+.wrapper section .vacancy-list {
+  width: 100%;
+}
+.wrapper section .vacancy-list .vacancy-list-item {
+  margin-bottom: 1%;
+}
+.wrapper section .news-record {
+  width: 100%;
+}
+.wrapper section .news-record .photo {
+  width: 30%;
+  float: left;
+}
+.wrapper section .news-record .photo img {
+  width: 100%;
+}
+.wrapper section .news-record .caption {
+  float: right;
+  width: 65%;
+}
+.wrapper section .news-record .caption h2 {
+  margin-top: 0;
+}
 .wrapper section .slider {
   width: 100%;
   position: relative;
+  margin-bottom: 2%;
 }
 .wrapper section .slider .btn-prev,
 .wrapper section .slider .btn-next {
@@ -194,7 +355,6 @@ img {
 }
 .wrapper section .featured-list {
   width: 100%;
-  margin-top: 2%;
   position: relative;
 }
 .wrapper section .featured-list .featured-item {
