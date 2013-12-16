@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Dec 13, 2013 at 06:52 PM
+-- Generation Time: Dec 16, 2013 at 02:43 PM
 -- Server version: 5.5.34
 -- PHP Version: 5.3.10-1ubuntu3.9
 
@@ -167,7 +167,7 @@ CREATE TABLE IF NOT EXISTS `fx_content` (
   `site_id` int(11) DEFAULT NULL,
   `parent_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=47 AUTO_INCREMENT=2600 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=47 AUTO_INCREMENT=2603 ;
 
 --
 -- Dumping data for table `fx_content`
@@ -330,7 +330,10 @@ INSERT INTO `fx_content` (`id`, `priority`, `checked`, `created`, `last_updated`
 (2596, 200, 1, '2013-12-13 18:26:33', '2013-12-13 14:26:33', 2367, 'section', 284, 17, 2562),
 (2597, 201, 1, '2013-12-13 18:27:51', '2013-12-13 14:27:51', 2367, 'project', 331, 17, 2596),
 (2598, 202, 1, '2013-12-13 18:50:09', '2013-12-13 14:50:09', 2367, 'section', 284, 17, 2562),
-(2599, 203, 1, '2013-12-13 18:51:00', '2013-12-13 14:51:00', 2367, 'award', 333, 17, 2598);
+(2599, 203, 1, '2013-12-13 18:51:00', '2013-12-13 14:51:00', 2367, 'award', 333, 17, 2598),
+(2600, 204, 1, '2013-12-16 13:17:37', '2013-12-16 09:17:37', 2367, 'contact', 0, 17, 2592),
+(2601, 205, 1, '2013-12-16 14:09:00', '2013-12-16 10:09:00', 2367, 'section', 335, 17, 2567),
+(2602, 206, 1, '2013-12-16 14:09:11', '2013-12-16 10:09:11', 2367, 'section', 335, 17, 2567);
 
 -- --------------------------------------------------------
 
@@ -522,7 +525,8 @@ CREATE TABLE IF NOT EXISTS `fx_content_contact` (
 
 INSERT INTO `fx_content_contact` (`id`, `value`, `contact_type`) VALUES
 (2247, '+7918687162', 'Phone'),
-(2463, '5252525', 'ICQ');
+(2463, '5252525', 'ICQ'),
+(2600, '23442667', 'Phone');
 
 -- --------------------------------------------------------
 
@@ -715,7 +719,9 @@ INSERT INTO `fx_content_page` (`id`, `url`, `name`, `title`, `comments_counter`)
 (2596, '/Projects', 'Projects', 'Projects', 0),
 (2597, '/Quis-aute-iure-reprehenderit-2', 'Quis aute iure reprehenderit', 'Quis aute iure reprehenderit', 0),
 (2598, '/Awards', 'Awards', 'Awards', 0),
-(2599, '/Excepteur-sint-obcaecat-cupiditat', 'Excepteur sint obcaecat cupiditat', 'Excepteur sint obcaecat cupiditat', 0);
+(2599, '/Excepteur-sint-obcaecat-cupiditat', 'Excepteur sint obcaecat cupiditat', 'Excepteur sint obcaecat cupiditat', 0),
+(2601, '/last-week', 'last week', 'last week', 0),
+(2602, '/last-month', 'last month', 'last month', 0);
 
 -- --------------------------------------------------------
 
@@ -884,10 +890,10 @@ INSERT INTO `fx_content_publication` (`id`, `publish_date`, `anounce`, `image`, 
 (2455, '2013-11-20 00:00:00', '<p>\r\n	 Stet clita kasd gubergren, no sea takimata sanctus est. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. At vero eos et accusam et justo duo dolores et ea rebum. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat.\r\n</p>', 479, '<p>\r\n	 Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. At vero eos et accusam et justo duo dolores et ea rebum.\r\n</p>\r\n<p>\r\n	 At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum.\r\n</p>\r\n<p>\r\n	 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.\r\n</p>\r\n<p>\r\n	 Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.\r\n</p>\r\n<p>\r\n	 Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\r\n</p>'),
 (2499, '2013-11-15 00:00:00', '<p>\r\n	Consetetur sadipscing elitr sed\r\n</p>', 0, '<p>\r\n	Consetetur sadipscing elitr sed\r\n</p>'),
 (2500, '2013-11-08 00:00:00', '<p>\r\n	Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.\r\n</p>', 0, '<p>\r\n	Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.\r\n</p>'),
-(2571, '0000-00-00 00:00:00', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr</span>\r\n</p>', 504, '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</span>\r\n</p>'),
-(2572, '0000-00-00 00:00:00', '<p>\r\n	 <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, </span>\r\n</p>', 505, '<p>\r\n	 <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</span>\r\n</p>'),
-(2573, '0000-00-00 00:00:00', '<p>\r\n	 <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</span>\r\n</p>', 506, '<p>\r\n	 <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum.</span>\r\n</p>'),
-(2574, '0000-00-00 00:00:00', '<p>\r\n	 <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum.</span>\r\n</p>', 507, '<p>\r\n	 <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</span>\r\n</p>');
+(2571, '2013-10-02 00:00:00', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr</span>\r\n</p>', 504, '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</span>\r\n</p>'),
+(2572, '2013-12-06 00:00:00', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, </span>\r\n</p>', 505, '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</span>\r\n</p>'),
+(2573, '2013-12-15 00:00:00', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</span>\r\n</p>', 506, '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum.</span>\r\n</p>'),
+(2574, '2013-12-04 00:00:00', '<p>\r\n	 <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum.</span>\r\n</p>', 507, '<p>\r\n	 <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</span>\r\n</p>');
 
 -- --------------------------------------------------------
 
@@ -942,7 +948,9 @@ INSERT INTO `fx_content_section` (`id`) VALUES
 (2591),
 (2593),
 (2596),
-(2598);
+(2598),
+(2601),
+(2602);
 
 -- --------------------------------------------------------
 
@@ -1511,7 +1519,7 @@ CREATE TABLE IF NOT EXISTS `fx_infoblock` (
   `scope` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `page_id` (`page_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=210 AUTO_INCREMENT=335 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=210 AUTO_INCREMENT=338 ;
 
 --
 -- Dumping data for table `fx_infoblock`
@@ -1627,7 +1635,10 @@ INSERT INTO `fx_infoblock` (`id`, `parent_infoblock_id`, `site_id`, `page_id`, `
 (331, 0, 17, 2596, 1, 'Project / ', 'component_project', 'list_infoblock', 'a:5:{s:5:"limit";s:0:"";s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";s:11:"parent_type";s:15:"current_page_id";s:16:"create_record_ib";s:1:"0";}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
 (332, 0, 17, 2596, 1, 'Project / Single entry', 'component_project', 'record', 'a:0:{}', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:7:"project";}'),
 (333, 0, 17, 2598, 1, 'Award / ', 'component_award', 'list_infoblock', 'a:5:{s:5:"limit";s:0:"";s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";s:11:"parent_type";s:15:"current_page_id";s:16:"create_record_ib";s:1:"0";}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
-(334, 0, 17, 2598, 1, 'Award / Single entry', 'component_award', 'record', 'a:0:{}', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:5:"award";}');
+(334, 0, 17, 2598, 1, 'Award / Single entry', 'component_award', 'record', 'a:0:{}', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:5:"award";}'),
+(335, 0, 17, 2567, 1, 'Navigation / ', 'component_section', 'list_infoblock', 'a:1:{s:7:"submenu";s:4:"none";}', 'a:2:{s:5:"pages";s:11:"descendants";s:9:"page_type";s:0:"";}'),
+(336, 0, 17, 2601, 1, 'News / last week', 'component_news', 'list_filtered', 'a:5:{s:5:"limit";s:0:"";s:10:"pagination";s:1:"0";s:7:"sorting";s:12:"publish_date";s:11:"sorting_dir";s:3:"asc";s:10:"conditions";a:1:{s:5:"new_1";a:4:{s:4:"name";s:12:"publish_date";s:8:"operator";s:4:"last";s:5:"value";s:1:"1";s:8:"interval";s:4:"WEEK";}}}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
+(337, 0, 17, 2602, 1, 'News / ', 'component_news', 'list_filtered', 'a:5:{s:5:"limit";s:0:"";s:10:"pagination";s:1:"0";s:7:"sorting";s:12:"publish_date";s:11:"sorting_dir";s:3:"asc";s:10:"conditions";a:1:{s:5:"new_1";a:4:{s:4:"name";s:12:"publish_date";s:8:"operator";s:4:"last";s:5:"value";s:1:"1";s:8:"interval";s:5:"MONTH";}}}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}');
 
 -- --------------------------------------------------------
 
@@ -1647,7 +1658,7 @@ CREATE TABLE IF NOT EXISTS `fx_infoblock_visual` (
   `priority` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `infoblock_id` (`infoblock_id`,`layout_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=138 AUTO_INCREMENT=407 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=138 AUTO_INCREMENT=410 ;
 
 --
 -- Dumping data for table `fx_infoblock_visual`
@@ -1775,7 +1786,10 @@ INSERT INTO `fx_infoblock_visual` (`id`, `infoblock_id`, `layout_id`, `wrapper`,
 (403, 331, 11, '', '', 'layout_demo.project_list', '', 'main_column', 17),
 (404, 332, 11, '', '', 'layout_demo.project_record', '', 'main_column', 18),
 (405, 333, 11, '', '', 'layout_demo.award_list', '', 'main_column', 19),
-(406, 334, 11, '', '', 'layout_demo.award_record', '', 'main_column', 20);
+(406, 334, 11, '', '', 'layout_demo.award_record', '', 'main_column', 20),
+(407, 335, 11, '', '', 'layout_demo.top_links', '', 'header_links', 1),
+(408, 336, 11, '', '', 'layout_demo.news_list_main', '', 'main_column', 21),
+(409, 337, 11, '', '', 'layout_demo.news_list_main', '', 'main_column', 22);
 
 -- --------------------------------------------------------
 
@@ -2399,8 +2413,7 @@ CREATE TABLE IF NOT EXISTS `fx_session` (
 --
 
 INSERT INTO `fx_session` (`id`, `user_id`, `session_start`, `session_time`, `ip`, `login_save`, `site_id`, `auth_type`) VALUES
-('049cbaab1d6860974df51df1b7aa2f50', 2367, 1386742001, 1386948514, 2130706433, 0, 0, 1),
-('b5899221a5c4012fb0b6ac8ff9f1dd8c', 2367, 1386923077, 1387032717, 2130706433, 0, 0, 1);
+('049cbaab1d6860974df51df1b7aa2f50', 2367, 1387189720, 1387276824, 2130706433, 0, 0, 1);
 
 -- --------------------------------------------------------
 
