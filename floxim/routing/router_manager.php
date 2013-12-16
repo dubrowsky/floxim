@@ -54,6 +54,7 @@ class fx_router_manager {
         if (is_null($url)) {
             $url = getenv('REQUEST_URI');
         }
+        
         if (!isset($context['site_id'])) {
             $context['site_id'] = fx::env('site')->get('id');
         }

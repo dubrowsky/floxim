@@ -132,6 +132,11 @@ class fx_template_html {
                 }
                 if ( ($tpl_size = $n->get_attribute('fx:size'))) {
                     $tpl_macro_tag .= ' size="'.$tpl_size.'" ';
+                    $n->remove_attribute('fx:size');
+                }
+                if ( ($tpl_suit = $n->get_attribute('fx:suit'))) {
+                    $tpl_macro_tag .= ' suit="'.$tpl_suit.'"';
+                    $n->remove_attribute('fx:suit');
                 }
                 $tpl_macro_tag .= '}';
                 $n->parent->add_child_before(fx_template_html_token::create($tpl_macro_tag), $n);
@@ -170,8 +175,13 @@ class fx_template_html {
                     $area .= 'size="'.$area_size.'" ';
                     $n->remove_attribute('fx:size');
                 }
-                $area .= '/}';
+                if ( ($area_suit = $n->get_attribute('fx:suit'))) {
+                    $area .= 'suit="'.$area_suit.'" ';
+                    $n->remove_attribute('fx:suit');
+                }
+                $area .= '}';
                 $n->add_child_first(fx_template_html_token::create($area));
+                $n->add_child(fx_template_html_token::create('{/area}'));
             }
             if ( ($if_test = $n->get_attribute('fx:if'))) {
                 $n->remove_attribute('fx:if');

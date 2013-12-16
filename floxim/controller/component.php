@@ -11,6 +11,7 @@ class fx_controller_component extends fx_controller {
         }
     }
     
+
     public function process() {
         $this->listen('before_action_run', array($this, '_count_parent_id'));
         $result = parent::process();
@@ -42,17 +43,21 @@ class fx_controller_component extends fx_controller {
         return $sources;
     } 
 
-    public function get_controller_name(){
-        return $this->_content_type;
+    public function get_controller_name($with_type = false){
+        $name = $this->_content_type;
+        if ($with_type) {
+            $name = 'component_'.$name;
+        }
+        return $name;
     }
     
-    public function after_save() {
+    public function after_save_infoblock($is_new) {
+        parent::after_save_infoblock($is_new);
         $ib = fx::data('infoblock', $this->input['infoblock_id']);
         $this->action = $ib['action'];
         if (isset($this->action)) {
             switch ($this->action) {
                 case 'list_selected':
-                        //dev_log($ib['params']['selected']);
                     if (isset($ib['params']['selected']) && is_array($ib['params']['selected'])) {
                         foreach ($ib['params']['selected'] as  $value) {
                             $saving[$value] = true;
@@ -108,7 +113,8 @@ class fx_controller_component extends fx_controller {
         return $linkers;
     }
 
-    public function after_delete() {
+    public function before_delete_infoblock() {
+        parent::before_delete_infoblock();
         $ib = fx::data('infoblock', $this->input['infoblock_id']);
         $this->action = $ib['action'];
         if (isset($this->action)) {
@@ -199,6 +205,11 @@ class fx_controller_component extends fx_controller {
             }
             $fields['conditions']['tpl'][0]['values'][$field['name']] = $res;
         }
+        $fields['conditions']['tpl'][0]['values']['infoblock_id'] = array(
+            'description' => 'Infoblock',
+            'type' => 'link',
+            'content_type' => 'infoblock'
+        );
         return $fields;
     }  
     
@@ -216,7 +227,6 @@ class fx_controller_component extends fx_controller {
                             find('type_of_edit', fx_field::EDIT_NONE, fx_collection::FILTER_NEQ);
         
         $fields = array();
-        fx::log('getting confs', $link_fields, $this);
         foreach ($link_fields as $lf) {
             if ($lf['type'] == fx_field::FIELD_LINK) {
                 $target_com_id = $lf['format']['target'];
@@ -259,7 +269,6 @@ class fx_controller_component extends fx_controller {
             }
             $fields[$c_ib_field['name']]= $c_ib_field;
         }
-        fx::log('tarfs', $fields);
         return $fields;
     }
     
@@ -269,7 +278,7 @@ class fx_controller_component extends fx_controller {
     }
     
     public function do_list() {
-        $f = $this->_get_finder();
+        $f = $this->get_finder();
         $this->trigger('query_ready', $f);
         $items = $f->all();
         if (count($items) === 0) {
@@ -342,7 +351,7 @@ class fx_controller_component extends fx_controller {
         if (!$this->get_param('show_pagination')){
             return null;
         }
-        $total_rows = $this->_get_finder()->get_found_rows();
+        $total_rows = $this->get_finder()->get_found_rows();
         if ($total_rows == 0) {
             return null;
         }
@@ -609,14 +618,14 @@ class fx_controller_component extends fx_controller {
     }
     
     
-    protected $_finder = null;
+    //protected $_finder = null;
     /**
      * @return fx_data_content data finder
      */
-    protected function _get_finder() {
-        if ($this->_finder) {
-            return $this->_finder;
-        }
+    public function get_finder() {
+        //if ($this->_finder) {
+        //    return $this->_finder;
+        //}
         $finder = fx::data('content_'.$this->get_content_type());
         $show_pagination = $this->get_param('pagination');
         $c_page = $this->_get_current_page_number();
@@ -645,7 +654,7 @@ class fx_controller_component extends fx_controller {
             }
             $finder->order($sorting, $dir);
         }
-        $this->_finder = $finder;
+        //$this->_finder = $finder;
         return $finder;
     }
     

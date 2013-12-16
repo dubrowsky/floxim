@@ -126,12 +126,7 @@ class fx_controller_admin_user extends fx_controller_admin {
         try {
             if ($result['status'] == 'ok') {
                 $info->set($data);
-                //$info->set_groups($input['group']);
                 $info->save();
-
-                //foreach ($fields as $v) {
-                //    $v->post_save($info);
-                //}
             }
         } catch (Exception $e) {
             $result['status'] = 'error';
@@ -144,7 +139,6 @@ class fx_controller_admin_user extends fx_controller_admin {
     }
 
     public function edit($input) {
-        //var_dump($input);
         $info = fx::data('content_user', $input['params'][0]);
         $fields = $this->_form($info);
         $fields[] = $this->ui->hidden('action', 'edit');
@@ -164,12 +158,8 @@ class fx_controller_admin_user extends fx_controller_admin {
         return $result;
     }
     public function add() {
-        //var_dump($input);
-        //$info = fx::data('content_user', $input['params'][0]);
         $fields = $this->_form(null);
         $fields[] = $this->ui->hidden('action', 'add');
-        //$fields[] = $this->ui->hidden('id', $info['id']);
-
         $result['fields'] = $fields;
         $this->response->add_form_button('save');
         $this->response->submenu->set_menu('user');
@@ -185,31 +175,12 @@ class fx_controller_admin_user extends fx_controller_admin {
     }
 
     protected function _form($info) {
-        //$groups = fx::data('group')->get_all();
-        //foreach ($groups as $v) {
-        //    $values[$v['id']] = $v['name'];
-        //}
-        //var_dump($values);
-        //$gr = null;
-        //if ($info['id']) {
-        //    $gr = array_keys($info->get_groups());
-        //    $fields []= $this->ui->hidden('id', $info['id']);
-        //}
-
-        //$fields[] = $this->ui->checkbox('group', fx::lang('Groups','system'), $values, $gr, 1);
-        //$fields[] = $this->ui->input('login', fx::lang('Login','system'), $info['login']);
-
-        //if (!$info['id']) {
-        //}
-        // временно
         $fields[] = $this->ui->input('f_email', fx::lang('Email','system'), $info['email']);
         $fields[] = $this->ui->input('f_name', fx::lang('Name','system'), $info['name']);
         $fields[] = $this->ui->password('password', fx::lang('Password','system'));
         $fields[] = $this->ui->password('password2', fx::lang('Confirm password','system'));
         $fields[] = array('type' => 'checkbox', 'name' => 'f_is_admin', 'label' => fx::lang('Admin','system'), 'value' => $info['is_admin']);
 
-        //$fields[] = $this->ui->input('f_name', fx::lang('Nick','system'), $info['name']);
-        //$fields[] = $this->ui->file('f_avatar', fx::lang('Avatar','system'));
         $fields[] = $this->ui->hidden('posting');
         $fields[] = $this->ui->hidden('essence', 'user');
 

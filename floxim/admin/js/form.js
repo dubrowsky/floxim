@@ -93,14 +93,17 @@ fx_form = {
         $form.trigger('fx_form_submit');
         
         $form.ajaxSubmit(function ( data ) {
+            console.log('ajs');
             try {
                 data = $.parseJSON( data );
             }
             catch(e) {
                 status_block.show();
                 status_block.writeError(data);
+                console.log('err');
                 return false;
             }
+            console.log('trig ffs');
             $form.trigger('fx_form_sent', data);
             
             if ( data.status === 'ok') {

@@ -51,7 +51,9 @@ class fx_admin_submenu {
             $this->active_main_menu = 'develop';
         }
 
+        fx::log('match', $match);
         if ($match[1] == 'widget' && !$match[3]) {
+            fx::log('init widdev');
             $this->init_develop();
             $this->active = 'widget';
             $this->active_main_menu = 'develop';
@@ -129,13 +131,13 @@ class fx_admin_submenu {
     }
 
     protected function init_develop() {
-        $this->menu[] = $node_component = $this->add_node('component', fx::lang('Components','system'), 'component.group');
+        $this->menu[] = $node_component = $this->add_node('component', fx::lang('Components','system'), 'component.all');
         $this->menu[] = $node_template = $this->add_node('layout', fx::lang('Layouts','system'), 'layout.all'); // template ->layout
-        $this->menu[] = $node_widget = $this->add_node('widget', fx::lang('Widgets','system'), 'widget.group');
+        $this->menu[] = $node_widget = $this->add_node('widget', fx::lang('Widgets','system'), 'widget.all');
 
         foreach (fx::data('component')->get_all_groups() as $group) {
             $hash = md5($group);
-            $this->menu[] = $this->add_node('componentgroup-'.$hash, $group, 'component.group('.$hash.')', $node_component);
+            $this->menu[] = $this->add_node('componentgroup-'.$hash, $group, 'component.all('.$hash.')', $node_component);
         }
         foreach (fx::data('widget')->get_all_groups() as $group) {
             $hash = md5($group);
@@ -169,7 +171,7 @@ class fx_admin_submenu {
             $this->error = fx::lang('Component not found','system');
         } else {
             $this->title = $component['name'];
-            $this->backlink = 'component.group';
+            $this->backlink = 'component.all';
             $cid = $component['id'];
             // выводим основные разделы
             $submenu_items = fx_controller_admin_component::get_component_submenu($component);
@@ -213,7 +215,7 @@ class fx_admin_submenu {
             $this->error = fx::lang('Widget not found','system');
         } else {
             $this->title = $widget['name'];
-            $this->backlink = 'widget.group';
+            $this->backlink = 'widget.all';
             
             $items = fx_controller_admin_component::get_component_submenu($widget);
             foreach ($items as $item) {

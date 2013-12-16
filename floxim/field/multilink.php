@@ -286,7 +286,7 @@ class fx_field_multilink extends fx_field_baze {
                 $existing_ids []= $item_id;
             }
         }
-        $existing_items = null;
+        $existing_items = fx::collection();
         if (count($existing_ids) > 0) {
             $existing_items = fx::data($first_data_type, $existing_ids);
         }

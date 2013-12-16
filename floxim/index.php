@@ -5,8 +5,9 @@ if (!defined('FLOXIM')) {
     require_once('../boot.php');
 }
 ob_start();
+
 if ( ($controller = fx::router()->route() ) ) {
-    echo $controller->process();
+	echo $controller->process();
     die();
 }
 ?>

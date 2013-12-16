@@ -50,6 +50,10 @@ class fx_controller {
     	return $this;
     }
 
+    public function after_save () {
+        
+    }
+
     /**
      * Возвращает результат выполнения действия контроллером
      * @return array|string массив с результатами работы контроллера
@@ -69,6 +73,21 @@ class fx_controller {
     
     protected $_action_prefix = '';
 
+
+    static protected function _get_abbr($name) {
+        $vowels = array('a', 'e', 'i', 'o', 'u', 'y');
+        $head = substr($name,0,1);
+        $words = explode(" ", $name);
+        if (count($words) > 1) {
+            $tail = substr($name, 1, 1).'.'.substr($words[1], 0, 1);
+        } else {
+            $tail = substr(str_replace($vowels, '', strtolower(substr($name,1))), 0, 2);
+            if (strlen($name) > 2 && strlen($tail) < 2) {
+                $tail = substr($name, 1, 2);
+            }
+        }
+        return $head.$tail;
+    }
 
     public function get_action_method() {
         $actions = explode('_', $this->action);
@@ -101,7 +120,8 @@ class fx_controller {
      * Возвращает массив шаблонов, которые можно использовать для контроллер-экшна
      * Вызывать после инициализации контроллера (с экшном)
      */
-    public function get_available_templates( $layout_name = null , $area_size = null) {
+    public function get_available_templates( $layout_name = null , $area_meta = null) {
+        $area_size = fx_template_suitable::get_size($area_meta['size']);
         if (is_numeric($layout_name)) {
             $layout_names = array(fx::data('layout', $layout_name)->get('keyword'));
         } elseif (is_null($layout_name)) {
@@ -142,6 +162,8 @@ class fx_controller {
                     continue;
                 }
                 list($tpl_of_controller, $tpl_of_action) = $of_parts;
+                if (preg_match('~_layout$~', $tpl_of_controller))
+                    $tpl_of_controller = 'layout';
                 if ( !in_array($tpl_of_controller, $controller_variants)) {
                     continue;
                 }
@@ -169,10 +191,12 @@ class fx_controller {
     
     public function get_action_settings($action) {
         $cfg = $this->get_config();
+        dev_log('get act', $action, $this, $cfg);
         if (!isset($cfg['actions'][$action])) {
             return;
         }
         $params = $cfg['actions'][$action];
+        // А точно нужно возвращать Null?
         if (!isset($params['settings'])) {
             return;
         }
@@ -196,13 +220,11 @@ class fx_controller {
         $actions = $this->_get_real_actions();
         $blocks = array();
         $meta = array();
+        $my_name = $this->get_controller_name();
         foreach ($sources as $src) {
-            $src_file = $src;
             $src_name = null;
-            $my_name = null;
+            $src_hash = md5($src);
             preg_match("~/([^/]+?)/[^/]+$~", $src, $src_name);
-            //preg_match("~_([^_]+)$~", get_class($this), $my_name);
-            $my_name = $this->get_controller_name();
             $is_own = $src_name && $my_name && $src_name[1] === $my_name;
             $src = include $src;
             if (!isset($src['actions'])) {
@@ -219,6 +241,12 @@ class fx_controller {
                     }
                     $inherit_horizontal = preg_match("~\*$~", $ak);
                     $action_code = trim($ak, '*');
+                    if (isset($props['install']) && !is_array($props['install'])) {
+                        $props['install'] = array($src_hash => $props['install']);
+                    }
+                    if (isset($props['delete']) && !is_array($props['delete'])) {
+                        $props['delete'] = array($src_hash => $props['delete']);
+                    }
                     $blocks []= $props;
                     $meta []= array($inherit_horizontal, $action_code);
                     if (!isset($actions[$action_code])) {
@@ -233,7 +261,10 @@ class fx_controller {
             foreach ($actions as $ak => &$action_props) {
                 if (
                         $ak === $bk || 
-                        ($inherit && substr($ak, 0, strlen($bk)) === $bk) 
+                        (
+                            $inherit && 
+                            ($bk === '.' || substr($ak, 0, strlen($bk)) === $bk)
+                        )
                 ) {
                     $action_props = array_replace_recursive($action_props, $block);
                     if (isset($action_props['settings'])) {
@@ -246,11 +277,16 @@ class fx_controller {
                 }
             }
         }
+        unset($actions['.']);
         return array('actions' => $actions);
     }
 
-    public function get_controller_name(){
-        return preg_replace('~^[^\W_]+_[^\W_]+_~', '', get_class($this));
+    public function get_controller_name($with_type = false){
+        $name = preg_replace('~^[^\W_]+_[^\W_]+_~', '', get_class($this));
+        if (!$with_type) {
+            $name = preg_replace('~^[^\W_]+_~', '', $name);
+        }
+        return $name;
     }
 
     protected function _prepare_action_config($actions) {
@@ -341,5 +377,45 @@ class fx_controller {
             $res[$action] = $info;
         }
         return $res;
+    }
+    
+    public function after_save_infoblock($is_new) {
+        if (! ($ib_id = $this->get_param('infoblock_id')) ) {
+            return;
+        }
+        $infoblock = fx::data('infoblock', $ib_id);
+        $action = $infoblock['action'];
+        $full_config = $this->get_config();
+        if (!isset($full_config['actions'][$action])) {
+            return;
+        }
+        $config = $full_config['actions'][$action];
+        if ($is_new && isset($config['install'])) {
+            foreach ($config['install'] as $install_callback) {
+                if (is_callable($install_callback)) {
+                    call_user_func($install_callback, $infoblock, $this);
+                }
+            }
+        }
+    }
+    
+    public function before_delete_infoblock() {
+        if (! ($ib_id = $this->get_param('infoblock_id')) ) {
+            return;
+        }
+        $infoblock = fx::data('infoblock', $ib_id);
+        $action = $infoblock['action'];
+        $full_config = $this->get_config();
+        if (!isset($full_config['actions'][$action])) {
+            return;
+        }
+        $config = $full_config['actions'][$action];
+        if (isset($config['delete'])) {
+            foreach ($config['delete'] as $delete_callback) {
+                if (is_callable($delete_callback)) {
+                    call_user_func($delete_callback, $infoblock, $this);
+                }
+            }
+        }
     }
 }

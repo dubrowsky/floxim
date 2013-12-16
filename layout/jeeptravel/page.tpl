@@ -12,6 +12,25 @@
     {css}all.css{/css}
     </head>
     <body>
+        <header class="header"
+                fx:area="top" 
+                fx:size="wide,low" 
+                fx:suit="force_block,local">
+                <div 
+                    fx:template="header_block_left" 
+                    fx:of="block"
+                    fx:suit="local" 
+                    class="header_block_left">
+                    {$content}
+                </div>
+                <div 
+                    fx:template="header_block_right" 
+                    fx:suit="local" 
+                    fx:of="block"
+                    class="header_block_right">
+                    {$content}
+                </div>
+        </header>
         <header class="header">
             <div class="wrapper">
                 <div class="logo">
@@ -22,8 +41,8 @@
                 <div class="header_area" fx:area="header" fx:size="wide,low">
                     <nav 
                         fx:template="top_menu"
-						fx:name="Main menu"
-                        fx:of="component_section.listing"
+                        fx:name="Main Menu"
+                        fx:of="menu"
                         class="top_menu">
                         <ul>
                             <li fx:template="inactive">
@@ -40,6 +59,9 @@
         <?
         $bg_color = '#000';
         $bg_image = '';
+        if (!isset($path)) {
+            $path = array();
+        }
         
         foreach($path as $path_level => $path_page) {
             if (count($path) > 1 && $path_level == 0) {
@@ -78,7 +100,8 @@
                         class="places" 
                         fx:name="Pages by year"
                         fx:template="pages_by_year" 
-                        fx:of="component_page.listing">
+                        fx:size="wide,high"
+                        fx:of="page.list">
                         <div 
                             fx:each="{$items->group('publish_date | fx::date : "Y"') as $year => $pages}" 
                             class="col"
@@ -108,7 +131,7 @@
                     <div class="l-side" fx:area="index_left">
                         <ul 
                             fx:template="index_photo_anounces" 
-                            fx:of="component_photo.listing" 
+                            fx:of="component_photo.list" 
                             class="photo_anounces">
                             <li fx:template="item">
                                 <?
@@ -128,7 +151,7 @@
                             <h2>{%header}Header{/%}</h2>
                             {$content}
                         </div>
-                        <ul fx:template="index_link_list" fx:of="component_page.listing" fx:name="Simple link list">
+                        <ul fx:template="index_link_list" fx:of="page.list" fx:name="Simple link list">
                             <li fx:template="item"><a href="{$url}">{$name}</a></li>
                         </ul>
                         

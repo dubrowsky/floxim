@@ -2,7 +2,7 @@
 class fx_controller_component_comment extends fx_controller_component
 {
     
-    public function get_action_settings_add()
+    protected function _get_target_infoblock()
     {
         $target_ibs = fx::data('infoblock')->where('controller', 'component_comment')->where('action', 'listing')->all();
         $field      = array(
@@ -18,13 +18,11 @@ class fx_controller_component_comment extends fx_controller_component
                 $ib['name']
             );
         }
-        return array(
-            'target_infoblock_id' => $field
-        );
+        return $field;
     }
-    protected function _get_finder()
+    public function get_finder()
     {
-        $finder = parent::_get_finder();
+        $finder = parent::get_finder();
         
         if (!fx::is_admin()) {
             if ($own_comments = $this->_get_own_comments()) {

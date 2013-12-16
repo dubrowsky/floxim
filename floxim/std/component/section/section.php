@@ -4,54 +4,6 @@ class fx_controller_component_section extends fx_controller_component_page {
     /*
      * Отключаем "Отдельную страницу" для компонента
      */
-
-    public function get_action_settings($action)
-    {
-        $fields = parent::get_action_settings($action);
-        if ($action == 'listing') {
-            foreach (
-                array('parent_type', 'parent_id', 'sorting', 'sorting_dir', 'limit', 'show_pagination')
-                as $fk) {
-                    unset($fields[$fk]);
-            }
-            $fields['submenu'] = array(
-                'name' => 'submenu',
-                'label' => fx::lang('Subsections','component_section'),
-                'type' => 'select',
-                'values' => array(
-                    'none' => fx::lang('Don\'t show','component_section'),
-                    'active' => fx::lang('Show for the active item','component_section'),
-                    'all' => fx::lang('Show for all items','component_section')
-                )
-            );/*
-            $fields['submenu_level'] = array(
-                'name' => 'submenu_level',
-                'label' => fx::lang('Nesting level', 'component_section'),
-                'type' => 'select',
-                'values' => array(
-                    array('2', fx::lang('2 levels', 'component_section')),
-                    array('3', fx::lang('3 levels', 'component_section')),
-                    array('onemore', fx::lang('Current level +1', 'component_section')),
-                    array('infinity', fx::lang('No limit', 'component_section'))
-                ),
-                'parent' => array('submenu' => '!=none')
-            );*/
-        } elseif ($action == 'breadcrumbs') {
-            $fields = array(
-                'header_only' => array(
-                    'name' => 'header_only',
-                    'type' => 'checkbox',
-                    'label' => fx::lang('Show only header?', 'component_section'),
-                ),
-                'hide_on_index' => array(
-                    'name' => 'hide_on_index',
-                    'type' => 'checkbox',
-                    'label' => fx::lang('Hide on the index page', 'component_section')
-                )
-            );
-        }
-        return $fields;
-    }
     
     public function do_list_infoblock() {
         $this->set_param('parent_id', false);
@@ -63,7 +15,7 @@ class fx_controller_component_section extends fx_controller_component_page {
             $this->set_param('parent_type', 'mount_page_id');
         }
         
-        $this->set_param('sorting', 'manual');
+        //$this->set_param('sorting', 'manual');
         
         $this->listen('query_ready', function($q) use ($path, $submenu_type) {
             switch ($submenu_type) {
@@ -77,6 +29,7 @@ class fx_controller_component_section extends fx_controller_component_page {
         });
         
         $this->listen('items_ready', function($items, $ctr) use ($path, $submenu_type) {
+            fx::log('menu itms rd', $items, $ctr, $path, $submenu_type);
             foreach ($items as $item) {
                 if (in_array($item['id'], $path)) {
                     $item['active'] = true;
@@ -98,6 +51,73 @@ class fx_controller_component_section extends fx_controller_component_page {
         return parent::do_list_infoblock();
     }
 
+    public function do_list_filtered () {
+        $c_page_id  = fx::env('page')->get('id');
+        $path = fx::env('page')->get_parent_ids();
+        $path []= $c_page_id;
+        $submenu_type = $this->get_param('submenu');
+        $this->listen('query_ready', function($q) use ($path, $submenu_type) {
+            switch ($submenu_type) {
+                case 'all':
+                    $q->clear_where('parent_id');
+                    break;
+                case 'active':
+                    $q->clear_where('parent_id')->where('parent_id', $path);
+                    break;
+            }
+        });
+        $this->listen('items_ready', function($items) use ($path, $submenu_type) {
+            foreach ($items as $item) {
+                if (in_array($item['id'], $path))
+                    $item['active'] = true;
+            }
+            $items->make_tree();
+            if ($submenu_type == 'none')
+                $items->apply(function($item){
+                    unset($item['children']);
+                });
+        });
+        return parent::do_list_filtered();
+    }
+
+    public function do_list_selected () {
+        $c_page_id  = fx::env('page')->get('id');
+        $path = fx::env('page')->get_parent_ids();
+        $path []= $c_page_id;
+        $submenu_type = $this->get_param('submenu');
+        $this->listen('query_ready', function($q) use ($path, $submenu_type) {
+            switch ($submenu_type) {
+                case 'all':
+                    $q->clear_where('parent_id');
+                    break;
+                case 'active':
+                    $q->clear_where('parent_id')->where('parent_id', $path);
+                    break;
+            }
+        });
+        $ctr = $this;
+        $recurcive_children = function ($items) use (&$recurcive_children, $ctr) {
+            $sub_items = $ctr
+                    ->get_finder()
+                    ->where('parent_id', $items->get_values('id'))
+                    ->all();
+            if (!count($sub_items)>0) {
+                return;
+            }
+            $items->attache_many($sub_items, 'parent_id', 'children');
+            $recurcive_children($sub_items);
+
+        };
+        $this->listen('items_ready', function ($items) use ($recurcive_children, $submenu_type) {
+            $recurcive_children($items);
+            if ($submenu_type == 'none')
+                $items->apply(function($item){
+                    unset($item['children']);
+                });
+        });
+        return parent::do_list_selected();
+    }
+
     public function do_list_submenu() {
         $source = $this->get_param('source_infoblock_id');
         $path = fx::env('page')->get_path();
@@ -116,20 +136,6 @@ class fx_controller_component_section extends fx_controller_component_page {
             }
         });
         return $this->do_list();
-    }
-
-    public function config_list_submenu($config) {
-        $site_id = fx::env('site')->get('id');
-        $sections = fx::data('infoblock')->where('site_id', $site_id)->get_content_infoblocks('section')->get_values('name', 'id');
-        $config['settings']['source_infoblock_id']['values'] = $sections;
-        return $config;
-    }
-    
-    public function info_breadcrumbs() {
-        return array(
-            'name' => fx::lang('Bread crumbs','component_section'),
-            'description' => fx::lang('Show path to the current page','component_section')
-        );
     }
     
     public function do_breadcrumbs() {

@@ -11,7 +11,6 @@ class fx_router_front extends fx_router {
         $infoblocks = $this->get_page_infoblocks($page['id'], $layout_id);
         $layout_ib = $infoblocks['layout'][0];
         fx::http()->status('200');
-
         return fx::controller(
             'infoblock.render',
             array(

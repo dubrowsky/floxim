@@ -12,8 +12,13 @@ $content_exists = fx::data('content_'.$component['keyword'])
                             ->where('site_id', fx::env('site')->get('id'))
                             ->one();
 
+$is_new_infoblock = !$this->get_param('infoblock_id');
+
 return array(
     'actions' => array(
+        '*.*' => array(
+            'icon' => self::_get_abbr($component['name'])
+        ),
         '*list*' => array(
             'settings' => array(
                 'limit' => array(
@@ -44,6 +49,9 @@ return array(
         ),
         '*list_infoblock' => array(
             'name' => $component['name'],
+            'install' => function() {
+                
+            },
             'settings' => array(
                 'sorting' => array(
                     'values' => array( array('manual', 'Manual' ) ) + $sort_fields
@@ -64,10 +72,12 @@ return array(
         ),
         '*list_filtered' => array(
             'name' => $component['name'].' by filter',
+            'icon_extra' => 'fil',
             'settings' => $this->_config_conditions()
         ),
         '*list_selected' => array(
             'name' => $component['name'].' selected',
+            'icon_extra' => 'sel',
             'settings' => array(
                 'selected' => array (
                     'name' => 'selected', 
