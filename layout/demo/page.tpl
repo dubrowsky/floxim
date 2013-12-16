@@ -396,7 +396,7 @@
 						class="featured-item {if $item_index%4 == 0}last{/if}">
 						<img fx:if="$image" src="{$image}">
 						<div class="caption">
-							<p>{$anounce}</p>
+							<div>{$anounce}</div>
 							<a href="{$url}">{$name}</a>
 						</div>
 					</div>
@@ -423,7 +423,7 @@
 						class="news-list-item">
 						<div class="date">{$publish_date|'d.m.Y'}</div>
 						<div class="announce">
-							<p>{$anounce}</p>
+							<div>{$anounce}</div>
 							<a href="{$url}">{$name}</a>
 						</div>
 						{if $tags}
