@@ -446,21 +446,13 @@
 		</section>
 		<footer>
 			<div class="footer">
-				<ul class="social-block">
-					<li class="social-item">
-						<a href="#"></a>
-					</li>
-					<li class="social-item">
-						<a class="twitter" href="#"></a>
-					</li>
-					<li class="social-item">
-						<a class="google" href="#"></a>
-					</li>
-					<li class="social-item">
-						<a class="myspace" href="#"></a>
-					</li>
-					<li class="social-item">
-						<a class="linkedin" href="#"></a>
+				<div class="social-area" fx:area="right_column" fx:size="narrow,low"></div>
+				<ul
+					fx:template="social_icons"
+					fx:of="social_icon.list"
+					class="social-block">
+					<li fx:each="$items" class="social-item">
+						<a class="{$soc_type}" {if $soc_type=="unknown"}style="background:url({$icon|height:20,width:20});"{/if} href="{$url}"></a>
 					</li>
 				</ul>
 				<div class="copyright">{%copyright}© Starwarslab{/%}</div>
