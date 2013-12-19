@@ -165,7 +165,7 @@
 				    <div fx:template="item" 
 				        class="vacancy-list-item">
 			            <h3 class="no-top-margin"><a href="{$url}">{$position}</a></h3>
-			            <h4>{$salary_from} - {$salary_to}</h4>
+			            <h4>{$salary_from}{$currency} - {$salary_to}{$currency}</h4>
 				    </div>
 				</div>
 				<div 
@@ -188,15 +188,15 @@
 				    	       <h3>{%conditions}Work Conditions{/%}</h3>
 				    	       <div>{$work_conditions}</div>
 				    	   </div>
-				    	   <div fx:if="$salary_from || $salary_to">
-				    	       {if $salary_from}From {$salary_from} {/if}
-				    	       {if $salary_to}To {$salary_to}{/if}
-				    	   </div>
+				    	   <h4 fx:if="$salary_from || $salary_to">
+				    	       {if $salary_from}{%from}From{/%}{$salary_from}{$currency} {/if}
+				    	       {if $salary_to}{%to}To{/%}{$salary_to}{$currency}{/if}
+				    	   </h4>
 				    	   <div>
 				    	       <h3>{%Contacts}Contacts{/%}</h3>
-				    	       <div fx:if="$phone">Phone: {$phone}</div>
-				    	       <div fx:if="$email">Email: {$email}</div>
-				    	       <div fx:if="$contacts_name">{%name}Contact's name{/%}: {$contacts_name}</div>
+				    	       <div fx:if="$phone">{%phone_tpl}Phone:{/%} {$phone}</div>
+				    	       <div fx:if="$email">{%email_tpl}Email: {/%} {$email}</div>
+				    	       <div fx:if="$contacts_name">{%name_tpl}Contact's name{/%}: {$contacts_name}</div>
 				    	   </div>
 				        </div>
 				    </div>
@@ -446,7 +446,7 @@
 		</section>
 		<footer>
 			<div class="footer">
-				<div class="social-area" fx:area="right_column" fx:size="narrow,low"></div>
+				<div class="social-area" fx:area="soc_area" fx:size="narrow,low"></div>
 				<ul
 					fx:template="social_icons"
 					fx:of="social_icon.list"
