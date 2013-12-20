@@ -29,7 +29,6 @@ class fx_controller_component_section extends fx_controller_component_page {
         });
         
         $this->listen('items_ready', function($items, $ctr) use ($path, $submenu_type) {
-            fx::log('menu itms rd', $items, $ctr, $path, $submenu_type);
             foreach ($items as $item) {
                 if (in_array($item['id'], $path)) {
                     $item['active'] = true;

@@ -10,44 +10,44 @@ class fx_template_html_tokenizer {
     const STATE_FX_COMMENT = 8;
     
     public function __construct() {
-		$this->state = self::STATE_TEXT;
+        $this->state = self::STATE_TEXT;
         // fx comments
         $this->add_rule(self::STATE_ANY, '{*', self::STATE_FX_COMMENT, 'fx_comment_start');
         $this->add_rule(self::STATE_FX_COMMENT, '*}', false, 'fx_comment_end');
-        
+
         // php
-		$this->add_rule(self::STATE_ANY, '<?', self::STATE_PHP, 'php_start');
-		$this->add_rule(self::STATE_PHP, '?>', false, 'php_end');
-		
+        $this->add_rule(self::STATE_ANY, '<?', self::STATE_PHP, 'php_start');
+        $this->add_rule(self::STATE_PHP, '?>', false, 'php_end');
+
         $this->add_rule(self::STATE_TAG, '{', self::STATE_FX, 'fx_start');
         $this->add_rule(self::STATE_TEXT, '{', self::STATE_FX, 'fx_start');
         $this->add_rule(self::STATE_ATT_NAME, '{', self::STATE_FX, 'fx_start');
         $this->add_rule(self::STATE_ATT_VAL, '{', self::STATE_FX, 'fx_start');
         $this->add_rule(self::STATE_FX, '}', false, 'fx_end');
-        
-		$this->add_rule(self::STATE_TEXT, '<', self::STATE_TAG, 'text_to_tag');
-		$this->add_rule(self::STATE_TAG, '>', self::STATE_TEXT, 'tag_to_text');
-		$this->add_rule(self::STATE_TAG, ' ', self::STATE_ATT_NAME);
-		$this->add_rule(self::STATE_ATT_NAME, '="', self::STATE_ATT_VAL, 'att_value_start');
-		$this->add_rule(self::STATE_ATT_NAME, "='", self::STATE_ATT_VAL, 'att_value_start');
-		$this->add_rule(self::STATE_ATT_NAME, "=", self::STATE_ATT_VAL, 'att_value_start');
-		$this->add_rule(self::STATE_ATT_NAME, '>', self::STATE_TEXT, 'tag_to_text');
-		$this->add_rule(self::STATE_ATT_VAL, '"', self::STATE_TAG, 'att_value_end');
-		$this->add_rule(self::STATE_ATT_VAL, "'", self::STATE_TAG, 'att_value_end');
-		$this->add_rule(self::STATE_ATT_VAL, ' ', self::STATE_TAG, 'att_value_end');
-		$this->add_rule(self::STATE_ATT_VAL, '>', self::STATE_TAG, 'att_value_end');
-	}
-	protected $rules = array();
-	public function add_rule($first_state, $char, $new_state = false, $callback = null) {
-		$this->rules [] = array($first_state, $char, $new_state, $callback, $char[0], strlen($char));
-	}
-	
-	public function set_state($state) {
-		$this->prev_state = $this->state;
-		$this->state = $state;
-	}
-	
-	protected $stack = '';
+
+        $this->add_rule(self::STATE_TEXT, '<', self::STATE_TAG, 'text_to_tag');
+        $this->add_rule(self::STATE_TAG, '>', self::STATE_TEXT, 'tag_to_text');
+        $this->add_rule(self::STATE_TAG, ' ', self::STATE_ATT_NAME);
+        $this->add_rule(self::STATE_ATT_NAME, '="', self::STATE_ATT_VAL, 'att_value_start');
+        $this->add_rule(self::STATE_ATT_NAME, "='", self::STATE_ATT_VAL, 'att_value_start');
+        $this->add_rule(self::STATE_ATT_NAME, "=", self::STATE_ATT_VAL, 'att_value_start');
+        $this->add_rule(self::STATE_ATT_NAME, '>', self::STATE_TEXT, 'tag_to_text');
+        $this->add_rule(self::STATE_ATT_VAL, '"', self::STATE_TAG, 'att_value_end');
+        $this->add_rule(self::STATE_ATT_VAL, "'", self::STATE_TAG, 'att_value_end');
+        $this->add_rule(self::STATE_ATT_VAL, ' ', self::STATE_TAG, 'att_value_end');
+        $this->add_rule(self::STATE_ATT_VAL, '>', self::STATE_TAG, 'att_value_end');
+    }
+    protected $rules = array();
+    public function add_rule($first_state, $char, $new_state = false, $callback = null) {
+            $this->rules [] = array($first_state, $char, $new_state, $callback, $char[0], strlen($char));
+    }
+
+    public function set_state($state) {
+            $this->prev_state = $this->state;
+            $this->state = $state;
+    }
+
+    protected $stack = '';
 	
     public function parse($string) {
         $this->position = 0;

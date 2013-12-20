@@ -36,76 +36,93 @@ function fx_debug() {
     if (defined("FX_ALLOW_DEBUG") && !FX_ALLOW_DEBUG) {
         return;
     }
-	$call_time = Timer::Instance()->elapsed();
-	static $is_first_launch = true;
-	static $last_timer_value = 0;
-	$call_time_diff = $call_time - $last_timer_value;
-	$last_timer_value = $call_time;
-	$result = array();
+    $call_time = Timer::Instance()->elapsed();
+    static $is_first_launch = true;
+    static $last_timer_value = 0;
+    $call_time_diff = $call_time - $last_timer_value;
+    $last_timer_value = $call_time;
+    $result = array();
     $backtrace = debug_backtrace();
     $is_dev_log = false;
-    foreach ($backtrace as $bt) {
-        if (isset($bt['function']) && $bt['function'] == 'dev_log') {
-            $is_dev_log = true;
-            break;
+    $service_index = 0;
+    foreach ($backtrace as $bt_level => $bt) {
+        $f = isset($bt['function']) ? $bt['function'] : false;
+        if ($f === 'call_user_func_array') {
+            $f = $bt['args'][0];
         }
+        if ($f == 'dev_log') {
+            $is_dev_log = true;
+        }
+        if (in_array($f, array('dev_log', 'fx_debug', 'log', 'debug'))) {
+            $service_index = $bt_level;
+            continue;
+        }
+        break;
     }
+    $backtrace = array_slice($backtrace, $service_index);
     if (! $is_dev_log && $is_first_launch) {
         fx_debug_start();
         $is_first_launch = false;
     }
-	
-	foreach (func_get_args() as $print_item) {
+    $args = func_get_args();
+    //$args[]= $backtrace;
+    foreach ($args as $print_item) {
         if (is_string($print_item) && preg_match("~[<>]~", $print_item)) {
             $print_item = '<pre>'.htmlspecialchars($print_item).'</pre>';
         }
-		if (is_object($print_item) && $print_item instanceof DOMNode) {
-			$result []= fen_pretty_xml($print_item);
-		} elseif ( is_object($print_item) || is_array($print_item) ) {
-			$result []= fen_print($print_item);
-		} elseif (is_string($print_item) && preg_match("~^bt(\d+)$~", $print_item, $bt_depth)) {
-            $trace_offset = 3;
-            foreach (range(0, $bt_depth[1]) as $trace_level) {
-                $real_level = $trace_level+$trace_offset;
-                if (!isset($backtrace[$real_level])) {
-                    break;
-                }
-                $trace = $backtrace[$real_level];
-                $trace_res = '';
-                $caller_trace_level = $real_level;
-                if (isset($backtrace[$caller_trace_level])) {
-                    $trace_res .= $backtrace[$caller_trace_level]['file'].'@'.$backtrace[$caller_trace_level]['line'];
-                }
-                if (isset($trace['function'])) {
-                    $method_name = isset($trace['class']) ? $trace['class'].'::'.$trace['function'] : $trace['function'];
-                    $result []= $trace_res.' called '.$method_name;
-                }
-            }
+        if ( is_object($print_item) || is_array($print_item) ) {
+            $result []= fx_debug_print($print_item);
+        } elseif (is_string($print_item) && preg_match("~^bt(\d+)$~", $print_item, $bt_depth)) {
+            $result []= fx_show_trace($backtrace, $bt_depth[1]);
         } else {
-			$result []= $print_item;
-		}
-	}
-	
-	$call = $backtrace[2];
-	$print_title = " ".$call['file'];
-	if (isset($call['line'])) {
-		$print_title .= ' at line <b>'.$call['line'].'</b>';
-	}
-	if (isset($backtrace[1])) {
-		$p_call = $backtrace[1];
-		if (isset($p_call['function'])) {
-			$method_name = isset($p_call['class']) ? $p_call['class'].'::'.$p_call['function'] : $p_call['function'];
-			$print_title .= ' from '.$method_name;
-		}
-	}
-	$print_title .= sprintf(' (+%.4f, %.4f s, %s)', $call_time_diff, $call_time, convert(memory_get_usage(true)));
-	$out = "<div class='hi_pre'><div class='hi_title'>".$print_title;
-	$out .= "<a onclick='fen_toggle_all(this.parentNode.parentNode)'>+</a><input /></div>";
-	$out .= join('<div class="hi_sep"></div>', $result)."</div>";
-	return $out;
+            $result []= $print_item;
+        }
+    }
+    
+    $call = $backtrace[0];
+    $print_title = $call['file'];
+    if (isset($call['line'])) {
+        $print_title .= ' at line <b>'.$call['line'].'</b>';
+    }
+    if (isset($backtrace[1])) {
+        $p_call = $backtrace[1];
+        if (isset($p_call['function'])) {
+            $method_name = isset($p_call['class']) ? $p_call['class'].'::'.$p_call['function'] : $p_call['function'];
+            $print_title .= ' from '.$method_name;
+        }
+    }
+    $print_title .= sprintf(' (+%.4f, %.4f s, %s)', $call_time_diff, $call_time, convert(memory_get_usage(true)));
+    $out = "<div class='hi_pre'><div class='hi_title'>".$print_title;
+    //$out .= "<a onclick='fen_toggle_all(this.parentNode.parentNode)'>+</a><input /></div>";
+    $out .= "</div>";
+    $out .= join('<div class="hi_sep"></div>', $result)."</div>";
+    return $out;
 }
 
-function fen_print($data = '', $print_title = false) {
+function fx_show_trace($full_trace, $depth) {
+    $result = array();
+    foreach ($full_trace as $level => $trace) {
+        if ($level >= $depth) {
+            break;
+        }
+        $trace_res = '';
+        $caller_trace_level = $level+1;
+        if (isset($full_trace[$caller_trace_level])) {
+            $trace_res .= $full_trace[$caller_trace_level]['file']
+                            .'@'.$full_trace[$caller_trace_level]['line'];
+        }
+        if (isset($trace['function'])) {
+            $method_name = $trace['function'];
+            if (isset($trace['class'])) {
+                $method_name = $trace['class'].'::'.$method_name;
+            }
+            $result []= $trace_res.' called '.$method_name;
+        }
+    }
+    return join("<br />", $result);
+}
+
+function fx_debug_print($data = '', $print_title = false) {
 	ob_start();
 	echo htmlspecialchars(print_r($data,1));
 	$html = ob_get_clean();
@@ -266,4 +283,5 @@ class Timer {
 	$result = $size." ".$sizes[$i];
 	return $result;
 }
+Timer::Instance();
 ?>

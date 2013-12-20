@@ -1,7 +1,20 @@
 (function($){
-    $.fn.edit_in_place = function() {
-        if (!this.data('edit_in_place')) {
-            this.data('edit_in_place', new fx_edit_in_place(this));
+    $.fn.edit_in_place = function(command) {
+        var eip = this.data('edit_in_place');
+        if (!eip) {
+            eip = new fx_edit_in_place(this);
+            this.data('edit_in_place', eip);
+            this.addClass('fx_edit_in_place');
+        }
+        if (!command) {
+            return eip;
+        }
+        switch(command) {
+            case 'destroy':
+                eip.stop();
+                this.data('edit_in_place', null);
+                this.removeClass('fx_edit_in_place');
+                break;
         }
     };
 })(jQuery);
@@ -24,18 +37,18 @@ function fx_edit_in_place( node ) {
     
     // редактировать нужно содержимое узла
     if (this.node.data('fx_var')) {
-		this.meta = node.data('fx_var');
-		this.start(node.data('fx_var'));
-	}
-	// редактирование атрибутов узла
-	for( var i in this.node.data()) {
-		if (!/^fx_template_var/.test(i)) {
-			continue;
-		}
-		var meta = this.node.data(i);
-		meta.is_att = true;
-		this.start(meta);
-	}
+        this.meta = node.data('fx_var');
+        this.start(node.data('fx_var'));
+    }
+    // редактирование атрибутов узла
+    for( var i in this.node.data()) {
+        if (!/^fx_template_var/.test(i)) {
+            continue;
+        }
+        var meta = this.node.data(i);
+        meta.is_att = true;
+        this.start(meta);
+    }
 }
 
 fx_edit_in_place.prototype.handle_keydown = function(e) {
@@ -66,10 +79,11 @@ fx_edit_in_place.prototype.start = function(meta) {
             case 'image': case 'file': 
                 var field = this.add_panel_field(
                     $.extend({}, meta, {
-                        value:meta.filetable_id,
-                        path:meta.value
+                        value:meta.filetable_id || '',
+                        path:meta.value && meta.value != '0' ? meta.value : false
                     })
                 );
+                console.log(meta.value, meta.value ? 'tru' : 'fls');
                 field.on('fx_change_file', function() {
                     edit_in_place.save().stop();
                 });
@@ -126,6 +140,9 @@ fx_edit_in_place.prototype.add_panel_field = function(meta) {
 };
 
 fx_edit_in_place.prototype.stop = function() {
+    if (this.stopped) {
+        return this;
+    }
     for (var i =0 ;i<this.panel_fields.length; i++) {
         this.panel_fields[i].remove();
     }
@@ -138,10 +155,16 @@ fx_edit_in_place.prototype.stop = function() {
     }
     $('*').off('.edit_in_place');
     this.node.blur();
+    this.stopped = true;
     return this;
 };
 
 fx_edit_in_place.prototype.save = function() {
+    console.log('saving');
+    if (this.stopped) {
+        console.log('alr st');
+        return this;
+    }
     var node = this.node;
     var vars = [];
     // редактируем текст узла

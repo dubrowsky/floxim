@@ -13,21 +13,28 @@ class fx_template_processor {
         $tokens = $this->tokenize($source);
         $tree = $this->_make_tree($tokens);
         $code = $this->_make_code($tree, $code);
+        $code = self::add_tabs($code);
         return $code;
     }
     
-    public static function get_template_file($tpl_name) {
-        $tpl_name = $tpl_name[1];
-        $tpl_file = fx::config()->COMPILED_TEMPLATES_FOLDER.'/'.$tpl_name;
-        $tpl_file_full = $tpl_file.'.php';
-        
-        if (
-                file_exists($tpl_file_full) &&
-                (time() - filemtime($tpl_file_full)) < fx::config()->COMPILED_TEMPLATES_TTL
-        ) {
-            return $tpl_file;
+    public static function add_tabs($code) {
+        $res = '';
+        $level = 0;
+        $code = preg_split("~[\n\r]+~", $code);
+        foreach ($code as $s) {
+            $s = trim($s);
+            if (preg_match("~^[\}\)]~", $s)) {
+                $level--;
+            }
+            $res .= str_repeat("    ", $level).$s."\n";
+            if (preg_match("~[\{\(]$~", $s)) {
+                $level++;
+            }
         }
-
+        return $res;
+    }
+    
+    protected static function _get_template_sources($tpl_name) {
         $tpl_name_parts = null;
         if (preg_match("~^(layout|component|widget)_([a-z0-9_]+)$~", $tpl_name, $tpl_name_parts)) {
             $ctr_type = $tpl_name_parts[1];
@@ -47,6 +54,24 @@ class fx_template_processor {
         if (is_dir($std_source_dir)) {
             $sources []= $std_source_dir;
         }
+        return $sources;
+    }
+    
+    public static function get_template_file($tpl_name, $sources = null) {
+        $tpl_file = fx::config()->COMPILED_TEMPLATES_FOLDER.'/'.$tpl_name;
+        $tpl_file_full = $tpl_file.'.php';
+        
+        if (
+                file_exists($tpl_file_full) &&
+                (time() - filemtime($tpl_file_full)) < fx::config()->COMPILED_TEMPLATES_TTL
+        ) {
+            return $tpl_file;
+        }
+
+        if (!$sources) {
+            $sources = self::_get_template_sources($tpl_name);
+        }
+        
         $processor = new fx_template_processor();
         $processor->process_dirs($sources);
         return $tpl_file;
@@ -390,7 +415,12 @@ class fx_template_processor {
         if (!preg_match("~\.~", $tpl_name)) {
             $tpl_name = $this->_class_code.".".$tpl_name;
         }
-        $code .= '$tpl_to_call = fx::template("'.$tpl_name.'", $this->data);'."\n";
+        
+        $code .= '$tpl_to_call = fx::template("'.$tpl_name.'"';
+        if ( $token->get_prop('include') == 'true') {
+            $code .= ', $this->data';
+        }
+        $code .= ');'."\n";
         $call_children = $token->get_children();
         /*
          * Преобразуем:
@@ -432,9 +462,9 @@ class fx_template_processor {
                 // передаем результат выполнения php-кода
                 $value_to_set = $select_att;
             }
-            $code .= "\$tpl_to_call->set_var(
-                '".$param_var_token->get_prop('id')."', 
-                ".$value_to_set.");\n";
+            $code .= "\$tpl_to_call->set_var(".
+                "'".$param_var_token->get_prop('id')."', ".
+                $value_to_set.");\n";
         }
         $code .= 'echo $tpl_to_call->render();?>';
         $current_template =& $this->templates[$this->_get_current_template_id()];
@@ -465,16 +495,20 @@ class fx_template_processor {
         $code .= 'if (isset(${"'.$var_parts[0].'"})) {'."\n";
         $code .= "\t".$var_tmp.' = ';
         if (isset($var_parts[1])) {
-            $code .= 'fx::dig(${"'.$var_parts[0].'"}, "'.$var_parts[1].'")';
+            $code .= 'fx::dig(${"'.$var_parts[0].'"}, "'.$var_parts[1].'")'.";\n";
         } else {
-            if ($token->get_prop('type') == 'image') {
-                $code .= 'fx_filetable::get_path(${"'.$var_parts[0].'"})';
+            if ($token->get_prop('type') == 'image' && $token->get_prop('var_type') == 'visual') {
+                $code .= 'fx_filetable::get_path(${"'.$var_parts[0].'"})'.";\n";
             } else {
-                $code .= '${"'.$var_parts[0].'"}';
+                $code .= '${"'.$var_parts[0].'"}'.";\n";
             }
         }
-        $code .= ";\n";
         $code .= "}\n";
+        if ($token->get_prop('var_type') == 'visual') {
+            $code .= " else {\n";
+            $code .= "\t".$var_tmp.' = $this->get_parent_var("'.$var_parts[0].'");'."\n";
+            $code .= "}\n";
+        }
         
         if ($token->get_prop('default') || count($token->get_children()) > 0) {
             // default values for template/visual vars
@@ -525,7 +559,8 @@ class fx_template_processor {
             $code .= 'array("id" => "'.$var_id.'", ';
             $code .= '"var_type" => "visual", ';
             $code .= '"type" => "'.$token->get_prop('type').'", ';
-            $code .= '"infoblock_id" => fx::dig($this->data, "infoblock.id"), ';
+            //$code .= '"infoblock_id" => fx::dig($this->data, "infoblock.id"), ';
+            $code .= '"infoblock_id" => $infoblock["id"], ';
             $code .= '"template" => $this->_get_template_sign(), ';
             if ( ( $var_title = $token->get_prop('title')) ) {
                 $code .= '"title" => "'.$var_title.'", ';
@@ -537,10 +572,10 @@ class fx_template_processor {
             $code .= "}\n";
         }
         if ( ( $modifiers = $token->get_prop('modifiers') ) ) {
-        	$code .= '$val = '.$var_tmp.' instanceof fx_template_field ? '.$var_tmp.'->get_value() : '.$var_tmp.";\n";
+            $code .= '$val = '.$var_tmp.' instanceof fx_template_field ? '.$var_tmp.'->get_value() : '.$var_tmp.";\n";
             $code .= "\$callback = null;\n";
-        	foreach ($modifiers as $mod) {
-        		$callback = array_shift($mod);
+            foreach ($modifiers as $mod) {
+                $callback = array_shift($mod);
                 if ($callback == 'fx_default') {
                     $code .= 'if ('.$var_tmp.' instanceof fx_template_field) {'."\n";
                     $code .= 'switch ('.$var_tmp.'->get_meta("type")) {'."\n";
@@ -550,10 +585,6 @@ class fx_template_processor {
                     $code .= '$callback = "fx::image";'."\nbreak;\n";
                     $code .= "}\n";
                     $code .= "}\n";
-                } else {
-                    if (!is_callable($callback)) {
-                        continue;
-                    }
                 }
                 $self_key = array_keys($mod, "self");
                 if (isset($self_key[0])) {
@@ -567,6 +598,14 @@ class fx_template_processor {
                 }
                 if ($callback == 'fx_default') {
                     $code .= '$val = call_user_func($callback, ';
+                } elseif (preg_match("~\.~", $callback)) {
+                    $tpl_parts = explode(".", $callback);
+                    $code .= '$callback_tpl = new fx_template_'.$tpl_parts[0]."(\"".$tpl_parts[1]."\");\n";
+                    $code .= '$callback_tpl->_parent = $this;'."\n";
+                    $code .= '$val = $callback_tpl->render(';
+                    //$code .= '$val = fx::template("'.$callback.'")->render(';
+                } elseif (preg_match("~\$~", $callback)) {
+                    $code .= '$val = call_user_func("'.$callback.'" ,';
                 } else {
                     $code .= '$val = '.$callback.'(';
                 }
@@ -576,12 +615,12 @@ class fx_template_processor {
                 if ($callback == 'fx_default') {
                     $code .= "}\n";
                 }
-        	}
-        	$code .= 'if ('.$var_tmp.' instanceof fx_template_field) {'."\n";
+            }
+            $code .= 'if ('.$var_tmp.' instanceof fx_template_field) {'."\n";
             $code .= $var_tmp.'->set_meta("display_value", $val)'.";\n";
-			$code .= "} else {\n";
-			$code .= $var_tmp.' = $val'.";\n";
-			$code .= "}\n";
+            $code .= "} else {\n";
+            $code .= $var_tmp.' = $val'.";\n";
+            $code .= "}\n";
         }
         $restore_editable = false;
         if ($token->get_prop('editable') == 'false') {
@@ -589,6 +628,17 @@ class fx_template_processor {
             $code .= 'if ('.$var_tmp.' instanceof fx_template_field) {'."\n";
             $code .= "\$stored_editable = ".$var_tmp."->get_meta('editable');\n";
             $code .= $var_tmp."->set_meta('editable', false);\n";
+            $code .= "}\n";
+        }
+        if ($token->get_prop('type') == 'image') {
+            $code .= 'if ($_is_admin && '.$var_tmp.' instanceof fx_template_field)'."{\n";
+            $code .= "if (!".$var_tmp."->get_value()) {\n";
+            $code .= $var_tmp."->set_meta('display_value', '/floxim/admin/images/0.gif');\n";
+            $code .= "}\n";
+            $code .= "} else {\n";
+            $code .= "if (!".$var_tmp.") {\n";
+            $code .= $var_tmp." = '/floxim/admin/images/0.gif';\n";
+            $code .= "}\n";
             $code .= "}\n";
         }
         $code .= "\necho ".$var_tmp.";\n";
@@ -666,12 +716,12 @@ class fx_template_processor {
         $is_essence = $item_alias."_is_essence";
         $code .=  $is_essence ." = ".$item_alias." instanceof fx_essence;\n";
         //$code .= $item_alias."_is_odd = ".$counter_id." % 2 != 0;\n";
-        if ($extract) {
-        	if ( ($e_prefix = $token->get_prop('prefix')) ) {
-        		$e_flags = ", EXTR_PREFIX_ALL, '".$e_prefix."'"; 
-        	} else {
-        		$e_flags = '';
-        	}
+        if ($extract && $extract !== 'false') {
+            if ( ($e_prefix = $token->get_prop('prefix')) ) {
+                $e_flags = ", EXTR_PREFIX_ALL, '".$e_prefix."'"; 
+            } else {
+                $e_flags = '';
+            }
             $code .= "\tif (".$is_essence.") {\n";
             $code .= "\t\textract(".$item_alias."->get_fields_to_show() ".$e_flags.");\n";
             $code .= "} elseif (is_array(".$item_alias.")) {\n";
@@ -712,35 +762,40 @@ class fx_template_processor {
     }
     
     protected function _token_area_to_code($token) {
-        $render_call = '<?=$this->render_area('.var_export($token->get_all_props(),1).');?>';
+        $token_props = var_export($token->get_all_props(),1);
+        /*$render_call = '<?=$this->render_area('.$token_props.');?>';*/
         $res = '';
-        //fx::log('a2c', $token->get_children());
         $render_called = false;
-        foreach ($token->get_children() as $child) {
+        foreach ($token->get_children() as $child_num => $child) {
             if ($child->name == 'template') {
                 $child->set_prop('area', $token->get_prop('id'));
                 if (!$render_called) {
-                    $res .= $render_call;
+                    if ($child_num > 0) {
+                        $res = 
+                            "<?\n".
+                            'if ($_is_admin) {'."\n".
+                            'echo $this->render_area('.$token_props.', \'marker\');'."\n".
+                            '}'."\n?>\n".
+                            $res.
+                            '<?=$this->render_area('.$token_props.', \'data\');?>';
+                    } else {
+                        $res .= '<?=$this->render_area('.$token_props.');?>';
+                    }
                     $render_called = true;
                 }
                 $this->add_template($child);
             } else {
-                $child_code = $this->_get_token_code($child, $token); //$this->_token_to_code($child);
-                //fx::log('ttc', $child, $child_code);
-                $res .= $child_code;
+                $res .= $this->_get_token_code($child, $token);
             }
         }
         if (!$render_called) {
-            $res = $render_call.$res;
+            $res = $res .= '<?=$this->render_area('.$token_props.');?>'.$res;
         }
-        //fx::log($token, $res);
-        return $res;
-        return $render_call;
         return $res;
     }
     
     protected function _token_if_to_code($token) {
-        $code  = '<?';
+        $code  = "<?";
         $cond = $token->get_prop('test');
         $cond = trim($cond);
         
@@ -816,16 +871,6 @@ class fx_template_processor {
         $code = '?>';
         foreach ($token->get_children() as $child) {
             $code .= $this->_get_token_code($child, $token);
-            /*
-            $method_name = '_token_'.$child->name.'_to_code';
-            if (method_exists($this, $method_name)) {
-                $code .= call_user_func(array($this, $method_name), $child, $token);
-                continue;
-            } else {
-                $code .= '/'."* no method for ".$method_name." *".'/';
-            }
-             * 
-             */
         }
         $code .= "<?";
         return $code;
@@ -928,6 +973,7 @@ class fx_template_processor {
                 echo $this->pad(2)."\$template_dir = '".$template_dir."';\n";
             }
             echo "\$_is_admin = fx::is_admin();\n";
+            echo "\$_data = \$this->data;\n";
             echo $this->pad(2).'extract($this->data);'."\n";
             echo $this->pad(2).$tpl["code"];
             echo "\n".$this->pad()."}\n";
@@ -954,52 +1000,58 @@ class fx_template_processor {
     public static function create_token($source) {
         
         if (!preg_match('~^\{~', $source)) {
-        	$type = 'single';
+            $type = 'single';
             $name = 'code';
             $props['value'] = $source;
             return new fx_template_token($name, $type, $props);
         }
         $props = array();
-		$source = preg_replace("~^\{|\}$~", '', $source);
-		$is_close = preg_match('~^\/~', $source);
-		preg_match("~^\/?([^\s\/\\|}]+)~", $source, $name);
-		$source = substr($source, strlen($name[0]));
-		$name = $name[1];
-		$type_info = self::get_token_info($name);
-		if (preg_match("~^[\\\$%]~", $name, $var_marker)) {
-			$props['id'] = preg_replace("~^[\\\$%]~", '', $name);
-			$props['var_type'] = $var_marker[0] == '%' ? 'visual' : 'data';
-			$name = 'var';
-		}
-		if (preg_match("~\/$~", $source)) {
-			$type = 'single';
-			$source = preg_replace("~/$~", '', $source);
-		} elseif ($is_close) {
-			$type = 'close';
-		} elseif ($type_info['type'] == 'single') {
-			$type = 'single';
-		} elseif ($type_info['type'] == 'double') {
-			$type = 'open';
-		} else {
-			$type = 'unknown';
-		}
-		if ($name == 'if' && $type == 'open' && !preg_match('~test=~', $source)) {
-			$props['test'] = $source;
-		} else {
-			// добавляем отсутствующие кавычки атрибутов
-			$source  = preg_replace("~\s([a-z]+)\s*?=\s*?([^\'\\\"\s]+)~", ' $1="$2"', $source);
-			$source = preg_replace_callback(
-				'~([a-z]+)="(.+?)(?<!\\\\)"~',
-				function ($matches) use (&$props) {
-					$props[$matches[1]] = str_replace('\"', '"', $matches[2]);
-					return '';
-				},
-				$source
-			);
-			if ($name == 'var' && preg_match("~^\s*\|~", $source)) {
-				$props['modifiers'] = self::get_var_modifiers($source);
-			}
-		}
+        $source = preg_replace("~^\{|\}$~", '', $source);
+        $is_close = preg_match('~^\/~', $source);
+        preg_match("~^\/?([^\s\/\\|}]+)~", $source, $name);
+        $source = substr($source, strlen($name[0]));
+        $name = $name[1];
+        $type_info = self::get_token_info($name);
+        if (preg_match("~^[\\\$%]~", $name, $var_marker)) {
+                $props['id'] = preg_replace("~^[\\\$%]~", '', $name);
+                $props['var_type'] = $var_marker[0] == '%' ? 'visual' : 'data';
+                $name = 'var';
+        }
+        if (preg_match("~\/$~", $source)) {
+                $type = 'single';
+                $source = preg_replace("~/$~", '', $source);
+        } elseif ($is_close) {
+                $type = 'close';
+        } elseif ($type_info['type'] == 'single') {
+                $type = 'single';
+        } elseif ($type_info['type'] == 'double') {
+                $type = 'open';
+        } else {
+                $type = 'unknown';
+        }
+        if ($name == 'if' && $type == 'open' && !preg_match('~test=~', $source)) {
+            $props['test'] = $source;
+        } elseif ($name == 'call' && $type != 'close' && !preg_match('~id=~', $source)) {
+            $props['id'] = trim($source);
+        } elseif ($name == 'each' && $type != 'close' && !preg_match ('~select=~', $source)) {
+            //fx::debug('eeahc', $source);
+            $props['select'] = trim($source);
+        } else {
+            // добавляем отсутствующие кавычки атрибутов
+            // пока убрал, ломается случай {if test="$x == 1"}
+            //$source = preg_replace("~([a-z0-9\:_-]+)\s*?=\s*?([^\'\\\"\s]+)~", ' $1="$2"', $source);
+            $source = preg_replace_callback(
+                '~([a-z0-9\:_-]+)=(["\'])(.+?)(?<!\\\\)\2~',
+                function ($matches) use (&$props) {
+                    $props[$matches[1]] = str_replace('\"', '"', $matches[3]);
+                    return '';
+                },
+                $source
+            );
+            if ($name == 'var' && preg_match("~^\s*\|~", $source)) {
+                $props['modifiers'] = self::get_var_modifiers($source);
+            }
+        }
         return new fx_template_token($name, $type, $props);   
     }
     
@@ -1007,7 +1059,7 @@ class fx_template_processor {
         $source = preg_replace("~^\s*\|~", '', $source);
         $source = trim($source);
         $source .= '|';
-        $source = preg_split("~(\s*\|\s*|\s*(?<!:):(?!:)\s*|[\'\"])~", $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+        $source = preg_split("~(\s*\|\s*|\s*(?<!:):(?!:)\s*|\s*\,\s*|[\'\"])~", $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
         if (count($source) == 0) {
             return null;
         }
@@ -1018,10 +1070,10 @@ class fx_template_processor {
         $c_arg = '';
         foreach ($source as $chunk) {
             $is_separator = preg_match("~^\s*\|\s*$~", $chunk);
-            $is_arg_separator = preg_match("~^\s*:\s*$~", $chunk);
+            $is_arg_separator = preg_match("~^\s*[\,\:]\s*$~", $chunk);
             if ($c_state == 'default') {
                 // нормальное название модификатора
-                if (preg_match("~^[a-z0-9_:-]+$~i", $chunk)) {
+                if (preg_match("~^[a-z0-9_:\.\$-]+$~i", $chunk)) {
                     $c_modifier['name'] = $chunk;
                     $c_state = 'modifier';
                     $c_arg_quote = '';
@@ -1031,7 +1083,7 @@ class fx_template_processor {
                 if ($chunk == '"' || $chunk = "'") {
                     $c_modifier['name'] = 'fx_default';
                     $c_state = 'arg';
-                    $c_arg_quote = $chunk;
+                    $c_arg_quote = $chunk;  
                     $c_arg = $chunk;
                     continue;
                 }
@@ -1080,6 +1132,7 @@ class fx_template_processor {
             }
 
         }
+        
         if (count($modifiers) == 0) {
             return null;
         }

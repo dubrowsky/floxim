@@ -59,7 +59,17 @@ var fx_front = function () {
         }
         $fx.front.outline_block_off($($fx.front.c_hover));
         $fx.front.c_hover = this;
-        var fix_link_ce = (node.get(0).nodeName === 'A' && node.hasClass('fx_template_var')) || (e.target.nodeName === 'A' && $(e.target).hasClass('fx_template_var') && !$(e.target).hasClass('fx_hilight'));
+        $target = $(e.target);
+        var fix_link_ce = $target.hasClass('fx_template_var') && !$target.hasClass('fx_wrong_mode');//false;
+        /*(
+                node.get(0).nodeName === 'A' && 
+                node.hasClass('fx_template_var')
+            ) || (
+                e.target.nodeName === 'A' && 
+                $target.hasClass('fx_template_var') && 
+                !$target.hasClass('fx_hilight')
+            ) && !node.hasClass('fx_wrong_mode') && !$target.hasClass('fx_wrong_mode');
+        */
 
         setTimeout(
             function() {
@@ -96,11 +106,6 @@ var fx_front = function () {
                         if (fix_link_ce) {
                             e.target.setAttribute('contenteditable', 'false');
                         }
-                        /*
-                        if (node.attr('href') !== undefined) {
-                            node.attr('contenteditable', 'false')
-                        }
-                        */
                     }
                 },
                 100
@@ -145,17 +150,26 @@ var fx_front = function () {
             return false;
         }
         
+        
         // отлавливаем только contenteditable
         if ($(closest_selectable).hasClass('fx_selected')) {
-            if ($(closest_selectable).attr('contenteditable') === 'true') {
+            return;
+            if (
+                    closest_selectable.getAttribute('contenteditable') === 'true' ||
+                    e.target.getAttribute('contenteditable') === 'true'
+            ) {
                 // чиним переход по ссылке для ситуациии:
                 // <a><div contenteditable="true">...</div></a>
-                e.preventDefault();
+                console.log('retinsprevdef');
+                //e.preventDefault();
                 return;
             }
+            console.log('ret fals', closest_selectable);
             return false;
         }
+        
         $fx.front.select_item(closest_selectable);
+        console.log('sel and ret f');
         return false;
         
     });
@@ -194,7 +208,7 @@ fx_front.prototype.enable_hilight = function(){
 };
 
 fx_front.prototype.get_area_meta = function($area_node) {
-    var meta = $area_node.data('fx_area');
+    var meta = $area_node.data('fx_area') || {};
     if (typeof meta.size === 'undefined') {
         // Хорошо бы вычислять
         var full_size = 1000;
@@ -848,6 +862,7 @@ fx_front.prototype.reload_infoblock = function(infoblock_node, callback, extra_d
                 selected_selector = selected.first().generate_selector(ib_parent);
            }
            $fx.front.outline_all_off();
+           $fx.front.deselect_item();
 
            if (infoblock_node.nodeName === 'BODY') {
                var inserted = false;

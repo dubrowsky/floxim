@@ -32,28 +32,27 @@
                 </div>
         </header>
         <header class="header">
-            <div class="wrapper">
+            <div class="wrapper" fx:area="header" fx:size="wide,low">
                 <div class="logo">
                     <a href="/">
                         <img src="{%logo}<?=$template_dir?>images/logo.png{/%}" alt="" />
                     </a>
                 </div>
-                <div class="header_area" fx:area="header" fx:size="wide,low">
-                    <nav 
-                        fx:template="top_menu"
-                        fx:name="Main Menu"
-                        fx:of="menu"
-                        class="top_menu">
-                        <ul>
-                            <li fx:template="inactive">
-                                <a href="{$url}">{$name}</a>
-                            </li>
-                            <li fx:template="active" class="active">
-                                <a href="{$url}">{$name}</a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
+                <nav 
+                    fx:template="top_menu"
+                    fx:name="Main Menu"
+                    fx:of="menu"
+                    fx:suit="local"
+                    class="top_menu">
+                    <ul>
+                        <li fx:template="inactive">
+                            <a href="{$url}">{$name}</a>
+                        </li>
+                        <li fx:template="active" class="active">
+                            <a href="{$url}">{$name}</a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
         </header>
         <?
@@ -170,6 +169,8 @@
                         <span class="phone">{%phone}+7 (495) 440 72 72{/%}</span>
                     </span>
                     <a href="mailto:{%email editable="false"}info@jt.ru{/%}">{%email}</a>
+                </div>
+                <div fx:template="footer_block" fx:of="block">
                 </div>
                 <div class="copy">
                     {%copy}&copy; JT, <?=date('Y')?><br />

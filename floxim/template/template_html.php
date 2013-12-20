@@ -59,13 +59,13 @@ class fx_template_html {
             
                 return;
             }
-            if (preg_match("~\{\%~", $n->source)) {
+            if (preg_match('~\{[\%|\$]~', $n->source)) {
                 $n->source = fx_template_html::parse_floxim_vars_in_atts($n->source);
             }
             if ($n->name == 'meta' && ($layout_id = $n->get_attribute('fx:layout'))) {
                 $layout_name = $n->get_attribute('fx:name');
                 $tpl_tag = '{template id="'.$layout_id.'" name="'.$layout_name.'"}';
-                $tpl_tag .= '{call id="_layout_body"}';
+                $tpl_tag .= '{call id="_layout_body" include="true"}';
                 $content = $n->get_attribute('content');
                 $vars = explode(",", $content);
                 foreach ($vars as $var) {
@@ -159,8 +159,12 @@ class fx_template_html {
                     $n->remove_attribute('fx:key');
                 }
                 if (( $prefix = $n->get_attribute('fx:prefix')) ) {
-					$each_macro_tag .= ' prefix="'.$prefix.'"';
-					$n->remove_attribute('fx:prefix');
+                    $each_macro_tag .= ' prefix="'.$prefix.'"';
+                    $n->remove_attribute('fx:prefix');
+                }
+                if ( ($extract = $n->get_attribute('fx:extract'))) {
+                    $each_macro_tag .= ' extract="'.$extract.'"';
+                    $n->remove_attribute('fx:extract');
                 }
                 $each_macro_tag .= '}';
                 $n->parent->add_child_before(fx_template_html_token::create($each_macro_tag), $n);
@@ -216,7 +220,7 @@ class fx_template_html {
                 $res .= $part;
                 continue;
             }
-            if (preg_match("~^\{[^\%]~", $part)) {
+            if (preg_match('~^\{[^\%\$]~', $part)) {
                 $res .= $part;
                 continue;
             }
@@ -259,27 +263,40 @@ class fx_template_html {
                     $res .= $part;
                     continue;
                 }
-                if (preg_match("~^\{\%~", $part)) {
-                    if (!preg_match("~type=~", $part)) {
-                        $c_type = '';
-                        if ($c_att == 'style') {
-                            if (
-                                    ($c_prop == 'background' 
-                                    && preg_match('~url\([\'\"]?$~', $res) ) ||
-                                    $c_prop == 'background-image'
-                                ) {
-                                $c_type = 'image';
-                            } elseif ($c_prop == 'background' || $c_prop == 'background-color' || $c_prop == 'color') {
-                                $c_type = 'color';
-                            } elseif ($c_prop == 'width' || $c_prop == 'height') {
-                                $c_type = 'number';
-                            }
-                        } elseif ($c_att == 'src') {
+                if (preg_match('~^\{[\%\$]~', $part)) {
+                    if (preg_match("~^fx:~", $c_att)) {
+                        $res .= $part;
+                        continue;
+                    }
+                    $part = preg_replace("~^([^\s\|\}]+)~", '\1 inatt="true" ', $part);
+                    if (preg_match("~type=~", $part)) {
+                        $res .= $part;
+                        continue;
+                    }
+                    
+                    $c_type = '';
+                    if ($c_att == 'style') {
+                        if (
+                            ($c_prop == 'background' 
+                            && preg_match('~url\([\'\"]?$~', $res) ) ||
+                            $c_prop == 'background-image'
+                        ) {
                             $c_type = 'image';
+                        } elseif (
+                            $c_prop == 'background' || 
+                            $c_prop == 'background-color' || 
+                            $c_prop == 'color'
+                        ) {
+                            $c_type = 'color';
+                        } elseif ($c_prop == 'width' || $c_prop == 'height') {
+                            $c_type = 'number';
                         }
-                        if ($c_type) {
-                            $part = preg_replace("~\}$~", ' type="'.$c_type.'"}', $part);
-                        }
+                    } elseif ($c_att == 'src') {
+                        $c_type = 'image';
+                    }
+                    if ($c_type) {
+                        //$part = preg_replace("~\}$~", ' type="'.$c_type.'"}', $part);
+                        $part = preg_replace("~^([^\s\|\}]+)~", '\1 type="'.$c_type.'" ', $part);
                     }
                     $res .= $part;
                     continue;

@@ -13,8 +13,22 @@ class fx_template {
         return fx::dig($this->data, $var_path);
     }
     
+    public function get_parent_var($var) {
+        if (isset($this->data[$var])) {
+            return $this->data[$var];
+        }
+        if (!$this->_parent) {
+            return null;
+        }
+        return $this->_parent->get_parent_var($var);
+    }
+    
     public function set_var($var_path, $var_value) {
         fx::dig_set($this->data, $var_path, $var_value);
+    }
+    
+    public function set_data($data) {
+        $this->data = $data;
     }
     
     protected function _get_template_sign() {
@@ -24,9 +38,14 @@ class fx_template {
     
     public static $area_replacements = array();
 
-    public function render_area($area) {
-    	$is_admin =  fx::env('is_admin');
-        fx::trigger('render_area', array('area' => $area));
+    /*
+     * @param $mode - marker | data | both
+     */
+    public function render_area($area, $mode = 'both') {
+    	$is_admin =  fx::is_admin();
+        if ($mode != 'marker') {
+            fx::trigger('render_area', array('area' => $area));
+        }
         
         $area_blocks = $this->data['areas'][$area['id']];
         if (!$area_blocks || !is_array($area_blocks)) {
@@ -38,19 +57,26 @@ class fx_template {
             return $a_pos - $b_pos;
         });
         if ($is_admin) {
-        	ob_start();
+            ob_start();
         }
-        foreach ($area_blocks as $ib) {
-            if (! $ib instanceof fx_infoblock) {
-                die();
+        if ($mode != 'marker') {
+            foreach ($area_blocks as $ib) {
+                if (! $ib instanceof fx_infoblock) {
+                    die();
+                }
+                $result = $ib->render();
+                echo $result;
             }
-            $result = $ib->render();
-            echo $result;
         }
         if ($is_admin) {
-        	$area_result = ob_get_clean();
-        	self::$area_replacements []= array($area, $area_result);
-        	echo '###fxa'.(count(self::$area_replacements)-1).'###';
+            $area_result = ob_get_clean();
+            self::$area_replacements []= array($area, $area_result);
+            $marker = '###fxa'.(count(self::$area_replacements)-1);
+            if ($mode != 'both') {
+                $marker .= '|'.$mode;
+            }
+            $marker .= '###';
+            echo $marker;
         }
     }
 
@@ -67,15 +93,20 @@ class fx_template {
     }
     
     public function render(array $data = array()) {
+        /*
         foreach ($data as $dk => $dv) {
             $this->set_var($dk, $dv);
         }
+         * 
+         */
+        $this->data = array_merge($this->data, $data);
+        //$this->data = $data;
         ob_start();
         $method = 'tpl_'.$this->action;
         if (method_exists($this, $method)) {
             $this->$method();
         } else {
-            dev_log('tpl with no action called', get_class($this), $this->action, debug_backtrace());
+            //dev_log('tpl with no action called', get_class($this), $this->action, debug_backtrace());
             echo 'No tpl action: <code>'.get_class($this).".".$this->action.'</code>';
         }
         $result = ob_get_clean();
@@ -84,7 +115,7 @@ class fx_template {
             return $result;
         }
         
-        if (fx::env('is_admin')) {
+        if (fx::is_admin()) {
             $result = fx_template::replace_areas($result);
             $result = fx_template_field::replace_fields($result);
         }
@@ -111,76 +142,69 @@ class fx_template {
     }
     
     public static function replace_areas($html) {
+        if (!strpos($html, '###fxa')) {
+            return $html;
+        }
         $html = self::_replace_areas_wrapped_by_tag($html);
         $html = self::_replace_areas_in_text($html);
         return $html;
     }
     
     protected static function _replace_areas_wrapped_by_tag($html) {
-    	$html = preg_replace("~<!--.*?-->~s", '', $html);
+    	//$html = preg_replace("~<!--.*?-->~s", '', $html);
     	$html = preg_replace_callback(
-    		"~(<[a-z0-9_-]+[^>]*?>)\s*###fxa(\d+)###\s*(</[a-z0-9_-]+>)~s",
-    		function($matches) use ($html) {
-    			$replacement = fx_template::$area_replacements[$matches[2]];
-    			$tag = fx_template_html_token::create_standalone($matches[1]);
+            /*"~(<[a-z0-9_-]+[^>]*?>)\s*###fxa(\d+)###\s*(</[a-z0-9_-]+>)~s",*/
+            "~(<[a-z0-9_-]+[^>]*?>)\s*###fxa(\d+)\|?(.*?)###~s",
+            function($matches) use ($html) {
+                $replacement = fx_template::$area_replacements[$matches[2]];
+                $mode = $matches[3];
+                if ($mode == 'data') {
+                    fx_template::$area_replacements[$matches[2]] = null;
+                    fx::log('rep data');
+                    return $replacement[1];
+                }
+                
+                $tag = fx_template_html_token::create_standalone($matches[1]);
                 $tag->add_meta(array(
                     'class' => 'fx_area',
                     'data-fx_area' => $replacement[0]
                 ));
                 $tag = $tag->serialize();
+                
+                if ($mode == 'marker') {
+                    return $tag;
+                }
+                
                 fx_template::$area_replacements[$matches[2]] = null;
-    			return $tag.$replacement[1].$matches[3]; 
-    		},
-    		$html
-		);
-		return $html;
+                return $tag.$replacement[1].$matches[3]; 
+            },
+            $html
+        );
+        return $html;
     }
     
     protected static function _replace_areas_in_text($html) {
     	$html = preg_replace_callback(
-    		"~###fxa(\d+)###~",
-    		function($matches) {
-    			$replacement = fx_template::$area_replacements[$matches[1]];
-    			//$tag_name = preg_match("~<(?:div|ul|li|table|br|nav)~i", $content) ? 'div' : 'span';
+            "~###fxa(\d+)\|?(.*?)###~",
+            function($matches) {
+                $mode = $matches[2];
+                $replacement = fx_template::$area_replacements[$matches[1]];
+                if ($mode == 'data') {
+                    return $replacement[1];
+                }
                 $tag_name = 'div';
-    			$tag = fx_template_html_token::create_standalone('<'.$tag_name.'>');
+                $tag = fx_template_html_token::create_standalone('<'.$tag_name.'>');
                 $tag->add_meta(array(
-                    'class' => 'fx_area',
+                    'class' => 'fx_area fx_wrapper',
                     'data-fx_area' => $replacement[0]
                 ));
                 $tag = $tag->serialize();
                 fx_template::$area_replacements[$matches[1]] = null;
                 return $tag.$replacement[1].'</'.$tag_name.'>';
-    		},
-    		$html
-		);
-		return $html;
+            },
+            $html
+        );
+        return $html;
     }
-    /*
-    protected function _apply_modifiers($var, $modifiers) {
-    	$val = $var instanceof fx_template_field ? $var->get_value() : $var;
-    	echo "~".$val."~";
-    	foreach ($modifiers as $mod) {
-    		$callback = array_shift($mod);
-    		if (!is_callable($callback)) {
-    			continue;
-    		}
-    		$self_key = array_keys($mod, "self");
-    		if (isset($self_key[0])) {
-    			$mod[$self_key[0]] = $val;
-    		} else {
-    			array_unshift($mod, $val);
-    		}
-    		echo '<br>'.$callback."(<pre>".htmlspecialchars(print_r($mod,1))."</pre>)";
-    		$val = call_user_func_array($callback, $mod);
-    		echo "<pre>".htmlspecialchars(print_r($val,1))."</pre>";
-    		//echo "<pre>".htmlspecialchars(print_r($mod,1))."</pre>";
-    	}
-    	echo "<pre>".htmlspecialchars(print_r($val,1))."</pre>";
-    	//echo "<pre>".htmlspecialchars(print_r($modifiers,1))."</pre>";
-    	return $var;
-    }
-     * 
-     */
 }
 ?>

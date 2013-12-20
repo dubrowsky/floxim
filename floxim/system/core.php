@@ -248,7 +248,7 @@ class fx_core extends fx_system {
                 break;
             }
             if (preg_match("~^template_(.+)$~", $classname, $tpl_name)) {
-                $file = fx_template_processor::get_template_file($tpl_name);
+                $file = fx_template_processor::get_template_file($tpl_name[1]);
                 break;
                 //echo "<pre>" . htmlspecialchars(print_r($file, 1)) . "</pre>";
                 //die();
