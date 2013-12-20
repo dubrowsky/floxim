@@ -30,10 +30,10 @@
 					    class="main-menu">
 						<li 
 							fx:each="$items" 
-							class="menu-item {if $children} dropdown{/if} {if $active}current{/if}">
+							class="menu-item {if $children} dropdown{/if} {if $item->is_active()}current{/if}">
 							<a href="{$url}">{$name}</a>
 							<ul fx:if="$children" class="menu-sub-items">
-								<li fx:each="$children" fx:prefix="child" class="{if $child_active} active{/if} menu-sub-item">
+								<li fx:each="$children as $child" fx:prefix="child" class="{if $child->is_active()} active {/if} menu-sub-item">
 									<a href="{$child_url}">{$child_name}</a>
 								</li>
 							</ul>
@@ -95,10 +95,7 @@
 					fx:name="Left menu"
 				    fx:of="page.list"
 				    class="sub-menu">
-					<li fx:template="inactive" class="sub-menu-item">
-						<a href="{$url}">{$name}</a>
-					</li>
-					<li fx:template="active" class="sub-menu-item active">
+					<li fx:each="$items" class="sub-menu-item {if $item->is_active()}active{/if}">
 						<a href="{$url}">{$name}</a>
 					</li>
 				</ul>
@@ -168,7 +165,7 @@
 				    <div fx:template="item" 
 				        class="vacancy-list-item">
 			            <h3 class="no-top-margin"><a href="{$url}">{$position}</a></h3>
-			            <h4>{$salary_from} - {$salary_to}</h4>
+			            <h4>{$salary_from}{$currency} - {$salary_to}{$currency}</h4>
 				    </div>
 				</div>
 				<div 
@@ -191,15 +188,15 @@
 				    	       <h3>{%conditions}Work Conditions{/%}</h3>
 				    	       <div>{$work_conditions}</div>
 				    	   </div>
-				    	   <div fx:if="$salary_from || $salary_to">
-				    	       {if $salary_from}From {$salary_from} {/if}
-				    	       {if $salary_to}To {$salary_to}{/if}
-				    	   </div>
+				    	   <h4 fx:if="$salary_from || $salary_to">
+				    	       {if $salary_from}{%from}From{/%}{$salary_from}{$currency} {/if}
+				    	       {if $salary_to}{%to}To{/%}{$salary_to}{$currency}{/if}
+				    	   </h4>
 				    	   <div>
 				    	       <h3>{%Contacts}Contacts{/%}</h3>
-				    	       <div fx:if="$phone">Phone: {$phone}</div>
-				    	       <div fx:if="$email">Email: {$email}</div>
-				    	       <div fx:if="$contacts_name">{%name}Contact's name{/%}: {$contacts_name}</div>
+				    	       <div fx:if="$phone">{%phone_tpl}Phone:{/%} {$phone}</div>
+				    	       <div fx:if="$email">{%email_tpl}Email: {/%} {$email}</div>
+				    	       <div fx:if="$contacts_name">{%name_tpl}Contact's name{/%}: {$contacts_name}</div>
 				    	   </div>
 				        </div>
 				    </div>
@@ -449,21 +446,13 @@
 		</section>
 		<footer>
 			<div class="footer">
-				<ul class="social-block">
-					<li class="social-item">
-						<a href="#"></a>
-					</li>
-					<li class="social-item">
-						<a class="twitter" href="#"></a>
-					</li>
-					<li class="social-item">
-						<a class="google" href="#"></a>
-					</li>
-					<li class="social-item">
-						<a class="myspace" href="#"></a>
-					</li>
-					<li class="social-item">
-						<a class="linkedin" href="#"></a>
+				<div class="social-area" fx:area="soc_area" fx:size="narrow,low"></div>
+				<ul
+					fx:template="social_icons"
+					fx:of="social_icon.list"
+					class="social-block">
+					<li fx:each="$items" class="social-item">
+						<a class="{$soc_type}" {if $soc_type=="unknown"}style="background:url({$icon|height:20,width:20});"{/if} href="{$url}"></a>
 					</li>
 				</ul>
 				<div class="copyright">{%copyright}© Starwarslab{/%}</div>

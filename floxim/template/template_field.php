@@ -27,15 +27,15 @@ class fx_template_field  {
     }
     
     public static $replacements = array();
-    
+    public static $count_replacements = 0;
     public function __toString() {
-        $val = isset($this->_meta['display_value']) ? $this->_meta['display_value'] : $this->get_value();
-        if (!$this->get_meta('editable') || !fx::is_admin()) {
+        $val = isset($this->_meta['display_value']) ? $this->_meta['display_value'] : $this->_value;
+        if (!$this->_meta['editable']) {
             return $val;
         }
-        $id = $this->get_meta('id');
-        self::$replacements []= array($id, $this->_meta, $val);
-        return "###fxf".(count(self::$replacements)-1)."###";
+        $this->_meta['value'] = $this->_value;
+        self::$replacements []= array($this->_meta['id'], $this->_meta, $val);
+        return '###fxf'.(self::$count_replacements++).'###';
     }
     
     /**
@@ -43,6 +43,9 @@ class fx_template_field  {
      * @param string $html
      */
     public static function replace_fields($html) {
+        if (!strpos($html, '#fxf')) {
+            return $html;
+        }
         $html = self::_replace_fields_in_atts($html);
         $html = self::_replace_fields_wrapped_by_tag($html);
         $html = self::_replace_fields_in_text($html);
@@ -58,7 +61,7 @@ class fx_template_field  {
                     '~###fxf(\d+)###~', 
                     function($field_matches) use (&$att_fields) {
                         $replacement = fx_template_field::$replacements[$field_matches[1]];
-                        $replacement[1]['value'] = $replacement[2];
+                        //$replacement[1]['value'] = $replacement[2];
                         $att_fields[$replacement[0]] = $replacement[1];
                         fx_template_field::$replacements[$field_matches[1]] = null;
                         return $replacement[2];
@@ -71,9 +74,7 @@ class fx_template_field  {
                 }
                 $tag = fx_template_html_token::create_standalone($tag);
                 $tag->add_meta($tag_meta);
-                //dev_log('metataging', $tag);
                 $tag = $tag->serialize();
-                //dev_log('done', $tag);
                 return $tag;
             }, 
             $html

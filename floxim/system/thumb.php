@@ -8,14 +8,16 @@ class fx_thumb
     
     public function __construct($source_http_path, $config)
     {
+        if (empty($source_http_path)) {
+            throw new Exception('Empty path');
+        }
         $this->config = $this->get_config($config);
         $doc_root     = fx::config()->DOCUMENT_ROOT;
         $source_path  = $doc_root . '/' . preg_replace('~^[\/]~', '', $source_http_path);
-        if (!file_exists($source_path)) {
+        if (!file_exists($source_path) || !is_file($source_path)) {
             throw new Exception('File not found: ' . $source_path);
         }
         $source_path = realpath($source_path);
-        
         
         $this->source_path = $source_path;
         $info              = getimagesize($source_path);
@@ -29,7 +31,7 @@ class fx_thumb
         $this->info = $info;
         if (!isset(self::$_types[$info['imagetype']])) {
             // неправильный/неизвестный тип картинки
-            die('wrong image type');
+            throw new Exception('Wrong image type');
         }
         $this->info += self::$_types[$info['imagetype']];
         $this->image = call_user_func($this->info['create_func'], $this->source_path);

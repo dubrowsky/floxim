@@ -8,6 +8,7 @@
         script.js
     {/js}
     {css}listing_slider.css{/css}
+    <img style="border:1px solid #C00; width:50px; height:50px; padding:10px;" src="{%olopic}" />
     <div class="images fx_not_sortable" fx:template="$items">
         <div 
             fx:template="item" 
@@ -21,7 +22,7 @@
     	<div 
             fx:template="item" 
             class="preview{if $item_is_first} preview-active{/if} pic_preview_{$id}" data-pic_id="{$id}">
-                <img src="{$photo|'height:100'}" />
+                <img src="{$photo | 'height:100'}" />
     	</div>
     </div>
 </div>

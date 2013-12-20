@@ -170,6 +170,11 @@ class fx_controller {
                 if (strpos($this->action, $tpl_of_action) !== 0) {
                     continue;
                 }
+                if ($tplv['suit'] && $tplv['suit'] == 'local') {
+                    if ($tplv['area'] != $area_meta['id']) {
+                        continue;
+                    }
+                }
                 if ($area_size && isset($tplv['size'])) {
                     $size = fx_template_suitable::get_size($tplv['size']);
                     if (!fx_template_suitable::check_sizes($size, $area_size)) {

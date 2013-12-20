@@ -138,7 +138,7 @@ class fx_content extends fx_essence {
             }
             
             // простое поле для не-админа - возвращаем значение
-            if (!in_array($cf->type, array('image', 'file', 'datetime')) && !$is_admin) {
+            if (!in_array($cf->type, array('image', 'file')) && !$is_admin) {
                 $fields_to_show[$fkey] = $v;
                 continue;
             }
@@ -146,9 +146,11 @@ class fx_content extends fx_essence {
                 if ($v && is_numeric($v) && ($file_obj = fx::data('filetable', $v)) ) {
                     $field_meta['filetable_id'] = $v;
                     $v = fx::config()->HTTP_FILES_PATH.$file_obj['path'];
-                }/* elseif ($cf->type == 'image' && $is_admin) {
-                    $v = '/floxim/admin/images/0.gif';
-                }*/
+                }
+                if (!$is_admin) {
+                    $fields_to_show[$fkey] = $v;
+                    continue;
+                }
             }
             if ($cf->type == 'datetime') {
                 $field_meta['value'] = $v;

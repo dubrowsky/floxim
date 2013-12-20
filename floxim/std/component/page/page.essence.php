@@ -21,6 +21,19 @@ class fx_content_page extends fx_content {
         return $path;
     }
     
+    protected $_active;
+
+    public function is_active () {
+        if ($this->_active)
+            return $this->_active;
+        $c_page_id  = fx::env('page')->get('id');
+        $path = fx::env('page')->get_parent_ids();
+        $path []= $c_page_id;
+
+        return $this->_active = in_array($this['id'], $path);
+    }
+    
+    
     protected function _before_save() {
         parent::_before_save();
         if (empty($this['url']) && !empty($this['name'])) {
