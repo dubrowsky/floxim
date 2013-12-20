@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Dec 16, 2013 at 04:22 PM
+-- Generation Time: Dec 19, 2013 at 11:24 AM
 -- Server version: 5.5.34
 -- PHP Version: 5.3.10-1ubuntu3.9
 
@@ -114,7 +114,7 @@ CREATE TABLE IF NOT EXISTS `fx_component` (
   `item_name` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `Class_Group` (`group`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=100 AUTO_INCREMENT=79 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=100 AUTO_INCREMENT=80 ;
 
 --
 -- Dumping data for table `fx_component`
@@ -147,7 +147,8 @@ INSERT INTO `fx_component` (`id`, `keyword`, `name`, `description`, `group`, `ic
 (75, 'product', 'Product', NULL, 'Basic', '', NULL, 23, 'Product'),
 (76, 'product_category', 'Product Category', NULL, 'Basic', '', NULL, 64, 'Product Category'),
 (77, 'select_linker', 'Select Linker', NULL, 'Basic', '', NULL, 36, 'select_linker'),
-(78, 'tag', 'Tag', NULL, 'Basic', '', NULL, 64, 'Tag');
+(78, 'tag', 'Tag', NULL, 'Basic', '', NULL, 64, 'Tag'),
+(79, 'social_icon', 'Social icon', NULL, 'Basic', '', NULL, 36, 'social_icon');
 
 -- --------------------------------------------------------
 
@@ -167,7 +168,7 @@ CREATE TABLE IF NOT EXISTS `fx_content` (
   `site_id` int(11) DEFAULT NULL,
   `parent_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=47 AUTO_INCREMENT=2603 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=47 AUTO_INCREMENT=2623 ;
 
 --
 -- Dumping data for table `fx_content`
@@ -299,7 +300,6 @@ INSERT INTO `fx_content` (`id`, `priority`, `checked`, `created`, `last_updated`
 (2552, 2, 1, '2013-12-12 18:19:37', '2013-12-12 14:19:56', 2367, 'product_category', 303, 17, 2510),
 (2553, 3, 1, '2013-12-12 18:19:47', '2013-12-12 14:19:56', 2367, 'product_category', 303, 17, 2510),
 (2562, 3, 1, '2013-12-12 19:18:31', '2013-12-13 13:06:41', 2367, 'section', 284, 17, 2501),
-(2564, 177, 1, '2013-12-12 19:28:10', '2013-12-12 15:28:10', 2367, 'photo', 311, 17, 2562),
 (2567, 2, 1, '2013-12-13 15:48:54', '2013-12-13 13:06:41', 2367, 'section', 284, 17, 2501),
 (2568, 1, 1, '2013-12-13 15:49:59', '2013-12-13 11:50:29', 2367, 'tag', 315, 17, 2567),
 (2569, 2, 1, '2013-12-13 15:50:16', '2013-12-13 11:50:29', 2367, 'tag', 315, 17, 2567),
@@ -333,7 +333,10 @@ INSERT INTO `fx_content` (`id`, `priority`, `checked`, `created`, `last_updated`
 (2599, 203, 1, '2013-12-13 18:51:00', '2013-12-13 14:51:00', 2367, 'award', 333, 17, 2598),
 (2600, 204, 1, '2013-12-16 13:17:37', '2013-12-16 09:17:37', 2367, 'contact', 0, 17, 2592),
 (2601, 205, 1, '2013-12-16 14:09:00', '2013-12-16 10:09:00', 2367, 'section', 335, 17, 2567),
-(2602, 206, 1, '2013-12-16 14:09:11', '2013-12-16 10:09:11', 2367, 'section', 335, 17, 2567);
+(2602, 206, 1, '2013-12-16 14:09:11', '2013-12-16 10:09:11', 2367, 'section', 335, 17, 2567),
+(2616, 207, 1, '2013-12-17 18:12:14', '2013-12-17 14:12:14', 2367, 'social_icon', 338, 17, 2602),
+(2617, 208, 1, '2013-12-17 18:13:01', '2013-12-17 14:13:01', 2367, 'social_icon', 338, 17, 2602),
+(2622, 209, 1, '2013-12-19 11:08:23', '2013-12-19 07:08:23', 2367, 'photo', 311, 17, 2562);
 
 -- --------------------------------------------------------
 
@@ -777,7 +780,7 @@ INSERT INTO `fx_content_photo` (`id`, `photo`, `description`, `copy`) VALUES
 (2218, 436, 'Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. Sanctus sea sed takimata ut vero voluptua. At vero eos et accusam et justo duo dolores et ea rebum.', 'Ut wisi enim ad'),
 (2219, 438, 'Sanctus sea sed takimata ut vero voluptua. Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. At vero eos et accusam et justo duo dolores et ea rebum.', 'At vero eos et'),
 (2231, 450, 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. At vero eos et accusam et justo duo dolores et ea rebum.', 'At vero eos et'),
-(2564, 503, '', 'Lorem ipsum dolor sit');
+(2622, 520, '', '');
 
 -- --------------------------------------------------------
 
@@ -982,6 +985,29 @@ INSERT INTO `fx_content_select_linker` (`id`, `linked_id`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `fx_content_social_icon`
+--
+
+CREATE TABLE IF NOT EXISTS `fx_content_social_icon` (
+  `id` int(11) NOT NULL,
+  `url` varchar(255) DEFAULT NULL,
+  `icon` int(11) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `soc_type` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `fx_content_social_icon`
+--
+
+INSERT INTO `fx_content_social_icon` (`id`, `url`, `icon`, `name`, `soc_type`) VALUES
+(2616, 'http://www.linkedin.com/nhome/', 0, NULL, 'linkedin'),
+(2617, 'https://www.facebook.com/lists/404129646265675', 0, NULL, 'facebook');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `fx_content_tag`
 --
 
@@ -1097,6 +1123,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_vacancy` (
   `phone` varchar(255) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
   `contacts_name` varchar(255) DEFAULT NULL,
+  `currency` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -1104,11 +1131,11 @@ CREATE TABLE IF NOT EXISTS `fx_content_vacancy` (
 -- Dumping data for table `fx_content_vacancy`
 --
 
-INSERT INTO `fx_content_vacancy` (`id`, `position`, `salary_from`, `salary_to`, `requirements`, `responsibilities`, `work_conditions`, `address`, `phone`, `email`, `contacts_name`) VALUES
-(2249, 'At vero eos et', 1234, 5446, 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.', 'Stet clita kasd gubergren, no sea takimata sanctus est. Sanctus sea sed takimata ut vero voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.', 'Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.', 'anywhere str. 4-5-1', '777777', 'ceo@ceo.ru', 'Ivanov I. P.'),
-(2250, 'Quis aute iure', 7567, 7807890, ' Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.', 'Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Stet clita kasd gubergren, no sea takimata sanctus est. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. At vero eos et accusam et justo duo dolores et ea rebum.', 'At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est.', 'Sanctus sea sed takimata', '2425236346', 'ceo@ceo.ru', 'Ivanov I. P.'),
-(2594, 'Consetetur sadipscing elitr sed', 200, 1700, 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.', 'Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis.', 'At vero eos et accusam et justo duo dolores et ea rebum. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis.', 'Lorem ipsum dolor sit', '67576567', '', ''),
-(2595, 'Stet clita kasd gubergren', 500, 2700, 'Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.', ' Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua.', 'Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis. At vero eos et accusam et justo duo dolores et ea rebum. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.', 'Duis autem vel eum', '23123123', 'zuynew@yandex.ru', 'asd');
+INSERT INTO `fx_content_vacancy` (`id`, `position`, `salary_from`, `salary_to`, `requirements`, `responsibilities`, `work_conditions`, `address`, `phone`, `email`, `contacts_name`, `currency`) VALUES
+(2249, 'At vero eos et', 1234, 5446, 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.', 'Stet clita kasd gubergren, no sea takimata sanctus est. Sanctus sea sed takimata ut vero voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.', 'Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.', 'anywhere str. 4-5-1', '777777', 'ceo@ceo.ru', 'Ivanov I. P.', NULL),
+(2250, 'Quis aute iure', 7567, 7807890, ' Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.', 'Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Stet clita kasd gubergren, no sea takimata sanctus est. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. At vero eos et accusam et justo duo dolores et ea rebum.', 'At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est.', 'Sanctus sea sed takimata', '2425236346', 'ceo@ceo.ru', 'Ivanov I. P.', NULL),
+(2594, 'Consetetur sadipscing elitr sed', 200, 17000, '<p>\r\n	  Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.\r\n</p>', '<p>\r\n	  Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis.\r\n</p>', '<p>\r\n	  At vero eos et accusam et justo duo dolores et ea rebum. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis.\r\n</p>', 'Lorem ipsum dolor sit', '67576567', 'zuynew@yandex.ru', 'asdfasdf', '$'),
+(2595, 'Stet clita kasd gubergren', 500, 2700, '<p>\r\n	Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.\r\n</p>', '<p>\r\n	Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua.\r\n</p>', '<p>\r\n	Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis. At vero eos et accusam et justo duo dolores et ea rebum. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.\r\n</p>', 'Duis autem vel eum', '23123123', 'zuynew@yandex.ru', 'asd', '$');
 
 -- --------------------------------------------------------
 
@@ -1230,7 +1257,7 @@ CREATE TABLE IF NOT EXISTS `fx_field` (
   KEY `TypeOfData_ID` (`type`),
   KEY `TypeOfEdit_ID` (`type_of_edit`),
   KEY `Widget_Class_ID` (`widget_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=95 AUTO_INCREMENT=296 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=95 AUTO_INCREMENT=301 ;
 
 --
 -- Dumping data for table `fx_field`
@@ -1318,7 +1345,12 @@ INSERT INTO `fx_field` (`id`, `parent`, `component_id`, `ctpl_id`, `system_table
 (291, NULL, 36, 0, 0, 0, 'user_id', 'User', 13, 'a:4:{s:6:"target";s:1:"1";s:9:"prop_name";s:4:"user";s:9:"is_parent";s:1:"0";s:11:"render_type";s:10:"livesearch";}', 0, 245, 0, '', 0, 3, 1, 0),
 (292, NULL, 36, 0, 0, 0, 'site_id', 'Site', 13, 'a:4:{s:6:"target";s:4:"site";s:9:"prop_name";s:4:"site";s:9:"is_parent";s:1:"0";s:11:"render_type";s:10:"livesearch";}', 0, 246, 0, '', 0, 3, 1, 0),
 (294, NULL, 77, 0, 0, 0, 'linked_id', 'Linking content id', 13, 'a:4:{s:6:"target";s:2:"36";s:9:"prop_name";s:7:"content";s:9:"is_parent";s:1:"0";s:11:"render_type";s:10:"livesearch";}', 0, 247, 0, '', 0, 1, 1, 0),
-(295, NULL, 49, 0, 0, 0, 'tags', 'Tags', 14, 'a:5:{s:11:"render_type";s:10:"livesearch";s:13:"linking_field";s:3:"255";s:16:"linking_datatype";s:2:"65";s:8:"mm_field";s:3:"254";s:11:"mm_datatype";s:2:"78";}', 0, 248, 0, '', 0, 1, 1, 0);
+(295, NULL, 49, 0, 0, 0, 'tags', 'Tags', 14, 'a:5:{s:11:"render_type";s:10:"livesearch";s:13:"linking_field";s:3:"255";s:16:"linking_datatype";s:2:"65";s:8:"mm_field";s:3:"254";s:11:"mm_datatype";s:2:"78";}', 0, 248, 0, '', 0, 1, 1, 0),
+(296, NULL, 79, 0, 0, 0, 'url', 'URL', 1, '', 1, 249, 0, '', 0, 1, 1, 0),
+(297, NULL, 79, 0, 0, 0, 'icon', 'icon', 11, '', 0, 250, 0, '', 0, 1, 1, 0),
+(298, NULL, 79, 0, 0, 0, 'name', 'name', 1, '', 0, 251, 0, '', 0, 1, 1, 0),
+(299, NULL, 79, 0, 0, 0, 'soc_type', 'Type (fb, vk, etc.)', 1, '', 0, 252, 0, '', 0, 3, 1, 0),
+(300, NULL, 63, 0, 0, 0, 'currency', 'Currency', 1, '', 0, 253, 0, '$', 0, 1, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -1334,7 +1366,7 @@ CREATE TABLE IF NOT EXISTS `fx_filetable` (
   `size` int(10) unsigned NOT NULL DEFAULT '0',
   `to_delete` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=56 AUTO_INCREMENT=518 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=56 AUTO_INCREMENT=521 ;
 
 --
 -- Dumping data for table `fx_filetable`
@@ -1423,7 +1455,6 @@ INSERT INTO `fx_filetable` (`id`, `real_name`, `path`, `type`, `size`, `to_delet
 (496, 'slide2.png', 'content/slide2_3.png', 'image/png', 1532079, 0),
 (500, 'slide.jpg', 'content/slide_1.jpg', 'image/jpeg', 469679, 0),
 (501, 'slide.jpg', 'content/slide_2.jpg', 'image/jpeg', 469679, 0),
-(503, 'banner.png', 'content/banner_0.png', 'image/png', 225331, 0),
 (504, 'feature-item2.png', 'content/feature-item2_4.png', 'image/png', 83479, 0),
 (505, 'feature-item2.png', 'content/feature-item2_5.png', 'image/png', 83479, 0),
 (506, 'feature-item.png', 'content/feature-item_3.png', 'image/png', 49569, 0),
@@ -1437,7 +1468,8 @@ INSERT INTO `fx_filetable` (`id`, `real_name`, `path`, `type`, `size`, `to_delet
 (514, 'slide2.png', 'content/slide2_5.png', 'image/png', 1532079, 0),
 (515, 'attack02.jpeg', 'content/attack02_0.jpeg', 'image/jpeg', 58475, 0),
 (516, 'feature-item2.png', 'content/feature-item2_7.png', 'image/png', 83479, 0),
-(517, 'feature-item.png', 'content/feature-item_7.png', 'image/png', 49569, 0);
+(517, 'feature-item.png', 'content/feature-item_7.png', 'image/png', 49569, 0),
+(520, 'banner.png', 'content/banner_0.png', 'image/png', 225331, 0);
 
 -- --------------------------------------------------------
 
@@ -1511,7 +1543,7 @@ CREATE TABLE IF NOT EXISTS `fx_infoblock` (
   `scope` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `page_id` (`page_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=210 AUTO_INCREMENT=338 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=210 AUTO_INCREMENT=339 ;
 
 --
 -- Dumping data for table `fx_infoblock`
@@ -1630,7 +1662,8 @@ INSERT INTO `fx_infoblock` (`id`, `parent_infoblock_id`, `site_id`, `page_id`, `
 (334, 0, 17, 2598, 1, 'Award / Single entry', 'component_award', 'record', 'a:0:{}', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:5:"award";}'),
 (335, 0, 17, 2567, 1, 'Navigation / ', 'component_section', 'list_infoblock', 'a:1:{s:7:"submenu";s:4:"none";}', 'a:2:{s:5:"pages";s:11:"descendants";s:9:"page_type";s:0:"";}'),
 (336, 0, 17, 2601, 1, 'News / last week', 'component_news', 'list_filtered', 'a:5:{s:5:"limit";s:0:"";s:10:"pagination";s:1:"0";s:7:"sorting";s:12:"publish_date";s:11:"sorting_dir";s:3:"asc";s:10:"conditions";a:1:{s:5:"new_1";a:4:{s:4:"name";s:12:"publish_date";s:8:"operator";s:4:"last";s:5:"value";s:1:"1";s:8:"interval";s:4:"WEEK";}}}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
-(337, 0, 17, 2602, 1, 'News / ', 'component_news', 'list_filtered', 'a:5:{s:5:"limit";s:0:"";s:10:"pagination";s:1:"0";s:7:"sorting";s:12:"publish_date";s:11:"sorting_dir";s:3:"asc";s:10:"conditions";a:1:{s:5:"new_1";a:4:{s:4:"name";s:12:"publish_date";s:8:"operator";s:4:"last";s:5:"value";s:1:"1";s:8:"interval";s:5:"MONTH";}}}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}');
+(337, 0, 17, 2602, 1, 'News / ', 'component_news', 'list_filtered', 'a:5:{s:5:"limit";s:0:"";s:10:"pagination";s:1:"0";s:7:"sorting";s:12:"publish_date";s:11:"sorting_dir";s:3:"asc";s:10:"conditions";a:1:{s:5:"new_1";a:4:{s:4:"name";s:12:"publish_date";s:8:"operator";s:4:"last";s:5:"value";s:1:"1";s:8:"interval";s:5:"MONTH";}}}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
+(338, 0, 17, 2501, 1, 'Social Icons', 'component_social_icon', 'list_infoblock', 'a:4:{s:5:"limit";s:0:"";s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";s:11:"parent_type";s:15:"current_page_id";}', 'a:2:{s:5:"pages";s:11:"descendants";s:9:"page_type";s:0:"";}');
 
 -- --------------------------------------------------------
 
@@ -1650,7 +1683,7 @@ CREATE TABLE IF NOT EXISTS `fx_infoblock_visual` (
   `priority` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `infoblock_id` (`infoblock_id`,`layout_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=138 AUTO_INCREMENT=410 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=138 AUTO_INCREMENT=411 ;
 
 --
 -- Dumping data for table `fx_infoblock_visual`
@@ -1773,7 +1806,7 @@ INSERT INTO `fx_infoblock_visual` (`id`, `infoblock_id`, `layout_id`, `wrapper`,
 (397, 325, 11, '', '', 'layout_demo.person_list_main', '', 'main_column', 13),
 (398, 326, 11, '', '', 'layout_demo.person_record', '', 'main_column', 14),
 (399, 327, 11, '', '', 'layout_demo.vacancy_list', '', 'main_column', 15),
-(400, 328, 11, '', '', 'layout_demo.vacancy_record', '', 'main_column', 16),
+(400, 328, 11, '', '', 'layout_demo.vacancy_record', 'a:3:{s:4:"from";s:6:"From ";s:2:"to";s:4:"To ";s:9:"phone_tpl";s:9:"Phone:  ";}', 'main_column', 16),
 (402, 330, 11, '', '', 'layout_demo.left_menu', '', 'left_column', 5),
 (403, 331, 11, '', '', 'layout_demo.project_list', '', 'main_column', 17),
 (404, 332, 11, '', '', 'layout_demo.project_record', '', 'main_column', 18),
@@ -1781,7 +1814,8 @@ INSERT INTO `fx_infoblock_visual` (`id`, `infoblock_id`, `layout_id`, `wrapper`,
 (406, 334, 11, '', '', 'layout_demo.award_record', '', 'main_column', 20),
 (407, 335, 11, '', '', 'layout_demo.top_links', '', 'header_links', 1),
 (408, 336, 11, '', '', 'layout_demo.news_list_main', '', 'main_column', 21),
-(409, 337, 11, '', '', 'layout_demo.news_list_main', '', 'main_column', 22);
+(409, 337, 11, '', '', 'layout_demo.news_list_main', '', 'main_column', 22),
+(410, 338, 11, '', '', 'layout_demo.social_icons', '', 'right_column', 2);
 
 -- --------------------------------------------------------
 
@@ -2405,7 +2439,7 @@ CREATE TABLE IF NOT EXISTS `fx_session` (
 --
 
 INSERT INTO `fx_session` (`id`, `user_id`, `session_start`, `session_time`, `ip`, `login_save`, `site_id`, `auth_type`) VALUES
-('049cbaab1d6860974df51df1b7aa2f50', 2367, 1387189720, 1387282658, 2130706433, 0, 0, 1);
+('049cbaab1d6860974df51df1b7aa2f50', 2367, 1387436775, 1387523795, 2130706433, 0, 0, 1);
 
 -- --------------------------------------------------------
 

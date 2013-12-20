@@ -1,4 +1,9 @@
 <?
+
+$source_ibs = fx::data('infoblock')
+    ->get_content_infoblocks('section')
+    ->find('site_id', fx::env('site')->get('id'))
+    ->get_values('name', 'id');
 return array(
     'actions' => array(
         '*list*' => array(
@@ -31,6 +36,7 @@ return array(
                 'source_infoblock_id' => array(
                     'label' => fx::lang('Source infoblock','component_section'),
                     'type' => 'select',
+                    'values' => $source_ibs,
                 ),
             ),
         ),

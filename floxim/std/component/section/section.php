@@ -31,7 +31,6 @@ class fx_controller_component_section extends fx_controller_component_page {
         $this->listen('items_ready', function($items, $ctr) use ($path, $submenu_type) {
             foreach ($items as $item) {
                 if (in_array($item['id'], $path)) {
-                    $item['active'] = true;
                     if ($ctr->get_param('submenu') !== 'none') {
                         $ctr->accept_content(array(
                             'title' => fx::lang('Subsection','component_section') 
@@ -39,8 +38,6 @@ class fx_controller_component_section extends fx_controller_component_page {
                             'parent_id' => $item['id']
                         ));
                     }
-                } else {
-                    $item['active'] = false;
                 }
             }
             if ($submenu_type != 'none') {
@@ -66,10 +63,6 @@ class fx_controller_component_section extends fx_controller_component_page {
             }
         });
         $this->listen('items_ready', function($items) use ($path, $submenu_type) {
-            foreach ($items as $item) {
-                if (in_array($item['id'], $path))
-                    $item['active'] = true;
-            }
             $items->make_tree();
             if ($submenu_type == 'none')
                 $items->apply(function($item){
@@ -127,13 +120,6 @@ class fx_controller_component_section extends fx_controller_component_page {
         }
         $paths = fx::env('page')->get_parent_ids();
         $paths[] = fx::env('page')->get('id');
-        $this->listen('items_ready', function($items, $ctr) use ($paths) {
-            foreach ($items as $item) {
-                if (in_array($item['id'], $paths)) {
-                    $item['active'] = true;
-                }
-            }
-        });
         return $this->do_list();
     }
     
