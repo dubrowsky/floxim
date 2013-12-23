@@ -89,6 +89,40 @@ var fx_front = function () {
                 */
                 if (fix_link_ce) {
                     e.target.setAttribute('contenteditable', 'true');
+                    $(e.target).keydown(function(e) {
+                        var sel  = window.getSelection();
+                        var link = this;
+                        const KEY_PGUP = 33;
+                        const KEY_PGDN = 34;
+                        const KEY_END = 35;
+                        const KEY_DOWN = 40;
+                        const KEY_RIGHT = 39;
+                        const KEY_HOME = 36;
+
+                        if (e.which !== KEY_PGDN && e.which !== KEY_PGUP && e.which !== KEY_END && e.which !== KEY_DOWN && e.which !== KEY_RIGHT && e.which !== KEY_HOME) {
+                                return;
+                        }
+                        var right_out = sel.anchorNode.length - sel.anchorOffset === 1
+                                                                && !sel.anchorNode.nextSibling
+                                                                && sel.anchorNode.parentNode === this;
+                        console.log(right_out);
+                        if (e.which !== KEY_RIGHT || right_out) {
+                            console.log('end', sel.anchorNode.nextSibling);
+                            var range = document.createRange();
+                            if (e.which === KEY_HOME) {
+                                range.setStart(link, 0);
+                                range.collapse(true);
+                            } else {
+                                range.selectNodeContents(link);
+                                range.collapse(false);
+                            }
+                            var sel = window.getSelection();
+                            sel.removeAllRanges();
+                            sel.addRange(range);
+                            return false;
+                        }
+
+                    });
                 }
             }, 
             $fx.front.c_hover ? 100 : 10
@@ -105,6 +139,7 @@ var fx_front = function () {
                         $fx.front.outline_block_off(node);
                         if (fix_link_ce) {
                             e.target.setAttribute('contenteditable', 'false');
+                            $(e.target).unbind('keydown');
                         }
                     }
                 },
