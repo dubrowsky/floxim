@@ -737,7 +737,28 @@ fx_front.prototype.start_essences_sortable = function(container) {
         }
         var $c_selected = null;
         cp.addClass('fx_essence_container_sortable');
+        var sortable_items_selector = '>:not(.fx_not_sortable).fx_content_essence.fx_hilight';
+        var $essences = $(sortable_items_selector, cp);
+        var is_x = true;
+        var is_y = true;
+        var c_x = null;
+        var c_y = null;
+        $essences.each(function()  {
+            var o  = $(this).offset();
+            if (c_x === null){
+                c_x = o.left;
+            } else if (o.left !== c_x) {
+                is_y = false;
+            }
+            if (c_y === null){
+                c_y = o.top;
+            } else if (o.top !== c_y) {
+                is_x = false;
+            }
+        });
+        var axis = is_x ? 'x' : is_y ? 'y' : null;
         cp.sortable({
+            axis:axis,
             start:function(e, ui) {
                 //$('body').addClass('fx_stop_outline');
                 
@@ -753,7 +774,7 @@ fx_front.prototype.start_essences_sortable = function(container) {
                 $fx.front.outline_block_off($c_selected);
                 $fx.front.disable_hilight();
             },
-            items:'>:not(.fx_not_sortable).fx_content_essence.fx_hilight',
+            items:sortable_items_selector,
             placeholder: placeholder_class,
             forcePlaceholderSize : true,
             stop:function(e, ui) {
