@@ -15,7 +15,7 @@ img {
   font-family: Times New Roman;
 }
 .wrapper section {
-  padding: 15px;
+  padding: 2%;
   position: relative;
   z-index: 0;
 }
@@ -34,17 +34,19 @@ img {
   width: 75%;
 }
 .wrapper section.three-column .left-column {
-  width: 25%;
+  width: 23%;
+  margin-right: 2%;
 }
 .wrapper section.three-column .main-column {
   width: 50%;
+  margin-right: 2%;
 }
 .wrapper section.three-column .main-column h2 {
   margin: 0;
   padding: 0;
 }
 .wrapper section.three-column .right-column {
-  width: 25%;
+  width: 23%;
 }
 .wrapper section .header h1 {
   float: left;
@@ -94,6 +96,7 @@ img {
   float: left;
   display: block;
   width: 100%;
+  margin-top: 1.3em;
   font-size: 3em;
   text-align: left;
   color: #33ccff;
@@ -577,11 +580,18 @@ img {
   padding: 5px 15px;
   background-color: #212121;
 }
+.wrapper .footer .social-area {
+  float: left;
+  height: 20px;
+  min-width: 20px;
+}
 .wrapper .footer .social-block {
   margin: 0;
   padding: 0;
   list-style: none;
   float: left;
+  height: 20px;
+  min-width: 20px;
 }
 .wrapper .footer .social-block .social-item {
   float: left;

@@ -106,8 +106,12 @@ class fx_content extends fx_essence {
     
     protected static $content_fields_by_component = array();
 
-
+    protected $_fields_to_show = null;
+    
     public function get_fields_to_show() {
+        if ($this->_fields_to_show) {
+            return $this->_fields_to_show;
+        }
         $fields_to_show = array();
         $com_id = $this->component_id;
         $com_fields = $this->get_fields();
@@ -173,6 +177,7 @@ class fx_content extends fx_essence {
             $fields_to_show[$fkey] = new fx_template_field($v, $field_meta);
         }
 
+        $this->_fields_to_show = $fields_to_show;
         return $fields_to_show;
     }
     

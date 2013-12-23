@@ -153,7 +153,6 @@
                         <ul fx:template="index_link_list" fx:of="page.list" fx:name="Simple link list">
                             <li fx:template="item"><a href="{$url}">{$name}</a></li>
                         </ul>
-                        
                     </div>
                     <div class="r-side" fx:area="index_right">
                         
