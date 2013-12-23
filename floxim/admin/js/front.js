@@ -117,7 +117,7 @@ var fx_front = function () {
     });
     
     $('html').on('click', function(e) {
-        if ($fx.front.mode === 'view' || $fx.front.hilight_disabled) {
+        if ($fx.front.mode === 'view' || $fx.front.select_disabled) {
             return;
         }
         var target = $(e.target);
@@ -207,6 +207,14 @@ fx_front.prototype.enable_hilight = function(){
     this.hilight_disabled = false;
 };
 
+fx_front.prototype.disable_select = function() {
+    this.select_disabled = true;
+};
+
+fx_front.prototype.enable_select = function(){
+    this.select_disabled = false;
+};
+
 fx_front.prototype.get_area_meta = function($area_node) {
     var meta = $area_node.data('fx_area') || {};
     if (typeof meta.size === 'undefined') {
@@ -240,6 +248,7 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
                     //$fx.front.disable_infoblock(ib);
                     $fx.front.select_item(ib.get(0));
                     $fx.front.disable_hilight();
+                    $fx.front.disable_select();
                     
                     $fx.front_panel.load_form({
                        essence:'content',
@@ -277,6 +286,7 @@ fx_front.prototype.redraw_add_button = function(node, mode) {
                 var infoblock_back = arguments.callee;
                 $fx.front.select_item(area_node.get(0));
                 $fx.front.disable_hilight();
+                $fx.front.disable_select();
                 
                 $fx.front_panel.load_form({
                     essence:'infoblock',
@@ -447,6 +457,7 @@ fx_front.prototype.select_item = function(node) {
     } else {
         $fx.buttons.unbind('select_block', $fx.front.select_level_up);
     }
+    $fx.front.disable_hilight();
     //$fx.front.fix();
     $('html').on('keydown.fx_selected', function(e) {
        if (e.which === 27) {
@@ -469,6 +480,7 @@ fx_front.prototype.get_selected_item = function() {
 fx_front.prototype.deselect_item = function() {
     var selected_item = this.get_selected_item();
     if (selected_item) {
+        $fx.front.enable_hilight();
         $(selected_item).
                 removeClass('fx_selected').
                 trigger('fx_deselect').
@@ -723,13 +735,51 @@ fx_front.prototype.start_essences_sortable = function(container) {
         if (essences.first().css('display') === 'inline') {
             placeholder_class += ' fx_essence_placeholder_inline';
         }
-
+        var $c_selected = null;
         cp.addClass('fx_essence_container_sortable');
+        var sortable_items_selector = '>:not(.fx_not_sortable).fx_content_essence.fx_hilight';
+        var $essences = $(sortable_items_selector, cp);
+        var is_x = true;
+        var is_y = true;
+        var c_x = null;
+        var c_y = null;
+        $essences.each(function()  {
+            var o  = $(this).offset();
+            if (c_x === null){
+                c_x = o.left;
+            } else if (o.left !== c_x) {
+                is_y = false;
+            }
+            if (c_y === null){
+                c_y = o.top;
+            } else if (o.top !== c_y) {
+                is_x = false;
+            }
+        });
+        var axis = is_x ? 'x' : is_y ? 'y' : null;
         cp.sortable({
-            items:'>:not(.fx_not_sortable).fx_content_essence.fx_hilight',
+            axis:axis,
+            start:function(e, ui) {
+                //$('body').addClass('fx_stop_outline');
+                
+                var ph = ui.placeholder;
+                var item = ui.item;
+                ph.css({
+                    width:item.width()+'px',
+                    height:item.height()+'px',
+                    'box-sizing':'border-box'
+                });
+                ph.attr('class', ph.attr('class')+ ' '+item.attr('class'));
+                $c_selected = $($fx.front.get_selected_item());
+                $fx.front.outline_block_off($c_selected);
+                $fx.front.disable_hilight();
+            },
+            items:sortable_items_selector,
             placeholder: placeholder_class,
             forcePlaceholderSize : true,
             stop:function(e, ui) {
+                //$fx.front.enable_hilight();
+                //$fx.front.select_item($c_selected);
                 var ce = ui.item.closest('.fx_content_essence');
                 var ce_data = ce.data('fx_content_essence');
                 var ce_id = ce_data.linker_id || ce_data.id;
@@ -884,6 +934,7 @@ fx_front.prototype.reload_infoblock = function(infoblock_node, callback, extra_d
            }
            
            $fx.front.hilight();
+           $('body').removeClass('fx_stop_outline');
            if (selected_selector) {
                var sel_target = ib_parent.find(selected_selector);
                if (sel_target.length > 0) {
@@ -989,7 +1040,7 @@ fx_front.prototype.outline_block = function(n, style) {
         var css = {};
         // добавляем px для размеров
         $.each(box, function(i, v) {
-            css[i] = v+'px';
+            css[i] = Math.round(v)+'px';
         });
         var m = $(
             '<div class="fx_outline_pane '+

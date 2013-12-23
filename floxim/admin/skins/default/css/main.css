@@ -1441,7 +1441,7 @@ a.fx_var_editable:focus, .fx_var_editable a:focus {
 
 .fx_essence_placeholder {
     min-height: 5px;
-    min-width: 50px;
+    min-width: 5px;
     background: #FFF;
     border:3px solid #000;
 }
@@ -1574,6 +1574,10 @@ a.fx_var_editable:focus, .fx_var_editable a:focus {
 .fx_outline_pane {
     position:absolute;
     background-color:#555;
+}
+
+.fx_stop_outline .fx_outline_pane {
+    display:none;
 }
 
 .fx_outline_pane_top, .fx_outline_pane_bottom {
