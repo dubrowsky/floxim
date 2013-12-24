@@ -1058,6 +1058,19 @@ fx_front.prototype.outline_block = function(n, style) {
     var nh = n.outerHeight();
     var size = style === 'hover' ? 2 : 2;
     var pane_z_index = $('#fx_admin_control').css('z-index') - 1;
+    var parents = n.parents();
+    var pane_position = 'absolute';
+    if (n.css('position') == 'fixed') {
+        pane_position = 'fixed';
+    }
+    for (var i = 0 ; i<parents.length; i++) {
+        if (pane_position != 'fixed' && parents.eq(i).css('position') == 'fixed') {
+            pane_position = 'fixed';
+            if (parents.eq(i).css('z-index') !== undefined)
+                pane_z_index = parents.eq(i).css('z-index');
+            break;
+        }
+    };
     var doc_width = $(document).width();
     function make_pane(box, type) {
         var c_left = box.left;
@@ -1082,6 +1095,7 @@ fx_front.prototype.outline_block = function(n, style) {
                 'fx_outline_pane_'+type+' fx_outline_style_'+style+'" />'
         );
         css['z-index'] = pane_z_index;
+        css['position'] = pane_position;
         m.css(css);
         m.data('pane_props', $.extend(box, {
             type:type,
@@ -1150,8 +1164,10 @@ fx_front.prototype.outline_block = function(n, style) {
         
         m_after.remove();
     }
+    if (pane_position=='fixed') 
+        o.top -=$(window).scrollTop();
     panes.top = make_pane({
-        top:o.top - size,
+        top: o.top - size,
         left: (o.left + top_left_offset),
         width:(nw-top_left_offset ),
         height:size
