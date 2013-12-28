@@ -2,7 +2,6 @@ body {
 	margin: 0;
 	padding: 0;
 	font-size: 100%;
-	* {font-family: 'Nixie One';}
 }
 
 img {
@@ -10,9 +9,9 @@ img {
 }
 
 .wrapper {
+	* {font-family: 'Nixie One';}
 	width: 100%;
 	margin: auto;
-	font-family: Times New Roman;
 	section {
 		padding: 2%;
 		position: relative;
@@ -443,7 +442,7 @@ img {
 		height: 40px;
 		background-color: #212121;
 		position: fixed;
-		z-index: 1;
+		z-index: 99999;
 		.logo {
 			float: left;
 			margin-top: 7.5px;
@@ -470,10 +469,11 @@ img {
 				float: left;
 				padding: 0 10px;
 				position: relative;
-				&.active {
+				&.active, &:hover {
 					background-color: white;
 					a {
 						color: #33ccff;
+						font-weight: normal !important;
 					}
 					.menu-sub-items {
 						display: block;
@@ -481,9 +481,8 @@ img {
 				}
 
 				&.current {
-					background-color: white;
-					a {
-						color: #33ccff;
+					> a {
+						font-weight: bold;
 					}
 				}
 

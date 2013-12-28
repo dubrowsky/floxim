@@ -89,6 +89,40 @@ var fx_front = function () {
                 */
                 if (fix_link_ce) {
                     e.target.setAttribute('contenteditable', 'true');
+                    $(e.target).keydown(function(e) {
+                        var sel  = window.getSelection();
+                        var link = this;
+                        const KEY_PGUP = 33;
+                        const KEY_PGDN = 34;
+                        const KEY_END = 35;
+                        const KEY_DOWN = 40;
+                        const KEY_RIGHT = 39;
+                        const KEY_HOME = 36;
+
+                        if (e.which !== KEY_PGDN && e.which !== KEY_PGUP && e.which !== KEY_END && e.which !== KEY_DOWN && e.which !== KEY_RIGHT && e.which !== KEY_HOME) {
+                                return;
+                        }
+                        var right_out = sel.anchorNode.length - sel.anchorOffset === 1
+                                                                && !sel.anchorNode.nextSibling
+                                                                && sel.anchorNode.parentNode === this;
+                        console.log(right_out);
+                        if (e.which !== KEY_RIGHT || right_out) {
+                            console.log('end', sel.anchorNode.nextSibling);
+                            var range = document.createRange();
+                            if (e.which === KEY_HOME) {
+                                range.setStart(link, 0);
+                                range.collapse(true);
+                            } else {
+                                range.selectNodeContents(link);
+                                range.collapse(false);
+                            }
+                            var sel = window.getSelection();
+                            sel.removeAllRanges();
+                            sel.addRange(range);
+                            return false;
+                        }
+
+                    });
                 }
             }, 
             $fx.front.c_hover ? 100 : 10
@@ -105,6 +139,7 @@ var fx_front = function () {
                         $fx.front.outline_block_off(node);
                         if (fix_link_ce) {
                             e.target.setAttribute('contenteditable', 'false');
+                            $(e.target).unbind('keydown');
                         }
                     }
                 },
@@ -1023,6 +1058,19 @@ fx_front.prototype.outline_block = function(n, style) {
     var nh = n.outerHeight();
     var size = style === 'hover' ? 2 : 2;
     var pane_z_index = $('#fx_admin_control').css('z-index') - 1;
+    var parents = n.parents();
+    var pane_position = 'absolute';
+    if (n.css('position') == 'fixed') {
+        pane_position = 'fixed';
+    }
+    for (var i = 0 ; i<parents.length; i++) {
+        if (pane_position != 'fixed' && parents.eq(i).css('position') == 'fixed') {
+            pane_position = 'fixed';
+            if (parents.eq(i).css('z-index') !== undefined)
+                pane_z_index = parents.eq(i).css('z-index');
+            break;
+        }
+    };
     var doc_width = $(document).width();
     function make_pane(box, type) {
         var c_left = box.left;
@@ -1047,6 +1095,7 @@ fx_front.prototype.outline_block = function(n, style) {
                 'fx_outline_pane_'+type+' fx_outline_style_'+style+'" />'
         );
         css['z-index'] = pane_z_index;
+        css['position'] = pane_position;
         m.css(css);
         m.data('pane_props', $.extend(box, {
             type:type,
@@ -1115,8 +1164,10 @@ fx_front.prototype.outline_block = function(n, style) {
         
         m_after.remove();
     }
+    if (pane_position=='fixed') 
+        o.top -=$(window).scrollTop();
     panes.top = make_pane({
-        top:o.top - size,
+        top: o.top - size,
         left: (o.left + top_left_offset),
         width:(nw-top_left_offset ),
         height:size
