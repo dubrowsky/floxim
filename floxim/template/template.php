@@ -3,6 +3,7 @@ class fx_template {
     
     protected $data = array();
     protected $action = null;
+    protected $_parent = null;
     
     public function __construct($action, $data = array()) {
         $this->data = $data;
@@ -11,6 +12,24 @@ class fx_template {
     
     public function get_var($var_path) {
         return fx::dig($this->data, $var_path);
+    }
+    
+    protected $context_stack = array();
+    
+    public static $v_count = 0;
+    public function v($name) {
+        //self::$v_count++;
+        for ($i = count($this->context_stack) - 1; $i >= 0; $i--) {
+            if (isset($this->context_stack[$i][$name])) {
+                return $this->context_stack[$i][$name];
+            }
+        }
+        if (isset($this->data[$name])) {
+            return $this->data[$name];
+        }
+        if ($this->_parent) {
+            return $this->_parent->v($name);
+        }
     }
     
     public function get_parent_var($var) {
@@ -106,8 +125,7 @@ class fx_template {
         if (method_exists($this, $method)) {
             $this->$method();
         } else {
-            //dev_log('tpl with no action called', get_class($this), $this->action, debug_backtrace());
-            echo 'No tpl action: <code>'.get_class($this).".".$this->action.'</code>';
+           echo 'No tpl action: <code>'.get_class($this).".".$this->action.'</code>';
         }
         $result = ob_get_clean();
         
@@ -115,12 +133,14 @@ class fx_template {
             return $result;
         }
         
-        if (fx::is_admin()) {
+        if (fx::is_admin() && !$this->_parent) {
+            self::$count_replaces++;
             $result = fx_template::replace_areas($result);
             $result = fx_template_field::replace_fields($result);
         }
         return $result;
     }
+    public static $count_replaces = 0;
     
     // заполняется при компиляции
     protected $_templates = array();

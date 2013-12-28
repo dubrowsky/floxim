@@ -112,11 +112,13 @@ class fx_content extends fx_essence {
         if ($this->_fields_to_show) {
             return $this->_fields_to_show;
         }
+        
+        $is_admin = fx::is_admin();
         $fields_to_show = array();
         $com_id = $this->component_id;
         $com_fields = $this->get_fields();
         
-        $is_admin = fx::is_admin();
+        
         
         foreach ($this->data as $fkey => $v) {
             $field_meta = array();
@@ -142,7 +144,7 @@ class fx_content extends fx_essence {
             }
             
             // простое поле для не-админа - возвращаем значение
-            if (!in_array($cf->type, array('image', 'file')) && !$is_admin) {
+            if (!in_array($cf->type, array('image', 'file', 'datetime')) && !$is_admin) {
                 $fields_to_show[$fkey] = $v;
                 continue;
             }
@@ -203,10 +205,12 @@ class fx_content extends fx_essence {
     }
     
     public function add_template_record_meta($html, $collection, $index, $is_subroot) {
+        
         $essence_meta = array(
             'id' => $this->get('id'),
             'type' => $this->get_type(false)
         );
+        //return $html;
         if ($collection->linker_map && isset($collection->linker_map[$index])) {
             $linker = $collection->linker_map[$index];
             $essence_meta['linker_id'] = $linker['id'];
@@ -216,6 +220,7 @@ class fx_content extends fx_essence {
             'data-fx_content_essence' => $essence_meta, 
             'class' => 'fx_content_essence'. ($collection->is_sortable ? '' : ' fx_not_sortable')
         );
+        
         if ($is_subroot) {
             $html = preg_replace_callback(
                 "~^(\s*?)(<[^>]+>)~", 

@@ -199,6 +199,7 @@ class fx_template_html {
             }
         });
         $res = $tree->serialize();
+        //fx::debug($res, $tree);
         return $res;
     }
     
@@ -293,9 +294,14 @@ class fx_template_html {
                         }
                     } elseif ($c_att == 'src') {
                         $c_type = 'image';
+                    } elseif (
+                            ($c_att == 'href' || $c_att == 'title' || $c_att == 'alt') && 
+                            !preg_match("~editable=~", $part) &&
+                            !preg_match("~^\{\%~", $part)
+                        ) {
+                        $part = preg_replace("~^([^\s\|\}]+)~", '\1 editable="false" ', $part);
                     }
                     if ($c_type) {
-                        //$part = preg_replace("~\}$~", ' type="'.$c_type.'"}', $part);
                         $part = preg_replace("~^([^\s\|\}]+)~", '\1 type="'.$c_type.'" ', $part);
                     }
                     $res .= $part;
