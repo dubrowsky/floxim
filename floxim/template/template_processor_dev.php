@@ -1,5 +1,5 @@
 <?php
-class fx_template_processor {
+class fx_template_processor_dev {
     /**
      * Преобразовать шаблон в php-код
      * @param string $source исходник шаблона
@@ -72,7 +72,7 @@ class fx_template_processor {
             $sources = self::_get_template_sources($tpl_name);
         }
         
-        $processor = new fx_template_processor();
+        $processor = new fx_template_processor_dev();
         $processor->process_dirs($sources);
         return $tpl_file;
     }
@@ -476,6 +476,15 @@ class fx_template_processor {
     }
     
     protected function _token_var_to_code(fx_template_token $token) {
+        $code = "<?\n";
+        $var_id = $token->get_prop('id');
+        $var = preg_match("~^[a-z0-9_]+$~i", $var_id) ? '$'.$var_id : '${"'.$var_id.'"}';
+        $code .= 'echo isset('.$var.') ? '.$var.' : $this->v("'.$var_id.'");'."\n";
+        $code .= '?>';
+        return $code;
+    }
+    
+    protected function __token_var_to_code(fx_template_token $token) {
         $var_id = $token->get_prop('id');
         $code .= "<?\n";
         
@@ -716,7 +725,8 @@ class fx_template_processor {
         $is_essence = $item_alias."_is_essence";
         $code .=  $is_essence ." = ".$item_alias." instanceof fx_essence;\n";
         //$code .= $item_alias."_is_odd = ".$counter_id." % 2 != 0;\n";
-        if ($extract && $extract !== 'false') {
+        $use_extract = false;
+        if ($use_extract && $extract && $extract !== 'false') {
             if ( ($e_prefix = $token->get_prop('prefix')) ) {
                 $e_flags = ", EXTR_PREFIX_ALL, '".$e_prefix."'"; 
             } else {
@@ -729,6 +739,10 @@ class fx_template_processor {
             $code .= "\t} elseif (is_object(".$item_alias.")) {\n";
             $code .= "\t\textract(get_object_vars(".$item_alias.") ".$e_flags.");\n";
             $code .= "\t}\n";
+        }
+        if (!$use_extract) {
+            $code .= '$this->context_stack[]= '.$is_essence.' ? '.$item_alias.'->get_fields_to_show() : '.$item_alias.";\n";
+            //$code .= '$this->context_stack[]= '.$item_alias.";\n";
         }
         $meta_test = "\tif (\$_is_admin && ".$is_essence." ) {\n";
         $code .= $meta_test;
@@ -747,7 +761,10 @@ class fx_template_processor {
         if ($separator) {
             $code .= 'if (!'.$item_alias."_is_last) {\n";
             $code .= $this->_token_to_code($separator);
-            $code .= "}\n";
+            $code .= "\n}\n";
+        }
+        if (!$use_extract) {
+            $code .= 'array_pop($this->context_stack);'."\n";
         }
         $code .= "}\n"; // close foreach
         $code .= "}\n";  // close if
@@ -789,7 +806,7 @@ class fx_template_processor {
             }
         }
         if (!$render_called) {
-            $res = '<?=$this->render_area('.$token_props.');?>'.$res;
+            $res = $res .= '<?=$this->render_area('.$token_props.');?>'.$res;
         }
         return $res;
     }
