@@ -165,7 +165,7 @@
 				    <div fx:template="item" 
 				        class="vacancy-list-item">
 			            <h3 class="no-top-margin"><a href="{$url}">{$position}</a></h3>
-			            <h4>{$salary_from}{$currency} - {$salary_to}{$currency}</h4>
+			            <h4>{if $salary_from}{$salary_from}{$currency}{/if}{if $salary_to}{%separator}-{/%}{$salary_to}{$currency}{/if}</h4>
 				    </div>
 				</div>
 				<div 
@@ -350,7 +350,7 @@
 				    class="featured-list">
 					<div fx:each="$items" class="featured-item {if $item_index%3==0}last{/if}">
 						<a href="{$url}">
-							<img src="{$image}">
+							<img src="{$image|'width:430,height:430}">
 						</a>
 						<div class="caption">
 							{$price}
@@ -369,21 +369,6 @@
 				<div style="clear:both;"></div>
 			</div>
 			<div class="main-column" fx:area="main_column" fx:size="wide,high">
-				<div class="slider">
-					<div class="slide">
-						<img src="img/slide2.png" alt="">
-						<div class="caption">
-							<h2>
-								<p>You are dead?</p>
-								<p>Find new</p>	
-							</h2>
-							<div class="text">
-								<p>Fuck</p>	
-								<p>Find new</p>
-							</div>
-						</div>
-					</div>
-				</div>
 				<div
 					fx:template="featured_news_list"
 				    fx:of="news.list"
@@ -391,7 +376,7 @@
 					<div 
 						fx:template="item" 
 						class="featured-item {if $item_index%4 == 0}last{/if}">
-						<img fx:if="$image" src="{$image}">
+						<img fx:if="$image" src="{$image|'width:425,height:300'}">
 						<div class="caption">
 							<div>{$anounce}</div>
 							<a href="{$url}">{$name}</a>
@@ -399,6 +384,7 @@
 					</div>
 
 					<a class="more" href="{%more}">{%More_news}More news{/%}</a>
+					<div style="clear:both;"></div>
 				</div>
 			</div>
 			<div style="clear: both;"></div>

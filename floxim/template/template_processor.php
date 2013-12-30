@@ -789,7 +789,7 @@ class fx_template_processor {
             }
         }
         if (!$render_called) {
-            $res = $res .= '<?=$this->render_area('.$token_props.');?>'.$res;
+            $res = '<?=$this->render_area('.$token_props.');?>'.$res;
         }
         return $res;
     }
