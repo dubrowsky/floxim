@@ -180,6 +180,9 @@ abstract class fx_essence implements ArrayAccess {
         if (isset($this->data[$offset])) {
             return $this->data[$offset];
         }
+        if ($offset == 'id') {
+            return null;
+        }
         /**
          * Например для $post['tags'], где tags - поле-мультисвязь
          * Если связанные не загружены, просим файндер их загрузить

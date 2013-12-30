@@ -36,19 +36,28 @@ class fx {
      * @param string $datatype название типа данных - 'component', 'content_news'
      * @param mixed [$id] id или массив ids
     */
-    public static function data($datatype, $id = null) {
+    public static $data_stat = array();
+    public static function  data($datatype, $id = null) {
     	
     	static $data_classes_cache = array();
     	
-		if (is_array($datatype)) {
+        if (is_array($datatype)) {
             $datatype = join("_", $datatype);
         }
+        /*
+        if (!isset(self::$data_stat[$datatype])) {
+            self::$data_stat[$datatype] = array('total' => 0, 'cached' => 0);
+        }
+        self::$data_stat[$datatype]['total']++;
+         * 
+         */
         if (
             !is_null($id) && 
             !is_array($id) && 
             isset(self::$data_cache[$datatype]) &&  
             isset(self::$data_cache[$datatype][$id])
         ) {
+                //self::$data_stat[$datatype]['cached']++;
                 return self::$data_cache[$datatype][$id];
         }
         

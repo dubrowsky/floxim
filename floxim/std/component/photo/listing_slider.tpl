@@ -8,7 +8,6 @@
         script.js
     {/js}
     {css}listing_slider.css{/css}
-    <img style="border:1px solid #C00; width:50px; height:50px; padding:10px;" src="{%olopic}" />
     <div class="images fx_not_sortable" fx:template="$items">
         <div 
             fx:template="item" 
