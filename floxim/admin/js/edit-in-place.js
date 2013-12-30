@@ -110,12 +110,14 @@ fx_edit_in_place.prototype.start = function(meta) {
                 this.node.addClass('fx_var_editable');
                 if ( (meta.type === 'text' && meta.html) || meta.type === 'html') {
                     this.is_wysiwyg = true;
+                    this.node.data('fx_saved_value', this.node.html());
                     this.make_wysiwyg();
                 }
-                
+                if (!((meta.type === 'text' && meta.html) || meta.type === 'html')) {
+                    this.node.data('fx_saved_value', this.node.html());
+                }
                 this.node
                     .attr('contenteditable', 'true')
-                    .data('fx_saved_value', this.node.html())
                     .focus();
             }
             break;
@@ -173,9 +175,10 @@ fx_edit_in_place.prototype.save = function() {
         if (this.is_wysiwyg && this.source_area.is(':visible')) {
             this.node.redactor('toggle');
         }
-        var text_val = node.text();
-        var html_val = node.html();
+        var text_val = this.is_wysiwyg ? node.redactor('get') : node.text();
+        var html_val = this.is_wysiwyg ? node.redactor('get') : node.html();
         var saved_val = node.data('fx_saved_value');
+
         if (text_val !== saved_val && html_val !== saved_val ) {
             vars.push({
                 'var':this.meta,
@@ -226,28 +229,68 @@ fx_edit_in_place.prototype.restore = function() {
         return this;
     }
     var saved = this.node.data('fx_saved_value');
-    
     this.node.html(saved);
     return this;
 }
 
 fx_edit_in_place.prototype.make_wysiwyg = function () {
+    //return;
+    var doc = this.node[0].ownerDocument || this.node[0].document;
+    var win = doc.defaultView || doc.parentWindow;
+    var sel = win.getSelection();
+    var is_ok = false;
+    if (sel) {
+        var cp = sel.focusNode;
+        var is_ok = $.contains(this.node[0], sel.focusNode);
+    }
+    if (is_ok) {
+        console.log('add marker')
+        var range = sel.getRangeAt(0);
+        range.collapse(true);
+        range.insertNode($('<span id="fx_marker-1">&#x200b;</span>')[0]);
+        range.detach();
+    }
     if (!this.node.attr('id')) {
         this.node.attr('id', 'stub'+Math.round(Math.random()*1000));
     }
     $('#fx_admin_control').append('<div class="editor_panel" />');
     var linebreaks = this.meta.var_type == 'visual';
+    var _node = this.node;
     this.node.redactor({
-        focus:true,
+        //focus:true,
         linebreaks:linebreaks,
         toolbarExternal: '.editor_panel',
         imageUpload : '/floxim/admin/controller/redactor-upload.php',
         buttons: ['formatting', '|', 'bold', 'italic', 'deleted', '|',
                 'unorderedlist', 'orderedlist', 'outdent', 'indent', '|',
                 'image', 'video', 'file', 'table', 'link', '|',
-                'fontcolor', 'backcolor', '|', 'alignment', '|', 'horizontalrule']
+                'fontcolor', 'backcolor', '|', 'alignment', '|', 'horizontalrule'],
+        initCallback: function() {
+            var marker = _node.find('#fx_marker-1');
+            var selection = window.getSelection();
+            if (selection) {
+                var range = document.createRange();
+            }
+            if (marker.length != 0) {
+                range.selectNodeContents(marker[0]);
+                range.collapse(false);
+                selection.removeAllRanges();
+                selection.addRange(range);
+                console.log('marker');
+                marker.remove();
+            } else {
+                console.log('start')
+                range.setStart(_node[0], 0);
+                range.collapse(true);
+                selection.removeAllRanges();
+                selection.addRange(range);
+            }
+            this.sync();
+            _node.data('fx_saved_value', this.get());
+        }
 
     });
+
     this.source_area = $('textarea[name="'+ this.node.attr('id')+'"]');
     this.source_area.addClass('fx_overlay');
     this.source_area.css({
@@ -258,6 +301,11 @@ fx_edit_in_place.prototype.make_wysiwyg = function () {
 };
 
 fx_edit_in_place.prototype.destroy_wysiwyg = function() {
+
+    
     this.node.redactor('destroy');
+    var marker = this.node.find('#fx_marker-1');
+    marker.remove();
     $('#fx_admin_control .editor_panel').remove();
+    this.node.get(0).normalize();
 };

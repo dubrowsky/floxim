@@ -180,7 +180,7 @@
                         </small>                
                     </div>
                 </div>
-                <div class="row">
+                <div class="row row_footer">
                     <div fx:area="footer" fx:size="wide,low"  class="col-xs-12">
                         <div class="col-xs-4">
                             <h4>

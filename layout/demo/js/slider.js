@@ -1,4 +1,9 @@
 $(function(){
+    $('.slider').find('.slide').eq(0).find('img').eq(0).load(function () {
+        var img_height = $(this).height();
+        $('.slider').height(img_height);
+        change_slide_by_hash ();
+    })
     $('html').on('click', '.slider .switcher A', function(e){
         e.preventDefault();
         change_slide($(this).parent().attr("data-slideid"));
@@ -32,12 +37,11 @@ $(function(){
         }
     }    
     function change_slide_by_hash () {
-    	var hash = window.location.hash.substring(1);
-    	if (hash.indexOf("slideid") === 0) {
+      var hash = window.location.hash.substring(1);
+      if (hash.indexOf("slideid") === 0) {
             var id = hash.substring(7);
             change_slide(id);
-       	}
+        }
     }
     $("html").on("fx_infoblock_loaded", change_slide_by_hash);
-    change_slide_by_hash ();
 });

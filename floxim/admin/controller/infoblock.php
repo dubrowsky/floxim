@@ -657,6 +657,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
      */
     public function save_var($input) {
         /* @var $ib fx_infoblock */
+        dev_log('save var', $input);
         $ib = fx::data('infoblock', $input['infoblock']['id']);
         // для инфоблоков-лейаутов всегда сохраняем параметры в корневой инфоблок
         if ($ib->get_prop_inherited('controller') == 'layout') {
