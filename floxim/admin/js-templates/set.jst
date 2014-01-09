@@ -28,9 +28,8 @@ var fs = $('.fx_fieldset', html);
 
 if (_c.context === 'panel') {
     fs.hide();
-    var expander = $('<a>Edit...</a>');
+    var expander = $('<a>Add...</a>').addClass('expander')
     fs.before(expander);
-    
     expander.click(function() {
         if (expander.data('popup')) {
             return;
@@ -39,6 +38,7 @@ if (_c.context === 'panel') {
         var popup = new $fx.popup({
             target:expander,
             onclose:function() {
+                $('.fx_fieldset_row.fake').remove();
                 html.append(orig);
                 orig.hide();
             }
@@ -76,7 +76,12 @@ if (_c.context === 'panel') {
 if (!_c.values) {
     _c.values = _c.value || [];
 }
+var flag = false;
 $.each(_c.values, function(row, val) {
+    if (!flag) {
+        flag = true;
+        $('.expander', html).text('Edit...')
+    }
     var val_num = 0;
     var inputs = [];
     var row_index = val._index || row;
@@ -112,7 +117,12 @@ $('.fx_fieldset_add', fs).click( function() {
     var new_row = $t.jQuery('fieldset_row', inputs, {index:index, set_field: _c});
     $('.fx_fieldset_rows', fs).append(new_row);
 });
-
+if (!flag) {
+    $('.fx_fieldset_add', fs).click();
+    $('.fx_fieldset_rows .fx_fieldset_row', fs).addClass('fake').one('change', function() {
+        $(this).removeClass('fake')
+    })
+}
 <!--[fieldset_row ? _o.set_field.is_cond_set === undefined]-->
 <tr class="fx_fieldset_row row_<?=_o.index?>">
     <?for (var i = 0; i< _c.length; i++) {
