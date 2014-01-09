@@ -1,9 +1,33 @@
 $(function(){
-    $('.slider').find('.slide').eq(0).find('img').eq(0).load(function () {
-        var img_height = $(this).height();
-        $('.slider').height(img_height);
-        change_slide_by_hash ();
-    })
+    var set_height = function() {
+        var slider_height = $(window).height() - parseInt($('body').css('margin-top')) - $('.nav').height();
+        //console.log(slider_height, $('.slider .slide').innerHeight())
+        $('.slider .slide').css({
+                'max-height': slider_height,
+                'height': 'auto',
+        })
+        $('.slider').css({
+                'max-height': slider_height,
+                'height': 'auto',
+        })
+        var slide_inner = $('.slider .slide').innerHeight();
+        if (slide_inner < slider_height) {
+            slider_height = slide_inner;
+
+            $('.slider .slide').css({
+                'max-height': 'auto',
+                'height': slider_height,
+            });
+            $('.slider').css({
+                'max-height': 'auto',
+                'height': slider_height,
+            });
+
+        }
+        console.log(slide_inner, slider_height)
+    };
+    $('.slider .slide img').eq(0).load(set_height)
+    $(window).resize(set_height);
     $('html').on('click', '.slider .switcher A', function(e){
         e.preventDefault();
         change_slide($(this).parent().attr("data-slideid"));
@@ -44,4 +68,6 @@ $(function(){
         }
     }
     $("html").on("fx_infoblock_loaded", change_slide_by_hash);
+    change_slide_by_hash ();
+
 });

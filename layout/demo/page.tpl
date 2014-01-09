@@ -131,7 +131,6 @@
 						fx:each="$items"  
 						class="footer-menu-item">
 						<a href="{$url}">{$name}</a>
-						<?dev_log('tpl', $children);?>
 						<ul fx:if="$children" class="footer-menu-sub-items" >
 							<li 
 								fx:each="$children" 
