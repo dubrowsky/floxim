@@ -309,9 +309,14 @@
 						</div>
 						<div class="caption">
 							<h2>{$name}</h2>
+                            <div class="date">{$publish_date | 'Y-m-d'}</div>
 							<div class="text">
 								{$text}
 							</div>
+                            <div fx:template="$item['tags']" class="tags">
+                                <a fx:template="item" href="{$url}">{$name}</a>
+                                <span fx:template="separator">, </span>
+                            </div>
 						</div>
 					</div>
 				</div>
@@ -379,6 +384,7 @@
 						<img fx:if="$image" src="{$image|'width:425,height:300'}">
 						<div class="caption">
 							<div>{$anounce}</div>
+                            <div class="date">{$publish_date | 'Y-m-d'}</div>
 							<a href="{$url}">{$name}</a>
 						</div>
 					</div>

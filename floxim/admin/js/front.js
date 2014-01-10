@@ -1057,7 +1057,7 @@ fx_front.prototype.outline_block = function(n, style) {
     var nw = n.outerWidth() + 1;
     var nh = n.outerHeight();
     var size = style === 'hover' ? 2 : 2;
-    var pane_z_index = $('#fx_admin_control').css('z-index') - 1;
+    var pane_z_index = $('#fx_admin_control').css('z-index') - 10;
     var parents = n.parents();
     var pane_position = 'absolute';
     if (n.css('position') == 'fixed') {

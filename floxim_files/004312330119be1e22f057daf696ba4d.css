@@ -3,16 +3,15 @@ body {
   padding: 0;
   font-size: 100%;
 }
-body * {
-  font-family: 'Nixie One';
-}
 img {
   vertical-align: middle;
 }
 .wrapper {
   width: 100%;
   margin: auto;
-  font-family: Times New Roman;
+}
+.wrapper * {
+  font-family: 'Nixie One';
 }
 .wrapper section {
   padding: 2%;
@@ -296,6 +295,7 @@ img {
 }
 .wrapper section .slider {
   width: 100%;
+  overflow: hidden;
   position: relative;
   margin-bottom: 2%;
 }
@@ -412,7 +412,7 @@ img {
   height: 40px;
   background-color: #212121;
   position: fixed;
-  z-index: 1;
+  z-index: 2666;
 }
 .wrapper .nav .logo {
   float: left;
@@ -441,20 +441,21 @@ img {
   padding: 0 10px;
   position: relative;
 }
-.wrapper .nav .main-menu .menu-item.active {
+.wrapper .nav .main-menu .menu-item.active,
+.wrapper .nav .main-menu .menu-item:hover {
   background-color: white;
 }
-.wrapper .nav .main-menu .menu-item.active a {
+.wrapper .nav .main-menu .menu-item.active a,
+.wrapper .nav .main-menu .menu-item:hover a {
   color: #33ccff;
+  font-weight: normal !important;
 }
-.wrapper .nav .main-menu .menu-item.active .menu-sub-items {
+.wrapper .nav .main-menu .menu-item.active .menu-sub-items,
+.wrapper .nav .main-menu .menu-item:hover .menu-sub-items {
   display: block;
 }
-.wrapper .nav .main-menu .menu-item.current {
-  background-color: white;
-}
-.wrapper .nav .main-menu .menu-item.current a {
-  color: #33ccff;
+.wrapper .nav .main-menu .menu-item.current > a {
+  font-weight: bold;
 }
 .wrapper .nav .main-menu .menu-item a {
   color: white;
