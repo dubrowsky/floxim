@@ -10,7 +10,10 @@
 
 <!--jquery-->
 var inp  = $('input.date_input', html);
-
+$('.icon', html).click(function(){
+    console.log('asdf')
+    inp.focus();
+});
 function get_inp_time(inp) {
     var v = inp.val();
     var v_time = v.replace(/^[^\s]+\s/, '');

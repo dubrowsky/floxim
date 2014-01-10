@@ -5,8 +5,7 @@ class fx_controller_admin_field extends fx_controller_admin {
     public function items( $input ) {
         $essence = $input['essence'];
         
-        $items = $essence->fields();
-        
+        $items = $essence->all_fields();
         $ar = array('type' => 'list', 'filter' => true, 'sortable' => true);
         
         $essence_code = str_replace('fx_','',get_class($essence));
@@ -19,13 +18,18 @@ class fx_controller_admin_field extends fx_controller_admin {
             'type' => fx::lang('Type','system')
         );
         foreach ( $items as $field ) {
+            $desc = $field->get_description();
+            if ($essence['id'] != $field['component_id']) {
+                $component_name = fx::data('component', $field['component_id'])->get('name');
+                $desc .= ' ('.$component_name.')';
+            }
             $r = array(
                 'id' => $field->get_id(), 
                 'name' => array(
                     'name' => $field->get_name(), 
-                    'url' =>  '#admin.'.$essence_code.'.edit('.$essence['id'].',edit_field,'.$field->get_id().')'
+                    'url' =>  '#admin.'.$essence_code.'.edit('.$field['component_id'].',edit_field,'.$field->get_id().')'
                 ),
-                'label' => $field->get_description(), 
+                'label' => $desc, 
                 'type' => fx::lang("FX_ADMIN_FIELD_".strtoupper($field->get_type(false)), 'system')
             );
             $ar['values'][] = $r;
@@ -208,7 +212,18 @@ class fx_controller_admin_field extends fx_controller_admin {
             $fields[] = $this->ui->checkbox('searchable', fx::lang('Field can be used for searching','system'), null, $field['searchable']);
         }
         if ( $datatype['default'] ) {
-            $fields[] = $this->ui->input('default', fx::lang('Default value','system'), $field['default']);
+            if ($datatype['name'] == 'datetime') {
+                $fields[] = array(
+                    'name' => 'default',
+                    'type' => 'radio',
+                    'label' => fx::lang('Default value','system'),
+                    'values' => array(''=>'No', 'now'=>'NOW'),
+                    'value' => $field['default'],
+                    'selected_first' => true
+                );
+            } else {
+                $fields[] = $this->ui->input('default', fx::lang('Default value','system'), $field['default']);
+            }
         }
 
         $format_settings =  $field->format_settings();  
