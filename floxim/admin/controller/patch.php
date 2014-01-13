@@ -6,7 +6,7 @@ class fx_controller_admin_patch extends fx_controller_admin {
             $this->response->add_field(array(
                 'type' => 'label',
                 'value' => '<p style="color:#F00;">'.
-                    fx::lang('Update check failed','system').
+                    fx::alang('Update check failed','system').
                 '</p>'
             ));
         }
@@ -14,7 +14,7 @@ class fx_controller_admin_patch extends fx_controller_admin {
         $this->response->add_field(array(
             'type' => 'label',
             'value' => '<p>'.
-                    fx::lang('Current Floxim version:', 'system').
+                    fx::alang('Current Floxim version:', 'system').
                     ' '.fx::version().
                 '</p>'
         ));
@@ -64,7 +64,7 @@ class fx_controller_admin_patch extends fx_controller_admin {
             'type' => 'label',
             'value' => 
                 '<p>'.
-                    sprintf(fx::lang('Installing patch %s...', 'system'), $patch['to']).
+                    sprintf(fx::alang('Installing patch %s...', 'system'), $patch['to']).
                 '</p>'
         ));
         
@@ -90,7 +90,7 @@ class fx_controller_admin_patch extends fx_controller_admin {
     }
     
     protected function _set_layout($c_patch = null) {
-    	$this->response->breadcrumb->add_item( fx::lang('Patches','system'), '#admin.patch.all');
+    	$this->response->breadcrumb->add_item( fx::alang('Patches','system'), '#admin.patch.all');
         if ($c_patch) {
             $this->response->breadcrumb->add_item( 
                 $c_patch['to'], 

@@ -37,7 +37,7 @@ class fx_controller_component_publication extends fx_controller_component {
             'values' => $ib_values,
             'name' => 'source_infoblock_id',
             'label' => 
-                fx::lang('Infoblock for the field', 'controller_component')
+                fx::alang('Infoblock for the field', 'controller_component')
         );
         return $fields;
     }

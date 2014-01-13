@@ -41,7 +41,7 @@ class fx_system_page extends fx_system {
             return $this->add_js_file($file);
         }
     }
-
+    
     public function add_css_file($file) {
         if (preg_match("~\.less$~", $file)) {
             $doc_root = fx::config()->DOCUMENT_ROOT;

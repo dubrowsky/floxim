@@ -12,7 +12,7 @@ class fx_controller_admin_adminpanel extends fx_controller_admin {
                 <div id="fx_admin_main_menu"></div>
                 <div id="fx_admin_page_modes"></div>
                 <div id="fx_admin_more_menu"></div>
-                <div id="fx_admin_additional_menu"><a class="fx_logout">'.fx::lang('Sign out','system').'</a></div>
+                <div id="fx_admin_additional_menu"><a class="fx_logout">'.fx::alang('Sign out','system').'</a></div>
                 <div id="fx_admin_clear"></div>
             </div>
             <div id="fx_admin_control" class="fx_overlay">
@@ -33,7 +33,7 @@ class fx_controller_admin_adminpanel extends fx_controller_admin {
     public static function get_more_menu() {
         $more_menu = array();
         $more_menu[] = array(
-            'name' => fx::lang('Page design','system'),
+            'name' => fx::alang('Page design','system'),
             'button' => array(
                 'essence' => 'infoblock',
                 'action' => 'layout_settings',
@@ -46,24 +46,24 @@ class fx_controller_admin_adminpanel extends fx_controller_admin {
     public static function get_buttons() {
         $result = array(
             'source' => array(
-                'add' => array('title' => fx::lang('add', 'system'), 'type' => 'text'),
-                'edit' => array('title' => fx::lang('edit', 'system')),
-                'on' => array('title' => fx::lang('on', 'system')),
-                'off' => array('title' => fx::lang('off', 'system')),
-                'settings' => array('title' => fx::lang('settings', 'system')),
-                'delete' => array('title' => fx::lang('delete', 'system')),
-                'select_block' => array('title' => fx::lang('Select parent block','system')),
-                'rights' => array('title' => fx::lang('Permissions','system')),
-                'upload' => array('title' => fx::lang('Upload file','system')),
-                'download' => array('title' => fx::lang('Download file','system')),
-                'map' => array('title' => fx::lang('Site map','system')),
-                'export' => array('title' => fx::lang('Export','system')),
-                'store' => array('title' => fx::lang('Download from FloximStore','system')),
-                'import' => array('title' => fx::lang('Import','system')),
-                'change_password' => array('title' => fx::lang('Change password','system')),
-                'undo' => array('title' => fx::lang('Cancel', 'system')),
-                'redo' => array('title' => fx::lang('Redo', 'system')),
-                'more' => array('title' => fx::lang('More', 'system'))
+                'add' => array('title' => fx::alang('add', 'system'), 'type' => 'text'),
+                'edit' => array('title' => fx::alang('edit', 'system')),
+                'on' => array('title' => fx::alang('on', 'system')),
+                'off' => array('title' => fx::alang('off', 'system')),
+                'settings' => array('title' => fx::alang('settings', 'system')),
+                'delete' => array('title' => fx::alang('delete', 'system')),
+                'select_block' => array('title' => fx::alang('Select parent block','system')),
+                'rights' => array('title' => fx::alang('Permissions','system')),
+                'upload' => array('title' => fx::alang('Upload file','system')),
+                'download' => array('title' => fx::alang('Download file','system')),
+                'map' => array('title' => fx::alang('Site map','system')),
+                'export' => array('title' => fx::alang('Export','system')),
+                'store' => array('title' => fx::alang('Download from FloximStore','system')),
+                'import' => array('title' => fx::alang('Import','system')),
+                'change_password' => array('title' => fx::alang('Change password','system')),
+                'undo' => array('title' => fx::alang('Cancel', 'system')),
+                'redo' => array('title' => fx::alang('Redo', 'system')),
+                'more' => array('title' => fx::alang('More', 'system'))
             ),
             'map' => array(
                 'page' => explode(

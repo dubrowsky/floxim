@@ -212,11 +212,11 @@ class fx_field_multilink extends fx_field_baze {
         $fields[]= array(
             'id' => 'format[render_type]',
             'name' => 'format[render_type]',
-            'label' => fx::lang('Render type', 'system'),
+            'label' => fx::alang('Render type', 'system'),
             'type' => 'select',
             'values' => array(
-                'livesearch' => fx::lang('Live search','system'),
-                'table' => fx::lang('Fields table','system')
+                'livesearch' => fx::alang('Live search','system'),
+                'table' => fx::alang('Fields table','system')
             ),
             'value' => $this['format']['render_type']
         );

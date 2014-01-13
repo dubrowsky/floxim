@@ -13,9 +13,9 @@ class fx_controller_admin_field extends fx_controller_admin {
         $ar['essence'] = 'field';
         $ar['values'] = array();
         $ar['labels'] = array(
-            'name' => fx::lang('Name','system'), 
-            'label' => fx::lang('Description','system'),
-            'type' => fx::lang('Type','system')
+            'name' => fx::alang('Name','system'),
+            'label' => fx::alang('Description','system'),
+            'type' => fx::alang('Type','system')
         );
         foreach ( $items as $field ) {
             $desc = $field->get_description();
@@ -30,7 +30,7 @@ class fx_controller_admin_field extends fx_controller_admin {
                     'url' =>  '#admin.'.$essence_code.'.edit('.$field['component_id'].',edit_field,'.$field->get_id().')'
                 ),
                 'label' => $desc, 
-                'type' => fx::lang("FX_ADMIN_FIELD_".strtoupper($field->get_type(false)), 'system')
+                'type' => fx::alang("FX_ADMIN_FIELD_".strtoupper($field->get_type(false)), 'system')
             );
             $ar['values'][] = $r;
         }
@@ -40,7 +40,7 @@ class fx_controller_admin_field extends fx_controller_admin {
             array(
                 array(
                     'key' => 'add', 
-                    'title' => fx::lang('Add new field', 'system'),
+                    'title' => fx::alang('Add new field', 'system'),
                     'url' => '#admin.'.$essence_code.'.edit('.$essence['id'].',add_field)'
                 ),
                 "delete"
@@ -61,8 +61,8 @@ class fx_controller_admin_field extends fx_controller_admin {
     
     
     protected function _form ( $info = array() ) {
-        $fields[] = $this->ui->input('name', fx::lang('Field keyword','system'), $info['name']);
-        $fields[] = $this->ui->input('description', fx::lang('Description','system'), $info['description']);
+        $fields[] = $this->ui->input('name', fx::alang('Field keyword','system'), $info['name']);
+        $fields[] = $this->ui->input('description', fx::alang('Description','system'), $info['description']);
         
         $fields []= array(
             'type' => 'select',
@@ -80,12 +80,12 @@ class fx_controller_admin_field extends fx_controller_admin {
         
         $finder = fx_data::optional('datatype');
         foreach ($finder->get_all() as $v ) {
-            $values[$v['id']] = fx::lang("FX_ADMIN_FIELD_".strtoupper($v['name']), 'system');
+            $values[$v['id']] = fx::alang("FX_ADMIN_FIELD_".strtoupper($v['name']), 'system');
         }
         $fields[] = array(
         	'type' => 'select', 
         	'name' => 'type', 
-        	'label' => fx::lang('Field type','system'),
+        	'label' => fx::alang('Field type','system'),
         	'values' => $values, 
         	'value' => $info['type'] ?  $info['type']  : 1, 
         	'post' => array(
@@ -97,13 +97,13 @@ class fx_controller_admin_field extends fx_controller_admin {
         );
         
         $values = array(
-            fx_field::EDIT_ALL => fx::lang('anybody','system'), 
-            fx_field::EDIT_ADMIN => fx::lang('admins only','system'), 
-            fx_field::EDIT_NONE => fx::lang('nobody','system')
+            fx_field::EDIT_ALL => fx::alang('anybody','system'),
+            fx_field::EDIT_ADMIN => fx::alang('admins only','system'),
+            fx_field::EDIT_NONE => fx::alang('nobody','system')
         );
         $fields[] = $this->ui->select(
                 'type_of_edit', 
-                fx::lang('Field is available for','system'), 
+                fx::alang('Field is available for','system'),
                 $values, 
                 $info['type_of_edit'] ? $info['type_of_edit'] : fx_field::EDIT_ALL  
         );
@@ -149,7 +149,7 @@ class fx_controller_admin_field extends fx_controller_admin {
             $fields[] = $this->ui->hidden('action','edit');
         }
         else {
-            $fields[] = $this->ui->error( fx::lang('Field not found','system') );
+            $fields[] = $this->ui->error( fx::alang('Field not found','system') );
         }
 
         return array('fields' => $fields);
@@ -206,23 +206,23 @@ class fx_controller_admin_field extends fx_controller_admin {
        
         $datatype = fx_data::optional('datatype')->get_by_id($input['type']);
         if ( $datatype['not_null'] ) {
-            $fields[] = $this->ui->checkbox('not_null', fx::lang('Required','system'), null, $field['not_null']);
+            $fields[] = $this->ui->checkbox('not_null', fx::alang('Required','system'), null, $field['not_null']);
         }
         if ( $datatype['searchable'] ) {
-            $fields[] = $this->ui->checkbox('searchable', fx::lang('Field can be used for searching','system'), null, $field['searchable']);
+            $fields[] = $this->ui->checkbox('searchable', fx::alang('Field can be used for searching','system'), null, $field['searchable']);
         }
         if ( $datatype['default'] ) {
             if ($datatype['name'] == 'datetime') {
                 $fields[] = array(
                     'name' => 'default',
                     'type' => 'radio',
-                    'label' => fx::lang('Default value','system'),
+                    'label' => fx::alang('Default value','system'),
                     'values' => array(''=>'No', 'now'=>'NOW'),
                     'value' => $field['default'],
                     'selected_first' => true
                 );
             } else {
-                $fields[] = $this->ui->input('default', fx::lang('Default value','system'), $field['default']);
+                $fields[] = $this->ui->input('default', fx::alang('Default value','system'), $field['default']);
             }
         }
 

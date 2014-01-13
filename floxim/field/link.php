@@ -34,7 +34,7 @@ class fx_field_link extends fx_field_baze {
         $fields[] = array(
             'id' => 'format[target]',
             'name' => 'format[target]',
-            'label' => fx::lang('Links to','system'),
+            'label' => fx::alang('Links to','system'),
             'type' => 'select',
             'values' => $comp_values,
             'value' => $this['format']['target'] ? $this['format']['target'] : ''
@@ -42,13 +42,13 @@ class fx_field_link extends fx_field_baze {
         $fields[] = array(
             'id' => 'format[prop_name]',
             'name' => 'format[prop_name]',
-            'label' => fx::lang('Key name for the property','system'),
+            'label' => fx::alang('Key name for the property','system'),
             'value' => $this->get_prop_name()
         );
         $fields[]= array(
             'id' => 'format[is_parent]',
             'name' => 'format[is_parent]',
-            'label' => fx::lang('Bind value to the parent','system'),
+            'label' => fx::alang('Bind value to the parent','system'),
             'type' => 'checkbox',
             'value' => $this['format']['is_parent']
         );
@@ -56,11 +56,11 @@ class fx_field_link extends fx_field_baze {
             'id' => 'format[render_type]',
             'name' => 'format[render_type]',
 
-            'label' => fx::lang('Render type','system'),
+            'label' => fx::alang('Render type','system'),
             'type' => 'select',
             'values' => array(
-                'livesearch' => fx::lang('Live search','system'),
-                'select' => fx::lang('Simple select','system')
+                'livesearch' => fx::alang('Live search','system'),
+                'select' => fx::alang('Simple select','system')
             ),
             'value' => $this['format']['render_type']
         );

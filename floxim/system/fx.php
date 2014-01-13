@@ -317,12 +317,24 @@ class fx {
     public static function lang ( $string = null, $dict = null) {
         static $lang = null;
         if (!$lang) {
+            $lang = new fx_lang(fx::env()->get_site()->get('language'));
+        }
+        if ($string === null) {
+            return $lang;
+        }
+
+        return $lang->get_string($string, $dict);
+    }
+
+    public static function alang ( $string = null, $dict = null) {
+        static $lang = null;
+        if (!$lang) {
             $lang = new fx_lang();
         }
         if ($string === null) {
             return $lang;
         }
-        
+
         return $lang->get_string($string, $dict);
     }
 

@@ -33,7 +33,7 @@ class fx_controller_admin_history extends fx_controller {
         if ($history) {
             $history->undo()->set('marker', 1)->save(true);
         }
-        return array('status' => 'ok', 'text' => fx::lang('Cancelled','system'));
+        return array('status' => 'ok', 'text' => fx::alang('Cancelled','system'));
     }
 
     public function redo() {
@@ -42,7 +42,7 @@ class fx_controller_admin_history extends fx_controller {
         if ($history) {
             $history->redo()->set('marker', 0)->save(true);
         }
-        return array('status' => 'ok', 'text' => fx::lang('Repeated','system'));
+        return array('status' => 'ok', 'text' => fx::alang('Repeated','system'));
     }
 
 }

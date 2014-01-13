@@ -19,12 +19,12 @@ return array(
             'settings' => array(
             	'submenu' => array(
                     'name' => 'submenu',
-                    'label' => fx::lang('Subsections','component_section'),
+                    'label' => fx::alang('Subsections','component_section'),
                     'type' => 'select',
                     'values' => array(
-                        'none' => fx::lang('Don\'t show','component_section'),
-                        'active' => fx::lang('Show for the active item','component_section'),
-                        'all' => fx::lang('Show for all items','component_section')
+                        'none' => fx::alang('Don\'t show','component_section'),
+                        'active' => fx::alang('Show for the active item','component_section'),
+                        'all' => fx::alang('Show for all items','component_section')
                     )
                 ),
             ),
@@ -34,7 +34,7 @@ return array(
             'icon_extra' => 'sub',
             'settings' => array(
                 'source_infoblock_id' => array(
-                    'label' => fx::lang('Source infoblock','component_section'),
+                    'label' => fx::alang('Source infoblock','component_section'),
                     'type' => 'select',
                     'values' => $source_ibs,
                 ),
