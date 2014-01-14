@@ -13,12 +13,11 @@ class fx_controller_admin_component extends fx_controller_admin {
         
         $field = array('type' => 'list', 'filter' => true);
         $field['labels'] = array(
-            'name' => fx::lang('Name', 'system'), 
+            'name' => fx::alang('Name', 'system'),
             'buttons' => array('type' => 'buttons')
         );
         $field['values'] = array();
         $field['essence'] = $essence;
-        
         $append_coms = function($coll, $level) use (&$field, &$append_coms) {
             foreach ($coll as $v) {
                 $submenu = fx_controller_admin_component::get_component_submenu($v);
@@ -57,7 +56,7 @@ class fx_controller_admin_component extends fx_controller_admin {
         $this->response->add_buttons(array(
             array(
                 'key' => "add", 
-                'title' => fx::lang('Add new '.$essence, 'system'),
+                'title' => fx::alang('Add new '.$essence, 'system'),
                 'url' => '#admin.'.$essence.'.add'
             ),
             "delete"
@@ -76,14 +75,14 @@ class fx_controller_admin_component extends fx_controller_admin {
     	
     	$titles = array(
             'component' => array(
-                'settings' => fx::lang('Settings','system'),
-                'fields' => fx::lang('Fields','system'),
+                'settings' => fx::alang('Settings','system'),
+                'fields' => fx::alang('Fields','system'),
                 //'actions' => fx::lang('Component actions', 'system'),
-                'templates' => fx::lang('Templates', 'system')
+                'templates' => fx::alang('Templates', 'system')
             ), 
             'widget' => array(
-                'settings' => fx::lang('Settings','system'),
-                'templates' => fx::lang('Templates', 'system')
+                'settings' => fx::alang('Settings','system'),
+                'templates' => fx::alang('Templates', 'system')
             )
         );
 		
@@ -131,7 +130,7 @@ class fx_controller_admin_component extends fx_controller_admin {
 
         switch ($input['source']) {
             case 'import':
-                $fields[] = array('name' => 'importfile', 'type' => 'file', 'label' => fx::lang('File','system'));
+                $fields[] = array('name' => 'importfile', 'type' => 'file', 'label' => fx::alang('File','system'));
                 $fields[] = $this->ui->hidden('action', 'import');
                 break;
             case 'store':
@@ -142,10 +141,10 @@ class fx_controller_admin_component extends fx_controller_admin {
                 $groups = fx::data('component')->get_all_groups();
 
                 $fields[] = $this->ui->hidden('action', 'add');
-                $fields[] = array('label' => fx::lang('Component name','system'), 'name' => 'name');
-                $fields[] = array('label' => fx::lang('Name of an entity created by the component','system'), 'name' => 'item_name');
-                $fields[] = array('label' => fx::lang('Keyword','system'), 'name' => 'keyword');
-                $fields[] = array('label' => fx::lang('Group','system'), 'type' => 'select', 'values' => $groups, 'name' => 'group', 'extendable' => fx::lang('Another group','system'));
+                $fields[] = array('label' => fx::alang('Component name','system'), 'name' => 'name');
+                $fields[] = array('label' => fx::alang('Name of an entity created by the component','system'), 'name' => 'item_name');
+                $fields[] = array('label' => fx::alang('Keyword','system'), 'name' => 'keyword');
+                $fields[] = array('label' => fx::alang('Group','system'), 'type' => 'select', 'values' => $groups, 'name' => 'group', 'extendable' => fx::alang('Another group','system'));
         }
 
         $fields[] = $this->ui->hidden('source', $input['source']);
@@ -160,7 +159,7 @@ class fx_controller_admin_component extends fx_controller_admin {
             '#admin.'.$essence.'.all'
         );
         $this->response->breadcrumb->add_item(
-            fx::lang('Add new '.$essence, 'system')
+            fx::alang('Add new '.$essence, 'system')
         );
         
         $this->response->submenu->set_menu($essence);
@@ -211,8 +210,8 @@ class fx_controller_admin_component extends fx_controller_admin {
     
     protected static function _essence_types( $key = null ) {
         $arr = array (
-            'widget' => fx::lang('Widgets','system'),
-            'component' => fx::lang('Components','system')
+            'widget' => fx::alang('Widgets','system'),
+            'component' => fx::alang('Components','system')
         );
         return ( empty($key) ? $arr : $arr[$key] );
     }
@@ -286,7 +285,7 @@ class fx_controller_admin_component extends fx_controller_admin {
         $file = $input['importfile'];
         if (!$file) {
             $result = array('status' => 'error');
-            $result['text'][] = fx::lang('Error creating a temporary file','system');
+            $result['text'][] = fx::alang('Error creating a temporary file','system');
         }
 
         $result = array('status' => 'ok');
@@ -323,11 +322,11 @@ class fx_controller_admin_component extends fx_controller_admin {
             'add'
         );
         $this->response->breadcrumb->add_item(
-            fx::lang('Fields', 'system'),
+            fx::alang('Fields', 'system'),
             '#admin.component.edit('.$component['id'].',fields)'
         );
         $this->response->breadcrumb->add_item(
-            fx::lang('Add new field', 'system')
+            fx::alang('Add new field', 'system')
         );
         return $controller->process();
     }
@@ -344,12 +343,12 @@ class fx_controller_admin_component extends fx_controller_admin {
                 all();
         $field = array('type' => 'list', 'filter' => true);
         $field['labels'] = array(
-            'name' => fx::lang('Name', 'system'),
-            'action' => fx::lang('Action', 'system'),
-            'type' => fx::lang('Type', 'system'),
-            'source' => fx::lang('Source', 'system'),
-            'file' => fx::lang('File', 'system'),
-            'used' => fx::lang('Used', 'system')
+            'name' => fx::alang('Name', 'system'),
+            'action' => fx::alang('Action', 'system'),
+            'type' => fx::alang('Type', 'system'),
+            'source' => fx::alang('Source', 'system'),
+            'file' => fx::alang('File', 'system'),
+            'used' => fx::alang('Used', 'system')
         );
         $field['values'] = array();
         foreach ($templates as $tpl) {
@@ -468,10 +467,10 @@ class fx_controller_admin_component extends fx_controller_admin {
     
     protected function _get_parent_component_field($component = null) {
         $field = array(
-            'label' => fx::lang('Parent component','system'),
+            'label' => fx::alang('Parent component','system'),
             'name' => 'parent_id',
             'type' => 'select',
-            'values' => array('' => fx::lang('--no--','system'))
+            'values' => array('' => fx::alang('--no--','system'))
         );
         $c_finder = fx::data('component');
         if ($component) {
@@ -479,7 +478,7 @@ class fx_controller_admin_component extends fx_controller_admin {
             $field['value'] = $component['parent_id'];
         }
         $field['values'] = array_merge(
-                array(array('', fx::lang('--no--','system'))),
+                array(array('', fx::alang('--no--','system'))),
                 $c_finder->get_select_values()
         );
         return $field;
@@ -488,11 +487,11 @@ class fx_controller_admin_component extends fx_controller_admin {
     public function settings($component) {
         $groups = fx::data('component')->get_all_groups();
 
-        $fields[] = array('label' => fx::lang('Keyword:','system') . ' '.$component['keyword'], 'type' => 'label');
-        $fields[] = array('label' => fx::lang('Component name','system'), 'name' => 'name', 'value' => $component['name']);
-        $fields[] = array('label' => fx::lang('Name of entity created by the component','system'), 'name' => 'item_name', 'value' => $component['item_name']);
-        $fields[] = array('label' => fx::lang('Group','system'), 'type' => 'select', 'values' => $groups, 'name' => 'group', 'value' => $component['group'], 'extendable' => fx::lang('Another group','system'));
-        $fields[] = array('label' => fx::lang('Description','system'), 'name' => 'description', 'value' => $component['description'], 'type' => 'text');
+        $fields[] = array('label' => fx::alang('Keyword:','system') . ' '.$component['keyword'], 'type' => 'label');
+        $fields[] = array('label' => fx::alang('Component name','system'), 'name' => 'name', 'value' => $component['name']);
+        $fields[] = array('label' => fx::alang('Name of entity created by the component','system'), 'name' => 'item_name', 'value' => $component['item_name']);
+        $fields[] = array('label' => fx::alang('Group','system'), 'type' => 'select', 'values' => $groups, 'name' => 'group', 'value' => $component['group'], 'extendable' => fx::alang('Another group','system'));
+        $fields[] = array('label' => fx::alang('Description','system'), 'name' => 'description', 'value' => $component['description'], 'type' => 'text');
         
         $fields []= $this->_get_parent_component_field($component);
 

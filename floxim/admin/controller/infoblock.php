@@ -3,9 +3,9 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
 
     protected function _component_actions ( $key ) {
         $arr = array(
-            'listing' => fx::lang('List','system'),
-            'mirror' => fx::lang('Mirror','system'),
-            'record' => fx::lang('Single entry','system')
+            'listing' => fx::alang('List','system'),
+            'mirror' => fx::alang('Mirror','system'),
+            'record' => fx::alang('Single entry','system')
         );
         return empty($key) ? $arr : $arr[$key];
     }
@@ -113,17 +113,17 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         }
         $this->response->add_form_button(array(
             'key' => 'next',
-            'label' => fx::lang('Next','system')
+            'label' => fx::alang('Next','system')
         ));
         $this->response->add_form_button(array(
             'key' => 'finish',
-            'label' => fx::lang('Finish','system')
+            'label' => fx::alang('Finish','system')
         ));
         $result = array(
             'fields' => $fields,
-            'header' => fx::lang('Adding infoblock','system'),
+            'header' => fx::alang('Adding infoblock','system'),
             'dialog_button' => array(
-                array('key' => 'save', 'text' => fx::lang('Next','system'))
+                array('key' => 'save', 'text' => fx::alang('Next','system'))
             )
     	);
         return $result;
@@ -139,7 +139,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         if ($type == 'component') {
             $action_name = $this->_component_actions($action);
         } else {
-            $action_name = fx::lang('Widget','system');
+            $action_name = fx::alang('Widget','system');
         }
         return $ctr['name'].' / '.$action_name;
     }
@@ -211,7 +211,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             //$this->response->add_tab('settings', fx::lang('What to show','system'));
             $this->response->add_fields(
                     array(array(
-                        'label' => fx::lang('Block name','system'),
+                        'label' => fx::alang('Block name','system'),
                         'name' => 'name', 
                         'value' => $infoblock['name'],
                         'tip' => $infoblock['controller'].'.'.$infoblock['action']
@@ -329,15 +329,15 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
     	
         $result = array(
             'header' => $is_layout ? 
-                fx::lang('Page layout','system') : 
-                fx::lang('Infoblock settings','system'). 
+                fx::alang('Page layout','system') :
+                fx::alang('Infoblock settings','system').
                 ', ' . $controller_name . '.' . $action.' #'.$infoblock['id'],
             'dialog_button' => array(
                 array(
                     'key' => 'save', 
                     'text' => $input['id'] 
-                                ? fx::lang('Update','system') 
-                                : fx::lang('Create','system')
+                                ? fx::alang('Update','system')
+                                : fx::alang('Create','system')
                 )
             )
     	);
@@ -348,7 +348,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         }
         
         if (!$infoblock['id']) {
-            $result['header'] = ' <a class="back">'.fx::lang('Adding infoblock','system').'</a>';
+            $result['header'] = ' <a class="back">'.fx::alang('Adding infoblock','system').'</a>';
             $result['header'] .= ' / '.$action_name;
         } else {
             $result['header'] = 'Settings / '.$action_name;
@@ -358,12 +358,12 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             $is_inherited = $infoblock['parent_infoblock_id'] != 0;
             $result['dialog_button'] []= array(
                 'key' => 'inherit', 
-                'text' => fx::lang('Create a new rule','system'), 
+                'text' => fx::alang('Create a new rule','system'),
                 'act_as' => 'save'
             );
             if ($is_inherited) {
                 $result['dialog_button'] []= array(
-                    'key' => 'inherit_delete', 'text' => fx::lang('Remove this rule','system'), 'act_as' => 'save'
+                    'key' => 'inherit_delete', 'text' => fx::alang('Remove this rule','system'), 'act_as' => 'save'
                 );
             }
             
@@ -503,7 +503,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             return $fields;
         }
         
-        $path_vals = array('0' => fx::lang('On all pages','system'));
+        $path_vals = array('0' => fx::alang('On all pages','system'));
         $path_ids = $c_page->get_parent_ids();
         $path = fx::data('content_page', $path_ids);
         $path []= $c_page;
@@ -528,18 +528,18 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         $fields []= array(
             'type' => 'select', 
             'name' => 'page_id', 
-            'label' => fx::lang('Page','system'),
+            'label' => fx::alang('Page','system'),
             'values' => $path_vals,
             'value' => $c_page_id_val
         );
                 
         $page_vals = array(
-            'this' => fx::lang('Only on the page','system')
+            'this' => fx::alang('Only on the page','system')
         );
         
         //if ($c_page['url'] != '/') {
-            $page_vals['children'] = fx::lang('Only on children','system');
-            $page_vals['descendants'] = fx::lang('On the page and it\'s children','system');
+            $page_vals['children'] = fx::alang('Only on children','system');
+            $page_vals['descendants'] = fx::alang('On the page and it\'s children','system');
         //}
         
         $fields []= array(
@@ -551,7 +551,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         );
         
         $page_types = array();
-        $page_types []= array('', fx::lang('-Any-', 'system'));
+        $page_types []= array('', fx::alang('-Any-', 'system'));
         $coms = fx::data('component')->get_select_values('page');
         foreach ($coms as $com) {
             $com = fx::data('component', $com[0]);
@@ -560,7 +560,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         
         $fields []= array(
             'name' => 'page_type',
-            'label' => fx::lang('Only on pages of type','system'),
+            'label' => fx::alang('Only on pages of type','system'),
             'value' => fx::dig($infoblock, 'scope.page_type'),
             'parent' => array('pages' => '!=this'),
             'type' => 'select',
@@ -594,7 +594,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         $wrappers = array();
         $c_wrapper = '';
         if (!$force_block) {
-            $wrappers[''] = fx::lang('With no wrapper','system');
+            $wrappers[''] = fx::alang('With no wrapper','system');
             $c_wrapper = $i2l['wrapper'];
         }
         $layout_name = fx::data('layout', $i2l['layout_id'])->get('keyword');
@@ -634,7 +634,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         }
 
         $fields []= array(
-            'label' => fx::lang('Template','system'),
+            'label' => fx::alang('Template','system'),
             'name' => 'template',
             'type' => 'select',
             'values' => $templates,
@@ -642,7 +642,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         );
         if ($controller_name != 'layout') {
             $fields []= array(
-                'label' => fx::lang('Block wrapper','system'),
+                'label' => fx::alang('Block wrapper','system'),
                 'name' => 'wrapper',
                 'type' => 'select',
                 'values' => $wrappers,
@@ -720,7 +720,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         $controller->set_param('infoblock_id', $infoblock['id']);
         $fields = array(
             array(
-                'label' => fx::lang('I am REALLY sure','system'),
+                'label' => fx::alang('I am REALLY sure','system'),
                 'name' => 'delete_confirm',
                 'type' => 'checkbox'
             ),
@@ -733,16 +733,16 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         if ($ib_content->length > 0) {
             $fields[]= array(
                 'name' => 'content_handle',
-                'label' => fx::lang('The infoblock contains some content','system') . ', <b>' . $ib_content->length . '</b> '. fx::lang('items. What should we do with them?','system'),
+                'label' => fx::alang('The infoblock contains some content','system') . ', <b>' . $ib_content->length . '</b> '. fx::alang('items. What should we do with them?','system'),
                 'type' => 'select',
-                'values' => array('unbind' => fx::lang('Unbind/Hide','system'), 'delete' => fx::lang('Delete','system')),
+                'values' => array('unbind' => fx::alang('Unbind/Hide','system'), 'delete' => fx::alang('Delete','system')),
                 //'parent' => array('delete_confirm' => true)
             );
         }
         
         if ($infoblock['controller'] == 'layout' && !$infoblock['parent_infoblock_id']) {
             unset($fields[0]);
-            $fields []= array('type' => 'html', 'html' => fx::lang('Layouts can not be deleted','system'));
+            $fields []= array('type' => 'html', 'html' => fx::alang('Layouts can not be deleted','system'));
         }
         $this->response->add_fields($fields);
         if ($input['delete_confirm']) {

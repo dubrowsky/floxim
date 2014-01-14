@@ -12,7 +12,7 @@ class fx_field_select extends fx_field_baze {
         $values = $this->get_options();
         if (!$this->is_not_null() && is_array($values)) {
             $values = array_merge(
-                array( array('', fx::lang('-- choose something --', 'system'))),
+                array( array('', fx::alang('-- choose something --', 'system'))),
                 $values
             );
         }
@@ -38,7 +38,7 @@ class fx_field_select extends fx_field_baze {
 
         $fields[] = array(
             'name' => 'format[values]', 
-            'label' => fx::lang('Elements','system'), 
+            'label' => fx::alang('Elements','system'),
             'type' => 'set', 
             'tpl' => array(
                 array('name' => 'id', 'type' => 'string'),

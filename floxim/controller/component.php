@@ -136,7 +136,7 @@ class fx_controller_component extends fx_controller {
     protected function _config_conditions () {
         $fields['conditions'] = array(
             'name' => 'conditions',
-            'label' => fx::lang('Conditions','controller_component'),
+            'label' => fx::alang('Conditions','controller_component'),
             'type' => 'set', 
             'is_cond_set' => true,  
             'tpl' => array(
@@ -263,7 +263,7 @@ class fx_controller_component extends fx_controller {
                 $c_ib_field += array(
                     'type' => 'select',
                     'values' => $ib_values,
-                    'label' => fx::lang('Infoblock for the field', 'controller_component')
+                    'label' => fx::alang('Infoblock for the field', 'controller_component')
                                 .' "'.$lf['description'].'"'
                 );
             }

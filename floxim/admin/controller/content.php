@@ -55,8 +55,8 @@ class fx_controller_admin_content extends fx_controller_admin {
             'status' => 'ok', 
             'header' => 
             	($input['content_id'] ? 
-                	fx::lang('Editing ', 'system') :
-                	fx::lang('Adding new ', 'system')
+                	fx::alang('Editing ', 'system') :
+                	fx::alang('Adding new ', 'system')
 				). ' '.fx::data('component', $content_type)->get('item_name')
         );
     }

@@ -73,7 +73,7 @@ class fx_controller_admin extends fx_controller {
     }
 
     protected function get_status_text() {
-        return fx::lang('Saved','system');
+        return fx::alang('Saved','system');
     }
 
     protected function get_active_tab() {
@@ -84,7 +84,7 @@ class fx_controller_admin extends fx_controller {
         $js_files = array(
             FX_JQUERY_PATH,
             '/floxim/lib/js/fx-lang.js',
-            '/floxim_files/js_dictionaries/js-dictionary-'.fx::config()->LANGUAGE.'.js',
+            '/floxim_files/js_dictionaries/js-dictionary-'.fx::config()->ADMIN_LANG.'.js',
             '/floxim/lib/js/jquery-ui-1.10.3.custom.min.js',
             '/floxim/lib/js/jquery.nestedSortable.js',
             '/floxim/lib/js/jquery.ba-hashchange.min.js',
@@ -163,7 +163,7 @@ class fx_controller_admin extends fx_controller {
             <div id="fx_admin_panel">
                 <div id="fx_admin_panel_logo"><div class="fx_preloader"></div></div>
                 <div id="fx_admin_main_menu"></div>
-                <div id="fx_admin_additional_menu"><a class="fx_logout">'.fx::lang('Sign out','system').'</a></div>
+                <div id="fx_admin_additional_menu"><a class="fx_logout">'.fx::alang('Sign out','system').'</a></div>
                 <div id="fx_admin_clear"></div>
             </div>
             <div id="fx_admin_left">
@@ -186,7 +186,7 @@ class fx_controller_admin extends fx_controller {
                     <div id="fx_admin_panel_logo"></div>
                     <div id="fx_admin_main_menu">
                         <a class="fx_admin_main_menu_active fx_backend_login_title">
-                            '.fx::lang('Welcome to Floxim.CMS, please sign in', 'system').'
+                            '.fx::alang('Welcome to Floxim.CMS, please sign in', 'system').'
                         </a>
                     </div>
                 </div>
@@ -195,15 +195,15 @@ class fx_controller_admin extends fx_controller {
                 <input type="hidden" name="essence" value="module_auth" />
                 <input type="hidden" name="action" value="auth" />
                 <div class="group">
-                    <label for="inp_user">'.fx::lang('Login', 'system').'</label>
+                    <label for="inp_user">'.fx::alang('Login', 'system').'</label>
                     <input class="text" name="AUTH_USER" id="inp_user" />
                 </div>
                 <div class="group">
-                    <label for="inp_password">'.fx::lang('Password', 'system').'</label>
+                    <label for="inp_password">'.fx::alang('Password', 'system').'</label>
                     <input class="text" type="password" name="AUTH_PW" id="inp_password" />
                 </div>
                 <button type="submit" class="fx_button fx_admin_button_text">
-                    <span>'.fx::lang('Login','system').'</span>
+                    <span>'.fx::alang('Login','system').'</span>
                 </button>
                 </form></div>';
         }
@@ -306,12 +306,12 @@ class fx_controller_admin_module extends fx_controller_admin {
     public function basesettings($input) {
         $module_keyword = str_replace('fx_controller_admin_module_', '', get_class($this));
         $this->response->submenu->set_menu('settings')->set_subactive('settings-'.$module_keyword);
-        $this->response->breadcrumb->add_item( fx::lang('Configuring the','system') . ' ' . $module_keyword);
+        $this->response->breadcrumb->add_item( fx::alang('Configuring the','system') . ' ' . $module_keyword);
         $this->settings();
     }
 
     public function settings() {
-        $this->response->add_field($this->ui->label( fx::lang('Override the settings in the class','system') ));
+        $this->response->add_field($this->ui->label( fx::alang('Override the settings in the class','system') ));
     }
 
     public function basesettings_save($input) {

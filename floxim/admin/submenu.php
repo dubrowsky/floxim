@@ -131,9 +131,9 @@ class fx_admin_submenu {
     }
 
     protected function init_develop() {
-        $this->menu[] = $node_component = $this->add_node('component', fx::lang('Components','system'), 'component.all');
-        $this->menu[] = $node_template = $this->add_node('layout', fx::lang('Layouts','system'), 'layout.all'); // template ->layout
-        $this->menu[] = $node_widget = $this->add_node('widget', fx::lang('Widgets','system'), 'widget.all');
+        $this->menu[] = $node_component = $this->add_node('component', fx::alang('Components','system'), 'component.all');
+        $this->menu[] = $node_template = $this->add_node('layout', fx::alang('Layouts','system'), 'layout.all'); // template ->layout
+        $this->menu[] = $node_widget = $this->add_node('widget', fx::alang('Widgets','system'), 'widget.all');
 
         foreach (fx::data('component')->get_all_groups() as $group) {
             $hash = md5($group);
@@ -149,17 +149,17 @@ class fx_admin_submenu {
         
         $this->menu[] = $this->add_node(
             'site', 
-            fx::lang('All sites','system'), 
+            fx::alang('All sites','system'),
             'site.all'
         );
         $this->menu[] = $this->add_node(
             'patch', 
-            fx::lang('Patches','system'), 
+            fx::alang('Patches','system'),
             'patch.all'
         );
         $this->menu[] = $this->add_node(
             'user', 
-            fx::lang('Users','system'), 
+            fx::alang('Users','system'),
             'user.all'
         );
     }
@@ -168,7 +168,7 @@ class fx_admin_submenu {
         $this->type = 'full';
         $component = fx::data('component')->get_by_id($id);
         if (!$component) {
-            $this->error = fx::lang('Component not found','system');
+            $this->error = fx::alang('Component not found','system');
         } else {
             $this->title = $component['name'];
             $this->backlink = 'component.all';
@@ -191,7 +191,7 @@ class fx_admin_submenu {
         // $template = fx::data('template')->get_by_id($id);
         $layout = fx::data('layout', $id);
         if (!$layout) {
-            $this->error = fx::lang('Layout not found','system');
+            $this->error = fx::alang('Layout not found','system');
         } else {
             $this->title = $layout['name'];
             $this->backlink = 'template.all';
@@ -212,7 +212,7 @@ class fx_admin_submenu {
         $this->type = 'full';
         $widget = fx::data('widget')->get_by_id($id);
         if (!$widget) {
-            $this->error = fx::lang('Widget not found','system');
+            $this->error = fx::alang('Widget not found','system');
         } else {
             $this->title = $widget['name'];
             $this->backlink = 'widget.all';
@@ -228,14 +228,14 @@ class fx_admin_submenu {
         $this->type = 'full';
         $site = fx::data('site')->get_by_id($id);
         if (!$site) {
-            $this->error = fx::lang('Site not found','system');
+            $this->error = fx::alang('Site not found','system');
         } else {
             $this->title = $site['name'];
             $this->backlink = 'site.all';
 
-            $this->menu[] = $this->add_node('sitesettings-'.$site['id'], fx::lang('Settings','system'), 'site.settings('.$site['id'].')');
-            $this->menu[] = $this->add_node('sitedesign-'.$site['id'], fx::lang('Design','system'), 'site.design('.$site['id'].')');
-            $this->menu[] = $this->add_node('sitemap-'.$site['id'], fx::lang('Site map','system'), 'site.map('.$site['id'].')');
+            $this->menu[] = $this->add_node('sitesettings-'.$site['id'], fx::alang('Settings','system'), 'site.settings('.$site['id'].')');
+            $this->menu[] = $this->add_node('sitedesign-'.$site['id'], fx::alang('Design','system'), 'site.design('.$site['id'].')');
+            $this->menu[] = $this->add_node('sitemap-'.$site['id'], fx::alang('Site map','system'), 'site.map('.$site['id'].')');
         }
     }
 
@@ -243,7 +243,7 @@ class fx_admin_submenu {
         $this->type = 'full';
         $classificator = fx::data('classificator')->get_by_id($id);
         if (!$classificator) {
-            $this->error = fx::lang('List not found','system');
+            $this->error = fx::alang('List not found','system');
         } else {
             $this->title = $classificator['name'];
             $this->backlink = 'classificator.all';
@@ -254,11 +254,11 @@ class fx_admin_submenu {
         $this->type = 'full';
         $user = fx::data('user')->get_by_id($id);
         if (!$user) {
-            $this->error = fx::lang('User not found','system');
+            $this->error = fx::alang('User not found','system');
         } else {
             $this->title = $user['name'];
             $this->backlink = 'user.all';
-            $this->menu[] = $this->add_node('profile', fx::lang('Profile','system'), 'user.full('.$user['id'].')');
+            $this->menu[] = $this->add_node('profile', fx::alang('Profile','system'), 'user.full('.$user['id'].')');
         }
     }
 

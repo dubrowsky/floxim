@@ -10,13 +10,13 @@ class fx_controller_admin_site extends fx_controller_admin {
 
         $list['values'] = array();
         foreach ($sites as $v) {
-            $text = fx::lang('Language:','system') . ' ' . $v['language'];
+            $text = fx::alang('Language:','system') . ' ' . $v['language'];
             if ($v['domain']) {
                 $text .= "<br />".$v['domain'];
             }
             $text = '<a href="http://'.$v['domain'].'" style="color:#666;" target="_blank"> '.$v['domain'].'</a>';
             $text .=" <span style='font-size:10px; color:#777;'>&middot;</span> ".$v['language'];
-            if ($v['type'] == 'mobile') $text .= "<br/>" . fx::lang('for mobile devices','system');
+            if ($v['type'] == 'mobile') $text .= "<br/>" . fx::alang('for mobile devices','system');
             $r = array(
                     'id' => $v['id'],
                     'header' => array('name' => $v['name'], 'url' => 'site.settings('.$v['id'].')'),
@@ -31,13 +31,13 @@ class fx_controller_admin_site extends fx_controller_admin {
             array(
                 array(
                     'key' => 'add', 
-                    'title' => fx::lang('Add new site','system'),
+                    'title' => fx::alang('Add new site','system'),
                     'url' => '#admin.administrate.site.add'
                 ),
                 'delete'
             )
         );
-        $this->response->breadcrumb->add_item( fx::lang('Sites','system') );
+        $this->response->breadcrumb->add_item( fx::alang('Sites','system') );
         $this->response->submenu->set_menu('site');
     }
 
@@ -46,18 +46,18 @@ class fx_controller_admin_site extends fx_controller_admin {
 
         $fields[] = $this->ui->hidden('action', 'add_save');
         $fields[] = $this->ui->hidden('essence', 'site');
-        $fields[] = $this->ui->input('name', fx::lang('Site name','system'), fx::lang('Add new site','system'));
-        $fields[] = $this->ui->input('domain', fx::lang('Domain','system'), fx::lang('Domain','system'));
+        $fields[] = $this->ui->input('name', fx::alang('Site name','system'), fx::alang('Add new site','system'));
+        $fields[] = $this->ui->input('domain', fx::alang('Domain','system'), fx::alang('Domain','system'));
         
         //$fields[] = $this->ui->hidden('posting');
         $this->response->add_fields($fields);
-        $this->response->dialog->set_title( fx::lang('Create a new site','system') );
+        $this->response->dialog->set_title( fx::alang('Create a new site','system') );
         $this->response->breadcrumb->add_item( 
-            fx::lang('Sites','system'),
+            fx::alang('Sites','system'),
             '#admin.administrate.site.all'
         );
         $this->response->breadcrumb->add_item(
-            fx::lang('Add new site','system')
+            fx::alang('Add new site','system')
         );
         $this->response->add_form_button('save');
         $this->response->submenu->set_menu('site');
@@ -67,7 +67,7 @@ class fx_controller_admin_site extends fx_controller_admin {
         $file = $input['importfile'];
         if (!$file) {
             $result = array('status' => 'error');
-            $result['text'][] = fx::lang('Error creating a temporary file','system');
+            $result['text'][] = fx::alang('Error creating a temporary file','system');
         }
 
         $result = array('status' => 'ok');
@@ -104,13 +104,13 @@ class fx_controller_admin_site extends fx_controller_admin {
         $site->save();
 
         $index_page = fx::data('content_page')->create(array(
-            'name' => fx::lang('Cover Page','system'),
+            'name' => fx::alang('Cover Page','system'),
             'url' => '/',
             'site_id' => $site['id']
         ))->save();
         
         $error_page = fx::data('content_page')->create(array(
-            'name' => fx::lang('Page not found','system'),
+            'name' => fx::alang('Page not found','system'),
             'url' => '/404', 
             'site_id' => $site['id'],
             'parent_id' => $index_page['id']
@@ -134,7 +134,7 @@ class fx_controller_admin_site extends fx_controller_admin {
     public function map($input) {
         $site = fx::data('site')->get_by_id($input['params'][0]);
         if (!$site) {
-            $this->response->set_status_error( fx::lang('Site not found','system') );
+            $this->response->set_status_error( fx::alang('Site not found','system') );
             return;
         }
         $fields = array();
@@ -149,11 +149,11 @@ class fx_controller_admin_site extends fx_controller_admin {
     
     protected function _set_layout($section, $site) {
     	$titles = array(
-    		'map' => fx::lang('Site map','system'),
-    		'settings' => fx::lang('Settings','system'),
-    		'design' => fx::lang('Design','system')
+    		'map' => fx::alang('Site map','system'),
+    		'settings' => fx::alang('Settings','system'),
+    		'design' => fx::alang('Design','system')
 		);
-    	$this->response->breadcrumb->add_item( fx::lang('Sites','system'), '#admin.site.all');
+    	$this->response->breadcrumb->add_item( fx::alang('Sites','system'), '#admin.site.all');
         $this->response->breadcrumb->add_item($site['name'], '#admin.site.settings('.$site['id'].')');
         $this->response->breadcrumb->add_item($titles[$section]);
         $this->response->submenu->set_menu('site-'.$site['id'])->set_subactive('site'.$section.'-'.$site['id']);
@@ -214,10 +214,10 @@ class fx_controller_admin_site extends fx_controller_admin {
         $site = fx::data('site', $site_id);
 
         $main_fields = array();
-        $main_fields[] = $this->ui->input('name', fx::lang('Site name','system'), $site['name']);
-        $main_fields[] = $this->ui->input('domain', fx::lang('Domain','system'), $site['domain']);
-        $main_fields[] = $this->ui->input('mirrors', fx::lang('Aliases','system'), $site['mirrors']);
-        $main_fields[] = $this->ui->input('language', fx::lang('Site language','system'), $site['language']);
+        $main_fields[] = $this->ui->input('name', fx::alang('Site name','system'), $site['name']);
+        $main_fields[] = $this->ui->input('domain', fx::alang('Domain','system'), $site['domain']);
+        $main_fields[] = $this->ui->input('mirrors', fx::alang('Aliases','system'), $site['mirrors']);
+        $main_fields[] = $this->ui->input('language', fx::alang('Site language','system'), $site['language']);
         $this->response->add_fields($main_fields);
 
         $fields = array();
@@ -268,7 +268,7 @@ class fx_controller_admin_site extends fx_controller_admin {
                 'type' => 'select', 
                 'values' => $layouts_select,
                 'value' => $site['layout_id'],
-                'label' => fx::lang('Layout','system')
+                'label' => fx::alang('Layout','system')
             ),
             array(
                 'type' => 'hidden',
@@ -301,7 +301,7 @@ class fx_controller_admin_site extends fx_controller_admin {
         $items = $input['params'];
         if ($items) {
             $store = new fx_admin_store();
-            $fields[] = $this->ui->label( fx::lang('You are about to install:','system') );
+            $fields[] = $this->ui->label( fx::alang('You are about to install:','system') );
             foreach ($items as $store_id) {
                 $info = $store->get_info($store_id);
                 $fields[] = $this->ui->hidden('download['.$info['type'].']', $store_id);

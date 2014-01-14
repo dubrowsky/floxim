@@ -4,7 +4,7 @@ class fx_site extends fx_essence {
     public function validate() {
         $res = true;
         if (!$this['name']) {
-            $this->validate_errors[] = array('field' => 'name', 'text' => fx::lang('Enter the name of the site','system'));
+            $this->validate_errors[] = array('field' => 'name', 'text' => fx::alang('Enter the name of the site','system'));
             $res = false;
         }
         return $res;

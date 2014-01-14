@@ -13,12 +13,12 @@ class fx_admin_configjs {
     
     $main_menu = array(
         'manage' => array(
-            'name' => fx::lang('Management', 'system'),
+            'name' => fx::alang('Management', 'system'),
             'key' => 'manage',
             'href' => '/floxim/#admin.administrate.site.all'
         ), 
         'develop' => array(
-            'name' => fx::lang('Development', 'system'),
+            'name' => fx::alang('Development', 'system'),
             'key' => 'develop',
             'href' => '/floxim/#admin.component.all'
         ), 

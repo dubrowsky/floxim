@@ -41,11 +41,11 @@ class fx_system_page extends fx_system {
             return $this->add_js_file($file);
         }
     }
-
+    
     public function add_css_file($file) {
         if (preg_match("~\.less$~", $file)) {
             $doc_root = fx::config()->DOCUMENT_ROOT;
-            $http_path = fx::config()->HTTP_FILES_PATH;
+            $http_path = fx::config()->HTTP_FILES_PATH.'asset_cache/';
             $full_path = $doc_root.$http_path;
 
             if (!file_exists($doc_root.$file)) {
@@ -82,7 +82,7 @@ class fx_system_page extends fx_system {
         }
         $params['name'] .= '.cssgz';
         $doc_root = fx::config()->DOCUMENT_ROOT;
-        $http_path = fx::config()->HTTP_FILES_PATH.$params['name'];
+        $http_path = fx::config()->HTTP_FILES_PATH.'asset_cache/'.$params['name'];
         $full_path = $doc_root.$http_path;
         
         //$this->_all_css = array_merge($this->_all_css, $files);
@@ -180,7 +180,7 @@ class fx_system_page extends fx_system {
         }
         $params['name'] .= '.jsgz';
         $doc_root = fx::config()->DOCUMENT_ROOT;
-        $http_path = fx::config()->HTTP_FILES_PATH.$params['name'];
+        $http_path = fx::config()->HTTP_FILES_PATH.'asset_cache/'.$params['name'];
         $full_path = $doc_root.$http_path;
         
         $this->_all_js = array_merge($this->_all_js, $files);

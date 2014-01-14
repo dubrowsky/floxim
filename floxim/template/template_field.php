@@ -31,7 +31,7 @@ class fx_template_field  {
     public function __toString() {
         $val = isset($this->_meta['display_value']) ? $this->_meta['display_value'] : $this->_value;
         if (!$this->_meta['editable']) {
-            return $val;
+            return (string) $val;
         }
         $this->_meta['value'] = $this->_value;
         self::$replacements []= array($this->_meta['id'], $this->_meta, $val);

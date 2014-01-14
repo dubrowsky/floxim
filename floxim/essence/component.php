@@ -28,17 +28,17 @@ class fx_component extends fx_essence {
         $res = true;
 
         if (!$this['name']) {
-            $this->validate_errors[] = array('field' => 'name', 'text' => fx::lang('Component name can not be empty','system'));
+            $this->validate_errors[] = array('field' => 'name', 'text' => fx::alang('Component name can not be empty','system'));
             $res = false;
         }
 
         if (!$this['keyword']) {
-            $this->validate_errors[] = array('field' => 'keyword', 'text' => fx::lang('Specify component keyword','system'));
+            $this->validate_errors[] = array('field' => 'keyword', 'text' => fx::alang('Specify component keyword','system'));
             $res = false;
         }
 
         if ($this['keyword'] && !preg_match("/^[a-z][a-z0-9_-]*$/i", $this['keyword'])) {
-            $this->validate_errors[] = array('field' => 'keyword', 'text' => fx::lang('Keyword can only contain letters, numbers, symbols, "hyphen" and "underscore"','system'));
+            $this->validate_errors[] = array('field' => 'keyword', 'text' => fx::alang('Keyword can only contain letters, numbers, symbols, "hyphen" and "underscore"','system'));
             $res = false;
         }
 
@@ -46,7 +46,7 @@ class fx_component extends fx_essence {
             $components = fx::data('component')->get_all();
             foreach ($components as $component) {
                 if ($component['id'] != $this['id'] && $component['keyword'] == $this['keyword']) {
-                    $this->validate_errors[] = array('field' => 'keyword', 'text' => fx::lang('This keyword is used by the component','system') . ' "'.$component['name'].'"');
+                    $this->validate_errors[] = array('field' => 'keyword', 'text' => fx::alang('This keyword is used by the component','system') . ' "'.$component['name'].'"');
                     $res = false;
                 }
             }
@@ -77,9 +77,9 @@ class fx_component extends fx_essence {
 
         $result = array();
 
-        $result['created'] = fx::lang('Created','system');
+        $result['created'] = fx::alang('Created','system');
         $result['id'] = 'ID';
-        $result['priority'] = fx::lang('Priority','system');
+        $result['priority'] = fx::alang('Priority','system');
 
 
         foreach ($this->fields() as $v) {
