@@ -5,8 +5,11 @@ class fx_lang {
     
     const DEFAULT_DICT = 'system';
     
-    public function __construct() {
-        $this->lang = fx::config()->LANGUAGE;
+    public function __construct($lang=null) {
+        if (!$lang)
+            $this->lang = fx::config()->ADMIN_LANG;
+        else
+            $this->lang = $lang;
     }
     
     
@@ -43,7 +46,7 @@ class fx_lang {
     
     public function drop_dict_files($dict) {
         foreach (fx::config()->AVAILABLE_LANGUAGES as $lang) {
-            $file = fx::lang()->get_dict_file($dict, $lang);
+            $file = fx::alang()->get_dict_file($dict, $lang);
             if (file_exists($file)) {
                 unlink($file);
             } 

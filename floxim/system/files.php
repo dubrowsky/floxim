@@ -320,7 +320,7 @@ class fx_system_files extends fx_system {
             return 0;
         }
 
-        throw new fx_exception_files( fx::lang('File is not writable','system') . ' ' . $filename);
+        throw new fx_exception_files( fx::alang('File is not writable','system') . ' ' . $filename);
 
         // В противном случае пишем через ftp
         $tmpfile = tmpfile();

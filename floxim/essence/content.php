@@ -153,10 +153,13 @@ class fx_content extends fx_essence {
                     $field_meta['filetable_id'] = $v;
                     $v = fx::config()->HTTP_FILES_PATH.$file_obj['path'];
                 }
+                /*
                 if (!$is_admin) {
                     $fields_to_show[$fkey] = $v;
                     continue;
                 }
+                 * 
+                 */
             }
             if ($cf->type == 'datetime') {
                 $field_meta['value'] = $v;
@@ -222,6 +225,7 @@ class fx_content extends fx_essence {
         );
         
         if ($is_subroot) {
+            fx::log('src', $html);
             $html = preg_replace_callback(
                 "~^(\s*?)(<[^>]+>)~", 
                 function($matches) use ($essence_atts) {

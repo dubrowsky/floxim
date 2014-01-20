@@ -75,11 +75,11 @@ class fx_field extends fx_essence {
         $res = true;
 
         if (!$this['name']) {
-            $this->validate_errors[] = array('field' => fx::lang('name','system'), 'text' => fx::lang('Specify field name','system'));
+            $this->validate_errors[] = array('field' => fx::alang('name','system'), 'text' => fx::alang('Specify field name','system'));
             $res = false;
         }
         if ($this['name'] && !preg_match("/^[a-z][a-z0-9_]*$/i", $this['name'])) {
-            $this->validate_errors[] = array('field' => 'name', 'text' => fx::lang('Field name can contain only letters, numbers, and the underscore character','system'));
+            $this->validate_errors[] = array('field' => 'name', 'text' => fx::alang('Field name can contain only letters, numbers, and the underscore character','system'));
             $res = false;
         }
 
@@ -87,7 +87,7 @@ class fx_field extends fx_essence {
 
         if ($this['component_id'] && ( $modified || !$this['id'])) {
             if (fx::util()->is_mysql_keyword($this->data['name'])) {
-                $this->validate_errors[] = array('field' => 'name', 'text' => fx::lang('This field is reserved','system'));
+                $this->validate_errors[] = array('field' => 'name', 'text' => fx::alang('This field is reserved','system'));
                 $res = false;
             }
             /// Правим тут
@@ -96,19 +96,19 @@ class fx_field extends fx_essence {
             foreach ( $chain as $c_level ) {
 
                 if ( fx::db()->column_exists( $c_level->get_content_table(), $this->data['name']) ) {
-                    $this->validate_errors[] = array('field' => 'name', 'text' => fx::lang('This field already exists','system'));
+                    $this->validate_errors[] = array('field' => 'name', 'text' => fx::alang('This field already exists','system'));
                     $res = false;
                 }
             }
             if (fx::db()->column_exists($this->get_table(), $this->data['name'])) {
-                $this->validate_errors[] = array('field' => 'name', 'text' => fx::lang('This field already exists','system'));
+                $this->validate_errors[] = array('field' => 'name', 'text' => fx::alang('This field already exists','system'));
                 $res = false;
             }
         }
 
 
         if (!$this['description']) {
-            $this->validate_errors[] = array('field' => 'description', 'text' => fx::lang('Specify field description','system'));
+            $this->validate_errors[] = array('field' => 'description', 'text' => fx::alang('Specify field description','system'));
             $res = false;
         }
 

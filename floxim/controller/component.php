@@ -136,7 +136,7 @@ class fx_controller_component extends fx_controller {
     protected function _config_conditions () {
         $fields['conditions'] = array(
             'name' => 'conditions',
-            'label' => fx::lang('Conditions','controller_component'),
+            'label' => fx::alang('Conditions','controller_component'),
             'type' => 'set', 
             'is_cond_set' => true,  
             'tpl' => array(
@@ -263,7 +263,7 @@ class fx_controller_component extends fx_controller {
                 $c_ib_field += array(
                     'type' => 'select',
                     'values' => $ib_values,
-                    'label' => fx::lang('Infoblock for the field', 'controller_component')
+                    'label' => fx::alang('Infoblock for the field', 'controller_component')
                                 .' "'.$lf['description'].'"'
                 );
             }
@@ -307,7 +307,7 @@ class fx_controller_component extends fx_controller {
             $real_ib_name = $infoblock->get_prop_inherited('name');
             $ib_name = $real_ib_name ? $real_ib_name : $infoblock['id'];
             $component = $this->get_component();
-            $adder_title = $component['item_name'].' &rarr; '.$ib_name;
+            $adder_title = 'Add '.$component['item_name'];//.' &rarr; '.$ib_name;
             
             $this->accept_content(array(
                 'title' => $adder_title,

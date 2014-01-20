@@ -126,7 +126,11 @@ class fx_data_content extends fx_data {
         $fields = $component->all_fields()->find('default', '', fx_collection::FILTER_NEQ);
         foreach ($fields as $f) {
             if (!isset($obj[$f['name']])) {
-                $obj[$f['name']] = $f['default'];
+                if ($f['type'] == fx_field::FIELD_DATETIME) {
+                    $obj[$f['name']] = date('Y-m-d H:i:s');
+                } else {
+                    $obj[$f['name']] = $f['default'];
+                }
             }
         }
         if (!isset($obj['priority'])) {

@@ -202,8 +202,9 @@ html.find('select.extendable').change(function() {
 
 <!--[input ? _c.type == 'radio']-->
 <div class="fx_admin_group">
-    <?for (var vk in _c.values) {
-        var i = 0;
+    <?
+    var i = 0;
+    for (var vk in _c.values) {
         if (typeof _c.values[vk] == 'string') {
             i++;
             var is_checked = (_c.value && _c.value == vk) || (!_c.value && _c.selected_first && i == 1);?>

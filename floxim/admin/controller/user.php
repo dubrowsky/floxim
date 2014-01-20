@@ -7,8 +7,8 @@ class fx_controller_admin_user extends fx_controller_admin {
         $result = array('type' => 'list', 'filter' => true, 'tpl' => 'imgh');
         $result['labels'] = array();
         $result['labels']  = array(
-            'name' => fx::lang('Name','system'), 
-            'email' => fx::lang('Email','system'),
+            'name' => fx::alang('Name','system'),
+            'email' => fx::alang('Email','system'),
         );
         $result['values'] = array();
         foreach ($users as $v) {
@@ -29,7 +29,7 @@ class fx_controller_admin_user extends fx_controller_admin {
             array(
                 array(
                     'key' => 'add', 
-                    'title' => fx::lang('Add new user', 'system'),
+                    'title' => fx::alang('Add new user', 'system'),
                     'url' => '#admin.user.add()'
                 ),
                 "delete"
@@ -37,7 +37,7 @@ class fx_controller_admin_user extends fx_controller_admin {
         );
         $this->response->submenu->set_menu('user');
         $this->response->breadcrumb->add_item(
-            fx::lang('Users', 'system'),
+            fx::alang('Users', 'system'),
             '#admin.user.all'
         );
         return $res;
@@ -64,12 +64,12 @@ class fx_controller_admin_user extends fx_controller_admin {
         $name = trim($input['f_name']);
         if (!$email || !preg_match('~^(\S+)@([a-z0-9-]+)(\.)([a-z]{2,4})(\.?)([a-z]{0,4})+$~', $email)) {
             $result['status'] = 'error';
-            $result['text'][] = fx::lang('Fill in correct email','system');
+            $result['text'][] = fx::alang('Fill in correct email','system');
             $result['fields'][] = 'email';
         }
         if (!$name) {
             $result['status'] = 'error';
-            $result['text'][] = fx::lang('Fill in name','system');
+            $result['text'][] = fx::alang('Fill in name','system');
             $result['fields'][] = 'name';
         }
         if ($info && (empty($input['password']) || empty($input['password2']))) {
@@ -79,7 +79,7 @@ class fx_controller_admin_user extends fx_controller_admin {
         if (!$info) {
             if (!$input['password']) {
                 $result['status'] = 'error';
-                $result['text'][] = fx::lang('Password can\'t be empty','system');
+                $result['text'][] = fx::alang('Password can\'t be empty','system');
                 $result['fields'][] = 'password';
             }
 
@@ -116,7 +116,7 @@ class fx_controller_admin_user extends fx_controller_admin {
         if (isset($input['password']) && isset($input['password2'])) {
 			if (!$input['password'] || !$input['password2'] || $input['password'] != $input['password2']) {
 				$result['status'] = 'error';
-				$result['text'][] = fx::lang('Passwords do not match','system');
+				$result['text'][] = fx::alang('Passwords do not match','system');
 				$result['fields'][] = 'password';
 				$result['fields'][] = 'password2';
 			} else {
@@ -130,7 +130,7 @@ class fx_controller_admin_user extends fx_controller_admin {
             }
         } catch (Exception $e) {
             $result['status'] = 'error';
-            $result['text'][] = fx::lang($e->getMessage(),'system');
+            $result['text'][] = fx::alang($e->getMessage(),'system');
             $result['fields'][] = 'email';
         }
 
@@ -148,11 +148,11 @@ class fx_controller_admin_user extends fx_controller_admin {
         $this->response->add_form_button('save');
         $this->response->submenu->set_menu('user');
         $this->response->breadcrumb->add_item(
-            fx::lang('Users', 'system'),
+            fx::alang('Users', 'system'),
             '#admin.user.all'
         );
         $this->response->breadcrumb->add_item(
-            fx::lang('Edit user', 'system'),
+            fx::alang('Edit user', 'system'),
             '#admin.user.edit('.$input['params'][0].')'
         );
         return $result;
@@ -164,22 +164,22 @@ class fx_controller_admin_user extends fx_controller_admin {
         $this->response->add_form_button('save');
         $this->response->submenu->set_menu('user');
         $this->response->breadcrumb->add_item(
-            fx::lang('Users', 'system'),
+            fx::alang('Users', 'system'),
             '#admin.user.all'
         );
         $this->response->breadcrumb->add_item(
-            fx::lang('Add user', 'system'),
+            fx::alang('Add user', 'system'),
             '#admin.user.add()'
         );
         return $result;
     }
 
     protected function _form($info) {
-        $fields[] = $this->ui->input('f_email', fx::lang('Email','system'), $info['email']);
-        $fields[] = $this->ui->input('f_name', fx::lang('Name','system'), $info['name']);
-        $fields[] = $this->ui->password('password', fx::lang('Password','system'));
-        $fields[] = $this->ui->password('password2', fx::lang('Confirm password','system'));
-        $fields[] = array('type' => 'checkbox', 'name' => 'f_is_admin', 'label' => fx::lang('Admin','system'), 'value' => $info['is_admin']);
+        $fields[] = $this->ui->input('f_email', fx::alang('Email','system'), $info['email']);
+        $fields[] = $this->ui->input('f_name', fx::alang('Name','system'), $info['name']);
+        $fields[] = $this->ui->password('password', fx::alang('Password','system'));
+        $fields[] = $this->ui->password('password2', fx::alang('Confirm password','system'));
+        $fields[] = array('type' => 'checkbox', 'name' => 'f_is_admin', 'label' => fx::alang('Admin','system'), 'value' => $info['is_admin']);
 
         $fields[] = $this->ui->hidden('posting');
         $fields[] = $this->ui->hidden('essence', 'user');

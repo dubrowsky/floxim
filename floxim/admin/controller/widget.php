@@ -5,7 +5,7 @@ class fx_controller_admin_widget extends fx_controller_admin_component {
     public function all() {
         $field = array('type' => 'list', 'filter' => true);
         $field['labels'] = array(
-            'name' => fx::lang('Name', 'system'), 
+            'name' => fx::alang('Name', 'system'),
             'buttons' => array('type' => 'buttons')
         );
         $field['values'] = array();
@@ -38,7 +38,7 @@ class fx_controller_admin_widget extends fx_controller_admin_component {
         $this->response->add_buttons(array(
             array(
                 'key' => "add", 
-                'title' => fx::lang('Add new widget', 'system'),
+                'title' => fx::alang('Add new widget', 'system'),
                 'url' => '#admin.widget.add'
             ),
             "delete"
@@ -65,9 +65,9 @@ class fx_controller_admin_widget extends fx_controller_admin_component {
             default:
                 $input['source'] = 'new';
                 $fields[] = $this->ui->hidden('action', 'add');
-                $fields[] = array('label' => fx::lang('Name','system'), 'name' => 'name');
-                $fields[] = array('label' => fx::lang('Keyword','system'), 'name' => 'keyword');
-                $fields[] = array('label' => fx::lang('Group','system'), 'type' => 'select', 'values' => $groups, 'name' => 'group', 'extendable' => fx::lang('Another group','system'));
+                $fields[] = array('label' => fx::alang('Name','system'), 'name' => 'name');
+                $fields[] = array('label' => fx::alang('Keyword','system'), 'name' => 'keyword');
+                $fields[] = array('label' => fx::alang('Group','system'), 'type' => 'select', 'values' => $groups, 'name' => 'group', 'extendable' => fx::alang('Another group','system'));
         }
 
         $fields[] = $this->ui->hidden('source', $input['source']);
@@ -78,7 +78,7 @@ class fx_controller_admin_widget extends fx_controller_admin_component {
             '#admin.widget.all'
         );
         $this->response->breadcrumb->add_item(
-            fx::lang('Add new widget', 'system')
+            fx::alang('Add new widget', 'system')
         );
         
         $this->response->submenu->set_menu('widget');
@@ -128,7 +128,7 @@ class fx_controller_admin_widget extends fx_controller_admin_component {
             $params = array('name', 'group', 'description', 'embed');
             if (!trim($input['name'])) {
                 $result['status'] = 'error';
-                $result['text'][] = fx::lang('Enter the widget name','system');
+                $result['text'][] = fx::alang('Enter the widget name','system');
                 $result['fields'][] = 'name';
             }
 
@@ -148,12 +148,12 @@ class fx_controller_admin_widget extends fx_controller_admin_component {
 
         $groups = fx::data('widget')->get_all_groups();
 
-        $fields[] = array('label' => fx::lang('Keyword:','system') . ' '.$widget['keyword'], 'type' => 'label');
+        $fields[] = array('label' => fx::alang('Keyword:','system') . ' '.$widget['keyword'], 'type' => 'label');
 
-        $fields[] = array('label' => fx::lang('Name','system'), 'name' => 'name', 'value' => $widget['name']);
-        $fields[] = array('label' => fx::lang('Group','system'), 'type' => 'select', 'values' => $groups, 'name' => 'group', 'value' => $widget['group'], 'extendable' => fx::lang('Another group','system'));
+        $fields[] = array('label' => fx::alang('Name','system'), 'name' => 'name', 'value' => $widget['name']);
+        $fields[] = array('label' => fx::alang('Group','system'), 'type' => 'select', 'values' => $groups, 'name' => 'group', 'value' => $widget['group'], 'extendable' => fx::alang('Another group','system'));
 
-        $fields[] = array('label' => fx::lang('Description','system'), 'name' => 'description', 'value' => $widget['description'], 'type' => 'text');
+        $fields[] = array('label' => fx::alang('Description','system'), 'name' => 'description', 'value' => $widget['description'], 'type' => 'text');
 
         $fields[] = array('type' => 'hidden', 'name' => 'phase', 'value' => 'settings');
         $fields[] = array('type' => 'hidden', 'name' => 'id', 'value' => $widget['id']);

@@ -83,7 +83,6 @@ fx_edit_in_place.prototype.start = function(meta) {
                         path:meta.value && meta.value != '0' ? meta.value : false
                     })
                 );
-                console.log(meta.value, meta.value ? 'tru' : 'fls');
                 field.on('fx_change_file', function() {
                     edit_in_place.save().stop();
                 });
@@ -130,7 +129,7 @@ fx_edit_in_place.prototype.start = function(meta) {
 fx_edit_in_place.prototype.add_panel_field = function(meta) {
     meta = $.extend({}, meta);
     if (meta.var_type === 'visual') {
-            meta.name = meta.id;
+        meta.name = meta.id;
     }
     if (!meta.type) {
         meta.type = 'string';
@@ -162,9 +161,7 @@ fx_edit_in_place.prototype.stop = function() {
 };
 
 fx_edit_in_place.prototype.save = function() {
-    console.log('saving');
     if (this.stopped) {
-        console.log('alr st');
         return this;
     }
     var node = this.node;
@@ -234,7 +231,6 @@ fx_edit_in_place.prototype.restore = function() {
 }
 
 fx_edit_in_place.prototype.make_wysiwyg = function () {
-    //return;
     var doc = this.node[0].ownerDocument || this.node[0].document;
     var win = doc.defaultView || doc.parentWindow;
     var sel = win.getSelection();
@@ -244,7 +240,6 @@ fx_edit_in_place.prototype.make_wysiwyg = function () {
         var is_ok = $.contains(this.node[0], sel.focusNode);
     }
     if (is_ok) {
-        console.log('add marker')
         var range = sel.getRangeAt(0);
         range.collapse(true);
         range.insertNode($('<span id="fx_marker-1">&#x200b;</span>')[0]);
@@ -253,8 +248,9 @@ fx_edit_in_place.prototype.make_wysiwyg = function () {
     if (!this.node.attr('id')) {
         this.node.attr('id', 'stub'+Math.round(Math.random()*1000));
     }
-    $('#fx_admin_control').append('<div class="editor_panel" />');
-    var linebreaks = this.meta.var_type == 'visual';
+    //    $('#fx_admin_control').append('<div class="editor_panel" />');
+    this.node.data('fx_node_panel').append('<div class="editor_panel" />').show();
+    var linebreaks = this.meta.var_type === 'visual';
     var _node = this.node;
     this.node.redactor({
         //focus:true,
@@ -262,24 +258,22 @@ fx_edit_in_place.prototype.make_wysiwyg = function () {
         toolbarExternal: '.editor_panel',
         imageUpload : '/floxim/admin/controller/redactor-upload.php',
         buttons: ['formatting', '|', 'bold', 'italic', 'deleted', '|',
-                'unorderedlist', 'orderedlist', 'outdent', 'indent', '|',
-                'image', 'video', 'file', 'table', 'link', '|',
-                'fontcolor', 'backcolor', '|', 'alignment', '|', 'horizontalrule'],
+                'unorderedlist', 'orderedlist', '|',
+                'image', 'video', 'file', 'table', 'link', '|', 'alignment', '|', 'horizontalrule'],
+        plugins: ['fontcolor'],
         initCallback: function() {
             var marker = _node.find('#fx_marker-1');
             var selection = window.getSelection();
             if (selection) {
                 var range = document.createRange();
             }
-            if (marker.length != 0) {
+            if (marker.length !== 0) {
                 range.selectNodeContents(marker[0]);
                 range.collapse(false);
                 selection.removeAllRanges();
                 selection.addRange(range);
-                console.log('marker');
                 marker.remove();
             } else {
-                console.log('start')
                 range.setStart(_node[0], 0);
                 range.collapse(true);
                 selection.removeAllRanges();

@@ -20,7 +20,7 @@ class fx_controller_admin_layout extends fx_controller_admin {
         }
 
         $ar = array('type' => 'list', 'filter' => true);
-        $ar['labels'] = array('name' => FX_ADMIN_NAME, 'use' => fx::lang('Used on','system'), 'buttons' => array('type' => 'buttons'));
+        $ar['labels'] = array('name' => FX_ADMIN_NAME, 'use' => fx::alang('Used on','system'), 'buttons' => array('type' => 'buttons'));
 
         foreach ($items as $item) {
             $submenu = self::get_template_submenu($item);
@@ -68,18 +68,18 @@ class fx_controller_admin_layout extends fx_controller_admin {
         $fields = array(
             $this->ui->hidden('action', 'add'),
             $this->ui->hidden('essence', 'layout'),
-            array('name' => 'name', 'label' => fx::lang('Layout name','system')),
-            array('name' => 'keyword', 'label' => fx::lang('Layout keyword','system')),
+            array('name' => 'name', 'label' => fx::alang('Layout name','system')),
+            array('name' => 'keyword', 'label' => fx::alang('Layout keyword','system')),
             $this->ui->hidden('source', $input['source']),
             $this->ui->hidden('posting')
         );
         $this->response->submenu->set_menu('layout');
         $this->response->breadcrumb->add_item(
-            fx::lang('Layouts','system'), 
+            fx::alang('Layouts','system'),
             '#admin.layout.all'
         );
         $this->response->breadcrumb->add_item(
-            fx::lang('Add new layout','system')
+            fx::alang('Add new layout','system')
         );
         $this->response->add_form_button('save');
         $result['fields'] = $fields;
@@ -101,7 +101,7 @@ class fx_controller_admin_layout extends fx_controller_admin {
             $layout->save();
         } catch (Exception $e) {
             $result['status'] = 'error';
-            $result['text'][] = fx::lang('Unable to create directory','system'). ' ' .$path;
+            $result['text'][] = fx::alang('Unable to create directory','system'). ' ' .$path;
         }
         return $result;
     }
@@ -129,7 +129,7 @@ class fx_controller_admin_layout extends fx_controller_admin {
         $action = isset($input['params'][1]) ? $input['params'][1] : 'layouts';
 
         if (!$layout) {
-            $fields[] = $this->ui->error(fx::lang('Layout not found','system'));
+            $fields[] = $this->ui->error(fx::alang('Layout not found','system'));
             return array('fields' => $fields);
         }
         
@@ -147,7 +147,7 @@ class fx_controller_admin_layout extends fx_controller_admin {
     	$tpl_submenu = self::get_template_submenu($template);
         $tpl_submenu_first = current($tpl_submenu);
         
-    	$breadcrumb->add_item(fx::lang('Layouts','system'), '#admin.layout.all');
+    	$breadcrumb->add_item(fx::alang('Layouts','system'), '#admin.layout.all');
         $breadcrumb->add_item($template['name'], $tpl_submenu_first['url']);
         $breadcrumb->add_item($tpl_submenu[$action]['title'], $tpl_submenu[$action]['url']);
     }
@@ -173,7 +173,7 @@ class fx_controller_admin_layout extends fx_controller_admin {
     
     public static function get_template_submenu($layout) {
     	$titles = array(
-            'settings' => fx::lang('Settings','system'),
+            'settings' => fx::alang('Settings','system'),
             'source' => "Source"
         );
 
@@ -211,7 +211,7 @@ class fx_controller_admin_layout extends fx_controller_admin {
     }
     
     public function settings($template) {
-    	$fields[] = $this->ui->input('name', fx::lang('Layout name','system'), $template['name']);
+    	$fields[] = $this->ui->input('name', fx::alang('Layout name','system'), $template['name']);
         $fields[] = $this->ui->hidden('action', 'settings');
         $fields[] = $this->ui->hidden('id', $template['id']);
         
@@ -224,7 +224,7 @@ class fx_controller_admin_layout extends fx_controller_admin {
         $name = trim($input['name']);
         if ( !$name ) {
             $result['status'] = 'error';
-            $result['text'][] = fx::lang('Enter the layout name','system');
+            $result['text'][] = fx::alang('Enter the layout name','system');
             $result['fields'][] = 'name';
         }
         else {
@@ -235,7 +235,7 @@ class fx_controller_admin_layout extends fx_controller_admin {
             }
             else {
                 $result['status'] = 'error';
-                $result['text'][] = fx::lang('Layout not found','system');
+                $result['text'][] = fx::alang('Layout not found','system');
             }
         }
         

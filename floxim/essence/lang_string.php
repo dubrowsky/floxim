@@ -4,7 +4,7 @@ class fx_lang_string extends fx_essence {
         if (!parent::validate()){
             return false;
         }
-        $exists = fx::lang()->check_string($this['string'], $this['dict']);
+        $exists = fx::alang()->check_string($this['string'], $this['dict']);
         if ($exists) {
             $this->validate_errors []= 
                     'String "'.$this['string'].'" already exists in the "'.
@@ -16,11 +16,11 @@ class fx_lang_string extends fx_essence {
     
     protected function _after_save() {
         parent::_after_save();
-        fx::lang()->drop_dict_files($this['dict']);
+        fx::alang()->drop_dict_files($this['dict']);
     }
     
     protected function _after_delete() {
         parent::_after_delete();
-        fx::lang()->drop_dict_files($this['dict']);
+        fx::alang()->drop_dict_files($this['dict']);
     }
 }

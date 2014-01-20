@@ -109,7 +109,7 @@ class fx_admin_ui {
         $store = new fx_admin_store();
         $response = $store->get_items($type, $filter, $reason, $position);
         if ($response === false) {
-            $result = $this->error( fx::lang('Unable to connect to server','system') );
+            $result = $this->error( fx::alang('Unable to connect to server','system') );
         } 
         else if ( $response['error'] ) {
             $result = $this->html( $response['error'] );

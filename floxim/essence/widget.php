@@ -9,17 +9,17 @@ class fx_widget extends fx_essence {
         $res = true;
 
         if (!$this['name']) {
-            $this->validate_errors[] = array('field' => 'name', 'text' => fx::lang('Specify the name of the widget','system'));
+            $this->validate_errors[] = array('field' => 'name', 'text' => fx::alang('Specify the name of the widget','system'));
             $res = false;
         }
 
         if (!$this['keyword']) {
-            $this->validate_errors[] = array('field' => 'keyword', 'text' => fx::lang('Enter the keyword of widget','system'));
+            $this->validate_errors[] = array('field' => 'keyword', 'text' => fx::alang('Enter the keyword of widget','system'));
             $res = false;
         }
 
         if ($this['keyword'] && !preg_match("/^[a-z][a-z0-9-]*$/i", $this['keyword'])) {
-            $this->validate_errors[] = array('field' => 'keyword', 'text' => fx::lang('Keyword can contain only letters and numbers','system'));
+            $this->validate_errors[] = array('field' => 'keyword', 'text' => fx::alang('Keyword can contain only letters and numbers','system'));
             $res = false;
         }
 
@@ -27,7 +27,7 @@ class fx_widget extends fx_essence {
             $widgets = fx::data('widget')->get_all();
             foreach ($widgets as $widget) {
                 if ($widget['id'] != $this['id'] && $widget['keyword'] == $this['keyword']) {
-                    $this->validate_errors[] = array('field' => 'keyword', 'text' => fx::lang('This keyword is used by widget','system') . ' "'.$widget['name'].'"');
+                    $this->validate_errors[] = array('field' => 'keyword', 'text' => fx::alang('This keyword is used by widget','system') . ' "'.$widget['name'].'"');
                     $res = false;
                 }
             }

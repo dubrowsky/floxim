@@ -603,7 +603,6 @@ class fx_template_processor {
                     $code .= '$callback_tpl = new fx_template_'.$tpl_parts[0]."(\"".$tpl_parts[1]."\");\n";
                     $code .= '$callback_tpl->_parent = $this;'."\n";
                     $code .= '$val = $callback_tpl->render(';
-                    //$code .= '$val = fx::template("'.$callback.'")->render(';
                 } elseif (preg_match("~\$~", $callback)) {
                     $code .= '$val = call_user_func("'.$callback.'" ,';
                 } else {
