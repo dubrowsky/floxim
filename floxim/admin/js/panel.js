@@ -7,6 +7,12 @@
                 params.view = 'vertical';
             }
             this.params = params;
+            
+            // disable hilight & select, hide node panel
+            $fx.front.disable_hilight();
+            $fx.front.disable_select();
+            $fx.front.get_node_panel().hide();
+            
             this.prepare_form_data(data);
             this.panel = $('#fx_admin_extra_panel .fx_admin_panel_body');
             this.footer = $('#fx_admin_extra_panel .fx_admin_panel_footer');
@@ -135,7 +141,8 @@
             p.animate({opacity:0},300, function () {
                 p.hide();
                 footer.hide();
-                $('#fx_admin_control .editor_panel').show();
+                $fx.front.enable_select();
+                $fx.front.get_node_panel().show();
             });
         },
         prepare_form_data: function(data) {

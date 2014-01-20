@@ -267,10 +267,7 @@ fx_front.prototype.redraw_add_button = function(node) {
             var c_cnt = cm.accept_content[i];
             var cb_closure = (function(c_cnt) {
                 return function() {
-                    //$fx.front.disable_infoblock(ib);
                     $fx.front.select_item(ib.get(0));
-                    $fx.front.disable_hilight();
-                    $fx.front.disable_select();
                     
                     $fx.front_panel.load_form({
                        essence:'content',
@@ -283,10 +280,9 @@ fx_front.prototype.redraw_add_button = function(node) {
                         view:'cols',
                         onfinish:function() {
                             $fx.front.reload_infoblock(ib);
-                            $fx.front.enable_hilight();
                         },
                         oncancel:function() {
-                            $fx.front.enable_hilight();
+                            
                         }
                     });
                 };
@@ -310,8 +306,6 @@ fx_front.prototype.redraw_add_button = function(node) {
             callback: function() {
                 var infoblock_back = arguments.callee;
                 $fx.front.select_item(area_node.get(0));
-                $fx.front.disable_hilight();
-                $fx.front.disable_select();
                 
                 $fx.front_panel.load_form({
                     essence:'infoblock',
@@ -329,7 +323,6 @@ fx_front.prototype.redraw_add_button = function(node) {
                             onfinish:function(res) {
                                 $fx.front.reload_layout(
                                     function() {
-                                        $fx.front.enable_hilight();
                                         if (!res.props || !res.props.infoblock_id) {
                                             return;
                                         }
@@ -381,29 +374,30 @@ fx_front.prototype.redraw_add_button = function(node) {
                             },
                             oncancel:function() {
                                 $('.fx_infoblock_fake').remove();
-                                $fx.front.enable_hilight();
                             }
                         });
                     },
                     oncancel:function() {
-                        $fx.front.enable_hilight();
+                        
                     }
                 });
             }
         });
     }
+    for (var i = 0; i < buttons.length; i++) {
+        $fx.front.add_panel_button(buttons[i]);
+    }
+    /*
     if (buttons.length > 0) {
         $fx.buttons.bind('add', function() {
             $fx.buttons.show_pulldown('add', buttons);
             return false;
         });
-        for (var i = 0; i < buttons.length; i++) {
-            $fx.front.add_panel_button(buttons[i]);
-        }
         $('html').one('fx_deselect', function() {
             $fx.front.redraw_add_button();
         });
     }
+    */
 };
 
 fx_front.prototype.is_selectable = function(node) {
@@ -709,7 +703,6 @@ fx_front.prototype.select_content_essence = function(n) {
     //$fx.buttons.bind('edit', function() {
     $fx.front.add_panel_button('edit', function() {
         $fx.front.select_item(n.get(0));
-        $fx.front.disable_hilight();
         $fx.front_panel.load_form(
             {
                 essence:'content',
@@ -721,10 +714,9 @@ fx_front.prototype.select_content_essence = function(n) {
                 view:'cols',
                 onfinish: function() {
                     $fx.front.reload_infoblock(ib_node);
-                    $fx.front.enable_hilight();
                 },
                 oncancel: function() {
-                    $fx.front.enable_hilight();
+                    
                 }
             }
         );
@@ -748,8 +740,6 @@ fx_front.prototype.select_content_essence = function(n) {
     });
     $fx.front.start_essences_sortable(n.parent());
     $('html').one('fx_deselect', function() {
-        //$fx.buttons.unbind('edit');
-        //$fx.buttons.unbind('delete');
         $fx.front.stop_essences_sortable();
     });
 };
@@ -767,7 +757,6 @@ fx_front.prototype.select_infoblock = function(n) {
         var area_node = ib_node.closest('.fx_area');
         var area_meta = $fx.front.get_area_meta(area_node);
         
-        $fx.front.disable_hilight();
         $fx.front_panel.load_form({
             essence:'infoblock',
             action:'select_settings',
@@ -781,7 +770,6 @@ fx_front.prototype.select_infoblock = function(n) {
             view:'horizontal',
             onfinish:function() {
                 $fx.front.reload_infoblock(ib_node);
-                $fx.front.enable_hilight();
             },
             onready:function($form) {
                 $form.data('ib_node', ib_node);
@@ -805,7 +793,6 @@ fx_front.prototype.select_infoblock = function(n) {
             },
             oncancel:function($form) {
                 $fx.front.reload_infoblock($form.data('ib_node'));
-                $fx.front.enable_hilight();
             }
         });
     });
@@ -889,8 +876,6 @@ fx_front.prototype.start_essences_sortable = function(container) {
         cp.sortable({
             axis:axis,
             start:function(e, ui) {
-                //$('body').addClass('fx_stop_outline');
-                
                 var ph = ui.placeholder;
                 var item = ui.item;
                 ph.css({
@@ -902,13 +887,12 @@ fx_front.prototype.start_essences_sortable = function(container) {
                 $c_selected = $($fx.front.get_selected_item());
                 $fx.front.outline_block_off($c_selected);
                 $fx.front.disable_hilight();
+                $fx.front.get_node_panel().hide();
             },
             items:sortable_items_selector,
             placeholder: placeholder_class,
             forcePlaceholderSize : true,
             stop:function(e, ui) {
-                //$fx.front.enable_hilight();
-                //$fx.front.select_item($c_selected);
                 var ce = ui.item.closest('.fx_content_essence');
                 var ce_data = ce.data('fx_content_essence');
                 var ce_id = ce_data.linker_id || ce_data.id;
@@ -930,6 +914,7 @@ fx_front.prototype.start_essences_sortable = function(container) {
                 }, function(res) {
                     $fx.front.reload_infoblock(cp.closest('.fx_infoblock'));
                 });
+                $fx.front.get_node_panel().show();
                 //$fx.front.fix();
             }
         });
@@ -968,6 +953,20 @@ fx_front.prototype.start_areas_sortable = function() {
             start:function(e, ui) {
                 $('.fx_area').addClass('fx_area_target');
                 cp.sortable('refreshPositions');
+                var ph = ui.placeholder;
+                var item = ui.item;
+                ph.css({
+                    'height':'100px',
+                    'max-width':'300px'
+                    //width:item.width()+'px',
+                    //height:item.height()+'px',
+                    //'box-sizing':'border-box'
+                });
+                //ph.attr('class', ph.attr('class')+ ' '+item.attr('class'));
+                $c_selected = $($fx.front.get_selected_item());
+                $fx.front.outline_block_off($c_selected);
+                $fx.front.disable_hilight();
+                $fx.front.get_node_panel().hide();
             },
             stop:function(e, ui) {
                 $('.fx_area').removeClass('fx_area_target');
