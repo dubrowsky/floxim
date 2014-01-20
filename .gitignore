@@ -183,3 +183,4 @@ pip-log.txt
 /floxim_files/php_dictionaries/*
 /floxim.php
 /floxim_files/fx_admin*
+/floxim_files/asset_cache/*

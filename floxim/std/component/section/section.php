@@ -33,8 +33,8 @@ class fx_controller_component_section extends fx_controller_component_page {
                 if (in_array($item['id'], $path)) {
                     if ($ctr->get_param('submenu') !== 'none') {
                         $ctr->accept_content(array(
-                            'title' => fx::alang('Subsection','component_section')
-                                        . ' &rarr; ' . $item['name'],
+                            'title' => fx::alang('Add subsection to','component_section')
+                                        . ' &quot;' . $item['name'].'&quot;',
                             'parent_id' => $item['id']
                         ));
                     }

@@ -146,7 +146,10 @@ class fx_template_html {
             if ( ($each_id = $n->get_attribute('fx:each')) ) {
                 $each_id = trim($each_id, '{}');
                 $each_id = str_replace('"', '\\"', $each_id);
-                $each_macro_tag = '{each subroot="true"';
+                $each_macro_tag = '{each ';
+                if (!$n->get_attribute('fx:omit')) {
+                    $each_macro_tag .= ' subroot="true" ';
+                }
                 if (!empty($each_id)) {
                     $each_macro_tag .= ' select="'.$each_id.'"';
                 }
@@ -199,7 +202,7 @@ class fx_template_html {
             }
         });
         $res = $tree->serialize();
-        //fx::debug($res, $tree);
+        fx::log($res, $tree);
         return $res;
     }
     

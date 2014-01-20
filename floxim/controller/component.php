@@ -307,7 +307,7 @@ class fx_controller_component extends fx_controller {
             $real_ib_name = $infoblock->get_prop_inherited('name');
             $ib_name = $real_ib_name ? $real_ib_name : $infoblock['id'];
             $component = $this->get_component();
-            $adder_title = $component['item_name'].' &rarr; '.$ib_name;
+            $adder_title = 'Add '.$component['item_name'];//.' &rarr; '.$ib_name;
             
             $this->accept_content(array(
                 'title' => $adder_title,

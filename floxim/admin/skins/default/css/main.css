@@ -582,6 +582,7 @@ input.ui-button {
     margin: 0 20px 0 0;
     border:none;
     text-decoration: none !important;
+    white-space: nowrap;
 }
 
 .fx_overlay .fx_admin_button_text span {
@@ -1662,4 +1663,53 @@ a.fx_var_editable:focus, .fx_var_editable a:focus {
     height: 0;
     clear: both;
     visibility: hidden;
+}
+
+.fx_node_panel {
+    border:1px solid #CCC;
+    background:#FFF;
+    box-shadow: 0px 0px 6px rgba(50, 50, 50, 0.2);
+    height: 31px;
+    display:none;
+}
+
+.fx_node_panel .editor_panel {
+    width:435px;
+}
+.fx_node_panel .redactor_toolbar {
+    background:none;
+}
+
+.fx_node_panel > ul, .fx_node_panel > div {
+    float:left;
+}
+
+.fx_node_panel .field_image {
+    max-height: 31px;
+    overflow: hidden;
+}
+
+.fx_node_panel .field_image .preview img {
+    display:none;
+}
+
+.fx_node_panel .field_image .preview a {
+    margin-top:3px;
+}
+
+.fx_node_panel .field_colorpicker {
+    width:36px;
+}
+
+.panel_overlay .fx_admin_button {
+    margin-top:3px;
+    margin-left:3px;
+}
+
+.fx_node_panel_fixed {
+    opacity:0.7;
+}
+
+.fx_node_panel_fixed:hover {
+    opacity: 1;
 }

@@ -225,6 +225,7 @@ class fx_content extends fx_essence {
         );
         
         if ($is_subroot) {
+            fx::log('src', $html);
             $html = preg_replace_callback(
                 "~^(\s*?)(<[^>]+>)~", 
                 function($matches) use ($essence_atts) {

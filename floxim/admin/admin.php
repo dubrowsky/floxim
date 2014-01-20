@@ -111,6 +111,7 @@ class fx_controller_admin extends fx_controller {
             '/floxim/admin/js/menu/additional.js',
             '/floxim/admin/js/menu/breadcrumb.js',
             '/floxim/lib/editors/redactor/redactor.js',
+            '/floxim/lib/editors/redactor/fontcolor.js',
             '/floxim/lib/js/jquery.form.js',
             '/floxim/lib/js/jquery.cookie.js',
             '/floxim/lib/js/jquery.ba-resize.min.js',
