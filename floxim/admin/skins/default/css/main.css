@@ -1190,7 +1190,7 @@ img.fx_hilight {
 
 .fx_area_target {
     display: block !important;
-    min-height: 30px;
+    min-height: 100px;
     min-width: 100px;
     background: #DFD;
 }
