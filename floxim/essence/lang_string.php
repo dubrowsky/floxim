@@ -4,7 +4,7 @@ class fx_lang_string extends fx_essence {
         if (!parent::validate()){
             return false;
         }
-        $exists = fx::alang()->check_string($this['string'], $this['dict']);
+        $exists = fx::data('lang_string')->get_string($this['string'], $this['dict']) !== null;
         if ($exists) {
             $this->validate_errors []= 
                     'String "'.$this['string'].'" already exists in the "'.

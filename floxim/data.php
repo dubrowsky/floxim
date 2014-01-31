@@ -47,6 +47,10 @@ class fx_data {
         return array();
     }
 
+    public function get_multi_lang_fields() {
+        return array();
+    }
+
     public function all() {
         $data = $this->_get_essences();
         return $data;
