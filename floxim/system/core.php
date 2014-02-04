@@ -239,7 +239,7 @@ class fx_core extends fx_system {
                 $file = $root.'system/collection';
                 break;
             }
-            if (preg_match("~^template(|_processor|_field|_html|_suitable|_html_token|_token|_html_tokenizer)$~", $classname)) {
+            if (preg_match("~^template(|_processor|_field|_html|_suitable|_html_token|_token|_html_tokenizer|_fsm|_compiler|_loader|_parser|_expression_parser)(?:_dev)?$~", $classname)) {
                 $file = $root.'template/'.$classname;
                 break;
             }
@@ -248,6 +248,8 @@ class fx_core extends fx_system {
                 break;
             }
             if (preg_match("~^template_(.+)$~", $classname, $tpl_name)) {
+                fx_template_loader::autoload($tpl_name[1]);
+                return;
                 $file = fx_template_processor::get_template_file($tpl_name[1]);
                 break;
                 //echo "<pre>" . htmlspecialchars(print_r($file, 1)) . "</pre>";
