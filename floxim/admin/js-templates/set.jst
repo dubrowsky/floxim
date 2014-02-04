@@ -24,6 +24,7 @@
 </div>
 
 <!--jquery-->
+
 var fs = $('.fx_fieldset', html);
 
 if (_c.context === 'panel') {
@@ -53,7 +54,6 @@ if (_c.context === 'panel') {
         var orig = $('.fx_fieldset', html);
         var cloned = orig.clone(true);
 
-        console.log($('select', orig));
         $('select', orig).each(function(i) {
             $('select', cloned).eq(i).val($(this).val());
 	});
@@ -177,6 +177,7 @@ html.on('change', '.input_cell_0 select', function() {
 });
 html.on('change', '.input_cell_1 select.date_operator', function() {
     var type = $(this).val(); 
+
     if (typeof _o.index === 'number') {
         var name = 'new_'+_o.index;
     } else {
@@ -190,11 +191,13 @@ html.on('change', '.input_cell_1 select.date_operator', function() {
         break;
         case 'next':
         case 'last':
+
             var cells = $(this).parent().parent().find('[class*="input_cell"]').not('.input_cell_0').not('.input_cell_1');
             cells.remove();
             $(this).parent()
             .after('<td class="input_cell_2"><input type="text" class="fx_input short" name="params[conditions]['+name+'][value]" id="params[conditions]['+name+'][value]" value=""></td>')
             //.next().after('<td class="input_cell_3"></td>');
+
             var select = $t.jQuery(
                 'input', {
                     'type':'select', 
@@ -245,7 +248,13 @@ function set_saved () {
                 $(name+"[value]']", html).parent().parent().after(cell);
                 $(name+"[value]']", html).unbind();
             }
+            $(name+"[operator]']", html).change();
+            if (_o.set_field.values[_o.index].interval !== undefined) {
+                $(name+"[interval]']", html).val(_o.set_field.values[_o.index].interval);
+            }
+
             $(name+"[value]']", html).val(_o.set_field.values[_o.index].value).css('width', '40px');
+
         } else {
             $(name+"[value]']", html).val(_o.set_field.values[_o.index].value);
         }
@@ -371,7 +380,6 @@ function set_control (meta, selector) {
                             'content_type' : meta.content_type
                         }
                     };
-            console.log(livesearch_opts);
             var live_search = $t.jQuery(
                 'input', livesearch_opts
             );

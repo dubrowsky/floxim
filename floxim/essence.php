@@ -189,7 +189,15 @@ abstract class fx_essence implements ArrayAccess {
          */
          
          $finder = $this->get_finder();
-         $rels = $finder->relations();
+        $multi_lang_fields = $finder->get_multi_lang_fields();
+        if (in_array($offset, $multi_lang_fields)) {
+            if (!empty($this->data[$offset.'_'.fx::config()->ADMIN_LANG])) {
+                return $this->data[$offset.'_'.fx::config()->ADMIN_LANG];
+            } else {
+                return $this->data[$offset.'_en'];
+            }
+        }
+        $rels = $finder->relations();
         
         if (!isset($rels[$offset])) {
             return null;

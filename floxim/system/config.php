@@ -2,7 +2,6 @@
 class fx_config {
     private $config = array(
 
-            'ADMIN_LANG' => 'en',
 
             'SUB_FOLDER' => '',
 
@@ -15,8 +14,9 @@ class fx_config {
 
             'CHARSET' => 'utf-8',
 
-            'AVAILABLE_LANGUAGES' => array("ru","en"),
-            /*'LANGUAGE' => 'en',*/
+            'ADMIN_LANG' => 'en',
+            /*'AVAILABLE_LANGUAGES' => array("ru","en"),
+            'LANGUAGE' => 'en',*/
 
             'PAGE_TPL' => 'page',
             'SEARCH_KEY' => 'fxsrch',

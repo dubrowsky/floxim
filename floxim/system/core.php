@@ -229,7 +229,8 @@ class fx_core extends fx_system {
             'widget',
             'filetable',
             'patch',
-            'lang_string'
+            'lang_string',
+            'lang'
         ); //'user'
 
         $classname = str_replace(array('nc_', 'fx_'), '', $classname);
