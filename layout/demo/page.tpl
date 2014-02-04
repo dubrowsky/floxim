@@ -18,7 +18,7 @@
 <body>
 	<div class="wrapper">
 		<nav>
-			<div class="nav">
+			<div class="nav fx_top_fixed">
 				<a href="/" class="logo">
 					<img src="{%logo}<?=$template_dir?>img/logo.png{/%}">
 				</a>

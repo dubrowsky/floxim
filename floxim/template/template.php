@@ -14,6 +14,10 @@ class fx_template {
         return fx::dig($this->data, $var_path);
     }
     
+    protected function print_var($val, $meta = null, $modifiers = array()) {
+        echo $val;
+    }
+    
     protected $context_stack = array();
     
     public static $v_count = 0;
@@ -30,6 +34,10 @@ class fx_template {
         if ($this->_parent) {
             return $this->_parent->v($name);
         }
+    }
+    
+    public static function val($v) {
+        return $v instanceof fx_template_field ? $v->get_value() : $v;
     }
     
     public function get_parent_var($var) {

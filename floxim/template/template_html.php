@@ -7,7 +7,9 @@ class fx_template_html {
     }
     
     public function tokenize() {
-        $tokenizer = new fx_template_html_tokenizer();
+        $tp = realpath(dirname(__FILE__)).'/template_html_tokenizer_dev.php';
+        
+        $tokenizer = new fx_template_html_tokenizer_dev();
         $tokens = $tokenizer->parse($this->_string);
         return $tokens;
     }
@@ -37,7 +39,8 @@ class fx_template_html {
     }
     
     public function transform_to_floxim() {
-        $tree = $this->make_tree($this->tokenize());
+        $tokens = $this->tokenize();
+        $tree = $this->make_tree($tokens);
         
         $unnamed_replaces = array();
         
@@ -78,6 +81,7 @@ class fx_template_html {
                     $tpl_tag .= '{$'.$var.' select="'.($negative ? 'false' : 'true').'" /}';
                 }
                 $tpl_tag .= '{/call}{/template}';
+                fx::log($tpl_tag);
                 $n->parent->add_child_before(fx_template_html_token::create($tpl_tag), $n);
                 $n->remove();
                 return;
@@ -202,7 +206,6 @@ class fx_template_html {
             }
         });
         $res = $tree->serialize();
-        fx::log($res, $tree);
         return $res;
     }
     
@@ -332,14 +335,12 @@ class fx_template_html {
                     break;
                 case 'close':
                     $closed_tag = array_pop($stack);
-					if ($closed_tag->name != $token->name) {
-						$msg = "HTML parser error: ".
-							"start tag ".htmlspecialchars($closed_tag->source)." (".$closed_tag->offset[0]."-".$closed_tag->offset[1].")".
-							"doesn't match end tag &lt;/".$token->name.'&gt; ('.$token->offset[0].')';
-						
-						dev_log($this->_string, $msg);
-						die($msg);
-					}
+                    if ($closed_tag->name != $token->name) {
+                        $msg = "HTML parser error: ".
+                                "start tag ".htmlspecialchars($closed_tag->source)." (".$closed_tag->offset[0]."-".$closed_tag->offset[1].")".
+                                "doesn't match end tag &lt;/".$token->name.'&gt; ('.$token->offset[0].')';
+                        throw new Exception($msg);
+                    }
                     if ($token->offset) {
                         $closed_tag->end_offset = $token->offset;
                     }
@@ -364,8 +365,8 @@ class fx_template_html {
         }
         // в стеке должен остаться только <root>
         if (count($stack) > 1) {
-        	dev_log("All closed, but stack not empty!", $stack);
-        	//die();
+            dev_log("All closed, but stack not empty!", $stack);
+            //die();
         }
         return $root;
     }
