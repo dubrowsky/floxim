@@ -3,7 +3,7 @@
 class fx_controller_admin_site extends fx_controller_admin {
 
     public function all() {
-        $sites = fx::data('site')->get_all();
+        $sites = fx::data('site')->all();
 
         $list = array('type' => 'list', 'filter' => true, 'tpl' => 'imgh', 'sortable' => true);
         $list['labels'] = array();

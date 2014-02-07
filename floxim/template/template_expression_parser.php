@@ -2,7 +2,7 @@
 require_once (dirname(__FILE__).'/template_fsm.php');
 class fx_template_expression_parser extends fx_template_fsm {
     
-    public $split_regexp = '~(\$\{|\$|\s+|[\[\]]|[\'\"]|[\{\}]|[+=&\|\)\(-])~';
+    public $split_regexp = '~(\$\{|\$|\s+|\.|[\[\]]|[\'\"]|[\{\}]|[+=&\|\)\(-])~';
     
     const CODE = 1;
     const VAR_NAME = 2;
@@ -16,7 +16,7 @@ class fx_template_expression_parser extends fx_template_fsm {
     
     public function __construct() {
         $this->add_rule(array(self::CODE, self::ARR_INDEX, self::VAR_NAME), '~^\$~', null, 'start_var');
-        $this->add_rule(self::VAR_NAME, '[', null, 'start_arr');
+        $this->add_rule(array(self::VAR_NAME, self::ARR_INDEX), array('[', '.'), null, 'start_arr');
         $this->add_rule(
             self::VAR_NAME, 
             "~^[^a-z0-9_]~i",
@@ -29,13 +29,15 @@ class fx_template_expression_parser extends fx_template_fsm {
     
     public $stack = array();
     public $curr_node = null;
+    
     public function push_stack($node) {
         $this->stack[]= $node;
         $this->curr_node = $node;
     }
+    
     public function pop_stack() {
         $node = array_pop($this->stack);
-        $this->curr_node = end($this->stack);//$node;
+        $this->curr_node = end($this->stack);
         return $node;
     }
     
@@ -47,7 +49,19 @@ class fx_template_expression_parser extends fx_template_fsm {
     }
     
     public function start_arr($ch) {
+        // $item["olo".$id] - ignore dot
+        if ($ch == '.' && $this->state == self::ARR_INDEX && $this->curr_node->starter != '.') {
+            return false;
+        }
+        if (
+                ($ch == '.' && $this->state == self::ARR_INDEX) ||
+                $this->curr_node->starter == '.'
+            ) {
+            $this->end_arr();
+        }
+        
         $arr = self::node(self::T_ARR);
+        $arr->starter = $ch;
         $this->curr_node->add_child($arr);
         $this->push_stack($arr);
         $this->push_state(self::ARR_INDEX);
@@ -83,11 +97,18 @@ class fx_template_expression_parser extends fx_template_fsm {
     }
     
     public function default_callback($ch) {
-        switch ($this->state){
+        switch ($this->state) {
             case self::VAR_NAME:
                 $this->curr_node->name []= $ch;
                 break;
-            case self::CODE: case self::ARR_INDEX:
+            case self::CODE:
+                $this->read_code($ch);
+                break;
+            case self::ARR_INDEX:
+                fx::debug('reading', $ch);
+                if ($this->curr_node->starter == '.' && preg_match("~^[a-z0-9_]+$~i", $ch)) {
+                    $ch = '"'.$ch.'"';
+                }
                 $this->read_code($ch);
                 break;
         }
@@ -110,6 +131,8 @@ class fx_template_expression_parser extends fx_template_fsm {
         return new fx_template_expression_node($type);
     }
     
+    public $local_vars = array('this');
+    
     public function compile($node) {
         $res = '';
         $proc = $this;
@@ -125,32 +148,38 @@ class fx_template_expression_parser extends fx_template_fsm {
                 $add_children($node);
                 break;
             case self::T_VAR:
-                $var = '(isset(';
-                //$var = '$this->v(';
+                $is_local = false;
                 $var_name = '';
-                foreach ($node->name as $np) {
-                    if (is_string($np)) {
-                        $var_name .= '"'.$np.'"';
+                // simple var
+                if (count($node->name) == 1 && is_string($node->name[0])) {
+                    $var_name = $node->name[0];
+                    if (in_array($var_name, $this->local_vars)) {
+                        $is_local = true;
+                        $var = '$'.$var_name;
                     } else {
-                        $var_name .= '.'.$this->compile($np);
+                        $var = '$this->v("'.$var_name.'")';
                     }
+                } 
+                // complex var such as $image_$id
+                else {
+                    foreach ($node->name as $np) {
+                        $var_name .= is_string($np) ? '"'.$np.'"' : '.'.$this->compile($np);
+                    }
+                    $var = '$this->v('.$var_name.')';
                 }
-                
-                if (preg_match('~^\"[a-z0-9_]+\"$~', $var_name)) {
-                    $plain_name = '$'.preg_replace('~\"~', '', $var_name);
-                } else {
-                    $plain_name = '${'.$var_name.'}';
-                }
-                $var = ' (isset('.$plain_name.') ? '.$plain_name .': $this->v('.$var_name.') )';
                 
                 if ($node->last_child) {
-                    $res .= "fx::dig(".$var.", ";
                     $indexes = array();
                     foreach ($node->children as $arr_index) {
                         $indexes []= $this->compile($arr_index);
                     }
-                    $res .= join(", ", $indexes);
-                    $res .= ")";
+                    if ($is_local) {
+                        $res .= $var.'['.join('][', $indexes).']';
+                    } else {
+                        $res .= "fx::dig(".$var.", ";
+                        $res .= join(", ", $indexes);
+                        $res .= ")";
+                    }
                 } else {
                     $res .= $var;
                 }
@@ -179,6 +208,19 @@ class fx_template_expression_node {
         }
         $this->children []= $n;
         $this->last_child = $n;
+    }
+    
+    public function pop_child() {
+        if (!$this->last_child) {
+            return null;
+        }
+        $child = array_pop($this->children);
+        if (count($this->children) == 0) {
+            $this->last_child = null;
+        } else {
+            $this->last_child = end($this->children);
+        }
+        return $child;
     }
 }
 /*

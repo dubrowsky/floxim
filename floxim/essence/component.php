@@ -43,7 +43,7 @@ class fx_component extends fx_essence {
         }
 
         if ($this['keyword']) {
-            $components = fx::data('component')->get_all();
+            $components = fx::data('component')->all();
             foreach ($components as $component) {
                 if ($component['id'] != $this['id'] && $component['keyword'] == $this['keyword']) {
                     $this->validate_errors[] = array('field' => 'keyword', 'text' => fx::alang('This keyword is used by the component','system') . ' "'.$component['name'].'"');

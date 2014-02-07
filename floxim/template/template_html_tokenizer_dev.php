@@ -36,7 +36,7 @@ class fx_template_html_tokenizer_dev extends fx_template_fsm {
     protected $stack = '';
     
     public function get_split_regexp() {
-        return "~(<[a-z0-9\/\?]+|>|\{\*|\*\}|<\?|\?>|[\{\}]|=[\'\"]?|[\'\"]|\s+)~";
+        return "~(<[a-z0-9\/]+|>|\{\*|\*\}|<\?|\?>|[\{\}]|=[\'\"]?|[\'\"]|\s+)~";
     }
 
     public function parse($string) {

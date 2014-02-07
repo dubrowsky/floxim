@@ -12,12 +12,18 @@ class fx_template_compiler {
      */
     public function compile($tree) {
         $code = $this->_make_code($tree);
+        $code = self::add_tabs($code);
         $is_correct = self::is_php_syntax_correct($code);
         if ($is_correct !== true) {
-            fx::debug('Syntax error', self::add_tabs($code));
+            $lines = explode("\n", $code);
+            $lined = '';
+            foreach ($lines as $ln => $l) {
+                $lined .= $ln."\t".$l."\n";
+            }
+            fx::debug('Syntax error', $is_correct, $lined, $code);
             throw new Exception('Syntax error');
         }
-        $code = self::add_tabs($code);
+        
         return $code;
     }
     
@@ -56,10 +62,11 @@ class fx_template_compiler {
         }
         
         $code .= '$tpl_to_call = fx::template("'.$tpl_name.'"';
-        if ( $token->get_prop('include') == 'true') {
+        /*if ( $token->get_prop('include') == 'true') {
             $code .= ', $this->data';
-        }
+        }*/
         $code .= ');'."\n";
+        $code .= '$tpl_to_call->set_parent($this)'.";\n";
         $call_children = $token->get_children();
         /*
          * Преобразуем:
@@ -124,40 +131,133 @@ class fx_template_compiler {
     
     protected function _token_var_to_code(fx_template_token $token) {
         $code = "<?\n";
-        /*
-        if ($token->get_prop('var_type') == 'visual') {
-            
+        // parse var expression and store token 
+        // to create correct expression for get_var_meta()
+        $ep = new fx_template_expression_parser();
+        $expr_token = $ep->parse('$'.$token->get_prop('id'));
+        $expr = $ep->compile($expr_token);
+        $var_token = $expr_token->last_child;
+        
+        $modifiers = $token->get_prop('modifiers');
+        $token->set_prop('modifiers', null);
+        
+        // e.g. "name" or "image_".$this->v('id')
+        $var_id = preg_replace('~^\$this->v\(~', '', preg_replace("~\)$~", '', $expr));
+        
+        $has_default = $token->get_prop('default') || count($token->get_children()) > 0;
+        
+        // if var has default value or there are some modifiers
+        // store real value for editing
+        $real_val_defined = false;
+        if ($modifiers || $has_default || $token->get_prop('inatt')) {
+            $real_val_var = '$'.$this->varialize($var_id).'_real_val';
+            $code .= $real_val_var . ' = '.$expr.";\n";
+            $real_val_defined = true;
+        }
+        if ($has_default) {
+            $code .= "\nif (!".$real_val_var.") {\n";
+            if (!($default = $token->get_prop('default')) ) {
+                $code .= "\tob_start();\n";
+                $code .= "\t".$this->_children_to_code($token);
+                $default = "ob_get_clean()";
+            }
+            if ($token->get_prop('var_type') == 'visual') {
+                $code .= "\n".'$this->set_var('.$var_id.',  '.$default.");\n";
+            } else {
+                $code .= "\n".$real_val_var.' = '.$default.";\n";
+            }
+            $code .= "}\n";
+        }
+        
+        // Expression to get var meta
+        $var_meta_expr = '$this->get_var_meta(';
+        // if var is smth like $item['parent']['url'], 
+        // it should be get_var_meta('url', fx::dig( $this->v('item'), 'parent'))
+        if ($var_token->last_child) {
+            $last_index = $var_token->pop_child();
+            $var_meta_expr .= $ep->compile($last_index).', ';
+            $var_meta_expr .= $ep->compile($var_token).')';
         } else {
+            $var_meta_expr .= '"'.$token->get_prop('id').'")';
+        }
+        
+        $var_meta_defined = false;
+        // if the var is not visual and there is 'default' modifier
+        // we shoud find and store var type first
+        if (!$token->get_prop('type') && $modifiers) {
+            $has_default_modifier = false;
+            foreach ($modifiers as $mod) {
+                if ($mod[0] == 'fx_default') {
+                    $has_default_modifier = true;
+                    break;
+                }
+            }
+            if ($has_default_modifier) {
+                $code .= '$var_meta = '.$var_meta_expr.";\n";
+                $code .= '$var_type = $var_meta["type"]'.";\n";
+                $var_meta_defined = true;
+            }
+        }
+        $code .= '$this->print_var('."\n";
+        if (!$modifiers || count($modifiers) == 0) {
+            $code .= $expr;
+        } else {
+            $modified = $expr;
+            foreach ($modifiers as $mod) {
+                //$modified = $mod
+                $mod_callback = array_shift($mod);
+                if ($mod_callback == 'fx_default') {
+                    if ($token->get_prop('type')) {
+                        $mod_callback = $token->get_prop('type') == 'image' ? 'fx::image' : 'fx::date';
+                        $mod_callback .= '(';
+                    } else {
+                        $mod_callback = 'call_user_func(';
+                        $mod_callback .= '($var_type == "image" ? "fx::image" : ';
+                        $mod_callback .= '($var_type == "datetime" ? "fx::date" : "fx::cb")), ';
+                    }
+                } else {
+                    $mod_callback .= '(';
+                }
+                $args = array();
+                $self_used = false;
+                foreach ($mod as $arg) {
+                    if ($arg == 'self') {
+                        $args []= $modified;
+                        $self_used = true;
+                    } else {
+                        $args []= self::parse_expression($arg);
+                    }
+                }
+                if (!$self_used) {
+                    array_unshift($args, $modified);
+                }
+                $modified = $mod_callback.join(', ', $args).')';
+            }
+            $code .= $modified;
+        }
+        $code .= ", \n";
+        $code .= ' !$_is_admin ? null : ';
+        if ($token->get_prop('var_type') == 'visual') {
+            $token_props = $token->get_all_props();
+            $code .= " array(";
+            $tp_parts = array();
             
+            foreach ($token_props as $tp => $tpval) {
+                $tp_parts[]= "'".$tp."' => ". ($tp == 'id' ? $var_id : "'".addslashes($tpval)."'");
+            }
+            $code .= join(", ", $tp_parts);
+            $code .= ")";
+        } else {
+            $code .= $var_meta_defined ? '$var_meta' : $var_meta_expr;
         }
-         * 
-         */
-        $expr = self::parse_expression('$'.$token->get_prop('id'));
-        //$code .= 'echo '.$expr.";\n";
-        $code .= '$this->print_var('.$expr.");\n";
+        if ($token->get_prop('editable') == 'false') {
+            $code .= ' + array("editable"=>false)';
+        }
+        if ($real_val_defined) {
+            $code .= ' + array("real_value" => '.$real_val_var.')';
+        }
+        $code .= "\n);\n";
         $code .= "?>";
-        return $code;
-        
-        //$code = "<?\n";
-        //$code .= ''
-        /*
-        if (!isset($var)) {
-            $var = $this->v('var');
-            // or
-            $var = new fx_template_field($params);
-        }
-        
-        echo $this->apply_filters($var);
-        
-        */
-
-
-
-        $code = "<?\n";
-        $var_id = $token->get_prop('id');
-        $var = preg_match("~^[a-z0-9_]+$~i", $var_id) ? '$'.$var_id : '${"'.$var_id.'"}';
-        $code .= 'echo isset('.$var.') ? '.$var.' : $this->v("'.$var_id.'");'."\n";
-        $code .= '?>';
         return $code;
     }
     
@@ -339,6 +439,14 @@ class fx_template_compiler {
         return $code;
     }
     
+    protected function varialize($var) {
+        return preg_replace("~^_+|_+$~", '', 
+                preg_replace(
+            '~[^a-z0-9_]+~', '_', 
+            preg_replace('~(?:\$this\->v|fx\:\:dig)~', '', $var)
+        ));
+    }
+    
     protected $_loop_depth = 0;
     protected function _token_each_to_code(fx_template_token $token) {
         $this->_loop_depth++;
@@ -360,8 +468,10 @@ class fx_template_compiler {
         if (! $arr_id || $arr_id == '.') {
             $arr_id = '$items';
         }
+        $arr_id = self::parse_expression($arr_id);
         if (!preg_match('~^\$[a-z0-9_]+$~', $arr_id)) {
-            $arr_hash_name = '$arr_'.md5($arr_id);
+            
+            $arr_hash_name = '$arr_'.$this->varialize($arr_id);
             $code .= $arr_hash_name .'= '.$arr_id.";\n";
         } else {
             $arr_hash_name = $arr_id;
@@ -374,6 +484,7 @@ class fx_template_compiler {
                 $item_alias .= '_'.$this->_loop_depth;
             }
         }
+        $item_alias = preg_replace('~^\$~', '', $item_alias);
         if (!$item_key && !($item_key = $token->get_prop('key'))) {
             $item_key = $item_alias.'_key';
         }
@@ -393,14 +504,19 @@ class fx_template_compiler {
         $code .= $arr_id . " = array(" . $arr_id . ");\n";
         $code .= "}\n";
         $code .= "if (is_array(".$arr_id.") || ".$arr_id." instanceof Traversable) {\n";
-        $code .= $counter_id." = 0;\n";
-        $code .= $item_alias."_total = count(".$arr_id.");\n";
-        $code .= "\nforeach (".$arr_id." as ".$item_key." => ".$item_alias.") {\n";
-        $code .= $counter_id."++;\n";
-        $code .= $item_alias."_is_first = ".$counter_id." === 1;\n";
-        $code .= $item_alias."_is_last = ".$item_alias."_total == ".$counter_id.";\n";
-        $is_essence = $item_alias."_is_essence";
-        $code .=  $is_essence ." = ".$item_alias." instanceof fx_essence;\n";
+        $code .= '$'.$counter_id." = 0;\n";
+        $code .= '$'.$item_alias."_total = count(".$arr_id.");\n";
+        $code .= "\nforeach (".$arr_id." as \$".$item_key." => \$".$item_alias.") {\n";
+        $code .= '$'.$counter_id."++;\n";
+        $code .= '$this->context_stack[]= array('."\n";
+        $code .= "'".$item_alias."' => \$".$item_alias.",\n";
+        $code .= "'".$counter_id."' => \$".$counter_id.",\n";
+        $code .= "'".$item_alias."_is_first' => \$".$counter_id." === 1,\n";
+        $code .= "'".$item_alias."_is_last' => \$".$item_alias."_total == \$".$counter_id.",\n";
+        $code .= "'".$item_alias."_total' => \$".$item_alias."_total\n";
+        $code .= ");\n";
+        $is_essence = '$'.$item_alias."_is_essence";
+        $code .=  $is_essence ." = \$".$item_alias." instanceof fx_essence;\n";
         //$code .= $item_alias."_is_odd =45 ".$counter_id." % 2 != 0;\n";
         $use_extract = false;
         if ($use_extract && $extract && $extract !== 'false') {
@@ -418,8 +534,8 @@ class fx_template_compiler {
             $code .= "\t}\n";
         }
         if (!$use_extract) {
-            $code .= '$this->context_stack[]= '.$is_essence.' ? '.$item_alias.'->get_fields_to_show() : '.$item_alias.";\n";
-            //$code .= '$this->context_stack[]= '.$item_alias.";\n";
+            //$code .= '$this->context_stack[]= '.$is_essence.' ? '.$item_alias.'->get_fields_to_show() : '.$item_alias.";\n";
+            $code .= '$this->context_stack[]= $'.$item_alias.";\n";
         }
         $meta_test = "\tif (\$_is_admin && ".$is_essence." ) {\n";
         $code .= $meta_test;
@@ -427,10 +543,10 @@ class fx_template_compiler {
         $code .= "\t}\n";
         $code .= $this->_children_to_code($token);
         $code .= $meta_test;
-        $code .= "\t\techo ".$item_alias."->add_template_record_meta(".
+        $code .= "\t\techo \$".$item_alias."->add_template_record_meta(".
                     "ob_get_clean(), ".
                     $arr_id.", ".
-                    $counter_id." - 1, ".
+                    '$'.$counter_id." - 1, ".
                     ($token->get_prop('subroot') ? 'true' : 'false').
                 ");\n";
         //$code .= "echo ob_get_clean();\n";
@@ -443,6 +559,7 @@ class fx_template_compiler {
         if (!$use_extract) {
             $code .= 'array_pop($this->context_stack);'."\n";
         }
+        $code .= 'array_pop($this->context_stack);'."\n";
         $code .= "}\n"; // close foreach
         $code .= "}\n";  // close if
         $code .= "\n?>";
@@ -456,7 +573,6 @@ class fx_template_compiler {
     
     protected function _token_area_to_code($token) {
         $token_props = var_export($token->get_all_props(),1);
-        /*$render_call = '<?=$this->render_area('.$token_props.');?>';*/
         $res = '';
         $render_called = false;
         foreach ($token->get_children() as $child_num => $child) {
@@ -491,7 +607,7 @@ class fx_template_compiler {
         $code  = "<?";
         $cond = $token->get_prop('test');
         $cond = trim($cond);
-        
+        /*
         $var_rex = '~(\$[a-z0-9_]+)~i';
         $parts = preg_split(
                 $var_rex, 
@@ -509,7 +625,8 @@ class fx_template_compiler {
             }
             $cond .= $p;
         }
-        
+        */
+        $cond = self::parse_expression($cond);
         $code .= 'if ('.$cond.") {\n";
         $code .= $this->_children_to_code($token)."\n";
         $code .= "}\n?>";
@@ -599,7 +716,7 @@ class fx_template_compiler {
         
         $code .= "\$template_dir = '".$template_dir."';\n";
         $code .= "\$_is_admin = fx::is_admin();\n";
-        $code .= 'extract($this->data);'."\n";
+        //$code .= 'extract($this->data);'."\n";
         $code .= "\t\$this->is_subroot = ".($is_subroot).";\n";
         $code .= $this->_children_to_code($token);
         $code .= "\n}\n";
@@ -726,9 +843,9 @@ class fx_template_compiler {
         $braces || $code = "if(0){{$code}\n}";
 
         if (false === eval($code)) {
-            if ($braces) $braces = PHP_INT_MAX;
-            else
-            {
+            if ($braces) {
+                $braces = PHP_INT_MAX;
+            } else {
                 // Get the maximum number of lines in $code to fix a border case
                 false !== strpos($code, "\r") && $code = strtr(str_replace("\r\n", "\n", $code), "\r", "\n");
                 $braces = substr_count($code, "\n");
@@ -738,17 +855,14 @@ class fx_template_compiler {
             $code = strip_tags($code);
 
             // Get the error message and line number
-            if (preg_match("'syntax error, (.+) in .+ on line (\d+)$'s", $code, $code))
-            {
+            if (preg_match("'syntax error, (.+) in .+ on line (\d+)$'s", $code, $code)) {
                 $code[2] = (int) $code[2];
                 $code = $code[2] <= $braces
                     ? array($code[1], $code[2])
                     : array('unexpected $end' . substr($code[1], 14), $braces);
             }
-            $result = array('syntax error', 0);
-        }
-        else
-        {
+            $result = array('syntax error', $code);
+        } else {
             ob_end_clean();
             $result = true;
         }

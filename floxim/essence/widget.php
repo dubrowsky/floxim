@@ -24,7 +24,7 @@ class fx_widget extends fx_essence {
         }
 
         if ($this['keyword']) {
-            $widgets = fx::data('widget')->get_all();
+            $widgets = fx::data('widget')->all();
             foreach ($widgets as $widget) {
                 if ($widget['id'] != $this['id'] && $widget['keyword'] == $this['keyword']) {
                     $this->validate_errors[] = array('field' => 'keyword', 'text' => fx::alang('This keyword is used by widget','system') . ' "'.$widget['name'].'"');

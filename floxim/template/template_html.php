@@ -7,8 +7,6 @@ class fx_template_html {
     }
     
     public function tokenize() {
-        $tp = realpath(dirname(__FILE__)).'/template_html_tokenizer_dev.php';
-        
         $tokenizer = new fx_template_html_tokenizer_dev();
         $tokens = $tokenizer->parse($this->_string);
         return $tokens;
@@ -46,6 +44,7 @@ class fx_template_html {
         
         $tree->apply( function(fx_template_html_token $n) use (&$unnamed_replaces) {
             if ($n->name == 'text') {
+                /*
                 // удаляем пробелы в начале строки, 
                 // если она начинается с {...}
                 $n->source = preg_replace(
@@ -59,7 +58,7 @@ class fx_template_html {
                     '\1',
                     $n->source
                 );
-            
+                */
                 return;
             }
             if (preg_match('~\{[\%|\$]~', $n->source)) {
@@ -81,7 +80,6 @@ class fx_template_html {
                     $tpl_tag .= '{$'.$var.' select="'.($negative ? 'false' : 'true').'" /}';
                 }
                 $tpl_tag .= '{/call}{/template}';
-                fx::log($tpl_tag);
                 $n->parent->add_child_before(fx_template_html_token::create($tpl_tag), $n);
                 $n->remove();
                 return;
@@ -177,7 +175,6 @@ class fx_template_html {
                 $n->parent->add_child_before(fx_template_html_token::create($each_macro_tag), $n);
                 $n->parent->add_child_after(fx_template_html_token::create('{/each}'), $n);
                 $n->remove_attribute('fx:each');
-                //$n->set_attribute('fx:is_record_root', '1');
             }
             if ( ($area_id = $n->get_attribute('fx:area'))) {
                 $n->remove_attribute('fx:area');
@@ -325,7 +322,7 @@ class fx_template_html {
         $stack = array($root);
         $token_index = -1;
         while ($token = array_shift($tokens)) {
-        	$token_index++;
+            $token_index++;
             switch ($token->type) {
                 case 'open':
                     if (count($stack) > 0) {
@@ -339,6 +336,7 @@ class fx_template_html {
                         $msg = "HTML parser error: ".
                                 "start tag ".htmlspecialchars($closed_tag->source)." (".$closed_tag->offset[0]."-".$closed_tag->offset[1].")".
                                 "doesn't match end tag &lt;/".$token->name.'&gt; ('.$token->offset[0].')';
+                        
                         throw new Exception($msg);
                     }
                     if ($token->offset) {

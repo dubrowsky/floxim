@@ -252,7 +252,11 @@ class fx_template_token {
 
 
     public function set_prop($name, $value) {
-        $this->props[$name] = $value;
+        if ($value === null){
+            unset($this->props[$name]);
+        } else {
+            $this->props[$name] = $value;
+        }
     }
     
     public function get_prop($name) {

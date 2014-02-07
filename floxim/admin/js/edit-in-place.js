@@ -79,8 +79,8 @@ fx_edit_in_place.prototype.start = function(meta) {
             case 'image': case 'file': 
                 var field = this.add_panel_field(
                     $.extend({}, meta, {
-                        value:meta.filetable_id || '',
-                        path:meta.value && meta.value != '0' ? meta.value : false
+                        value:meta.real_value || ''//,
+                        //path:meta.value && meta.value != '0' ? meta.value : false
                     })
                 );
                 field.on('fx_change_file', function() {

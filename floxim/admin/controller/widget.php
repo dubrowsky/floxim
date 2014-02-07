@@ -54,7 +54,7 @@ class fx_controller_admin_widget extends fx_controller_admin_component {
     public function add($input) {
         $fields = array();
 
-        $widgets = fx::data('widget')->get_all();
+        $widgets = fx::data('widget')->all();
 
         $groups = array();
         foreach ($widgets as $v) {

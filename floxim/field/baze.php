@@ -36,9 +36,12 @@ class fx_field_baze extends fx_field {
         return $this->_js_field;
     }
 
+    /*
     public function get_input($opt = '') {
         return "<input class='".$this->get_css_class()."' ".$opt." type='text' name='f_".$this->name."' value='".htmlspecialchars($this->value, ENT_QUOTES)."' />";
     }
+     * 
+     */
 
     public function get_html($opt = '') {
         $asterisk = $this['not_null'] ? '<span class="fx_field_asterisk">*</span>' : '';

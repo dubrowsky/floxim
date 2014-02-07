@@ -144,7 +144,6 @@ class fx_system_page extends fx_system {
         $file = preg_replace_callback(
             '~(url\([\'\"]?)([^/][^\)]+)~i', 
             function($matches) use ($http_base) {
-                //fx::debug($matches);
                 if (preg_match("~data\:~", $matches[0])) {
                     return $matches[0];
                 }
@@ -341,5 +340,14 @@ class fx_system_page extends fx_system {
        
         
         return $buffer;
+    }
+    
+    protected $areas = array();
+    public function set_infoblocks($areas) {
+        $this->areas = $areas;
+    }
+    
+    public function get_area_infoblocks($area_id) {
+        return isset($this->areas[$area_id]) ? $this->areas[$area_id] : null;
     }
 }

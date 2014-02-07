@@ -69,11 +69,17 @@ class fx_template_loader {
         $dir_end = $this->_controller_type.'/'.$this->_controller_name;
         $root = fx::config()->DOCUMENT_ROOT;
         
-        try {
-            $this->add_source_dir($root.'/'.$dir_end);
-            $this->add_source_dir($root.'/floxim/std/'.$dir_end);
-        } catch (Exception $e) {
-            
+        $dirs = array(
+            $root.'/'.$dir_end,
+            $root.'/floxim/std/'.$dir_end
+        );
+        
+        foreach ($dirs as $dir) {
+            try {
+                $this->add_source_dir($dir);
+            } catch (Exception $e) {
+
+            }
         }
     }
     
@@ -127,7 +133,7 @@ class fx_template_loader {
     
     public function compile() {
         $source = $this->build_source();
-        fx::debug($source);
+        //fx::debug($source);
         $parser = new fx_template_parser();
         $tree = $parser->parse($source);
         $compiler = new fx_template_compiler();
@@ -168,7 +174,11 @@ class fx_template_loader {
         
         // преобразуем fx::атрибуты к каноническому смарти-синтаксису
         $T = new fx_template_html($file_data);
-        $file_data = $T->transform_to_floxim();
+        try {
+            $file_data = $T->transform_to_floxim();
+        } catch (Exception $e) {
+            fx::debug($e, $file);
+        }
 
         // удаляем fx-комментарии
         $file_data = preg_replace("~\{\*.*?\*\}~s", '', $file_data);

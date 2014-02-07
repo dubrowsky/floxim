@@ -30,7 +30,7 @@ class fx_field extends fx_essence {
 
         static $res = array();
         if (empty($res)) {
-            $types = fx_data::optional('datatype')->get_all();
+            $types = fx::data('datatype')->all();
             foreach ($types as $v) {
                 $res[$v['id']] = $v['name'];
             }
@@ -184,7 +184,6 @@ class fx_field extends fx_essence {
     public function fake_value() {
         $c_type = preg_replace("~\(.+?\)~", '', $this->get_sql_type());
         $val = '';
-        //echo $this['name'].' - '.$c_type."<br />";
         switch ($c_type) {
             case 'TEXT': case 'VARCHAR':
                 $val = $this['description'];
@@ -196,12 +195,6 @@ class fx_field extends fx_essence {
                 $val = date('r');
                 break;
         }
-        if ($this->type === 'image') {
-            $val = fx::db()->get_var('SELECT id FROM {{filetable}} WHERE path LIKE "%.jpg" ORDER BY RAND()', 0);
-            
-        }
-        //echo fx_debug($this);
-        //echo $val."<br />";
         return $val;
     }
 

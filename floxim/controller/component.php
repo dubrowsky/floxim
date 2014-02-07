@@ -612,9 +612,7 @@ class fx_controller_component extends fx_controller {
      * @return fx_data_component
      */
     public function get_component() {
-        $ct = $this->get_content_type();
-        $component = fx::data('component')->get('keyword', $ct);
-        return $component;
+        return fx::data('component', $this->get_content_type());
     }
     
     

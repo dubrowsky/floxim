@@ -108,6 +108,27 @@ class fx_content extends fx_essence {
 
     protected $_fields_to_show = null;
     
+    public function get_field_meta($field_name) {
+        $fields = $this->get_fields();
+        if (!isset($fields[$field_name])) {
+            return false;
+        }
+        $cf = $fields[$field_name];
+        $field_meta = array(
+            'var_type' => 'content', 
+            'content_id' => $this['id'],
+            'content_type_id' => $this->component_id,
+            'id' => $cf['id'],
+            'name' => $cf['name'],
+            'title' => $cf['description'],
+            'type' => $cf->type
+        );
+        if ($cf->type == 'text') {
+            $field_meta['html'] = isset($cf['format']['html']) ? $cf['format']['html'] : 0;
+        }
+        return $field_meta;
+    }
+    
     public function get_fields_to_show() {
         if ($this->_fields_to_show) {
             return $this->_fields_to_show;
@@ -153,13 +174,6 @@ class fx_content extends fx_essence {
                     $field_meta['filetable_id'] = $v;
                     $v = fx::config()->HTTP_FILES_PATH.$file_obj['path'];
                 }
-                /*
-                if (!$is_admin) {
-                    $fields_to_show[$fkey] = $v;
-                    continue;
-                }
-                 * 
-                 */
             }
             if ($cf->type == 'datetime') {
                 $field_meta['value'] = $v;
@@ -225,7 +239,6 @@ class fx_content extends fx_essence {
         );
         
         if ($is_subroot) {
-            fx::log('src', $html);
             $html = preg_replace_callback(
                 "~^(\s*?)(<[^>]+>)~", 
                 function($matches) use ($essence_atts) {
@@ -236,10 +249,9 @@ class fx_content extends fx_essence {
                 $html
             );
             return $html;
-        } else {
-            $proc = new fx_template_html($html);
-            $html = $proc->add_meta($essence_atts);
         }
+        $proc = new fx_template_html($html);
+        $html = $proc->add_meta($essence_atts);
         return $html;
     }
     

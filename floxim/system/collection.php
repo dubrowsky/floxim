@@ -58,6 +58,7 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
         } elseif ($compare_type == '!=') {
             $compare_type = self::FILTER_NEQ;
         }
+        $res = array();
         if ($compare_type == self::FILTER_EQ) {
             foreach ($this->data as $item) {
                 if ($item[$field] == $prop) {
@@ -276,11 +277,12 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
     /*
      * Find elemenets and remove them from the collection
      */
-    public function find_remove($field, $prop, $compare_type = null) {
+    public function find_remove($field, $prop = null, $compare_type = null) {
         $items=  $this->find($field, $prop, $compare_type);
         foreach ($items as $i) {
             $this->remove($i);
         }
+        return $this;
     }
     
     public function get_values($field, $key_field = null, $as_collection = false) {

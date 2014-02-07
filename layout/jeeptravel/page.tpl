@@ -82,7 +82,7 @@
                 }
             }
         }
-        if (!$bg_image && !${"page_bg_image_$page_id"}) {
+        if (!$bg_image && !isset(${"page_bg_image_".$this->v('page_id')}) ) {
             $bg_image = $template_dir."images/0.gif";
         }
         ?>
@@ -133,14 +133,11 @@
                             fx:of="component_photo.list" 
                             class="photo_anounces">
                             <li fx:template="item">
-                                <?
-                                $parent = fx::data('content_page', $item['parent_id']);
-                                extract($parent->get_fields_to_show());
-                                ?>
-                                <a href="{$url}">
+                                <a href="{$item['parent']['url']}">
                                     <img src="{$photo | 'width:140,height:100'}" alt="" />
                                 </a>
                                 <span>{$description}</span>
+                                
                             </li>
                         </ul>
                     </div>

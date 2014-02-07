@@ -1,44 +1,109 @@
 <?php
 class fx_template {
     
-    protected $data = array();
+    //protected $data = array();
     protected $action = null;
     protected $_parent = null;
     
     public function __construct($action, $data = array()) {
-        $this->data = $data;
+        $this->context_stack []= $data;
         $this->action = $action;
     }
     
+    public function set_parent($parent_template) {
+        $this->_parent = $parent_template;
+    }
+
+
+    public function set_var($var, $val) {
+        if (count($this->context_stack) == 0) {
+            $this->context_stack[]= array();
+        }
+        $this->context_stack[count($this->context_stack) - 1][$var] = $val;
+    }
+    /*
     public function get_var($var_path) {
         return fx::dig($this->data, $var_path);
     }
+     * 
+     */
     
-    protected function print_var($val, $meta = null, $modifiers = array()) {
-        echo $val;
+    protected function print_var($val, $meta = null) {
+        $tf = null;
+        /*
+        if ($meta && isset($meta['type']) && $meta['type'] == 'image' && is_numeric($val)) {
+            $val = fx_filetable::get_path($val);
+        }
+         * 
+         */
+        if ($meta && fx::is_admin()) {
+            $tf = new fx_template_field($val, $meta);
+        }
+        echo $tf ? $tf : $val;
+    }
+    
+    protected function get_var_meta($var_name, $source = null) {
+        if ($source && $source instanceof fx_content) {
+            return $source->get_field_meta($var_name);
+        }
+        for ($i = count($this->context_stack) - 1; $i >= 0; $i--) {
+            if ( !($this->context_stack[$i] instanceof fx_content) ) {
+                continue;
+            }
+            if ( ($meta = $this->context_stack[$i]->get_field_meta($var_name))) {
+                return $meta;
+            }
+        }
+        if ($this->_parent) {
+            return $this->_parent->get_var_meta($var_name);
+        }
+        return array();
     }
     
     protected $context_stack = array();
     
     public static $v_count = 0;
     public function v($name) {
-        //self::$v_count++;
         for ($i = count($this->context_stack) - 1; $i >= 0; $i--) {
             if (isset($this->context_stack[$i][$name])) {
                 return $this->context_stack[$i][$name];
             }
-        }
-        if (isset($this->data[$name])) {
-            return $this->data[$name];
         }
         if ($this->_parent) {
             return $this->_parent->v($name);
         }
     }
     
+    public static function beautify_html($html) {
+        $level = 0;
+        $html = preg_replace_callback(
+            '~\s*?<(/?)([a-z0-9]+)[^>]*?(/?)>\s*?~', 
+            function($matches) use (&$level) {
+                $is_closing = $matches[1] == '/';
+                $is_single = in_array(strtolower($matches[2]), array('img', 'br', 'link')) || $matches[3] == '/';
+                    
+                if ($is_closing) {
+                    $level = $level == 0 ? $level : $level - 1;
+                }
+                $tag = trim($matches[0]);
+                $tag = "\n".str_repeat(" ", $level*4).$tag;
+                
+                if (!$is_closing && !$is_single) {
+                    $level++;
+                }
+                return $tag;
+                //fx::debug($matches);
+            }, 
+            $html
+        );
+        return $html;
+    }
+    
+    /*
     public static function val($v) {
         return $v instanceof fx_template_field ? $v->get_value() : $v;
     }
+    
     
     public function get_parent_var($var) {
         if (isset($this->data[$var])) {
@@ -50,13 +115,13 @@ class fx_template {
         return $this->_parent->get_parent_var($var);
     }
     
-    public function set_var($var_path, $var_value) {
-        fx::dig_set($this->data, $var_path, $var_value);
-    }
+    
     
     public function set_data($data) {
         $this->data = $data;
     }
+     * 
+     */
     
     protected function _get_template_sign() {
         $template_name = preg_replace("~^fx_template_~", '', get_class($this));
@@ -74,7 +139,7 @@ class fx_template {
             fx::trigger('render_area', array('area' => $area));
         }
         
-        $area_blocks = $this->data['areas'][$area['id']];
+        $area_blocks = fx::page()->get_area_infoblocks($area['id']);//$this->data['areas'][$area['id']];
         if (!$area_blocks || !is_array($area_blocks)) {
             $area_blocks = array();
         }
@@ -120,24 +185,27 @@ class fx_template {
     }
     
     public function render(array $data = array()) {
+        $this->context_stack[]= $data;
         /*
-        foreach ($data as $dk => $dv) {
-            $this->set_var($dk, $dv);
-        }
+        set_error_handler(function() {
+            fx::log(func_get_args());
+        });
          * 
          */
-        $this->data = array_merge($this->data, $data);
-        //$this->data = $data;
         ob_start();
         $method = 'tpl_'.$this->action;
         if (method_exists($this, $method)) {
-            $this->$method();
+            try {
+                $this->$method();
+            } catch (Exception $e) {
+                fx::log('template exception', $e);
+            }
         } else {
            echo 'No tpl action: <code>'.get_class($this).".".$this->action.'</code>';
         }
         $result = ob_get_clean();
         
-        if ($this->data['_idle']) {
+        if ($this->v('_idle')) {
             return $result;
         }
         
@@ -188,7 +256,6 @@ class fx_template {
                 $mode = $matches[3];
                 if ($mode == 'data') {
                     fx_template::$area_replacements[$matches[2]] = null;
-                    fx::log('rep data');
                     return $replacement[1];
                 }
                 
@@ -235,4 +302,3 @@ class fx_template {
         return $html;
     }
 }
-?>
