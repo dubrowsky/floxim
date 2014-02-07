@@ -141,14 +141,10 @@
                 p.hide();
                 footer.hide();
                 $fx.front.enable_select();
-<<<<<<< HEAD
                 var node_panel = $fx.front.get_node_panel()
                 if (node_panel !== null)
                     node_panel.show();
-=======
-                $fx.front.get_node_panel().show();
                 $fx.front.recount_node_panel();
->>>>>>> 81e119eebab1b96d70b965b72742a68e7b8bff09
             });
         },
         prepare_form_data: function(data) {
