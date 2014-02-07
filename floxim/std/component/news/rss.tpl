@@ -6,25 +6,22 @@ $_is_admin = false;
     <rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/">
         <channel>
             {each select="$blog"}
-                <title>{$blog_name}{$name editable="false" /}{/$}</title>
-                <link>{$blog_url}{$base_url /}{$url editable="false" /}{/$}</link>
-                <description>{$blog_description}{$description editable="false"/}{/$}</description>
+                <title>{$blog_name}{$name /}{/$}</title>
+                <link>{$blog_url}{$base_url /}{$url /}{/$}</link>
+                <description>{$blog_description}{$description /}{/$}</description>
             {/each}
-            <item fx:template="item">
-                <title>{$name editable="false"}</title>
-                <link>{$base_url}{$url editable="false"}</link>
-                <pubDate>{$publish_date editable="false" | 'r'}</pubDate>
+            <item fx:each="$items">
+                <title>{$name}</title>
+                <link>{$base_url}{$url}</link>
+                <pubDate>{$publish_date | 'r'}</pubDate>
                 <description>
                     <?ob_start();?>
-                        {$anounce editable="false"}
-                        <p fx:template="$tags">
+                        {$anounce}
+                        <p fx:if="$tags">
                             {$tags_label}Posted under:{/$} 
-                            <a fx:template="item" href="{$base_url}{$url editable="false"}">
-                                {$name editable="false"}
+                            <a fx:each="$tags" fx:separator=", " href="{$base_url}{$url}">
+                                {$name}
                             </a>
-                            <span fx:omit="true" fx:template="separator">
-                                {$rss_tag_separator}, {/$}
-                            </span>
                         </p>
                     <?=htmlspecialchars(ob_get_clean());?>
                 </description>

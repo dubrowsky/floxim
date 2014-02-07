@@ -79,8 +79,8 @@ fx_edit_in_place.prototype.start = function(meta) {
             case 'image': case 'file': 
                 var field = this.add_panel_field(
                     $.extend({}, meta, {
-                        value:meta.filetable_id || '',
-                        path:meta.value && meta.value != '0' ? meta.value : false
+                        value:meta.real_value || ''//,
+                        //path:meta.value && meta.value != '0' ? meta.value : false
                     })
                 );
                 field.on('fx_change_file', function() {
@@ -127,6 +127,10 @@ fx_edit_in_place.prototype.start = function(meta) {
 };
 
 fx_edit_in_place.prototype.add_panel_field = function(meta) {
+    console.log(meta);
+    if (meta.real_value) {
+        meta.value = meta.real_value;
+    }
     meta = $.extend({}, meta);
     if (meta.var_type === 'visual') {
         meta.name = meta.id;

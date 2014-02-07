@@ -68,6 +68,7 @@ class fx_infoblock extends fx_essence {
     
     public function get_prop_inherited($path_str, $layout_id = null) {
         $own_result = null;
+        $parent_result = null;
         $path = explode(".", $path_str);
         if ($path[0] == 'visual') {
             $c_i2l = $this->get_visual($layout_id);

@@ -19,7 +19,7 @@ class fx_data_field extends fx_data {
     }
 
     public function get_by_component($component_id) {
-        return $this->get_all('component_id', $component_id);
+        return $this->where('component_id', $component_id)->all();
     }
 
     protected function get_class_name($data = array()) {

@@ -193,6 +193,7 @@ input.ui-button {
     width: 100%;
     height: 34px;
     background-color: #272729;
+    border-bottom:1px solid #4c5051;
     z-index: 2677;
     min-width:750px;
 }
@@ -270,7 +271,7 @@ input.ui-button {
 
 #fx_admin_page_modes .fx_admin_page_modes_arrow {
     position: absolute;
-    top: 29px;
+    top: 30px;
     width: 9px;
     height: 5px;
     background: url(../images/images.png) no-repeat -24px 0;
@@ -408,8 +409,6 @@ input.ui-button {
 
 #fx_admin_control {
     width: 100%;
-    height: 36px;
-    border-bottom: 3px solid #e4e6e6;
     background: #fff;
     position: fixed;
     left: 0;
@@ -1563,7 +1562,6 @@ a.fx_var_editable:focus, .fx_var_editable a:focus {
     overflow: auto;
     background: #FFF;
     max-height: 500px;
-    border-bottom:1px solid #e4e6e6;
 }
 
 #fx_admin_extra_panel .ui-tabs-panel {

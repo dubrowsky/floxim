@@ -78,8 +78,7 @@ class fx_controller_admin_field extends fx_controller_admin {
             'value' => $info['form_tab']
         );
         
-        $finder = fx_data::optional('datatype');
-        foreach ($finder->get_all() as $v ) {
+        foreach (fx::data('datatype')->all() as $v ) {
             $values[$v['id']] = fx::alang("FX_ADMIN_FIELD_".strtoupper($v['name']), 'system');
         }
         $fields[] = array(

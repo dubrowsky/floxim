@@ -3,7 +3,7 @@
 class fx_controller_admin_lang extends fx_controller_admin {
 
     public function all() {
-        $langs = fx::data('lang')->get_all();
+        $langs = fx::data('lang')->all();
 
         $list = array('type' => 'list', 'filter' => true, 'tpl' => 'imgh', 'sortable' => true, 'essence'=> 'lang');
         $list['labels'] = array();

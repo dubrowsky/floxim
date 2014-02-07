@@ -19,10 +19,11 @@ class fx_controller_layout extends fx_controller {
             $page_id, 
             $layout_id
         );
+        fx::page()->set_infoblocks($page_infoblocks);
         $path = fx::data('content_page', $page_id)->get_path();
         $current_page = $path->last();
         $res = array(
-            'areas' => $page_infoblocks,
+            //'areas' => $page_infoblocks,
             'page_id' => $page_id,
             'path' => $path,
             'current_page' => $current_page

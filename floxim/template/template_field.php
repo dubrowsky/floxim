@@ -30,10 +30,13 @@ class fx_template_field  {
     public static $count_replacements = 0;
     public function __toString() {
         $val = isset($this->_meta['display_value']) ? $this->_meta['display_value'] : $this->_value;
-        if (!$this->_meta['editable']) {
+        if (
+                isset($this->_meta['editable']) && 
+                (!$this->_meta['editable'] || $this->_meta['editable'] == 'false')
+            ) {
             return (string) $val;
         }
-        $this->_meta['value'] = $this->_value;
+        //$this->_meta['value'] = $this->_value;
         self::$replacements []= array($this->_meta['id'], $this->_meta, $val);
         return '###fxf'.(self::$count_replacements++).'###';
     }

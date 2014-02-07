@@ -537,9 +537,21 @@ fx_front.prototype.recount_node_panel = function() {
     var p_height = $p.outerHeight();
     var css = {
         width:p_right - p_left + 'px',
-        visibility:'visible'
+        visibility:'visible',
+        opacity:1
     };
-    var top_fix = 73;
+    var top_fix = 0;
+    var $top_fixed_nodes = $('#fx_admin_panel, .fx_top_fixed');
+    var scroll_top = $('body').scrollTop();
+    $top_fixed_nodes.each(function (index, item) {
+        var $i = $(item);
+        var i_top = $i.offset().top - scroll_top;
+        var i_bottom = i_top + $i.outerHeight();
+        if (i_bottom > top_fix) {
+            top_fix = i_bottom;
+        }
+    });
+    
     var $node = $($fx.front.get_selected_item());
     var no = $node.offset();
     var break_top = no.top - top_fix - p_height - 4;
@@ -568,6 +580,7 @@ fx_front.prototype.recount_node_panel = function() {
             } else {
                 css.position = 'fixed';
                 css.top = top_fix+'px';
+                css.opacity = 0.7;
                 $p.addClass('fx_node_panel_fixed');
             }
         //}
@@ -577,8 +590,12 @@ fx_front.prototype.recount_node_panel = function() {
     if (p_gone > 0) {
         css.left = p_left - p_gone;
     }
-        
     $p.css(css);
+    $p.css('opacity', parseFloat($p.css('opacity'))+0.05);
+    clearTimeout($p.data('opacity_timeout'));
+    $p.data('opacity_timeout', setTimeout(function() {
+        $p.css('opacity', parseFloat($p.css('opacity'))-0.05);
+    }, 100));
 };
 
 fx_front.prototype.get_selected_item = function() {
@@ -889,6 +906,7 @@ fx_front.prototype.start_essences_sortable = function(container) {
                 $fx.front.disable_hilight();
                 $fx.front.get_node_panel().hide();
             },
+            handle:$('.fx_admin_button_select_block').first().get(0),
             items:sortable_items_selector,
             placeholder: placeholder_class,
             forcePlaceholderSize : true,
@@ -1096,7 +1114,7 @@ fx_front.prototype.reload_layout = function(callback) {
 };
 
 fx_front.prototype.move_down_body =function () {
-    $("body").css('margin-top','73px'); //74 - высота панели
+    $("body").css('margin-top','34px'); //34 - высота панели
 };
 
 fx_front.prototype.get_node_panel = function() {
@@ -1184,6 +1202,7 @@ fx_front.prototype.outline_block = function(n, style) {
         n.on('keyup.recount_outlines', function() {
             $fx.front.outline_block_off(n);
             $fx.front.outline_block(n, 'selected');
+            $fx.front.recount_node_panel();
         });
     }
     var o = n.offset();

@@ -39,12 +39,12 @@ class fx_template_html_tokenizer {
     }
     protected $rules = array();
     public function add_rule($first_state, $char, $new_state = false, $callback = null) {
-            $this->rules [] = array($first_state, $char, $new_state, $callback, $char[0], strlen($char));
+        $this->rules [] = array($first_state, $char, $new_state, $callback, $char[0], strlen($char));
     }
 
     public function set_state($state) {
-            $this->prev_state = $this->state;
-            $this->state = $state;
+        $this->prev_state = $this->state;
+        $this->state = $state;
     }
 
     protected $stack = '';
@@ -52,19 +52,18 @@ class fx_template_html_tokenizer {
     public function parse($string) {
         $this->position = 0;
         $parts = preg_split(
-                "~(<[a-z0-9\/\?]+|>|\{\*|\*\}|<\?|\?>|[\{\}]|=[\'\"]?|[\'\"]|\s+)~", 
-                $string, 
-                -1, 
-                PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY
+            "~(<[a-z0-9\/\?]+|>|\{\*|\*\}|<\?|\?>|[\{\}]|=[\'\"]?|[\'\"]|\s+)~", 
+            $string, 
+            -1, 
+            PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY
         );
         foreach ($parts as $ch) {
             $this->position += mb_strlen($ch);
-			foreach($this->rules as $rule) {
-				list($old_state, $r_char, $new_state, $callback, $r_first, $test_length) = $rule;
-				
-				if ($old_state != $this->state && $old_state != self::STATE_ANY) { 
-					continue;
-				}
+            foreach($this->rules as $rule) {
+                list($old_state, $r_char, $new_state, $callback, $r_first, $test_length) = $rule;		
+                if ($old_state != $this->state && $old_state != self::STATE_ANY) { 
+                    continue;
+                }
                 if (substr($ch, 0, $test_length) != $r_char) {
                     continue;
                 }
@@ -82,16 +81,16 @@ class fx_template_html_tokenizer {
                     }
                     continue 2;
                 }
-			}
-			$this->stack .= $ch;
-		}
+            }
+            $this->stack .= $ch;
+        }
         if (!empty($this->stack)) {
             $this->text_to_tag('');
         }
         return $this->res;
-	}
-	
-	protected $res = array();
+    }
+    
+    protected $res = array();
     
     protected function _add_token($source, $end) {
     	$start = $end - mb_strlen($source);
@@ -177,4 +176,3 @@ class fx_template_html_tokenizer {
 		}
 	}
 }
-?>
