@@ -141,6 +141,17 @@ class fx_template_compiler {
         $modifiers = $token->get_prop('modifiers');
         $token->set_prop('modifiers', null);
         
+        if (!$token->get_prop('type')) {
+            $token_type = 'string';
+            foreach ($token->get_children() as $child) {
+                if (preg_match("~<[a-z]+.*?>~", $child->get_prop('value'))) {
+                    $token_type = 'html';
+                    break;
+                }
+            }
+            $token->set_prop('type', $token_type);
+        }
+        
         // e.g. "name" or "image_".$this->v('id')
         $var_id = preg_replace('~^\$this->v\(~', '', preg_replace("~\)$~", '', $expr));
         
@@ -240,7 +251,7 @@ class fx_template_compiler {
         if ($token->get_prop('var_type') == 'visual') {
             $token_props = $token->get_all_props();
             $code .= " array(";
-            $tp_parts = array();
+            $tp_parts = array('"template" => $this->_get_template_sign()');
             
             foreach ($token_props as $tp => $tpval) {
                 $tp_parts[]= "'".$tp."' => ". ($tp == 'id' ? $var_id : "'".addslashes($tpval)."'");

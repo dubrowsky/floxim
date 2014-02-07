@@ -105,7 +105,6 @@ class fx_template_expression_parser extends fx_template_fsm {
                 $this->read_code($ch);
                 break;
             case self::ARR_INDEX:
-                fx::debug('reading', $ch);
                 if ($this->curr_node->starter == '.' && preg_match("~^[a-z0-9_]+$~i", $ch)) {
                     $ch = '"'.$ch.'"';
                 }
