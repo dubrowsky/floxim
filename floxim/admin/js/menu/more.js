@@ -28,7 +28,10 @@ fx_more_menu.prototype.load_items = function () {
         element.click( function(){
             self.hide();
             if (item.button && typeof item.button == 'object') {
-                $fx.post(item.button);
+                $fx.post(item.button,
+                function(json) {
+                    $fx.front_panel.show_form(json, {});
+                });
             }
             return false;
         });

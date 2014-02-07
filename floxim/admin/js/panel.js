@@ -11,7 +11,9 @@
             // disable hilight & select, hide node panel
             $fx.front.disable_hilight();
             $fx.front.disable_select();
-            $fx.front.get_node_panel().hide();
+            var node_panel = $fx.front.get_node_panel()
+            if (node_panel !== null)
+                node_panel.hide();
             
             this.prepare_form_data(data);
             this.panel = $('#fx_admin_extra_panel .fx_admin_panel_body');
@@ -142,7 +144,9 @@
                 p.hide();
                 footer.hide();
                 $fx.front.enable_select();
-                $fx.front.get_node_panel().show();
+                var node_panel = $fx.front.get_node_panel()
+                if (node_panel !== null)
+                    node_panel.show();
             });
         },
         prepare_form_data: function(data) {
