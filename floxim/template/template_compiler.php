@@ -499,6 +499,7 @@ class fx_template_compiler {
         if (!$item_key && !($item_key = $token->get_prop('key'))) {
             $item_key = $item_alias.'_key';
         }
+        $item_key = preg_replace('~^\$~', '', $item_key);
         if (! ($extract = $token->get_prop('extract'))) {
             $extract = true;
         }
@@ -521,6 +522,7 @@ class fx_template_compiler {
         $code .= '$'.$counter_id."++;\n";
         $code .= '$this->context_stack[]= array('."\n";
         $code .= "'".$item_alias."' => \$".$item_alias.",\n";
+        $code .= "'".$item_key."' => \$".$item_key.",\n";
         $code .= "'".$counter_id."' => \$".$counter_id.",\n";
         $code .= "'".$item_alias."_is_first' => \$".$counter_id." === 1,\n";
         $code .= "'".$item_alias."_is_last' => \$".$item_alias."_total == \$".$counter_id.",\n";
