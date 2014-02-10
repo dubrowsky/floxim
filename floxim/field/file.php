@@ -159,6 +159,3 @@ class fx_field_file extends fx_field_baze {
     }
 
 }
-
-?>
-

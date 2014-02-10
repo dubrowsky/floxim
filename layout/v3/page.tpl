@@ -19,7 +19,7 @@
 </head>
 <body>
     <div class="wrapper">
-        <nav>
+        <nav class="fx_top_fixed">
             <div class="holder">
                 <a href="/" class="logo">
                     <img src="{%logo}{/%}">

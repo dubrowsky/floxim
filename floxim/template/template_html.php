@@ -66,7 +66,7 @@ class fx_template_html {
             }
             if ($n->name == 'meta' && ($layout_id = $n->get_attribute('fx:layout'))) {
                 $layout_name = $n->get_attribute('fx:name');
-                $tpl_tag = '{template id="'.$layout_id.'" name="'.$layout_name.'"}';
+                $tpl_tag = '{template id="'.$layout_id.'" name="'.$layout_name.'" of="layout.show"}';
                 $tpl_tag .= '{call id="_layout_body" include="true"}';
                 $content = $n->get_attribute('content');
                 $vars = explode(",", $content);
