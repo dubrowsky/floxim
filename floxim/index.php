@@ -4,7 +4,6 @@
 if (!defined('FLOXIM')) {
     require_once('../boot.php');
 }
-//ob_start();
 
 register_shutdown_function(function() {
     $ob_level = ob_get_level();
@@ -13,8 +12,7 @@ register_shutdown_function(function() {
         for ($i = 0; $i < $ob_level; $i++) {
             $res .= ob_get_clean();
         }
-        fx::log('down', $res); 
-        echo "See more in log  :(";
+        fx::log('down', $res, debug_backtrace()); 
     }
 });
 

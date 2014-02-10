@@ -68,14 +68,13 @@ var fx_front = function () {
         $fx.front.c_hover = this;
         $target = $(e.target);
         var fix_link_ce = $target.hasClass('fx_template_var') && $fx.front.mode === 'edit';
-
         setTimeout(
             function() {
                 if ($fx.front.c_hover !== node.get(0)) {
                     return;
                 }
                 if (node.hasClass('fx_selected')) {
-                    return;
+                        return;
                 }
                 $('.fx_hilight_hover').removeClass('fx_hilight_hover');
                 node.addClass('fx_hilight_hover');
@@ -1051,6 +1050,7 @@ fx_front.prototype.reload_infoblock = function(infoblock_node, callback, extra_d
         data:post_data,
        url:'/~ib/'+meta.id+'@'+page_id,
        success:function(res) {
+           $fx.front.c_hover = null;
            $infoblock_node.off('click.fx_fake_click').css({opacity:''});
            var selected = $infoblock_node.descendant_or_self('.fx_selected');
            var selected_selector = null;
@@ -1071,6 +1071,7 @@ fx_front.prototype.reload_infoblock = function(infoblock_node, callback, extra_d
                        $(this).remove();
                    }
                });
+               $fx.front.front_overlay = null;
                $('body').trigger('fx_infoblock_loaded');
            } else {
                $infoblock_node.hide().before(res);

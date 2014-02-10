@@ -691,7 +691,6 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                 }
                     
                 if ($tplv['of'] == 'block') {
-                    fx::log('wv', $tplv);
                     $wrappers[$full_id] = $tplv['name'];
                     if ($force_block && empty($c_wrapper)) {
                         $c_wrapper = $full_id;

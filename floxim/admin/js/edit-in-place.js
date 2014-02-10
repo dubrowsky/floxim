@@ -127,7 +127,6 @@ fx_edit_in_place.prototype.start = function(meta) {
 };
 
 fx_edit_in_place.prototype.add_panel_field = function(meta) {
-    console.log(meta);
     if (meta.real_value) {
         meta.value = meta.real_value;
     }

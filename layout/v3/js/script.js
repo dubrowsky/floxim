@@ -55,7 +55,6 @@
 	});
 	function full_back(){
 		var height = $(window).height();
-		console.log(height)
 		$('.full-back').height(height-120);
 	}
 	$(document).ready(full_back);
