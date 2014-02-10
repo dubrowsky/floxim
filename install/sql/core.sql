@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 3.4.10.1deb1
+-- version 3.5.1
 -- http://www.phpmyadmin.net
 --
--- Host: localhost
--- Generation Time: Jan 31, 2014 at 07:31 PM
--- Server version: 5.5.35
--- PHP Version: 5.3.10-1ubuntu3.9
+-- Хост: 127.0.0.1
+-- Время создания: Фев 10 2014 г., 16:00
+-- Версия сервера: 5.5.25
+-- Версия PHP: 5.3.13
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,13 +17,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `floxim`
+-- База данных: `floxim_loc`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_auth_external`
+-- Структура таблицы `fx_auth_external`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_auth_external` (
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `fx_auth_external` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_classificator`
+-- Структура таблицы `fx_classificator`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_classificator` (
@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS `fx_classificator` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_classificator_cities`
+-- Структура таблицы `fx_classificator_cities`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_classificator_cities` (
@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS `fx_classificator_cities` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_classificator_country`
+-- Структура таблицы `fx_classificator_country`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_classificator_country` (
@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS `fx_classificator_country` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_classificator_region`
+-- Структура таблицы `fx_classificator_region`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_classificator_region` (
@@ -99,7 +99,7 @@ CREATE TABLE IF NOT EXISTS `fx_classificator_region` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_component`
+-- Структура таблицы `fx_component`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_component` (
@@ -120,7 +120,7 @@ CREATE TABLE IF NOT EXISTS `fx_component` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=100 AUTO_INCREMENT=80 ;
 
 --
--- Dumping data for table `fx_component`
+-- Дамп данных таблицы `fx_component`
 --
 
 INSERT INTO `fx_component` (`id`, `keyword`, `name_en`, `description_en`, `group`, `icon`, `store_id`, `parent_id`, `item_name_en`, `name_rus`, `item_name_rus`, `description_rus`) VALUES
@@ -156,7 +156,7 @@ INSERT INTO `fx_component` (`id`, `keyword`, `name_en`, `description_en`, `group
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content`
+-- Структура таблицы `fx_content`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content` (
@@ -174,7 +174,7 @@ CREATE TABLE IF NOT EXISTS `fx_content` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=47 AUTO_INCREMENT=2702 ;
 
 --
--- Dumping data for table `fx_content`
+-- Дамп данных таблицы `fx_content`
 --
 
 INSERT INTO `fx_content` (`id`, `priority`, `checked`, `created`, `last_updated`, `user_id`, `type`, `infoblock_id`, `site_id`, `parent_id`) VALUES
@@ -397,12 +397,12 @@ INSERT INTO `fx_content` (`id`, `priority`, `checked`, `created`, `last_updated`
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_award`
+-- Структура таблицы `fx_content_award`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_award` (
   `id` int(11) NOT NULL,
-  `image` int(11) DEFAULT NULL,
+  `image` varchar(255) DEFAULT NULL,
   `description` text,
   `year` int(11) DEFAULT NULL,
   `short_description` varchar(255) DEFAULT NULL,
@@ -410,18 +410,18 @@ CREATE TABLE IF NOT EXISTS `fx_content_award` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `fx_content_award`
+-- Дамп данных таблицы `fx_content_award`
 --
 
 INSERT INTO `fx_content_award` (`id`, `image`, `description`, `year`, `short_description`) VALUES
-(2243, 456, 'Stet clita kasd gubergren, no sea takimata sanctus est.. Lorem ipsum dolor sit amet. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat.\r\n\r\nLorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.\r\n\r\nLorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua.\r\n\r\nLorem ipsum dolor sit amet. Sanctus sea sed takimata ut vero voluptua. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat.\r\n\r\nLorem ipsum dolor sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. At vero eos et accusam et justo duo dolores et ea rebum.', 2012, 'Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.'),
-(2244, 457, 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\r\n\r\nLorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum.\r\n\r\nSanctus sea sed takimata ut vero voluptua. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.\r\n\r\nDuis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. At vero eos et accusam et justo duo dolores et ea rebum. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.\r\n\r\nLorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. At vero eos et accusam et justo duo dolores et ea rebum. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.', 2003, 'Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.'),
-(2599, 517, 'Sanctus sea sed takimata ut vero voluptua. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.\r\n\r\nQuis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sanctus sea sed takimata ut vero voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.\r\n\r\nExcepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. Sanctus sea sed takimata ut vero voluptua. At vero eos et accusam et justo duo dolores et ea rebum.\r\n\r\nLorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Sanctus sea sed takimata ut vero voluptua.\r\n\r\nLorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.', 2000, 'At vero eos et');
+(2243, '/floxim_files/content/awards-2007_4.png', 'Stet clita kasd gubergren, no sea takimata sanctus est.. Lorem ipsum dolor sit amet. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat.\r\n\r\nLorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.\r\n\r\nLorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua.\r\n\r\nLorem ipsum dolor sit amet. Sanctus sea sed takimata ut vero voluptua. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat.\r\n\r\nLorem ipsum dolor sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. At vero eos et accusam et justo duo dolores et ea rebum.', 2012, 'Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.'),
+(2244, '/floxim_files/content/awards-2007_0.png', 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\r\n\r\nLorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum.\r\n\r\nSanctus sea sed takimata ut vero voluptua. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.\r\n\r\nDuis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. At vero eos et accusam et justo duo dolores et ea rebum. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.\r\n\r\nLorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. At vero eos et accusam et justo duo dolores et ea rebum. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.', 2003, 'Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.'),
+(2599, '/floxim_files/content/feature-item_7.png', 'Sanctus sea sed takimata ut vero voluptua. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.\r\n\r\nQuis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sanctus sea sed takimata ut vero voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.\r\n\r\nExcepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. Sanctus sea sed takimata ut vero voluptua. At vero eos et accusam et justo duo dolores et ea rebum.\r\n\r\nLorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Sanctus sea sed takimata ut vero voluptua.\r\n\r\nLorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.', 2000, 'At vero eos et');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_classifier`
+-- Структура таблицы `fx_content_classifier`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_classifier` (
@@ -430,7 +430,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_classifier` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `fx_content_classifier`
+-- Дамп данных таблицы `fx_content_classifier`
 --
 
 INSERT INTO `fx_content_classifier` (`id`) VALUES
@@ -450,7 +450,7 @@ INSERT INTO `fx_content_classifier` (`id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_classifier_linker`
+-- Структура таблицы `fx_content_classifier_linker`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_classifier_linker` (
@@ -461,7 +461,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_classifier_linker` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `fx_content_classifier_linker`
+-- Дамп данных таблицы `fx_content_classifier_linker`
 --
 
 INSERT INTO `fx_content_classifier_linker` (`id`, `classifier_id`, `content_id`) VALUES
@@ -491,7 +491,7 @@ INSERT INTO `fx_content_classifier_linker` (`id`, `classifier_id`, `content_id`)
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_comment`
+-- Структура таблицы `fx_content_comment`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_comment` (
@@ -504,7 +504,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_comment` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `fx_content_comment`
+-- Дамп данных таблицы `fx_content_comment`
 --
 
 INSERT INTO `fx_content_comment` (`id`, `comment_text`, `publish_date`, `user_name`, `is_moderated`) VALUES
@@ -513,12 +513,12 @@ INSERT INTO `fx_content_comment` (`id`, `comment_text`, `publish_date`, `user_na
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_company`
+-- Структура таблицы `fx_content_company`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_company` (
   `id` int(11) NOT NULL,
-  `logo` int(11) DEFAULT NULL,
+  `logo` varchar(255) DEFAULT NULL,
   `short_description` varchar(255) DEFAULT NULL,
   `description` text,
   PRIMARY KEY (`id`)
@@ -527,27 +527,27 @@ CREATE TABLE IF NOT EXISTS `fx_content_company` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_complex_photo`
+-- Структура таблицы `fx_content_complex_photo`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_complex_photo` (
   `id` int(11) NOT NULL,
-  `image` int(11) DEFAULT NULL,
+  `image` varchar(255) DEFAULT NULL,
   `description` text,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `fx_content_complex_photo`
+-- Дамп данных таблицы `fx_content_complex_photo`
 --
 
 INSERT INTO `fx_content_complex_photo` (`id`, `image`, `description`) VALUES
-(2182, 429, '<p>asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasddfasdfasdf</p>');
+(2182, '429', '<p>asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasddfasdfasdf</p>');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_complex_video`
+-- Структура таблицы `fx_content_complex_video`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_complex_video` (
@@ -559,7 +559,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_complex_video` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `fx_content_complex_video`
+-- Дамп данных таблицы `fx_content_complex_video`
 --
 
 INSERT INTO `fx_content_complex_video` (`id`, `embed_html`, `description`, `tags`) VALUES
@@ -569,7 +569,7 @@ INSERT INTO `fx_content_complex_video` (`id`, `embed_html`, `description`, `tags
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_contact`
+-- Структура таблицы `fx_content_contact`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_contact` (
@@ -580,7 +580,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_contact` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `fx_content_contact`
+-- Дамп данных таблицы `fx_content_contact`
 --
 
 INSERT INTO `fx_content_contact` (`id`, `value`, `contact_type`) VALUES
@@ -594,7 +594,7 @@ INSERT INTO `fx_content_contact` (`id`, `value`, `contact_type`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_faq`
+-- Структура таблицы `fx_content_faq`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_faq` (
@@ -605,7 +605,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_faq` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `fx_content_faq`
+-- Дамп данных таблицы `fx_content_faq`
 --
 
 INSERT INTO `fx_content_faq` (`id`, `question`, `answer`) VALUES
@@ -614,20 +614,20 @@ INSERT INTO `fx_content_faq` (`id`, `question`, `answer`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_gallery`
+-- Структура таблицы `fx_content_gallery`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_gallery` (
   `id` int(11) NOT NULL,
   `publish_date` datetime DEFAULT NULL,
-  `cover` int(11) DEFAULT NULL,
+  `cover` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_news`
+-- Структура таблицы `fx_content_news`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_news` (
@@ -636,7 +636,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_news` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `fx_content_news`
+-- Дамп данных таблицы `fx_content_news`
 --
 
 INSERT INTO `fx_content_news` (`id`) VALUES
@@ -658,7 +658,7 @@ INSERT INTO `fx_content_news` (`id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_page`
+-- Структура таблицы `fx_content_page`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_page` (
@@ -672,7 +672,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_page` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=62;
 
 --
--- Dumping data for table `fx_content_page`
+-- Дамп данных таблицы `fx_content_page`
 --
 
 INSERT INTO `fx_content_page` (`id`, `url`, `name`, `title`, `comments_counter`) VALUES
@@ -821,7 +821,7 @@ INSERT INTO `fx_content_page` (`id`, `url`, `name`, `title`, `comments_counter`)
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_person`
+-- Структура таблицы `fx_content_person`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_person` (
@@ -829,7 +829,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_person` (
   `full_name` varchar(255) DEFAULT NULL,
   `company` varchar(255) DEFAULT NULL,
   `department` varchar(255) DEFAULT NULL,
-  `photo` int(11) DEFAULT NULL,
+  `photo` varchar(255) DEFAULT NULL,
   `short_description` varchar(255) DEFAULT NULL,
   `description` text,
   `birthday` datetime DEFAULT NULL,
@@ -838,52 +838,52 @@ CREATE TABLE IF NOT EXISTS `fx_content_person` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `fx_content_person`
+-- Дамп данных таблицы `fx_content_person`
 --
 
 INSERT INTO `fx_content_person` (`id`, `full_name`, `company`, `department`, `photo`, `short_description`, `description`, `birthday`, `position`) VALUES
-(2238, 'Pertrovich Ivanov', 'Ivanov & CO', 'Ecommerce', 452, 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.sdasd', 'Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.\r\n\r\n Sanctus sea sed takimata ut vero voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. At vero eos et accusam et justo duo dolores et ea rebum.\r\n\r\nDuis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. At vero eos et accusam et justo duo dolores et ea rebum. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. At vero eos et accusam et justo duo dolores et ea rebum.\r\n\r\nStet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\r\n\r\nDuis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. At vero eos et accusam et justo duo dolores et ea rebum.', '2013-10-27 00:00:00', 'CIO'),
-(2239, 'Stet clita kasd gubergren', 'At vero eos et', 'Stet clita kasd gubergren', 453, 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu f', '<p>​At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p><p>Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum.</p><p>Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. At vero eos et accusam et justo duo dolores et ea rebum.</p><p>At vero eos et accusam et justo duo dolores et ea rebum. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum.</p><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.. Stet clita kasd gubergren, no sea takimata sanctus est. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Sanctus sea sed takimata ut vero voluptua.</p>', '1976-10-08 00:00:00', 'Lorem ipsum dolor sit'),
-(2592, 'Lorem ipsum dolor sit', 'At vero eos et', 'Lorem ipsum dolor sit', 515, 'Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id', 'Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.', '2013-12-11 00:00:00', 'jedi'),
-(2671, 'Fan Fedorov', '', '', 536, 'Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Ut enim ad minim veniam, quis nostrud exercitation ullamco la', '<p>\n	Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\n</p>', '2014-01-23 00:00:00', ''),
-(2673, 'Peter Wegenet', '', '', 537, '', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. At vero eos et accusam et justo duo dolores et ea rebum. Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</span>\r\n</p>', '2014-01-17 00:00:00', ''),
-(2675, 'Yorik Sheackspear', '', '', 538, '', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</span>\r\n</p>', '2014-01-03 00:00:00', '');
+(2238, 'Pertrovich Ivanov', 'Ivanov & CO', 'Ecommerce', '/floxim_files/content/top7_5bc1e924e748f5ae47b8ad0db7f1e096_4.jpg', 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.sdasd', 'Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.\r\n\r\n Sanctus sea sed takimata ut vero voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. At vero eos et accusam et justo duo dolores et ea rebum.\r\n\r\nDuis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. At vero eos et accusam et justo duo dolores et ea rebum. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. At vero eos et accusam et justo duo dolores et ea rebum.\r\n\r\nStet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\r\n\r\nDuis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. At vero eos et accusam et justo duo dolores et ea rebum.', '2013-10-27 00:00:00', 'CIO'),
+(2239, 'Stet clita kasd gubergren', 'At vero eos et', 'Stet clita kasd gubergren', '/floxim_files/content/pic_cf234a6d1cee7008e148c859472470e8_3.jpg', 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu f', '<p>​At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p><p>Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum.</p><p>Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. At vero eos et accusam et justo duo dolores et ea rebum.</p><p>At vero eos et accusam et justo duo dolores et ea rebum. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum.</p><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.. Stet clita kasd gubergren, no sea takimata sanctus est. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Sanctus sea sed takimata ut vero voluptua.</p>', '1976-10-08 00:00:00', 'Lorem ipsum dolor sit'),
+(2592, 'Lorem ipsum dolor sit', 'At vero eos et', 'Lorem ipsum dolor sit', '/floxim_files/content/attack02_0.jpeg', 'Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id', 'Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.', '2013-12-11 00:00:00', 'jedi'),
+(2671, 'Fan Fedorov', '', '', '/floxim_files/content/employee_0.png', 'Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Ut enim ad minim veniam, quis nostrud exercitation ullamco la', '<p>\n	Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\n</p>', '2014-01-23 00:00:00', ''),
+(2673, 'Peter Wegenet', '', '', '/floxim_files/content/employee_1.png', '', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. At vero eos et accusam et justo duo dolores et ea rebum. Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</span>\r\n</p>', '2014-01-17 00:00:00', ''),
+(2675, 'Yorik Sheackspear', '', '', '/floxim_files/content/employee_2.png', '', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</span>\r\n</p>', '2014-01-03 00:00:00', '');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_photo`
+-- Структура таблицы `fx_content_photo`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_photo` (
   `id` int(11) NOT NULL,
-  `photo` int(11) DEFAULT NULL,
+  `photo` varchar(255) DEFAULT NULL,
   `description` text,
   `copy` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `fx_content_photo`
+-- Дамп данных таблицы `fx_content_photo`
 --
 
 INSERT INTO `fx_content_photo` (`id`, `photo`, `description`, `copy`) VALUES
-(2058, 390, 'Это же Саша Васильев!', ''),
-(2214, 432, 'Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Sanctus sea sed takimata ut vero voluptua. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.', 'Sanctus sea sed takimata'),
-(2215, 433, 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Quis aute iure reprehenderit inUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi ', 'Lorem ipsum dolor sit'),
-(2216, 434, 'Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.', 'Ut wisi enim ad'),
-(2217, 435, 'Lorem ipsum dolor sit', 'Stet clita kasd gubergren'),
-(2218, 436, 'Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. Sanctus sea sed takimata ut vero voluptua. At vero eos et accusam et justo duo dolores et ea rebum.', 'Ut wisi enim ad'),
-(2219, 438, 'Sanctus sea sed takimata ut vero voluptua. Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. At vero eos et accusam et justo duo dolores et ea rebum.', 'At vero eos et'),
-(2231, 450, 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. At vero eos et accusam et justo duo dolores et ea rebum.', 'At vero eos et'),
-(2622, 520, '', ''),
-(2692, 547, '', ''),
-(2693, 548, '', '');
+(2058, '/floxim_files/content/7394_0.jpg', 'Это же Саша Васильев!', ''),
+(2214, '/floxim_files/content/pic_cf234a6d1cee7008e148c859472470e8_5.jpg', 'Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Sanctus sea sed takimata ut vero voluptua. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.', 'Sanctus sea sed takimata'),
+(2215, '/floxim_files/content/pic_cf234a6d1cee7008e148c859472470e8_6.jpg', 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Quis aute iure reprehenderit inUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi ', 'Lorem ipsum dolor sit'),
+(2216, '/floxim_files/content/pic_cf234a6d1cee7008e148c859472470e8_7.jpg', 'Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.', 'Ut wisi enim ad'),
+(2217, '/floxim_files/content/pic_cf234a6d1cee7008e148c859472470e8_8.jpg', 'Lorem ipsum dolor sit', 'Stet clita kasd gubergren'),
+(2218, '/floxim_files/content/top7_5bc1e924e748f5ae47b8ad0db7f1e096_0.jpg', 'Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. Sanctus sea sed takimata ut vero voluptua. At vero eos et accusam et justo duo dolores et ea rebum.', 'Ut wisi enim ad'),
+(2219, '/floxim_files/content/top7_99c6e04ab50912c4c8faa3dfa0d78189_1.jpg', 'Sanctus sea sed takimata ut vero voluptua. Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. At vero eos et accusam et justo duo dolores et ea rebum.', 'At vero eos et'),
+(2231, '/floxim_files/content/top7_99c6e04ab50912c4c8faa3dfa0d78189_4.jpg', 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. At vero eos et accusam et justo duo dolores et ea rebum.', 'At vero eos et'),
+(2622, '/floxim_files/content/banner_0.png', '', ''),
+(2692, '/floxim_files/content/3fl-about-people_0.jpg', '', ''),
+(2693, '/floxim_files/content/HansIsland_9.png', '', '');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_product`
+-- Структура таблицы `fx_content_product`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_product` (
@@ -891,32 +891,32 @@ CREATE TABLE IF NOT EXISTS `fx_content_product` (
   `reference` varchar(255) DEFAULT NULL,
   `description` text,
   `short_description` varchar(255) DEFAULT NULL,
-  `image` int(11) DEFAULT NULL,
+  `image` varchar(255) DEFAULT NULL,
   `price` double DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `fx_content_product`
+-- Дамп данных таблицы `fx_content_product`
 --
 
 INSERT INTO `fx_content_product` (`id`, `reference`, `description`, `short_description`, `image`, `price`) VALUES
-(2258, '43564356', 'Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. At vero eos et accusam et justo duo dolores et ea rebum.', 'Lorem ipsum dolor sit', 462, 334),
-(2259, '53464356', 'Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet. Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.', 'At vero eos et', 463, 34534),
-(2260, '23423423', 'Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.', 'Lorem ipsum dolor sit', 465, 234),
-(2328, '4354365', 'Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Stet clita kasd gubergren, no sea takimata sanctus est. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.', 'At vero eos et', 469, 452),
-(2410, '5452345', '<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</p><p>Sanctus sea sed takimata ut vero voluptua. Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Sanctus sea sed takimata ut vero voluptua. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</p>', 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore ma', 476, 234234),
-(2627, '123123', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat.. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Ut wisi enim ad minim veniam, quis nostrud exerci tation</span><span style="font-size: 15px;">ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</span>\r\n</p>', '​Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat.. ', 527, 2134),
-(2631, '354678', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Stet clita kasd gubergren, no sea takimata sanctus est. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum.</span>\r\n</p>', '​Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Stet clita kasd gubergren, no sea takimata sanctus est. Nam liber tempor cum soluta nobis eleifend option con', 529, 2345),
-(2633, '2345', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Sanctus sea sed takimata ut vero voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est.</span>\r\n</p>', '​Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat', 530, 124323),
-(2660, '', '<p>\n	 <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. At vero eos et accusam et justo duo dolores et ea rebum. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. At vero eos et accusam et justo duo dolores et ea rebum.</span>\n</p>\n<p>\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;"></span>Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.\n</p>', 'Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et', 535, 2000),
-(2661, '', '<p>\r\n	 <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</span>\r\n</p>', '​At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. ', 0, 1500),
-(2662, '', '', '', 0, 1500);
+(2258, '43564356', 'Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. At vero eos et accusam et justo duo dolores et ea rebum.', 'Lorem ipsum dolor sit', '/floxim_files/content/anyday-00113601_1.jpg', 334),
+(2259, '53464356', 'Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet. Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.', 'At vero eos et', '/floxim_files/content/anyday-00113599_1.jpg', 34534),
+(2260, '23423423', 'Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.', 'Lorem ipsum dolor sit', '/floxim_files/content/anyday-00113601_2.jpg', 234),
+(2328, '4354365', 'Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Stet clita kasd gubergren, no sea takimata sanctus est. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.', 'At vero eos et', '/floxim_files/content/eleganzza-00119360_0.jpg', 452),
+(2410, '5452345', '<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</p><p>Sanctus sea sed takimata ut vero voluptua. Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Sanctus sea sed takimata ut vero voluptua. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</p>', 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore ma', '/floxim_files/content/eleganzza-00116508_0.jpg', 234234),
+(2627, '123123', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat.. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Ut wisi enim ad minim veniam, quis nostrud exerci tation</span><span style="font-size: 15px;">ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</span>\r\n</p>', '​Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat.. ', '/floxim_files/content/feature-item_4.png', 2134),
+(2631, '354678', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Stet clita kasd gubergren, no sea takimata sanctus est. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum.</span>\r\n</p>', '​Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Stet clita kasd gubergren, no sea takimata sanctus est. Nam liber tempor cum soluta nobis eleifend option con', '/floxim_files/content/feature-item2_8.png', 2345),
+(2633, '2345', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Sanctus sea sed takimata ut vero voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est.</span>\r\n</p>', '​Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat', '/floxim_files/content/feature-item2_9.png', 124323),
+(2660, '', '<p>\n	 <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. At vero eos et accusam et justo duo dolores et ea rebum. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. At vero eos et accusam et justo duo dolores et ea rebum.</span>\n</p>\n<p>\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;"></span>Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.\n</p>', 'Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et', '/floxim_files/content/HansIsland_3.png', 2000),
+(2661, '', '<p>\r\n	 <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</span>\r\n</p>', '​At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. ', '/floxim_files/', 1500),
+(2662, '', '', '', '/floxim_files/', 1500);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_product_category`
+-- Структура таблицы `fx_content_product_category`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_product_category` (
@@ -926,7 +926,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_product_category` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `fx_content_product_category`
+-- Дамп данных таблицы `fx_content_product_category`
 --
 
 INSERT INTO `fx_content_product_category` (`id`, `counter`) VALUES
@@ -942,12 +942,12 @@ INSERT INTO `fx_content_product_category` (`id`, `counter`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_project`
+-- Структура таблицы `fx_content_project`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_project` (
   `id` int(11) NOT NULL,
-  `image` int(11) DEFAULT NULL,
+  `image` varchar(255) DEFAULT NULL,
   `client` varchar(255) DEFAULT NULL,
   `short_description` varchar(255) DEFAULT NULL,
   `description` text,
@@ -956,57 +956,57 @@ CREATE TABLE IF NOT EXISTS `fx_content_project` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `fx_content_project`
+-- Дамп данных таблицы `fx_content_project`
 --
 
 INSERT INTO `fx_content_project` (`id`, `image`, `client`, `short_description`, `description`, `date`) VALUES
-(2253, 459, 'Duis autem ', 'Stet clita kasd gubergren', 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Lorem ipsum dolor sit amet.', '2013-10-03 00:00:00'),
-(2326, 467, 'At vero eos et', 'At vero eos et accusam et justo duo dolores et ea rebum', 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.\r\n\r\nStet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. At vero eos et accusam et justo duo dolores et ea rebum. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.\r\n\r\nAt vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum..\r\n\r\nLorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Sanctus sea sed takimata ut vero voluptua. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.\r\n\r\nDuis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Sanctus sea sed takimata ut vero voluptua.', '2011-10-02 00:00:00'),
-(2340, 475, 'Ivano I.P.', 'Lorem ipsum dolor sitLorem ipsum dolor sitLorem ipsum dolor sitLorem ipsum dolor sitLorem ipsum dolor sitLorem ipsum dolor sitLorem ipsum dolor sitLorem ipsum dolor sit', 'Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. At vero eos et accusam et justo duo dolores et ea rebum. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis.', '2013-10-17 00:00:00'),
-(2597, 516, 'At vero eos et', 'Lorem ipsum dolor sit', 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.', '2013-12-12 00:00:00'),
-(2688, 544, '', 'Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Nam liber tempor cum soluta nobis eleifend option', '<p>\r\n	 <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</span>\r\n</p>', '2014-01-09 00:00:00'),
-(2689, 545, '', 'Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Lorem ipsum do', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">At vero eos et accusam et justo duo dolores et ea rebum. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat.</span>\r\n</p>\r\n<p>\r\n	At vero eos et accusam et justo duo dolores et ea rebum. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet.\r\n</p>\r\n<p>\r\n	Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat.\r\n</p>\r\n<p>\r\n	Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum..\r\n</p>\r\n<p style="margin-left: 40px;">\r\n	Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum.\r\n</p>', '0000-00-00 00:00:00'),
-(2690, 0, '', 'Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consectetuer adi', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">At vero eos et accusam et justo duo dolores et ea rebum. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. Sanctus sea sed takimata ut vero voluptua. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis.</span>\r\n</p>\r\n<p>\r\n	Sanctus sea sed takimata ut vero voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.\r\n</p>\r\n<p>\r\n	Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. At vero eos et accusam et justo duo dolores et ea rebum. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum.\r\n</p>\r\n<p>\r\n	Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\r\n</p>\r\n<p>\r\n	Stet clita kasd gubergren, no sea takimata sanctus est. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\r\n</p>', '2014-01-16 00:00:00');
+(2253, '/floxim_files/content/awards-2007_3.png', 'Duis autem ', 'Stet clita kasd gubergren', 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Lorem ipsum dolor sit amet.', '2013-10-03 00:00:00'),
+(2326, '/floxim_files/content/awards-2007_2.png', 'At vero eos et', 'At vero eos et accusam et justo duo dolores et ea rebum', 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.\r\n\r\nStet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. At vero eos et accusam et justo duo dolores et ea rebum. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.\r\n\r\nAt vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum..\r\n\r\nLorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Sanctus sea sed takimata ut vero voluptua. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.\r\n\r\nDuis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Sanctus sea sed takimata ut vero voluptua.', '2011-10-02 00:00:00'),
+(2340, '/floxim_files/content/awards-2007_5.png', 'Ivano I.P.', 'Lorem ipsum dolor sitLorem ipsum dolor sitLorem ipsum dolor sitLorem ipsum dolor sitLorem ipsum dolor sitLorem ipsum dolor sitLorem ipsum dolor sitLorem ipsum dolor sit', 'Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. At vero eos et accusam et justo duo dolores et ea rebum. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis.', '2013-10-17 00:00:00'),
+(2597, '/floxim_files/content/feature-item2_7.png', 'At vero eos et', 'Lorem ipsum dolor sit', 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.', '2013-12-12 00:00:00'),
+(2688, '/floxim_files/content/HansIsland_7.png', '', 'Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Nam liber tempor cum soluta nobis eleifend option', '<p>\r\n	 <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</span>\r\n</p>', '2014-01-09 00:00:00'),
+(2689, '/floxim_files/content/employee_4.png', '', 'Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Lorem ipsum do', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">At vero eos et accusam et justo duo dolores et ea rebum. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat.</span>\r\n</p>\r\n<p>\r\n	At vero eos et accusam et justo duo dolores et ea rebum. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet.\r\n</p>\r\n<p>\r\n	Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat.\r\n</p>\r\n<p>\r\n	Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum..\r\n</p>\r\n<p style="margin-left: 40px;">\r\n	Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum.\r\n</p>', '0000-00-00 00:00:00'),
+(2690, '/floxim_files/', '', 'Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consectetuer adi', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">At vero eos et accusam et justo duo dolores et ea rebum. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. Sanctus sea sed takimata ut vero voluptua. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis.</span>\r\n</p>\r\n<p>\r\n	Sanctus sea sed takimata ut vero voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.\r\n</p>\r\n<p>\r\n	Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. At vero eos et accusam et justo duo dolores et ea rebum. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum.\r\n</p>\r\n<p>\r\n	Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\r\n</p>\r\n<p>\r\n	Stet clita kasd gubergren, no sea takimata sanctus est. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\r\n</p>', '2014-01-16 00:00:00');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_publication`
+-- Структура таблицы `fx_content_publication`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_publication` (
   `id` int(11) NOT NULL,
   `publish_date` datetime DEFAULT NULL,
   `anounce` text,
-  `image` int(11) DEFAULT NULL,
+  `image` varchar(255) DEFAULT NULL,
   `text` text,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `fx_content_publication`
+-- Дамп данных таблицы `fx_content_publication`
 --
 
 INSERT INTO `fx_content_publication` (`id`, `publish_date`, `anounce`, `image`, `text`) VALUES
-(2150, '2013-10-31 00:00:00', '<p>​At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</p>', 0, '<p>​Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Sanctus sea sed takimata ut vero voluptua. Stet clita kasd gubergren, no sea takimata sanctus est. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.</p><p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p><p>Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum.</p><p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Sanctus sea sed takimata ut vero voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet.</p>'),
-(2256, '2013-10-20 00:00:00', '<p>\n	  huy\n</p>', 461, '<p>\r\n	Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Stet clita kasd gubergren, no sea takimata sanctus est. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.\r\n</p>\r\n<p>\r\n	Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\r\n</p>\r\n<p>\r\n	Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.\r\n</p>\r\n<p>\r\n	Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Stet clita kasd gubergren, no sea takimata sanctus est. At vero eos et accusam et justo duo dolores et ea rebum. Sanctus sea sed takimata ut vero voluptua.\r\n</p>\r\n<p>\r\n	Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum.\r\n</p>'),
-(2455, '2013-11-20 00:00:00', '<p>\r\n	 Stet clita kasd gubergren, no sea takimata sanctus est. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. At vero eos et accusam et justo duo dolores et ea rebum. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat.\r\n</p>', 479, '<p>\r\n	 Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. At vero eos et accusam et justo duo dolores et ea rebum.\r\n</p>\r\n<p>\r\n	 At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum.\r\n</p>\r\n<p>\r\n	 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.\r\n</p>\r\n<p>\r\n	 Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.\r\n</p>\r\n<p>\r\n	 Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\r\n</p>'),
-(2499, '2013-11-15 00:00:00', '<p>\r\n	Consetetur sadipscing elitr sed\r\n</p>', 0, '<p>\r\n	Consetetur sadipscing elitr sed\r\n</p>'),
-(2500, '2013-11-08 00:00:00', '<p>\r\n	Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.\r\n</p>', 0, '<p>\r\n	Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.\r\n</p>'),
-(2571, '2013-10-02 00:00:00', '<p>\n	<span data-redactor="verified" style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr</span></p>', 504, '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</span>\r\n</p>'),
-(2572, '2013-12-06 00:00:00', '<p>\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum doloadsr sit amet, consetetur<strong> sadipscidfgng</strong> elitr, </span>\n</p>', 505, '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</span>\r\n</p>'),
-(2573, '2013-12-15 00:00:00', '<p>\n	 <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet daolore magna aliquam erat volutpat.</span>\n</p>', 506, '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum.</span>\r\n</p>'),
-(2574, '2013-12-03 00:00:00', '<p>\n	 <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Stet clita kasd gubergren, no sea takimata sanctus ests Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum.</span>\n</p>', 507, '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. </span>\r\n</p>\r\n<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</span>\r\n</p>'),
-(2624, '2014-01-20 15:44:44', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat.</span>\r\n</p>', 524, '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</span>\r\n</p>'),
-(2678, '2014-01-30 15:37:03', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum.</span>\r\n</p>', 539, '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum.</span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum.</span>\r\n</p>'),
-(2679, '2014-03-13 15:37:34', '<p>\r\n	 <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</span>\r\n</p>', 540, '<p>\r\n	 <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">At vero eos et accusam et justo duo dolores et ea rebum. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</span>\r\n</p>\r\n<p>\r\n	 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum.\r\n</p>\r\n<p>\r\n	 Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Sanctus sea sed takimata ut vero voluptua. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.\r\n</p>\r\n<p>\r\n	 Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet... Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\r\n</p>\r\n<p>\r\n	 Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet. Sanctus sea sed takimata ut vero voluptua. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\r\n</p>'),
-(2680, '2014-01-30 15:39:29', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Stet clita kasd gubergren, no sea takimata sanctus est.</span>\r\n</p>', 541, '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</span>\r\n</p>\r\n<p>\r\n	Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. At vero eos et accusam et justo duo dolores et ea rebum..\r\n</p>\r\n<p>\r\n	At vero eos et accusam et justo duo dolores et ea rebum. At vero eos et accusam et justo duo dolores et ea rebum. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\r\n</p>\r\n<p>\r\n	Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis. Sanctus sea sed takimata ut vero voluptua. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.\r\n</p>\r\n<p>\r\n	Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Sanctus sea sed takimata ut vero voluptua. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. At vero eos et accusam et justo duo dolores et ea rebum.\r\n</p>'),
-(2681, '2014-06-05 15:39:50', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">At vero eos et accusam et justo duo dolores et ea rebum. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis. Stet clita kasd gubergren, no sea takimata sanctus est. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</span>\r\n</p>', 0, '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum.. Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</span>\r\n</p>\r\n<p>\r\n	Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.\r\n</p>\r\n<p>\r\n	Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. At vero eos et accusam et justo duo dolores et ea rebum. At vero eos et accusam et justo duo dolores et ea rebum.\r\n</p>\r\n<p>\r\n	Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua.\r\n</p>\r\n<p>\r\n	Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet. Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.\r\n</p>');
+(2150, '2013-10-31 00:00:00', '<p>​At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</p>', '/floxim_files/', '<p>​Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Sanctus sea sed takimata ut vero voluptua. Stet clita kasd gubergren, no sea takimata sanctus est. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.</p><p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p><p>Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum.</p><p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Sanctus sea sed takimata ut vero voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet.</p>'),
+(2256, '2013-10-20 00:00:00', '<p>\n	  huy\n</p>', '/floxim_files/content/pic_cf234a6d1cee7008e148c859472470e8_9.jpg', '<p>\r\n	Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Stet clita kasd gubergren, no sea takimata sanctus est. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.\r\n</p>\r\n<p>\r\n	Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\r\n</p>\r\n<p>\r\n	Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.\r\n</p>\r\n<p>\r\n	Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Stet clita kasd gubergren, no sea takimata sanctus est. At vero eos et accusam et justo duo dolores et ea rebum. Sanctus sea sed takimata ut vero voluptua.\r\n</p>\r\n<p>\r\n	Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum.\r\n</p>'),
+(2455, '2013-11-20 00:00:00', '<p>\r\n	 Stet clita kasd gubergren, no sea takimata sanctus est. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. At vero eos et accusam et justo duo dolores et ea rebum. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat.\r\n</p>', '/floxim_files/content/Screenshot_from_2013-11-20_13_34_13_2.png', '<p>\r\n	 Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. At vero eos et accusam et justo duo dolores et ea rebum.\r\n</p>\r\n<p>\r\n	 At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum.\r\n</p>\r\n<p>\r\n	 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.\r\n</p>\r\n<p>\r\n	 Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.\r\n</p>\r\n<p>\r\n	 Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\r\n</p>'),
+(2499, '2013-11-15 00:00:00', '<p>\r\n	Consetetur sadipscing elitr sed\r\n</p>', '/floxim_files/', '<p>\r\n	Consetetur sadipscing elitr sed\r\n</p>'),
+(2500, '2013-11-08 00:00:00', '<p>\r\n	Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.\r\n</p>', '/floxim_files/', '<p>\r\n	Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.\r\n</p>'),
+(2571, '2013-10-02 00:00:00', '<p>\n	<span data-redactor="verified" style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr</span></p>', '/floxim_files/content/feature-item2_4.png', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</span>\r\n</p>'),
+(2572, '2013-12-06 00:00:00', '<p>\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum doloadsr sit amet, consetetur<strong> sadipscidfgng</strong> elitr, </span>\n</p>', '/floxim_files/content/feature-item2_5.png', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</span>\r\n</p>'),
+(2573, '2013-12-15 00:00:00', '<p>\n	 <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet daolore magna aliquam erat volutpat.</span>\n</p>', '/floxim_files/content/feature-item_3.png', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum.</span>\r\n</p>'),
+(2574, '2013-12-03 00:00:00', '<p>\n	 <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Stet clita kasd gubergren, no sea takimata sanctus ests Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum.</span>\n</p>', '/floxim_files/content/feature-item2_6.png', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. </span>\r\n</p>\r\n<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</span>\r\n</p>'),
+(2624, '2014-01-20 15:44:44', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat.</span>\r\n</p>', '/floxim_files/content/1280px-Sortie_de_l_op_ra_en_l_an_2000-2_1_2.jpg', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</span>\r\n</p>'),
+(2678, '2014-01-30 15:37:03', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum.</span>\r\n</p>', '/floxim_files/content/HansIsland_4.png', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum.</span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum.</span>\r\n</p>'),
+(2679, '2014-03-13 15:37:34', '<p>\r\n	 <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</span>\r\n</p>', '/floxim_files/content/HansIsland_5.png', '<p>\r\n	 <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">At vero eos et accusam et justo duo dolores et ea rebum. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</span>\r\n</p>\r\n<p>\r\n	 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum.\r\n</p>\r\n<p>\r\n	 Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Sanctus sea sed takimata ut vero voluptua. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.\r\n</p>\r\n<p>\r\n	 Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet... Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\r\n</p>\r\n<p>\r\n	 Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet. Sanctus sea sed takimata ut vero voluptua. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\r\n</p>'),
+(2680, '2014-01-30 15:39:29', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Stet clita kasd gubergren, no sea takimata sanctus est.</span>\r\n</p>', '/floxim_files/content/employee_3.png', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</span>\r\n</p>\r\n<p>\r\n	Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. At vero eos et accusam et justo duo dolores et ea rebum..\r\n</p>\r\n<p>\r\n	At vero eos et accusam et justo duo dolores et ea rebum. At vero eos et accusam et justo duo dolores et ea rebum. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\r\n</p>\r\n<p>\r\n	Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis. Sanctus sea sed takimata ut vero voluptua. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.\r\n</p>\r\n<p>\r\n	Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Sanctus sea sed takimata ut vero voluptua. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. At vero eos et accusam et justo duo dolores et ea rebum.\r\n</p>'),
+(2681, '2014-06-05 15:39:50', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">At vero eos et accusam et justo duo dolores et ea rebum. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis. Stet clita kasd gubergren, no sea takimata sanctus est. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</span>\r\n</p>', '/floxim_files/', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum.. Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</span>\r\n</p>\r\n<p>\r\n	Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.\r\n</p>\r\n<p>\r\n	Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. At vero eos et accusam et justo duo dolores et ea rebum. At vero eos et accusam et justo duo dolores et ea rebum.\r\n</p>\r\n<p>\r\n	Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua.\r\n</p>\r\n<p>\r\n	Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet. Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.\r\n</p>');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_section`
+-- Структура таблицы `fx_content_section`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_section` (
@@ -1015,7 +1015,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_section` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=7;
 
 --
--- Dumping data for table `fx_content_section`
+-- Дамп данных таблицы `fx_content_section`
 --
 
 INSERT INTO `fx_content_section` (`id`) VALUES
@@ -1074,7 +1074,7 @@ INSERT INTO `fx_content_section` (`id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_select_linker`
+-- Структура таблицы `fx_content_select_linker`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_select_linker` (
@@ -1084,7 +1084,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_select_linker` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `fx_content_select_linker`
+-- Дамп данных таблицы `fx_content_select_linker`
 --
 
 INSERT INTO `fx_content_select_linker` (`id`, `linked_id`) VALUES
@@ -1120,31 +1120,31 @@ INSERT INTO `fx_content_select_linker` (`id`, `linked_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_social_icon`
+-- Структура таблицы `fx_content_social_icon`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_social_icon` (
   `id` int(11) NOT NULL,
   `url` varchar(255) DEFAULT NULL,
-  `icon` int(11) DEFAULT NULL,
+  `icon` varchar(255) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   `soc_type` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `fx_content_social_icon`
+-- Дамп данных таблицы `fx_content_social_icon`
 --
 
 INSERT INTO `fx_content_social_icon` (`id`, `url`, `icon`, `name`, `soc_type`) VALUES
-(2616, 'http://www.linkedin.com/nhome/', 0, NULL, 'linkedin'),
-(2617, 'https://www.facebook.com/lists/404129646265675', 0, NULL, 'facebook'),
-(2642, 'https://www.facebook.com/', 0, '', 'facebook');
+(2616, 'http://www.linkedin.com/nhome/', '/floxim_files/', NULL, 'linkedin'),
+(2617, 'https://www.facebook.com/lists/404129646265675', '/floxim_files/', NULL, 'facebook'),
+(2642, 'https://www.facebook.com/', '/floxim_files/', '', 'facebook');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_tag`
+-- Структура таблицы `fx_content_tag`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_tag` (
@@ -1153,7 +1153,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_tag` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `fx_content_tag`
+-- Дамп данных таблицы `fx_content_tag`
 --
 
 INSERT INTO `fx_content_tag` (`id`) VALUES
@@ -1165,7 +1165,7 @@ INSERT INTO `fx_content_tag` (`id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_text`
+-- Структура таблицы `fx_content_text`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_text` (
@@ -1175,7 +1175,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_text` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=1199;
 
 --
--- Dumping data for table `fx_content_text`
+-- Дамп данных таблицы `fx_content_text`
 --
 
 INSERT INTO `fx_content_text` (`id`, `text`) VALUES
@@ -1197,7 +1197,7 @@ INSERT INTO `fx_content_text` (`id`, `text`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_travel_route`
+-- Структура таблицы `fx_content_travel_route`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_travel_route` (
@@ -1208,7 +1208,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_travel_route` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `fx_content_travel_route`
+-- Дамп данных таблицы `fx_content_travel_route`
 --
 
 INSERT INTO `fx_content_travel_route` (`id`, `start_date`, `end_date`) VALUES
@@ -1218,7 +1218,7 @@ INSERT INTO `fx_content_travel_route` (`id`, `start_date`, `end_date`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_user`
+-- Структура таблицы `fx_content_user`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_user` (
@@ -1227,7 +1227,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_user` (
   `login` varchar(255) NOT NULL,
   `name` varchar(255) NOT NULL,
   `registration_code` varchar(45) DEFAULT NULL,
-  `avatar` int(11) DEFAULT NULL,
+  `avatar` varchar(255) DEFAULT NULL,
   `forum_messages` int(11) NOT NULL DEFAULT '0',
   `pa_balance` double NOT NULL DEFAULT '0',
   `auth_hash` varchar(50) NOT NULL DEFAULT '',
@@ -1238,7 +1238,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=104;
 
 --
--- Dumping data for table `fx_content_user`
+-- Дамп данных таблицы `fx_content_user`
 --
 
 INSERT INTO `fx_content_user` (`id`, `email`, `login`, `name`, `registration_code`, `avatar`, `forum_messages`, `pa_balance`, `auth_hash`, `is_admin`, `password`) VALUES
@@ -1247,7 +1247,7 @@ INSERT INTO `fx_content_user` (`id`, `email`, `login`, `name`, `registration_cod
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_vacancy`
+-- Структура таблицы `fx_content_vacancy`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_vacancy` (
@@ -1268,7 +1268,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_vacancy` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `fx_content_vacancy`
+-- Дамп данных таблицы `fx_content_vacancy`
 --
 
 INSERT INTO `fx_content_vacancy` (`id`, `position`, `salary_from`, `salary_to`, `requirements`, `responsibilities`, `work_conditions`, `address`, `phone`, `email`, `contacts_name`, `currency`, `description`) VALUES
@@ -1281,7 +1281,7 @@ INSERT INTO `fx_content_vacancy` (`id`, `position`, `salary_from`, `salary_to`, 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_content_video`
+-- Структура таблицы `fx_content_video`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_content_video` (
@@ -1292,7 +1292,7 @@ CREATE TABLE IF NOT EXISTS `fx_content_video` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `fx_content_video`
+-- Дамп данных таблицы `fx_content_video`
 --
 
 INSERT INTO `fx_content_video` (`id`, `embed_html`, `description`) VALUES
@@ -1301,7 +1301,7 @@ INSERT INTO `fx_content_video` (`id`, `embed_html`, `description`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_controller`
+-- Структура таблицы `fx_controller`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_controller` (
@@ -1315,7 +1315,7 @@ CREATE TABLE IF NOT EXISTS `fx_controller` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_crontask`
+-- Структура таблицы `fx_crontask`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_crontask` (
@@ -1335,7 +1335,7 @@ CREATE TABLE IF NOT EXISTS `fx_crontask` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_datatype`
+-- Структура таблицы `fx_datatype`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_datatype` (
@@ -1349,7 +1349,7 @@ CREATE TABLE IF NOT EXISTS `fx_datatype` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=204 AUTO_INCREMENT=15 ;
 
 --
--- Dumping data for table `fx_datatype`
+-- Дамп данных таблицы `fx_datatype`
 --
 
 INSERT INTO `fx_datatype` (`id`, `name`, `priority`, `searchable`, `not_null`, `default`) VALUES
@@ -1369,7 +1369,7 @@ INSERT INTO `fx_datatype` (`id`, `name`, `priority`, `searchable`, `not_null`, `
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_field`
+-- Структура таблицы `fx_field`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_field` (
@@ -1401,7 +1401,7 @@ CREATE TABLE IF NOT EXISTS `fx_field` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=95 AUTO_INCREMENT=302 ;
 
 --
--- Dumping data for table `fx_field`
+-- Дамп данных таблицы `fx_field`
 --
 
 INSERT INTO `fx_field` (`id`, `parent`, `component_id`, `ctpl_id`, `system_table_id`, `widget_id`, `name`, `description`, `type`, `format`, `not_null`, `priority`, `searchable`, `default`, `inheritance`, `type_of_edit`, `checked`, `form_tab`) VALUES
@@ -1497,7 +1497,7 @@ INSERT INTO `fx_field` (`id`, `parent`, `component_id`, `ctpl_id`, `system_table
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_filetable`
+-- Структура таблицы `fx_filetable`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_filetable` (
@@ -1511,7 +1511,7 @@ CREATE TABLE IF NOT EXISTS `fx_filetable` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=56 AUTO_INCREMENT=549 ;
 
 --
--- Dumping data for table `fx_filetable`
+-- Дамп данных таблицы `fx_filetable`
 --
 
 INSERT INTO `fx_filetable` (`id`, `real_name`, `path`, `type`, `size`, `to_delete`) VALUES
@@ -1639,7 +1639,7 @@ INSERT INTO `fx_filetable` (`id`, `real_name`, `path`, `type`, `size`, `to_delet
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_group`
+-- Структура таблицы `fx_group`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_group` (
@@ -1649,7 +1649,7 @@ CREATE TABLE IF NOT EXISTS `fx_group` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=197 AUTO_INCREMENT=4 ;
 
 --
--- Dumping data for table `fx_group`
+-- Дамп данных таблицы `fx_group`
 --
 
 INSERT INTO `fx_group` (`id`, `name`) VALUES
@@ -1660,7 +1660,7 @@ INSERT INTO `fx_group` (`id`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_history`
+-- Структура таблицы `fx_history`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_history` (
@@ -1675,7 +1675,7 @@ CREATE TABLE IF NOT EXISTS `fx_history` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_history_item`
+-- Структура таблицы `fx_history_item`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_history_item` (
@@ -1692,7 +1692,7 @@ CREATE TABLE IF NOT EXISTS `fx_history_item` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_infoblock`
+-- Структура таблицы `fx_infoblock`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_infoblock` (
@@ -1711,7 +1711,7 @@ CREATE TABLE IF NOT EXISTS `fx_infoblock` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=210 AUTO_INCREMENT=398 ;
 
 --
--- Dumping data for table `fx_infoblock`
+-- Дамп данных таблицы `fx_infoblock`
 --
 
 INSERT INTO `fx_infoblock` (`id`, `parent_infoblock_id`, `site_id`, `page_id`, `checked`, `name`, `controller`, `action`, `params`, `scope`) VALUES
@@ -1873,7 +1873,7 @@ INSERT INTO `fx_infoblock` (`id`, `parent_infoblock_id`, `site_id`, `page_id`, `
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_infoblock_visual`
+-- Структура таблицы `fx_infoblock_visual`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_infoblock_visual` (
@@ -1891,7 +1891,7 @@ CREATE TABLE IF NOT EXISTS `fx_infoblock_visual` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=138 AUTO_INCREMENT=470 ;
 
 --
--- Dumping data for table `fx_infoblock_visual`
+-- Дамп данных таблицы `fx_infoblock_visual`
 --
 
 INSERT INTO `fx_infoblock_visual` (`id`, `infoblock_id`, `layout_id`, `wrapper`, `wrapper_visual`, `template`, `template_visual`, `area`, `priority`) VALUES
@@ -1903,9 +1903,9 @@ INSERT INTO `fx_infoblock_visual` (`id`, `infoblock_id`, `layout_id`, `wrapper`,
 (125, 61, 8, '', '', 'auto.auto', '', 'banner', 0),
 (126, 61, 1, '', '', 'component_text.list', '', '', 0),
 (134, 67, 1, '', '', 'layout_supernova.index', '', '', 0),
-(137, 67, 10, '', '', 'layout_jeeptravel.page', 'a:31:{s:18:"page_bg_color_1895";s:0:"";s:18:"page_bg_color_1888";s:7:"#E9A502";s:18:"page_bg_image_1888";s:52:"/controllers/layout/jeeptravel/images/bg-company.jpg";s:18:"page_bg_image_1895";s:0:"";s:18:"page_bg_color_1887";s:4:"#000";s:18:"page_bg_image_1887";s:3:"358";s:5:"phone";s:14:"+7  561 99 75";s:4:"mail";s:19:"info@jeeptravel.loc";s:18:"page_bg_color_1889";s:7:"#c7c1c7";s:18:"page_bg_image_1889";s:3:"389";s:18:"page_bg_color_1890";s:7:"#E9A502";s:18:"page_bg_image_1890";s:2:"60";s:18:"page_bg_color_1925";s:7:"#7a7a7a";s:18:"page_bg_image_1925";s:0:"";s:18:"page_bg_color_1926";s:7:"#500070";s:18:"page_bg_image_1926";s:3:"326";s:4:"logo";s:3:"378";s:18:"page_bg_image_1891";s:0:"";s:18:"page_bg_image_1968";s:0:"";s:14:"contacts_label";s:8:"Call us:";s:4:"copy";s:93:"© JeepTravel, 2013<br>&nbsp; &nbsp; Photo by: <a href="http://leecannon.com/">Lee Cannon</a>";s:18:"page_bg_image_1883";s:0:"";s:18:"page_bg_image_1996";s:0:"";s:18:"page_bg_image_1884";s:0:"";s:18:"page_bg_color_1883";s:7:"#fafafa";s:18:"page_bg_color_1884";s:7:"#000000";s:18:"page_bg_image_1916";s:0:"";s:18:"page_bg_image_1902";s:0:"";s:18:"page_bg_image_2033";s:0:"";s:5:"email";s:11:"info@jt.com";s:18:"page_bg_color_1996";s:7:"#000000";}', '', 0),
+(137, 67, 10, '', '', 'layout_jeeptravel.page', 'a:31:{s:18:"page_bg_color_1895";s:0:"";s:18:"page_bg_color_1888";s:7:"#E9A502";s:18:"page_bg_image_1888";s:52:"/controllers/layout/jeeptravel/images/bg-company.jpg";s:18:"page_bg_image_1895";s:0:"";s:18:"page_bg_color_1887";s:4:"#000";s:18:"page_bg_image_1887";s:38:"/floxim_files/content/bg-company_2.jpg";s:5:"phone";s:14:"+7  561 99 75";s:4:"mail";s:19:"info@jeeptravel.loc";s:18:"page_bg_color_1889";s:7:"#c7c1c7";s:18:"page_bg_image_1889";s:40:"/floxim_files/content/bg-portfolio_0.jpg";s:18:"page_bg_color_1890";s:7:"#E9A502";s:18:"page_bg_image_1890";s:40:"/floxim_files/content/bg-portfolio_3.jpg";s:18:"page_bg_color_1925";s:7:"#7a7a7a";s:18:"page_bg_image_1925";s:0:"";s:18:"page_bg_color_1926";s:7:"#500070";s:18:"page_bg_image_1926";s:3:"326";s:4:"logo";s:32:"/floxim_files/content/logo_6.png";s:18:"page_bg_image_1891";s:0:"";s:18:"page_bg_image_1968";s:0:"";s:14:"contacts_label";s:8:"Call us:";s:4:"copy";s:93:"© JeepTravel, 2013<br>&nbsp; &nbsp; Photo by: <a href="http://leecannon.com/">Lee Cannon</a>";s:18:"page_bg_image_1883";s:0:"";s:18:"page_bg_image_1996";s:0:"";s:18:"page_bg_image_1884";s:0:"";s:18:"page_bg_color_1883";s:7:"#fafafa";s:18:"page_bg_color_1884";s:7:"#000000";s:18:"page_bg_image_1916";s:0:"";s:18:"page_bg_image_1902";s:0:"";s:18:"page_bg_image_2033";s:0:"";s:5:"email";s:11:"info@jt.com";s:18:"page_bg_color_1996";s:7:"#000000";}', '', 1),
 (139, 69, 10, '', '', 'layout_jeeptravel.top_menu', '', 'header', 1),
-(140, 70, 10, '', '', 'layout_jeeptravel.index_slider', 'a:15:{s:9:"info_1891";s:510:"<dt><strong>Difficulty:</strong> easy<br>\n <strong>Cities:</strong> <span data-redactor="verified" style="color: rgb(217, 150, 148);">Gada</span>, <span data-redactor="verified" style="color: rgb(255, 255, 0);">B<strong>a</strong>lle</span>, <a href="https://google.com"><strong><span data-redactor="verified" style="color: rgb(242, 195, 20);">Binji</span></strong></a>, Wurno<br>\n <strong>Villages:</strong> Kaita, Rimi<span data-redactor="verified" style="color: rgb(84, 141, 212);"><br>​</span><br>\n </dt>";s:14:"more_text_1891";s:12:"Tell me more";s:16:"action_text_1891";s:14:"Gonna b there!";s:9:"date_1891";s:9:"May 12-15";s:11:"header_1891";s:16:"Summer Rally<br>";s:13:"bg_photo_1892";s:3:"357";s:11:"header_1892";s:34:"It''s going to be<br>​Legen-dary!";s:16:"action_text_1892";s:15:"Yes, I''m crazy!";s:14:"more_text_1892";s:12:"Tell me more";s:9:"date_1892";s:16:"January 5 – 19";s:9:"info_1892";s:251:"<dl>\n                                            <dt>Difficulty: </dt>extremely difficult<br>​Period: 2 weeks<br>Cities<strong>: Paris, Dakar</strong><dd></dd><dt>A chance to survive:</dt><dd>~23.5%</dd>\n                                        </dl>";s:13:"bg_photo_1891";s:3:"345";s:15:"action_url_1891";s:18:"http://google.com/";s:15:"action_url_1892";s:0:"";s:13:"bg_photo_2085";s:3:"422";}', 'content', 8),
+(140, 70, 10, '', '', 'layout_jeeptravel.index_slider', 'a:15:{s:9:"info_1891";s:510:"<dt><strong>Difficulty:</strong> easy<br>\n <strong>Cities:</strong> <span data-redactor="verified" style="color: rgb(217, 150, 148);">Gada</span>, <span data-redactor="verified" style="color: rgb(255, 255, 0);">B<strong>a</strong>lle</span>, <a href="https://google.com"><strong><span data-redactor="verified" style="color: rgb(242, 195, 20);">Binji</span></strong></a>, Wurno<br>\n <strong>Villages:</strong> Kaita, Rimi<span data-redactor="verified" style="color: rgb(84, 141, 212);"><br>​</span><br>\n </dt>";s:14:"more_text_1891";s:12:"Tell me more";s:16:"action_text_1891";s:14:"Gonna b there!";s:9:"date_1891";s:9:"May 12-15";s:11:"header_1891";s:16:"Summer Rally<br>";s:13:"bg_photo_1892";s:40:"/floxim_files/content/bg-portfolio_6.jpg";s:11:"header_1892";s:34:"It''s going to be<br>​Legen-dary!";s:16:"action_text_1892";s:15:"Yes, I''m crazy!";s:14:"more_text_1892";s:12:"Tell me more";s:9:"date_1892";s:16:"January 5 – 19";s:9:"info_1892";s:251:"<dl>\n                                            <dt>Difficulty: </dt>extremely difficult<br>​Period: 2 weeks<br>Cities<strong>: Paris, Dakar</strong><dd></dd><dt>A chance to survive:</dt><dd>~23.5%</dd>\n                                        </dl>";s:13:"bg_photo_1891";s:33:"/floxim_files/content/img01_1.jpg";s:15:"action_url_1891";s:18:"http://google.com/";s:15:"action_url_1892";s:0:"";s:13:"bg_photo_2085";s:39:"/floxim_files/content/oblako_edit_0.png";}', 'content', 8),
 (141, 71, 10, '', '', 'layout_jeeptravel.index', '', '', 0),
 (142, 72, 10, 'layout_jeeptravel.block_titled', 'a:1:{s:6:"header";s:8:"Upcoming";}', 'layout_jeeptravel.index_link_list', '', 'index_center', 1),
 (144, 74, 10, '', '', 'component_text.list', '', 'content', 7),
@@ -1938,8 +1938,8 @@ INSERT INTO `fx_infoblock_visual` (`id`, `infoblock_id`, `layout_id`, `wrapper`,
 (225, 154, 10, '', '', 'component_complex_photo.record', '', 'content', 30),
 (226, 155, 10, '', '', 'component_complex_video.list', 'a:1:{s:10:"tags_label";s:5:"Tags:";}', 'content', 31),
 (227, 156, 10, '', '', 'component_person.record', '', 'content', 32),
-(228, 157, 9, '', '', 'layout_dummy.two_columns', 'a:2:{s:4:"logo";s:3:"473";s:9:"add_phone";s:15:"8.800.213.23.45";}', '', 0),
-(229, 158, 9, '', '', 'layout_dummy.top_menu', 'a:2:{s:4:"logo";s:3:"470";s:5:"brand";s:16:"Ut enim ad minim";}', 'menu', 1),
+(228, 157, 9, '', '', 'layout_dummy.two_columns', 'a:2:{s:4:"logo";s:35:"/floxim_files/content/logo_es_2.jpg";s:9:"add_phone";s:15:"8.800.213.23.45";}', '', 1),
+(229, 158, 9, '', '', 'layout_dummy.top_menu', 'a:2:{s:4:"logo";s:35:"/floxim_files/content/logo_es_0.jpg";s:5:"brand";s:16:"Ut enim ad minim";}', 'menu', 1),
 (238, 167, 9, 'layout_dummy.block_titled', 'a:1:{s:6:"header";s:21:"Lorem ipsum dolor sit";}', 'component_text.list', '', 'left_block', 1),
 (243, 172, 9, 'layout_dummy.block_titled_bottom_left', 'a:1:{s:6:"header";s:18:"Photo Of The Month";}', 'layout_dummy.bottom_photo', '', 'bottom_right_block', 0),
 (244, 173, 9, '', '', 'layout_dummy.person_record', '', 'two_columns_left_block', 0),
@@ -2002,7 +2002,7 @@ INSERT INTO `fx_infoblock_visual` (`id`, `infoblock_id`, `layout_id`, `wrapper`,
 (389, 317, 11, '', 'a:1:{s:6:"header";s:4:"News";}', 'layout_demo.featured_news_list', 'a:1:{s:4:"more";s:5:"/News";}', 'main_column', 20),
 (391, 319, 11, '', '', 'layout_demo.news_list_main', '', 'main_column', 3),
 (392, 320, 11, '', '', 'layout_demo.news_record', '', 'main_column', 4),
-(395, 323, 11, '', '', 'layout_demo.index_slider', 'a:9:{s:13:"bg_photo_2584";s:3:"513";s:11:"header_2584";s:9:"Mega prod";s:9:"text_2584";s:8:"Buyyyyyy";s:13:"bg_photo_2582";s:3:"514";s:11:"header_2582";s:15:"Stet clita kasd";s:9:"text_2582";s:18:"At vero eos et<br>";s:13:"bg_photo_2627";s:3:"528";s:11:"header_2627";s:6:"asdasd";s:9:"text_2627";s:5:"dasda";}', 'main_column', 5),
+(395, 323, 11, '', '', 'layout_demo.index_slider', 'a:9:{s:13:"bg_photo_2584";s:34:"/floxim_files/content/slide2_4.png";s:11:"header_2584";s:9:"Mega prod";s:9:"text_2584";s:8:"Buyyyyyy";s:13:"bg_photo_2582";s:34:"/floxim_files/content/slide2_5.png";s:11:"header_2582";s:15:"Stet clita kasd";s:9:"text_2582";s:18:"At vero eos et<br>";s:13:"bg_photo_2627";s:33:"/floxim_files/content/slide_6.jpg";s:11:"header_2627";s:6:"asdasd";s:9:"text_2627";s:5:"dasda";}', 'main_column', 5),
 (396, 324, 11, '', '', 'component_text.list', '', 'main_column', 8),
 (397, 325, 11, '', '', 'layout_demo.person_list_main', '', 'main_column', 9),
 (398, 326, 11, '', '', 'layout_demo.person_record', '', 'main_column', 10),
@@ -2017,9 +2017,9 @@ INSERT INTO `fx_infoblock_visual` (`id`, `infoblock_id`, `layout_id`, `wrapper`,
 (408, 336, 11, '', '', 'layout_demo.news_list_main', '', 'main_column', 16),
 (409, 337, 11, '', '', 'layout_demo.news_list_main', '', 'main_column', 17),
 (410, 338, 11, '', '', 'layout_demo.social_icons', '', 'right_column', 2),
-(411, 339, 11, '', '', 'layout_demo.full_screen_banner', 'a:3:{s:12:"banner_image";s:3:"523";s:13:"banner_header";s:15:"Lorem idssfpfdf";s:11:"banner_text";s:51:"Excepteur sint obcaecat<br>\ncupiditat non proident,";}', 'full_screen', 1),
+(411, 339, 11, '', '', 'layout_demo.full_screen_banner', 'a:3:{s:12:"banner_image";s:69:"/floxim_files/content/1280px-Sortie_de_l_op_ra_en_l_an_2000-2_1_1.jpg";s:13:"banner_header";s:15:"Lorem idssfpfdf";s:11:"banner_text";s:51:"Excepteur sint obcaecat<br>\ncupiditat non proident,";}', 'full_screen', 1),
 (413, 341, 11, '', '', 'layout_demo.left_menu', '', 'index_left_column', 1),
-(414, 342, 11, '', '', 'layout_demo.index_slider', 'a:6:{s:13:"bg_photo_2582";s:3:"525";s:11:"header_2582";s:21:"Lorem ipsum dolor sit";s:9:"text_2582";s:24:"Nam liber tempor cum<br>";s:13:"bg_photo_2584";s:3:"526";s:11:"header_2584";s:12:"sdfgsdfgsdfg";s:9:"text_2584";s:17:"sadfgsdfgsdfgsdfg";}', 'index_main_column', 1),
+(414, 342, 11, '', '', 'layout_demo.index_slider', 'a:6:{s:13:"bg_photo_2582";s:69:"/floxim_files/content/1280px-Sortie_de_l_op_ra_en_l_an_2000-2_1_3.jpg";s:11:"header_2582";s:21:"Lorem ipsum dolor sit";s:9:"text_2582";s:24:"Nam liber tempor cum<br>";s:13:"bg_photo_2584";s:33:"/floxim_files/content/slide_5.jpg";s:11:"header_2584";s:12:"sdfgsdfgsdfg";s:9:"text_2584";s:17:"sadfgsdfgsdfgsdfg";}', 'index_main_column', 1),
 (415, 343, 11, '', '', 'layout_demo.featured_products_list', '', 'index_main_column', 2),
 (416, 344, 11, '', '', 'layout_demo.featured_products_list_with_categories', '', 'main_column', 22),
 (417, 345, 12, '', '', 'layout_v3.index', '', '', 1),
@@ -2029,7 +2029,7 @@ INSERT INTO `fx_infoblock_visual` (`id`, `infoblock_id`, `layout_id`, `wrapper`,
 (421, 349, 12, '', '', 'layout_v3.authform_popup', '', 'icons_area', 1),
 (431, 359, 12, '', '', 'layout_v3.one_column', '', '', 2),
 (432, 360, 12, '', '', 'layout_v3.breadcrumbs', '', 'breadcrumbs-area', 2),
-(433, 361, 12, '', '', 'layout_v3.featured_list', 'a:3:{s:5:"image";s:3:"532";s:10:"image_2652";s:3:"534";s:10:"four_items";s:1:"1";}', 'main_column', 1),
+(433, 361, 12, '', '', 'layout_v3.featured_list', 'a:3:{s:5:"image";s:38:"/floxim_files/content/HansIsland_0.png";s:10:"image_2652";s:38:"/floxim_files/content/HansIsland_2.png";s:10:"four_items";s:1:"1";}', 'main_column', 1),
 (434, 362, 12, '', '', 'layout_v3.banner', 'a:2:{s:18:"banner_header_2652";s:26:"<p>\n	Best Icebreakers\n</p>";s:16:"banner_text_2652";s:58:"Check <strong>our </strong><strong>best </strong>deals<br>";}', 'breadcrumbs-area', 1),
 (435, 363, 12, '', '', 'layout_v3.two_columns', '', '', 3),
 (436, 364, 12, '', '', 'layout_v3.featured_list', 'a:1:{s:10:"four_items";s:1:"0";}', 'main_column', 2),
@@ -2050,9 +2050,9 @@ INSERT INTO `fx_infoblock_visual` (`id`, `infoblock_id`, `layout_id`, `wrapper`,
 (452, 380, 12, '', '', 'layout_v3.featured_news_list', '', 'main_column', 10),
 (453, 381, 12, '', '', 'layout_v3.featured_news_list', 'a:1:{s:13:"more_news_url";s:5:"/news";}', 'index_one_column', 1),
 (454, 382, 12, '', '', 'layout_v3.full_width', '', '', 9),
-(457, 385, 12, '', '', 'layout_v3.full_screen_menu', 'a:1:{s:7:"bg_2688";s:3:"546";}', 'full_screen', 1),
+(457, 385, 12, '', '', 'layout_v3.full_screen_menu', 'a:1:{s:7:"bg_2688";s:38:"/floxim_files/content/HansIsland_8.png";}', 'full_screen', 1),
 (458, 386, 12, 'layout_v3.block_titled', 'a:1:{s:6:"header";s:13:"About Project";}', 'layout_v3.project_record', '', 'full_screen', 2),
-(459, 387, 12, '', '', 'layout_v3.full_screen_menu', '', 'full_screen', 3),
+(459, 387, 12, '', '', 'layout_v3.full_screen_menu', 'a:1:{s:7:"header_";s:15:"Hans Island<br>";}', 'full_screen', 3),
 (460, 388, 12, '', '', 'layout_v3.side_menu', 'a:1:{s:10:"unstylized";s:1:"1";}', 'left_column', 8),
 (461, 389, 12, 'layout_v3.block_titled', 'a:1:{s:6:"header";s:6:"Images";}', 'layout_v3.slider', 'a:1:{s:10:"thumbnails";s:1:"1";}', 'full_screen', 4),
 (462, 390, 12, '', '', 'layout_v3.one_column', '', '', 10),
@@ -2065,7 +2065,7 @@ INSERT INTO `fx_infoblock_visual` (`id`, `infoblock_id`, `layout_id`, `wrapper`,
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_lang`
+-- Структура таблицы `fx_lang`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_lang` (
@@ -2078,7 +2078,7 @@ CREATE TABLE IF NOT EXISTS `fx_lang` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
 
 --
--- Dumping data for table `fx_lang`
+-- Дамп данных таблицы `fx_lang`
 --
 
 INSERT INTO `fx_lang` (`id`, `en_name`, `native_name`, `lang_code`) VALUES
@@ -2088,7 +2088,7 @@ INSERT INTO `fx_lang` (`id`, `en_name`, `native_name`, `lang_code`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_lang_string`
+-- Структура таблицы `fx_lang_string`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_lang_string` (
@@ -2102,7 +2102,7 @@ CREATE TABLE IF NOT EXISTS `fx_lang_string` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=502 ;
 
 --
--- Dumping data for table `fx_lang_string`
+-- Дамп данных таблицы `fx_lang_string`
 --
 
 INSERT INTO `fx_lang_string` (`id`, `dict`, `string`, `lang_en`, `lang_ru`, `lang_rus`) VALUES
@@ -2577,7 +2577,7 @@ INSERT INTO `fx_lang_string` (`id`, `dict`, `string`, `lang_en`, `lang_ru`, `lan
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_layout`
+-- Структура таблицы `fx_layout`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_layout` (
@@ -2588,7 +2588,7 @@ CREATE TABLE IF NOT EXISTS `fx_layout` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=64 AUTO_INCREMENT=13 ;
 
 --
--- Dumping data for table `fx_layout`
+-- Дамп данных таблицы `fx_layout`
 --
 
 INSERT INTO `fx_layout` (`id`, `keyword`, `name`) VALUES
@@ -2601,7 +2601,7 @@ INSERT INTO `fx_layout` (`id`, `keyword`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_mail_template`
+-- Структура таблицы `fx_mail_template`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_mail_template` (
@@ -2617,7 +2617,7 @@ CREATE TABLE IF NOT EXISTS `fx_mail_template` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_module`
+-- Структура таблицы `fx_module`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_module` (
@@ -2633,7 +2633,7 @@ CREATE TABLE IF NOT EXISTS `fx_module` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=68 AUTO_INCREMENT=5 ;
 
 --
--- Dumping data for table `fx_module`
+-- Дамп данных таблицы `fx_module`
 --
 
 INSERT INTO `fx_module` (`id`, `name`, `keyword`, `description`, `installed`, `inside_admin`, `checked`) VALUES
@@ -2644,7 +2644,7 @@ INSERT INTO `fx_module` (`id`, `name`, `keyword`, `description`, `installed`, `i
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_multiselect`
+-- Структура таблицы `fx_multiselect`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_multiselect` (
@@ -2658,7 +2658,7 @@ CREATE TABLE IF NOT EXISTS `fx_multiselect` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_patch`
+-- Структура таблицы `fx_patch`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_patch` (
@@ -2673,7 +2673,7 @@ CREATE TABLE IF NOT EXISTS `fx_patch` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=cp1251 AUTO_INCREMENT=24 ;
 
 --
--- Dumping data for table `fx_patch`
+-- Дамп данных таблицы `fx_patch`
 --
 
 INSERT INTO `fx_patch` (`id`, `to`, `created`, `description`, `from`, `status`, `url`) VALUES
@@ -2685,7 +2685,7 @@ INSERT INTO `fx_patch` (`id`, `to`, `created`, `description`, `from`, `status`, 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_redirect`
+-- Структура таблицы `fx_redirect`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_redirect` (
@@ -2701,7 +2701,7 @@ CREATE TABLE IF NOT EXISTS `fx_redirect` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_session`
+-- Структура таблицы `fx_session`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_session` (
@@ -2718,16 +2718,16 @@ CREATE TABLE IF NOT EXISTS `fx_session` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=126;
 
 --
--- Dumping data for table `fx_session`
+-- Дамп данных таблицы `fx_session`
 --
 
 INSERT INTO `fx_session` (`id`, `user_id`, `session_start`, `session_time`, `ip`, `login_save`, `site_id`, `auth_type`) VALUES
-('1b74823f418413b2ecf2371568e6f7f8', 2367, 1390995386, 1391268238, 2130706433, 0, 0, 1);
+('d2c1f443c2b2ba0ac44c06758333a061', 2367, 1392029323, 1392119881, 2130706433, 0, 0, 1);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_settings`
+-- Структура таблицы `fx_settings`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_settings` (
@@ -2741,7 +2741,7 @@ CREATE TABLE IF NOT EXISTS `fx_settings` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=70 AUTO_INCREMENT=40 ;
 
 --
--- Dumping data for table `fx_settings`
+-- Дамп данных таблицы `fx_settings`
 --
 
 INSERT INTO `fx_settings` (`id`, `key`, `value`, `module`, `site_id`) VALUES
@@ -2788,7 +2788,7 @@ INSERT INTO `fx_settings` (`id`, `key`, `value`, `module`, `site_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_site`
+-- Структура таблицы `fx_site`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_site` (
@@ -2816,7 +2816,7 @@ CREATE TABLE IF NOT EXISTS `fx_site` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=292 AUTO_INCREMENT=19 ;
 
 --
--- Dumping data for table `fx_site`
+-- Дамп данных таблицы `fx_site`
 --
 
 INSERT INTO `fx_site` (`id`, `parent_id`, `name`, `domain`, `layout_id`, `color`, `mirrors`, `priority`, `checked`, `index_page_id`, `error_page_id`, `created`, `last_updated`, `robots`, `disallow_indexing`, `type`, `language`, `offline_text`, `store_id`) VALUES
@@ -2829,7 +2829,7 @@ INSERT INTO `fx_site` (`id`, `parent_id`, `name`, `domain`, `layout_id`, `color`
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_template`
+-- Структура таблицы `fx_template`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_template` (
@@ -2850,7 +2850,7 @@ CREATE TABLE IF NOT EXISTS `fx_template` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_user_group`
+-- Структура таблицы `fx_user_group`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_user_group` (
@@ -2863,7 +2863,7 @@ CREATE TABLE IF NOT EXISTS `fx_user_group` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=13 AUTO_INCREMENT=8 ;
 
 --
--- Dumping data for table `fx_user_group`
+-- Дамп данных таблицы `fx_user_group`
 --
 
 INSERT INTO `fx_user_group` (`id`, `user_id`, `group_id`) VALUES
@@ -2872,7 +2872,7 @@ INSERT INTO `fx_user_group` (`id`, `user_id`, `group_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fx_widget`
+-- Структура таблицы `fx_widget`
 --
 
 CREATE TABLE IF NOT EXISTS `fx_widget` (
@@ -2889,7 +2889,7 @@ CREATE TABLE IF NOT EXISTS `fx_widget` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=111 AUTO_INCREMENT=4 ;
 
 --
--- Dumping data for table `fx_widget`
+-- Дамп данных таблицы `fx_widget`
 --
 
 INSERT INTO `fx_widget` (`id`, `name`, `keyword`, `description`, `group`, `checked`, `icon`, `embed`, `store_id`) VALUES
