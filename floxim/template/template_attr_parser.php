@@ -3,7 +3,7 @@ require_once (dirname(__FILE__).'/template_fsm.php');
 
 class fx_template_attr_parser extends fx_template_fsm {
 
-    public $split_regexp = "~(\s|=[\'\"]|:|\"|<\?.+?\?>|\{[^\}]+?\})~";
+    public $split_regexp = "~(\s|=[\'\"]|fx:|:|\"|<\?.+?\?>|\{[^\}]+?\})~";
 
     const TAG = 1;
     const PHP = 2;
@@ -11,6 +11,7 @@ class fx_template_attr_parser extends fx_template_fsm {
     const ATT = 4;
     const ATT_NAME = 5;
     const ATT_VAL = 6;
+    const FX_VAL = 7;
 
 
     protected $res = '';
@@ -19,8 +20,13 @@ class fx_template_attr_parser extends fx_template_fsm {
 
     public function __construct() {
         $this->add_rule(self::TAG, '~^\s+$~', self::ATT_NAME, 'start_att');
+
+        $this->add_rule(self::ATT_NAME, '~^fx:$~', self::FX, null);
+        $this->add_rule(self::FX, '~^=[\'\"]$~', self::FX_VAL, 'start_val');
+
         $this->add_rule(self::ATT_NAME, '~^=[\'\"]$~', self::ATT_VAL, 'start_val');
-        $this->add_rule(self::ATT_VAL, '~^\s+|[\'\"]$~', self::TAG, 'end_att');
+        $this->add_rule(self::ATT_VAL, '~^\{[\%\$]~', null, 'start_var');
+        $this->add_rule(array(self::ATT_VAL, self::FX_VAL), '~^\s+|[\'\"]$~', self::TAG, 'end_att');
         $this->init_state = self::TAG;
     }
 
@@ -38,6 +44,20 @@ class fx_template_attr_parser extends fx_template_fsm {
             $this->att_quote = $att_quote[0];
         }
     }
+
+
+    public function start_var ($ch) {
+        $ch = preg_replace("~^([^\s\|\}]+)~", '\1 inatt="true" ', $ch);
+        if (preg_match("~type=~", $ch)) {
+            $res .= $part;
+            return;
+        }
+        if ($this->current_attr == 'style') {
+            echo 'Style';
+        }
+        $this->res .= $ch;
+    }
+
     public function end_att ($ch) {
         switch ($ch) {
             case '"': case "'":
@@ -55,6 +75,12 @@ class fx_template_attr_parser extends fx_template_fsm {
                     return false;
                 }
                 break;
+        }
+        $this->att_quote = null;
+        if ($ch == '>') {
+            $this->push_state(self::TAG);
+        } else {
+            $this->res .= $ch;
         }
     }
 
