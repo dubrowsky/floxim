@@ -183,45 +183,45 @@ function fx_debug_print($data = '', $print_title = false) {
 }
 
 class Timer { 
-      var $start; // start time in usec 
-      var $stop; // stop time in usec 
-      private $marks = array();
-		private $total = 0;
-		private static $last_id = 0;
-		private $id;
-		
-		protected static $instance = false;
-		
-		public static function Instance() {
-			if (self::$instance == false) {
-				self::$instance = new Timer();
-				self::$instance->start();
-			}
-			return self::$instance;
-		}
-		
-		public static function passed() {
-			$T = self::Instance();
-			return $T->elapsed();
-		}
-		
-		function __construct() {
-			$this->addMark('start');
-			$this->id = self::$last_id++;
-		}
-		
-		function addMark($name = false) {
-			$t = gettimeofday();
-         $mark = $t['sec'] * 1000000.0 + $t['usec'];
-			if (count($this->marks) > 0) {
-				$last_mark = $this->marks[count($this->marks) - 1];
-				$elapsed = ($mark - $last_mark['time']) / 1000000.0;
-				$this->marks[count($this->marks) - 1]['elapsed'] = $elapsed;
-				$this->marks[count($this->marks) - 1]['memory'] = memory_get_usage(false);
-				$this->total += $elapsed;
-			}
-			$this->marks []= array('time' => $mark, 'name' => $name);
-		}
+    var $start; // start time in usec 
+    var $stop; // stop time in usec 
+    private $marks = array();
+    private $total = 0;
+    private static $last_id = 0;
+    private $id;
+
+    protected static $instance = false;
+
+    public static function Instance() {
+        if (self::$instance == false) {
+            self::$instance = new Timer();
+            self::$instance->start();
+        }
+        return self::$instance;
+    }
+
+    public static function passed() {
+        $T = self::Instance();
+        return $T->elapsed();
+    }
+
+    function __construct() {
+        $this->addMark('start');
+        $this->id = self::$last_id++;
+    }
+
+    function addMark($name = false) {
+        $t = gettimeofday();
+        $mark = $t['sec'] * 1000000.0 + $t['usec'];
+        if (count($this->marks) > 0) {
+            $last_mark = $this->marks[count($this->marks) - 1];
+            $elapsed = ($mark - $last_mark['time']) / 1000000.0;
+            $this->marks[count($this->marks) - 1]['elapsed'] = $elapsed;
+            $this->marks[count($this->marks) - 1]['memory'] = memory_get_usage(false);
+            $this->total += $elapsed;
+        }
+        $this->marks []= array('time' => $mark, 'name' => $name);
+    }
 		
       function start() { 
          $t = gettimeofday(); 

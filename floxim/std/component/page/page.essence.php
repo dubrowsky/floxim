@@ -6,6 +6,10 @@ class fx_content_page extends fx_content {
      */
     public function get_parent_ids() {
         $c_pid = $this->get('parent_id');
+        // if page has null parent, hold it as if it was nested to index
+        if ($c_pid === null && ($site = fx::env('site'))) {
+            return array($site['index_page_id']);
+        }
         $ids = array();
         while ($c_pid != 0) {
             array_unshift($ids, $c_pid);
@@ -22,17 +26,32 @@ class fx_content_page extends fx_content {
     }
     
     protected $_active;
+    
+    public function get_is_active() {
+        return $this->is_active();
+    }
 
     public function is_active () {
-        if ($this->_active)
+        if ($this->_active) {
             return $this->_active;
-        $c_page_id  = fx::env('page')->get('id');
+        }
+        $c_page_id  = fx::env('page_id');
+        if (!$c_page_id) {
+            return false;
+        }
         $path = fx::env('page')->get_parent_ids();
         $path []= $c_page_id;
 
         return $this->_active = in_array($this['id'], $path);
     }
     
+    public function is_current() {
+        return $this['id'] == fx::env('page_id');
+    }
+    
+    public function get_is_current() {
+        return $this->is_current();
+    }
     
     protected function _before_save() {
         parent::_before_save();

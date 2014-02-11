@@ -96,7 +96,7 @@ class fx_template_html_token {
             } else {
                 $omit_conditional = true;
                 $omit_var_name = '$omit_'.md5($this->omit);
-                $res .= '<?'.$omit_var_name.' = '.$this->omit.'; if ('.$omit_var_name.') {?>';
+                $res .= '<?'.$omit_var_name.' = '.$this->omit.'; if (!'.$omit_var_name.') {?>';
             }
         }
         $tag_start = '';
@@ -147,7 +147,7 @@ class fx_template_html_token {
         }
         if ($this->type == 'open' && $this->name != 'root' && !$omit) {
             if ($omit_conditional) {
-                $res .= '<?if ('.$omit_var_name.') {?>';
+                $res .= '<?if (!'.$omit_var_name.') {?>';
             }
             $res .= "</".$this->original_name.">";
             

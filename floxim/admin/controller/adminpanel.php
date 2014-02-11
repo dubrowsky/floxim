@@ -16,10 +16,6 @@ class fx_controller_admin_adminpanel extends fx_controller_admin {
                 <div id="fx_admin_clear"></div>
             </div>
             <div id="fx_admin_control" class="fx_overlay">
-                <div id="fx_admin_buttons"></div>
-                <div id="fx_admin_fields"></div>
-                <div id="fx_admin_additionl_text"></div>
-                <div id="fx_admin_statustext"></div>
                 <div id="fx_admin_extra_panel">
                     <div class="fx_admin_panel_title"></div>
                     <div class="fx_admin_panel_body"></div>

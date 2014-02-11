@@ -183,14 +183,28 @@ abstract class fx_essence implements ArrayAccess {
         if ($offset == 'id') {
             return null;
         }
+        
+        if (method_exists($this, 'get_'.$offset)) {
+            return call_user_func(array($this, 'get_'.$offset));
+        }
+        
+        $finder = $this->get_finder();
+        $multi_lang_fields = $finder->get_multi_lang_fields();
+        if (in_array($offset, $multi_lang_fields)) {
+            if (!empty($this->data[$offset.'_'.fx::config()->ADMIN_LANG])) {
+                return $this->data[$offset.'_'.fx::config()->ADMIN_LANG];
+            } else {
+                return $this->data[$offset.'_en'];
+            }
+        }
+        
         /**
          * Например для $post['tags'], где tags - поле-мультисвязь
          * Если связанные не загружены, просим файндер их загрузить
          */
          
-         $finder = $this->get_finder();
-         $rels = $finder->relations();
         
+        $rels = $finder->relations();
         if (!isset($rels[$offset])) {
             return null;
         }
@@ -212,7 +226,7 @@ abstract class fx_essence implements ArrayAccess {
         }
         
         if (!is_object($value) || $offset_exists) {
-            if (!isset($this->modified_data[$offset])) {
+            if (!isset($this->modified_data[$offset]) && isset($this->data[$offset])) {
                 $this->modified_data[$offset] = $this->data[$offset];
             }
             $this->modified[] = $offset;
@@ -221,7 +235,17 @@ abstract class fx_essence implements ArrayAccess {
     }
 
     public function offsetExists($offset) {
-        return isset($this->data[$offset]);
+        if  (isset($this->data[$offset])) {
+            return true;
+        } 
+        if (method_exists($this, 'get_'.$offset)) {
+            return true;
+        }
+        $rels = $this->get_finder()->relations();
+        if (isset($rels[$offset])) {
+            return true;
+        }
+        return false;
     }
 
     public function offsetUnset($offset) {

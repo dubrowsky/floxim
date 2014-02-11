@@ -27,8 +27,8 @@ class fx_lang {
             $res = $this->loaded[$dict][$lang][$string];
             return empty($res) ? $string : $res;
         }
-        $this->add_string($string, $dict, $lang);
-        return $string;
+        //$this->add_string($string, $dict, $lang);
+        //return $string;
     }
     
     public function check_string($string, $dict) {
@@ -87,12 +87,12 @@ class fx_lang {
         fclose($fh);
     }
     
-    public function add_string($string, $dict, $lang) {
+    public function add_string($string, $dict) {
         fx::data('lang_string')->create(
                 array(
                     'string' => $string,
                     'dict' => $dict,
-                    'lang_'.$lang => $string
+                    'lang_en' => $string
                 )
         )->save();
     }

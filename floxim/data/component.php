@@ -1,7 +1,7 @@
 <?php
 
 class fx_data_component extends fx_data {
-    
+
     public function relations() {
         return array(
             'fields' => array(
@@ -9,6 +9,14 @@ class fx_data_component extends fx_data {
                 'field',
                 'component_id'
             )
+        );
+    }
+
+    public function get_multi_lang_fields() {
+        return array(
+            'name',
+            'description',
+            'item_name',
         );
     }
 

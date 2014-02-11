@@ -1,5 +1,4 @@
 <?php
-
 class fx_field_image extends fx_field_file {
 
     public function get_js_field($content, $tname = 'f_%name%', $layer = '', $tab = '') {
@@ -19,7 +18,4 @@ class fx_field_image extends fx_field_file {
     protected function get_field_vars($info) {
         return new fx_field_vars_image($info);
     }
-
 }
-
-?>

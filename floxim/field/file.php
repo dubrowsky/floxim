@@ -25,7 +25,7 @@ class fx_field_file extends fx_field_baze {
                 $file_ids[] = intval($res[$this->name]);
             }
             if ( $file_ids ) {
-                $info = fx::data('filetable')->get_all("`id` IN (".join(',', $file_ids ).") ");
+                $info = fx::data('filetable', $file_ids);
                 foreach ( $info as $v ) {
                     self::$filetable[$infoblock_id.'-'.$this['id']][$v['id']] = $v->get();
                 }
@@ -63,7 +63,7 @@ class fx_field_file extends fx_field_baze {
         $this->_js_field['type'] = 'file';
         $this->_js_field['field_id'] = $this['id'];
 
-
+        /*
         $file_id = $content[$this->name];
         if ($file_id) {
             $sql = "SELECT * FROM `{{filetable}}` WHERE `id` = '".$file_id."'";
@@ -72,22 +72,14 @@ class fx_field_file extends fx_field_baze {
             $this->_js_field['path'] = fx::config()->HTTP_FILES_PATH.$fileinfo['path'];
             $this->_js_field['old'] = $file_id;
         }
+         * 
+         */
         return $this->_js_field;
     }
 
-    public function get_input() {
-        $html =  "<input  class='fx_form_field fx_form_field_".fx_field::get_type_by_id($this->type_id)."' type='file' name='f_".$this->name."' />";
-        if ( $this->value ) {
-            $file = fx::data('filetable')->get_by_id($this->value);
-            if ( $file ) {
-                $html .= '<br/> <span>' . fx::alang('Current file:','system') . ' </span><a href="'.fx::config()->HTTP_FILES_PATH.$file['path'].'">'.$file['real_name'].'</a>';
-            }
-        }
-
-        return $html;
-    }
-
     public function get_savestring(fx_essence $content = null) {
+        return $this->value;
+        /*
         if (is_numeric($this->value)) {
             return $this->value;
         }
@@ -116,6 +108,8 @@ class fx_field_file extends fx_field_baze {
         }
 
         return +$r['id'];
+         * 
+         */
     }
 
     public function post_save($content) {
@@ -126,7 +120,7 @@ class fx_field_file extends fx_field_baze {
     }
 
     public function get_sql_type() {
-        return "INT";
+        return "VARCHAR(255)";
     }
 
     public function get_export_value($value, $dir = '') {
@@ -165,6 +159,3 @@ class fx_field_file extends fx_field_baze {
     }
 
 }
-
-?>
-

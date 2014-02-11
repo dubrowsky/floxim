@@ -3,7 +3,7 @@
 class fx_controller_admin_site extends fx_controller_admin {
 
     public function all() {
-        $sites = fx::data('site')->get_all();
+        $sites = fx::data('site')->all();
 
         $list = array('type' => 'list', 'filter' => true, 'tpl' => 'imgh', 'sortable' => true);
         $list['labels'] = array();
@@ -217,7 +217,15 @@ class fx_controller_admin_site extends fx_controller_admin {
         $main_fields[] = $this->ui->input('name', fx::alang('Site name','system'), $site['name']);
         $main_fields[] = $this->ui->input('domain', fx::alang('Domain','system'), $site['domain']);
         $main_fields[] = $this->ui->input('mirrors', fx::alang('Aliases','system'), $site['mirrors']);
-        $main_fields[] = $this->ui->input('language', fx::alang('Site language','system'), $site['language']);
+        $languages = fx::data('lang')->all()->get_values('lang_code', 'lang_code');
+        $main_fields[] =
+            array(
+                'name' => 'language',
+                'type' => 'select',
+                'values' => $languages,
+                'value' => $site['language'],
+                'label' => fx::alang('Language','system')
+            );
         $this->response->add_fields($main_fields);
 
         $fields = array();
@@ -265,7 +273,7 @@ class fx_controller_admin_site extends fx_controller_admin {
         $fields = array(
             array(
                 'name' => 'layout_id',
-                'type' => 'select', 
+                'type' => 'select',
                 'values' => $layouts_select,
                 'value' => $site['layout_id'],
                 'label' => fx::alang('Layout','system')

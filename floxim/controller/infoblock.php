@@ -26,7 +26,7 @@ class fx_controller_infoblock extends fx_controller {
         $infoblock = $this->_get_infoblock();
         
         if (!$infoblock) {
-            dev_log('no ib to render', $this);
+            fx::debug('no ib to render', $this, debug_backtrace());
             die("IB NOT FOUND");
         }
         

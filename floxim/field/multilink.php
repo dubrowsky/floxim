@@ -57,7 +57,6 @@ class fx_field_multilink extends fx_field_baze {
             }
             $this->_js_field['type'] = 'set';
         }
-        dev_log('_js_field', $this->_js_field);
         return $this->_js_field;
     }
     

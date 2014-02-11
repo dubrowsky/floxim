@@ -116,10 +116,16 @@ class fx_admin_submenu {
             $this->active = 'settings';
             $this->active_main_menu = 'manage';
         }
-        
+
         if ($match[1] == 'patch') {
             $this->init_manage();
             $this->active = 'patch';
+            $this->active_main_menu = 'manage';
+        }
+
+        if ($match[1] == 'lang') {
+            $this->init_manage();
+            $this->active = 'lang';
             $this->active_main_menu = 'manage';
         }
         return $this;
@@ -158,9 +164,14 @@ class fx_admin_submenu {
             'patch.all'
         );
         $this->menu[] = $this->add_node(
-            'user', 
+            'user',
             fx::alang('Users','system'),
             'user.all'
+        );
+        $this->menu[] = $this->add_node(
+            'lang',
+            fx::alang('Languages','system'),
+            'lang.all'
         );
     }
 

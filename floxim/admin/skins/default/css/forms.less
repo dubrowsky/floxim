@@ -36,6 +36,7 @@
     margin: 7px 0 0;
 }
 
+
 .fx_admin_form input[type=text].fx_input, .fx_admin_form select.fx_input {
     width: 50%;
 }
@@ -164,6 +165,9 @@
     }
 
     .fx_form_cols {
+        table.fx_form_cols_table {
+            min-width:40%;
+        }
         .fx_tab_data {
             vertical-align:top;
             padding:0 15px;
@@ -185,6 +189,15 @@
         }
         .field_last .input_container {
             margin-bottom:0;
+        }
+        textarea {
+            box-sizing:border-box;
+            -moz-box-sizing:border-box;
+            width:100%;
+            min-height:70px;
+        }
+        .fx_input {
+            width:100%;
         }
     }
 

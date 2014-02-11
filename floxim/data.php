@@ -47,6 +47,13 @@ class fx_data {
         return array();
     }
 
+    public function get_multi_lang_fields() {
+        return array();
+    }
+
+    /*
+     * @return fx_collection
+     */
     public function all() {
         $data = $this->_get_essences();
         return $data;
@@ -129,7 +136,9 @@ class fx_data {
         if (is_null($this->select)) {
             $this->select = array();
         }
-        $this->select []= $what;
+        foreach (func_get_args() as $arg) {
+            $this->select []= $arg;
+        }
         return $this;
     }
     
@@ -161,6 +170,11 @@ class fx_data {
         foreach ($tables as $t) {
             $q .= 'INNER JOIN `{{'.$t.'}}` ON `{{'.$t.'}}`.id = `{{'.$base_table."}}`.id\n";
         }
+        foreach ($this->joins as $join) {
+            $q .= $join['type'].' ';
+            $q .= 'JOIN ';
+            $q .= $join['table'].' ON '.$join['on'].' ';
+        }
         if (count($this->where) > 0) {
             $conds = array();
             foreach ($this->where as $cond) {
@@ -178,6 +192,17 @@ class fx_data {
             $q .= ' LIMIT '.$this->limit;
         }
         return $q;
+    }
+    
+    protected $joins = array();
+    
+    public function join($table, $on, $type = 'inner') {
+        $this->joins[]= array(
+            'table' => $table, 
+            'on' => $on, 
+            'type' => strtoupper($type)
+        );
+        return $this;
     }
     
     protected function _make_cond($cond, $base_table) {
@@ -200,7 +225,7 @@ class fx_data {
         } else {
             // use conditions like "MD5(`field`)" as is
             if (!preg_match("~[a-z0-9_-]\s*\(.*?\)~i", $field)) {
-                $field = '`'.$field.'`';
+                //$field = '`'.$field.'`';
             }
         }
         if (is_array($value)) {
@@ -324,7 +349,6 @@ class fx_data {
                     $rel_finder->where($end_rel_field, 0, '!=');
                 }
                 $rel_items = $rel_finder->all()->find($end_rel, null, '!=');
-                //echo fx_debug($rel_items, $rel_finder);
                 $essences->attache_many($rel_items, $rel_field, $rel_name, 'id', $end_rel);
                 break;
         }
@@ -393,10 +417,11 @@ class fx_data {
      */
     public function get_by_ids($ids) {
         return $this->where('id', $ids)->all();
-        return $this->get_all(array('id' => $ids));
     }
     
     public function get() {
+        fx::log(debug_backtrace());
+        die();
         $argc = func_num_args();
         $argv = func_get_args();
         $query = $this->make_query($argc, $argv);
@@ -419,127 +444,6 @@ class fx_data {
         }
         $obj = $this->essence($res);
         return $obj;
-    }
-
-    /**
-     * Форматы входных параметров:
-     * 1) Поля и значения через запятые:
-     *  "a",1,"b",3 -> WHERE `a` = '1' AND `b` = '3'
-     * 2) Прямое задание WHERE (одна строчка )
-     *  "a=3" -> WHERE a=3 ( ничего не экранируется! )
-     * 3) Прямое задание WHERE c подготовленным выражениями ( placeholder )
-     * "a = ? OR b = ?", array( $_GET['a'], $b )
-     * 4) Задание WHERE через массив ( ключ - поле, значение - значение, все через AND )
-     *  array('a' => 3, 'b' => 4 ) -> `a` = '1' AND `b` = '3'
-     * @return classname
-     */
-    public function get_all() {
-        $argc = func_num_args();
-        $argv = func_get_args();
-        $query = "SELECT * FROM `{{".$this->table."}}`".$this->make_query($argc, $argv);
-        $res = fx::db()->get_results($query);
-
-        if (fx::db()->is_error()) {
-            throw new Exception("SQL ERROR ".fx::db()->debug());
-        }
-
-        $objs = array();
-        foreach ($res as $v) {
-            if (!empty($this->serialized)) {
-                foreach ($this->serialized as &$key) {
-                    if (isset($v[$key])) {
-                        $original = $v[$key];
-                        $v[$key] = unserialize($v[$key]);
-                        if (!is_array($v[$key])) {
-                            $v[$key] = $original;
-                        }
-                    }
-                }
-            }
-            $essence = $this->essence($v);
-            $objs[] = $essence;
-        }
-        return new fx_collection($objs);
-    }
-
-    protected function make_query($argc, $argv) {
-        $query = '';
-        $where = '';
-        $order = $this->order ? $this->order : '';
-        $limit = '';
-        // OMG!!!
-        // передаем 2 аргумента - условия и параметры
-        // array($conds), array('order' => 'priority', 'limit' => 10)
-        $special_syntax = false;
-        if ($argc == 2 && is_array($argv[1]) && is_array($argv[0])) {
-            $special_keys = array('order', 'group', 'limit');
-            foreach ($special_keys as $spk) {
-                if (array_key_exists($spk, $argv[1])){
-                    $special_syntax = true;
-                    break;
-                }
-            }
-            if (isset($argv[1]['order'])) {
-                $order = $argv[1]['order'];
-            }
-            if (isset($argv[1]['limit'])) {
-                $limit = $argv[1]['limit'];
-            }
-            // делаем вид, что у нас 1 аргумент
-            $argc = 1;
-        }
-
-        if ($argc == 1 && is_string($argv[0])) {
-            $where = $argv[0];
-        } else if ($argc == 1 && is_array($argv[0])) {
-            $cond = (array_key_exists('order', $argv[0]) || array_key_exists('where', $argv[0]) || array_key_exists('limit', $argv[0]));
-            if ($cond) {
-                $order = $argv[0]['order'];
-                $where = $argv[0]['where'];
-                $limit = $argv[0]['limit'];
-            } else {
-                foreach ($argv[0] as $k => $v) {
-                    $where_cond = "`".$k."` ";
-                    if (is_array($v)) {
-                        if (count($v) > 0) {
-                            array_walk($v, array(fx::db(), 'escape'));
-                            $where_cond .= " IN ('".join("', '", $v)."')";
-                        } else {
-                            $where_cond = ' FALSE ';
-                        }
-                    } else {
-                        $where_cond .= "= '".fx::db()->escape($v)."'";
-                    }
-                    $where[] = $where_cond;
-                }
-            }
-        } else if ($argc == 2 && is_array($argv[1])) {
-            $parts = explode('?', $argv[0]);
-            $count = count($parts);
-            foreach ($parts as $k => $v) {
-                $where .= $v;
-                if ($count - 1 <> $k) $where .= " '".$argv[1][$k]."' ";
-            }
-        }
-        else {
-            for ($i = 0; $i < $argc; $i = $i + 2) {
-                $arg = (strpos($argv[$i], '`') === false ) ? "`".$argv[$i]."`" : $argv[$i];
-                $where[] = $arg." = '".fx::db()->escape($argv[$i + 1])."'";
-            }
-        }
-        if ($where) {
-            $query .= " WHERE ".(is_array($where) ? join(" AND ", $where) : $where);
-        }
-        if ($order) {
-            if (is_array($order)) {
-                $order = join(", ", $order);
-            }
-            $query .= " ORDER BY ".$order;
-        }
-        if ($limit) {
-            $query .= " LIMIT ".$limit;
-        }
-        return $query;
     }
 
     /**

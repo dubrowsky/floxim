@@ -246,8 +246,21 @@ class fx {
         return self::$page;
     }
     
+    /*
+     * Utility for accessing deep array indexes
+     * @param ArrayAccess $collection
+     * @param $var_path
+     * @param [$index_2] etc.
+     * @example $x = fx::dig(array('y' => array('x' => 2)), 'y.x');
+     * @example $x = fx::dig(array('y' => array('x' => 2)), 'y', 'x');
+     */
     public static function dig($collection, $var_path) {
-        $var_path = explode(".", $var_path);
+        if (func_num_args() > 2) {
+            $var_path = func_get_args();
+            array_shift($var_path);
+        } else {
+            $var_path = explode(".", $var_path);
+        }
         $arr = $collection;
         foreach ($var_path as $pp) {
             if (is_array($arr) || $arr instanceof ArrayAccess) {
@@ -317,25 +330,33 @@ class fx {
     public static function lang ( $string = null, $dict = null) {
         static $lang = null;
         if (!$lang) {
-            $lang = new fx_lang(fx::env()->get_site()->get('language'));
+            $lang = fx::data('lang_string');
+            $lang->set_lang(fx::env()->get_site()->get('language'));
         }
         if ($string === null) {
             return $lang;
         }
-
-        return $lang->get_string($string, $dict);
+        if (!($res = $lang->get_string($string, $dict))) {
+            $lang->add_string($string, $dict);
+            $res = $string;
+        }
+        return $res;
     }
 
     public static function alang ( $string = null, $dict = null) {
         static $lang = null;
         if (!$lang) {
-            $lang = new fx_lang();
+            $lang = fx::data('lang_string');
+            $lang->set_lang();
         }
         if ($string === null) {
             return $lang;
         }
-
-        return $lang->get_string($string, $dict);
+        if (!($res = $lang->get_string($string, $dict))) {
+            $lang->add_string($string, $dict);
+            $res = $string;
+        }
+        return $res;
     }
 
     
@@ -424,6 +445,7 @@ class fx {
             $thumber = new fx_thumb($value, $format);
             $value = $thumber->get_result_path();
         } catch (Exception $e) {
+            //fx::log('thumb ex', $e);
             $value = '';
         }
         return $value;
