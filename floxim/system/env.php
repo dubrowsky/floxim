@@ -1,8 +1,24 @@
 <?php
-
 class fx_system_env extends fx_system {
   protected $current = array();
 
+  
+  public function set($var, $val) {
+  	  $setter = 'set_'.$var;
+  	  if (method_exists($this, $setter)) {
+  	  	  call_user_func(array($this, $setter), $val);
+  	  } else {
+  	  	  $this->current[$var] = $val;
+  	  }
+  }
+  
+  public function get($var) {
+  	  $getter = 'get_'.$var;
+  	  if (method_exists($this, $getter)) {
+  	  	  return call_user_func(array($this, $getter));
+  	  }
+  	  return isset($this->current[$var]) ? $this->current[$var] : null;
+  }
 
   public function set_site ( $env ) {
     $this->current['site'] = $env;
@@ -135,5 +151,3 @@ class fx_system_env extends fx_system {
         return $this->current['layout'];
     }
 }
-
-?>

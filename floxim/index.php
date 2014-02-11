@@ -6,8 +6,8 @@ if (!defined('FLOXIM')) {
 }
 
 register_shutdown_function(function() {
-    $ob_level = ob_get_level();
-    if ($ob_level > 0) {
+    if (!fx::env()->get('complete_ok')) {
+    	$ob_level = ob_get_level();
         $res = '';
         for ($i = 0; $i < $ob_level; $i++) {
             $res .= ob_get_clean();
@@ -18,6 +18,5 @@ register_shutdown_function(function() {
 
 if ( ($controller = fx::router()->route() ) ) {
     echo $controller->process();
-    die();
+    fx::env()->set('complete_ok', true);
 }
-?>
