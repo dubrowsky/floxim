@@ -60,8 +60,16 @@ class fx_router_front extends fx_router {
             }
             fx::dig_set($areas, $c_area.'.', $ib);
         }
+        // force root layout infoblock
+        if (!isset($areas['layout'])) {
+            $lay_ib = fx::data('infoblock')
+                        ->where('controller', 'layout')
+                        ->where('site_id', fx::env('site_id'))
+                        ->where('parent_infoblock_id', 0)
+                        ->one();
+            $areas['layout'] = array($lay_ib);
+        }
         $this->_ib_cache[$cache_key] = $areas;
         return $areas;
     }
 }
-?>

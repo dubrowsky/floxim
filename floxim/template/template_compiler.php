@@ -565,7 +565,7 @@ class fx_template_compiler {
         //$code .= "echo ob_get_clean();\n";
         $code .= "\t}\n";
         if ($separator) {
-            $code .= 'if (!'.$item_alias."_is_last) {\n";
+            $code .= 'if (!$this->v("'.$item_alias.'_is_last")) {'."\n";
             $code .= $this->_children_to_code($separator);
             $code .= "\n}\n";
         }

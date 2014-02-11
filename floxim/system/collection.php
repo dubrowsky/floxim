@@ -380,7 +380,7 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
         foreach ($this as $our_item) {
             $check_value = $our_item[$check_field];
             $our_item[$res_field] = isset($res_index[$check_value]) ?
-                                    $res_index[$check_value] : null;
+                                    $res_index[$check_value] : fx::collection();
         }
         return $this;
     }

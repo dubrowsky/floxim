@@ -21,7 +21,6 @@ class fx_data_infoblock extends fx_data {
             where('site_id', $page['site_id'])->
             where('checked', 1)->
             all();
-        
         foreach ($infoblocks as $ib) {
             // если page_id=0 - тупо все страницы, игнорируем фильтр scope.pages
             if ($ib['page_id'] != 0) {

@@ -21,12 +21,18 @@ class fx_template_html {
         }
         $tree = $this->make_tree($this->tokenize());
         $children = $tree->get_children();
-        if (count($children) == 1) {
-            if ($children[0]->name != 'text') {
-                $root = $children[0];
-                $root->add_meta($meta);
-                return $tree->serialize();
+        $not_empty_children = array();
+        foreach ($children as $child) {
+            if ($child->name == 'text' && preg_match("~^\s*$~", $child->source)) {
+                continue;
             }
+            $not_empty_children []= $child;
+        }
+        if (count($not_empty_children) == 1 && $not_empty_children[0]->name != 'text') {
+            //$root = $children[0];
+            //$root->add_meta($meta);
+            $not_empty_children[0]->add_meta($meta);
+            return $tree->serialize();
         }
         $wrapper = fx_template_html_token::create('<div>');
         $wrapper->add_meta($meta);
@@ -198,6 +204,8 @@ class fx_template_html {
                 $n->parent->add_child_after(fx_template_html_token::create('{/if}'), $n);
             }
             if ( ($omit = $n->get_attribute('fx:omit'))) {
+                $ep = new fx_template_expression_parser();
+                $omit = $ep->compile($ep->parse($omit));
                 $n->omit = $omit;
                 $n->remove_attribute('fx:omit');
             }

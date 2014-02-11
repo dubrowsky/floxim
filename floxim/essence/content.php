@@ -222,7 +222,10 @@ class fx_content extends fx_essence {
     }
     
     public function add_template_record_meta($html, $collection, $index, $is_subroot) {
-        
+        // do nothing if html is empty
+        if (!trim($html)) {
+            return $html;
+        }
         $essence_meta = array(
             'id' => $this->get('id'),
             'type' => $this->get_type(false)

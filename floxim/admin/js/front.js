@@ -297,106 +297,105 @@ fx_front.prototype.redraw_add_button = function(node) {
     }
     ib.data('content_adders', adders);
     
-    var area_node = node.closest('.fx_area');
-    var area_meta = $fx.front.get_area_meta(area_node);
-    if (mode === 'design' && node.is('.fx_area') && area_meta) {
-        buttons.push({
-            name:'Add new infoblock to '+area_meta.id,
-            callback: function() {
-                var infoblock_back = arguments.callee;
-                $fx.front.select_item(area_node.get(0));
-                
-                $fx.front_panel.load_form({
-                    essence:'infoblock',
-                    action:'select_controller',
-                    page_id:$('body').data('fx_page_id'),
-                    area:area_meta,
-                    //area_size:area_meta.size,
-                    admin_mode:$fx.front.mode,
-                    fx_admin:true
-                }, {
-                    view:'vertical',
-                    onfinish:function(data) {
-                        $fx.front_panel.show_form(data, {
-                            view:'horizontal',
-                            onfinish:function(res) {
-                                $fx.front.reload_layout(
-                                    function() {
-                                        if (!res.props || !res.props.infoblock_id) {
-                                            return;
-                                        }
-                                        var new_ib_node = $('.fx_infoblock_'+res.props.infoblock_id);
-                                        if (new_ib_node.length === 0) {
-                                            return;
-                                        }
-                                        $fx.front.select_item(new_ib_node.get(0));
-                                        $fx.front.scrollTo(new_ib_node);
-                                        var adders = new_ib_node.data('content_adders');
-                                        if (!adders || adders.length === 0 ){
-                                            return;
-                                        }
-                                        adders[0]();
-                                    }
-                                );
-                            },
-                            onready:function($form) {
-                               var back = $('.form_header a.back', $form);
-                                back.on('click', function() {
-                                    infoblock_back();
-                                    $('.fx_infoblock_fake').remove();
-                                });
-                                
-                                // creating infoblock preview
-                                $fx.front.deselect_item();
-                                var ib_node = $('<div class="fx_infoblock fx_infoblock_fake" />');
-                                area_node.append(ib_node);
-                                ib_node.data('fx_infoblock', {id:'fake'});
-                                $form.data('ib_node', ib_node);
-                                //$fx.front.scrollTo($ib_node);
-                                $form.on('change', function(e) {
-                                    if ($form.data('is_waiting')) {
-                                        return;
-                                    }
-                                    $form.data('is_waiting', true);
-                                    $fx.front.reload_infoblock(
-                                        $form.data('ib_node'), 
-                                        function($new_ib_node) {
-                                            $form.data('ib_node', $new_ib_node);
-                                            $form.data('is_waiting', false);
-                                            $fx.front.select_item($new_ib_node.get(0));
-                                            $fx.front.scrollTo($new_ib_node);
-                                        }, 
-                                        {override_infoblock:$form.serialize()}
-                                    );
-                                });
-                                $form.change();
-                            },
-                            oncancel:function() {
-                                $('.fx_infoblock_fake').remove();
-                            }
-                        });
-                    },
-                    oncancel:function() {
-                        
-                    }
-                });
-            }
-        });
+    if (mode === 'design' && node.is('.fx_area')) {
+        var area_meta = $fx.front.get_area_meta(node.closest('.fx_area'));
+        if (area_meta) {
+            buttons.push({
+                name:'Add new infoblock to '+area_meta.id,
+                callback: function() {
+                    $fx.front.add_infoblock_select_controller(node);
+                }
+            });
+        }
     }
     for (var i = 0; i < buttons.length; i++) {
         $fx.front.add_panel_button(buttons[i]);
     }
-    /*
-    if (buttons.length > 0) {
-        $fx.buttons.bind('add', function() {
-            $fx.buttons.show_pulldown('add', buttons);
-            return false;
-        });
-        $('html').one('fx_deselect', function() {
-            $fx.front.redraw_add_button();
-        });
-    }
-    */
+};
+
+/**
+ * Function to show controller selection dialog
+ */
+
+fx_front.prototype.add_infoblock_select_controller = function($node) {
+    //var infoblock_back = arguments.callee;
+    var $area_node = $node.closest('.fx_area');
+    var area_meta = $fx.front.get_area_meta($area_node);
+    
+    $fx.front.select_item($area_node.get(0));
+
+    $fx.front_panel.load_form({
+        essence:'infoblock',
+        action:'select_controller',
+        page_id:$('body').data('fx_page_id'),
+        area:area_meta,
+        fx_admin:true
+    }, {
+        view:'vertical',
+        onfinish: $fx.front.add_infoblock_select_settings
+    });
+};
+
+fx_front.prototype.add_infoblock_select_settings = function(data) {
+    var $area_node = $($fx.front.get_selected_item());
+    $fx.front_panel.show_form(data, {
+        view:'horizontal',
+        onfinish:function(res) {
+            $fx.front.reload_layout(
+                function() {
+                    if (!res.props || !res.props.infoblock_id) {
+                        return;
+                    }
+                    var new_ib_node = $('.fx_infoblock_'+res.props.infoblock_id);
+                    if (new_ib_node.length === 0) {
+                        return;
+                    }
+                    $fx.front.select_item(new_ib_node.get(0));
+                    $fx.front.scrollTo(new_ib_node);
+                    var adders = new_ib_node.data('content_adders');
+                    if (!adders || adders.length === 0 ){
+                        return;
+                    }
+                    adders[0]();
+                }
+            );
+        },
+        onready:function($form) {
+           var back = $('.form_header a.back', $form);
+            back.on('click', function() {
+                infoblock_back();
+                $('.fx_infoblock_fake').remove();
+            });
+
+            // creating infoblock preview
+            $fx.front.deselect_item();
+            var ib_node = $('<div class="fx_infoblock fx_infoblock_fake" />');
+            $area_node.append(ib_node);
+            ib_node.data('fx_infoblock', {id:'fake'});
+            $form.data('ib_node', ib_node);
+            //$fx.front.scrollTo($ib_node);
+            $form.on('change', function(e) {
+                if ($form.data('is_waiting')) {
+                    return;
+                }
+                $form.data('is_waiting', true);
+                $fx.front.reload_infoblock(
+                    $form.data('ib_node'), 
+                    function($new_ib_node) {
+                        $form.data('ib_node', $new_ib_node);
+                        $form.data('is_waiting', false);
+                        $fx.front.select_item($new_ib_node.get(0));
+                        $fx.front.scrollTo($new_ib_node);
+                    }, 
+                    {override_infoblock:$form.serialize()}
+                );
+            });
+            $form.change();
+        },
+        oncancel:function() {
+            $('.fx_infoblock_fake').remove();
+        }
+    });
 };
 
 fx_front.prototype.is_selectable = function(node) {
@@ -656,7 +655,7 @@ fx_front.prototype.hilight = function() {
         if ($fx.front.is_selectable(item)) {
             
             i.addClass('fx_hilight');
-            if (!i.css('float').match(/left|right/) && i.css('display') !== 'inline') {
+            if (!i.css('float').match(/left|right/) && !i.css('display').match(/^inline/)) {
                 i.addClass('fx_clearfix');
             }
             // зеленые выделения для полей внутри скрытых блоков

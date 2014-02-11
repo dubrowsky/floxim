@@ -11,16 +11,17 @@
             // disable hilight & select, hide node panel
             $fx.front.disable_hilight();
             $fx.front.disable_select();
-            var node_panel = $fx.front.get_node_panel()
-            if (node_panel !== null)
+            var node_panel = $fx.front.get_node_panel();
+            if (node_panel !== null) {
                 node_panel.hide();
+            }
             
             this.prepare_form_data(data);
             this.panel = $('#fx_admin_extra_panel .fx_admin_panel_body');
             this.footer = $('#fx_admin_extra_panel .fx_admin_panel_footer');
             
             this.stop();
-            
+            console.log('stopped and showng', data);
             this.footer
                     .html('')
                     .css({
@@ -114,16 +115,20 @@
                 duration
             );
             $('.panel_overlay').animate({
-                top: (height_delta > 0 ? '+=' : '-=')+ Math.abs(height_delta)
-            }, duration);
+                    top: (height_delta > 0 ? '+=' : '-=')+ Math.abs(height_delta)
+                }, {
+                    duration:duration,
+                    complete: callback
+            });
+            /*
             if (callback) {
                 setTimeout(callback, duration+10);
-            }
+            }*/
         },
         stop: function() {
-            this.panel.stop(1,1);
-            $('body').stop(1,1);
-            $('.fx_outline_style_selected').stop(1,1);
+            this.panel.parent().stop(true,false);
+            $('body').stop(true,false);
+            $('.panel_overlay').stop(true,false);
         },
         load_form: function(form_options, params) {
             $fx.post(
@@ -141,9 +146,10 @@
                 p.hide();
                 footer.hide();
                 $fx.front.enable_select();
-                var node_panel = $fx.front.get_node_panel()
-                if (node_panel !== null)
+                var node_panel = $fx.front.get_node_panel();
+                if (node_panel !== null) {
                     node_panel.show();
+                }
                 $fx.front.recount_node_panel();
             });
         },

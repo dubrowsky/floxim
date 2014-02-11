@@ -68,6 +68,13 @@ class fx_system_env extends fx_system {
       }
       return NULL;
   }
+  
+  public function get_site_id() {
+      if (isset($this->current['site']) && is_object($this->current['site'])) {
+          return $this->current['site']['id'];
+      }
+      return null;
+  }
 
   public function set_tpl ( $tpl ) {
       $this->current['tpl'] = $tpl;

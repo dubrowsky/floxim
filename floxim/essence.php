@@ -205,7 +205,6 @@ abstract class fx_essence implements ArrayAccess {
          
         
         $rels = $finder->relations();
-        
         if (!isset($rels[$offset])) {
             return null;
         }

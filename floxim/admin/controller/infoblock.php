@@ -15,7 +15,6 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
      * Выбор контроллера-экшна
      */
     public function select_controller($input) {
-        fx::log('area meta', $input['area']);
         $fields = array(
             $this->ui->hidden('action', 'select_settings'),
             $this->ui->hidden('essence', 'infoblock'),
@@ -29,22 +28,6 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         $page = fx::data('content_page', $input['page_id']);
         
         $area_meta = $input['area'];
-        /*
-        if (!isset($area_meta['size'])) {
-            $layout_id = fx::env('layout');
-            $infoblocks = fx::router('front')->get_page_infoblocks($page['id'], $layout_id);
-            $layout_ib = $infoblocks['layout'][0];
-            $layout_tpl = fx::template($layout_ib->get_visual()->get('template'));
-            $areas = $layout_tpl->get_areas();
-            $area_info = $areas[$area_meta['id']];
-            $area_size = fx_template_suitable::get_size(
-                isset($area_info['size']) ? $area_info['size'] : ''
-            );
-        } else {
-            $area_size = fx_template_suitable::get_size($area_meta['size']);
-        }
-         * 
-         */
         
         /* Список контроллеров */
         $fields['controller'] = array(
@@ -52,8 +35,6 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             'name' => 'controller',
             'values' => array()
         );
-        
-        fx::env('page', $input['page_id']);
         
         $controllers = fx::data('component')->all();
         $controllers->concat(fx::data('widget')->all());
@@ -396,8 +377,10 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             $infoblock->save();
             $i2l['infoblock_id'] = $infoblock['id'];
             $i2l->save();
-            $controller->set_param('infoblock_id', $infoblock['id']);
-            $controller->after_save_infoblock($is_new_infoblock);
+            if (!$is_layout) {
+                $controller->set_param('infoblock_id', $infoblock['id']);
+                $controller->after_save_infoblock($is_new_infoblock);
+            }
             $this->response->set_status_ok();
             $this->response->set_prop('infoblock_id', $infoblock['id']);
             return;

@@ -349,7 +349,6 @@ class fx_data {
                     $rel_finder->where($end_rel_field, 0, '!=');
                 }
                 $rel_items = $rel_finder->all()->find($end_rel, null, '!=');
-                //echo fx_debug($rel_items, $rel_finder);
                 $essences->attache_many($rel_items, $rel_field, $rel_name, 'id', $end_rel);
                 break;
         }

@@ -25,15 +25,18 @@ class fx_field_baze extends fx_field {
         if ($content[$this->name]) {
             $this->_js_field['value'] = $content[$this->name];
         }
-
+        if ($tab) {
+            $this->_js_field['tab'] = $tab;
+        }
+        return $this->_js_field;
+        /*
         if ($this['parent']) {
             $this->_js_field['parent'] = array('visual['.$this['parent'][0].']', $this['parent'][1]);
         }
 
         if ($layer) $this->_js_field['layer'] = $layer;
-        if ($tab) $this->_js_field['tab'] = $tab;
-
-        return $this->_js_field;
+         * 
+         */
     }
 
     /*

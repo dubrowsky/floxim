@@ -191,15 +191,19 @@ class fx_template_loader {
     
     public function wrap_file($file, $file_data) {
         $is_layout = $this->_controller_type == 'layout';
+        $tpl_of = 'false';
         if ($is_layout) {
             $tpl_id = '_layout_body';
         } else {
             $file_tpl_name = null;
-            preg_match("~/([^/]+)\.tpl~", $file, $file_tpl_name);
+            preg_match('~([a-z0-9_]+)\.tpl$~', $file, $file_tpl_name);
             $tpl_id = $file_tpl_name[1];
+            if ($this->_controller_type == 'component' && $this->_controller_name) {
+                $tpl_of = 'component_'.$this->_controller_name.'.'.$tpl_id;
+            }
         }
         $file_data = 
-            '{template id="'.$tpl_id.'"'.($is_layout ? ' of="false" ' : '').'}'.
+            '{template id="'.$tpl_id.'" of="'.$tpl_of.'"}'.
                $file_data.
             '{/template}';
         return $file_data;
