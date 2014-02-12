@@ -240,7 +240,7 @@ class fx_core extends fx_system {
                 $file = $root.'system/collection';
                 break;
             }
-            if (preg_match("~^template(|_processor|_field|_html|_suitable|_html_token|_token|_html_tokenizer|_fsm|_compiler|_loader|_parser|_expression_parser)(?:_dev)?$~", $classname)) {
+            if (preg_match("~^template(|_processor|_field|_html|_suitable|_html_token|_token|_html_tokenizer|_fsm|_compiler|_loader|_parser|_expression_parser|_attr_parser)(?:_dev)?$~", $classname)) {
                 $file = $root.'template/'.$classname;
                 break;
             }
