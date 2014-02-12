@@ -17,12 +17,13 @@ class fx_controller_module_auth extends fx_controller_module {
         
         $fx_sid = $user->authorize();
         if (fx::is_admin()) {
+        	ob_start();
             self::_cross_site_forms(array(
                 "essence" => "module_auth",
                 "action" => "init_session",
                 "sid" => $fx_sid
             ));
-            die();
+            return ob_get_clean();
         }
     }
 
