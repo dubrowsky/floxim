@@ -42,6 +42,9 @@ function fx_livesearch(node) {
                 fx_admin:'true'
             }
         };
+        if (this.conditions) {
+            params.data.conditions = this.conditions;
+        }
         var vals = this.getValues();
         if (vals.length > 0) {
             params.data.skip_ids = vals;
@@ -75,20 +78,6 @@ function fx_livesearch(node) {
             var id = n.data('id');
             var name = n.data('name');
             if (n.hasClass('add_item')){
-                /*
-                    var c_term = livesearch.Suggest.getTerm();
-                    show_adder_window({
-                            url:n.data('url'),
-                            success: function(form_result) {
-                                    var new_item_id = form_result.iframe_body.innerHTML;
-                                    livesearch.loadValues(new_item_id);
-                            },
-                            load: function(form_container) {
-                                form_container.find('.row_name input').first().val(c_term).focus().trigger('change');
-                            }
-                    });
-                    livesearch.Suggest.hideBox();
-                */
                 return;
             }
             livesearch.addValue(id, name);

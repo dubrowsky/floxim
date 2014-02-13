@@ -462,6 +462,10 @@ fx_front.prototype.select_item = function(node) {
     var $node = $(node);
     this.make_node_panel($node);
     
+    $node.on('mouseout.fx_catch_mouseout', function (e) {
+       e.stopImmediatePropagation();
+    });
+    
     var selectable_up = this.get_selectable_up();
     if (selectable_up) {
         $fx.buttons.bind('select_block', $fx.front.select_level_up);
@@ -600,13 +604,13 @@ fx_front.prototype.recount_node_panel = function() {
 
 fx_front.prototype.get_selected_item = function() {
     return this.selected_item;
-    return $('.fx_selected').get(0);
 };
 
 fx_front.prototype.deselect_item = function() {
     var selected_item = this.get_selected_item();
     if (selected_item) {
         $node = $(selected_item);
+        $node.off('.fx_catch_mouseout');
         $fx.front.enable_hilight();
         $node.
                 removeClass('fx_selected').

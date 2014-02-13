@@ -186,9 +186,9 @@ class fx_controller_component extends fx_controller {
                 'Value'
             ),
         );
-
-        $searchable_fields =  $this
-                ->get_component()
+        $com = $this->get_component();
+        $searchable_fields =  
+                $com
                 ->all_fields()
                 ->find('type', fx_field::FIELD_IMAGE, '!=');
         foreach ($searchable_fields as $field) {
@@ -205,11 +205,21 @@ class fx_controller_component extends fx_controller {
             }
             $fields['conditions']['tpl'][0]['values'][$field['name']] = $res;
         }
-        $fields['conditions']['tpl'][0]['values']['infoblock_id'] = array(
+        
+        $ib_field_params = array(
             'description' => 'Infoblock',
             'type' => 'link',
-            'content_type' => 'infoblock'
+            'content_type' => 'infoblock',
+            'conditions' => array(
+                'controller' => 'component_'.$com['keyword'],
+                'site_id' => fx::env('site_id'),
+                'action' => array( array('list_infoblock', 'list_selected'), 'IN')
+            )
         );
+        if ( ($cib_id = $this->get_param('infoblock_id'))) {
+            $ib_field_params['conditions']['id'] = array($cib_id, '!=');
+        }
+        $fields['conditions']['tpl'][0]['values']['infoblock_id'] = $ib_field_params;
         return $fields;
     }  
     
@@ -480,6 +490,7 @@ class fx_controller_component extends fx_controller {
 
             foreach ($conditions as $condition) {
                 $field = $fields->find_one('name', $condition['name']);
+                fx::log('condfild', $field, $condition);
                 $error = false;
                 switch ($condition['operator']) {
                     case 'contains':
@@ -564,6 +575,19 @@ class fx_controller_component extends fx_controller {
                         } elseif ($condition['operator'] === '=') {
                             $condition['operator'] = 'IN';
                         }
+                    }
+                }
+                
+                if ($condition['name'] == 'infoblock_id') {
+                    $target_ib = fx::data('infoblock', $condition['value'])->first();
+                    if ($target_ib['action'] == 'list_selected') {
+                        $linkers = fx::data('content_select_linker')
+                                    ->where('infoblock_id', $target_ib['id'])
+                                    ->all();
+                        $content_ids = $linkers->get_values('linked_id');
+                        $condition['name'] = 'id';
+                        $condition['value'] = $content_ids;
+                        $condition['operator'] = 'IN';
                     }
                 }
                 if (!$error) {

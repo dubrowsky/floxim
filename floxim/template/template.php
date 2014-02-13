@@ -36,7 +36,7 @@ class fx_template {
         }
          * 
          */
-        if ($meta && fx::is_admin()) {
+        if ($meta && isset($meta['var_type']) && fx::is_admin()) {
             $tf = new fx_template_field($val, $meta);
         }
         echo $tf ? $tf : $val;

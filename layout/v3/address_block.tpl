@@ -5,15 +5,11 @@
     fx:of="text.list"
     fx:size="high,wide"
     class="address-block">
-    {each $items}
-    <?
-        $blue = ${'blue_'.$id};
-        ?>
-        <div
-         data-blue="{%blue_$id type='bool' title='Blue'}0{/%}"
-         class="{if !$blue}address{/if} {if $blue}info{/if}">
+    <div
+        fx:each="$items"
+        data-blue="{%blue_$id type='bool' label='Blue?'}0{/%}"
+        class="{if !$blue_$id}address{/if} {if $blue_$id}info{/if}">
         {$text}Text{/$}
     </div>
-    {/each}
     <div style="clear:both;"></div>
 </div>

@@ -148,6 +148,15 @@ class fx_controller_admin_content extends fx_controller_admin {
         if (isset($input['ids'])) {
             $finder->where('id', $input['ids']);
         }
+        if (isset($input['conditions'])) {
+            foreach ($input['conditions'] as $cond_field => $cond_val) {
+                if (is_array($cond_val)) {
+                    $finder->where($cond_field, $cond_val[0], $cond_val[1]);
+                } else {
+                    $finder->where($cond_field, $cond_val);
+                }
+            }
+        }
         $res = $finder->quicksearch($_POST['term']);
 
         echo json_encode($res);

@@ -369,6 +369,7 @@ function set_control (meta, selector) {
             );
 
             $('.input_cell_1', html).html(select);
+            //console.log('lsm', meta);
             var livesearch_opts = {
                     'type':'livesearch', 
                     'name': name+'value'+']',
@@ -377,9 +378,10 @@ function set_control (meta, selector) {
                     ajax_preload:true,
                     //'name_postfix' : 'f_classifier_id',
                     params: {
-                            'content_type' : meta.content_type
-                        }
-                    };
+                        'content_type' : meta.content_type,
+                        conditions:meta.conditions
+                    }
+            };
             var live_search = $t.jQuery(
                 'input', livesearch_opts
             );
