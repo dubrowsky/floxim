@@ -27,7 +27,7 @@
 	        ));
 	    }
 	})
-	$('html').on('click', '.icon.off a', function (e) {
+	$('html').on('click', '.icon > a', function (e) {
 		e.preventDefault();
 		var node = $(this).parent();
 		var nav = node.closest('nav')

@@ -1,3 +1,12 @@
+.clearfix {
+    &:after {
+        content: ".";
+        display: block;
+        height: 0;
+        clear: both;
+        visibility: hidden !important;
+    }
+}
 body {
 	margin: 0;
 	.wrapper {
@@ -286,7 +295,8 @@ body {
 				}
 			}
 			.caption {
-				h2 {
+				h2, div.h2 {
+                                        .clearfix();
 					font-weight: 100;
 					font-size: 60px;
 					margin: 0;
@@ -311,6 +321,7 @@ body {
 					background-color: #32ccfe;
 					color: white;
 					position: relative;
+                                        float:left;
 					p {
 						padding: 0;
 						margin: 0;
@@ -427,7 +438,8 @@ body {
 					.caption {
 						position: absolute;
 						bottom: 10px;
-						h3 {
+						h3, div.h3 {
+                                                        .clearfix();
 							font-weight: 300;
 							font-size: 30px;
 							margin: 0;
@@ -954,6 +966,10 @@ body {
 							position: absolute;
 							right: 120px;
 						}
+                                                a.content_anchor {
+                                                    position:absolute;
+                                                    bottom:30px;
+                                                }
 					}
 					/*
 					.project-record {

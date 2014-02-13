@@ -9,7 +9,7 @@
         class="featuared-news-list-item">
         <img fx:if="$image" src="{$image}">
         <a href="{$url}" class="title">{$name}</a>
-        <div class="date">{$publish_date}</div>
+        <div class="date">{$publish_date | 'Y.m.d'}</div>
         <div class="text">
             {$anounce}
         </div>

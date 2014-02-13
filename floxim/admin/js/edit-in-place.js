@@ -74,7 +74,11 @@ fx_edit_in_place.prototype.start = function(meta) {
 	var edit_in_place = this;
 	switch (meta.type) {
             case 'datetime':
-                var field = this.add_panel_field(meta);
+                var field = this.add_panel_field(
+                    $.extend({}, meta, {
+                        value: meta.real_value || this.node.text()
+                    })
+                );
                 break;
             case 'image': case 'file': 
                 var field = this.add_panel_field(
@@ -254,6 +258,10 @@ fx_edit_in_place.prototype.make_wysiwyg = function () {
     //    $('#fx_admin_control').append('<div class="editor_panel" />');
     this.node.data('fx_node_panel').append('<div class="editor_panel" />').show();
     var linebreaks = this.meta.var_type === 'visual';
+    if (this.meta.linebreaks !== undefined) {
+        linebreaks = this.meta.linebreaks;
+    }
+    
     var _node = this.node;
     this.node.redactor({
         //focus:true,

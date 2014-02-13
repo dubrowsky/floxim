@@ -9,13 +9,11 @@
         fx:each="$items"
         href="{$url}#{/$}"
         class="featured-list-item">
-        <img fx:if="$image" src="{$image type='image'}<?=$template_dir?>/img/120110-G-IA163-068-Healy-escorts-Renda.jpg{/$}">
-        <img fx:if="!$image" src="{%image_$id}<?=$template_dir?>/img/120110-G-IA163-068-Healy-escorts-Renda.jpg{/%}">
+        <img src="{%image_$id}<?=$template_dir?>/img/120110-G-IA163-068-Healy-escorts-Renda.jpg{/$}">
         <div class="caption">
-            <h3>
+            <div class="h3">
                 <p>{$name}</p>
-                <div style="clear:both;"></div>
-            </h3>
+            </div>
             <div fx:if="$price" class="price">{$price} {$currency}${/$}</div>
             <div style="clear:both;"></div>
         </div>

@@ -22,7 +22,7 @@
         <nav class="fx_top_fixed">
             <div class="holder">
                 <a href="/" class="logo">
-                    <img src="{%logo}{/%}">
+                    <img src="{%logo | 'max-height:40'}">
                 </a>
                 <div
                     fx:area="top_nav"
@@ -62,19 +62,19 @@
                                         <input type="hidden" name="essence" value="module_auth" />
                                         <input type="hidden" name="action" value="auth" />
                                         <div class="input-group">
-                                            <label for="AUTH_USER">Email</label>
+                                            <label for="AUTH_USER">{%email}Email{/%}</label>
                                             <input id="AUTH_USER" name="AUTH_USER" type="text">
                                         </div>
                                         <div class="input-group">
-                                            <label for="AUTH_PW">Password</label>
+                                            <label for="AUTH_PW">{%pass}Password{/%}</label>
                                             <input id="AUTH_PW" name="AUTH_PW" type="password">
                                         </div>
                                         <div class="input-group remember">
-                                            <label>REMEMBER ME</label>
+                                            <label>{%remember}REMEMBER ME{/%}</label>
                                             <input type="checkbox">
                                         </div>
                                         <div class="input-group">
-                                            <input type="submit" value="LOGIN">
+                                            <input type="submit" value="{%login}LOGIN{/%}">
                                         </div>
                                     </form>
                                 </div>

@@ -141,15 +141,27 @@ class fx_template_compiler {
         $modifiers = $token->get_prop('modifiers');
         $token->set_prop('modifiers', null);
         
-        if (!$token->get_prop('type')) {
-            $token_type = 'string';
+        $token_type = $token->get_prop('type');
+        // analyze default value to get token type and wysiwyg linebreaks mode
+        if (
+            !$token_type || 
+            ($token_type == 'html' && !$token->get_prop('linebreaks'))
+        ) {
+            $linebreaks = $token->get_prop('var_type') == 'visual';
             foreach ($token->get_children() as $child) {
-                if (preg_match("~<[a-z]+.*?>~", $child->get_prop('value'))) {
+                $child_source = $child->get_prop('value');
+                if (!$token_type && preg_match("~<[a-z]+.*?>~i", $child_source)) {
                     $token_type = 'html';
-                    break;
+                }
+                if (preg_match("~<p.*?>~i", $child_source)) {
+                    $linebreaks = false;
                 }
             }
+            if (!$token_type) {
+                $token_type = 'string';
+            }
             $token->set_prop('type', $token_type);
+            $token->set_prop('linebreaks', $linebreaks);
         }
         
         // e.g. "name" or "image_".$this->v('id')
@@ -160,22 +172,32 @@ class fx_template_compiler {
         // if var has default value or there are some modifiers
         // store real value for editing
         $real_val_defined = false;
+        $var_chunk = $this->varialize($var_id);
         if ($modifiers || $has_default || $token->get_prop('inatt')) {
-            $real_val_var = '$'.$this->varialize($var_id).'_real_val';
+            $real_val_var = '$'.$var_chunk.'_real_val';
+            $display_val_var = '$'.$var_chunk.'_display_val';
             $code .= $real_val_var . ' = '.$expr.";\n";
+            $code .= $display_val_var . ' = '.$real_val_var.";\n";
+            $expr = $display_val_var;
             $real_val_defined = true;
         }
         if ($has_default) {
             $code .= "\nif (!".$real_val_var.") {\n";
             if (!($default = $token->get_prop('default')) ) {
                 $code .= "\tob_start();\n";
+                $code .= '$'.$var_chunk.'_was_admin = $_is_admin;'."\n";
+                $code .= '$_is_admin = false;'."\n";
                 $code .= "\t".$this->_children_to_code($token);
+                $code .= '$_is_admin = $'.$var_chunk.'_was_admin;'."\n";
                 $default = "ob_get_clean()";
             }
-            if ($token->get_prop('var_type') == 'visual') {
+            if ($real_val_defined) {
+                $code .= "\n".$display_val_var.' = '.$default.";\n";
+                if ($token->get_prop('var_type') == 'visual') {
+                    $code .= "\n".'$this->set_var('.$var_id.',  '.$display_val_var.");\n";
+                }
+            } elseif ($token->get_prop('var_type') == 'visual') {
                 $code .= "\n".'$this->set_var('.$var_id.',  '.$default.");\n";
-            } else {
-                $code .= "\n".$real_val_var.' = '.$default.";\n";
             }
             $code .= "}\n";
         }
