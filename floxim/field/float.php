@@ -2,8 +2,8 @@
 
 
 class fx_field_float extends fx_field_baze {
-    public function get_js_field($content, $tname = 'f_%name%', $layer = '', $tab = '') {
-        parent::get_js_field($content, $tname, $layer, $tab);
+    public function get_js_field($content) {
+        parent::get_js_field($content);
         $this->_js_field['type'] = 'floatfield';
         
         return $this->_js_field;

@@ -1,8 +1,8 @@
 <?php
 class fx_field_image extends fx_field_file {
 
-    public function get_js_field($content, $tname = 'f_%name%', $layer = '', $tab = '') {
-        parent::get_js_field($content, $tname, $layer, $tab);
+    public function get_js_field($content) {
+        parent::get_js_field($content);
         $this->_js_field['type'] = 'image';
 
         return $this->_js_field;

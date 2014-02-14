@@ -298,7 +298,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             if ($is_layout) {
                 $this->response->set_reload(true);
                 $layouts = $this->_get_layouts($input['page_id']);
-
+                fx::log('curr layout id', $infoblock['id']);
                 if ($infoblock['id'] && $input['visual']['template'] != $i2l['template']) {
                     if (!$this->_compare_scope($input['scope']['complex_scope'], $infoblock)) {
                         if ($this->_compare_templates($input['visual']['template'], end($layouts)) && $infoblock['parent_infoblock_id'] != 0) {
@@ -726,10 +726,17 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         } else {
             $ib_visual = $ib->get_visual();
         }
+
+
+        $contents = array();
+
+
         foreach ($input['vars'] as $c_var) {
             $var = $c_var['var'];
             $value = $c_var['value'];
             if ($var['var_type'] == 'visual' && $ib_visual) {
+
+
                 $wrapper_name = $ib_visual['wrapper'];
                 if ($var['template'] == $wrapper_name) {
                     $wrapper_visual = $ib_visual['wrapper_visual'];
@@ -756,15 +763,41 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                 }
                 $ib_visual->save();
             } elseif ($var['var_type'] == 'content') {
-                $content_id = $var['content_id'];
+
+                if (!isset($contents[$var['content_id']])) {
+                    $contents[$var['content_id']] = array(
+                        'content_type_id' => $var['content_type_id'],
+                        'values' => array($var['name'] => $value)
+                    );
+                } else {
+                    $contents[$var['content_id']]['values'][$var['name']] = $value;
+                }
+
+                /*$content_id = $var['content_id'];
                 $content_type_id = $var['content_type_id'];
                 $content = fx::data(array('content',$content_type_id), $content_id);
                 if ($content) {
                     $content[$var['name']] = $value;
                     $content->save();
-                }
+                }*/
             }
         }
+
+        foreach ($contents as $content_id => $content_info) {
+
+            fx::log('content_info', $content_info);
+            $content = fx::data(array('content', $content_info['content_type_id']), $content_id);
+            if ($content) {
+                /*foreach ($content_info['values'] as $name => $value) {
+                    $content[$name] = $value;
+                }
+                $content->save();*/
+                $content->set_field_values($content_info['values'], array_keys($content_info['values']));
+                $content->save();
+            }
+        }
+
+
     }
     
     public function delete_infoblock($input) {

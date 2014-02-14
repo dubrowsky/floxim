@@ -67,22 +67,22 @@ class fx_content extends fx_essence {
      * Заполняет $this->data на основе админской формы
      * @param array $values массив значений из формы вида array('f_name' => 'Название', 'f_title => '');
      */
-    public function set_field_values($values = array()) {
+    public function set_field_values($values = array(), $save_fields = null) {
         if (count($values) == 0) {
             return;
         }
-        $fields = $this->get_fields();
+        $fields = $save_fields ? $this->get_fields()->find('name', $save_fields) : $this->get_fields();
         $result = array('status' => 'ok');
         foreach ($fields as $field) {
             $field_name = $field->get_name();
-            if (!isset($values['f_'.$field_name])) {
+            if (!isset($values[$field_name])) {
                 if ($field['type'] == fx_field::FIELD_MULTILINK) {
                     $value = array();
                 } else {
                     continue;
                 }
             } else {
-                $value = $values['f_'.$field_name]; 
+                $value = $values[$field_name];
             }
             
             if (!$field->check_rights()) {
@@ -96,7 +96,7 @@ class fx_content extends fx_essence {
                 $field->set_error();
                 $result['status'] = 'error';
                 $result['text'][] = $field->get_error();
-                $result['fields'][] = 'f_'.$field_name;
+                $result['fields'][] = $field_name;
             }
         }
         return $result;

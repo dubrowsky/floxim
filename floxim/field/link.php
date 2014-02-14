@@ -77,8 +77,8 @@ class fx_field_link extends fx_field_baze {
         return '';
     }
     
-    public function get_js_field($content, $tname = 'f_%name%', $layer = '', $tab = '') {
-        parent::get_js_field($content, $tname, $layer, $tab);
+    public function get_js_field($content) {
+        parent::get_js_field($content);
         //$target_component = fx::data('component', $this['format']['target']);
         //$target_content = 'content_'.$target_component['keyword'];
         $target_content = $this->get_target_name();

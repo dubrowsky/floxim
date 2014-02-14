@@ -4,8 +4,8 @@ class fx_field_multilink extends fx_field_baze {
         return false;
     }
     
-    public function get_js_field($content, $tname = 'f_%name%', $layer = '', $tab = '') {
-        parent::get_js_field($content, $tname, $layer, $tab);
+    public function get_js_field($content) {
+        parent::get_js_field($content);
         $render_type = $this['format']['render_type'];
         if ($render_type == 'livesearch') {
             $this->_js_field['type'] = 'livesearch';

@@ -8,7 +8,7 @@ class fx_field_text extends fx_field_baze {
      * 
      */
 
-    public function get_js_field($content, $tname = 'f_%name%', $layer = '', $tab = '') {
+    public function get_js_field($content) {
         parent::get_js_field($content);
         if (isset($this['format']) && isset($this['format']['html']) && $this['format']['html']) {
             $this->_js_field['wysiwyg'] = true;

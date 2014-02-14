@@ -58,8 +58,8 @@ class fx_field_file extends fx_field_baze {
         return $this->_edit_jsdata;
     }
 
-    public function get_js_field($content, $tname = 'f_%name%', $layer = '', $tab = '') {
-        parent::get_js_field($content, $tname, $layer, $tab);
+    public function get_js_field($content) {
+        parent::get_js_field($content);
         $this->_js_field['type'] = 'file';
         $this->_js_field['field_id'] = $this['id'];
 
@@ -78,7 +78,21 @@ class fx_field_file extends fx_field_baze {
     }
 
     public function get_savestring(fx_essence $content = null) {
-        return $this->value;
+
+
+        if ($content[$this['name']] != $this->value) {
+            fx::log('get save string', $content, $this->value, $this);
+
+            $folder = ($content['id']%100 > 0) ? (floor($content['id']/100)*100+1).'-'.(floor($content['id']/100)*100+100) : ((floor($content['id']/100)-1)*100+1).'-'.(floor($content['id']/100)*100);
+            preg_match("~[^".preg_quote(DIRECTORY_SEPARATOR).']+$~', $this->value, $fn);
+            $path = '/floxim_files/content/'.$content['type'].'/'.$folder.'/'.$this->name.'/'.$fn[0];
+            fx::files()->rm($content[$this['name']]);
+            fx::files()->move($this->value, $path);
+        }
+
+        fx::log(isset($path) ? $path : $this->value);
+
+        return isset($path) ? $path : $this->value;
         /*
         if (is_numeric($this->value)) {
             return $this->value;
