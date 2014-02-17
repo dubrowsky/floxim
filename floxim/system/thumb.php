@@ -364,19 +364,38 @@ class fx_thumb
     }
     public function get_result_path()
     {
-        $hash = md5(serialize($this->config) . $this->source_path);
-        preg_match("~.([^.]+)$~", $this->source_path, $ext);
-        if (!isset($ext[1])) {
-            return false;
+
+        //$hash = md5(serialize($this->config) . $this->source_path);
+        //preg_match("~.([^.]+)$~", $this->source_path, $ext);
+       // if (!isset($ext[1])) {
+        //    return false;
+        //}
+
+        fx::log('source path', $this->source_path);
+
+
+        preg_match('~\/floxim_files\/content\/(.+)$~', $this->source_path, $folders);
+
+        $folder_name = array();
+        foreach ($this->config as $key => $value) {
+            if ($value) {
+                /*if (!empty($folder_name)) {
+                    $folder_name .= '-';
+                }*/
+                $folder_name []= $key.'-'.$value;
+            }
         }
-        
-        $ext       = $ext[1];
+        $folder_name = join('.', $folder_name);
+
+        //$ext       = $ext[1];
         $thumb_dir = 'fx_thumb';
-        if (!file_exists(fx::config()->FILES_FOLDER . $thumb_dir)) {
-            mkdir(fx::config()->FILES_FOLDER . $thumb_dir);
-        }
-        $rel_path  = $thumb_dir . '/' . $hash . '.' . $ext;
-        $full_path = fx::config()->FILES_FOLDER . $rel_path;
+        //if (!file_exists(fx::config()->FILES_FOLDER . $thumb_dir)) {
+        //    mkdir(fx::config()->FILES_FOLDER . $thumb_dir);
+        //}
+        //$rel_path  = $thumb_dir . '/' . $hash . '.' . $ext;
+        //$full_path = fx::config()->FILES_FOLDER . $rel_path;
+        $rel_path = $thumb_dir.($folder_name ? '/'.$folder_name : '').'/'.$folders[1];
+        $full_path = fx::config()->FILES_FOLDER.$rel_path;
         if (!file_exists($full_path)) {
             $this->process($full_path);
         }
