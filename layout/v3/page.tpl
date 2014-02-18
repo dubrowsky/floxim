@@ -28,7 +28,6 @@
                     fx:area="top_nav"
                     fx:size="wide,low"
                     class="main-menu-area">
-
                 </div>
                 <div class="main-icons-area">
                     <ul
@@ -44,7 +43,7 @@
                                             <label for="search">Search</label>
                                             <input  id="search" name="search" type="text">
                                         </div>
-                                        <div class="input-group">
+                                        <div class="input-group button">
                                             <input type="submit" value="SEARCH">
                                         </div>
                                     </form>
@@ -73,7 +72,7 @@
                                             <label>{%remember}REMEMBER ME{/%}</label>
                                             <input type="checkbox">
                                         </div>
-                                        <div class="input-group">
+                                        <div class="input-group login">
                                             <input type="submit" value="{%login}LOGIN{/%}">
                                         </div>
                                     </form>
@@ -216,39 +215,42 @@
         </section>
         <footer>
             <div class="holder">
-                <div
-                    fx:area="footer_menu"
-                    fx:size="wide,low"
-                    class="footer-menu-area">
-                    <ul
-                        fx:template="footer_menu"
-                        fx:name="Footer menu"
-                        fx:of="section.list"
-                        class="footer-menu">
-                        <li fx:each="$items" class="footer-menu-item"><a href="{$url}">{$name}</a></li>
-                        <div style="clear:both;"></div>
-                    </ul>
-                </div>
-                <div class="footer-contacts-area">
+                <div class="top-block">
+                    <div
+                        fx:area="footer_menu"
+                        fx:size="wide,low"
+                        class="footer-menu-area">
+                        <ul
+                            fx:template="footer_menu"
+                            fx:name="Footer menu"
+                            fx:of="section.list"
+                            class="footer-menu">
+                            <li fx:each="$items" class="footer-menu-item"><a href="{$url}">{$name}</a></li>
+                            <div style="clear:both;"></div>
+                        </ul>
+                    </div>
                     <a class="email">{%email}floxim@floxim.loc{/%}</a>
                     <a class="phone">{%phone}8 (800) 192 16 81{/%}</a>
-                </div>
-                <div style="clear:both;"></div>
-                <div
-                    fx:area="footer_social_icons"
-                    fx:size="wide,low"
-                    class="footer-social-area">
-                    <ul
-                        fx:template="social_icons"
-                        fx:name="Footer social icons"
-                        fx:of="social_icon.list"
-                        class="social-icons-list">
-                        <li fx:each="$items" class="social-icons-list-item {$soc_type}"><a href="{$url}"></a></li>
-                        <div style="clear:both;"></div>
-                    </ul>
                     <div style="clear:both;"></div>
+                    <div
+                        fx:area="footer_social_icons"
+                        fx:size="wide,low"
+                        class="footer-social-area">
+                        <ul
+                            fx:template="social_icons"
+                            fx:name="Footer social icons"
+                            fx:of="social_icon.list"
+                            class="social-icons-list">
+                            <h3 class="follow">Follow us</h3>
+                            <li fx:each="$items" class="social-icons-list-item {$soc_type}"><a href="{$url}"></a></li>
+                            <div style="clear:both;"></div>
+                        </ul>
+                        <div style="clear:both;"></div>
+                    </div>
                 </div>
-                <a class="copyright">{%copyright}© 2014 floxim inc.{/%}</a>
+                <div class="bottom-block">
+                    <a class="copyright">{%copyright}© 2014 floxim inc.{/%}</a>
+                </div>
             </div>
         </footer>
     </div>
