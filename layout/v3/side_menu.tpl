@@ -2,7 +2,7 @@
     fx:template="side_menu"
     fx:name="Side menu"
     fx:of="page.list"
-    data-unstylized="{%unstylized type='bool' title='Unstylize'}0{/%}"
+    data-unstylized="{%unstylized type='bool' label='Unstylize'}0{/%}"
     class="side-menu {if $unstylized}unstylized{/if}">
     <li
         fx:each="$items"

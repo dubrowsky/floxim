@@ -94,9 +94,41 @@ class fx_template_parser {
                     $stack []= $token;
                     break;
                 case 'close':
-                    $closed_token = array_pop($stack);
-                    if ($closed_token->name =='template') {
+                    if ($token->name == 'if') {
+                        do {
+                            $closed_token = array_pop($stack);
+                        } while ($closed_token->name != 'if');
+                    } else {
+                        $closed_token = array_pop($stack);
+                    }
+                    
+                    if ($token->name == 'if' || $token->name == 'elseif') {
+                        // reading forward to check if there is nearby {elseif} / {else} tag
+                        $count_skipped = 0;
+                        foreach ($tokens as $next_token) {
+                            // skip empty tokens
+                            if ($next_token->is_empty()) {
+                                $count_skipped++;
+                                continue;
+                            }
+                            if (
+                                $next_token->type == 'open' && 
+                                ($next_token->name == 'elseif' || $next_token->name == 'else')
+                            ) {
+                                $next_token->stack_extra = true;
+                                $stack []= $closed_token;
+                                foreach (range(1, $count_skipped) as $skip) {
+                                    array_shift($tokens);
+                                }
+                            }
+                            break;
+                        }
+                    }
+                    if ($token->name == 'template' && $closed_token->name == 'template') {
                         $this->_template_to_each($closed_token);
+                    }
+                    if ($closed_token->stack_extra) {
+                        array_pop($stack);
                     }
                     break;
                 case 'single': default:
@@ -113,6 +145,25 @@ class fx_template_parser {
         return $root;
     }
     
+    protected function _template_to_each(fx_template_token $token) {
+        $children = $token->get_children();
+        $has_items = false;
+        foreach ($children as $child) {
+            if ($child->name == 'item') {
+                $has_items = true;
+                break;
+            }
+        }
+        if (!$has_items) {
+            return;
+        }
+        $with_each_token = new fx_template_token('with_each', 'double', array('select' => '$items'));
+        $with_each_token->set_children($children);
+        $token->clear_children();
+        $token->add_child($with_each_token);
+    }
+    
+    /*
     protected function _template_to_each(fx_template_token $token) {
         $children = $token->get_children();
         $subtemplates = array();
@@ -222,6 +273,6 @@ class fx_template_parser {
             $each_token->add_child($subtemplates['separator']);
         }
     }
-    
+    */
     
 }

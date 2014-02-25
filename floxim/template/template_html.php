@@ -7,7 +7,7 @@ class fx_template_html {
     }
     
     public function tokenize() {
-        $tokenizer = new fx_template_html_tokenizer_dev();
+        $tokenizer = new fx_template_html_tokenizer();
         $tokens = $tokenizer->parse($this->_string);
         return $tokens;
     }
@@ -122,14 +122,35 @@ class fx_template_html {
                 $n->add_child(fx_template_html_token::create('{/'.$var_name.'}'));
                 $n->remove_attribute('fx:var');
             }
-            if ( ($tpl_id = $n->get_attribute('fx:template'))) {
+            
+            
+            $tpl_id = $n->get_attribute('fx:template');
+            $macro_id = $n->get_attribute('fx:macro');
+            if ( $tpl_id || $macro_id) {
+                if ($macro_id) {
+                    $tpl_id = $macro_id;
+                }
+                
+                if (preg_match("~\[(.+?)\]~", $tpl_id, $tpl_test)) {
+                    $tpl_test = $tpl_test[1];
+                    $tpl_id = preg_replace("~\[.+?\]~", '', $tpl_id);
+                }
+                    
+                
                 $tpl_macro_tag = '{template id="'.$tpl_id.'" ';
+                if ($macro_id) {
+                    $tpl_macro_tag .= ' is_macro="true" ';
+                }
                 if (!$n->get_attribute('fx:omit')) {
                     $tpl_macro_tag .= ' subroot="true" ';
                 }
                 if ( ($tpl_for = $n->get_attribute('fx:of')) ) {
                     $tpl_macro_tag .= ' of="'.$tpl_for.'"';
                     $n->remove_attribute('fx:of');
+                }
+                if ($tpl_test || ($tpl_test = $n->get_attribute('fx:test'))) {
+                    $tpl_macro_tag .= ' test="'.$tpl_test.'" ';
+                    $n->remove_attribute('fx:test');
                 }
                 if ( ($tpl_name = $n->get_attribute('fx:name'))) {
                     $tpl_macro_tag .= ' name="'.$tpl_name.'"';
@@ -147,9 +168,9 @@ class fx_template_html {
                     $n->remove_attribute('fx:suit');
                 }
                 $tpl_macro_tag .= '}';
-                $n->parent->add_child_before(fx_template_html_token::create($tpl_macro_tag), $n);
-                $n->parent->add_child_after(fx_template_html_token::create('{/template}'), $n);
+                $n->wrap($tpl_macro_tag, '{/template}');
                 $n->remove_attribute('fx:template');
+                $n->remove_attribute('fx:macro');
             }
             if ( ($each_id = $n->get_attribute('fx:each')) ) {
                 $each_id = trim($each_id, '{}');
@@ -178,8 +199,7 @@ class fx_template_html {
                     $n->remove_attribute('fx:extract');
                 }
                 $each_macro_tag .= '}';
-                $n->parent->add_child_before(fx_template_html_token::create($each_macro_tag), $n);
-                $n->parent->add_child_after(fx_template_html_token::create('{/each}'), $n);
+                $n->wrap($each_macro_tag, '{/each}');
                 $n->remove_attribute('fx:each');
             }
             if ( ($area_id = $n->get_attribute('fx:area'))) {
@@ -199,9 +219,47 @@ class fx_template_html {
             }
             if ( ($if_test = $n->get_attribute('fx:if'))) {
                 $n->remove_attribute('fx:if');
-                $if = '{if test="'.$if_test.'"}';
-                $n->parent->add_child_before(fx_template_html_token::create($if), $n);
-                $n->parent->add_child_after(fx_template_html_token::create('{/if}'), $n);
+                $n->wrap(
+                    '{if test="'.$if_test.'"}',
+                    '{/if}'
+                );
+            }
+            if ( ($with_each = $n->get_attribute('fx:with-each'))) {
+                $n->remove_attribute('fx:with-each');
+                $n->wrap(
+                    '{with-each '.$with_each.'}',
+                    '{/with-each}'
+                );
+            }
+            if ( ($with = $n->get_attribute('fx:with'))) {
+                $n->remove_attribute('fx:with');
+                $n->wrap(
+                    '{with '.$with.'}',
+                    '{/with}'
+                );
+            }
+            if ( $n->has_attribute('fx:item') ) {
+                $item_att = $n->get_attribute('fx:item');
+                $n->remove_attribute('fx:item');
+                $n->wrap(
+                    '{item'.($item_att ? ' test="'.$item_att.'"' : '').'}',
+                    '{/item}'
+                );
+            }
+            if ($n->has_attribute('fx:separator')) {
+                $n->wrap('{separator}', '{/separator}');
+                $n->remove_attribute('fx:separator');
+            }
+            if ( ($elseif_test = $n->get_attribute('fx:elseif'))) {
+                $n->remove_attribute('fx:elseif');
+                $n->wrap(
+                    '{elseif test="'.$elseif_test.'"}',
+                    '{/elseif}'
+                );
+            }
+            if ( $n->has_attribute('fx:else') ) {
+                $n->remove_attribute('fx:else');
+                $n->wrap('{else}', '{/else}');
             }
             if ( ($omit = $n->get_attribute('fx:omit'))) {
                 $ep = new fx_template_expression_parser();
@@ -211,11 +269,12 @@ class fx_template_html {
             }
         });
         $res = $tree->serialize();
+        fx::log($res);
         return $res;
     }
     
     public static function parse_floxim_vars_in_atts($input_source) {
-        $ap = new fx_template_attr_parser();
+        $ap = new fx_template_attrtype_parser();
         $res = $ap->parse($input_source);
         return $res;
     }

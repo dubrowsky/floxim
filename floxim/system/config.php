@@ -1,75 +1,72 @@
 <?php
 class fx_config {
     private $config = array(
+        'SUB_FOLDER' => '',
+        'DB_DSN' => '',
+        'DB_USER' => '',
+        'DB_PASSWORD' => '',
+        'DB_PREFIX' => 'fx',
+        'DB_CHARSET' => 'utf8',
+        'DB_ENCRYPT' => 'MD5',
+
+        'CHARSET' => 'utf-8',
+
+        'ADMIN_LANG' => 'en',
+        /*'AVAILABLE_LANGUAGES' => array("ru","en"),
+        'LANGUAGE' => 'en',*/
+
+        'PAGE_TPL' => 'page',
+        'SEARCH_KEY' => 'fxsrch',
+
+        'REDIRECT_FULL_MESSAGE' => 1,
+
+        'AUTHORIZE_BY' => 'email',
+        'AUTHTIME' => 86400,
+        'AUTHTYPE' => 'manual',
+        'FILECHMOD' => 0644,
+        'DIRCHMOD' => 0755,
+        'PHP_TYPE' => 'module',
+
+        'IMAGE_MAX_WIDTH' => 1000,
+        'IMAGE_MAX_HEIGHT' => 1000,
+        'THUMB_MAX_WIDTH' => 200,
+        'THUMB_MAX_HEIGHT' => 200,
 
 
-            'SUB_FOLDER' => '',
+        'HTTP_ROOT_PATH' => '/floxim/',
+        'HTTP_FILES_PATH' => '/floxim_files/',
+        'HTTP_DUMP_PATH' => '/floxim_dump/',
+        'HTTP_TEMPLATE_PATH' => '/floxim_templates/',
+        'HTTP_LAYOUT_PATH' => '/layout/',
+        'HTTP_COMPONENT_PATH' => '/floxim_components/',
+        'HTTP_WIDGET_PATH' => '/floxim_widgets/',
 
-            'DB_DSN' => '',
-            'DB_USER' => '',
-            'DB_PASSWORD' => '',
-            'DB_PREFIX' => 'fx',
-            'DB_CHARSET' => 'utf8',
-            'DB_ENCRYPT' => 'MD5',
+        'SESSION_KEY' => '_fx_cms_',
 
-            'CHARSET' => 'utf-8',
+        'HTTP_MODULE_PATH' => '',
+        'HTTP_ACTION_LINK' => '',
 
-            'ADMIN_LANG' => 'en',
-            /*'AVAILABLE_LANGUAGES' => array("ru","en"),
-            'LANGUAGE' => 'en',*/
-
-            'PAGE_TPL' => 'page',
-            'SEARCH_KEY' => 'fxsrch',
-
-            'REDIRECT_FULL_MESSAGE' => 1,
-
-            'AUTHORIZE_BY' => 'email',
-            'AUTHTIME' => 86400,
-            'AUTHTYPE' => 'manual',
-            'FILECHMOD' => 0644,
-            'DIRCHMOD' => 0755,
-            'PHP_TYPE' => 'module',
-
-            'IMAGE_MAX_WIDTH' => 1000,
-            'IMAGE_MAX_HEIGHT' => 1000,
-            'THUMB_MAX_WIDTH' => 200,
-            'THUMB_MAX_HEIGHT' => 200,
-
-
-            'HTTP_ROOT_PATH' => '/floxim/',
-            'HTTP_FILES_PATH' => '/floxim_files/',
-            'HTTP_DUMP_PATH' => '/floxim_dump/',
-            'HTTP_TEMPLATE_PATH' => '/floxim_templates/',
-            'HTTP_LAYOUT_PATH' => '/layout/',
-            'HTTP_COMPONENT_PATH' => '/floxim_components/',
-            'HTTP_WIDGET_PATH' => '/floxim_widgets/',
-
-            'SESSION_KEY' => '_fx_cms_',
-
-            'HTTP_MODULE_PATH' => '',
-            'HTTP_ACTION_LINK' => '',
-
-            'DOCUMENT_ROOT' => '',
-            'HTTP_HOST' => '',
-            'FLOXIM_FOLDER' => '',
-            'ADMIN_PATH' => '',
-            'ADMIN_TEMPLATE' => '',
-            'SYSTEM_FOLDER' => '',
-            'ROOT_FOLDER' => '',
-            'FILES_FOLDER' => '',
-            'DUMP_FOLDER' => '',
-            'INCLUDE_FOLDER' => '',
-            'TMP_FOLDER' => '',
-            'MODULE_FOLDER' => '',
-            'ADMIN_FOLDER' => '',
-            'TEMPLATE_FOLDER' => '',
-            'COMPONENT_FOLDER' => '',
-            'WIDGET_FOLDER' => '',
-            'FX_VERSION' => '0.1.1.1',
-            'FLOXIM_SITE_PROTOCOL' => 'http',
-            'FLOXIM_SITE_HOST' => 'floxim.org',
-            'COMPILED_TEMPLATES_TTL' => 0,
-            'IS_DEV_MODE' => false
+        'DOCUMENT_ROOT' => '',
+        'HTTP_HOST' => '',
+        'FLOXIM_FOLDER' => '',
+        'ADMIN_PATH' => '',
+        'ADMIN_TEMPLATE' => '',
+        'SYSTEM_FOLDER' => '',
+        'ROOT_FOLDER' => '',
+        'FILES_FOLDER' => '',
+        'DUMP_FOLDER' => '',
+        'INCLUDE_FOLDER' => '',
+        'TMP_FOLDER' => '',
+        'MODULE_FOLDER' => '',
+        'ADMIN_FOLDER' => '',
+        'TEMPLATE_FOLDER' => '',
+        'COMPONENT_FOLDER' => '',
+        'WIDGET_FOLDER' => '',
+        'FX_VERSION' => '0.1.1.1',
+        'FLOXIM_SITE_PROTOCOL' => 'http',
+        'FLOXIM_SITE_HOST' => 'floxim.org',
+        'COMPILED_TEMPLATES_TTL' => 0,
+        'IS_DEV_MODE' => false
     );
 
     public function __construct() {
@@ -122,6 +119,14 @@ class fx_config {
 
     public function to_array() {
         return $this->config;
+    }
+    
+    public function set($k, $v) {
+        $this->config[$k] = $v;
+    }
+    
+    public function get($k) {
+        return isset($this->config[$k]) ? $this->config[$k] : null;
     }
 
     public function __get($name) {

@@ -169,10 +169,11 @@ class fx_controller_admin_site extends fx_controller_admin {
     protected function _get_tree_branch($level_collection) {
         $result = array();
         $content_blocks = $level_collection->group('infoblock_id');
-        $infoblocks = fx::data('infoblock')->where('action', 'listing')->all();
+        $infoblocks = fx::data('infoblock', $content_blocks->keys());
         foreach ($content_blocks as $ib_id => $items) {
             $infoblock = $infoblocks->find_one('id', $ib_id);
             if (!$infoblock) {
+                fx::log('no ib', $ib_id, $infoblocks);
                 $ib_name = '<span style="color:#F00;">ib #'.$ib_id.'</span>';
             } else {
                 $ib_name = $infoblock['name'] ? $infoblock['name'] : 'ib #'.$ib_id;

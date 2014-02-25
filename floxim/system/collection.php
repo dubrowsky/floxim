@@ -172,6 +172,10 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
         uasort($this->data, $sorter);
     }
     
+    public function slice($offset, $length = null) {
+        return fx::collection(array_slice($this->data, $offset, $length));
+    }
+    
     public function group($groupper) {
         $res = new fx_collection();
         if (is_numeric($groupper)) {
@@ -431,6 +435,11 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
         }
     }
     
+    public function keys() {
+        return array_keys($this->data);
+    }
+
+
     /* Array access */
 
     public function offsetSet($offset, $value) {

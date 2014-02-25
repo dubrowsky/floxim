@@ -1,6 +1,8 @@
 <?php
 class fx_template_fsm {
     protected $rules = array();
+    protected $res = array();
+    public $debug = false;
     
     const STATE_ANY = 0;
     public $state = null;
@@ -29,6 +31,7 @@ class fx_template_fsm {
             return null;
         }
         $this->set_state(array_pop($this->state_stack));
+        return $this->state;
     }
     
     protected $any_rules = array();
@@ -81,11 +84,17 @@ class fx_template_fsm {
     }
     
     public function parse($string) {
+        if (!is_string($string)) {
+            fx::debug('nostr', debug_backtrace());
+        }
         $this->state_stack = array();
         $this->prev_state = null;
         $this->position = 0;
         $this->state = $this->init_state;
         $parts = $this->split_string($string);
+        if ($this->debug) {
+            fx::debug($parts);
+        }
         foreach ($parts as $ch) {
             $this->position += mb_strlen($ch);
             $this->step($ch);
@@ -95,6 +104,10 @@ class fx_template_fsm {
     
     public function step($ch) {
         $callback_res = false;
+        if (!isset($this->rules[$this->state])) {
+            $this->default_callback($ch);
+            return false;
+        }
         foreach($this->rules[$this->state] as $rule) {
             list($rule_val, $new_state, $callback, $rule_type) = $rule;
             if (

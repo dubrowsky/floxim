@@ -71,6 +71,13 @@ class fx_template_html_token {
         $this->add_child($new_child, $ref_index);
     }
     
+    
+    public function wrap($code_before, $code_after) {
+        $this->parent->add_child_before(fx_template_html_token::create($code_before), $this);
+        $this->parent->add_child_after(fx_template_html_token::create($code_after), $this);
+    }
+
+
     public function add_child_after(fx_template_html_token $new_child, fx_template_html_token $ref_child) {
         if (($ref_index = $this->get_child_index($ref_child)) === null ) {
             return;
@@ -121,7 +128,7 @@ class fx_template_html_token {
                 $tag_start .= '>';
             } else {
                 $tag_start .= $this->source;
-            }
+            }/*
             if ( isset($this->_injections) && count($this->_injections) > 0) {
                 $injections = $this->_injections;
                 $tag_start = preg_replace_callback(
@@ -131,7 +138,7 @@ class fx_template_html_token {
                     }, 
                     $tag_start
                 );
-            }
+            }*/
         }
         
         $res .= $tag_start;
@@ -165,7 +172,15 @@ class fx_template_html_token {
         return $this->children;
     }
     
+    protected static $attr_parser = null;
+    
     protected function _parse_attributes() {
+        if (!self::$attr_parser) {
+            self::$attr_parser = new fx_template_attr_parser();
+        }
+        self::$attr_parser->parse_atts($this);
+        /*
+        return;
         $source = preg_replace("~^<[a-z0-9_]+~", '', $this->source);
         
         // Сохраняем в массив field-маркеры, восстановим при обратной сборке
@@ -193,7 +208,7 @@ class fx_template_html_token {
         $this->_injections = $injections;
         $source  = preg_replace("~\s([a-z0-9\:_-]+)\s*?=\s*?([^\'\\\"\s]+)~", ' $1="$2"', $source);
         $atts = null;
-        preg_match_all('~(#inj\d+#)|([a-z0-9\:_-]+)=(["\'])(.*?)\3~s', $source, $atts);
+        preg_match_all('~(#inj\d+#)|([a-z0-9\:_-]+)(?:=(["\'])(.*?)\3)?~s', $source, $atts);
         $this->attributes = array();
         foreach ($atts[0] as $att_num => $att_full) {
             $att_name = $atts[2][$att_num];
@@ -205,6 +220,18 @@ class fx_template_html_token {
             }
             $this->attributes[$att_name] = $att_val;
         }
+         * 
+         */
+    }
+    
+    public function has_attribute($att_name) {
+        if ($this->name == 'text') {
+            return null;
+        }
+        if (!isset($this->attributes)) {
+            $this->_parse_attributes();
+        }
+        return array_key_exists($att_name, $this->attributes);
     }
     
     public function get_attribute($att_name) {
@@ -218,6 +245,8 @@ class fx_template_html_token {
             return null;
         }
         $att = $this->attributes[$att_name];
+        return $att;
+        /*
         if (!$this->_injections) {
             return $att;
         }
@@ -230,6 +259,8 @@ class fx_template_html_token {
             $att
         );
         return $att;
+         * 
+         */
     }
     
     public function set_attribute($att_name, $att_value) {
@@ -256,7 +287,7 @@ class fx_template_html_token {
     }
     
     public function remove_attribute($att_name) {
-        if (!$this->attributes) {
+        if (!isset($this->attributes)) {
             $this->_parse_attributes();
         }
         unset($this->attributes[$att_name]);

@@ -32,6 +32,9 @@ class fx_template_token {
             $props['var_type'] = $var_marker[0] == '%' ? 'visual' : 'data';
             $name = 'var';
         }
+        if ($name == 'with-each') {
+            $name = 'with_each';
+        }
         if (preg_match("~\/$~", $source)) {
             $type = 'single';
             $source = preg_replace("~/$~", '', $source);
@@ -44,12 +47,30 @@ class fx_template_token {
         } else {
             $type = 'unknown';
         }
-        if ($name == 'if' && $type == 'open' && !preg_match('~test=~', $source)) {
+        if ($name == 'apply') {
+            $name = 'call';
+            $props['apply'] = true;
+        }
+        if ( ($name == 'if' || $name == 'elseif') && $type == 'open' && !preg_match('~test=~', $source)) {
             $props['test'] = $source;
         } elseif ($name == 'call' && $type != 'close' && !preg_match('~id=~', $source)) {
-            $props['id'] = trim($source);
-        } elseif ($name == 'each' && $type != 'close' && !preg_match ('~select=~', $source)) {
-            //fx::debug('eeahc', $source);
+            $source = trim($source);
+            $parts = preg_split("~\s+(with|each|as)\s+~", $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+            $props['id'] = array_shift($parts);
+            foreach ($parts as $prop_num => $prop){
+                if ($prop_num % 2 == 0 && isset($parts[$prop_num + 1])) {
+                    $props[$prop] = $parts[$prop_num + 1];
+                }
+            }
+        } elseif (( $name == 'each' || $name == 'with_each') && $type != 'close' && !preg_match ('~select=~', $source)) {
+            $props['select'] = trim($source);
+        } elseif ($name == 'set') {
+            $parts = explode("=", $source, 2);
+            $props['var'] = trim($parts[0]);
+            if (isset($parts[1])) {
+                $props['value'] = trim($parts[1]);
+            }
+        } elseif ($name == 'with' && !preg_match("~select=~", $source)) {
             $props['select'] = trim($source);
         } else {
             // добавляем отсутствующие кавычки атрибутов
@@ -67,105 +88,47 @@ class fx_template_token {
                 $props['modifiers'] = self::get_var_modifiers($source);
             }
         }
+        
+        if ($name == 'each' || $name == 'with_each') {
+            $arr_id_parts = null;
+            $item_key = null;
+            $item_alias = null;
+            $arr_id = $props['select'];
+            if (preg_match("~(.+?)\sas\s(.+)$~", $arr_id, $arr_id_parts)) {
+                $arr_id = trim($arr_id_parts[1]);
+                $as_parts = explode("=>", $arr_id_parts[2]);
+                if (count($as_parts) == 2) {
+                    $item_key = trim($as_parts[0]);
+                    $item_alias = trim($as_parts[1]);
+                } else {
+                    $item_alias = trim($as_parts[0]);
+                }
+            }
+            $props['select'] = $arr_id;
+            $props['as'] = $item_alias;
+            $props['key'] = $item_key;
+        }
         return new fx_template_token($name, $type, $props);   
     }
     
-    public static function get_var_modifiers($source) {
-        $source = preg_replace("~^\s*\|~", '', $source);
-        $source = trim($source);
-        $source .= '|';
-        $source = preg_split("~(\s*\|\s*|\s*(?<!:):(?!:)\s*|\s*\,\s*|[\'\"])~", $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
-        if (count($source) == 0) {
-            return null;
+    public function is_empty() {
+        if ($this->name != 'code') {
+            return false;
         }
-        $modifiers = array();
-        $c_modifier = array();
-        $c_state = 'default';
-        $c_arg_quote = '';
-        $c_arg = '';
-        foreach ($source as $chunk) {
-            $is_separator = preg_match("~^\s*\|\s*$~", $chunk);
-            $is_arg_separator = preg_match("~^\s*[\,\:]\s*$~", $chunk);
-            if ($c_state == 'default') {
-                // нормальное название модификатора
-                if (preg_match("~^[a-z0-9_:\.\$-]+$~i", $chunk)) {
-                    $c_modifier['name'] = $chunk;
-                    $c_state = 'modifier';
-                    $c_arg_quote = '';
-                    continue;
-                }
-                // вместо модификатора - аргумент в кавычках
-                if ($chunk == '"' || $chunk = "'") {
-                    $c_modifier['name'] = 'fx_default';
-                    $c_state = 'arg';
-                    $c_arg_quote = $chunk;  
-                    $c_arg = $chunk;
-                    continue;
-                }
-            }
-            if ($c_state == 'arg') {
-                if ( $c_arg_quote == '' && ($chunk == '"' || $chunk == "'")) {
-                    $c_arg_quote = $chunk;
-                    $c_arg .= $chunk;
-                    continue;
-                }
-                // закрылась кавычка аргумента
-                if ( $c_arg_quote != '' && $chunk == $c_arg_quote ) {
-                    $c_arg .= $chunk;
-                    $c_arg_quote = '';
-                    continue;
-                }
-                // начался новый аргумент
-                if ($c_arg_quote == '' && $is_arg_separator) {
-                    $c_modifier['args'][]= $c_arg;
-                    $c_arg = '';
-                    continue;
-                }
-                // конец аргумента и модификатора
-                if ($c_arg_quote == '' && $is_separator) {
-                    $c_state = 'default';
-                    $c_modifier['args'] []= $c_arg;
-                    $modifiers []= $c_modifier;
-                    $c_modifier = array('args' => array());
-                    $c_arg = '';
-                    continue;
-                }
-                $c_arg .= $chunk;
-                continue;
-            }
-            // конец модификатора
-            if ($c_state == 'modifier' && $is_separator) {
-                $c_state = 'default';
-                $modifiers []= $c_modifier;
-                $c_modifier = array('args' => array());
-                continue;
-            }
-            if ($c_state == 'modifier' && $is_arg_separator) {
-                $c_state = 'arg';
-                $c_arg = '';
-                continue;
-            }
+        return !trim($this->get_prop('value'));
+    }
 
-        }
-        
-        if (count($modifiers) == 0) {
-            return null;
-        }
-        $res = array();
-        foreach ($modifiers as $modifier) {
-            $c_mod = array($modifier['name']);
-            if (isset($modifier['args'])) {
-                $c_mod = array_merge($c_mod, $modifier['args']);
-            }
-            $res[]= $c_mod;
-        }
+
+    public static function get_var_modifiers($source_str) {
+        $p = new fx_template_modifier_parser();
+        $res = $p->parse($source_str);
         return $res;
     }
     
     protected static $_token_types = array(
         'template' => array(
             'type' => 'double',
-            'contains' => array('code', 'template', 'area', 'var', 'call', 'each','if')
+            'contains' => array('code', 'template', 'area', 'var', 'call', 'each','if', 'with_each', 'separator', 'with')
         ),
         'code' => array(
             'type' => 'single'
@@ -187,12 +150,35 @@ class fx_template_token {
             'contains' => array('template', 'templates')
         ),
         'each' => array(
-            'type' => 'both',
-            'contains' => array('code', 'template', 'area', 'var', 'call', 'each', 'if')
+            'type' => 'double',
+            'contains' => array('code', 'template', 'area', 'var', 'call', 'each', 'if', 'elseif', 'else', 'separator')
+        ),
+        'with_each' => array(
+            'type' => 'double',
+            'contains' => array('item', 'code', 'template', 'area', 'var', 'call', 'each', 'if', 'elseif', 'else', 'separator')
+        ),
+        'with' => array(
+            'type' => 'double',
+            'contains' => array('item', 'code', 'template', 'area', 'var', 'call', 'each', 'if', 'elseif', 'else', 'separator')
+        ),
+        'item' => array(
+            'type' => 'double',
+            'contains' => array('code', 'template', 'area', 'var', 'call', 'each', 'if', 'elseif', 'else')
         ),
         'if' => array(
             'type' => 'double',
             'contains' => array('code', 'template', 'area', 'var', 'call', 'each', 'elseif', 'else')
+        ),
+        'else' => array(
+            'type' => 'double',
+            'contains' => array('code', 'template', 'area', 'var', 'call', 'each', 'elseif', 'else')
+        ),
+        'elseif' => array(
+            'type' => 'double',
+            'contains' => array('code', 'template', 'area', 'var', 'call', 'each', 'elseif', 'else')
+        ),
+        'separator' => array(
+            'type' => 'double'
         )
     );
     
@@ -249,6 +235,10 @@ class fx_template_token {
             $this->children[$index] = $child;
         }
     }
+    
+    public function set_children($children){
+        $this->children = $children;
+    }
 
 
     public function set_prop($name, $value) {
@@ -278,4 +268,3 @@ class fx_template_token {
         return $r;
     }
 }
-?>

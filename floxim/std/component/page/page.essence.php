@@ -7,8 +7,8 @@ class fx_content_page extends fx_content {
     public function get_parent_ids() {
         $c_pid = $this->get('parent_id');
         // if page has null parent, hold it as if it was nested to index
-        if ($c_pid === null && ($site = fx::env('site'))) {
-            return array($site['index_page_id']);
+        if ($c_pid === null && ($site = fx::env('site')) && ($index_id = $site['index_page_id'])) {
+            return $index_id != $this['id'] ? array($index_id) : array();
         }
         $ids = array();
         while ($c_pid != 0) {

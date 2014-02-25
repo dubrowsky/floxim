@@ -2,12 +2,13 @@
 require_once (dirname(__FILE__).'/template_fsm.php');
 class fx_template_expression_parser extends fx_template_fsm {
     
-    public $split_regexp = '~(\$\{|\$|\s+|\.|[\[\]]|[\'\"]|[\{\}]|[+=&\|\)\(-])~';
+    public $split_regexp = '~(\$\{|\`|\$|\s+|\.|\,|[\[\]]|[\'\"]|[\{\}]|[+=&\|\)\(-])~';
     
     const CODE = 1;
     const VAR_NAME = 2;
     const ARR_INDEX = 3;
     const STR = 4;
+    const ESC = 5;
     
     const T_CODE = 1;
     const T_VAR = 2;
@@ -15,6 +16,8 @@ class fx_template_expression_parser extends fx_template_fsm {
     const T_ROOT = 0;
     
     public function __construct() {
+        $this->add_rule(self::CODE, '`', null, 'start_esc');
+        $this->add_rule(self::ESC, '`', null, 'end_esc');
         $this->add_rule(array(self::CODE, self::ARR_INDEX, self::VAR_NAME), '~^\$~', null, 'start_var');
         $this->add_rule(array(self::VAR_NAME, self::ARR_INDEX), array('[', '.'), null, 'start_arr');
         $this->add_rule(
@@ -23,12 +26,22 @@ class fx_template_expression_parser extends fx_template_fsm {
             null, 
             'end_var'
         );
+        $this->add_rule(self::ARR_INDEX, "~^[^a-z0-9_\.]~", null, 'end_var_dot');
         $this->add_rule(self::ARR_INDEX, ']', null, 'end_arr');
         $this->init_state = self::CODE;
     }
     
     public $stack = array();
     public $curr_node = null;
+    
+    
+    public function start_esc($ch) {
+        $this->push_state(self::ESC);
+    }
+    
+    public function end_esc($ch) {
+        $this->pop_state();
+    }
     
     public function push_stack($node) {
         $this->stack[]= $node;
@@ -67,6 +80,13 @@ class fx_template_expression_parser extends fx_template_fsm {
         $this->push_state(self::ARR_INDEX);
     }
     
+    public function end_var_dot($ch) {
+        if ($this->curr_node->starter != '.') {
+            return false;
+        }
+        $this->end_var($ch);
+    }
+    
     public function start_var($ch) {
         $var = self::node(self::T_VAR);
         $var->name = array();
@@ -101,7 +121,7 @@ class fx_template_expression_parser extends fx_template_fsm {
             case self::VAR_NAME:
                 $this->curr_node->name []= $ch;
                 break;
-            case self::CODE:
+            case self::CODE: case self::ESC:
                 $this->read_code($ch);
                 break;
             case self::ARR_INDEX:

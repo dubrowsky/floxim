@@ -133,7 +133,6 @@ class fx_template_loader {
     
     public function compile() {
         $source = $this->build_source();
-        //fx::debug($source);
         $parser = new fx_template_parser();
         $tree = $parser->parse($source);
         $compiler = new fx_template_compiler();

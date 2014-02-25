@@ -19,9 +19,9 @@
     ?>
     <div fx:template="item" class="year{if $active || $expand == 'true'} year_active{/if}">
         <div class="year_title">{$year}</div>
-        <div class="months" fx:template="$months">
-            <div fx:template="item">
-                <a fx:omit="!$active" href="{$url}">
+        <div class="months">
+            <div fx:each="$months">
+                <a fx:omit="$active" href="{$url}">
                     {%month_$month}<?=$month_names[ (int) $month]?>{/%}
                 </a>&nbsp;<sup class="counter">{$count}</sup>
             </div>

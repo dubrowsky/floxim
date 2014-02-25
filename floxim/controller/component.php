@@ -490,7 +490,6 @@ class fx_controller_component extends fx_controller {
 
             foreach ($conditions as $condition) {
                 $field = $fields->find_one('name', $condition['name']);
-                fx::log('condfild', $field, $condition);
                 $error = false;
                 switch ($condition['operator']) {
                     case 'contains':
@@ -579,7 +578,14 @@ class fx_controller_component extends fx_controller {
                 }
                 
                 if ($condition['name'] == 'infoblock_id') {
-                    $target_ib = fx::data('infoblock', $condition['value'])->first();
+                    if (empty($condition['value'])) {
+                        continue;
+                    }
+                    $target_ib = fx::data('infoblock', $condition['value']);//->first();
+                    if (!$target_ib) {
+                        continue;
+                    }
+                    $target_ib = $target_ib->first();
                     if ($target_ib['action'] == 'list_selected') {
                         $linkers = fx::data('content_select_linker')
                                     ->where('infoblock_id', $target_ib['id'])
@@ -687,7 +693,14 @@ class fx_controller_component extends fx_controller {
     
     protected function _get_controller_variants() {
         $vars = parent::_get_controller_variants();
-        $chain = array_reverse($this->get_component()->get_chain());
+        $com = $this->get_component();
+        if (!$com) {
+            fx::log($this);
+            die();
+        }
+        $chain = $com->get_chain();
+        $chain = array_reverse($chain);
+        //$chain = array_reverse($this->get_component()->get_chain());
         foreach ($chain as $chain_item) {
             $vars []= 'component_'.$chain_item['keyword'];
         }

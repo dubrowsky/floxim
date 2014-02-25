@@ -1,5 +1,5 @@
 <div fx:template="list" class="news_list">
-    <div fx:template="item" class="news">
+    <div fx:item class="news">
         <h2><a href="{$url}">{$name}Unnamed article{/$}</a></h2>
         <div class="date">
             <span>{$publish_date | 'd.m.Y'}</span>
@@ -14,5 +14,5 @@
         <div fx:if="$comments_counter" class="comments_counter">Comments: {$comments_counter}0{/$}</div>
     </div>
 
-    {call id="component_content.pagination" /}
+    {call component_content.pagination /}
 </div>

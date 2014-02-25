@@ -11,6 +11,9 @@ $page_config = array(
         '.*' => array(
             'disabled' => true
         ),
+        'list_infoblock' => array(
+            'disabled' => false
+        ),
         '*list_infoblock' => array(
             'settings' => (
                 $is_new_infoblock ? array(

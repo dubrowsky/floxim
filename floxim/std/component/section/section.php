@@ -1,11 +1,7 @@
 <?
 class fx_controller_component_section extends fx_controller_component_page {
 
-    /*
-     * Отключаем "Отдельную страницу" для компонента
-     */
-    
-    public function do_list_infoblock() {
+   public function do_list_infoblock() {
         $this->set_param('parent_id', false);
         $c_page_id  = fx::env('page')->get('id');
         $path = fx::env('page')->get_parent_ids();
@@ -102,10 +98,11 @@ class fx_controller_component_section extends fx_controller_component_page {
         };
         $this->listen('items_ready', function ($items) use ($recurcive_children, $submenu_type) {
             $recurcive_children($items);
-            if ($submenu_type == 'none')
+            if ($submenu_type == 'none') {
                 $items->apply(function($item){
                     unset($item['children']);
                 });
+            }
         });
         return parent::do_list_selected();
     }
@@ -113,13 +110,14 @@ class fx_controller_component_section extends fx_controller_component_page {
     public function do_list_submenu() {
         $source = $this->get_param('source_infoblock_id');
         $path = fx::env('page')->get_path();
+        if (count($path) < 2) {
+            return;
+        }
         if (isset($path[1])) {
             $this->listen('query_ready', function($q) use ($path, $source){
                 $q->where('parent_id', $path[1]->get('id'))->where('infoblock_id', $source);
             });
         }
-        $paths = fx::env('page')->get_parent_ids();
-        $paths[] = fx::env('page')->get('id');
         return $this->do_list();
     }
     

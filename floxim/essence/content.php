@@ -227,18 +227,18 @@ class fx_content extends fx_essence {
             return $html;
         }
         $essence_meta = array(
-            'id' => $this->get('id'),
-            'type' => $this->get_type(false)
+            $this->get('id'),
+            $this->get_type(false)
         );
         //return $html;
         if ($collection->linker_map && isset($collection->linker_map[$index])) {
             $linker = $collection->linker_map[$index];
-            $essence_meta['linker_id'] = $linker['id'];
-            $essence_meta['linker_type'] = $linker['type'];
+            $essence_meta[]= $linker['id'];
+            $essence_meta[]= $linker['type'];
         }
         $essence_atts = array(
-            'data-fx_content_essence' => $essence_meta, 
-            'class' => 'fx_content_essence'. ($collection->is_sortable ? '' : ' fx_not_sortable')
+            'data-fx_essence' => $essence_meta, 
+            'class' => 'fx_essence'. ($collection->is_sortable ? ' fx_sortable' : '')
         );
         
         if ($is_subroot) {

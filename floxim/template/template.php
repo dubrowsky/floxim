@@ -12,6 +12,7 @@ class fx_template {
     
     public function set_parent($parent_template) {
         $this->_parent = $parent_template;
+        return $this;
     }
 
 

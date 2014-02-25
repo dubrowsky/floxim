@@ -45,10 +45,10 @@
                     fx:suit="local"
                     class="top_menu">
                     <ul>
-                        <li fx:template="inactive">
+                        <li fx:item>
                             <a href="{$url}">{$name}</a>
                         </li>
-                        <li fx:template="active" class="active">
+                        <li fx:item="$is_active" class="active">
                             <a href="{$url}">{$name}</a>
                         </li>
                     </ul>
@@ -106,8 +106,8 @@
                             class="col"
                             {if ($pages_index-1) % 3 == 0} style="clear:both;"{/if}>
                             <strong>{$year}</strong>
-                            <ul fx:template="$pages">
-                                <li fx:template="item">
+                            <ul fx:with-each="$pages">
+                                <li fx:item>
                                     <a href="{$url}">{$name}</a>
                                     <div fx:if="$cover">
                                         <img src="{$cover|'width:110'}" alt="" />
@@ -120,8 +120,8 @@
                 <!-- This is for inner -->
                 <div class="sidebar" fx:area="sidebar" fx:if="$sidebar" fx:size="narrow,high">
                     <ul fx:template="side_menu" fx:of="component_section.listing" fx:name="Side menu" class="jt_side_menu">
-                        <li fx:template="inactive"><a href="{$url}">{$name}</a></li>
-                        <li fx:template="active"><a href="{$url}"><b>{$name}</b></a></li>
+                        <li fx:item><a href="{$url}">{$name}</a></li>
+                        <li fx:item="$is_active"><a href="{$url}"><b>{$name}</b></a></li>
                     </ul>
                 </div>
                     
@@ -132,12 +132,11 @@
                             fx:template="index_photo_anounces" 
                             fx:of="component_photo.list" 
                             class="photo_anounces">
-                            <li fx:template="item">
-                                <a href="{$item['parent']['url']}">
+                            <li fx:item>
+                                <a href="{$item.parent.url}">
                                     <img src="{$photo | 'width:140,height:100'}" alt="" />
                                 </a>
-                                <span>{$description}</span>
-                                
+                                <span>{$description}</span>                                
                             </li>
                         </ul>
                     </div>
@@ -148,7 +147,7 @@
                             {$content}
                         </div>
                         <ul fx:template="index_link_list" fx:of="page.list" fx:name="Simple link list">
-                            <li fx:template="item"><a href="{$url}">{$name}</a></li>
+                            <li fx:item><a href="{$url}">{$name}</a></li>
                         </ul>
                     </div>
                     <div class="r-side" fx:area="index_right">

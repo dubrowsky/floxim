@@ -39,10 +39,25 @@ return array(
                     'values' => $source_ibs,
                 ),
             ),
+            'check_context' => function() {
+                return count(fx::env('page')->get_parent_ids()) > 0;
+            }
         ),
         'breadcrumbs' => array(
             'icon' => 'Nav',
             'icon_extra' => 'bre',
+            'settings' => array(
+                'header_only' => array(
+                    'name' => 'header_only',
+                    'type' => 'checkbox',
+                    'label' => fx::alang('Show only header?', 'component_section'),
+                ),
+                'hide_on_index' => array(
+                    'name' => 'hide_on_index',
+                    'type' => 'checkbox',
+                    'label' => fx::alang('Hide on the index page', 'component_section')
+                )
+            )
         ),
     )
 );

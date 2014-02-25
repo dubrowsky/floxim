@@ -1,134 +1,65 @@
 <?php
-class fx_template_attr_parser extends fx_template_fsm {
-
-    public $split_regexp = "~(\s|=[\'\"]|fx:|:|\"|<\?.+?\?>|\{[^\}]+?\})~";
-
-    const TAG = 1;
-    const PHP = 2;
-    const FX = 3;
-    const FX_VAL = 4;
-    const ATT = 5;
-    const ATT_NAME = 6;
-    const ATT_VAL = 7;
-    const STYLE = 8;
-    const STYLE_BACKGROUND = 9;
-    const STYLE_BACKGROUND_URL = 10;
-    const STYLE_VAL = 11;
-    const SRC = 12;
-    const SRC_VAL = 13;
-    const HREF = 14;
-    const HREF_VAL = 15;
-
-
-    protected $res = '';
-
-    protected $att_quot;
-
-    public function __construct() {
-        $this->add_rule(self::TAG, '~^\s+$~', self::ATT_NAME, null);
-
-        $this->add_rule(self::ATT_NAME, '~^fx:$~', self::FX, null);
-        $this->add_rule(self::FX, '~^=[\'\"]$~', self::FX_VAL, 'start_val');
-
-        $this->add_rule(self::ATT_NAME, '~^=[\'\"]$~', self::ATT_VAL, 'start_val');
-
-        $this->add_rule(self::ATT_NAME, '~^style$~', self::STYLE, null);
-        $this->add_rule(self::STYLE, '~^=[\'\"]$~', self::STYLE_VAL, 'start_val');
-        $this->add_rule(self::STYLE_VAL, '~^background$~', self::STYLE_BACKGROUND, null);
-        $this->add_rule(self::STYLE_VAL, '~^background-image$~', self::STYLE_BACKGROUND_URL, null);
-        $this->add_rule(self::STYLE_VAL, '~^background-color|color$~', self::STYLE_BACKGROUND, null);
-        $this->add_rule(self::STYLE_BACKGROUND, '~^url\([\'\"]?$~', self::STYLE_BACKGROUND_URL, null);
-        $this->add_rule(self::STYLE_BACKGROUND_URL, '~^\{[\%\$]~', self::STYLE_VAL, 'set_image_var');
-        $this->add_rule(self::STYLE_BACKGROUND, '~^\{[\%\$]~', self::STYLE_VAL, 'set_color_var');
-
-        $this->add_rule(self::ATT_NAME, '~^src$~', self::SRC, null);
-        $this->add_rule(self::SRC, '~^=[\'\"]$~', self::SRC_VAL, 'start_val');
-        $this->add_rule(self::SRC_VAL, '~^\{[\%\$]~', null, 'set_image_var');
-
-        $this->add_rule(self::ATT_NAME, '~^href|title|alt$~', self::HREF, null);
-        $this->add_rule(self::HREF, '~^=[\'\"]$~', self::HREF_VAL, 'start_val');
-        $this->add_rule(self::HREF_VAL, '~^\{[\%\$]~', null, 'set_href_var');
-
-
-        $this->add_rule(self::ATT_VAL, '~^\{[\%\$]~', null, 'start_var');
-        $this->add_rule(array(self::ATT_VAL, self::FX_VAL, self::STYLE_VAL, self::SRC_VAL, self::HREF_VAL), '~^\s+|[\'\"]$~', self::TAG, 'end_att');
-        $this->init_state = self::TAG;
-    }
-
-
-    public function start_att($ch) {
-        $this->res .= $ch;
-    }
-
-    public function start_val($ch) {
-        $this->res .= $ch;
-        if (preg_match("~[\'\"]$~", $ch, $att_quote)) {
-            $this->att_quote = $att_quote[0];
+class fx_template_attr_parser extends fx_template_html_tokenizer {
+    
+    public function parse_atts(fx_template_html_token $token) {
+        $token->attributes = array();
+        $s = $token->source;
+        if (!$s || !preg_match("~\s~", $s)) {
+            return;
         }
+        $this->token = $token;
+        $this->c_att = array('name' => null, 'value' => null);
+        $this->parse($s);
     }
-
-
-    public function start_var ($ch) {
-        $this->res .= $this->set_prop_val(array('inatt'=>'true'), $ch);
-    }
-
-
-    protected  function  set_prop_val ($props = array(), $ch) {
-        foreach($props as $prop => $value) {
-            $c_type = '';
-            if (!preg_match('~'.$prop.'=[\'\"]?\w+[\'\"]?~', $ch)) {
-                $c_type = ' '.$prop.'="'.$value.'"';
-            }
-
-            $ch = preg_replace("~^([^\s\|\}]+)~", '\1 '.$c_type, $ch);
+    
+    protected function _add_att() {
+        //fx::debug($this->state, $this->stack);
+        //if ($this->state != self::TAG && !$this->c_att['name']) {
+        if (!$this->c_att['name'] && !preg_match("~^<~", $this->stack)) {
+            $this->c_att['name'] = $this->stack;
         }
-        return $ch;
-    }
-
-    public function set_image_var ($ch) {
-        $this->res .= $this->set_prop_val(array('inatt'=>'true', 'type'=> 'image'), $ch);
-    }
-
-    public function set_href_var ($ch) {
-        $c_editable = 'true';
-        if (
-            !preg_match("~^\{\%~", $ch)
-        ) {
-            $c_editable = 'false';
-        }
-
-        $this->res .= $this->set_prop_val(array('inatt'=>'true', 'editable'=> $c_editable), $ch);
-    }
-
-    public function set_color_var ($ch) {
-        $this->res .= $this->set_prop_val(array('inatt'=>'true', 'type'=> 'color'), $ch);
-    }
-
-    public function end_att ($ch) {
-        switch ($ch) {
-            case '"': case "'":
-            if ($this->att_quote !== $ch) {
-                return false;
-            }
-            break;
-            case ' ':
-                if ($this->att_quote) {
-                    return false;
+        if ($this->c_att) {
+            $att_name = trim($this->c_att['name']);
+            // skip trailing backslash
+            if ($att_name && $att_name != '/') {
+                $att_val = $this->c_att['value'];
+                if ($att_val) {
+                    $att_val = trim($att_val);
                 }
-                break;
-            case '>':
-                if ($this->att_quote) {
-                    return false;
-                }
-                break;
+                $this->token->attributes[$att_name] = $att_val;
+            }
         }
-        $this->att_quote = null;
-        $this->res .= $ch;
-
+        $this->c_att = array('name' => null, 'value' => null);
     }
-
-    public function default_callback($ch) {
-        $this->res .= $ch;
+    
+    public function att_name_start($ch) {
+        $this->_add_att();
+        $this->stack = '';
+        parent::att_name_start($ch);
+        $this->c_att = array('name' => '', 'value' => null);
     }
-
-} 
+    
+    public function att_value_start($ch) {
+        $this->c_att['name'] = $this->stack;
+        parent::att_value_start($ch);
+        $this->stack = '';
+    }
+    
+    public function att_value_end($ch) {
+        $c_val = $this->stack;
+        $res = parent::att_value_end($ch);
+        if ($res !== false) {
+            $this->c_att['value'] = $c_val;
+            $this->_add_att();
+            $this->stack = '';
+        }
+        return $res;
+    }
+    
+    public function tag_to_text($ch) {
+        if (!empty($this->stack)) {
+            $this->c_att['name'] = $this->stack;
+            $this->_add_att();
+        }
+    }
+}

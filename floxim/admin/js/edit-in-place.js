@@ -105,7 +105,7 @@ fx_edit_in_place.prototype.start = function(meta) {
                 this.add_panel_field(meta);
             } else {
                 this.is_content_editable = true;
-                if (!$($fx.front.get_selected_item()).hasClass('fx_content_essence')) {
+                if (!$($fx.front.get_selected_item()).hasClass('fx_essence')) {
                     setTimeout(function() {
                         $fx.front.stop_essences_sortable();
                     }, 50);

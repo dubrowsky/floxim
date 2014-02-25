@@ -10,11 +10,19 @@ class fx {
     }
 
     /* Get config data */
-    static public function config() {
+    static public function config($k = null, $v = null) {
         static $config = false;
         if ($config === false) {
             $config = new fx_config();
         }
+        $argc = func_num_args();
+        if ($argc == 0) {
+            return $config;
+        }
+        if ($argc == 1) {
+            return $config->get($k);
+        }
+        $config->set($k, $v);
         return $config;
     }
     
