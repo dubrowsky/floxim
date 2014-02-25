@@ -17,34 +17,17 @@ class fx_field_baze extends fx_field {
         return $this->_edit_jsdata;
     }
 
-    public function get_js_field($content, $tname = 'f_%name%', $layer = '', $tab = '') {
+    public function get_js_field($content) {
 
-        $name = $tname ? str_replace('%name%', $this->name, $tname) : $this->name;
+        $name = $this->name;
         $this->_js_field = array('id' => $name, 'name' => $name, 'label' => $this->description, 'type' => $this->get_type(false));
         $this->_js_field['value'] = $this['default'];
         if ($content[$this->name]) {
             $this->_js_field['value'] = $content[$this->name];
         }
-        if ($tab) {
-            $this->_js_field['tab'] = $tab;
-        }
         return $this->_js_field;
-        /*
-        if ($this['parent']) {
-            $this->_js_field['parent'] = array('visual['.$this['parent'][0].']', $this['parent'][1]);
-        }
-
-        if ($layer) $this->_js_field['layer'] = $layer;
-         * 
-         */
     }
 
-    /*
-    public function get_input($opt = '') {
-        return "<input class='".$this->get_css_class()."' ".$opt." type='text' name='f_".$this->name."' value='".htmlspecialchars($this->value, ENT_QUOTES)."' />";
-    }
-     * 
-     */
 
     public function get_html($opt = '') {
         $asterisk = $this['not_null'] ? '<span class="fx_field_asterisk">*</span>' : '';

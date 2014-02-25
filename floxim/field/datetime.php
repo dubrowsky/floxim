@@ -4,8 +4,8 @@ class fx_field_datetime extends fx_field_baze {
 
     protected $day = '', $month = '', $year = '', $hours = '', $minutes = '', $seconds = '';
 
-    public function get_js_field($content, $tname = 'f_%name%', $layer = '', $tab = '') {
-        parent::get_js_field($content, $tname, $layer, $tab);
+    public function get_js_field($content) {
+        parent::get_js_field($content);
 
         $this->load_values_by_str($content[$this->name]);
         $this->_js_field['day'] = $this->day;

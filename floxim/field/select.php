@@ -2,12 +2,12 @@
 
 class fx_field_select extends fx_field_baze {
 
-    public function get_js_field($content, $tname = 'f_%name%', $layer = '') {
+    public function get_js_field($content) {
         if ($this->format['multiple']) {
             $tname .= '[]';
         }
 
-        parent::get_js_field($content, $tname, $layer);
+        parent::get_js_field($content);
 
         $values = $this->get_options();
         if (!$this->is_not_null() && is_array($values)) {

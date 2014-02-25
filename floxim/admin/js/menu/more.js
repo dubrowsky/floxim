@@ -30,7 +30,11 @@ fx_more_menu.prototype.load_items = function () {
             if (item.button && typeof item.button == 'object') {
                 $fx.post(item.button,
                 function(json) {
-                    $fx.front_panel.show_form(json, {});
+                    $fx.front_panel.show_form(json, {
+                        'onfinish': function () {
+                            $fx.front.reload_layout();
+                        }
+                    });
                 });
             }
             return false;
