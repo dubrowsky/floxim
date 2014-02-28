@@ -6,7 +6,7 @@
     class="side-menu {if $unstylized}unstylized{/if}">
     <li
         fx:each="$items"
-        class="side-menu-item {if $item->is_active()}active{/if}">
+        class="side-menu-item {if $is_active}active{/if}">
         <a href="{$url}">{$name}</a>
     </li>
     <div style="clear:both;"></div>

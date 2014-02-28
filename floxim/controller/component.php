@@ -264,7 +264,7 @@ class fx_controller_component extends fx_controller {
             $c_ib_field = array(
                 'name' => 'field_'.$lf['id'].'_infoblock'
             );
-            if (count($ib_values) === 1 && false) {
+            if (count($ib_values) === 1) {
                 $c_ib_field += array(
                     'type' => 'hidden',
                     'value' => $ib_values[0][0]

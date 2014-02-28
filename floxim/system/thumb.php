@@ -330,6 +330,7 @@ class fx_thumb
     
     public function Save($target_path = false, $quality = 90)
     {
+        fx::log('saving', $target_path, $this);
         if ($this->info['imagetype'] == IMAGETYPE_PNG) {
             $quality = round($quality / 10);
         }
@@ -338,16 +339,20 @@ class fx_thumb
         } elseif ($target_path === null) {
             header("Content-type: " . $this->info['mime']);
         } else {
-            $sub_path     = str_replace($_SERVER['DOCUMENT_ROOT'], '', $target_path);
+            $doc_root = str_replace(DIRECTORY_SEPARATOR, '/', DOCUMENT_ROOT);
+            $target_path = str_replace(DIRECTORY_SEPARATOR, '/', $target_path);
+            $sub_path     = str_replace($doc_root, '', $target_path);
             $sub_path     = preg_replace("~^[//]~", '', $sub_path);
             $target_parts = preg_split("~[//]~", $sub_path);
-            $c_path       = $_SERVER['DOCUMENT_ROOT'];
+            $c_path       = $doc_root;
+            fx::log($target_parts);
             foreach ($target_parts as $pi => $pdir) {
                 $c_path .= '/' . $pdir;
                 if (file_exists($c_path)) {
                     continue;
                 }
                 if (!is_dir($c_path) && $pi != count($target_parts) - 1) {
+                    fx::log('mk', $c_path);
                     mkdir($c_path, 0777);
                 }
             }
@@ -356,44 +361,53 @@ class fx_thumb
         $res_image = call_user_func($this->info['save_func'], $this->image, $target_path, $quality);
     }
     
-    protected static $_types = array(IMAGETYPE_GIF => array('ext' => 'gif', 'create_func' => 'imagecreatefromgif', 'save_func' => 'imagegif'), IMAGETYPE_JPEG => array('ext' => 'gif', 'create_func' => 'imagecreatefromjpeg', 'save_func' => 'imagejpeg'), IMAGETYPE_PNG => array('ext' => 'gif', 'create_func' => 'imagecreatefrompng', 'save_func' => 'imagepng'));
-    public function process($full_path)
-    {
+    protected static $_types = array(
+        IMAGETYPE_GIF => array(
+            'ext' => 'gif', 
+            'create_func' => 'imagecreatefromgif', 
+            'save_func' => 'imagegif'
+        ), 
+        IMAGETYPE_JPEG => array(
+            'ext' => 'gif', 
+            'create_func' => 'imagecreatefromjpeg', 
+            'save_func' => 'imagejpeg'
+        ), 
+        IMAGETYPE_PNG => array(
+            'ext' => 'gif', 
+            'create_func' => 'imagecreatefrompng', 
+            'save_func' => 'imagepng'
+        )
+    );
+    
+    public function process($full_path) {
         $this->Resize();
         $this->Save($full_path);
     }
-    public function get_result_path()
-    {
-
-        //$hash = md5(serialize($this->config) . $this->source_path);
-        //preg_match("~.([^.]+)$~", $this->source_path, $ext);
-       // if (!isset($ext[1])) {
-        //    return false;
-        //}
-
-        fx::log('source path', $this->source_path);
-
-
-        preg_match('~\/floxim_files\/content\/(.+)$~', $this->source_path, $folders);
+    
+    public function get_result_path() {
+        $ds = '['.preg_quote('\/').']';
+        $rex = '~'.$ds.'floxim_files'.$ds.'content'.$ds.'(.+)$~';
+        preg_match(
+            $rex, 
+            $this->source_path, 
+            $folders
+        );
+        if (!$folders) {
+            preg_match("~".$ds."(.+?)$~", $this->source_path, $folders);
+        }
+        fx::log($this->source_path, $rex, $folders);
+        
 
         $folder_name = array();
         foreach ($this->config as $key => $value) {
             if ($value) {
-                /*if (!empty($folder_name)) {
-                    $folder_name .= '-';
-                }*/
                 $folder_name []= $key.'-'.$value;
             }
         }
         $folder_name = join('.', $folder_name);
 
-        //$ext       = $ext[1];
         $thumb_dir = 'fx_thumb';
-        //if (!file_exists(fx::config()->FILES_FOLDER . $thumb_dir)) {
-        //    mkdir(fx::config()->FILES_FOLDER . $thumb_dir);
-        //}
-        //$rel_path  = $thumb_dir . '/' . $hash . '.' . $ext;
-        //$full_path = fx::config()->FILES_FOLDER . $rel_path;
+        
         $rel_path = $thumb_dir.($folder_name ? '/'.$folder_name : '').'/'.$folders[1];
         $full_path = fx::config()->FILES_FOLDER.$rel_path;
         if (!file_exists($full_path)) {

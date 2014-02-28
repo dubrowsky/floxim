@@ -274,31 +274,11 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             }
         }
 
-        if ($scope_tab) {
-            //$this->response->add_tab('scope', fx::lang('Where to show','system'));
-        }
-        //$this->response->add_fields($scope_fields, $scope_tab ? 'scope' : false, 'scope');
         $this->response->add_fields($scope_fields, false, 'scope');
-        /*if ($is_layout) {
-            $this->response->add_field(array(
-               'type' => 'bool',
-                'name' => 'create_inherited',
-                'label' => 'Create inherited'
-            ));
-            if ($infoblock['parent_infoblock_id']) {
-                $this->response->add_field(array(
-                   'type' => 'bool',
-                    'name' => 'delete_inherited',
-                    'label' => 'Delete inherited'
-                ));
-            }
-        }*/
         if ($input['settings_sent'] == 'true') {
-            fx::log('ib and input', $infoblock, $input);
             if ($is_layout) {
                 $this->response->set_reload(true);
                 $layouts = $this->_get_layouts($input['page_id']);
-                fx::log('curr layout id', $infoblock['id']);
                 if ($infoblock['id'] && $input['visual']['template'] != $i2l['template']) {
                     if (!$this->_compare_scope($input['scope']['complex_scope'], $infoblock)) {
                         if ($this->_compare_templates($input['visual']['template'], end($layouts)) && $infoblock['parent_infoblock_id'] != 0) {
@@ -323,32 +303,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                     }
                 }
             }
-
-            /*
-            if (
-                    $input['delete_inherited'] && 
-                    $infoblock['parent_infoblock_id'] != 0
-                ) {
-                $infoblock->delete();
-                $this->response->set_status_ok();
-                return;
-            }
-            $inherit_mode = $input['create_inherited'];
             
-            
-            if ($inherit_mode) {
-                $source_ib = $infoblock;
-                $source_i2l = $i2l;
-                $infoblock = fx::data('infoblock')->create(array(
-                    'parent_infoblock_id' => $source_ib['id'],
-                    'site_id' => $source_ib['site_id'],
-                    'checked' => true
-                ));
-                $i2l = fx::data('infoblock_visual')->create(array(
-                    'layout_id' => $source_i2l['layout_id']
-                ));
-            }
-            */
             $infoblock['name'] = $input['name'];
             $action_params = array();
             if (!$is_layout && $settings && is_array($settings)) {
@@ -632,12 +587,6 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
      * Получение полей формы для вкладки "Как показывать"
      */
     protected function _get_format_fields(fx_infoblock $infoblock, $area_meta = null) {
-        /*$area_size = null;
-        if ($area_meta) {
-            $area_size = fx_template_suitable::get_size($area_meta['size']);
-        }
-         * 
-         */
         $i2l = $infoblock->get_visual();
         $fields = array(
             array(
@@ -685,6 +634,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         // Собираем доступные шаблоны
         $controller = fx::controller($controller_name.'.'.$action_name);
         $tmps = $controller->get_available_templates($layout_name, $area_meta);
+        //fx::log('found tmps', $tmps, $i2l['template']);
         if ( !empty($tmps) ) {
             foreach ( $tmps as $template ) {
                 $templates[$template['full_id']] = $template['name'];
@@ -698,7 +648,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             'values' => $templates,
             'value' => $i2l['template']
         );
-        if ($controller_name != 'layout') {
+        if ($controller_name != 'layout' && (count($wrappers) > 1 || !isset($wrappers['']))) {
             $fields []= array(
                 'label' => fx::alang('Block wrapper','system'),
                 'name' => 'wrapper',
