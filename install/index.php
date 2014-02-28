@@ -627,9 +627,9 @@ function fx_install_db($dir = 'sql/', $level = 0) {
 function fx_update_db() {
 	// update data
     $sql = array(
-		"UPDATE `fx_site` SET `domain` = '" . mysql_real_escape_string($_SERVER['HTTP_HOST']) . "' WHERE `id` = 15",
+		"UPDATE `fx_site` SET `domain` = '" . mysql_real_escape_string($_SERVER['HTTP_HOST']) . "' WHERE `id` = 18",
 		"UPDATE `fx_site` SET `domain` = '" . mysql_real_escape_string('alt.'.$_SERVER['HTTP_HOST']) . "' WHERE `id` = 1",
-		"UPDATE `fx_content_user` SET `password` = '" . md5($_SESSION['pwd']) . "', `email` = '" . mysql_real_escape_string( fx_post_get('email') ) . "' WHERE `login` = 'admin'",
+		"UPDATE `fx_content_user` SET `password` = '" . md5($_SESSION['pwd']) . "', `email` = '" . mysql_real_escape_string( fx_post_get('email') ) . "' WHERE `email` = 'admin@floxim.loc'",
 		"UPDATE `fx_settings` SET `value` = '" . mysql_real_escape_string( fx_post_get('email') ) . "' WHERE `key` = 'spam_from_email'"
 	);
 	
