@@ -1,6 +1,6 @@
 <div fx:template="record" class="vacancy_record_wrap">
 	{css}listing.css{/css}
-	<div fx:template="item" class="vacancy_record">
+	<div fx:item class="vacancy_record">
 	   <h2>{$position}</h2>
 	   <div class="text-block">
 	       <h3>Responsibilities</h3>

@@ -91,17 +91,62 @@ class fx_template_fsm {
         $this->prev_state = null;
         $this->position = 0;
         $this->state = $this->init_state;
-        $parts = $this->split_string($string);
+        $this->parts = $this->split_string($string);
         if ($this->debug) {
-            fx::debug($parts);
+            fx::debug($this->parts);
         }
-        foreach ($parts as $ch) {
+        /*
+        foreach ($this->parts as $ch) {
             $this->position += mb_strlen($ch);
             $this->step($ch);
+        }
+         * 
+         */
+        while ( ($ch = current($this->parts)) !== false) {
+            $this->position += mb_strlen($ch);
+            $this->step($ch);
+            next($this->parts);
         }
         return $this->res;
     }
     
+    public function get_next($count = 1) {
+        $moved = 0;
+        $res = array();
+        for ($i = 0; $i < $count; $i++) {
+            $item = next($this->parts);
+            if ($item === false) {
+                end($this->parts);
+                break;
+            }
+            $res[]= $item;
+            $moved++;
+        }
+        for ($i = 0; $i < $moved; $i++) {
+            prev($this->parts);
+        }
+        return $res;
+    }
+    
+    public function get_prev($count = 1) {
+        $moved = 0;
+        $res = array();
+        for ($i = 0; $i < $count; $i++) {
+            $item = prev($this->parts);
+            if ($item === false) {
+                reset($this->parts);
+                break;
+            }
+            $res[]= $item;
+            $moved++;
+        }
+        for ($i = 0; $i < $moved; $i++) {
+            next($this->parts);
+        }
+        return $res;
+    }
+
+
     public function step($ch) {
         $callback_res = false;
         if (!isset($this->rules[$this->state])) {

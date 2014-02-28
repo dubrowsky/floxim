@@ -12,7 +12,7 @@ register_shutdown_function(function() {
         for ($i = 0; $i < $ob_level; $i++) {
             $res .= ob_get_clean();
         }
-        fx::log('down', $res, debug_backtrace()); 
+        fx::log('down', $res, debug_backtrace(), $_SERVER, $_POST); 
     }
 });
 

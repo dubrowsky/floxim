@@ -2,7 +2,7 @@
     fx:template="award_record"
     fx:of="award.record"
     fx:omit="true">
-    <div fx:template="item" 
+    <div fx:item 
         class="clearfix award-record">
         <h1 class="no-top-margin">{$name}</h1>
         <h3>{$year}</h3>

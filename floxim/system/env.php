@@ -1,5 +1,5 @@
 <?php
-class fx_system_env extends fx_system {
+class fx_system_env {
   protected $current = array();
 
   

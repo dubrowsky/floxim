@@ -2,7 +2,7 @@
     fx:template="person_record"
     fx:of="person.record"
     fx:omit="true">
-    <div fx:template="item" 
+    <div fx:item 
         class="person-record">
         <h2>{$position}</h2>
         <h3>{$company}</h3>

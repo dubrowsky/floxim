@@ -410,7 +410,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             $result['header'] = ' <a class="back">'.fx::alang('Adding infoblock','system').'</a>';
             $result['header'] .= ' / '.$action_name;
         } else {
-            $result['header'] = 'Settings / '.$action_name;
+            $result['header'] = 'Settings / <span title="'.$infoblock['id'].'">'.$action_name.'</span>';
         }
         
         if ($input['id']) {

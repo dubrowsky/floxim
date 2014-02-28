@@ -1,6 +1,5 @@
 <?php
-
-class fx_system_mail extends fx_system {
+class fx_system_mail {
 
     protected $default_from = '';
     protected $default_from_name = '';
@@ -90,5 +89,3 @@ class fx_system_mail extends fx_system {
     }
 
 }
-
-?>

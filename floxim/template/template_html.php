@@ -269,7 +269,6 @@ class fx_template_html {
             }
         });
         $res = $tree->serialize();
-        fx::log($res);
         return $res;
     }
     

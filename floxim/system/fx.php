@@ -153,7 +153,6 @@ class fx {
     }
     
     /**
-     * @todo Пока держим env внутри fx_core, позже надо тоже перетащить 
      * Вызов без параметров - вернуть объект, с параметрами - получить/установить свойство
      * @param string $prop_name свойство
      * @param mixed $value установить значение
@@ -327,12 +326,13 @@ class fx {
     /*
      * @return fx_core
      */
-    public static function core() {
-        static $core = false;
-        if ($core === false) {
-            $core = new fx_core();
+    public static function load() {
+        static $loader = false;
+        if ($loader === false) {
+            require_once fx::config()->SYSTEM_FOLDER . 'loader.php';
+            $loader = new fx_loader();
         }
-        return $core;
+        return $loader;
     }
 
     public static function lang ( $string = null, $dict = null) {

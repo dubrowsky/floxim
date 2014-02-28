@@ -1,5 +1,5 @@
 <div class="news_record">
-    <div class="news" fx:template="item">
+    <div class="news" fx:item>
         <div class="date">
             {$publish_date|'d.m.Y'} {if $metatype}&bull; {$metatype}{/if}
         </div>

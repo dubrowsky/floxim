@@ -3,7 +3,7 @@
     fx:of="product.record"
     fx:omit="true">
     <div
-    	fx:template="item" 
+    	fx:item 
     	class="product-record">
 		<div class="photo">
             <img src="{$image}" alt="{$name}">

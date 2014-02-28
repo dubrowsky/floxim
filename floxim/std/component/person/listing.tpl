@@ -1,5 +1,5 @@
 <div fx:template="list" class="person_list">
-    <div fx:template="item" class="person">
+    <div fx:item class="person">
         <h2><a href="{$url}">{$full_name}Unnamed article{/$}</a></h2>
         
         <div class="photo">

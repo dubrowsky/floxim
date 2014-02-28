@@ -1,6 +1,6 @@
 <div fx:template="record" class="project_record_wrap">
 	{css}listing.css{/css}
-	<div fx:template="item" class="project_record">
+	<div fx:item class="project_record">
 		<div class="left_block">
 		  <div class="year">{$date|'d.m.Y'}</div>
 		</div>

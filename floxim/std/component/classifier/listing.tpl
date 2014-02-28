@@ -4,8 +4,8 @@
     fx:name="Classifier" 
     class="classifier">
         {%tags_label}Classifieres:{/%} 
-        <a fx:template="item" href="{$url}">
+        <a fx:item href="{$url}">
              {$name}
         </a>
-        <span fx:template="separator">, </span>
+        <span fx:separator>, </span>
 </div>

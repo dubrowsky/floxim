@@ -17,7 +17,7 @@
         'July,August,September,October,November,December'
     );
     ?>
-    <div fx:template="item" class="year{if $active || $expand == 'true'} year_active{/if}">
+    <div fx:item class="year{if $active || $expand == 'true'} year_active{/if}">
         <div class="year_title">{$year}</div>
         <div class="months">
             <div fx:each="$months">

@@ -2,7 +2,7 @@
 require_once (dirname(__FILE__).'/template_fsm.php');
 class fx_template_expression_parser extends fx_template_fsm {
     
-    public $split_regexp = '~(\$\{|\`|\$|\s+|\.|\,|[\[\]]|[\'\"]|[\{\}]|[+=&\|\)\(-])~';
+    public $split_regexp = '~(\$\{|\`|\$|\s+|\.|\,|[\[\]]|[\'\"]|[\{\}]|[+=&\|\)\(-]|[^a-z0-9_])~i';
     
     const CODE = 1;
     const VAR_NAME = 2;
@@ -56,23 +56,41 @@ class fx_template_expression_parser extends fx_template_fsm {
     
     public function parse($string) {
         $this->root = self::node(self::T_ROOT);
+        $this->stack = array();
         $this->push_stack($this->root);
         parent::parse($string);
         return $this->root;
     }
     
     public function start_arr($ch) {
+        $is_dot = $ch == '.';
         // $item["olo".$id] - ignore dot
-        if ($ch == '.' && $this->state == self::ARR_INDEX && $this->curr_node->starter != '.') {
+        if ($is_dot && $this->state == self::ARR_INDEX && $this->curr_node->starter != '.') {
             return false;
         }
         if (
-                ($ch == '.' && $this->state == self::ARR_INDEX) ||
+                ($is_dot && $this->state == self::ARR_INDEX) ||
                 $this->curr_node->starter == '.'
             ) {
             $this->end_arr();
         }
         
+        // test for $loop.items.count()
+        if ($is_dot) {
+            list($method_name, $bracket) = $this->get_next(2);
+            $is_method = preg_match("~^[a-z0-9_]+$~", $method_name) && $bracket == '(';
+            if ($is_method) {
+                $this->end_var('->');
+                return;
+            }
+        }
+        // test for $_._.olo
+        // if var still has no name - just continue without switching state
+        if ($this->curr_node->type == self::T_VAR && count($this->curr_node->name) == 0) {
+            if ($ch == '.') {
+                return;
+            }
+        }
         $arr = self::node(self::T_ARR);
         $arr->starter = $ch;
         $this->curr_node->add_child($arr);
@@ -114,12 +132,23 @@ class fx_template_expression_parser extends fx_template_fsm {
     public function end_arr() {
         $this->pop_stack();
         $this->pop_state();
+        // $_[$x] -> $this->v($this->v('x'), 0)
+        if ($this->curr_node->type == self::T_VAR && count($this->curr_node->name) == 0) {
+            $index_expr = $this->curr_node->children;
+            $this->curr_node->children = array();
+            $this->curr_node->last_child = null;
+            $this->curr_node->name = $index_expr;
+        }
     }
     
     public function default_callback($ch) {
         switch ($this->state) {
             case self::VAR_NAME:
-                $this->curr_node->name []= $ch;
+                if ($ch == '_') {
+                    $this->curr_node->context_offset++;
+                } else {
+                    $this->curr_node->name []= $ch;
+                }
                 break;
             case self::CODE: case self::ESC:
                 $this->read_code($ch);
@@ -152,6 +181,12 @@ class fx_template_expression_parser extends fx_template_fsm {
     
     public $local_vars = array('this');
     
+    public function build($expr) {
+        $tree = $this->parse($expr);
+        $res = $this->compile($tree);
+        return $res;
+    }
+    
     public function compile($node) {
         $res = '';
         $proc = $this;
@@ -169,6 +204,7 @@ class fx_template_expression_parser extends fx_template_fsm {
             case self::T_VAR:
                 $is_local = false;
                 $var_name = '';
+                $context_offset = $node->context_offset > -1 ? ", ".$node->context_offset : '';
                 // simple var
                 if (count($node->name) == 1 && is_string($node->name[0])) {
                     $var_name = $node->name[0];
@@ -176,15 +212,28 @@ class fx_template_expression_parser extends fx_template_fsm {
                         $is_local = true;
                         $var = '$'.$var_name;
                     } else {
-                        $var = '$this->v("'.$var_name.'")';
+                        if (!is_numeric($var_name)) {
+                            $var_name = '"'.$var_name.'"';
+                        }
+                        $var = '$this->v('.$var_name.$context_offset.')';
                     }
                 } 
                 // complex var such as $image_$id
                 else {
+                    $var_name_parts = array();
                     foreach ($node->name as $np) {
-                        $var_name .= is_string($np) ? '"'.$np.'"' : '.'.$this->compile($np);
+                        if (is_string($np) && !is_numeric($np)) {
+                            $np = '"'.$np.'"';
+                        } else {
+                            $np = $this->compile($np);
+                        }
+                        $var_name_parts []= $np;
                     }
-                    $var = '$this->v('.$var_name.')';
+                    $var_name = join(".", $var_name_parts);
+                    if (empty($var_name)) {
+                        $var_name = 'null';
+                    }
+                    $var = '$this->v('.$var_name.$context_offset.')';
                 }
                 
                 if ($node->last_child) {
@@ -218,6 +267,9 @@ class fx_template_expression_node {
     public $type;
     public function __construct($type = fx_template_expression_parser::T_CODE) {
         $this->type = $type;
+        if ($type == fx_template_expression_parser::VAR_NAME) {
+            $this->context_offset = -1;
+        }
     }
     public $last_child = null;
     //public $children = array();
@@ -242,20 +294,3 @@ class fx_template_expression_node {
         return $child;
     }
 }
-/*
-require_once '../../boot.php';
-fx::debug('start');
-
-$ep = new fx_template_expression_parser();
-//$str = '$arr["xx_".$b]["yy"] > strlen($pic[3], $gic_$id)';
-$str = '$image';
-$tree = $ep->parse($str);
-fx::debug($str, $tree, $ep->compile($tree));
-foreach (range(0, 1000) as $n) {
-    $tree = $ep->parse($str);
-    $res = $ep->compile($tree);
-}
-fx::debug($res);
-die();
- * 
- */

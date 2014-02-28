@@ -2,7 +2,7 @@
     fx:template="project_list"
     fx:of="project.list"
     fx:omit="true">
-    <div fx:template="item" 
+    <div fx:item 
         class="project-item clearfix">
         <div class="col-xs-3">
             <img src="{$image|'width:200px,crop:middle'}" alt="{$name}">

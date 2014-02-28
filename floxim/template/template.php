@@ -63,8 +63,49 @@ class fx_template {
     
     protected $context_stack = array();
     
+    
     public static $v_count = 0;
-    public function v($name) {
+    public function v($name = null, $context_offset = null) {
+        // neither var name nor context offset - return current context
+        if (!$name && !$context_offset ) {
+            return end($this->context_stack);
+        }
+        
+        //
+        if (!is_null($context_offset)) {
+            $context_position = -1;
+            for ($i = count($this->context_stack) - 1; $i >= 0; $i--) {
+                $cc = $this->context_stack[$i];
+                if ( ! $cc instanceof fx_template_loop) {
+                    $context_position++;
+                }
+                if ($context_position == $context_offset) {
+                    if (!$name) {
+                        return $cc;
+                    }
+                    if (isset($cc[$name])) {
+                        return $cc[$name];
+                    }
+                } elseif ($context_position > $context_offset) {
+                    return null;
+                }
+                
+                //fx::debug($context_position, $context_offset, $cc);
+                /*
+                if ($context_position < $context_offset) {
+                    continue;
+                }
+                if ($context_position == $context_offset) {
+                    if (isset($cc[]))
+                }
+                if (isset($this->context_stack[$i][$name])) {
+                    return $this->context_stack[$i][$name];
+                }
+                 * 
+                 */
+            }
+        }
+        
         for ($i = count($this->context_stack) - 1; $i >= 0; $i--) {
             if (isset($this->context_stack[$i][$name])) {
                 return $this->context_stack[$i][$name];
@@ -186,7 +227,9 @@ class fx_template {
     }
     
     public function render(array $data = array()) {
-        $this->context_stack[]= $data;
+        if (count($data) > 0) {
+            $this->context_stack[]= $data;
+        }
         /*
         set_error_handler(function() {
             fx::log(func_get_args());

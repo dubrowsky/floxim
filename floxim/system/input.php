@@ -1,16 +1,9 @@
 <?php
-/* $Id: nc_input.class.php 4755 2011-06-01 13:45:23Z denis $ */
-
-
-class fx_system_input extends fx_system {
+class fx_system_input {
 
 
   public function __construct () {
-    // load parent constructor
-    parent::__construct();
-
     $this->prepare_extract ();
-
   }
 
 

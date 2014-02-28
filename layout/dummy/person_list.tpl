@@ -2,7 +2,7 @@
     fx:template="person_list"
     fx:of="person.list"
     fx:omit="true">
-    <div fx:template="item" 
+    <div fx:item 
         class="person-item clearfix">
         <div class="col-xs-3">
             <img src="{$photo|'width:200px,crop:middle'}" alt="{$full_name}">

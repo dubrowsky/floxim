@@ -2,7 +2,7 @@
     fx:template="award_list"
     fx:of="award.list"
     class="award-list">
-    <div fx:template="item" 
+    <div fx:item
         class="award-list-item">
         <div class="photo">
             <img src="{$image|'width:200px,crop:middle'}" alt="{$name}">

@@ -3,7 +3,7 @@
     fx:of="product.list"
     class="product-list">
 	<div
-		fx:template="item" 
+		fx:item 
 		class="product-list-item">
 		<div class="photo">
 			<img src="{$image}" alt="{$name}">

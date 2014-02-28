@@ -1,6 +1,6 @@
 <div fx:template="record" class="company_item_record_wrap">
 	{css}listing.css{/css}
-	<div fx:template="item" class="company_item_record">
+	<div fx:item class="company_item_record">
 	  <div class="image">
 	      <img src="{$logo}" alt="" />
 	  </div>

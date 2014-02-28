@@ -3,7 +3,7 @@
     fx:name="Vacancy Record"
     fx:of="vacancy.record"
     fx:omit="true">
-    <div  fx:template="item" class="vacancy-record">
+    <div  fx:item class="vacancy-record">
         <h3>{$position}</h3>
         <div>{$description}<p></p>{/$}</div>
         <h4>{%responsibilities_$id}Responsibilities{/%}</h4>

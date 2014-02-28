@@ -6,7 +6,7 @@
     fx:omit="true"
     >
     <div
-        fx:template="item"
+        fx:item
         class="banner">
         <img src="{%banner_image_$id|'crop:middle,width:1160,min-height:350'}<?=$template_dir?>img/120110-G-IA163-068-Healy-escorts-Renda.jpg{/%}">
         <div class="caption">

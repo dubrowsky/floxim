@@ -3,7 +3,7 @@
     fx:of="news.record"
     fx:omit="true">
 	<div
-		fx:template="item"
+		fx:item
 	    class="news-record">
 		<div class="photo">
 			<img src="{$image}" alt="{$name}">

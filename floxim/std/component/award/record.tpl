@@ -1,6 +1,6 @@
 <div fx:template="record" class="award_record_wrap">
 	{css}listing.css{/css}
-	<div fx:template="item" class="award_record">
+	<div fx:item class="award_record">
 		<div class="left_block">
 		  <div class="year">{$year}</div>
 		</div>

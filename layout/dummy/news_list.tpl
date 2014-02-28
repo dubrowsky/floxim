@@ -2,7 +2,7 @@
     fx:template="news_list"
     fx:of="news.list"
     fx:omit="true">
-    <div fx:template="item" 
+    <div fx:item 
         class="news-item clearfix">
         <div class="col-xs-3">
             <img src="{$image|'width:200px,crop:middle'}" alt="{$name}">

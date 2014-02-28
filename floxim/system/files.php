@@ -1,6 +1,5 @@
 <?php
-
-class fx_system_files extends fx_system {
+class fx_system_files {
     public $ftp_host;
     public $ftp_port;
     public $ftp_path;
@@ -250,9 +249,6 @@ class fx_system_files extends fx_system {
      */
 
     public function __construct($user = '', $password = '', $host = null, $port = 21, $ftp_path = '') {
-        // load parent constructor
-        parent::__construct();
-        
         $this->ftp_user = $user;
         $this->ftp_password = $password;
         $this->ftp_port = $port;
@@ -1330,5 +1326,3 @@ class fx_system_files extends fx_system {
 class fx_exception_files extends fx_exception {
 
 }
-
-?>

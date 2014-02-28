@@ -3,7 +3,7 @@
     fx:of="product.record"
     fx:omit="true" >
     <div
-        fx:template="item"
+        fx:item
         class="col-xs-12">
         <h1 class="no-top-margin">{$name}</h1>
         <div class="col-xs-6">

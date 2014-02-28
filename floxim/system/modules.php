@@ -1,6 +1,5 @@
 <?php
-
-class fx_system_modules extends fx_system {
+class fx_system_modules {
 
     public function get_data() {
         static $all_modules_data = false;

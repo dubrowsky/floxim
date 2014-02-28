@@ -1,180 +1,9 @@
 <?php
-class fx_core extends fx_system {
-
-    /** @var fx_system_page */
-    public $page;
-
-    /** @var fx_system_eventmanager */
-    public $event;
-
-    /** @var fx_system_modules */
-    public $modules;
-
-    /** @var fx_system_env */
-    public $env;
-
-    /** @var fx_system_util */
-    public $util;
-    protected $settings; // значение настроек
-    protected $admin_mode = false;
-    protected $data_classes = array();
+class fx_loader {
 
     public function __construct() {
-        parent::__construct();
         spl_autoload_register(array($this, 'load_class'));
     }
-
-    /**
-     * Load system extension
-     *
-     */
-    public function load($object) {
-        $class_name = "fx_system_".$object;
-        $this->$object = new $class_name();
-        return $this->$object;
-    }
-
-    /**
-     * Получить значение параметра из настроек
-     * @param string ключ
-     * @param string имя модуля ( system - ядро )
-     * @return mixed значение параметра
-     */
-    public function get_settings($item = '', $module = '') {
-
-        if (empty($this->settings)) {
-            $res = fx::db()->get_results("SELECT `key`, `module`, `value` FROM `{{settings}}`");
-            $count = fx::db()->row_count();
-            for ($i = 0; $i < $count; $i++) {
-                $this->settings[$res[$i]['module']][$res[$i]['key']] = $res[$i]['value'];
-            }
-        }
-
-        // по умолчанию - ядро ( 1 и true нужно для обратной совместимости )
-        if (!$module || $module === 1 || $module === true) {
-            $module = 'system';
-        }
-
-
-        // if item requested return item value
-        if ($item && is_array($this->settings[$module])) {
-            return array_key_exists($item, $this->settings[$module]) ? $this->settings[$module][$item] : false;
-        }
-
-        // return all settings
-        return $this->settings[$module];
-    }
-
-    /**
-     * Установить значние параметра
-     * @param string ключ
-     * @param string значние параметра
-     * @param string модуль
-     * @return bool
-     */
-    public function set_settings($key, $value, $module = 'system') {
-        // по умолчанию - ядро системы
-        if (!$module) $module = 'system';
-        // обновляем состояние
-        $this->settings[$module][$key] = $value;
-        // подготовка записи в БД
-        $db = fx::db();
-        $key = $db->escape($key);
-        $value = $db->prepare($value);
-        $module = $db->escape($module);
-
-        $id = $db->get_var("SELECT `id` FROM `{{settings}}` WHERE `key` = '".$key."' AND `module` = '".$module."' ");
-        if ($id) {
-            $db->query("UPDATE `{{settings}}` SET `value` = '".$value."' WHERE `id` = '".$id."' ");
-        } else {
-            $db->query("INSERT INTO `{{settings}}`(`key`, `module`, `value`)
-                        VALUES('".$key."','".$module."','".$value."') ");
-        }
-
-        return true;
-    }
-
-    /**
-     * Удаление параметра
-     * @param string ключ
-     * @param string модуль
-     * @return int
-     */
-    public function drop_settings($key, $module = 'system') {
-        // по умолчанию - ядро системы
-        if (!$module) $module = 'system';
-        // обновляем состояние
-        unset($this->settings[$module][$key]);
-        // подготовка запроса к БД
-        $db = fx::db();
-        $key = $db->escape($key);
-        $module = $db->escape($module);
-
-        $db->get_query("DELETE FROM `{{settings}}` WHERE `key` = '".$key."' AND `module` = '".$module."' ");
-
-        return $db->affected_rows;
-    }
-
-    /**
-     * @return fx_core object
-     */
-    public static function get_object() {
-        static $storage;
-
-        if (!isset($storage)) {
-            $storage = new self();
-        }
-
-        return $storage;
-    }
-
-    /**
-     * Метод провреят, установлено ли расширение php
-     * @param string имя расширения
-     * @return bool
-     */
-    public function php_ext($name) {
-        static $ext = array();
-        if (!array_key_exists($name, $ext)) {
-            $ext[$name] = extension_loaded($name);
-        }
-
-        return $ext[$name];
-    }
-
-    public function is_admin_mode() {
-        return $this->admin_mode;
-    }
-
-    public function set_admin_mode() {
-        $this->admin_mode = 1;
-    }
-    
-    public function __get($name) {
-    	// объект загружен
-        if (isset($this->data_classes[$name])) {
-            return $this->data_classes[$name];
-        }
-
-        // попытка загрузить объект для работы с данными
-        try {
-            $classname = 'fx_data_'.$name;
-            $data_obj = new $classname();
-            $this->data_classes[$name] = $data_obj;
-            return $data_obj;
-        } catch (Exception $e) {
-            $trace = debug_backtrace();
-            trigger_error('Undefined class property fx_core->'.$name.
-                    ' in '.$trace[0]['file'].
-                    ' on line '.$trace[0]['line'], E_USER_NOTICE);
-            return null;
-        }
-    }
-
-    public function __isset($name) {
-        return isset($this->{$name});
-    }
-
     
     protected static $classes_with_no_file = array();
     
@@ -187,7 +16,7 @@ class fx_core extends fx_system {
         }
 
         if (in_array($classname, self::$classes_with_no_file)) {
-            throw new fx_exteption_classload('AGAIN: Unable to load class '.$classname);
+            throw new fx_exception_classload('AGAIN: Unable to load class '.$classname);
         }
         $file = self::get_class_file($classname);
         if (!$file) {
@@ -195,7 +24,7 @@ class fx_core extends fx_system {
         }
 
         if (!file_exists($file)) {
-            $e = new fx_exteption_classload('Unable to load class '.$classname);
+            $e = new fx_exception_classload('Unable to load class '.$classname);
             $e->class_file = $file;
             self::$classes_with_no_file[]= $classname;
             throw $e;
@@ -231,9 +60,9 @@ class fx_core extends fx_system {
             'patch',
             'lang_string',
             'lang'
-        ); //'user'
+        );
 
-        $classname = str_replace(array('nc_', 'fx_'), '', $classname);
+        $classname = str_replace('fx_', '', $classname);
 
         do {
             if ( $classname == 'collection') {
@@ -251,10 +80,6 @@ class fx_core extends fx_system {
             if (preg_match("~^template_(.+)$~", $classname, $tpl_name)) {
                 fx_template_loader::autoload($tpl_name[1]);
                 return;
-                $file = fx_template_processor::get_template_file($tpl_name[1]);
-                break;
-                //echo "<pre>" . htmlspecialchars(print_r($file, 1)) . "</pre>";
-                //die();
             }
             
             if (in_array($classname, $essences)) {
@@ -391,11 +216,9 @@ class fx_exception extends Exception {
 
 }
 
-class fx_exteption_classload extends fx_exception {
+class fx_exception_classload extends fx_exception {
 	public $class_file = false;
 	public function get_class_file() {
 		return $this->class_file;
 	}
 }
-
-?>

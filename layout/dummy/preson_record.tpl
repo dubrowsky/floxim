@@ -2,7 +2,7 @@
     fx:template="person_record"
     fx:of="person.record"
     fx:omit="true">
-    <div fx:template="item" 
+    <div fx:item 
         class="clearfix person-record">
         <h1 class="no-top-margin">{$full_name}</h1>
         <h2>{$position}</h2>

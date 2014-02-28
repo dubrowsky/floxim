@@ -3,7 +3,7 @@
     fx:of="news.list"
     class="news-list">
 	<div
-		fx:template="item" 
+		fx:item 
 		class="news-list-item">
 		<div class="photo">
 			<img src="{$image}" alt="{$name}">

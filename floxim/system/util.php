@@ -1,6 +1,5 @@
 <?php
-
-class fx_system_util extends fx_system {
+class fx_system_util {
 
     public function is_even($input) {
         return (bool) ( round($input / 2) == $input / 2 );
@@ -200,9 +199,3 @@ class fx_system_util extends fx_system {
     }
 
 }
-
-function dump($var) {
-    print "<hr><xmp>".print_r($var, 1)."</xmp><hr>";
-}
-
-?>

@@ -2,7 +2,7 @@
     fx:template="project_record"
     fx:of="project.record"
     fx:omit="true">
-    <div fx:template="item" 
+    <div fx:item 
         class="project-record">
         <h1>{$name}</h1>
         <h2>{$client}</h2>

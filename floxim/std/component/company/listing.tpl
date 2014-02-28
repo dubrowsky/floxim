@@ -1,8 +1,8 @@
 <div fx:template="list" class="company_list">
 	{css}listing.css{/css}
-	<div fx:template="item" class="company_item">
+	<div fx:item class="company_item">
 		<div class="image">
-			<img src="{$logo}" alt="" />
+                    <img src="{$logo}" alt="" />
 		</div>
 		<div class="description">
 		    <a href="{$url}"><h2>{$name}Name{/$}</h2></a>

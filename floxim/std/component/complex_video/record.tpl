@@ -1,5 +1,5 @@
 <div class="video_record">
-    <div class="video" fx:template="item">
+    <div class="video" fx:item>
         <div class="video_code">
             {$embed_html}
         </div>

@@ -1,5 +1,5 @@
 <?php
-class fx_system_page extends fx_system {
+class fx_system_page {
 
     // title, keywords, description
     protected $metatags = array();
@@ -266,10 +266,12 @@ class fx_system_page extends fx_system {
     }
 
     public function post_process($buffer) {
-
+        /*
         if ( fx::core()->is_admin_mode() ) {
             return $buffer;
         }
+         * 
+         */
 
         if ($this->metatags['seo_title']) {
             $r = "<title>".strip_tags($this->metatags['seo_title'])."</title>".PHP_EOL;;

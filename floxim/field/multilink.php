@@ -17,7 +17,7 @@ class fx_field_multilink extends fx_field_baze {
             $related_relation = fx::data($rel[1])->relations();
             $linker_field = $related_relation[$rel[3]][2];
             
-            $this->_js_field['name_postfix'] = 'f_'.$linker_field;
+            $this->_js_field['name_postfix'] = $linker_field;
             if (isset($content[$this['name']])) {
                 $this->_js_field['value'] = array();
                 $linkers = $content[$this['name']]->linker_map;
@@ -243,90 +243,99 @@ class fx_field_multilink extends fx_field_baze {
         parent::_before_save();
     }
     
+    
+    
     /*
      * Преобразует значение из формы в коллекцию
      * Кажется, пока заточен только под MANY_MANY
      */
     public function get_savestring($content) {
+        $rel = $this->get_relation();
+        $is_mm = $rel[0] == fx_data::MANY_MANY;
+        if ($is_mm) {
+            return $this->_append_many_many($content);
+        }
+        return $this->_append_has_many($content);
+    }
+    
+    /*
+     * Process value of many-many relation field
+     * such as post - tag_linker - tag
+     */
+    protected function _append_many_many($content) {
         // дергаем предыдущее значение,
         // чтобы заполнить его
-        $content->get($this['name']);
-        
+        $existing_items = $content->get($this['name']);
         $rel = $this->get_relation();
-        
-        $is_mm = $rel[0] == fx_data::MANY_MANY;
-        
         // конечный тип (для полей много-много)
-        $end_data_type = $this->get_end_data_type();
+        $linked_data_type = $this->get_end_data_type();
         // связующий тип, который непосредственно ссылается
-        $first_data_type = $rel[1];
-        
-        
-        /*
-         * many_many, eg. tag-tag_post-post:
-         * $values = array(
-         *      123 => array('tag_id' => 1, 'comment' => 'olo'),
-         *      124 => array('tag_id' => 2, 'comment' => 'trolo'),
-         *      new_1 => array('tag_id' => 3, 'comment' => ''),
-         *      new_2 => array('tag_id' => array('title' => 'New tag'), 'comment' => '')
-         * );
-         * 
-         * has_many, eg. link-person:
-         * $values = array(
-         *      123 => array('url' => 'http://olo.ru/', 'title' => 'Olo site'),
-         *      new_1 => array('url' => 'http://trolo.ru/', 'title' => 'Trolo site')
-         * );
-         */
-        
-        // собираем существующие значения, чтоб не запрашивать в цикле
-        $existing_ids = array();
-        foreach (array_keys($this->value) as $item_id) {
-            if (is_numeric($item_id)) {
-                $existing_ids []= $item_id;
-            }
-        }
-        $existing_items = fx::collection();
-        if (count($existing_ids) > 0) {
-            $existing_items = fx::data($first_data_type, $existing_ids);
-        }
+        $linker_data_type = $rel[1];
+        // название свойства линкера, куда попадает конечный объект
+        $linker_prop_name = $rel[3];
+        // value to be returned
         $new_value = new fx_collection();
-        if ($is_mm) {
-            $new_value->linker_map = new fx_collection();
-            // Находим название для поля, например "tag_id"
-            // что-то страшненько...
-            $end_link_field_name = 'f_'.fx::data(
-                    'component', preg_replace('~^content_~', '', $rel[1])
-                )->all_fields()->find_one(function($i) use ($rel) {
-                    //!!! какая-то жесть
-                    if (isset($i['format']['prop_name']))
-                        return $i['format']['prop_name'] == $rel[3];
-                    return false;
-                })->get('name');
-        }
+        $new_value->linker_map = new fx_collection();
+        // Находим название для поля, например "tag_id"
+        // что-то страшненько...
+        $linker_com_name = preg_replace('~^content_~', '', $linker_data_type);
+        $end_link_field_name = 
+            fx::data('component', $linker_com_name)
+            ->all_fields()
+            ->find_one(function($i) use ($linker_prop_name) {
+                //!!! какая-то жесть
+                return isset($i['format']['prop_name']) && $i['format']['prop_name'] == $linker_prop_name;
+            })
+            ->get('name');
         $linker_infoblock_id = null;
-        foreach ($this->value as $item_id => $item_props) {
-            if (!$linked_item = $existing_items->find_one('id', $item_id)) {
-                if (!$linker_infoblock_id) {
-                    $linker_infoblock_id = $content->get_link_field_infoblock($this['id']);
-                }
-                $linked_item = fx::data($first_data_type)->create();
-                
-                // создание нового конечного объекта для MANY_MANY
-                if ($is_mm && $end_data_type && is_array($item_props[$end_link_field_name])) {
-                    $item_props[$end_link_field_name]['type'] = $end_data_type;
-                    $item_props[$end_link_field_name]['infoblock_id'] = $linker_infoblock_id;
-                } else {
-                    $linked_item['infoblock_id'] = $linker_infoblock_id;
-                }
-            }
+        foreach ($this->value as $item_props) {
+            $linked_props = $item_props[$end_link_field_name];
+            // if the linked entity doesn't yet exist
+            // we get it as an array of values including 'title'
+            $linker_item = null;
             
-            $linked_item->set_field_values($item_props);
-            if ($is_mm) {
-                $new_value[]= $linked_item[$rel[3]];
-                $new_value->linker_map []= $linked_item;
+            if (is_array($linked_props)) {
+                if (!$linked_infoblock_id) {
+                    $linked_infoblock_id = $content->get_link_field_infoblock($this['id']);
+                }
+                $linked_props['type'] = $linked_data_type;
+                $linked_props['infoblock_id'] = $linked_infoblock_id;
             } else {
-                $new_value[]= $linked_item;
+                $linker_item = $existing_items->linker_map->find_one($end_link_field_name, $linked_props);
             }
+            if (!$linker_item) {
+                $linker_item = fx::data($linker_data_type)->create();
+            }
+            $linker_item->set_field_values(
+                array($end_link_field_name => $linked_props), 
+                array($end_link_field_name)
+            );
+            $new_value[]= $linker_item[$linker_prop_name];
+            $new_value->linker_map []= $linker_item;
+        }
+        //fx::log($new_value);
+        return $new_value;
+    }
+    
+    /*
+     * Process value of has-many relation field
+     * such as news - comment
+     */
+    protected function _append_has_many($content) {
+        // конечный тип (для полей много-много)
+        $linked_type = 'content_'.$this->get_related_component()->get('keyword');
+        $new_value = fx::collection();
+        foreach ($this->value as $item_id => $item_props) {
+            $linked_finder = fx::data($linked_type);
+            $linked_item = null;
+            if (is_numeric($item_id)) {
+                $linked_item = $linked_finder->where('id', $item_id)->one();
+            }
+            if (!is_numeric($item_id)) {
+                $linked_item = $linked_finder->create();
+            }
+            $linked_item->set_field_values($item_props);
+            $new_value[]= $linked_item;
         }
         return $new_value;
     }
@@ -337,10 +346,13 @@ class fx_field_multilink extends fx_field_baze {
         if (isset($relation[4])) {
             return $relation[4];
         }
+        /*
         // !!! старый вариант без явного хранения типа данных для many-many
         $related_relation = fx::data($relation[1])->relations();
         $end_data_type = $related_relation[$relation[3]][1];
         return $end_data_type;
+         * 
+         */
     }
     
     /*

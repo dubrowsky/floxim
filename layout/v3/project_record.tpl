@@ -3,7 +3,7 @@
     fx:name="Project Record"
     fx:of="project.record"
     fx:omit="true">
-    <div fx:template="item"  class="project-record">
+    <div fx:item  class="project-record">
         {$short_description}
        {$description} <p></p>{/$}
     </div>

@@ -395,7 +395,7 @@ class fx_template_compiler {
             $code .= $this->_get_token_code($child, $token);
         }
         
-        $code .= "<?}\n?>";
+        $code .= "<?\n}\n?>";
         return $code;
     }
     /*
@@ -429,9 +429,9 @@ class fx_template_compiler {
         $code .=  $is_essence ." = \$".$item_alias." instanceof fx_essence;\n";
         $is_complex = '$'.$item_alias.'_is_complex';
         $code .= $is_complex.' = '.$is_essence.' || is_array($'.$item_alias.') || $'.$item_alias.' instanceof ArrayAccess; '."\n";
-        $code .= 'if ('.$is_complex.") {\n";
-        $code .= '$this->context_stack[]= $'.$item_alias.";\n";
-        $code .= "}\n";
+        //$code .= 'if ('.$is_complex.") {\n";
+        $code .= '$this->context_stack[]= '.$is_complex.' ? $'.$item_alias." : array();\n";
+        //$code .= "}\n";
         $meta_test = "\tif (\$_is_admin && ".$is_essence." ) {\n";
         $code .= $meta_test;
         $code .= "\t\tob_start();\n";
@@ -445,9 +445,9 @@ class fx_template_compiler {
                     ($token->get_prop('subroot') ? 'true' : 'false').
                 ");\n";
         $code .= "\t}\n";
-        $code .= 'if ('.$is_complex.") {\n";
+        //$code .= 'if ('.$is_complex.") {\n";
         $code .= 'array_pop($this->context_stack);'."\n";
-        $code .= "}\n";
+        //$code .= "}\n";
         return $code;
     }
 
@@ -464,7 +464,7 @@ class fx_template_compiler {
         }
         
         if (!$item_alias) {
-            $item_alias = '$item';
+            $item_alias = $arr_id.'_item';
         }
         $item_alias = preg_replace('~^\$~', '', $item_alias);
         if (!$item_key) {
@@ -475,40 +475,20 @@ class fx_template_compiler {
             $extract = true;
         }
         $separator = $this->_find_separator($token);
-        //$counter_id = $item_alias."_index";
-        $code .= "if( " . $arr_id . " instanceof fx_content ) {\n ";
-        $code .= $arr_id . " = array(" . $arr_id . ");\n";
-        $code .= "}\n";
         $code .= "if (is_array(".$arr_id.") || ".$arr_id." instanceof Traversable) {\n";
-        //$code .= '$'.$counter_id." = 0;\n";
-        //$code .= '$'.$item_alias."_total = count(".$arr_id.");\n";
         $loop_id = '$'.$item_alias.'_loop';
         $code .=  $loop_id.' = new fx_template_loop('.$arr_id.");\n";
         $code .= '$this->context_stack[]= '.$loop_id.";\n";
         $code .= "\nforeach (".$arr_id." as \$".$item_key." => \$".$item_alias.") {\n";
         $code .= $loop_id."->_move();\n";
-        /*
-        $code .= '$'.$counter_id."++;\n";
-        $code .= '$this->context_stack[]= array('."\n";
-        $code .= "'".$item_alias."' => \$".$item_alias.",\n";
-        $code .= "'".$item_key."' => \$".$item_key.",\n";
-        $code .= "'".$counter_id."' => \$".$counter_id.",\n";
-        $code .= "'".$item_alias."_is_first' => \$".$counter_id." === 1,\n";
-        $code .= "'".$item_alias."_is_last' => \$".$item_alias."_total == \$".$counter_id.",\n";
-        $code .= "'".$item_alias."_total' => \$".$item_alias."_total\n";
-        $code .= ");\n";
-        */
-        
         // get code for step with scope & meta
         $code .= $this->_get_item_code($token, $item_alias, $counter_id, $arr_id);
         
         if ($separator) {
-            //$code .= 'if (!$this->v("'.$item_alias.'_is_last")) {'."\n";
             $code .= 'if (!'.$loop_id.'->is_last()) {'."\n";
             $code .= $this->_children_to_code($separator);
             $code .= "\n}\n";
         }
-        //$code .= 'array_pop($this->context_stack);'."\n";
         $code .= "}\n"; // close foreach
         $code .= 'array_pop($this->context_stack);'."\n"; // pop loop object
         $code .= "}\n";  // close if
@@ -519,7 +499,6 @@ class fx_template_compiler {
     protected function _token_with_to_code($token) {
         $code = "<?\n";
         $expr = self::parse_expression($token->get_prop('select'));
-        fx::debug($token);
         $item_name = $this->varialize($expr).'_with_item';
         $code .= '$'.$item_name.' = '.$expr.";\n";
         $code .= "if ($".$item_name.") {\n";

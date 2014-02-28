@@ -1,6 +1,5 @@
 <?php
-
-class fx_system_eventmanager extends fx_system {
+class fx_system_eventmanager {
     protected $_listeners = array();
 
     public function listen($event_name, $callback) {
@@ -60,4 +59,3 @@ class fx_system_eventmanager extends fx_system {
         }
     }
 }
-?>

@@ -84,7 +84,7 @@ class fx_config {
         @ini_set("mbstring.internal_encoding", "UTF-8");
         @ini_set("session.name", ini_get("session.hash_bits_per_character") >= 5 ? "sid" : "ced");
         
-        $this->config['DOCUMENT_ROOT'] = rtrim(getenv("DOCUMENT_ROOT"), "/\\");
+        $this->config['DOCUMENT_ROOT'] = DOCUMENT_ROOT;//rtrim(getenv("DOCUMENT_ROOT"), "/\\");
         $this->config['HTTP_HOST'] = getenv("HTTP_HOST");
         $this->config['FLOXIM_FOLDER'] = $this->config['DOCUMENT_ROOT'] . $this->config['SUB_FOLDER'];
 

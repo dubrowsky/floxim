@@ -71,6 +71,7 @@ class fx_content extends fx_essence {
         if (count($values) == 0) {
             return;
         }
+        fx::log('sfv', $values, $saved_fields);
         $fields = $save_fields ? $this->get_fields()->find('name', $save_fields) : $this->get_fields();
         $result = array('status' => 'ok');
         foreach ($fields as $field) {

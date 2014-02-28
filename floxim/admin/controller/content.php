@@ -47,18 +47,20 @@ class fx_controller_admin_content extends fx_controller_admin {
          */
 
         if ($input['data_sent']) {
+            fx::log('ready to save', $content);
             $content->set_field_values($input['content']);
+            fx::log('saving', $content, $input);
             $content->save();
         }
-        //$this->response->add_form_button('save');
-        return array(
-            'status' => 'ok', 
-            'header' => 
-            	($input['content_id'] ? 
-                	fx::alang('Editing ', 'system') :
-                	fx::alang('Adding new ', 'system')
-				). ' '.fx::data('component', $content_type)->get('item_name')
-        );
+        $com_item_name = fx::data('component', $content_type)->get('item_name');
+        $res = array('status' => 'ok');
+        if ($input['content_id']) {
+            $res['header'] = fx::alang('Editing ', 'system') . 
+                    ' <span title="#'.$input['content_id'].'">'.$com_item_name.'</span>';
+        } else {
+            $res['header'] = fx::alang('Adding new ', 'system'). ' '.$com_item_name;
+        }
+        return $res;
     }
 
     public function checked_save($input) {
@@ -158,7 +160,7 @@ class fx_controller_admin_content extends fx_controller_admin {
             }
         }
         $res = $finder->quicksearch($_POST['term']);
-
+        fx::env()->set('complete_ok', true);
         echo json_encode($res);
         die();
     }

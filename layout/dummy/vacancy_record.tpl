@@ -2,7 +2,7 @@
     fx:template="vacancy_record"
     fx:of="vacancy.record"
     fx:omit="true">
-    <div fx:template="item" 
+    <div fx:item 
         class="clearfix vacancy-record">
         <h1 class="no-top-margin">{$position}</h1>
         <div>

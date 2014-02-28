@@ -30,7 +30,7 @@
                 fx:name="Main horizontal menu"
                 class="supernova_menu" id="menu" >
                 <ul>
-                    <li fx:template="item">
+                    <li fx:item>
                         <a href="{$url}">
                             <span class="mw"><span class="mw">
                                 {$name}
@@ -89,7 +89,7 @@
 	id="menu_vert">
                 <h2>{%menu_title}Menu title{/%}</h2>
                 <ul>
-                    <li fx:template="item">
+                    <li fx:item>
                         <a class="menu-active" href="{$url}">{$name}</a>
                     </li>
                 </ul>
