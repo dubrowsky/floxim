@@ -13,8 +13,6 @@ class fx_template_attr_parser extends fx_template_html_tokenizer {
     }
     
     protected function _add_att() {
-        //fx::debug($this->state, $this->stack);
-        //if ($this->state != self::TAG && !$this->c_att['name']) {
         if (!$this->c_att['name'] && !preg_match("~^<~", $this->stack)) {
             $this->c_att['name'] = $this->stack;
         }
@@ -27,6 +25,9 @@ class fx_template_attr_parser extends fx_template_html_tokenizer {
                     $att_val = trim($att_val);
                 }
                 $this->token->attributes[$att_name] = $att_val;
+                if ($this->c_quote) {
+                    $this->token->att_quotes[$att_name] = $this->c_quote;
+                }
             }
         }
         $this->c_att = array('name' => null, 'value' => null);
@@ -46,6 +47,7 @@ class fx_template_attr_parser extends fx_template_html_tokenizer {
     }
     
     public function att_value_end($ch) {
+        $this->c_quote = $this->att_quote;
         $c_val = $this->stack;
         $res = parent::att_value_end($ch);
         if ($res !== false) {
@@ -53,6 +55,7 @@ class fx_template_attr_parser extends fx_template_html_tokenizer {
             $this->_add_att();
             $this->stack = '';
         }
+        $this->c_quote = null;
         return $res;
     }
     

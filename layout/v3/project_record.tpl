@@ -1,10 +1,10 @@
 <div
     fx:template="project_record"
-    fx:name="Project Record"
+    fx:name="Project record"
     fx:of="project.record"
     fx:omit="true">
-    <div fx:item  class="project-record">
+    <div fx:with="$item" class="project-record">
         {$short_description}
-       {$description} <p></p>{/$}
+        {$description} <p></p>{/$}
     </div>
 </div>

@@ -9,17 +9,17 @@
         <div class="close"></div>
         <li
             fx:each="$items"
-            class="main-menu-item {if $children} dropdown{/if} {if $is_active}current{/if}">
+            class="main-menu-item {if $submenu} dropdown{/if} {if $is_active}current{/if}">
             <a href="{$url}">
                 {$name}
-                {if $children}<div class="more">+</div>{/if}
+                {if $submenu}<div class="more">+</div>{/if}
             </a>
             <div
-                fx:if="$children"
+                fx:with-each="$submenu"
                 class="width-helper">
                 <ul class="sub-menu">
                     <li
-                        fx:each="$children as $child"
+                        fx:item
                         class="sub-menu-item {if $is_active} active {/if}">
                         <a href="{$url}">{$name}</a>
                     </li>

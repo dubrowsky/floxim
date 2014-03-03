@@ -284,17 +284,20 @@ class fx_controller_component extends fx_controller {
     
     public function do_record() {
         $page = fx::env('page');
-        return array('items' => $page);
+        return array('item' => $page);
     }
     
     public function do_list() {
         $f = $this->get_finder();
         $this->trigger('query_ready', $f);
+        fx::log($f->show_query());
         $items = $f->all();
         if (count($items) === 0) {
             $this->_meta['hidden'] = true;
         }
+        //fx::log('all itms', $items);
         $this->trigger('items_ready', $items);
+        //fx::log('filterd itms', $items);
         $res = array('items' => $items);
         if ( ($pagination = $this->_get_pagination()) ) {
             $res ['pagination'] = $pagination;
@@ -651,9 +654,6 @@ class fx_controller_component extends fx_controller {
      * @return fx_data_content data finder
      */
     public function get_finder() {
-        //if ($this->_finder) {
-        //    return $this->_finder;
-        //}
         $finder = fx::data('content_'.$this->get_content_type());
         $show_pagination = $this->get_param('pagination');
         $c_page = $this->_get_current_page_number();

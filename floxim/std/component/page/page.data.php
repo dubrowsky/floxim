@@ -1,5 +1,6 @@
 <?php
 class fx_data_content_page extends fx_data_content {
+    
     public function get_tree() {
         $data = $this->all();
         $tree = $this->make_tree($data);
@@ -29,7 +30,7 @@ class fx_data_content_page extends fx_data_content {
         return $page;
     }
     
-    public function make_tree($data) {
+    public function make_tree($data, $children_key = 'children') {
         
         $index_by_parent = array();
         
@@ -43,13 +44,13 @@ class fx_data_content_page extends fx_data_content {
         }
         foreach ($data as $item) {
             if (isset($index_by_parent[$item['id']])) {
-                $item['children'] = $index_by_parent[$item['id']];
+                $item[$children_key] = $index_by_parent[$item['id']];
                 $data->find_remove(
                     'id',
                     $index_by_parent[$item['id']]->get_values('id')
                 );
             } else {
-                $item['children'] = null;
+                $item[$children_key] = null;
             }
         }
         return $data;

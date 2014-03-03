@@ -280,12 +280,9 @@ class fx_data_content extends fx_data {
                 $field_names = array_merge($field_names, array(
                     'priority', 
                     'checked',
-                    //'created',
                     'last_updated',
-                    //'user_id',
                     'type',
-                    'infoblock_id',
-                    //'site_id'
+                    'infoblock_id'
                 ));
             }
             $table_name = $level_component->get_content_table();

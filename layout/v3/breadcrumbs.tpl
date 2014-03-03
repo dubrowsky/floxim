@@ -3,11 +3,9 @@
     fx:of="section.breadcrumbs"
     fx:name="Breadcumbs"
     class="breadcrumbs">
-    {each $items}
-        <h2 fx:if="$item_index == 2"><a fx:omit="$is_current" href="{$url}">{$name}</a></h2>
-        <h3 fx:if="$item_index > 2">
+        <h2 fx:item="$position == 2"><a fx:omit="$is_current" href="{$url}">{$name}</a></h2>
+        <h3 fx:item="$position > 2">
             <a fx:omit="$is_current" href="{$url}">{$name}</a>
         </h3>
-        <span fx:template="separator" fx:if="$item_index > 2">/</span>
-    {/each}
+        <span fx:separator>{if $position > 2} / {/if}</span>
 </div>

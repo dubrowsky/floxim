@@ -4,7 +4,7 @@
         fx:of="product.record"
         fx:omit="true">
     <div
-        fx:item
+        fx:with="$item"
         class="product-record">
         <div class="slider">
             <div class="slide active">

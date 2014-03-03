@@ -46,6 +46,11 @@ class fx_data {
     public function relations() {
         return array();
     }
+    
+    public function get_relation($name) {
+        $rels = $this->relations();
+        return isset($rels[$name]) ? $rels[$name] : null;
+    }
 
     public function get_multi_lang_fields() {
         return array();
@@ -76,6 +81,29 @@ class fx_data {
     }
     
     public function where($field, $value, $type = '=') {
+        if (strstr($field, '.')) {
+            list($rel, $field_name) = explode('.', $field, 2);
+            if (!isset($this->with[$rel])) {
+                $this->only_with($rel);
+            } 
+            $c_with = $this->with[$rel];
+            if (!$c_with[2]) {
+                $this->with[$rel][2] = true;
+                $this->_join_with($c_with);
+            }
+            
+            $with_name = $c_with[0];
+            $with_finder = $c_with[1];
+            $relation = $this->get_relation($rel);
+            if ($relation[0] != fx_data::MANY_MANY) {
+                $with_finder->where($field_name, $value, $type);
+            }
+            $table = $with_finder->get_col_table($field_name);
+            $field = $with_name.'__'.$table.'.'.$field_name;
+        } elseif (preg_match("~^[a-z0-9_-]~", $field)) {
+            $table = $this->get_col_table($field);
+            $field = '{{'.$table.'}}.'.$field;
+        }
         $this->where []= array($field, $value, $type);
         return $this;
     }
@@ -87,7 +115,6 @@ class fx_data {
     }
     
     public function clear_where($field, $value = null) {
-        
         foreach ($this->where as $where_num => $where_props) {
             if ($where_props[0] == $field) {
                 if (func_num_args() == 1 || $value == $where_props[1]) {
@@ -111,11 +138,28 @@ class fx_data {
         return $this;
     }
         
-    public function with($relation, $finder = null) {
-        $this->with []= array($relation, $finder);
+    public function with($relation, $finder = null, $only = false) {
+        if ( is_callable($finder) || is_null($finder) ) {
+            $rel = $this->get_relation($relation);
+            $default_finder = $this->_get_default_relation_finder($rel);
+            if (is_callable($finder)) {
+                call_user_func($finder, $default_finder);
+            }
+            $finder = $default_finder;
+        }
+        $with = array($relation, $finder, $only);
+        $this->with [$relation]= $with;
+        if ($only) {
+            $this->_join_with($with);
+        }
         return $this;
     }
     
+    public function only_with($relation, $finder = null) {
+        $this->with($relation, $finder, true);
+        return $this;
+    }
+
     protected $calc_found_rows = false;
     public function calc_found_rows($on = true) {
         $this->calc_found_rows = (bool) $on;
@@ -155,17 +199,18 @@ class fx_data {
     public function build_query() {
         // 1. Получить таблицы-родители
         $tables = $this->get_tables();
+        if (is_null($this->select)) {
+            foreach ($tables as $t) {
+                $this->select []= '{{'.$t.'}}.*';
+            }
+        }
         $base_table = array_shift($tables);
         $q = 'SELECT ';
         if ($this->calc_found_rows) {
             $q .= 'SQL_CALC_FOUND_ROWS ';
         }
         
-        if (!is_null($this->select)) {
-            $q .= join(", ", $this->select);
-        } else {
-            $q .= ' * ';
-        }
+        $q .= join(", ", $this->select);
         $q .= ' FROM `{{'.$base_table."}}`\n";
         foreach ($tables as $t) {
             $q .= 'INNER JOIN `{{'.$t.'}}` ON `{{'.$t.'}}`.id = `{{'.$base_table."}}`.id\n";
@@ -191,18 +236,109 @@ class fx_data {
         if ($this->limit){
             $q .= ' LIMIT '.$this->limit;
         }
+        //fx::debug(fx::db()->prepare_query($q));
         return $q;
     }
     
     protected $joins = array();
     
     public function join($table, $on, $type = 'inner') {
+        if (is_array($table)) {
+            $table = '{{'.$table[0].'}} as '.$table[1];
+        }
         $this->joins[]= array(
             'table' => $table, 
             'on' => $on, 
             'type' => strtoupper($type)
         );
         return $this;
+    }
+    
+    // inner join fx_content as user__fx_content on fx_content.user_id = user__fx_content.id
+    protected function _join_with($with) {
+        $rel_name = $with[0]; 
+        $finder = $with[1];
+        $rel = $this->get_relation($rel_name);
+        $finder_tables = $finder->get_tables();
+        
+        // колонка-ссылка
+        $link_col = $rel[2];
+        
+        switch ($rel[0]) {
+            case fx_data::BELONGS_TO:
+                //fx::debug('bel to', $rel);
+                $joined_table = array_shift($finder_tables);
+                $joined_alias = $rel_name.'__'.$joined_table;
+                // таблица текущего файндера, содержащая колонку-ссылку
+                $our_table = $this->get_col_table($link_col);
+                $this->join(
+                    array($joined_table, $joined_alias),
+                    $joined_alias.'.id = {{'.$our_table.'}}.'.$link_col
+                );
+                foreach ($finder_tables as $t) {
+                    $alias = $rel_name.'__'.$t;
+                    $this->join(
+                        array($t, $alias),
+                        $alias.'.id = '.$joined_alias.'.id'
+                    );
+                }
+                break;
+            case fx_data::HAS_MANY:
+                $their_table = $finder->get_col_table($link_col);
+                $joined_alias = $rel_name.'__'.$their_table;
+                $their_table_key = array_keys($finder_tables, $their_table);
+                unset($finder_tables[$their_table_key[0]]);
+                $this->join(
+                    array($their_table, $joined_alias),
+                    $joined_alias.'.'.$link_col.' = {{'.$this->table.'}}.id'
+                );
+                $this->group('{{'.$this->table.'}}.id');
+                foreach ($finder_tables as $t) {
+                    $alias = $rel_name.'__'.$t;
+                    $this->join(
+                        array($t, $alias),
+                        $alias.'.id = '.$joined_alias.'.id'
+                    );
+                }
+                break;
+            case fx_data::MANY_MANY:
+                $linker_table = $finder->get_col_table($link_col);
+                $joined_alias = $rel_name.'_linker__'.$linker_table;
+                $linker_table_key = array_keys($finder_tables, $linker_table);
+                unset($finder_tables[$linker_table_key[0]]);
+                $this->join(
+                    array($linker_table, $joined_alias),
+                    $joined_alias.'.'.$link_col.' = {{'.$this->table.'}}.id'
+                );
+                $this->group('{{'.$this->table.'}}.id');
+                foreach ($finder_tables as $t) {
+                    $alias = $rel_name.'_linker__'.$t;
+                    $this->join(
+                        array($t, $alias),
+                        $alias.'.id = '.$joined_alias.'.id'
+                    );
+                }
+                $link_table_alias = $rel_name.'_linker__'.$finder->get_col_table($rel[5]);
+                
+                $end_finder = fx::data($rel[4]);
+                $end_tables = $end_finder->get_tables();
+                $first_end_table = array_shift($end_tables);
+                $first_end_alias = $rel_name.'__'.$first_end_table;
+                $this->join(
+                    array($first_end_table, $first_end_alias),
+                    $first_end_alias.'.id = '.$link_table_alias.'.'.$rel[5]
+                );
+                foreach ($end_tables as $et) {
+                    $et_alias = $rel_name.'__'.$et;
+                    $this->join(
+                        array($et, $et_alias),
+                        $et_alias.'.id = '.$first_end_alias.'.id'
+                    );
+                }
+                //fx::debug($link_table);
+                fx::debug($rel);
+                break;
+        }
     }
     
     protected function _make_cond($cond, $base_table) {
@@ -297,7 +433,7 @@ class fx_data {
         return $data;
     }
     
-    protected function _get_default_relation_finder($rel, $rel_name = null) {
+    protected function _get_default_relation_finder($rel) {
         return fx::data($rel[1]);
     }
     
@@ -311,7 +447,7 @@ class fx_data {
         list($rel_type, $rel_datatype, $rel_field) = $rel;
 
         if (!$rel_finder){
-            $rel_finder = $this->_get_default_relation_finder($rel, $rel_name);
+            $rel_finder = $this->_get_default_relation_finder($rel);
         }
 
         // e.g. $rel = array(fx_data::HAS_MANY, 'field', 'component_id');
@@ -359,7 +495,6 @@ class fx_data {
      * использует $this->with и $this->relations
      */
     protected function _add_relations(fx_collection $essences) {
-
         if (count($this->with) == 0) {
             return;
         }
@@ -395,6 +530,17 @@ class fx_data {
     
     public function get_tables() {
         return array($this->table);
+    }
+    
+    public function get_col_table($col) {
+        $tables = $this->get_tables();
+        foreach ($tables as $t) {
+            $cols = $this->_get_columns($t);
+            if (in_array($col, $cols)) {
+                return $t;
+            }
+        }
+        return null;
     }
 
     public function get_pk() {

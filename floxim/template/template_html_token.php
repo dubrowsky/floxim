@@ -179,49 +179,6 @@ class fx_template_html_token {
             self::$attr_parser = new fx_template_attr_parser();
         }
         self::$attr_parser->parse_atts($this);
-        /*
-        return;
-        $source = preg_replace("~^<[a-z0-9_]+~", '', $this->source);
-        
-        // Сохраняем в массив field-маркеры, восстановим при обратной сборке
-        $injections = array();
-        
-        $source = preg_replace_callback( 
-            "~{.+?}~i", 
-            function($matches) use (&$injections) {
-                $injections []= $matches[0];
-                return '#inj'.(count($injections)-1).'#';
-            }, 
-            $source
-        );
-        
-        // и аналогично для пыха
-        $source = preg_replace_callback(
-            "~<\?.+?\?>~i", 
-            function($matches) use (&$injections) {
-                $injections []= $matches[0];
-                return '#inj'.(count($injections)-1).'#';
-            }, 
-            $source
-        );
-        
-        $this->_injections = $injections;
-        $source  = preg_replace("~\s([a-z0-9\:_-]+)\s*?=\s*?([^\'\\\"\s]+)~", ' $1="$2"', $source);
-        $atts = null;
-        preg_match_all('~(#inj\d+#)|([a-z0-9\:_-]+)(?:=(["\'])(.*?)\3)?~s', $source, $atts);
-        $this->attributes = array();
-        foreach ($atts[0] as $att_num => $att_full) {
-            $att_name = $atts[2][$att_num];
-            $att_val = $atts[4][$att_num];
-            $this->att_quotes[$att_name] = $atts[3][$att_num];
-            if (empty($att_name)) {
-                $att_name = $att_full;
-                $att_val = null;
-            }
-            $this->attributes[$att_name] = $att_val;
-        }
-         * 
-         */
     }
     
     public function has_attribute($att_name) {
@@ -294,7 +251,7 @@ class fx_template_html_token {
         $this->attributes_modified = true;
     }
     
-    protected $att_quotes = array();
+    public $att_quotes = array();
     public function add_meta($meta) {
         foreach ($meta as $k => $v) {
             if ($k == 'class') {

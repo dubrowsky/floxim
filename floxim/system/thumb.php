@@ -395,9 +395,7 @@ class fx_thumb
         if (!$folders) {
             preg_match("~".$ds."(.+?)$~", $this->source_path, $folders);
         }
-        fx::log($this->source_path, $rex, $folders);
         
-
         $folder_name = array();
         foreach ($this->config as $key => $value) {
             if ($value) {

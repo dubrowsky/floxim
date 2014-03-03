@@ -27,9 +27,22 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
      * Получить первый элемент коллекции
      */
     public function first() {
+        reset($this->data);
+        return current($this->data);
+        /*
         foreach ($this->data as $di) {
             return $di;
         }
+         * 
+         */
+    }
+    
+    public function next() {
+        return next($this->data);
+    }
+    
+    public function key() {
+        return key($this->data);
     }
 
     public function last(){ 

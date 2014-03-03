@@ -6,7 +6,7 @@
     fx:size="high,wide">
     <div 
         fx:each="$items"
-        class="gallery_item {if $item_is_first} gallery_item_active{/if} slideid{$id}">
+        class="gallery_item {if $is_first} gallery_item_active{/if} slideid{$id}">
         <img 
             src="{%bg_photo_$id | 'width:1100,height:530,crop:middle'}<?=$template_dir?>images/img01.jpg{/%}" 
             alt="" />

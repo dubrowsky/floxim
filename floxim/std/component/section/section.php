@@ -10,21 +10,7 @@ class fx_controller_component_section extends fx_controller_component_page {
         if ($submenu_type == 'none') {
             $this->set_param('parent_type', 'mount_page_id');
         }
-        
-        //$this->set_param('sorting', 'manual');
-        
-        $this->listen('query_ready', function($q) use ($path, $submenu_type) {
-            switch ($submenu_type) {
-                case 'all':
-                    $q->clear_where('parent_id');
-                    break;
-                case 'active':
-                    $q->clear_where('parent_id')->where('parent_id', $path);
-                    break;
-            }
-        });
-        
-        $this->listen('items_ready', function($items, $ctr) use ($path, $submenu_type) {
+        $this->listen('items_ready', function($items, $ctr) use ($path) {
             foreach ($items as $item) {
                 if (in_array($item['id'], $path)) {
                     if ($ctr->get_param('submenu') !== 'none') {
@@ -36,13 +22,20 @@ class fx_controller_component_section extends fx_controller_component_page {
                     }
                 }
             }
-            if ($submenu_type != 'none') {
-                fx::data('content_page')->make_tree($items);
-            }
         });
-        return parent::do_list_infoblock();
+        $res = parent::do_list_infoblock();
+        fx::log($res);
+        return $res;
+    }
+    
+    public function do_list() {
+        $this->listen('items_ready', function($items) {
+            fx::data('content_page')->make_tree($items, 'submenu');
+        });
+        return parent::do_list();
     }
 
+    /*
     public function do_list_filtered () {
         $c_page_id  = fx::env('page')->get('id');
         $path = fx::env('page')->get_parent_ids();
@@ -62,11 +55,14 @@ class fx_controller_component_section extends fx_controller_component_page {
             $items->make_tree();
             if ($submenu_type == 'none')
                 $items->apply(function($item){
-                    unset($item['children']);
+                    //unset($item['children']);
+                    $item['children'] = array();
                 });
         });
         return parent::do_list_filtered();
     }
+     * 
+     */
 
     public function do_list_selected () {
         $c_page_id  = fx::env('page')->get('id');
@@ -141,4 +137,3 @@ class fx_controller_component_section extends fx_controller_component_page {
         return array('items' => $pages);
     }
 }
-?>

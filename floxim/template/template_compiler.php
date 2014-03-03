@@ -477,7 +477,7 @@ class fx_template_compiler {
         $separator = $this->_find_separator($token);
         $code .= "if (is_array(".$arr_id.") || ".$arr_id." instanceof Traversable) {\n";
         $loop_id = '$'.$item_alias.'_loop';
-        $code .=  $loop_id.' = new fx_template_loop('.$arr_id.");\n";
+        $code .=  $loop_id.' = new fx_template_loop('.$arr_id.', "'.$item_key.'", "'.$item_alias.'"'.");\n";
         $code .= '$this->context_stack[]= '.$loop_id.";\n";
         $code .= "\nforeach (".$arr_id." as \$".$item_key." => \$".$item_alias.") {\n";
         $code .= $loop_id."->_move();\n";

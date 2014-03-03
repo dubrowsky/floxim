@@ -11,16 +11,17 @@ class fx_template_loop implements ArrayAccess {
         $this->current_key = $key;
         $this->current_alias = $alias;
         $this->current = null;
+        $this->_is_collection = $items instanceof fx_collection;
     }
     
     public function _move() {
         $this->position++;
         if ($this->current === null) {
-            $this->current = current($this->items);
+            $this->current = $this->_is_collection ? $this->items->first() : current($this->items);
         } else {
-            $this->current = next($this->items);
+            $this->current = $this->_is_collection ? $this->items->next() : next($this->items);
         }
-        $this->key = key($this->items);
+        $this->key = $this->_is_collection ? $this->items->key() : key($this->items);
     }
     
     public function is_last() {
@@ -46,12 +47,19 @@ class fx_template_loop implements ArrayAccess {
         if (method_exists($this, $offset)) {
             return $this->$offset();
         }
+        if ($offset == $this->current_key) {
+            return $this->key;
+        }
+        if ($offset == $this->current_alias) {
+            return $this->current;
+        }
     }
     public function offsetSet($offset, $value) {
         ;
     }
     public function offsetExists($offset) {
-        return isset($this->$offset) || method_exists($this, $offset);
+        return isset($this->$offset) || method_exists($this, $offset)  || 
+                $offset == $this->current_key || $offset == $this->current_alias;
     }
     public function offsetUnset($offset) {
         ;

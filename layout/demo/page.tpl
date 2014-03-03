@@ -139,9 +139,9 @@
                                             fx:each="$items"  
                                             class="footer-menu-item">
                                             <a href="{$url}">{$name}</a>
-                                            <ul fx:if="$children" class="footer-menu-sub-items" >
+                                            <ul fx:with-each="$submenu" class="footer-menu-sub-items" >
                                                 <li 
-                                                    fx:each="$children" 
+                                                    fx:item
                                                     class="footer-menu-sub-item">
                                                     <a href="{$url}">{$name}</a>
                                                 </li>
