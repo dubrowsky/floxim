@@ -2,7 +2,7 @@
 class fx_template {
     
     //protected $data = array();
-    protected $action = null;
+    public $action = null;
     protected $_parent = null;
     
     public function __construct($action, $data = array()) {
@@ -15,29 +15,16 @@ class fx_template {
         return $this;
     }
 
-
     public function set_var($var, $val) {
         if (count($this->context_stack) == 0) {
             $this->context_stack[]= array();
         }
         $this->context_stack[count($this->context_stack) - 1][$var] = $val;
     }
-    /*
-    public function get_var($var_path) {
-        return fx::dig($this->data, $var_path);
-    }
-     * 
-     */
     
     protected function print_var($val, $meta = null) {
         $tf = null;
-        /*
-        if ($meta && isset($meta['type']) && $meta['type'] == 'image' && is_numeric($val)) {
-            $val = fx_filetable::get_path($val);
-        }
-         * 
-         */
-        if ($meta && isset($meta['var_type']) && fx::is_admin()) {
+        if ($meta && fx::is_admin() && isset($meta['var_type'])) {
             $tf = new fx_template_field($val, $meta);
         }
         echo $tf ? $tf : $val;
@@ -73,6 +60,7 @@ class fx_template {
         
         //
         if (!is_null($context_offset)) {
+            //fx::debug('looking for: '.$name." / ".$context_offset);
             $context_position = -1;
             for ($i = count($this->context_stack) - 1; $i >= 0; $i--) {
                 $cc = $this->context_stack[$i];
@@ -80,30 +68,24 @@ class fx_template {
                     $context_position++;
                 }
                 if ($context_position == $context_offset) {
+                    //fx::debug('in offset', $cc);
                     if (!$name) {
                         return $cc;
                     }
                     if (isset($cc[$name])) {
                         return $cc[$name];
                     }
-                } elseif ($context_position > $context_offset) {
+                    continue;
+                } 
+                if ($context_position > $context_offset) {
                     return null;
                 }
-                
-                //fx::debug($context_position, $context_offset, $cc);
-                /*
-                if ($context_position < $context_offset) {
-                    continue;
-                }
-                if ($context_position == $context_offset) {
-                    if (isset($cc[]))
-                }
-                if (isset($this->context_stack[$i][$name])) {
-                    return $this->context_stack[$i][$name];
-                }
-                 * 
-                 */
             }
+            if ($this->_parent) {
+                return $this->_parent->v($name, $context_offset - $context_position - 1);
+            }
+            //fx::debug("Not found: ". $context_position.", ". $context_offset);
+            return null;
         }
         
         for ($i = count($this->context_stack) - 1; $i >= 0; $i--) {
@@ -227,37 +209,37 @@ class fx_template {
     }
     
     public function render(array $data = array()) {
+        fx::profiler()->block('inside tpl');
         if (count($data) > 0) {
             $this->context_stack[]= $data;
         }
-        /*
-        set_error_handler(function() {
-            fx::log(func_get_args());
-        });
-         * 
-         */
         ob_start();
         $method = 'tpl_'.$this->action;
         if (method_exists($this, $method)) {
+            fx::profiler()->block('running method '.$method);
             try {
                 $this->$method();
             } catch (Exception $e) {
                 fx::log('template exception', $e);
             }
+            fx::profiler()->stop();
         } else {
            echo 'No tpl action: <code>'.get_class($this).".".$this->action.'</code>';
         }
         $result = ob_get_clean();
         
         if ($this->v('_idle')) {
+            fx::profiler()->stop();
             return $result;
         }
-        
+        fx::profiler()->block('adding tpl meta');
         if (fx::is_admin() && !$this->_parent) {
             self::$count_replaces++;
             $result = fx_template::replace_areas($result);
             $result = fx_template_field::replace_fields($result);
         }
+        fx::profiler()->stop();
+        fx::profiler()->stop();
         return $result;
     }
     public static $count_replaces = 0;

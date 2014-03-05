@@ -8,7 +8,9 @@
     <div
         fx:item
         class="banner">
+        <?fx::profiler()->block('banner_pic');?>
         <img src="{%banner_image_$id|'crop:middle,width:1160,min-height:350'}<?=$template_dir?>img/120110-G-IA163-068-Healy-escorts-Renda.jpg{/%}">
+        <?fx::profiler()->stop();?>
         <div class="caption">
             <div class="h2">
                 {%banner_header_$id}

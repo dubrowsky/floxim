@@ -81,6 +81,7 @@ class fx_controller_admin extends fx_controller {
     }
     
     public static function add_admin_files() {
+        fx::profiler()->block('adding js');
         $js_files = array(
             FX_JQUERY_PATH,
             '/floxim/lib/js/fx-lang.js',
@@ -120,6 +121,8 @@ class fx_controller_admin extends fx_controller {
         );
         $page = fx::page();
         
+        
+        
         $page->add_js_bundle($js_files, array('name' => 'fx_admin'));
         
         $update_checker_url = fx::config()->FLOXIM_SITE_PROTOCOL.'://'.
@@ -136,7 +139,7 @@ class fx_controller_admin extends fx_controller {
             (document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild(fxupdate);
           })(); 
         ");
-        
+        fx::profiler()->stop()->block('add css');
         $css_files = array(
             '/floxim/lib/editors/redactor/redactor.css',
             '/floxim/admin/skins/default/jquery-ui/main.css',
@@ -144,12 +147,7 @@ class fx_controller_admin extends fx_controller {
             '/floxim/admin/skins/default/css/forms.less',
         );
         $page->add_css_bundle($css_files);
-        /*
-        foreach ($css_files as $file) {
-            $page->add_css_file($file);
-        }
-         * 
-         */
+        fx::profiler()->stop();
     }
     
     /**

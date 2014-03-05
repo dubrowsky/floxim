@@ -451,12 +451,11 @@ class fx {
     public static function image($value, $format) {
         try {
             $thumber = new fx_thumb($value, $format);
-            $value = $thumber->get_result_path();
+            $res = $thumber->get_result_path();
         } catch (Exception $e) {
-            //fx::log('thumb ex', $e);
-            $value = '';
+            $res = '';
         }
-        return $value;
+        return $res;
     }
     
     public static function version($type = null) {
@@ -479,5 +478,13 @@ class fx {
     
     public static function log($what) {
         call_user_func_array('dev_log', func_get_args());
+    }
+    
+    public static function profiler() {
+        static $profiler = null;
+        if (is_null($profiler)) {
+            $profiler = new fx_profiler();
+        }
+        return $profiler;
     }
 }

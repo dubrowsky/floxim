@@ -16,11 +16,26 @@ abstract class fx_essence implements ArrayAccess {
         return fx::data($this->get_type());
     }
 
+    protected static $_field_map = array();
+    
     public function __construct($input = array()) {
         if (isset($input['data'])) {
             $this->data = $input['data'];
         }
-        return $this;
+        
+        // cache relations & ml on first use
+        // to increase offsetExists() speed (for isset($n[$val]) in templates)
+        $c_type = $this->get_type();
+        if (!isset(self::$_field_map[$c_type])) {
+            $finder = $this->get_finder();
+            self::$_field_map[$c_type] = array();
+            foreach ($finder->relations() as $rel_name => $rel) {
+                self::$_field_map[$c_type][$rel_name] = array('type' => 'relation', 'data' => $rel);
+            }
+            foreach ($finder->get_multi_lang_fields() as $f) {
+                self::$_field_map[$c_type][$f] = array('type' => 'multi_lang');
+            }
+        }
     }
 
     public function save($dont_log = false, $action = 'update') {
@@ -106,15 +121,12 @@ abstract class fx_essence implements ArrayAccess {
         return $this->data[$this->_get_pk()];
     }
 
-    public function delete( $dont_log = false ) {
+    public function delete() {
         $pk = $this->_get_pk();
         $this->_before_delete();
         $this->get_finder()->delete($pk, $this->data[$pk]);
         $this->modified_data = $this->data;
         $this->_after_delete();
-        if (!$dont_log) {
-            $this->_add_history_operation('delete');
-        }
     }
 
     public function unchecked() {
@@ -143,10 +155,6 @@ abstract class fx_essence implements ArrayAccess {
             $res .= "$k = $v " . PHP_EOL;
         return $res;
     }
-
-    protected function _add_history_operation($type, $data = array()) {
-        //fx_history::add_operation($type, str_replace('fx_data_', '', get_class($this->get_finder())), $this->data[$this->pk], $this->modified_data, $data);
-    }
     
     protected function _before_insert () {
         return false;
@@ -171,9 +179,6 @@ abstract class fx_essence implements ArrayAccess {
     protected function _after_delete () {
         return false;
     }
-    
-    
-    
 
     /* Array access */
     public function offsetGet($offset) {
@@ -237,15 +242,11 @@ abstract class fx_essence implements ArrayAccess {
     public function offsetExists($offset) {
         if  (isset($this->data[$offset])) {
             return true;
-        } 
+        }
         if (method_exists($this, 'get_'.$offset)) {
             return true;
         }
-        $rels = $this->get_finder()->relations();
-        if (isset($rels[$offset])) {
-            return true;
-        }
-        return false;
+        return isset(self::$_field_map[$this->get_type()][$offset]);
     }
 
     public function offsetUnset($offset) {

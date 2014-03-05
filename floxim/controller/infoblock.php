@@ -22,9 +22,10 @@ class fx_controller_infoblock extends fx_controller {
 
 
     public function render() {
-        
         $infoblock = $this->_get_infoblock();
-        
+        $profiler = fx::profiler();
+        $profiler->block('render ib #'.$infoblock['id']);
+        $profiler->block('preparing');
         if (!$infoblock) {
             fx::debug('no ib to render', $this, debug_backtrace());
             die("IB NOT FOUND");
@@ -66,30 +67,38 @@ class fx_controller_infoblock extends fx_controller {
             $infoblock['scope'] = $ib_overs['scope'];
             $infoblock['page_id'] = $ib_overs['page_id'];
         }
+        $profiler->stop();
         
+        $controller_name = $infoblock->get_prop_inherited('controller');
+        $controller_action = $infoblock->get_prop_inherited('action');
+        
+        $profiler->block('processing '.$controller_name.'.'.$controller_action);
         $controller = fx::controller(
-            $infoblock->get_prop_inherited('controller'), 
+            $controller_name, 
             $params, 
-            $infoblock->get_prop_inherited('action')
+            $controller_action
         );
         
         
         $result = $controller->process();
         
+        $profiler->stop();
         if (is_string($result)) {
             if (fx::env('is_admin')) {
                 $result = $this->_add_infoblock_meta($result, $infoblock);
             }
             $result = $controller->postprocess($result);
+            fx::profiler()->stop();
             return $result;
         }
         
         $controller_meta = fx::dig($result, '_meta');
         if (fx::dig($controller_meta, 'disabled')) { // !fx::is_admin()
+            fx::profiler()->stop();
             return;
         }
         $tpl = null;
-        
+        $profiler->block('getting tpl data');
         // берем шаблон для предпросмотра
         if (isset($ib_overs['visual']['template'])) {
             $tpl = fx::template($ib_overs['visual']['template']);
@@ -112,8 +121,13 @@ class fx_controller_infoblock extends fx_controller {
         }
 
         $tpl_params['infoblock'] = $infoblock;
+        
+        $profiler->then('rendering tpl '.  get_class($tpl).'.'.$tpl->action);
+        
         $output = $tpl->render($tpl_params);
         $is_subroot = $tpl->is_subroot;
+        
+        $profiler->then('wrapping');
         
         if (isset($ib_overs['visual']['wrapper'])) {
             $wrapper = $ib_overs['visual']['wrapper'];
@@ -134,10 +148,12 @@ class fx_controller_infoblock extends fx_controller {
             $output = $tpl_wrap->render();
             $is_subroot = $tpl_wrap->is_subroot;
         }
+        $profiler->then('adding meta');
         if (fx::env('is_admin')) {
             $output = $this->_add_infoblock_meta($output, $infoblock, $controller_meta, $is_subroot);
         }
         $processed_output = $controller->postprocess($output);
+        $profiler->stop()->stop();
         return $processed_output;
     }
     

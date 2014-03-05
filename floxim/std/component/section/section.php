@@ -24,7 +24,6 @@ class fx_controller_component_section extends fx_controller_component_page {
             }
         });
         $res = parent::do_list_infoblock();
-        fx::log($res);
         return $res;
     }
     

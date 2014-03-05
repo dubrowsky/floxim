@@ -4,7 +4,7 @@
 if (!defined('FLOXIM')) {
     require_once('../boot.php');
 }
-
+fx::profiler()->block('page');
 register_shutdown_function(function() {
     if (!fx::env()->get('complete_ok')) {
     	$ob_level = ob_get_level();
@@ -14,9 +14,16 @@ register_shutdown_function(function() {
         }
         fx::log('down', $res, debug_backtrace(), $_SERVER, $_POST); 
     }
+    fx::profiler()->stop();
+    fx::log('profiled', fx::profiler()->show());
 });
 
-if ( ($controller = fx::router()->route() ) ) {
+fx::profiler()->block('routing');
+$controller = fx::router()->route();
+fx::profiler()->then('processing');
+
+if ( $controller ) {
     echo $controller->process();
     fx::env()->set('complete_ok', true);
 }
+fx::profiler()->stop();

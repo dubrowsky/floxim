@@ -1,4 +1,42 @@
 <?
+class fx_debug {
+    /**
+     * Show debug info right in the current output
+     */
+    public function show() {
+        
+    }
+    
+    /**
+     * Log debug info into file
+     */
+    public function log() {
+        
+    }
+    
+    /**
+     * Render pretty output for debug data
+     */
+    public function render($entry) {
+        
+    }
+    
+    /**
+     * Start profiling
+     * @return $profile_id
+     */
+    public function profile($key, $tags = array()) {
+        
+    }
+    
+    /**
+     * Finish profiling
+     */
+    public function stop($profile_id) {
+        
+    }
+}
+
 define("DEV_LOG_PATH", dirname(__FILE__).'/log');
 
 function fx_debug_start() {
@@ -67,7 +105,7 @@ function fx_debug() {
     $args = func_get_args();
     //$args[]= $backtrace;
     foreach ($args as $print_item) {
-        if (is_string($print_item) && preg_match("~[<>]~", $print_item)) {
+        if (is_string($print_item) && preg_match("~[<>]~", $print_item) && !preg_match('~profiler_res~', $print_item)) {
             $print_item = '<pre>'.htmlspecialchars($print_item).'</pre>';
         }
         if ( is_object($print_item) || is_array($print_item) ) {

@@ -336,7 +336,7 @@ class fx_data {
                     );
                 }
                 //fx::debug($link_table);
-                fx::debug($rel);
+                //fx::debug($rel);
                 break;
         }
     }

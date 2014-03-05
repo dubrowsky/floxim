@@ -34,7 +34,6 @@ class fx_thumb
             throw new Exception('Wrong image type');
         }
         $this->info += self::$_types[$info['imagetype']];
-        $this->image = call_user_func($this->info['create_func'], $this->source_path);
     }
     
     protected function _calculateSize($params, $source = null)
@@ -330,7 +329,6 @@ class fx_thumb
     
     public function Save($target_path = false, $quality = 90)
     {
-        fx::log('saving', $target_path, $this);
         if ($this->info['imagetype'] == IMAGETYPE_PNG) {
             $quality = round($quality / 10);
         }
@@ -345,14 +343,12 @@ class fx_thumb
             $sub_path     = preg_replace("~^[//]~", '', $sub_path);
             $target_parts = preg_split("~[//]~", $sub_path);
             $c_path       = $doc_root;
-            fx::log($target_parts);
             foreach ($target_parts as $pi => $pdir) {
                 $c_path .= '/' . $pdir;
                 if (file_exists($c_path)) {
                     continue;
                 }
                 if (!is_dir($c_path) && $pi != count($target_parts) - 1) {
-                    fx::log('mk', $c_path);
                     mkdir($c_path, 0777);
                 }
             }
@@ -380,6 +376,7 @@ class fx_thumb
     );
     
     public function process($full_path) {
+        $this->image = call_user_func($this->info['create_func'], $this->source_path);
         $this->Resize();
         $this->Save($full_path);
     }
@@ -393,7 +390,8 @@ class fx_thumb
             $folders
         );
         if (!$folders) {
-            preg_match("~".$ds."(.+?)$~", $this->source_path, $folders);
+            $rex = "~".$ds."([^".preg_quote('\/')."]+?)$~";
+            preg_match($rex, $this->source_path, $folders);
         }
         
         $folder_name = array();

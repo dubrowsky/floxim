@@ -3,9 +3,15 @@ class fx_template_loop implements ArrayAccess {
     
     public $loop;
     
-    public function __construct($items, $key = 'key', $alias = 'item') {
+    public function __construct($items, $key = null, $alias = null) {
+        if (is_null($key)){
+            $key = 'key';
+        }
+        if (is_null($alias)) {
+            $alias = 'item';
+        }
         $this->loop = $this;
-        $this->items = $items;
+        $this->looped = $items;
         $this->total = count($items);
         $this->position = 0;
         $this->current_key = $key;
@@ -17,11 +23,11 @@ class fx_template_loop implements ArrayAccess {
     public function _move() {
         $this->position++;
         if ($this->current === null) {
-            $this->current = $this->_is_collection ? $this->items->first() : current($this->items);
+            $this->current = $this->_is_collection ? $this->looped->first() : current($this->looped);
         } else {
-            $this->current = $this->_is_collection ? $this->items->next() : next($this->items);
+            $this->current = $this->_is_collection ? $this->looped->next() : next($this->looped);
         }
-        $this->key = $this->_is_collection ? $this->items->key() : key($this->items);
+        $this->key = $this->_is_collection ? $this->looped->key() : key($this->looped);
     }
     
     public function is_last() {

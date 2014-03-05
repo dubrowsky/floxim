@@ -2,6 +2,7 @@
 class fx_controller_layout extends fx_controller {
     
     public function show() {
+        fx::profiler()->block('env');
         if (! ($page_id = $this->get_param('page_id')) ) {
             $page_id = fx::env('page')->get('id');
             $this->input['page_id'] = $page_id;
@@ -9,17 +10,18 @@ class fx_controller_layout extends fx_controller {
         if (! ($layout_id = $this->get_param('layout_id'))) {
             $layout_id = fx::env('layout');
         }
-        
+        fx::profiler()->then('add adm files');
         // add admin files bundle BEFORE site scripts/styles
         if (! ($this->get_param('ajax_mode')) && fx::is_admin()) {
             fx_controller_admin::add_admin_files();
         }
-        
+        fx::profiler()->then('get page ibs');
         $page_infoblocks = fx::router('front')->get_page_infoblocks(
             $page_id, 
             $layout_id
         );
         fx::page()->set_infoblocks($page_infoblocks);
+        fx::profiler()->then('get path');
         $path = fx::data('content_page', $page_id)->get_path();
         $current_page = $path->last();
         $res = array(
@@ -28,6 +30,7 @@ class fx_controller_layout extends fx_controller {
             'path' => $path,
             'current_page' => $current_page
         );
+        fx::profiler()->stop();
         return $res;
     }
     

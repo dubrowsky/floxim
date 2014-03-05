@@ -88,6 +88,7 @@ class fx_template_expression_parser extends fx_template_fsm {
         // if var still has no name - just continue without switching state
         if ($this->curr_node->type == self::T_VAR && count($this->curr_node->name) == 0) {
             if ($ch == '.') {
+                $this->curr_node->context_level_up(0);
                 return;
             }
         }
@@ -145,7 +146,7 @@ class fx_template_expression_parser extends fx_template_fsm {
         switch ($this->state) {
             case self::VAR_NAME:
                 if ($ch == '_') {
-                    $this->curr_node->context_offset++;
+                    $this->curr_node->context_level_up();
                 } else {
                     $this->curr_node->name []= $ch;
                 }
@@ -204,7 +205,10 @@ class fx_template_expression_parser extends fx_template_fsm {
             case self::T_VAR:
                 $is_local = false;
                 $var_name = '';
-                $context_offset = $node->context_offset > -1 ? ", ".$node->context_offset : '';
+                $context_level = $node->get_context_level();
+                if (!is_null($context_level)) {
+                    $context_level = ", ".$context_level;
+                }
                 // simple var
                 if (count($node->name) == 1 && is_string($node->name[0])) {
                     $var_name = $node->name[0];
@@ -215,7 +219,7 @@ class fx_template_expression_parser extends fx_template_fsm {
                         if (!is_numeric($var_name)) {
                             $var_name = '"'.$var_name.'"';
                         }
-                        $var = '$this->v('.$var_name.$context_offset.')';
+                        $var = '$this->v('.$var_name.$context_level.')';
                     }
                 } 
                 // complex var such as $image_$id
@@ -233,7 +237,7 @@ class fx_template_expression_parser extends fx_template_fsm {
                     if (empty($var_name)) {
                         $var_name = 'null';
                     }
-                    $var = '$this->v('.$var_name.$context_offset.')';
+                    $var = '$this->v('.$var_name.$context_level.')';
                 }
                 
                 if ($node->last_child) {
@@ -265,12 +269,24 @@ class fx_template_expression_parser extends fx_template_fsm {
 
 class fx_template_expression_node {
     public $type;
+    
+    protected $context_offset = null;
+    
     public function __construct($type = fx_template_expression_parser::T_CODE) {
         $this->type = $type;
-        if ($type == fx_template_expression_parser::VAR_NAME) {
-            $this->context_offset = -1;
-        }
     }
+    
+    public function context_level_up($count = 1) {
+        if (is_null($this->context_offset)) {
+            $this->context_offset = 0;
+        }
+        $this->context_offset += $count;
+    }
+    
+    public function get_context_level() {
+        return $this->context_offset;
+    }
+    
     public $last_child = null;
     //public $children = array();
     public function add_child($n) {

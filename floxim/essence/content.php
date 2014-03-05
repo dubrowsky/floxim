@@ -6,10 +6,10 @@ class fx_content extends fx_essence {
     protected $component_id;
 
     public function __construct($input = array()) {
-        parent::__construct($input);
         if ($input['component_id']) {
             $this->component_id = $input['component_id'];
         }
+        parent::__construct($input);
         return $this;
     }
     
@@ -47,17 +47,6 @@ class fx_content extends fx_essence {
         }
         return false;
     }
-
-    /*
-    protected function _add_history_operation($type, $data = array()) {
-        fx_history::add_operation(
-            $type, 
-            str_replace('fx_data_', '', get_class($this->finder)), 
-            array($this->component_id, $this->data[$this->pk]), $this->modified_data, $data
-        );
-    }
-     * 
-     */
 
     public function get_upload_folder() {
         return "content/".$this->component_id;

@@ -45,25 +45,30 @@ class fx_system_page {
     public function add_css_file($file) {
         if (preg_match("~\.less$~", $file)) {
             $doc_root = fx::config()->DOCUMENT_ROOT;
-            $http_path = fx::config()->HTTP_FILES_PATH.'asset_cache/';
-            $full_path = $doc_root.$http_path;
+            $target_path = fx::config()->HTTP_FILES_PATH.'asset_cache/'.md5($file).'.css';;
+            
+            $full_target_path = $doc_root.$target_path;
+            $full_source_path = $doc_root.$file;
 
-            if (!file_exists($doc_root.$file)) {
+            if (!file_exists($full_source_path)) {
                 return;
             }
             
-            require_once $doc_root.'/floxim/lib/lessphp/lessc.inc.php';
-            $target_file_name = md5($file).'.css';
-            $this->_files_css[]= $http_path.$target_file_name;
-            $this->_all_css[] = $http_path.$target_file_name;
-            $fh = fopen($full_path.$target_file_name, 'w');
-            $http_base = preg_replace("~[^/]+$~", '', $file);
-            $file_content = file_get_contents($doc_root.$file);
-            $file_content = $this->_css_url_replace($file_content, $http_base);
-            $less = new lessc();
-            $file_content = $less->compile($file_content);
-            fputs($fh, $file_content);
-            fclose($fh);
+            if (!file_exists($full_target_path) || filemtime($full_source_path) > filemtime($full_target_path)) {
+                fx::profiler()->block('compile less '.$file);
+                require_once $doc_root.'/floxim/lib/lessphp/lessc.inc.php';
+                $fh = fopen($full_target_path, 'w');
+                $http_base = preg_replace("~[^/]+$~", '', $file);
+                $file_content = file_get_contents($full_source_path);
+                $file_content = $this->_css_url_replace($file_content, $http_base);
+                $less = new lessc();
+                $file_content = $less->compile($file_content);
+                fputs($fh, $file_content);
+                fclose($fh);
+                fx::profiler()->stop();
+            }
+            $this->_files_css[]= $target_path;
+            $this->_all_css[] = $target_path;
             return;
         }
         $this->_files_css[] = $file;

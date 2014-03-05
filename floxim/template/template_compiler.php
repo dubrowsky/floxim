@@ -57,10 +57,16 @@ class fx_template_compiler {
     protected function _token_call_to_code(fx_template_token $token) {
         $code = "<?\n";
         $tpl_name = $token->get_prop('id');
-        if (!preg_match("~\.~", $tpl_name)) {
-            $tpl_name = $this->_template_set_name.".".$tpl_name;
+        // not a plain name
+        if (!preg_match("~^[a-z0-9_\.]+$~", $tpl_name)) {
+            $tpl_name = self::parse_expression($tpl_name);
+        } else {
+            if (!preg_match("~\.~", $tpl_name)) {
+                $tpl_name = $this->_template_set_name.".".$tpl_name;
+            }
+            $tpl_name = '"'.$tpl_name.'"';
         }
-        $code .= '$tpl_to_call = fx::template("'.$tpl_name.'"';
+        $code .= '$tpl_to_call = fx::template('.$tpl_name;
         if ( ($with_expr = $token->get_prop('with'))) {
             $code .= ', '.self::parse_expression($with_expr);
         }
@@ -454,7 +460,8 @@ class fx_template_compiler {
     protected function _token_each_to_code(fx_template_token $token) {
         $code = "<?\n";
         $arr_id = self::parse_expression($token->get_prop('select'));
-        $item_key = $token->get_prop('key');
+        
+        $loop_alias = 'null';
         $item_alias = $token->get_prop('as');
         
         if (!preg_match('~^\$[a-z0-9_]+$~', $arr_id)) {
@@ -465,19 +472,26 @@ class fx_template_compiler {
         
         if (!$item_alias) {
             $item_alias = $arr_id.'_item';
+        } else {
+            $loop_alias = '"'.preg_replace('~^\$~', '', $item_alias).'"';
         }
         $item_alias = preg_replace('~^\$~', '', $item_alias);
+        
+        // key for loop
+        $loop_key = 'null';
+        
+        $item_key = $token->get_prop('key');
         if (!$item_key) {
             $item_key = $item_alias.'_key';
+        } else {
+            $item_key = preg_replace('~^\$~', '', $item_key);
+            $loop_key = '"'.$item_key.'"';
         }
-        $item_key = preg_replace('~^\$~', '', $item_key);
-        if (! ($extract = $token->get_prop('extract'))) {
-            $extract = true;
-        }
+        
         $separator = $this->_find_separator($token);
         $code .= "if (is_array(".$arr_id.") || ".$arr_id." instanceof Traversable) {\n";
         $loop_id = '$'.$item_alias.'_loop';
-        $code .=  $loop_id.' = new fx_template_loop('.$arr_id.', "'.$item_key.'", "'.$item_alias.'"'.");\n";
+        $code .=  $loop_id.' = new fx_template_loop('.$arr_id.', '.$loop_key.', '.$loop_alias.");\n";
         $code .= '$this->context_stack[]= '.$loop_id.";\n";
         $code .= "\nforeach (".$arr_id." as \$".$item_key." => \$".$item_alias.") {\n";
         $code .= $loop_id."->_move();\n";
