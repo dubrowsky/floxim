@@ -6,12 +6,12 @@ class fx_thumb
     protected $image = null;
     protected $config = null;
     
-    public function __construct($source_http_path, $config)
+    public function __construct($source_http_path, $config = '')
     {
         if (empty($source_http_path)) {
             throw new Exception('Empty path');
         }
-        $this->config = $this->get_config($config);
+        $this->config = $this->_read_config($config);
         
         $source_path = fx::path()->to_abs($source_http_path);
         if (!file_exists($source_path) || !is_file($source_path)) {
@@ -34,6 +34,15 @@ class fx_thumb
             throw new Exception('Wrong image type');
         }
         $this->info += self::$_types[$info['imagetype']];
+    }
+    
+    public function get_info($key = null) {
+        switch (func_num_args()) {
+            case 0: default:
+                return $this->info;
+            case 1:
+                return isset($this->info[$key]) ? $this->info[$key] : null;
+        }
     }
     
     protected function _calculateSize($params, $source = null)
@@ -200,12 +209,12 @@ class fx_thumb
         );
     }
     
-    public function Resize($params = null)
-    {
-        if (isset($params))
-            $params = $this->get_config($params);
-        else
+    public function resize($params = null) {
+        if (isset($params)) {
+            $params = $this->_read_config($params);
+        } else {
             $params = $this->config;
+        }
         $st = array_merge(array(
             'width' => false,
             'height' => false,
@@ -300,7 +309,7 @@ class fx_thumb
         );
         call_user_func_array('imagecopyresampled', $icr_args);
         $this->image = $target_i;
-        
+        return $this;
     }
     
     protected function _addTransparency($dst, $src, $type)
@@ -327,7 +336,7 @@ class fx_thumb
         imagecolortransparent($dst, $t_index);
     }
     
-    public function Save($target_path = false, $quality = 90) {
+    public function save($target_path = false, $quality = 90) {
         if ($this->info['imagetype'] == IMAGETYPE_PNG) {
             $quality = round($quality / 10);
         }
@@ -348,21 +357,22 @@ class fx_thumb
             'save_func' => 'imagegif'
         ), 
         IMAGETYPE_JPEG => array(
-            'ext' => 'gif', 
+            'ext' => 'jpg', 
             'create_func' => 'imagecreatefromjpeg', 
             'save_func' => 'imagejpeg'
         ), 
         IMAGETYPE_PNG => array(
-            'ext' => 'gif', 
+            'ext' => 'png', 
             'create_func' => 'imagecreatefrompng', 
             'save_func' => 'imagepng'
         )
     );
     
-    public function process($full_path) {
+    public function process($full_path = false) {
         $this->image = call_user_func($this->info['create_func'], $this->source_path);
-        $this->Resize();
-        $this->Save($full_path);
+        $this->resize();
+        $this->save($full_path);
+        $this->image = null;
     }
     
     public function get_result_path() {
@@ -397,8 +407,11 @@ class fx_thumb
         return $path;
     }
     
-    protected function get_config($config)
-    {
+    protected function _read_config($config) {
+        $config = trim($config);
+        if (empty($config)) {
+            return array();
+        }
         $config = explode(",", $config);
         $params = array();
         foreach ($config as $props) {
@@ -408,5 +421,15 @@ class fx_thumb
         }
         return $params;
     }
+    
+    public function set_config($key, $value) {
+        if (is_array($key)) {
+            foreach ($key as $rk => $rv) {
+                $this->set_config($rk, $rv);
+            }
+            return $this;
+        }
+        $this->config[$key]= $value; 
+        return $this;
+    }
 }
-?>
