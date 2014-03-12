@@ -89,27 +89,6 @@ class fx_component extends fx_essence {
         return $result;
     }
 
-    /**
-     * Возвращает относительный пункт до иконки компонента
-     * Определяется:
-     * 1. по полю icon
-     * 2. по наличию icon.png в директории компонента
-     * 3. по умолчанию
-     * @return string
-     */
-    public function get_icon() {
-        if ($this['icon']) {
-            return fx::config()->ADMIN_TEMPLATE.'icons/'.$this['icon'].'.png';
-        }
-
-        $fullpath = fx::config()->COMPONENT_FOLDER.$this['keyword'].'/icon.png';
-        if (file_exists($fullpath)) {
-            return fx::config()->HTTP_COMPONENT_PATH.$this['keyword'].'/icon.png';
-        }
-
-        return fx::config()->ADMIN_TEMPLATE.'icons/component.png';
-    }
-
     public function is_user_component() {
         return $this['keyword'] == 'user';
     }

@@ -344,7 +344,7 @@ class fx_controller_admin_component extends fx_controller_admin {
         $field['labels'] = array(
             'name' => fx::alang('Name', 'system'),
             'action' => fx::alang('Action', 'system'),
-            'type' => fx::alang('Type', 'system'),
+            'inherited' => fx::alang('Inherited', 'system'),
             'source' => fx::alang('Source', 'system'),
             'file' => fx::alang('File', 'system'),
             'used' => fx::alang('Used', 'system')
@@ -369,9 +369,9 @@ class fx_controller_admin_component extends fx_controller_admin {
             fx::log('ownc', $owner_ctr, $tpl['of']);
             
             if ($owner_ctr == $component['keyword']) {
-                $r['type'] = 'Own template';
+                $r['inherited'] = ' ';
             } else {
-                $r['type'] = 'Inherited from '.$owner_ctr;
+                $r['inherited'] = $owner_ctr;
             }
             if (preg_match("~^layout_~", $tpl['full_id'])) {
                 $layout_code = 
@@ -391,7 +391,7 @@ class fx_controller_admin_component extends fx_controller_admin {
                 $r['source'] = 
                     fx::data($ctr_type, $ctr_code)->get('name');
             }
-            $r['file'] = str_replace(fx::config()->DOCUMENT_ROOT, '', $tpl['file']);
+            $r['file'] = fx::path()->to_http($tpl['file']);
             $field['values'][] = $r;
         }
         return array('fields' => array('templates' => $field));
@@ -457,10 +457,7 @@ class fx_controller_admin_component extends fx_controller_admin {
         $res = mb_substr($info['full'], 0, $info['start']);
         $res .= $input['source'];
         $res .= mb_substr($info['full'], $info['start']+$info['length']);
-        dev_log('savng', $res, $info);
-        $fh = fopen($info['file'], 'w');
-        fputs($fh, $res);
-        fclose($fh);
+        fx::files()->writefile($info['file'], $res);
         return array('status' => 'ok');
     }
     

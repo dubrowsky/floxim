@@ -300,7 +300,7 @@ class fx_field_multilink extends fx_field_baze {
                 }
                 $linked_props['type'] = $linked_data_type;
                 $linked_props['infoblock_id'] = $linked_infoblock_id;
-            } else {
+            } elseif (isset($existing_items->linker_map)) {
                 $linker_item = $existing_items->linker_map->find_one($end_link_field_name, $linked_props);
             }
             if (!$linker_item) {

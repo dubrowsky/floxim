@@ -1,7 +1,7 @@
 <?php
 class fx_content_user extends fx_content {
 
-    static public function attempt_to_authorize() {
+    static public function load() {
         $db = fx::db();
         $session_id = fx::input()->fetch_cookie('fx_sid');
         $session_time = time() + (fx::config()->AUTHTIME ? fx::config()->AUTHTIME : 24 * 3600);
@@ -22,12 +22,12 @@ class fx_content_user extends fx_content {
             $user_id = $data['id'];
             $user = fx::data('content_user', $user_id);
             $user->create_session('attempt');
-            fx::env()->set_user($user);
         } elseif ($session_id) {
-        	self::drop_session_cookie();
+            self::drop_session_cookie();
+            $user = fx::data('content_user')->create();
         }
-
-        return $user_id;
+        fx::env()->set_user($user);
+        return $user;
     }
 
     public function authorize($auth_type = 1) {
@@ -47,7 +47,7 @@ class fx_content_user extends fx_content {
     public static function drop_session_cookie() {
         setcookie("fx_sid", NULL, NULL, "/", fx::config()->HTTP_HOST);
         if (preg_match("~www\.~", fx::config()->HTTP_HOST)) {
-			setcookie("fx_sid", NULL, NULL, "/", str_replace("www.", "", fx::config()->HTTP_HOST));
+            setcookie("fx_sid", NULL, NULL, "/", str_replace("www.", "", fx::config()->HTTP_HOST));
         }
     }
     
@@ -60,7 +60,7 @@ class fx_content_user extends fx_content {
         $user_id = $this['id'];
 
         // сохранять авторизацию ( перенести проверку поста в вызывающий метод )
-        $LoginSave = ( ($login_save || isset($_POST['loginsave']) || fx::config()->AUTHTYPE == "always") ? 1 : 0);
+        $LoginSave = ( ($login_save || isset($_POST['loginsave']) ) ? 1 : 0);
 
         // авторизировать на поддоменах
         // потом вынести в настройки

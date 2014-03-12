@@ -8,19 +8,17 @@
     <div
         fx:item
         class="banner">
-        <?fx::profiler()->block('banner_pic');?>
-        <img src="{%banner_image_$id|'crop:middle,width:1160,min-height:350'}<?=$template_dir?>img/120110-G-IA163-068-Healy-escorts-Renda.jpg{/%}">
-        <?fx::profiler()->stop();?>
+        <img src="{%banner_image_$id|'crop:middle,width:1160,min-height:350'}<?=$template_dir?>img/ship.jpg{/%}">
         <div class="caption">
             <div class="h2">
-                {%banner_header_$id}
-                    <p>This is Staff</p>
-                {/%}
+                {%banner_header_$id type="html"}<p>{$name /}</p>{/%}
             </div>
             <div class="text">
-                {%banner_text_$id}
+                <div>
+                    {%banner_text_$id}
                     <p>This is <strong>text</strong></p>
-                {/%}
+                    {/%}
+                </div>
                 <a class="go" href="{$url}">Go</a>
             </div>
         </div>

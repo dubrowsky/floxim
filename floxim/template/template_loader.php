@@ -117,8 +117,24 @@ class fx_template_loader {
     }
     
     public function is_fresh($target_path) {
-        return file_exists($target_path) && 
-                (time() - filemtime($target_path)) < fx::config()->COMPILED_TEMPLATES_TTL;
+        // file is not created yet
+        if (!file_exists($target_path)) {
+            return false;
+        }
+        $target_time = filemtime($target_path);
+        // file is fresh enough
+        if ((time() - $target_time) < fx::config()->COMPILED_TEMPLATES_TTL) {
+            return true;
+        }
+        // compare sources to compiled template
+        foreach ($this->_source_files as $source) {
+            if (filemtime($source) > $target_time) {
+                // some source updated
+                return false;
+            }
+        }
+        // all sources are older than compiled
+        return true;
     }
     
     public function load() {
@@ -142,9 +158,7 @@ class fx_template_loader {
     
     public function save() {
         $source = $this->compile();
-        $fh = fopen($this->get_target_path(), 'w');
-        fputs($fh, $source);
-        fclose($fh);
+        fx::files()->writefile($this->get_target_path(), $source);
     }
     /**
      * Преобразовать файлы-исходники в один большой

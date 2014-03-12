@@ -22,7 +22,8 @@
         <nav class="fx_top_fixed">
             <div class="holder">
                 <a href="/" class="logo">
-                    <img src="{%logo | 'max-height:40'}">
+                    <img fx:if="$logo" src="{%logo | 'max-height:40'}">
+                    <span fx:else data-logo="{%logo type="image"}">{%logo_name}Logo{/%}</span>
                 </a>
                 <div
                     fx:area="top_nav"

@@ -1172,6 +1172,8 @@ img.fx_hilight {
 
 .fx_selected, .fx_selected:focus {
     outline:none;
+    min-width: 10px;
+    min-height: 10px;
 }
 
 .fx_empty_infoblock {

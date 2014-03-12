@@ -27,13 +27,16 @@ function fx_edit_in_place( node ) {
     this.ib_meta = node.closest('.fx_infoblock').data('fx_infoblock');
     
     var eip = this;
-    
+    /*
     this.node.on('keydown.edit_in_place', function(e) {
         eip.handle_keydown(e);
     });
+    */
+   
     $('html').on('keydown.edit_in_place', function(e) {
        eip.handle_keydown(e);
     });
+    
     
     // редактировать нужно содержимое узла
     if (this.node.data('fx_var')) {

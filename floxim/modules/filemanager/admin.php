@@ -502,8 +502,7 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
                 @ob_end_clean();
             }
             header($_SERVER['SERVER_PROTOCOL']." 200 OK");
-            // for CGI header
-            if (fx::config()->PHP_TYPE == "cgi") header("Status: 200 OK");
+            
             header("Content-type: ".fx::files()->mime_content_type($filename));
             header("Content-Disposition: attachment; filename=\"".urldecode($only_name)."\"");
             header('Content-Transfer-Encoding: binary');

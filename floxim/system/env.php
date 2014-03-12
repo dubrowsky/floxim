@@ -55,8 +55,11 @@ class fx_system_env {
   /**
    * @return fx_site
    */
-  public function get_site ($item=null) {
-        return $item ? $this->current['site'][$item] : $this->current['site'];
+  public function get_site () {
+      if (!isset($this->current['site'])) {
+          $this->current['site'] = fx::data('site')->get_by_host_name($_SERVER['HTTP_HOST'], 1);
+      }
+      return $this->current['site'];
   }
 
   public function set_action ( $action ) {
@@ -104,8 +107,11 @@ class fx_system_env {
       $this->current['user'] = $user;
   }
 
-  public function get_user ($item=null) {
-      return $item ? $this->current['user'][$item] : $this->current['user'];
+  public function get_user () {
+      if (!isset($this->current['user'])) {
+          $this->current['user'] = fx_content_user::load();
+      }
+      return $this->current['user'];
   }
 
   public function set_main_content ( $str ) {

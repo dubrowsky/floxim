@@ -665,7 +665,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
      */
     public function save_var($input) {
         /* @var $ib fx_infoblock */
-        dev_log('save var', $input);
+        
         $ib = fx::data('infoblock', $input['infoblock']['id']);
         // для инфоблоков-лейаутов всегда сохраняем параметры в корневой инфоблок
         if ($ib->get_prop_inherited('controller') == 'layout') {
@@ -722,26 +722,12 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                 } else {
                     $contents[$var['content_id']]['values'][$var['name']] = $value;
                 }
-
-                /*$content_id = $var['content_id'];
-                $content_type_id = $var['content_type_id'];
-                $content = fx::data(array('content',$content_type_id), $content_id);
-                if ($content) {
-                    $content[$var['name']] = $value;
-                    $content->save();
-                }*/
             }
         }
 
         foreach ($contents as $content_id => $content_info) {
-
-            fx::log('content_info', $content_info);
             $content = fx::data(array('content', $content_info['content_type_id']), $content_id);
             if ($content) {
-                /*foreach ($content_info['values'] as $name => $value) {
-                    $content[$name] = $value;
-                }
-                $content->save();*/
                 $content->set_field_values($content_info['values'], array_keys($content_info['values']));
                 $content->save();
             }

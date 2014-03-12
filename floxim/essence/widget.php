@@ -1,10 +1,6 @@
 <?php
 class fx_widget extends fx_essence {
 
-    public function get_folder_path() {
-        return fx::config()->HTTP_WIDGET_PATH.$this['keyword'].'/';
-    }
-
     public function validate() {
         $res = true;
 

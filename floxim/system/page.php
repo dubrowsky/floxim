@@ -57,14 +57,15 @@ class fx_system_page {
             if (!file_exists($full_target_path) || filemtime($full_source_path) > filemtime($full_target_path)) {
                 fx::profiler()->block('compile less '.$file);
                 require_once $doc_root.'/floxim/lib/lessphp/lessc.inc.php';
-                $fh = fopen($full_target_path, 'w');
                 $http_base = preg_replace("~[^/]+$~", '', $file);
+                
+                $less = new lessc();
+                
                 $file_content = file_get_contents($full_source_path);
                 $file_content = $this->_css_url_replace($file_content, $http_base);
-                $less = new lessc();
+                
                 $file_content = $less->compile($file_content);
-                fputs($fh, $file_content);
-                fclose($fh);
+                fx::files()->writefile($full_target_path, $file_content);
                 fx::profiler()->stop();
             }
             $this->_files_css[]= $target_path;
@@ -86,11 +87,10 @@ class fx_system_page {
             $params['name'] = md5(join($files));
         }
         $params['name'] .= '.cssgz';
-        $doc_root = fx::config()->DOCUMENT_ROOT;
-        $http_path = fx::config()->HTTP_FILES_PATH.'asset_cache/'.$params['name'];
-        $full_path = $doc_root.$http_path;
         
-        //$this->_all_css = array_merge($this->_all_css, $files);
+        $http_path = fx::path()->http('files', 'asset_cache/'.$params['name']);
+        $full_path = fx::path()->to_abs($http_path);
+        
         if (!file_exists($full_path)) {
             $less_flag = false;
             $file_content = '';
@@ -98,7 +98,6 @@ class fx_system_page {
                 if (preg_match("~\.less$~", $file)) {
                     $less_flag = true;
                 }
-                //echo $file."<br />";
                 
                 if (preg_match("~^http://~i", $file)) {
                     $file_contents = file_get_contents($file);
@@ -107,38 +106,25 @@ class fx_system_page {
                     $file = $doc_root.$file;
                     $file_contents = file_get_contents($file);
                     $file_contents = $this->_css_url_replace($file_contents, $http_base);
-                    /*$file_contents = preg_replace_callback(
-                        '~(url\([\'\"]?)([^/][^\)]+)~i', 
-                        function($matches) use ($http_base) {
-                            //fx::debug($matches);
-                            if (preg_match("~data\:~", $matches[0])) {
-                                return $matches[0];
-                            }
-                            return $matches[1].$http_base.$matches[2];
-                        }, 
-                        $file_contents
-                    );*/
-                    //preg_match_all('~url\([\'\"]?[^/]~i', $file_contents, $urls);
-                    //fx::debug($urls);
                 }
-                //fx::debug($file_contents);
                 $file_content .= $file_contents."\n";
             }
-            //die();
 
             if ($less_flag) {
                 require_once $doc_root.'/floxim/lib/lessphp/lessc.inc.php';
                 $less = new lessc();
                 $file_content = $less->compile($file_content);
             }
+            
+            $plain_path = preg_replace("~\.cssgz$~", ".css", $full_path);
+            // directory should be created here:
+            fx::files()->writefile($plain_path, $file_content);
+            
             $fh = gzopen($full_path, 'wb5');
             gzwrite($fh, $file_content);
             gzclose($fh);
-            $fh = fopen(preg_replace("~\.cssgz$~", ".css", $full_path), 'w');
-            fputs($fh, $file_content);
-            fclose($fh);
         }
-        //die();
+        
         if (!$this->_accept_gzip()) {
             $http_path = preg_replace("~\.cssgz$~", ".css", $http_path);
         }
@@ -183,9 +169,14 @@ class fx_system_page {
             $params['name'] = md5(join($files));
         }
         $params['name'] .= '.jsgz';
+        /*
         $doc_root = fx::config()->DOCUMENT_ROOT;
         $http_path = fx::config()->HTTP_FILES_PATH.'asset_cache/'.$params['name'];
         $full_path = $doc_root.$http_path;
+         * 
+         */
+        $http_path = fx::path()->http('files', 'asset_cache/'.$params['name']);
+        $full_path = fx::path()->to_abs($http_path);
         
         $this->_all_js = array_merge($this->_all_js, $files);
         
@@ -203,12 +194,14 @@ class fx_system_page {
                 }
                 $bundle_content .= $file_content.";\n";
             }
+            
+            $plain_path = preg_replace("~\.jsgz$~", ".js", $full_path);
+            fx::files()->writefile($plain_path, $bundle_content);
+            
             $fh = gzopen($full_path, 'wb5');
             gzwrite($fh, $bundle_content);
             gzclose($fh);
-            $fh = fopen(preg_replace("~\.jsgz$~", ".js", $full_path), 'w');
-            fputs($fh, $bundle_content);
-            fclose($fh);
+            
         }
         if (!$this->_accept_gzip()) {
             $http_path = preg_replace("~\.jsgz$~", ".js", $http_path);

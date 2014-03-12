@@ -7,39 +7,18 @@ class fx_config {
         'DB_PASSWORD' => '',
         'DB_PREFIX' => 'fx',
         'DB_CHARSET' => 'utf8',
-        'DB_ENCRYPT' => 'MD5',
-
         'CHARSET' => 'utf-8',
-
+        
         'ADMIN_LANG' => 'en',
-        /*'AVAILABLE_LANGUAGES' => array("ru","en"),
-        'LANGUAGE' => 'en',*/
-
-        'PAGE_TPL' => 'page',
-        'SEARCH_KEY' => 'fxsrch',
-
-        'REDIRECT_FULL_MESSAGE' => 1,
-
+        
         'AUTHORIZE_BY' => 'email',
         'AUTHTIME' => 86400,
-        'AUTHTYPE' => 'manual',
         'FILECHMOD' => 0644,
         'DIRCHMOD' => 0755,
-        'PHP_TYPE' => 'module',
-
-        'IMAGE_MAX_WIDTH' => 1000,
-        'IMAGE_MAX_HEIGHT' => 1000,
-        'THUMB_MAX_WIDTH' => 200,
-        'THUMB_MAX_HEIGHT' => 200,
-
-
+        
         'HTTP_ROOT_PATH' => '/floxim/',
         'HTTP_FILES_PATH' => '/floxim_files/',
-        'HTTP_DUMP_PATH' => '/floxim_dump/',
-        'HTTP_TEMPLATE_PATH' => '/floxim_templates/',
         'HTTP_LAYOUT_PATH' => '/layout/',
-        'HTTP_COMPONENT_PATH' => '/floxim_components/',
-        'HTTP_WIDGET_PATH' => '/floxim_widgets/',
 
         'SESSION_KEY' => '_fx_cms_',
 
@@ -84,6 +63,16 @@ class fx_config {
         @ini_set("mbstring.internal_encoding", "UTF-8");
         @ini_set("session.name", ini_get("session.hash_bits_per_character") >= 5 ? "sid" : "ced");
         
+        
+        fx::path()->register('root', DOCUMENT_ROOT);
+        fx::path()->register('home', DOCUMENT_ROOT);
+        
+        fx::path()->register('floxim', '/floxim/');
+        fx::path()->register('std', fx::path('floxim', '/std'));
+        fx::path()->register('layouts', array('/layout', fx::path('std', '/layout')));
+        fx::path()->register('files', '/floxim_files/');
+                
+        
         $this->config['DOCUMENT_ROOT'] = DOCUMENT_ROOT;//rtrim(getenv("DOCUMENT_ROOT"), "/\\");
         $this->config['HTTP_HOST'] = getenv("HTTP_HOST");
         $this->config['FLOXIM_FOLDER'] = $this->config['DOCUMENT_ROOT'] . $this->config['SUB_FOLDER'];
@@ -97,9 +86,6 @@ class fx_config {
         $this->config['ROOT_FOLDER'] = $this->config['FLOXIM_FOLDER'].$this->config['HTTP_ROOT_PATH'];
         $this->config['SYSTEM_FOLDER'] = $this->config['ROOT_FOLDER'].'system/';
         $this->config['FILES_FOLDER'] = $this->config['FLOXIM_FOLDER'].$this->config['HTTP_FILES_PATH'];
-        $this->config['DUMP_FOLDER'] = $this->config['FLOXIM_FOLDER'].$this->config['HTTP_DUMP_PATH'];
-        $this->config['TEMPLATE_FOLDER'] = $this->config['FLOXIM_FOLDER'].$this->config['HTTP_TEMPLATE_PATH'];
-        $this->config['COMPONENT_FOLDER'] = $this->config['FLOXIM_FOLDER'].$this->config['HTTP_COMPONENT_PATH'];
         $this->config['WIDGET_FOLDER'] = $this->config['FLOXIM_FOLDER'].$this->config['HTTP_WIDGET_PATH'];
         $this->config['INCLUDE_FOLDER'] = $this->config['ROOT_FOLDER'].'lib/';
         $this->config['TMP_FOLDER'] = $this->config['ROOT_FOLDER'].'tmp/';
@@ -130,15 +116,7 @@ class fx_config {
     }
 
     public function __get($name) {
-        if (isset($this->config[$name])) {
-            return $this->config[$name];
-        } else {
-            $trace = debug_backtrace();
-            trigger_error('Undefined class property '.__CLASS__.'->'.$name.
-                    ' in '.$trace[0]['file'].
-                    ' on line '.$trace[0]['line'], E_USER_NOTICE);
-            return null;
-        }
+        return isset($this->config[$name]) ? $this->config[$name] : null;
     }
 
     public function __isset($name) {

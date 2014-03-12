@@ -17,7 +17,7 @@ class fx_filetable extends fx_essence {
     
     public function delete_file() {
         $path = $this->get_full_path();
-        if (file_exists($path)) {
+        if (file_exists($path) && is_file($path)) {
             unlink($path);
         }
     }

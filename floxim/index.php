@@ -1,10 +1,9 @@
 <?php
-// выношу инициализацию сервисов в boot.php (бывший vars.inc.php)
-
 if (!defined('FLOXIM')) {
     require_once('../boot.php');
 }
 fx::profiler()->block('page');
+
 register_shutdown_function(function() {
     if (!fx::env()->get('complete_ok')) {
     	$ob_level = ob_get_level();

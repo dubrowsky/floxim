@@ -308,6 +308,11 @@ class fx {
         }
     }
     
+    /**
+     * 
+     * @param fx_collection $data
+     * @return fx_collection
+     */
     public static function collection($data = array()) {
         return $data instanceof fx_collection ? $data : new fx_collection($data);
     }
@@ -378,16 +383,15 @@ class fx {
     }
     
     public static function user() {
-        return fx::env()->get_user();
+        return self::env()->get_user();
     }
     
-    protected static $_event_manager = null;
-    
     protected static function _get_event_manager() {
-        if (!self::$_event_manager) {
-            self::$_event_manager = new fx_system_eventmanager();
+        static $event_manager = null;
+        if (is_null($event_manager)) {
+            $event_manager = new fx_system_eventmanager();
         }
-        return self::$_event_manager;
+        return $event_manager;
     }
     public static function listen($event_name, $callback) {
         self::_get_event_manager()->listen($event_name, $callback);
@@ -486,5 +490,22 @@ class fx {
             $profiler = new fx_profiler();
         }
         return $profiler;
+    }
+    
+    public static function path($key = null, $tale = null) {
+        static $path = null;
+        if (!$path) {
+            // we can not autoload path because it gonna be used by autoloader itself
+            require_once (dirname(__FILE__).'/path.php');
+            $path = new fx_path();
+        }
+        switch(func_num_args()) {
+            case 0: default:
+                return $path;
+            case 1:
+                return $path->abs($key);
+            case 2:
+                return $path->abs($key, $tale);
+        }
     }
 }

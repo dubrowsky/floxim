@@ -741,8 +741,8 @@ fx_front.prototype.select_content_essence = function(n) {
     $fx.front.add_panel_button('delete', function() {
        if (confirm(fx_lang("Вы уверены?"))) {
            $fx.front.disable_infoblock(ib_node);
-           var ce_type = essence_meta.linker_type || essence_meta.type;
-           var ce_id = essence_meta.linker_id || essence_meta.id;
+           var ce_type = essence_meta[3] || essence_meta[1];
+           var ce_id = essence_meta[2] || essence_meta[0];
            $fx.post({
                essence:'content',
                action:'delete_save',

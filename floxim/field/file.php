@@ -78,52 +78,26 @@ class fx_field_file extends fx_field_baze {
     }
 
     public function get_savestring(fx_essence $content = null) {
-
-
         if ($content[$this['name']] != $this->value) {
-            fx::log('get save string', $content, $this->value, $this);
-
-            $folder = ($content['id']%100 > 0) ? (floor($content['id']/100)*100+1).'-'.(floor($content['id']/100)*100+100) : ((floor($content['id']/100)-1)*100+1).'-'.(floor($content['id']/100)*100);
-            preg_match("~[^".preg_quote(DIRECTORY_SEPARATOR).']+$~', $this->value, $fn);
-            $path = '/floxim_files/content/'.$content['type'].'/'.$folder.'/'.$this->name.'/'.$fn[0];
-            fx::files()->rm($content[$this['name']]);
-            fx::files()->move($this->value, $path);
+            $c_val = fx::path()->to_abs($this->value);
+            $id = $content['id'];
+            $div = 100;
+            $id_floor = floor($id/$div);
+            $folder = ($id%$div > 0) 
+                    ? ($id_floor*$div+1).'-'.($id_floor*$div+$div) 
+                    : (($id_floor-1)*$div+1).'-'.($id_floor*$div);
+            
+            preg_match("~[^".preg_quote(DIRECTORY_SEPARATOR).']+$~', $c_val, $fn);
+            
+            $path = fx::path()->http(
+                'files', 
+                '/content/'.$content['type'].'/'.$folder.'/'.$this->name.'/'.$fn[0]
+            );
+            
+            fx::files()->move($c_val, $path);
         }
-
-        fx::log(isset($path) ? $path : $this->value);
 
         return isset($path) ? $path : $this->value;
-        /*
-        if (is_numeric($this->value)) {
-            return $this->value;
-        }
-        if (empty($this->value)) {
-            return $this->value;
-        }
-
-        $current_file_id = $content ? $content[$this->name] : null;
-        return $current_file_id;
-
-        if ($this->value['delete'] && $current_file_id == $this->value['delete']) {
-            $this->_to_delete_id = $current_file_id;
-            $current_file_id = 0;
-        }
-
-        if (!$this->value || ($this->value['error'] == 4 || (isset($this->value['id']) && $this->value['id'] == 0))) {
-            return $current_file_id;
-        }
-
-        if (($id = intval($this->value['id']))) {
-            return $id;
-        }
-
-        if ($this->value) {
-            $r = fx::files()->save_file($this->value, $content->get_upload_folder());
-        }
-
-        return +$r['id'];
-         * 
-         */
     }
 
     public function post_save($content) {

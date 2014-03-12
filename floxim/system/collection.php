@@ -219,28 +219,32 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
         if (is_string($groupper)) {
             $modifiers = array();
             if (preg_match("~\|~", $groupper)) {
+                
                 $groupper_parts = explode("|", $groupper, 2);
                 $groupper = trim($groupper_parts[0]);
-                $parsed_modifiers = fx_template_processor::get_var_modifiers($groupper_parts[1]);
+                
+                $p = new fx_template_modifier_parser();
+                $parsed_modifiers = $p->parse('|'.$groupper_parts[1]);
                 if ($parsed_modifiers) {
                     foreach ($parsed_modifiers as $pmod) {
-                        $callback = array_shift($pmod);
+                        $callback = $pmod['name'];
+                        $args = $pmod['args'];
                         if (!is_callable($callback)) {
                             continue;
                         }
-                        $self_key = array_keys($pmod, "self");
+                        $self_key = array_keys($args, "self");
                         if (isset($self_key[0])) {
                             $self_key = $self_key[0];
                         } else {
-                            array_unshift($pmod, '');
+                            array_unshift($args, '');
                             $self_key = 0;
                         }
-                        foreach ($pmod as &$arg_v) {
+                        foreach ($args as &$arg_v) {
                             $arg_v = trim($arg_v, '"\'');
                         }
                         $modifiers []= array(
                             $callback,
-                            $pmod,
+                            $args,
                             $self_key
                         );
                     }

@@ -8,14 +8,12 @@ class fx_patch extends fx_essence {
             return false;
         }
         
-        $dir = fx::config()->DOCUMENT_ROOT.
-               fx::config()->HTTP_FILES_PATH.
-               'patches/'.$this['from'].'-'.$this['to'];
+        $dir = fx::path('files', 'patches/'.$this['from'].'-'.$this['to']);
         
         if (!file_exists($dir)) {
             $saved = fx::files()->save_file(
-                    array('link' => $this['url']),
-                    'patches/'
+                array('link' => $this['url']),
+                'patches/'
             );
             fx::files()->unzip($saved['fullpath'], 'patches/');
             unlink($saved['fullpath']);
@@ -56,28 +54,23 @@ class fx_patch extends fx_essence {
     
     protected function _update_files($dir, $base) {
         $items = glob($dir."/*");
-        dev_log("Updating files", $items);
         if (!$items) {
             return;
         }
         
         foreach ($items as $item) {
-            $item_target = fx::config()->DOCUMENT_ROOT.str_replace($base, '', $item);
+            $item_target = fx::path('root').str_replace($base, '', $item);
             if (is_dir($item)) {
-                if (!file_exists($item_target)){
-                    mkdir($item_target, 0777);
-                }
+                fx::files()->mkdir($item_target);
                 $this->_update_files($item, $base);
             } else {
-                $fh = fopen($item_target, 'w');
-                fputs($fh, file_get_contents($item));
-                fclose($fh);
+                fx::files()->writefile($item_target, file_get_contents($item));
             }
         }
     }
     
     protected function _update_version_number($new_version) {
-        $config_file = fx::config()->DOCUMENT_ROOT.'/floxim/system/config.php';
+        $config_file = fx::path('floxim', '/system/config.php');
         $new_full = $new_version.".".fx::version('build');
         $config_content = file_get_contents($config_file);
         $config_content = preg_replace_callback(
@@ -87,8 +80,6 @@ class fx_patch extends fx_essence {
             }, 
             $config_content
         );
-        $fh = fopen($config_file, 'w');
-        fputs($fh, $config_content);
-        fclose($fh);
+        fx::files()->writefile($config_file, $config_content);
     }
 }

@@ -31,7 +31,7 @@ class fx_controller_admin extends fx_controller {
         $input = $this->input;
         $action = $this->action;
         
-        if (!fx::env('is_admin')) {
+        if (!fx::is_admin()) {
             $result = $this->admin_office($input);
             if (is_string($result)) {
                 return $result;
@@ -158,7 +158,7 @@ class fx_controller_admin extends fx_controller {
         self::add_admin_files();
         $page = fx::page();
         $auth_form = '';
-        if (fx::env('is_admin')) {
+        if (fx::is_admin()) {
             $panel = '
             <div id="fx_admin_panel">
                 <div id="fx_admin_panel_logo"><div class="fx_preloader"></div></div>
@@ -208,7 +208,7 @@ class fx_controller_admin extends fx_controller {
                 </form></div>';
         }
 
-        if (fx::env('is_admin')) {
+        if (fx::is_admin()) {
             $js_config = new fx_admin_configjs();
             $page->add_js_text("fx_adminpanel.init(".$js_config->get_config().");");
         }

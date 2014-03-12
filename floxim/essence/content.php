@@ -60,7 +60,6 @@ class fx_content extends fx_essence {
         if (count($values) == 0) {
             return;
         }
-        fx::log('sfv', $values, $saved_fields);
         $fields = $save_fields ? $this->get_fields()->find('name', $save_fields) : $this->get_fields();
         $result = array('status' => 'ok');
         foreach ($fields as $field) {
@@ -162,7 +161,7 @@ class fx_content extends fx_essence {
             if ($cf->type == 'image' || $cf->type == 'file') {
                 if ($v && is_numeric($v) && ($file_obj = fx::data('filetable', $v)) ) {
                     $field_meta['filetable_id'] = $v;
-                    $v = fx::config()->HTTP_FILES_PATH.$file_obj['path'];
+                    $v = fx::path()->http('files', $file_obj['path']);
                 }
             }
             if ($cf->type == 'datetime') {
@@ -378,6 +377,11 @@ class fx_content extends fx_essence {
         return self::$content_fields_by_component[$com_id];
     }
     
+    public function has_field($field_name) {
+        $fields = $this->get_fields();
+        return isset($fields[$field_name]);
+    }
+
     protected function _after_delete() {
         parent::_after_delete();
         // delete images when deleting content

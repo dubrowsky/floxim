@@ -15,14 +15,12 @@ class fx_controller_admin_field extends fx_controller_admin {
         $ar['labels'] = array(
             'name' => fx::alang('Name','system'),
             'label' => fx::alang('Description','system'),
-            'type' => fx::alang('Type','system')
+            'type' => fx::alang('Type','system'),
+            'inherited' => fx::alang('Inherited from','system'),
+            'editable' => fx::alang('Editable', 'system')
         );
         foreach ( $items as $field ) {
             $desc = $field->get_description();
-            if ($essence['id'] != $field['component_id']) {
-                $component_name = fx::data('component', $field['component_id'])->get('name');
-                $desc .= ' ('.$component_name.')';
-            }
             $r = array(
                 'id' => $field->get_id(), 
                 'name' => array(
@@ -32,6 +30,23 @@ class fx_controller_admin_field extends fx_controller_admin {
                 'label' => $desc, 
                 'type' => fx::alang("FX_ADMIN_FIELD_".strtoupper($field->get_type(false)), 'system')
             );
+            if ($essence['id'] != $field['component_id']) {
+                $component_name = fx::data('component', $field['component_id'])->get('name');
+                $r['inherited'] = $component_name;
+            } else {
+                $r['inherited'] = ' ';
+            }
+            switch ($field['type_of_edit']) {
+                case fx_field::EDIT_ALL:
+                    $r['editable'] = fx::alang('Yes','system');
+                    break;
+                case fx_field::EDIT_NONE:
+                    $r['editable'] = fx::alang('No','system');
+                    break;
+                case fx_field::EDIT_ADMIN:
+                    $r['editable'] = fx::alang('For admin only', 'system');
+                    break;
+            }
             $ar['values'][] = $r;
         }
         

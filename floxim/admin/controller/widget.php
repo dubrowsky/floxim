@@ -104,7 +104,8 @@ class fx_controller_admin_widget extends fx_controller_admin_component {
             $result['errors'] = $widget->get_validate_error();
             return $result;
         }
-
+        return $result;
+        /*
         try {
             $content_php = $this->_get_tpl($widget['keyword']);
             fx::files()->writefile(fx::config()->HTTP_WIDGET_PATH.$data['keyword'].'/main.tpl.php', $content_php);
@@ -118,6 +119,8 @@ class fx_controller_admin_widget extends fx_controller_admin_component {
         }
 
         return $result;
+         * 
+         */
     }
 
     public function edit_save($input) {

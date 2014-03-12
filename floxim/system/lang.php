@@ -63,37 +63,25 @@ class fx_lang {
     
     protected function dump_dictionary($dict, $lang, $file) {
         $data = fx::data('lang_string')->where('dict', $dict)->all();
-        if (!file_exists(dirname($file))) {
-            mkdir(dirname($file));
-        }
+        
         $res = array();
         foreach ($data as $s) {
             $res[$s['string']] = $s['lang_'.$lang];        
         }
         
-        $fh = fopen($file, 'w');
-        fputs($fh, "<?php\nreturn ".var_export($res,1).";?>");
-        /*
-        foreach ($data as $s) {
-            $key = str_replace('"', '\"', $s['string']);
-            $val = str_replace('"', '\"', $s['lang_'.$lang]);
-            fputs(
-                $fh, 
-                '"'.$key.'" => '.($key == $val ? 'null' : '"'.$val.'"').",\n"
-            );
-        }
-        fputs($fh, ");");
-        */
-        fclose($fh);
+        fx::files()->writefile(
+            $file, 
+            "<?php\nreturn ".var_export($res,1).";?>"
+        );
     }
     
     public function add_string($string, $dict) {
         fx::data('lang_string')->create(
-                array(
-                    'string' => $string,
-                    'dict' => $dict,
-                    'lang_en' => $string
-                )
+            array(
+                'string' => $string,
+                'dict' => $dict,
+                'lang_en' => $string
+            )
         )->save();
     }
 }

@@ -13,6 +13,3 @@ if (!$config_res) {
 
 fx::config()->load($config_res);
 fx::load();
-
-fx::env('site', fx::data('site')->get_by_host_name($_SERVER['HTTP_HOST'], 1));
-fx_content_user::attempt_to_authorize();

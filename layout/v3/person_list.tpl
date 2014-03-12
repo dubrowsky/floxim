@@ -21,6 +21,6 @@
             </ul>
         </div>
         <div style="clear:both;"></div>
-        <img fx:if="$photo" src="{$photo}">
+        <img fx:if="$photo" src="{$photo | 'width:350,height:230'}">
     </div>
 </div>

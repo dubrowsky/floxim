@@ -12,8 +12,8 @@ class fx_thumb
             throw new Exception('Empty path');
         }
         $this->config = $this->get_config($config);
-        $doc_root     = fx::config()->DOCUMENT_ROOT;
-        $source_path  = $doc_root . '/' . preg_replace('~^[\/]~', '', $source_http_path);
+        
+        $source_path = fx::path()->to_abs($source_http_path);
         if (!file_exists($source_path) || !is_file($source_path)) {
             throw new Exception('File not found: ' . $source_path);
         }
@@ -327,8 +327,7 @@ class fx_thumb
         imagecolortransparent($dst, $t_index);
     }
     
-    public function Save($target_path = false, $quality = 90)
-    {
+    public function Save($target_path = false, $quality = 90) {
         if ($this->info['imagetype'] == IMAGETYPE_PNG) {
             $quality = round($quality / 10);
         }
@@ -337,22 +336,7 @@ class fx_thumb
         } elseif ($target_path === null) {
             header("Content-type: " . $this->info['mime']);
         } else {
-            $doc_root = str_replace(DIRECTORY_SEPARATOR, '/', DOCUMENT_ROOT);
-            $target_path = str_replace(DIRECTORY_SEPARATOR, '/', $target_path);
-            $sub_path     = str_replace($doc_root, '', $target_path);
-            $sub_path     = preg_replace("~^[//]~", '', $sub_path);
-            $target_parts = preg_split("~[//]~", $sub_path);
-            $c_path       = $doc_root;
-            foreach ($target_parts as $pi => $pdir) {
-                $c_path .= '/' . $pdir;
-                if (file_exists($c_path)) {
-                    continue;
-                }
-                if (!is_dir($c_path) && $pi != count($target_parts) - 1) {
-                    mkdir($c_path, 0777);
-                }
-            }
-            
+            fx::files()->mkdir( dirname($target_path) );
         }
         $res_image = call_user_func($this->info['save_func'], $this->image, $target_path, $quality);
     }
@@ -409,7 +393,7 @@ class fx_thumb
         if (!file_exists($full_path)) {
             $this->process($full_path);
         }
-        $path = fx::config()->HTTP_FILES_PATH . $rel_path;
+        $path = fx::path()->to_http(fx::config()->HTTP_FILES_PATH . $rel_path);
         return $path;
     }
     

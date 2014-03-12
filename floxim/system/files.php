@@ -262,7 +262,7 @@ class fx_system_files {
         $this->ftp_host = $host ? $host : $_SERVER['HTTP_HOST'];
         $this->base_url = "ftp://".$this->ftp_user.":".$this->ftp_password."@".
                 $this->ftp_host.":".$this->ftp_port."/".$this->ftp_path;
-        $this->base_path = fx::config()->FLOXIM_FOLDER;
+        $this->base_path = fx::path('root');
         $this->new_file_mods = 0666;
         $this->new_dir_mods = 0777;
 
@@ -274,8 +274,26 @@ class fx_system_files {
             $this->rm($f);
         }
     }
+    
+    public function open($filename, $mode = 'w') {
+        $filename = fx::path()->to_abs($filename);
+        $dir = dirname($filename);
+        if (!file_exists($dir)) {
+            $this->mkdir($dir);
+        }
+        $fh = fopen($filename, $mode);
+        if (!$fh) {
+            throw new fx_exception_files('Can not open file '.$filename);
+        }
+        return $fh;
+    }
 
     public function writefile($filename, $filedata = '', $make_dir = true) {
+        $fh = $this->open($filename);
+        fputs($fh, $filedata);
+        fclose($fh);
+        return 0;
+        
         if (!$filename) {
             return 1;
         }
@@ -362,13 +380,7 @@ class fx_system_files {
         if (!$path) {
             return 1;
         }
-
-        if ($path[0] != '/') {
-            $path = '/'.$path;
-        }
-
-        $local_path = $this->base_path.$path;
-
+        $local_path = fx::path()->to_abs($path);
         if (is_dir($local_path)) {
             return 0;
         }
@@ -477,11 +489,7 @@ class fx_system_files {
             return 1;
         }
 
-        if ($filename[0] != '/') {
-            $filename = '/'.$filename;
-        }
-
-        $local_filename = $this->base_path.$filename;
+        $local_filename = fx::path()->to_abs($filename);
 
         if (!file_exists($local_filename)) {
             return 1;
@@ -632,96 +640,6 @@ class fx_system_files {
         }
     }
 
-    public function resize_image ( $image_path, $sizes = array(), $new_path = false, $new_type = false, $jpeg_compression = false ) {
-        
-        list($width, $height, $type, $attr, $mime) = getimagesize($image_path);        
-        switch ( $type ) {
-            case IMAGETYPE_JPEG:
-                $image = imagecreatefromjpeg($image_path);
-                break;
-            case IMAGETYPE_GIF:
-                $image = imagecreatefromgif($image_path);
-                break;
-            case IMAGETYPE_PNG:
-                $image = imagecreatefrompng($image_path);
-                break;
-            default:
-                return false;
-                break;
-        }
-
-        if ( empty($sizes) ) {
-            if ( $width > fx::config()->IMAGE_MAX_WIDTH || $height > fx::config()->IMAGE_MAX_WIDTH ) {
-                $bearings = ( $width > $height ) ? 'horizontal' : 'vertical';
-                switch ($bearings) {
-                    case 'horizontal':
-                        $result_width = fx::config()->IMAGE_MAX_WIDTH;
-                        $result_height = floor(($height*$result_width)/$width);
-                        break;
-                    default:
-                        $result_height = fx::config()->IMAGE_MAX_HEIGHT;
-                        $result_width = floor(($width*$result_height)/$height);
-                        break;
-                }
-            }
-        } elseif ( !empty($sizes['width']) && !empty($sizes['height']) ) {
-            $result_width = $sizes['width'];
-            $result_height = $sizes['height'];
-        } else {
-            if ( empty($sizes['width']) ) {
-                $result_height = $sizes['height'];
-                $result_width = floor(($width*$result_height)/$height);
-            } else {
-                $result_width = $sizes['width'];
-                $result_height = floor(($height*$result_width)/$width);
-            }
-        }
-        if (!$result_width || !$result_height) {
-            return true;
-        }
-        $result_image = imagecreatetruecolor($result_width, $result_height);
-        imagecopyresized($result_image,$image,0,0,0,0,$result_width,$result_height,imagesx($image),imagesy($image));
-        $new_type = !empty($new_type) ? $new_type : $type;
-        $new_path = !empty($new_path) ? $new_path : $image_path;
-
-        switch ( $new_type ) {
-            case IMAGETYPE_JPEG:
-                $jpeg_compression = empty($jpeg_compression) ? 80 : $jpeg_compression;
-                $image = imagejpeg($result_image, $new_path, $jpeg_compression);
-                break;
-            case IMAGETYPE_GIF:
-                $image = imagepng($result_image, $new_path);
-                break;
-            case IMAGETYPE_PNG:
-                $image = imagegif($result_image, $new_path);
-                break;
-            default:
-                return false;
-                break;
-        }
-        return true;
-    }
-
-    public function create_thumb ( $image_path, $thumb_path = null, $thumb_size = array() ) {
-        if ( empty($thumb_path) ) {
-            $path = explode('/',$image_path);
-            $filename = array_pop($path);
-            $filename = explode('.',$filename);
-            $filename[count($filename)-2] = $filename[count($filename)-2] . '-thumb';
-            $filename = implode('.',$filename);
-            array_push($path, $filename);
-            $thumb_path = implode('/',$path);
-            $thumb_path = $thumb_path;
-        }
-        list($width, $height, $type, $attr, $mime) = getimagesize($image_path);
-        $bearings = ( $width > $height ) ? 'horizontal' : 'vertical';
-        if ( empty($thumb_size) ) {
-            $thumb_size = ( $bearings == 'horizontal' ) ? array('width' => fx::config()->THUMB_MAX_WIDTH) : array('height' => fx::config()->THUMB_MAX_HEIGHT);
-        }
-        $this->resize_image( $image_path, $thumb_size, $thumb_path );        
-        return $thumb_path;
-    }
-
     public function move_uploaded_file($tmp_file, $destination) {
 
         if (!$tmp_file || !$destination) {
@@ -735,7 +653,6 @@ class fx_system_files {
         $local_destination = $this->base_path.$destination;
 
         $res = move_uploaded_file($tmp_file, $local_destination);
-        $this->resize_image($local_destination);
 
 
         if (($res === false) && is_uploaded_file($tmp_file)) {
@@ -756,22 +673,30 @@ class fx_system_files {
             return null;
         }
 
-        if ($old_filename[0] != '/') {
+        /*if ($old_filename[0] != '/') {
             $old_filename = '/'.$old_filename;
         }
         $local_old_filename = $this->base_path.$old_filename;
+         * 
+         */
+        $local_old_filename = fx::path()->to_abs($old_filename);
 
+        /*
         if ($new_filename[0] != '/') {
             $new_filename = '/'.$new_filename;
         }
         $local_new_filename = $this->base_path.$new_filename;
+         * 
+         */
+        $local_new_filename = fx::path()->to_abs($new_filename);
+        
+        fx::log('movng', $local_old_filename, $local_new_filename);
 
-        $local_parent_dir = substr($local_new_filename, 0, strrpos($local_new_filename, '/'));
+        $local_parent_dir = dirname($local_new_filename);
 
         if (!is_dir($local_parent_dir)) {  // проверяем существует ли каталог назначения
             if ($make_dir) {
-                $parent_dir = substr($new_filename, 0, strrpos($new_filename, '/'));
-                $res = $this->mkdir($parent_dir);
+                $res = $this->mkdir($local_parent_dir);
             } else {
                 return null;
             }
@@ -779,6 +704,7 @@ class fx_system_files {
 
 
         if (!is_dir($local_old_filename)) {  // копируем 1 файл
+            fx::log('call ccp');
             return $this->_copy_file($local_old_filename, $local_new_filename);
         }
 

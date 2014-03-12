@@ -16,6 +16,7 @@ class fx_http {
     public function redirect($target_url, $status) {
         $this->status($status);
         header("Location: ".$target_url);
+        fx::env()->set('complete_ok', true);
         die();
     }
     

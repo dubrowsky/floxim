@@ -5,7 +5,7 @@ $this->set_var('ai', count($items) > 1 ?  $items->find_one('is_active', true) : 
 $this->set_var('cid', fx::env('page_id'));
 ?>
 <div
-    style="background-image: url({%bg_$cid}<?=$template_dir?>img/120110-G-IA163-068-Healy-escorts-Renda.jpg{/%});"
+    style="background-image: url({%bg_$cid | 'max-width:1200'}<?=$template_dir?>img/ship.jpg{/%});"
     class="full-back">
 
     <div class="caption">
@@ -15,7 +15,7 @@ $this->set_var('cid', fx::env('page_id'));
             {/%}
         </div>
         <div class="text">
-            <p>{%caption_$cid type="html"}This writing is on{/%}</p>
+            <div>{%caption_$cid type="html"}<p>This writing is on</p>{/%}</div>
             <a fx:if="$ai" class="go" href="{$ai.url}#content">Go</a>
         </div>
     </div>

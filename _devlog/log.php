@@ -1,42 +1,4 @@
 <?
-class fx_debug {
-    /**
-     * Show debug info right in the current output
-     */
-    public function show() {
-        
-    }
-    
-    /**
-     * Log debug info into file
-     */
-    public function log() {
-        
-    }
-    
-    /**
-     * Render pretty output for debug data
-     */
-    public function render($entry) {
-        
-    }
-    
-    /**
-     * Start profiling
-     * @return $profile_id
-     */
-    public function profile($key, $tags = array()) {
-        
-    }
-    
-    /**
-     * Finish profiling
-     */
-    public function stop($profile_id) {
-        
-    }
-}
-
 define("DEV_LOG_PATH", dirname(__FILE__).'/log');
 
 function fx_debug_start() {
@@ -48,26 +10,22 @@ function fx_debug_start() {
 }
 
 function dev_log() {
-	static $fh = false;
+    static $fh = false;
     if (defined("FX_ALLOW_DEBUG") && !FX_ALLOW_DEBUG) {
         return;
     }
-	if (!$fh) {
-		if (!is_dir(DEV_LOG_PATH)) {
-			mkdir(DEV_LOG_PATH);
-		}
-		$fh = fopen(DEV_LOG_PATH.'/log_'.md5(microtime().rand(0, 10000)).".html", 'w');
-		
-		$log_header = array(
-			'date' => time(),
-			'url' => $_SERVER['REQUEST_URI'],
-			'method' => $_SERVER['REQUEST_METHOD']
-		);
-		fputs($fh, serialize($log_header)."\n");
-	}
+    if (!$fh) {
+        $fh = fx::files()->open(DEV_LOG_PATH.'/log_'.md5(microtime().rand(0, 10000)).".html", 'w');
+        $log_header = array(
+                'date' => time(),
+                'url' => $_SERVER['REQUEST_URI'],
+                'method' => $_SERVER['REQUEST_METHOD']
+        );
+        fputs($fh, serialize($log_header)."\n");
+    }
     $args = func_get_args();
     $res = call_user_func_array('fx_debug', $args);
-	fputs($fh, $res);
+    fputs($fh, $res);
 }
 
 function fx_debug() {

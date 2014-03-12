@@ -7,11 +7,11 @@ class fx_data_lang_string extends fx_data {
 
 
     public function set_lang ($lang=null) {
-        if (!$lang)
+        if (!$lang) {
             $this->lang = fx::config()->ADMIN_LANG;
-        else
+        } else {
             $this->lang = $lang;
-
+        }
     }
 
 
@@ -49,11 +49,11 @@ class fx_data_lang_string extends fx_data {
         if (!isset($this->lang)) {
             $this->set_lang();
         }
-        return fx::config()->FILES_FOLDER.'php_dictionaries/'.$this->lang.'.'.$dict.'.php';
+        return fx::path('files', '/php_dictionaries/'.$this->lang.'.'.$dict.'.php');
     }
 
     public function drop_dict_files($dict) {
-        $files = glob(fx::config()->FILES_FOLDER.'php_dictionaries/*.'.$dict.'.php');
+        $files = glob(fx::path('files', '/php_dictionaries/*.'.$dict.'.php'));
         foreach($files as $file) {
             unlink($file);
         }
@@ -72,33 +72,17 @@ class fx_data_lang_string extends fx_data {
     }
 
     protected function dump_dictionary($dict, $file) {
-
         if (!isset($this->lang)) {
             $this->set_lang();
         }
         $data = fx::data('lang_string')->where('dict', $dict)->all();
-        if (!file_exists(dirname($file))) {
-            mkdir(dirname($file));
-        }
+        
         $res = array();
         foreach ($data as $s) {
             $res[$s['string']] = $s['lang_'.$this->lang];
         }
 
-        $fh = fopen($file, 'w');
-        fputs($fh, "<?php\nreturn ".var_export($res,1).";?>");
-        /*
-        foreach ($data as $s) {
-            $key = str_replace('"', '\"', $s['string']);
-            $val = str_replace('"', '\"', $s['lang_'.$lang]);
-            fputs(
-                $fh,
-                '"'.$key.'" => '.($key == $val ? 'null' : '"'.$val.'"').",\n"
-            );
-        }
-        fputs($fh, ");");
-        */
-        fclose($fh);
+        fx::files()->writefile($file, "<?php\nreturn ".var_export($res,1).";?>");
     }
 
     public function add_string($string, $dict) {
