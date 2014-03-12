@@ -58,10 +58,6 @@ class fx_path {
     }
     
     public function to_http($path) {
-        if (!is_string($path)) {
-            fx::debug(debug_backtrace());
-            die();
-        }
         $ds = "[".preg_quote('\/')."]";
         $path = preg_replace("~".$ds."~", DIRECTORY_SEPARATOR, $path);
         $path = preg_replace("~^".preg_quote($this->root)."~", '', $path);
@@ -74,14 +70,11 @@ class fx_path {
     }
     
     public function to_abs($path) {
-        $path = str_replace("/", DIRECTORY_SEPARATOR, $path);
-        $ds = preg_quote(DIRECTORY_SEPARATOR);
-        $path = preg_replace("~^".$ds."~", '', $path);
-        $path = preg_replace("~".$ds."$~", '', $path);
-        $path = preg_replace("~".$ds."+~", DIRECTORY_SEPARATOR, $path);
+        $path = str_replace("/", DIRECTORY_SEPARATOR, trim($path));
         $path = preg_replace("~^".preg_quote($this->root)."~", '', $path);
+        $path = trim($path, DIRECTORY_SEPARATOR);
         $path = $this->root.DIRECTORY_SEPARATOR.$path;
-        $path = preg_replace("~".$ds."+~", DIRECTORY_SEPARATOR, $path);
+        $path = preg_replace("~".preg_quote(DIRECTORY_SEPARATOR)."+~", DIRECTORY_SEPARATOR, $path);
         return $path;
     }
     
