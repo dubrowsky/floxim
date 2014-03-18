@@ -14,6 +14,10 @@
             fx:if="$item.has_field('image')" 
             class="own_pic"
             src="{$image | 'width:300,height:200'}<?=$pic?>{/$}" />
+        <img 
+            fx:elseif="$item.has_field('photo')" 
+            class="own_pic"
+            src="{$photo | 'width:300,height:200'}<?=$pic?>{/$}" />
         <img
             fx:else
             class="tpl_pic"
