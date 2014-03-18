@@ -3,7 +3,6 @@ if (!isset($_SERVER['REQUEST_TIME_FLOAT'])) {
     $_SERVER['REQUEST_TIME_FLOAT'] = microtime(true);
 }
 define("DOCUMENT_ROOT", dirname(__FILE__)); 
-require_once DOCUMENT_ROOT.'/_devlog/log.php';
 require_once DOCUMENT_ROOT.'/floxim/system/config.php';
 require_once DOCUMENT_ROOT.'/floxim/system/fx.php';
 
