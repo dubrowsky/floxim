@@ -296,7 +296,12 @@ class fx_debug {
                 <?php if ($line !== false) {
                     ?> at line <b><?php echo $line ?></b><?
                 }
-                echo sprintf(' (+%.5f, %.5f s, %s)', $meta['passed'], $meta['time'], convert($meta['memory']));
+                echo sprintf(
+                    ' (+%.5f, %.5f s, %s)', 
+                    $meta['passed'], 
+                    $meta['time'], 
+                    self::convert_memory($meta['memory'])
+                );
                 ?>
             </div>
             <?php foreach ($e[1] as $n => $item) { 
@@ -311,6 +316,16 @@ class fx_debug {
             <?php } ?>
         </div>
         <?php
+    }
+    
+    public static function convert_memory($size, $round = 3) {
+        $sizes = array('B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
+        $total = count($sizes);
+        for ($i=0; $size > 1024 && $i < $total; $i++) {
+            $size = $size / 1024;
+        }
+        $result = $size." ".$sizes[$i];
+        return $result;
     }
     
     protected function _print_format($html) {
