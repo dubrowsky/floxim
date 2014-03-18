@@ -49,8 +49,9 @@ return array(
         ),
         '*list_infoblock' => array(
             'name' => $component['name'],
+            // ! APC fatal error occured here sometimes
             'install' => function() {
-                
+            	return false;
             },
             'settings' => array(
                 'sorting' => array(
