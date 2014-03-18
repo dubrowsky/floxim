@@ -74,7 +74,6 @@ class fx_controller_component extends fx_controller {
                                 $linker->delete();
                                 $linkers->find_remove('id', $linker['id']);
                             } else {
-                                //dev_log('order', array_search($linker['linked_id'], $ib['params']['selected']), $linker['linked_id']);
                                 $linker['priority'] = array_search($linker['linked_id'], $ib['params']['selected']);
                                 $linker->save();
                                 unset($saving[$linker['linked_id']]);
@@ -250,7 +249,6 @@ class fx_controller_component extends fx_controller {
             }
             $target_com = fx::data('component', $target_com_id);
             if (!$target_com) {
-                dev_log('no tcom', $lf);
                 continue;
             }
             $com_infoblocks = fx::data('infoblock')->
@@ -317,7 +315,7 @@ class fx_controller_component extends fx_controller {
             }
         });
         $items = $this->do_list();
-        if (!$this->get_param('is_fake') && fx::env('is_admin')) {
+        if (!$this->get_param('is_fake') && fx::is_admin()) {
             $infoblock = fx::data('infoblock', $this->get_param('infoblock_id'));
             $real_ib_name = $infoblock->get_prop_inherited('name');
             $ib_name = $real_ib_name ? $real_ib_name : $infoblock['id'];
@@ -609,7 +607,6 @@ class fx_controller_component extends fx_controller {
                     );
                 }
             }
-            //dev_log('cond list', $q->show_query());
         });
         $res = $this->do_list();
         return $res;

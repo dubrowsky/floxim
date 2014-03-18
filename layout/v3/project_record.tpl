@@ -5,6 +5,7 @@
     fx:omit="true">
     <div fx:with="$item" class="project-record">
         {$short_description}
-        {$description} <p></p>{/$}
+        
+        {$description}
     </div>
 </div>

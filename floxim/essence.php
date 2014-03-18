@@ -272,6 +272,11 @@ abstract class fx_essence implements ArrayAccess {
         }
         return is_array($this->modified) && in_array($field, $this->modified);
     }
-
+    
+    public function get_old($field) {
+        if (!$this->is_modified($field)) {
+            return null;
+        }
+        return $this->modified_data[$field];
+    }
 }
-?>

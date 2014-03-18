@@ -88,7 +88,6 @@ class fx_controller_admin_layout extends fx_controller_admin {
     
 
     public function add_save($input) {
-        dev_log('add layout');
         $result = array('status' => 'ok');
         $keyword = trim($input['keyword']);
         $name = trim($input['name']);

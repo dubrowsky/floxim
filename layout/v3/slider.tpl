@@ -3,7 +3,7 @@
     fx:name="Simple slider"
     fx:of="photo.list"
     fx:size="high,wide"
-    data-thumbnails="{%thumbnails type='bool' title='Thumnails'}0{/%}"
+    data-thumbnails="{%thumbnails type='bool' label='Show thumnails'}0{/%}"
     class="slider-wrapper">
     <div  class="slider">
         <div fx:each="$items" class="slide {if $is_first}active{/$}">

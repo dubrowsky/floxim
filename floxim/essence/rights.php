@@ -1,7 +1,4 @@
 <?php
-/*$Id: rights.php 6965 2012-05-12 15:18:46Z denis $*/
-defined("FLOXIM") || die("Unable to load file.");
-
 class fx_rights extends fx_essence {
     /**
      * Типы пользователей:
@@ -27,4 +24,3 @@ class fx_rights extends fx_essence {
         return defined($const_name) ? constant($const_name) : $item;
     }
 }
-

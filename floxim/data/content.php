@@ -102,7 +102,6 @@ class fx_data_content extends fx_data {
     public function set_component($component_id_or_code) {
         $component = fx::data('component', $component_id_or_code);
         if (!$component) {
-            dev_log($component_id_or_code, debug_backtrace());
             die("Component not found: ".$component_id_or_code);
         }
         $this->component_id = $component['id'];
@@ -113,12 +112,13 @@ class fx_data_content extends fx_data {
     public function create($data = array()) {
         $obj = $this->essence($data);
         
+        $component = fx::data('component', $this->component_id);
+        
         $obj['created'] = date("Y-m-d H:i:s");
-        if ( ($user = fx::env()->get_user())) {
+        if ($component['keyword'] != 'user' && ($user = fx::env()->get_user())) {
             $obj['user_id'] = $user['id'];
         }
         $obj['checked'] = 1;
-        $component = fx::data('component', $this->component_id);
         $obj['type'] = $component['keyword'];
         if (!isset($data['site_id'])) {
             $obj['site_id'] = fx::env('site')->get('id');
@@ -159,7 +159,6 @@ class fx_data_content extends fx_data {
             $c_type = $component['keyword'];
         }
         if (!$component) {
-            dev_log('No component', $data);
             throw new Exception("No component: ".$c_type);
         }
         $chain = array_reverse($component->get_chain());
@@ -321,4 +320,3 @@ class fx_data_content extends fx_data {
         return $content;
     }
 }
-?>

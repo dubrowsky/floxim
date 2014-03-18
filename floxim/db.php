@@ -61,18 +61,17 @@ class fx_db extends PDO {
             echo "Query: <b>" . $statement . "</b><br/>\n";
             echo "Error: <b>" . $this->last_error[2] . "</b><br/>\n";
             echo "</div>\n";
-            dev_log($statement, debug_backtrace());
+            fx::log($statement, debug_backtrace());
         }
         $end_time = microtime(true);
         $q_time = $end_time - $start_time;
         self::$q_time += $q_time;
         return $this->last_result;
-        dev_log(
+        fx::log(
                 '#'.self::$q_count, 
                 'q_time: '.$q_time, 
                 'q_total: '.self::$q_time,
-                $statement,
-                'bt10'
+                $statement
         );
         return $this->last_result;
     }

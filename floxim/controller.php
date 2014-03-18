@@ -196,7 +196,6 @@ class fx_controller {
     
     public function get_action_settings($action) {
         $cfg = $this->get_config();
-        dev_log('get act', $action, $this, $cfg);
         if (!isset($cfg['actions'][$action])) {
             return;
         }

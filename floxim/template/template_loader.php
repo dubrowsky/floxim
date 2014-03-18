@@ -117,13 +117,18 @@ class fx_template_loader {
     }
     
     public function is_fresh($target_path) {
+        $ttl = fx::config('COMPILED_TEMPLATES_TTL');
+        // special mode, templates are recompile every time
+        if ($ttl < 0) {
+            return false;
+        }
         // file is not created yet
         if (!file_exists($target_path)) {
             return false;
         }
         $target_time = filemtime($target_path);
         // file is fresh enough
-        if ((time() - $target_time) < fx::config()->COMPILED_TEMPLATES_TTL) {
+        if ((time() - $target_time) < $ttl) {
             return true;
         }
         // compare sources to compiled template

@@ -16,7 +16,6 @@ class fx_content_video extends fx_content {
             }
         } else {
             if (preg_match('~src="(?P<url>[\/\w.]+)"~', $this['embed_html'], $matches)!=0) {
-                dev_log('video url', $matches['url']);
                 $this['embed_html'] = str_replace($matches['url'], $matches['url'].'?wmode=opaque', $this['embed_html']);
             }
         }

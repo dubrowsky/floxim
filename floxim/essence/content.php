@@ -1,6 +1,4 @@
 <?php
-defined("FLOXIM") || die("Unable to load file.");
-
 class fx_content extends fx_essence {
 
     protected $component_id;
@@ -26,7 +24,7 @@ class fx_content extends fx_essence {
     
     public function set_component_id($component_id) {
         if ($this->component_id && $component_id != $this->component_id) {
-            throw new fx_Exception_content("Component id can not be changed");
+            throw new Exception("Component id can not be changed");
         }
         $this->component_id = intval($component_id);
     }
@@ -116,82 +114,6 @@ class fx_content extends fx_essence {
             $field_meta['html'] = isset($cf['format']['html']) ? $cf['format']['html'] : 0;
         }
         return $field_meta;
-    }
-    
-    public function get_fields_to_show() {
-        if ($this->_fields_to_show) {
-            return $this->_fields_to_show;
-        }
-        
-        $is_admin = fx::is_admin();
-        $fields_to_show = array();
-        $com_id = $this->component_id;
-        $com_fields = $this->get_fields();
-        
-        
-        
-        foreach ($this->data as $fkey => $v) {
-            $field_meta = array();
-            $cf = $com_fields[$fkey];
-            // не-поля и поля-мультилинки - всегда возращаем просто значение
-            if (!$cf || $cf->type == 'multilink' || $cf['type_of_edit'] == fx_field::EDIT_NONE) {
-                $fields_to_show[$fkey] = $v;
-                continue;
-            }
-            
-            // поле-селект
-            if ($cf->type == 'select') {
-                $jsf = $cf->get_js_field($this);
-                $values = $cf->get_values();
-                $field_meta['display_value'] = $v ? $values[$v] : '';
-                // для не админов показываем название варианта
-                if (!$is_admin) {
-                    $fields_to_show[$fkey] = $field_meta['display_value'];
-                    continue;
-                }
-                $field_meta['values'] = $jsf['values'];
-                $field_meta['value'] = $v;
-            }
-            
-            // простое поле для не-админа - возвращаем значение
-            if (!in_array($cf->type, array('image', 'file', 'datetime')) && !$is_admin) {
-                $fields_to_show[$fkey] = $v;
-                continue;
-            }
-            if ($cf->type == 'image' || $cf->type == 'file') {
-                if ($v && is_numeric($v) && ($file_obj = fx::data('filetable', $v)) ) {
-                    $field_meta['filetable_id'] = $v;
-                    $v = fx::path()->http('files', $file_obj['path']);
-                }
-            }
-            if ($cf->type == 'datetime') {
-                $field_meta['value'] = $v;
-            }
-            if ($cf->type == 'text') {
-                $field_meta['html'] = isset($cf['format']['html']) ? $cf['format']['html'] : 0;
-            }
-            
-            $field_meta = array_merge(array(
-                'var_type' => 'content', 
-                'content_id' => $this['id'],
-                'content_type_id' => $com_id,
-                'id' => $cf['id'],
-                'name' => $cf['name'],
-                'title' => $cf['description'],
-                'type' => $cf->type,
-                'editable' => true
-            ), $field_meta);
-            
-            $fields_to_show[$fkey] = new fx_template_field($v, $field_meta);
-        }
-
-        $this->_fields_to_show = $fields_to_show;
-        return $fields_to_show;
-    }
-    
-    public function get_field_to_show($field) {
-        $fields = $this->get_fields_to_show();
-        return isset($fields[$field]) ? $fields[$field] : null;
     }
     
     public function get_form_fields() {
@@ -388,11 +310,9 @@ class fx_content extends fx_essence {
         $image_fields = $this->get_fields()->
                         find('type', fx_field::FIELD_IMAGE);
         foreach ($image_fields as $f) {
-            if ( ($field_val = $this[$f['name']]) ) {
-                $file = fx::data('filetable', $field_val);
-                if ($file) {
-                    $file->delete();
-                }
+            $c_prop = $this[$f['name']];
+            if (fx::path()->is_file($c_prop)) {
+                fx::files()->rm($c_prop);
             }
         }
     }
@@ -404,13 +324,11 @@ class fx_content extends fx_essence {
                         find('name', $this->modified)->
                         find('type', fx_field::FIELD_IMAGE);
         foreach ($image_fields as $img_field) {
-            if ( ($old_value = $this->modified_data[$img_field['name']]) ) {
-                if ( ($old_file = fx::data('filetable', $old_value)) ) {
-                    $old_file->delete();
-                }
+            $old_value = $this->modified_data[$img_field['name']];
+            if (fx::path()->is_file($old_value)) {
+                fx::files()->rm($old_value);
             }
         }
-        
     }
     
     public function fake() {
@@ -420,8 +338,4 @@ class fx_content extends fx_essence {
         }
         //echo fx_debug($fields);
     }
-}
-
-class fx_Exception_content extends Exception {
-    
 }

@@ -174,13 +174,17 @@ fx_adminpanel = {
     },
     
     reload:function(new_location) {
+        if (/^#/.test(new_location)) {
+            document.location.hash = new_location.replace(/^#/, '');
+            return;
+        }
         $('html, body').html('').css({
             background:'#EEE',
             color:'#000', 
             margin:'30px 0', 
             font:'bold 22px arial',
             textAlign:'center'
-        }).html('обновление страницы...');
+        }).html('reloading...');
         document.location.href = typeof new_location === 'string' ? new_location : document.location.href.replace(/#.*$/, '');  
     },
         
@@ -188,7 +192,12 @@ fx_adminpanel = {
         data.fx_admin = true;
         if (!callback) {
             callback = function(data) {
-                $fx_dialog.open_dialog(data);
+                /*
+                if (data.location) {
+                    
+                }
+                console.log('data caught', data);
+                */
             };
         }
         $.ajax({

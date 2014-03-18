@@ -262,8 +262,7 @@ class fx_controller_admin_component extends fx_controller_admin {
     
     public function edit_save($input){
         if (! ($component = fx::data('component', $input['id'])) ) {
-            dev_log('no cmp');
-            die("NO CMP");
+            return;
         }
         if (!empty($input['name'])) {
             $component['name'] = $input['name'];

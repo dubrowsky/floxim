@@ -109,7 +109,15 @@ class fx_template_field  {
             "~###fxf(\d+)###~", 
             function($matches) {
                 $replacement = fx_template_field::$replacements[$matches[1]];
-                $tag_name = preg_match("~<(?:div|ul|li|table|br)~i", $replacement[2]) ? 'div' : 'span';
+                
+                if ( 
+                    (isset($replacement[1]['html']) && $replacement[1]['html']) ||
+                    (isset($replacement[1]['type']) && $replacement[1]['type'] == 'html')
+                ) {
+                    $tag_name = 'div';
+                } else {
+                    $tag_name = preg_match("~<(?:div|ul|li|table|br|p|h\d)~i", $replacement[2]) ? 'div' : 'span';
+                }
                 $tag = fx_template_html_token::create_standalone('<'.$tag_name.'>');
                 $tag->add_meta(array(
                     'class' => 'fx_template_var',

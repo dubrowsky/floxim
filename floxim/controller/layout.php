@@ -75,7 +75,7 @@ class fx_controller_layout extends fx_controller {
     }
     
     protected function _show_admin_panel() {
-        if (!fx::env('is_admin')) {
+        if (!fx::is_admin()) {
             return;
         }
         // инициализация админ панели
@@ -85,12 +85,4 @@ class fx_controller_layout extends fx_controller {
         $p->add_js_text("fx_adminpanel.init(".$js_config->get_config().");");
         $p->set_after_body(fx_controller_admin_adminpanel::panel_html());        
     }
-
-    protected $save_history = false;
-    
-    public function blank() {
-
-    }
-
 }
-?>

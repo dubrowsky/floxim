@@ -52,7 +52,7 @@ class fx_content_user extends fx_content {
     }
     
     public function is_admin() {
-        return $this['is_admin'];
+        return (bool) $this['is_admin'];
     }
 
     public function create_session($auth_phase = 'authorize', $login_save = 0, $auth_type = 1) {

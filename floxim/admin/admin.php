@@ -1,5 +1,4 @@
 <?php
-
 class fx_controller_admin extends fx_controller {
 
     /** @var string стандартное действие для контроллера - вернуть html верстку  */
@@ -98,7 +97,7 @@ class fx_controller_admin extends fx_controller {
             '/floxim/admin/js/front.js',
             '/floxim/admin/js/buttons.js',                                     
             '/floxim/admin/js/form.js',
-            #'/floxim/admin/js/dialog.js',
+            '/floxim/admin/js/debug.js',
             '/floxim/admin/js/livesearch.js',
             '/floxim/admin/js/fields.js',
             '/floxim/admin/js/edit-in-place.js',
@@ -145,6 +144,7 @@ class fx_controller_admin extends fx_controller {
             '/floxim/admin/skins/default/jquery-ui/main.css',
             '/floxim/admin/skins/default/css/main.css',
             '/floxim/admin/skins/default/css/forms.less',
+            '/floxim/admin/skins/default/css/debug.less',
         );
         $page->add_css_bundle($css_files);
         fx::profiler()->stop();

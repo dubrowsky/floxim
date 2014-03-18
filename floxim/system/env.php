@@ -1,144 +1,109 @@
 <?php
 class fx_system_env {
-  protected $current = array();
+    protected $current = array();
 
   
-  public function set($var, $val) {
-  	  $setter = 'set_'.$var;
-  	  if (method_exists($this, $setter)) {
-  	  	  call_user_func(array($this, $setter), $val);
-  	  } else {
-  	  	  $this->current[$var] = $val;
-  	  }
-  }
+    public function set($var, $val) {
+        $setter = 'set_'.$var;
+        if (method_exists($this, $setter)) {
+            call_user_func(array($this, $setter), $val);
+        } else {
+            $this->current[$var] = $val;
+        }
+    }
   
-  public function get($var) {
-  	  $getter = 'get_'.$var;
-  	  if (method_exists($this, $getter)) {
-  	  	  return call_user_func(array($this, $getter));
-  	  }
-  	  return isset($this->current[$var]) ? $this->current[$var] : null;
-  }
+    public function get($var) {
+        $getter = 'get_'.$var;
+        if (method_exists($this, $getter)) {
+            return call_user_func(array($this, $getter));
+        }
+        return isset($this->current[$var]) ? $this->current[$var] : null;
+    }
 
-  public function set_site ( $env ) {
-    $this->current['site'] = $env;
-  }
+    public function set_site ( $env ) {
+        $this->current['site'] = $env;
+    }
 
-  public function set_sub ( $env ) {
-    $this->current['sub'] = $env;
-  }
 
-  public function set_ibs ( $env ) {
-    $this->current['ibs'] = $env;
-  }
+    /**
+     * @return fx_site
+     */
+    public function get_site () {
+        if (!isset($this->current['site'])) {
+            $this->current['site'] = fx::data('site')->get_by_host_name($_SERVER['HTTP_HOST'], 1);
+        }
+        return $this->current['site'];
+    }
 
-  public function set_content ( $env ) {
-    $this->current['content'] = $env;
-  }
+    public function set_action ( $action ) {
+        $this->current['action'] = $action;
+    }
 
-  public function set_template ( $template ) {
-    $this->current['template'] = $template;
-  }
+    public function get_action ( ) {
+        return $this->current['action'];
+    }
 
-  public function get_sub ($item=null) {
-    return $item ? $this->current['sub'][$item] : $this->current['sub'];
-  }
+    public function set_page ( $page ) {
+        if (is_numeric($page)) {
+          $page = fx::data('content_page', $page);
+        }
+        $this->current['page'] = $page;
+    }
 
-  public function get_content ($item=null) {
-    return $item ? $this->current['content'][$item] : $this->current['content'];
-  }
+    public function get_page ( ) {
+        return $this->current['page'];
+    }
 
-  public function get_ibs ($item=null) {
-    return $item ? $this->current['ibs'][$item] : $this->current['ibs'];
-  }
+    public function get_page_id () {
+        if (isset($this->current['page']) && is_object($this->current['page'])) {
+           return $this->current['page']->get('id');
+        }
+        return NULL;
+    }
 
-  /**
-   * @return fx_site
-   */
-  public function get_site () {
-      if (!isset($this->current['site'])) {
-          $this->current['site'] = fx::data('site')->get_by_host_name($_SERVER['HTTP_HOST'], 1);
-      }
-      return $this->current['site'];
-  }
+    public function get_site_id() {
+        if (isset($this->current['site']) && is_object($this->current['site'])) {
+            return $this->current['site']['id'];
+        }
+        return null;
+    }
 
-  public function set_action ( $action ) {
-      $this->current['action'] = $action;
-  }
+    public function set_user ( $user ) {
+        $this->current['user'] = $user;
+    }
 
-  public function get_action ( ) {
-      return $this->current['action'];
-  }
+    public function get_user () {
+        if (!isset($this->current['user'])) {
+            $this->current['user'] = fx_content_user::load();
+        }
+        return $this->current['user'];
+    }
 
-  public function set_page ( $page ) {
-      if (is_numeric($page)) {
-        $page = fx::data('content_page', $page);
-      }
-      $this->current['page'] = $page;
-  }
+    public function set_main_content ( $str ) {
+        $this->current['main_content'] = $str;
+    }
 
-  public function get_page ( ) {
-      return $this->current['page'];
-  }
-
-  public function get_page_id () {
-      if (isset($this->current['page']) && is_object($this->current['page'])) {
-         return $this->current['page']->get('id');
-      }
-      return NULL;
-  }
+    public function get_main_content () {
+        return $this->current['main_content'];
+    }
   
-  public function get_site_id() {
-      if (isset($this->current['site']) && is_object($this->current['site'])) {
-          return $this->current['site']['id'];
-      }
-      return null;
-  }
-
-  public function set_tpl ( $tpl ) {
-      $this->current['tpl'] = $tpl;
-  }
-
-  public function get_tpl ($item=null) {
-      return $item ? $this->current['tpl'][$item] : $this->current['tpl'];
-  }
-
-  public function set_user ( $user ) {
-      $this->current['user'] = $user;
-  }
-
-  public function get_user () {
-      if (!isset($this->current['user'])) {
-          $this->current['user'] = fx_content_user::load();
-      }
-      return $this->current['user'];
-  }
-
-  public function set_main_content ( $str ) {
-      $this->current['main_content'] = $str;
-  }
-
-  public function get_main_content () {
-      return $this->current['main_content'];
-  }
+    public function get_home_id() {
+        if (!isset($this->current['home_id'])) {
+            $site = $this->get_site();
+            $home_page = fx::data('content_page')
+                ->where('parent_id', 0)
+                ->where('site_id', $site['id'])
+                ->one();
+            $this->current['home_id'] = $home_page['id'];
+        }
+        return $this->current['home_id'];
+    }
   
-  public function get_home_id() {
-      if (!isset($this->current['home_id'])) {
-        $site = $this->get_site();
-        $home_page = fx::data('content_page')
-            ->where('parent_id', 0)
-            ->where('site_id', $site['id'])
-            ->one();
-        $this->current['home_id'] = $home_page['id'];
-      }
-      return $this->current['home_id'];
-  }
+    public function is_admin() {
+        return ($user = $this->get_user()) ? $user->is_admin() : false;
+    }
   
-  public function is_admin() {
-      return ($user = $this->get_user()) ? $user->is_admin() : false;
-  }
-  
-  public function get_layout() {
+    public function get_layout() {
         if (!$this->current['layout']) {
             $page_id = $this->get_page_id();
             if ($page_id) {

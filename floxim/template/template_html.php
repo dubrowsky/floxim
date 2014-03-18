@@ -308,7 +308,7 @@ class fx_template_html {
                 case 'single': default:
                     $stack_last = end($stack);
                     if (!$stack_last) {
-                        dev_log("fx_template_html tree error", $tokens, $root);
+                        fx::log("fx_template_html tree error", $tokens, $root);
                         echo fx_debug(
                                 "fx_template_html error: stack empty, trying to add: ",
                                 '#'.$token_index,
@@ -325,7 +325,7 @@ class fx_template_html {
         }
         // в стеке должен остаться только <root>
         if (count($stack) > 1) {
-            dev_log("All closed, but stack not empty!", $stack);
+            fx::log("All closed, but stack not empty!", $stack);
             //die();
         }
         return $root;

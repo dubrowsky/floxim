@@ -1,8 +1,4 @@
 <?php
-
-/* $Id: field.php 8536 2012-12-17 10:55:01Z myasin $ */
-defined("FLOXIM") || die("Unable to load file.");
-
 class fx_field extends fx_essence {
 
     protected $name, $format, $type_id, $description;

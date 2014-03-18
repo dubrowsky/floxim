@@ -4,6 +4,7 @@ class fx_field_file extends fx_field_baze {
 
     protected $_to_delete_id = 0;
 
+    /*
     protected static $filetable = array();
 
     protected function get_fileinfo (  fx_infoblock_content $infoblock, $file_id ) {
@@ -33,11 +34,14 @@ class fx_field_file extends fx_field_baze {
         }
 
     }
+     * 
+     */
 
     protected function get_field_vars($info) {
         return new fx_field_vars_file($info);
     }
 
+    /*
     public function get_edit_jsdata($content) {
         parent::get_edit_jsdata($content);
 
@@ -57,6 +61,8 @@ class fx_field_file extends fx_field_baze {
 
         return $this->_edit_jsdata;
     }
+     * 
+     */
 
     public function get_js_field($content) {
         parent::get_js_field($content);
@@ -80,18 +86,11 @@ class fx_field_file extends fx_field_baze {
     public function get_savestring(fx_essence $content = null) {
         if ($content[$this['name']] != $this->value) {
             $c_val = fx::path()->to_abs($this->value);
-            $id = $content['id'];
-            $div = 100;
-            $id_floor = floor($id/$div);
-            $folder = ($id%$div > 0) 
-                    ? ($id_floor*$div+1).'-'.($id_floor*$div+$div) 
-                    : (($id_floor-1)*$div+1).'-'.($id_floor*$div);
-            
             preg_match("~[^".preg_quote(DIRECTORY_SEPARATOR).']+$~', $c_val, $fn);
             
             $path = fx::path()->http(
-                'files', 
-                '/content/'.$content['type'].'/'.$folder.'/'.$this->name.'/'.$fn[0]
+                'content_files', 
+                $content['type'].'/'.$this->name.'/'.$fn[0]
             );
             
             fx::files()->move($c_val, $path);

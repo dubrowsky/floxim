@@ -48,7 +48,6 @@ class fx {
     public static function  data($datatype, $id = null) {
     	
     	static $data_classes_cache = array();
-    	
         if (is_array($datatype)) {
             $datatype = join("_", $datatype);
         }
@@ -144,12 +143,12 @@ class fx {
     	return self::$router;
     }
     
-    protected static $is_admin = null;
     public static function is_admin() {
-        if (is_null(self::$is_admin)) {
-            self::$is_admin = self::env('is_admin');
+        static $is_admin = null;
+        if (is_null($is_admin)) {
+            $is_admin = (bool) self::env('is_admin');
         }
-        return self::$is_admin;
+        return $is_admin;
     }
     
     /**
@@ -217,10 +216,9 @@ class fx {
                     }
                     return $controller_instance;
                 } catch (exception $e) {
-                    dev_log('general controller loading failed also');
+                    
                 }
             }
-            dev_log("Failed loading controller class ".$c_class, debug_backtrace());
             die("Failed loading controller class ".$c_class);
     	}
     }
@@ -476,12 +474,23 @@ class fx {
         }
     }
     
-    public static function debug($what) {
-        echo call_user_func_array('fx_debug', func_get_args());
+    protected static $debugger = null;
+    
+    public static function debug($what = null) {
+        if (is_null(self::$debugger)) {
+            self::$debugger = new fx_debug();
+        }
+        if (func_num_args() == 0) {
+            return self::$debugger;
+        }
+        call_user_func_array(array(self::$debugger, 'debug'), func_get_args());
     }
     
     public static function log($what) {
-        call_user_func_array('dev_log', func_get_args());
+        if (is_null(self::$debugger)) {
+            self::$debugger = new fx_debug();
+        }
+        call_user_func_array(array(self::$debugger, 'log'), func_get_args());
     }
     
     public static function profiler() {

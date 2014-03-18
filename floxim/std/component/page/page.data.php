@@ -56,4 +56,3 @@ class fx_data_content_page extends fx_data_content {
         return $data;
     }
 }
-?>

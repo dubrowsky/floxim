@@ -100,4 +100,3 @@ class fx_content_page extends fx_content {
         fx::data('infoblock')->where('page_id', $this['id'])->all()->apply($killer);
     }
 }
-?>

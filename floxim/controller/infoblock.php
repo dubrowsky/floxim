@@ -84,7 +84,7 @@ class fx_controller_infoblock extends fx_controller {
         
         $profiler->stop();
         if (is_string($result)) {
-            if (fx::env('is_admin')) {
+            if (fx::is_admin()) {
                 $result = $this->_add_infoblock_meta($result, $infoblock);
             }
             $result = $controller->postprocess($result);
@@ -149,7 +149,7 @@ class fx_controller_infoblock extends fx_controller {
             $is_subroot = $tpl_wrap->is_subroot;
         }
         $profiler->then('adding meta');
-        if (fx::env('is_admin')) {
+        if (fx::is_admin()) {
             $output = $this->_add_infoblock_meta($output, $infoblock, $controller_meta, $is_subroot);
         }
         $processed_output = $controller->postprocess($output);

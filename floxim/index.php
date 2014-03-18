@@ -1,9 +1,9 @@
 <?php
-if (!defined('FLOXIM')) {
-    require_once('../boot.php');
-}
-fx::profiler()->block('page');
+// if request directs right to /floxim/index.php 
+// e.g. admin interface
+require_once (dirname(__FILE__).'/../boot.php');
 
+fx::profiler()->block('page');
 register_shutdown_function(function() {
     if (!fx::env()->get('complete_ok')) {
     	$ob_level = ob_get_level();

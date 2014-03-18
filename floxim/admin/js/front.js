@@ -1192,7 +1192,7 @@ fx_front.prototype.outline_block = function(n, style) {
             $fx.front.outline_block(n, 'selected');
             $fx.front.recount_node_panel();
         };
-        n.on('keyup.recount_outlines', recount_outlines);
+        n.on('resize.recount_outlines', recount_outlines);
         $(window).on('resize.recount_outlines', recount_outlines);
     }
     var o = n.offset();
@@ -1207,12 +1207,24 @@ fx_front.prototype.outline_block = function(n, style) {
     if (n.css('position') === 'fixed') {
         pane_position = 'fixed';
     }
+    var fixed_found = false, overflow_found = false;
     for (var i = 0 ; i<parents.length; i++) {
-        if (pane_position !== 'fixed' && parents.eq(i).css('position') === 'fixed') {
+        var $cp = parents.eq(i);
+        if (pane_position !== 'fixed' && $cp.css('position') === 'fixed') {
             pane_position = 'fixed';
-            if (parents.eq(i).css('z-index') !== undefined) {
-                pane_z_index = parents.eq(i).css('z-index');
+            if ($cp.css('z-index') !== undefined) {
+                pane_z_index = $cp.css('z-index');
             }
+            fixed_found = true;
+        }
+        if ($cp.css('overflow') === 'hidden') {
+            var cph = $cp.outerHeight();
+            if (cph < nh) {
+                nh = cph;
+            }
+            overflow_found = true;
+        }
+        if (fixed_found && overflow_found) {
             break;
         }
     };

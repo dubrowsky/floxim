@@ -38,7 +38,6 @@ class fx_config {
         'TMP_FOLDER' => '',
         'MODULE_FOLDER' => '',
         'ADMIN_FOLDER' => '',
-        'TEMPLATE_FOLDER' => '',
         'COMPONENT_FOLDER' => '',
         'WIDGET_FOLDER' => '',
         'FX_VERSION' => '0.1.1.1',
@@ -71,6 +70,9 @@ class fx_config {
         fx::path()->register('std', fx::path('floxim', '/std'));
         fx::path()->register('layouts', array('/layout', fx::path('std', '/layout')));
         fx::path()->register('files', '/floxim_files/');
+        fx::path()->register('log', fx::path('files', '/log'));
+        fx::path()->register('thumbs', fx::path('files', '/fx_thumbs'));
+        fx::path()->register('content_files', fx::path('files', '/content'));
                 
         
         $this->config['DOCUMENT_ROOT'] = DOCUMENT_ROOT;//rtrim(getenv("DOCUMENT_ROOT"), "/\\");

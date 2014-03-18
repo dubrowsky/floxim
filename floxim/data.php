@@ -565,33 +565,6 @@ class fx_data {
         return $this->where('id', $ids)->all();
     }
     
-    public function get() {
-        fx::log(debug_backtrace());
-        die();
-        $argc = func_num_args();
-        $argv = func_get_args();
-        $query = $this->make_query($argc, $argv);
-        $res = fx::db()->get_row("SELECT * FROM `{{".$this->table."}}`".$query);
-
-        if (fx::db()->is_error()) {
-            throw new Exception("SQL ERROR ".fx::db()->debug());
-        }
-
-        if (!$res) return false;
-
-        if (!empty($this->serialized) && $res) {
-             foreach ($this->serialized as &$key) {
-                $original = $res[$key];
-                $res[$key] = unserialize($res[$key]);
-                if (!is_array($res[$key])) {
-                    $res[$key] = $original;
-                }
-            }
-        }
-        $obj = $this->essence($res);
-        return $obj;
-    }
-
     /**
      * Создать новый essence-экземпляр, заполнить значениями по умолчанию
      * @param array $data

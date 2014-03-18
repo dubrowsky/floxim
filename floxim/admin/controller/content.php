@@ -202,7 +202,3 @@ class fx_controller_admin_content extends fx_controller_admin {
         }
     }
 }
-
-class fx_exception_controller_content extends fx_exception {
-    
-}

@@ -4,3 +4,11 @@
     <?=$t.data_attr(_c)?>>
     <span><?=_c.label || ''?></span>
 </div>
+
+<!--jquery-->
+if (_c.options){ 
+    html.on('click', function() {
+        console.log('clicka', _c.options);
+        $fx.post(_c.options);
+    })
+}

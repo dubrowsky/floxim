@@ -45,17 +45,20 @@ class fx_admin_submenu {
             $this->active = 'layout';
             $this->active_main_menu = 'develop';
         }
-
+        fx::log($match);
         if ($match[1] == 'template' && is_numeric($match[3])) {
             $this->init_menu_template($match[3]);
             $this->active_main_menu = 'develop';
         }
 
-        fx::log('match', $match);
         if ($match[1] == 'widget' && !$match[3]) {
-            fx::log('init widdev');
             $this->init_develop();
             $this->active = 'widget';
+            $this->active_main_menu = 'develop';
+        }
+        if ($match[1] == 'log' && !$match[3]) {
+            $this->init_develop();
+            $this->active = 'log';
             $this->active_main_menu = 'develop';
         }
         if ($match[1] == 'widgetgroup') {
@@ -140,6 +143,7 @@ class fx_admin_submenu {
         $this->menu[] = $node_component = $this->add_node('component', fx::alang('Components','system'), 'component.all');
         $this->menu[] = $node_template = $this->add_node('layout', fx::alang('Layouts','system'), 'layout.all'); // template ->layout
         $this->menu[] = $node_widget = $this->add_node('widget', fx::alang('Widgets','system'), 'widget.all');
+        $this->menu[] = $node_log = $this->add_node('log', fx::alang('Logs','system'), 'log.all');
 
         foreach (fx::data('component')->get_all_groups() as $group) {
             $hash = md5($group);

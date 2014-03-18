@@ -1,11 +1,15 @@
 {template id="full_screen_menu" name="Full screen menu" of="page.list"}
-<?
+<?php
 $items = $this->v('items');
-$this->set_var('ai', count($items) > 1 ?  $items->find_one('is_active', true) : $items->first());
+if ( ($active = $items->find_one('is_active', true) ) ) {
+    $this->set_var('ai', $active);
+} else {
+    $this->set_var('ai', $items->first());
+}
 $this->set_var('cid', fx::env('page_id'));
 ?>
 <div
-    style="background-image: url({%bg_$cid | 'max-width:1200'}<?=$template_dir?>img/ship.jpg{/%});"
+    style="background-image: url({%bg_$cid | 'max-width:1200'}{$ai.image}<?php echo $template_dir?>img/ship.jpg{/$}{/%});"
     class="full-back">
 
     <div class="caption">

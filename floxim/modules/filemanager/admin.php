@@ -326,7 +326,6 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
     }
 
     public function edit_save($input) {
-        dev_log('Edit Save', $input );
         $filename = $input['filename'];
         if (!$filename) {
             return array('status' => 'error', 'text' => fx::alang('Not all fields are transferred!','system'));

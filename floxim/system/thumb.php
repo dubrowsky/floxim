@@ -376,6 +376,8 @@ class fx_thumb
     }
     
     public function get_result_path() {
+        $rel_path = fx::path()->to_http($this->source_path);
+        /*
         $ds = '['.preg_quote('\/').']';
         $rex = '~'.$ds.'floxim_files'.$ds.'content'.$ds.'(.+)$~';
         preg_match(
@@ -387,6 +389,8 @@ class fx_thumb
             $rex = "~".$ds."([^".preg_quote('\/')."]+?)$~";
             preg_match($rex, $this->source_path, $folders);
         }
+         * 
+         */
         
         $folder_name = array();
         foreach ($this->config as $key => $value) {
@@ -396,15 +400,35 @@ class fx_thumb
         }
         $folder_name = join('.', $folder_name);
 
-        $thumb_dir = 'fx_thumb';
+        //$thumb_dir = 'fx_thumb';
         
-        $rel_path = $thumb_dir.($folder_name ? '/'.$folder_name : '').'/'.$folders[1];
-        $full_path = fx::config()->FILES_FOLDER.$rel_path;
+        $rel_path = $folder_name.'/'.$rel_path;
+        $full_path = fx::path('thumbs', $rel_path);
         if (!file_exists($full_path)) {
             $this->process($full_path);
         }
-        $path = fx::path()->to_http(fx::config()->HTTP_FILES_PATH . $rel_path);
+        $path = fx::path()->to_http($full_path);
         return $path;
+    }
+    
+    public static function find_thumbs($source_path) {
+        $res = array();
+        $rel_path = fx::path()->to_http($source_path);
+        $dir = glob(fx::path('thumbs').'/*');
+        
+        
+        if (!$dir) {
+            return $res;
+        }
+        foreach ($dir as $sub) {
+            if (is_dir($sub)) {
+                $check_path = fx::path()->to_abs($sub.$rel_path);
+                if (fx::path()->is_file($check_path)) {
+                    $res []= $check_path;
+                }
+            }
+        }
+        return $res;
     }
     
     protected function _read_config($config) {

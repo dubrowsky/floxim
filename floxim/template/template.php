@@ -32,7 +32,8 @@ class fx_template {
     
     protected function get_var_meta($var_name, $source = null) {
         if ($source && $source instanceof fx_content) {
-            return $source->get_field_meta($var_name);
+            $meta = $source->get_field_meta($var_name);
+            return is_array($meta) ? $meta : array();
         }
         for ($i = count($this->context_stack) - 1; $i >= 0; $i--) {
             if ( !($this->context_stack[$i] instanceof fx_content) ) {

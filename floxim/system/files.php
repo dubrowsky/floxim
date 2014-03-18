@@ -554,10 +554,10 @@ class fx_system_files {
             }
 
             if (isset($success) && $success) {
+                fx::trigger('unlink', array('file' => $local_filename));
                 return 0;
-            } else {
-                return $this->rm_ftp(dirname($filename), array(basename($filename)));
             }
+            return $this->rm_ftp(dirname($filename), array(basename($filename)));
         }
     }
 
@@ -876,7 +876,6 @@ class fx_system_files {
         if ($type == 1) {
             $res= move_uploaded_file($file['tmp_name'], $full_path);
             if (!$res) {
-            	dev_log($file, $full_path);
             	die();
             }
             //$this->move_uploaded_file($file['tmp_name'], $full_path);
@@ -886,7 +885,7 @@ class fx_system_files {
         } else {
             fx::files()->copy($file['path'], $full_path);
         }
-        
+        /*
         $q = "INSERT INTO `{{filetable}}` SET
             `real_name` = '" . fx::db()->escape($filename) . "',
             `path` = '" . $stored_path. "',
@@ -894,9 +893,10 @@ class fx_system_files {
             `size` = '" . filesize($full_path) . "'";
 
         fx::db()->query($q);
+        */
         
-        return array(   
-            'id' => fx::db()->insert_id(), 
+        return array(
+            //'id' => fx::db()->insert_id(), 
             'path' => $http_path,
             'filename' => $filename,
             'fullpath' => $full_path

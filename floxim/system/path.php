@@ -58,10 +58,6 @@ class fx_path {
     }
     
     public function to_http($path) {
-        if (!is_string($path)) {
-            fx::debug(debug_backtrace());
-            die();
-        }
         $ds = "[".preg_quote('\/')."]";
         $path = preg_replace("~".$ds."~", DIRECTORY_SEPARATOR, $path);
         $path = preg_replace("~^".preg_quote($this->root)."~", '', $path);
@@ -87,5 +83,22 @@ class fx_path {
     
     public function exists($path) {
         return file_exists($this->to_abs($path));
+    }
+    
+    public function is_file($path) {
+        $path = $this->to_abs($path);
+        return file_exists($path) && is_file($path);
+    }
+    
+    public function is_inside($child, $parent) {
+        $child = $this->to_abs($child);
+        $parent = $this->to_abs($parent);
+        return preg_match("~^".preg_quote($parent)."~", $child);
+    }
+    
+    public function file_name($path){
+        $path = $this->to_abs($path);
+        preg_match("~[^".preg_quote(DIRECTORY_SEPARATOR)."]+$~", $path, $file_name);
+        return $file_name ? $file_name[0] : null;
     }
 }

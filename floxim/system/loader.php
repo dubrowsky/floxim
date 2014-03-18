@@ -22,7 +22,7 @@ class fx_loader {
         if (!$file) {
             return false;
         }
-
+        $file = $file.'.php';
         if (!file_exists($file)) {
             $e = new fx_exception_classload('Unable to load class '.$classname);
             $e->class_file = $file;
@@ -32,9 +32,60 @@ class fx_loader {
         require_once $file;
     }
 
+    protected static $essences = array(
+        'component', 
+        'field', 
+        'group', 
+        'history', 
+        'history_item', 
+        'infoblock', 
+        'infoblock_visual',
+        'layout',
+        'content', 
+        'redirect', 
+        'simplerow', 
+        'site', 
+        'widget',
+        'filetable',
+        'patch',
+        'lang_string',
+        'lang'
+    );
+    
+    protected static $tpl_classes = array(
+        'processor',
+        'field',
+        'html',
+        'suitable',
+        'html_token',
+        'token',
+        'html_tokenizer',
+        'fsm',
+        'compiler',
+        'loader',
+        'parser',
+        'expression_parser',
+        'loop',
+        'attr_parser',
+        'attrtype_parser',
+        'modifier_parser'
+    );
+
+    protected static $system_classes = array(
+        'collection',
+        'debug',
+        'profiler',
+        'http', 
+        'event', 
+        'cache', 
+        'thumb', 
+        'lang'
+    );
+    
     public static function get_class_file($classname) {
-      	$root = fx::config()->ROOT_FOLDER;
+        $root = fx::config()->ROOT_FOLDER;
         $doc_root = fx::config()->DOCUMENT_ROOT.'/';
+        
 
         $libs = array();
         $libs['FB'] = 'firephp/fb';
@@ -42,178 +93,155 @@ class fx_loader {
         $libs['tmhUtilities'] = 'tmhoAuth/tmhutilities';
         $libs['Facebook'] = 'facebook/facebook';
 
-        $essences = array(
-            'component', 
-            'field', 
-            'group', 
-            'history', 
-            'history_item', 
-            'infoblock', 
-            'infoblock_visual',
-            'layout',
-            'content', 
-            'redirect', 
-            'simplerow', 
-            'site', 
-            'widget',
-            'filetable',
-            'patch',
-            'lang_string',
-            'lang'
-        );
-
         $classname = str_replace('fx_', '', $classname);
 
-        do {
-            if ( $classname == 'collection') {
-                $file = $root.'system/collection';
-                break;
+        if ($classname == 'template') {
+            return $root.'template/template';
+        }
+        if (preg_match("~^template_(.+)$~", $classname, $tpl_name)) {
+            $tpl_name = $tpl_name[1];
+            if (in_array($tpl_name, self::$tpl_classes)) {
+                return $root.'template/'.$classname;
             }
-            if ($classname == 'profiler') {
-                $file = $root.'system/profiler';
-                break;
-            }
-            if (preg_match("~^template(|_processor|_field|_html|_suitable|_html_token|_token|_html_tokenizer|_fsm|_compiler|_loader|_parser|_expression_parser|_loop|_attr_parser|_attrtype_parser|_modifier_parser)(?:_dev)?$~", $classname)) {
-                $file = $root.'template/'.$classname;
-                break;
-            }
-            if (preg_match('~controller_(component|widget|layout)$~', $classname, $ctr_type)) {
-                $file = $root.'controller/'.$ctr_type[1];
-                break;
-            }
-            if (preg_match("~^template_(.+)$~", $classname, $tpl_name)) {
-                fx_template_loader::autoload($tpl_name[1]);
-                return;
-            }
+            fx_template_loader::autoload($tpl_name);
+            return;
+        }
+        
+        if (in_array($classname, self::$system_classes)) {
+            return $root.'system/'.$classname;
+        }
+        
+        if (preg_match("~^system_(.+)$~", $classname, $sys_name)){
+            return $root.'system/'.$sys_name[1];
+        }
             
-            if (in_array($classname, $essences)) {
-                $file = $root."essence/".$classname;
-                break;
-            }
+        if (in_array($classname, self::$essences)) {
+            return $root."essence/".$classname;
+        }
             
-            if (preg_match("~^router~", $classname)) {
-            	$file = $root.'routing/'.$classname;
-            	break;
-            }
+        if (preg_match('~controller_(component|widget|layout)$~', $classname, $ctr_type)) {
+            return $root.'controller/'.$ctr_type[1];
+        }
             
-            if (preg_match('~^content_~', $classname)) {
-                $com_name = preg_replace("~^content_~", '', $classname);
-                $file = $doc_root.'component/'.$com_name.'/'.$com_name.'.essence';
-                if (file_exists($file.'.php')) {
-                    break;
-                } elseif(file_exists($doc_root.'floxim/std/component/'.$com_name.'/'.$com_name.'.essence'.'.php')) {
-                    $file = $doc_root.'floxim/std/component/'.$com_name.'/'.$com_name.'.essence';
-                    break;
-                }
-            }
+        if (preg_match("~^router~", $classname)) {
+            return $root.'routing/'.$classname;
+        }
             
-            if (in_array($classname, array('http', 'event', 'cache', 'thumb', 'lang'))) {
-                $file = $root.'system/'.$classname;
-                break;
+        if (preg_match('~^content_~', $classname)) {
+            $com_name = preg_replace("~^content_~", '', $classname);
+            $file = $doc_root.'component/'.$com_name.'/'.$com_name.'.essence';
+            if (file_exists($file.'.php')) {
+                return $file;
+            } 
+            $std_file = $doc_root.'floxim/std/component/'.$com_name.'/'.$com_name.'.essence';
+            if(file_exists($std_file.'.php')) {
+                return $std_file;
             }
+        }
             
-            if (preg_match("~^controller_(.+)~", $classname, $controller_name)) {
-                $controller_name = $controller_name[1];
-                if (preg_match("~^(layout|component|widget)_(.+)$~", $controller_name, $name_parts)) {
-                    $ctr_type = $name_parts[1];
-                    $ctr_name = $name_parts[2];
-                } else {
-                    $ctr_type = 'other';
-                    $ctr_name = $controller_name;
-                }
-                $test_file = $doc_root.$ctr_type.'/'.$ctr_name.'/'.$ctr_name;
-                if (file_exists($test_file.'.php')) {
-                    $file = $test_file;
-                    break;
-                } elseif (file_exists($doc_root.'floxim/std/'.$ctr_type.'/'.$ctr_name.'/'.$ctr_name.'.php')) {
-                    $file = $doc_root.'floxim/std/'.$ctr_type.'/'.$ctr_name.'/'.$ctr_name;
-                    break;
+        if (preg_match("~^controller_(.+)~", $classname, $controller_name)) {
+            $controller_name = $controller_name[1];
+            if (preg_match("~^(layout|component|widget)_(.+)$~", $controller_name, $name_parts)) {
+                $ctr_type = $name_parts[1];
+                $ctr_name = $name_parts[2];
+            } else {
+                $ctr_type = 'other';
+                $ctr_name = $controller_name;
+            }
+            $test_file = $doc_root.$ctr_type.'/'.$ctr_name.'/'.$ctr_name;
+            if (file_exists($test_file.'.php')) {
+                return $test_file;
+            } 
+            $std_file = $doc_root.'floxim/std/'.$ctr_type.'/'.$ctr_name.'/'.$ctr_name;
+            if (file_exists($std_file.'.php')) {
+                return $std_file;
+            }
+        }
+        // Some old classes
+        if ($classname == 'controller_layout' || $classname == 'controller_admin_layout') {
+            return $root.'admin/controller/layout';
+        }
+
+        if ($classname == 'controller_admin' || $classname == 'controller_admin_module') {
+            return $root."admin/admin";
+        }
+
+        if (preg_match("/^controller_admin_module_([a-z]+)/", $classname, $match)) {
+            return $root."modules/".$match[1]."/admin";
+        }
+
+        if (preg_match("/^controller_admin_([a-z_]+)/", $classname, $match)) {
+            return $root.'admin/controller/'.str_replace('_', '/', $match[1]);
+        }
+
+        if (preg_match("/^controller_(site|template_files|template_colors|template|component|field|settings|widget)$/", $classname, $match)) {
+            return $root.'/admin/controller/'.str_replace('_', '/', $match[1]);
+        }
+
+        if (preg_match("/^controller_module_([a-z]+)/", $classname, $match)) {
+            return $root."modules/".$match[1]."/controller";
+        }
+
+        if (preg_match("/^controller_admin_module_([a-z]+)/", $classname, $match)) {
+            return $root."modules/".$match[1]."/admin";
+        }
+
+        if (preg_match("~^data_(.+)$~", $classname, $match)) {
+            $data_name = $match[1];
+            if (preg_match("~^content_~", $data_name)) {
+                $com_name = preg_replace("~^content_~", '', $data_name);
+                $file = $doc_root.'component/'.$com_name.'/'.$com_name.'.data';
+                if (file_exists($file.'.php')){
+                    return $file;
                 } 
-            }
-
-            if ($classname == 'controller_layout' || $classname == 'controller_admin_layout') {
-                $file = $root.'admin/controller/layout';
-                break;
-            }
-
-            if ($classname == 'controller_admin' || $classname == 'controller_admin_module') {
-                $file = $root."admin/admin";
-                break;
-            }
-
-            if (preg_match("/^controller_admin_module_([a-z]+)/", $classname, $match)) {
-                $file = $root."modules/".$match[1]."/admin";
-                break;
-            }
-
-            if (preg_match("/^controller_admin_([a-z_]+)/", $classname, $match)) {
-                $file = $root.'admin/controller/'.str_replace('_', '/', $match[1]);
-                break;
-            }
-
-            if (preg_match("/^controller_(site|template_files|template_colors|template|component|field|settings|widget)$/", $classname, $match)) {
-                $file = $root.'/admin/controller/'.str_replace('_', '/', $match[1]);
-                break;
-            }
-
-            if (preg_match("/^controller_module_([a-z]+)/", $classname, $match)) {
-                $file = $root."modules/".$match[1]."/controller";
-                break;
-            }
-
-
-            if (preg_match("/^controller_admin_module_([a-z]+)/", $classname, $match)) {
-                $file = $root."modules/".$match[1]."/admin";
-                break;
-            }
-            
-            if (preg_match("~^data_(.+)$~", $classname, $match)) {
-                $data_name = $match[1];
-                if (preg_match("~^content_~", $data_name)) {
-                    $com_name = preg_replace("~^content_~", '', $data_name);
-                    $file = $doc_root.'component/'.$com_name.'/'.$com_name.'.data';
-                    if (file_exists($file.'.php')){
-                        break;
-                    } elseif(file_exists($doc_root.'floxim/std/component/'.$com_name.'/'.$com_name.'.data'.'.php')) {
-                        $file = $doc_root.'floxim/std/component/'.$com_name.'/'.$com_name.'.data';
-                        break;
-                    }
-                } else {
-                    $file = $root.'data/'.$match[1];
+                $std_file = $doc_root.'floxim/std/component/'.$com_name.'/'.$com_name.'.data';
+                if(file_exists($std_file.'.php')) {
+                    return $std_file;
                 }
-                break;
+            } 
+            return $root.'data/'.$match[1];
+        }
+        if (preg_match("/^controller_admin_module_([a-z]+)/", $classname, $match)) {
+            return $root."modules/".$match[1]."/admin";
+        }
+
+        if (preg_match("/^controller_admin_([a-z_]+)/", $classname, $match)) {
+            return $root.'admin/controller/'.str_replace('_', '/', $match[1]);
+        }
+
+        if (preg_match("/^controller_module_([a-z]+)/", $classname, $match)) {
+            return $root."modules/".$match[1]."/controller";
+        }
+
+        if (preg_match("/^controller_admin_module_([a-z]+)/", $classname, $match)) {
+            return $root."modules/".$match[1]."/admin";
+        }
+
+        if (preg_match("~^data_(.+)$~", $classname, $match)) {
+            $data_name = $match[1];
+            if (preg_match("~^content_~", $data_name)) {
+                $com_name = preg_replace("~^content_~", '', $data_name);
+                $file = $doc_root.'component/'.$com_name.'/'.$com_name.'.data';
+                if (file_exists($file.'.php')) {
+                    return $file;
+                } 
+                $std_file = $doc_root.'floxim/std/component/'.$com_name.'/'.$com_name.'.data';
+                if (file_exists($std_file.'.php')) {
+                    return $std_file;
+                }
             }
+            return $root.'data/'.$match[1];
+        }
             
-            if (preg_match("/^(admin|controller|event|field|infoblock|layout|system)_([a-z0-9_]+)/", $classname, $match)) {
-                $file = $root.$match[1]."/".str_replace('_', '/', $match[2]);
-                break;
-            }
-
-            if (preg_match("/(ctpl_)([a-z][a-z0-9]*)_([a-z][a-z0-9_]+)/i", $classname, $match)) {
-                $file = fx::config()->COMPONENT_FOLDER.$match[2].'/'.$match[3].'.tpl';
-                break;
-            }
-
-            if (preg_match("/template__([a-z][a-z0-9]*)__([a-z][a-z0-9]+)/i", $classname, $match)) {
-                $file = fx::config()->TEMPLATE_FOLDER.$match[1].'/'.$match[2].'.tpl';
-                break;
-            }
-
-            if ($classname == 'fxml' || $classname == 'export' || $classname == 'import') {
-                $file = $root.'imex/'.$classname;
-                break;
-            }
-
-            if (isset($libs[$classname])) {
-                $file = fx::config()->INCLUDE_FOLDER.$libs[$classname];
-                break;
-            }
-
-            $file = $root.$classname;
-        } while (false);
-		return $file.".php";
+        if (preg_match("/^(admin|controller|event|field|infoblock|layout|system)_([a-z0-9_]+)/", $classname, $match)) {
+            return $root.$match[1]."/".str_replace('_', '/', $match[2]);
+        }
+        
+        if (isset($libs[$classname])) {
+            return fx::config()->INCLUDE_FOLDER.$libs[$classname];
+        }
+        return $root.$classname;
     }
-
 }
 
 class fx_exception extends Exception {
