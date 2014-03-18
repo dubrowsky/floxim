@@ -153,7 +153,7 @@
     }
 
     if (matchMedia) {
-        var mq = window.matchMedia("(min-width:320px) and (max-width:800px)");
+        var mq = window.matchMedia("(min-width:320px) and (max-width:1000px)");
         mq.addListener(WidthChange);
         WidthChange(mq);
     }

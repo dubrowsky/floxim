@@ -3,9 +3,8 @@
         fx:name="Main menu"
         fx:of="section.list"
         fx:omit="true">
-    <div class="menu-icon">☰</div>
-    <ul
-        class="main-menu">
+    <div class="menu-icon"></div>
+    <ul class="main-menu">
         <div class="close"></div>
         <li
             fx:each="$items"
