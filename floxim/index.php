@@ -14,7 +14,7 @@ register_shutdown_function(function() {
         fx::log('down', $res, debug_backtrace(), $_SERVER, $_POST); 
     }
     fx::profiler()->stop();
-    fx::log('profiled', fx::profiler()->show());
+    //fx::log('profiled', fx::profiler()->show());
 });
 
 fx::profiler()->block('routing');

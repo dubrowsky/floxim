@@ -22,14 +22,12 @@ class fx_router_admin extends fx_router {
         }
         
         $classname = 'fx_controller_' . $essence;
-        fx::log('routd ', $classname);
-
+       
         try {
             $controller = new $classname($input, $action);
         } catch (Exception $e) {
             die("Error! Essence: " . htmlspecialchars($essence));
         }
-
         return $controller;
     }
 }

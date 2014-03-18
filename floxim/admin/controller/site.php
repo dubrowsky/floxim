@@ -211,13 +211,12 @@ class fx_controller_admin_site extends fx_controller_admin {
 
     public function settings($input) {
         $site_id = isset($input['id']) ? $input['id'] : isset($input['params'][0]) ? $input['params'][0] : null;
-        
         $site = fx::data('site', $site_id);
-
         $main_fields = array();
         $main_fields[] = $this->ui->input('name', fx::alang('Site name','system'), $site['name']);
         $main_fields[] = $this->ui->input('domain', fx::alang('Domain','system'), $site['domain']);
         $main_fields[] = $this->ui->input('mirrors', fx::alang('Aliases','system'), $site['mirrors']);
+        
         $languages = fx::data('lang')->all()->get_values('lang_code', 'lang_code');
         $main_fields[] =
             array(
