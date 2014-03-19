@@ -795,6 +795,9 @@ function fx_exec_sql($file) {
 
 function fx_get_config($MYSQL_HOST, $MYSQL_USER, $MYSQL_PASSWORD, $MYSQL_DB_NAME) {
     ob_start();
+    if (function_exists("apc_clear_cache")) {
+        echo "ini_set('apc.cache_by_default', 0);\n";
+    }
     ?>
 define("FX_JQUERY_PATH", '/floxim/lib/js/jquery-1.9.1.min.js');
 $db_config = array(
@@ -823,6 +826,7 @@ function fx_write_config($distr_dir, $custom_dir) {
     
     if ( is_writable($distr_dir) ) {
       file_put_contents($config_path, $cfg_file);
+      chmod($config_path, 0666);
     } else {
 		fx_write_log('Configuration file config.php unaccessible for recording. Add the required permissions on this file and repeat the installation. ');
 	}
