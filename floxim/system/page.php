@@ -44,11 +44,14 @@ class fx_system_page {
     
     public function add_css_file($file) {
         if (preg_match("~\.less$~", $file)) {
-            $doc_root = fx::config()->DOCUMENT_ROOT;
-            $target_path = fx::config()->HTTP_FILES_PATH.'asset_cache/'.md5($file).'.css';;
+            //$doc_root = fx::config()->DOCUMENT_ROOT;
+            //$target_path = fx::config()->HTTP_FILES_PATH.'asset_cache/'.md5($file).'.css';
             
-            $full_target_path = $doc_root.$target_path;
-            $full_source_path = $doc_root.$file;
+            $target_path = fx::path()->http('files', 'asset_cache/'.md5($file).'.css');
+            $full_target_path = fx::path()->to_abs($target_path);
+            $full_source_path = fx::path()->to_abs($file);
+            //$full_target_path = $doc_root.$target_path;
+            //$full_source_path = $doc_root.$file;
 
             if (!file_exists($full_source_path)) {
                 return;
@@ -56,7 +59,6 @@ class fx_system_page {
             
             if (!file_exists($full_target_path) || filemtime($full_source_path) > filemtime($full_target_path)) {
                 fx::profiler()->block('compile less '.$file);
-                require_once $doc_root.'/floxim/lib/lessphp/lessc.inc.php';
                 $http_base = preg_replace("~[^/]+$~", '', $file);
                 
                 $less = new lessc();
@@ -103,15 +105,15 @@ class fx_system_page {
                     $file_contents = file_get_contents($file);
                 } else {
                     $http_base = preg_replace("~[^/]+$~", '', $file);
-                    $file = $doc_root.$file;
-                    $file_contents = file_get_contents($file);
+                    //$file = $doc_root.$file;
+                    $file_contents = file_get_contents(fx::path()->to_abs($file));
                     $file_contents = $this->_css_url_replace($file_contents, $http_base);
                 }
                 $file_content .= $file_contents."\n";
             }
 
             if ($less_flag) {
-                require_once $doc_root.'/floxim/lib/lessphp/lessc.inc.php';
+                //require_once $doc_root.'/floxim/lib/lessphp/lessc.inc.php';
                 $less = new lessc();
                 $file_content = $less->compile($file_content);
             }

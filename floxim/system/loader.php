@@ -11,10 +11,6 @@ class fx_loader {
      * @todo привести в номральный вид
      */
     static public function load_class($classname) {
-        if (substr($classname, 0, 3) != 'fx_') {
-            return false;
-        }
-
         if (in_array($classname, self::$classes_with_no_file)) {
             throw new fx_exception_classload('AGAIN: Unable to load class '.$classname);
         }
@@ -87,12 +83,22 @@ class fx_loader {
         $doc_root = fx::config()->DOCUMENT_ROOT.'/';
         
 
-        $libs = array();
-        $libs['FB'] = 'firephp/fb';
-        $libs['tmhOAuth'] = 'tmhoAuth/tmhoauth';
-        $libs['tmhUtilities'] = 'tmhoAuth/tmhutilities';
-        $libs['Facebook'] = 'facebook/facebook';
-
+        $libs = array(
+            'lessc' => 'lessphp/lessc.inc',
+            'FB' => 'firephp/fb',
+            'tmhOAuth' => 'tmhoAuth/tmhoauth',
+            'tmhUtilities' => 'tmhoAuth/tmhutilities',
+            'Facebook' => 'facebook/facebook'
+        );
+        
+        if (isset($libs[$classname])) {
+            return fx::config()->INCLUDE_FOLDER.$libs[$classname];
+        }
+        
+        if (substr($classname, 0, 3) != 'fx_') {
+            return false;
+        }
+        
         $classname = str_replace('fx_', '', $classname);
 
         if ($classname == 'template') {
@@ -237,9 +243,6 @@ class fx_loader {
             return $root.$match[1]."/".str_replace('_', '/', $match[2]);
         }
         
-        if (isset($libs[$classname])) {
-            return fx::config()->INCLUDE_FOLDER.$libs[$classname];
-        }
         return $root.$classname;
     }
 }
