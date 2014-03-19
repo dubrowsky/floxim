@@ -130,7 +130,7 @@ class fx_field_link extends fx_field_baze {
     }
     
     /*
-     * Получить компонент, на который ссылается поле
+     * Get the referenced component field
      */
     public function get_related_component() {
         $rel = $this->get_relation();

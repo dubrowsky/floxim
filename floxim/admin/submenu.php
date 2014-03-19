@@ -188,7 +188,7 @@ class fx_admin_submenu {
             $this->title = $component['name'];
             $this->backlink = 'component.all';
             $cid = $component['id'];
-            // выводим основные разделы
+            // print the main sections
             $submenu_items = fx_controller_admin_component::get_component_submenu($component);
             foreach ($submenu_items as $item) {
             	$this->menu[] = $this->add_node(

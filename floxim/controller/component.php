@@ -228,9 +228,9 @@ class fx_controller_component extends fx_controller {
     public function get_target_config_fields() {
         
         /*
-         * Ниже код, который добывает допустимые инфоблоки для полей-ссылок
-         * и предлагает выбрать, откуда брать/куда добавлять значения-ссылки
-         * возможно, откажемся из-за непонятного гуя 
+         * Below is the code that produces valid InfoBlock for fields-references
+         * offers to choose, where to get/where to add value-links
+         * you may elect not for incomprehensible Guia
          */
         $link_fields = $this->
                             get_component()->
@@ -614,9 +614,9 @@ class fx_controller_component extends fx_controller {
     
 
      /**
-     * $_content_type может быть одним из значений
-     * в таблице fx_component в поле keyword
-     * @var string 
+     * $_content_type may be one of the values
+     * the table fx_component in the keyword field
+     * @var string
      */
     protected $_content_type = null;
     
@@ -640,7 +640,7 @@ class fx_controller_component extends fx_controller {
     }
     
     /**
-     * Возвращает компонент по значение свойства _content_type
+     * Returns the component at the value of the property _content_type
      * @return fx_data_component
      */
     public function get_component() {
@@ -717,4 +717,3 @@ class fx_controller_component extends fx_controller {
         return $actions;
     }
 }
-?>

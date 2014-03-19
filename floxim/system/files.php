@@ -127,21 +127,21 @@ class fx_system_files {
             return 1;
         }
 
-        // пробуем поменять через локальную ФС
+        // try to change it via the local filesystem
         if (@chmod($local_filename, $perms)) {
             return 0;
         }
 
-        // в случае неудачи ломимся по ftp
+        // in case of failure break ftp
         return $this->chmod_ftp(dirname($filename), array(basename($filename)), $perms);
     }
 
     /**
-     * Меняет в указанном каталоге права на указанные файлы
-     * @param string $dir катаог, в котором лежат файлы
-     * @param array $files массив имен файлов (только имена, без пути)
-     * @param array $files новые права доступа (помнить про восьмиричную систему счисления)
-     * @return int 0 - успех, в противном случае код ошибки ftp
+     * Changes in the specified directory rights specified files
+     * @param string $dir catalog, which are files
+     * @param array $files array of file names (names only, without the path)
+     * @param array $files new access rights (to remember about octal notation)
+     * @return int 0 on success, otherwise, ftp error code
      */
     protected function chmod_ftp($dir, $files, $perms) {
         if (!$files || empty($files)) {
@@ -196,13 +196,13 @@ class fx_system_files {
         while ($dir = array_pop($dirs)) {
             $handle = @opendir(realpath($this->base_path.$dir));
             if ($handle) {
-                $chmod_failed = array();  // то, что не смогли поменять через локальную ФС
+                $chmod_failed = array();  // that could not change it via the local filesystem
                 while (($file = readdir($handle)) !== false) {
                     if ($file != "." && $file != "..") {
                         $file_path = $dir.$file;
                         $local_file_path = $this->base_path.$file_path;
 
-                        // пробуем поменять через локальную ФС
+                        // try to change it via the local filesystem
                         if (!@chmod(realpath($local_file_path), $perms)) {
                             $chmod_failed[] = $file;
                         }
@@ -240,11 +240,11 @@ class fx_system_files {
     }
 
     /*
-     * @param string логин пользователя ftp
-     * @param string пароль пользователя ftp
-     * @param string имя хоста ftp
-     * @param string ftp-порт
-     * @param string ftp-каталог с корнем сайта
+     * @param string the login name for the ftp user
+     * @param string the password of the ftp user
+     * @param string the name of the ftp host
+     * @param string the ftp port
+     * @param string the ftp directory with root
      * @return object
      */
 
@@ -304,7 +304,7 @@ class fx_system_files {
 
         $local_filename = $this->base_path.$filename;
 
-        // Проверяем существует ли каталог и создаем его если можно
+        // Check whether there is a directory and creates it if you can
         if ($local_filename && file_exists($local_filename)) {
             $path_success = is_writeable($local_filename);
         } else {
@@ -321,7 +321,7 @@ class fx_system_files {
         }
 
         if ($path_success) {
-            // Пробуем записать через локальную ФС
+            // Try to write via the local filesystem
             $file = @fopen($local_filename, "w");
             if ($file) {
                 $success = !(fwrite($file, $filedata) === false);
@@ -336,7 +336,7 @@ class fx_system_files {
 
         throw new fx_exception_files( fx::alang('File is not writable','system') . ' ' . $filename);
 
-        // В противном случае пишем через ftp
+        // If not, write via ftp
         $tmpfile = tmpfile();
         fwrite($tmpfile, $filedata);
         fseek($tmpfile, 0);
@@ -385,7 +385,7 @@ class fx_system_files {
             return 0;
         }
 
-        // сначала пробуем через ФС
+        // first, try through the Federal Assembly
         if (@mkdir($local_path, $this->new_dir_mods, $recursive)) {
             chmod($local_path, $this->new_dir_mods);
             return true;
@@ -395,19 +395,19 @@ class fx_system_files {
         }
 
         return 1;
-        // пробуем по ftp
+        // try to ftp
         return $this->mkdir_ftp($path, $recursive);
     }
 
     /**
-     * Чтение файла
-     * @param string $filename имя файла
+     * The file read
+     * @param string $filename the file name
      */
     public function readfile($filename) {
 
     	$local_filename = $this->get_full_path($filename);
 
-        // Проверяем существование, возможность чтения и не является ли каталогом
+        // Check for the existence, the ability to read and is not a directory
         if (!file_exists($local_filename) || !is_readable($local_filename) || is_dir($local_filename)) {
             throw new fx_exception_files("Unable to read file $local_filename");
         }
@@ -451,7 +451,7 @@ class fx_system_files {
         return $result;
     }
 
-    protected function rm_ftp($dir, $files) {  // только пустой
+    protected function rm_ftp($dir, $files) {  // only empty
         if (!$files || empty($files)) {
             return 1;
         }
@@ -506,7 +506,7 @@ class fx_system_files {
 
             $handle = opendir($local_filename);
             if ($handle) {
-                $failed_files = array();  // то, что не смогли удалить через локальную ФС
+                $failed_files = array();  // that could not be removed via the local filesystem
                 while (($file = readdir($handle)) !== false) {
                     if ($file != "." && $file != "..") {
 
@@ -515,7 +515,7 @@ class fx_system_files {
                         if (is_dir($local_file)) {
                             $result |= $this->rm($filename.$file);
                         } else {
-                            if (!@unlink($local_file)) {  // пробуем удалить через локальную ФС
+                            if (!@unlink($local_file)) {  // try to delete via the local filesystem
                                 $failed_files[] = $file;
                             }
                         }
@@ -573,7 +573,7 @@ class fx_system_files {
 
         $local_filename = $this->base_path.$filename;
 
-        // Проверяем существование и возможность чтения
+        // Check the existence and reading
         if (!file_exists($local_filename) || !is_readable($local_filename)) {
             return null;
         }
@@ -625,7 +625,7 @@ class fx_system_files {
 
         $ftp_path = $this->base_url.'/'.dirname($filename).'/';
 
-        // пробуем переименовать через ftp
+        // try to rename ftp
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $ftp_path);
         curl_setopt($ch, CURLOPT_POSTQUOTE, array("RNFR ".basename($filename), "RNTO ".$new_filename));
@@ -694,7 +694,7 @@ class fx_system_files {
 
         $local_parent_dir = dirname($local_new_filename);
 
-        if (!is_dir($local_parent_dir)) {  // проверяем существует ли каталог назначения
+        if (!is_dir($local_parent_dir)) {  // check whether there is a destination directory
             if ($make_dir) {
                 $res = $this->mkdir($local_parent_dir);
             } else {
@@ -703,12 +703,12 @@ class fx_system_files {
         }
 
 
-        if (!is_dir($local_old_filename)) {  // копируем 1 файл
+        if (!is_dir($local_old_filename)) {  // copy 1 file
             fx::log('call ccp');
             return $this->_copy_file($local_old_filename, $local_new_filename);
         }
 
-        // копируем каталог
+        // copy the directory
         $res = $this->mkdir($new_filename);
 
         if ($new_filename[strlen($new_filename) - 1] != '/') {
@@ -796,11 +796,11 @@ class fx_system_files {
     }
 
     /**
-     * Создает временный файл (файл автоматически удалится в деструкторе класса)
-     * @return mixed путь к файлу относительно корня сайта
+     * Creates a temporary file (the file is automatically deleted in the destructor of the class)
+     * @return mixed the file path relative to the site root
      */
     public function create_tmp_file() {
-        do {  // генерируем уникальное имя файла
+        do {  // generate a unique file name
             $local_filename = fx::config()->TMP_FOLDER.uniqid();
         } while (file_exists($local_filename));
 
@@ -818,11 +818,11 @@ class fx_system_files {
     }
 
     /**
-     * Создает временный каталог (файл автоматически удалится в деструкторе класса)
-     * @return mixed путь к каталогу относительно корня сайта
+     * Creates a temporary directory (the file is automatically deleted in the destructor of the class)
+     * @return mixed the directory path relative to the site root
      */
     public function create_tmp_dir() {
-        do {  // генерируем уникальное имя файла
+        do {  // generate a unique file name
             $local_filename = fx::config()->TMP_FOLDER.uniqid();
         } while (file_exists($local_filename));
 
@@ -844,7 +844,7 @@ class fx_system_files {
         $dir = trim($dir, '/').'/';
         $this->mkdir(fx::config()->HTTP_FILES_PATH.$dir);
 
-        // обычный FILES
+        // normal FILES
         if (is_array($file) && !$file['link'] && !$file['source_id'] && !$file['path']) {
             $type = 1;
             $filename = $file['name'];
@@ -943,9 +943,9 @@ class fx_system_files {
 
     /**
      *
-     * @param string $out_file - выходной файл
-     * @param string $dir - каталог, который будет корнем для архива
-     * @return mixed 0 в случае удачи, либо null в случае ошибки
+     * @param string $out_file - output file
+     * @param string $dir - the directory to be the root of the archive
+     * @return mixed 0 in case of success, or null on error
      */
     public function tgz_create($out_file, $dir) {
         require_once fx::config()->INCLUDE_FOLDER.'tar.php';
@@ -965,14 +965,14 @@ class fx_system_files {
         $local_dir = $this->base_path.$dir;
         @set_time_limit(0);
 
-        if ($this->tar_check()) {  // сначала пробуем через внешнюю программу tar
+        if ($this->tar_check()) {  // first, try using an external program tar
             exec("cd '$local_dir'; tar  -zchf '$local_out_file' * 2>&1", $output, $err_code);
             if (!$err_code && file_exists($local_out_file)) {
                 return 0;
             }
         }
 
-        // в случае неудачи - сами мудрим с tar-ом
+        // in case of failure themselves mudrym with tar-Ohm
         if ($local_dir[strlen($local_dir) - 1] == '/') {  // hack for OS windows
             $local_dir = substr($local_dir, 0, -1);
         }
@@ -985,9 +985,9 @@ class fx_system_files {
 
     /**
      *
-     * @param string $tgz_file - файл с архивом
-     * @param string $dir - каталог, в который извылекаем данные архива
-     * @return mixed 0 в случае удачи, либо null в случае ошибки
+     * @param string $tgz_file - file archive
+     * @param string $dir is the directory in which izveletiem data archive
+     * @return mixed 0 in case of success, or null on error
      */
     public function tgz_extract($tgz_file, $dir) {
         require_once fx::config()->INCLUDE_FOLDER.'tar.php';
@@ -1006,13 +1006,13 @@ class fx_system_files {
         }
         $local_dir = $this->base_path.$dir;
 
-        if (!is_dir($local_dir)) {  // если каталога не существует, создадим его
+        if (!is_dir($local_dir)) {  // if the directory does not exist, create it
             $res = $this->mkdir($dir);
         }
 
         @set_time_limit(0);
 
-        if ($this->tar_check()) {  // сначала пробуем через внешнюю программу tar
+        if ($this->tar_check()) {  // first, try using an external program tar
             exec("tar -zxf '$local_tgz_file' -C '$local_dir' 2>&1", $output, $err_code);
             if (!$err_code || strpos($output[0], "time")) { // ignore "can't utime, permission denied"
                 return 0;
@@ -1054,21 +1054,21 @@ class fx_system_files {
             return null;
         }
 
-        // Пытаемся средствами ПХП
+        // Try funds PHP
         if (extension_loaded('fileinfo')) {
             $finfo = new finfo;
             $fileinfo = $finfo->file($local_filename, FILEINFO_MIME_TYPE);
             return $fileinfo;
         }
 
-        // Пытаемся через шелл
+        // Try through the shell
         $shell_filename = escapeshellarg($local_filename);
         @exec('file -b --mime-type '.$shell_filename.' 2>/dev/null', $output, $err_code);
         if (!$err_code && $output && $output[0]) {
             return $output[0];
         }
 
-        // Сами мутим =((
+        // Themselves mutim =((
         return $this->my_mime_content_type($local_filename);
     }
 

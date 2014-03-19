@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Прослойка между таблицей и объектом
+ * Layer between the table and the object
  */
 class fx_data {
 
@@ -172,7 +172,7 @@ class fx_data {
     protected $select = null;
     
     public function select($what) {
-        // сбросить так: $finder->select(null)
+        // reset: $finder->select(null)
         if (func_num_args() == 1 && is_null($what)) {
             $this->select = null;
             return $this;
@@ -197,7 +197,7 @@ class fx_data {
     }
     
     public function build_query() {
-        // 1. Получить таблицы-родители
+        // 1. To get tables-parents
         $tables = $this->get_tables();
         if (is_null($this->select)) {
             foreach ($tables as $t) {
@@ -261,7 +261,7 @@ class fx_data {
         $rel = $this->get_relation($rel_name);
         $finder_tables = $finder->get_tables();
         
-        // колонка-ссылка
+        // column-link
         $link_col = $rel[2];
         
         switch ($rel[0]) {
@@ -269,7 +269,7 @@ class fx_data {
                 //fx::debug('bel to', $rel);
                 $joined_table = array_shift($finder_tables);
                 $joined_alias = $rel_name.'__'.$joined_table;
-                // таблица текущего файндера, содержащая колонку-ссылку
+                // table of current finder containing the page, link
                 $our_table = $this->get_col_table($link_col);
                 $this->join(
                     array($joined_table, $joined_alias),
@@ -385,7 +385,7 @@ class fx_data {
     }
     
      /*
-     * Метод собирает плоские данные
+     * Method collects flat data
      */
     public function get_data() {
         $query = $this->build_query();
@@ -401,7 +401,7 @@ class fx_data {
 
         $objs = array();
         foreach ($res as $v) {
-            // не забыть serialized
+            // don't forget serialized
             foreach ($this->serialized as $serialized_field_name) {
                 if (isset($v[$serialized_field_name])) {
                     $v[$serialized_field_name] = unserialize($v[$serialized_field_name]);
@@ -421,8 +421,8 @@ class fx_data {
     }
     
     /*
-     * Метод вызывает $this->get_data(),
-     * и из коллекции плоских данных собирает эссенсы
+     * Method call $this->get_data(),
+     * from the collection of the flat data collects essence
      */
     protected function _get_essences() {
         $data = $this->get_data();
@@ -465,12 +465,12 @@ class fx_data {
                 break;
             case self::MANY_MANY:
                 $end_rel = $rel[3];
-                // чтобы вынимались связанные сущности 
-                // только с непустым полем, по которому связываем
+                // removed to related entities
+                // only with a non-empty field in which relate
                 $end_rel_data = $rel_finder->relations();
                 $end_rel_field = $end_rel_data[$end_rel][2];
                 
-                // $rel[4] - тип данных для many-many
+                // $rel[4] is the data type for many-many
                 $end_finder = null;
                 if (isset($rel[4])) {
                     $end_rel_datatype = $rel[4];
@@ -491,8 +491,8 @@ class fx_data {
     }
     
     /*
-     * Метод добавляет релейтед-сущности к коллекции
-     * использует $this->with и $this->relations
+     * Method adds related-entity to the collection
+     * uses $this->with & $this->relations
      */
     protected function _add_relations(fx_collection $essences) {
         if (count($this->with) == 0) {
@@ -513,7 +513,7 @@ class fx_data {
     
 
     /**
-     * @todo ДАЛЕЕ: разобраться, что можно убить;
+     * @todo NEXT to understand that you can kill
      */
 ///////////////////////////
     
@@ -557,7 +557,7 @@ class fx_data {
     }
     
     /**
-     * Получить объекты по списку id
+     * Get the objects on the list id
      * @param type $ids
      * @return array
      */
@@ -566,7 +566,7 @@ class fx_data {
     }
     
     /**
-     * Создать новый essence-экземпляр, заполнить значениями по умолчанию
+     * To create a new essence instance, to fill in default values
      * @param array $data
      * @return fx_essence
      */
@@ -575,7 +575,7 @@ class fx_data {
     }
     
     /**
-     * Инициализировать essence
+     * To initialize essence
      * @param type $data
      * @return fx_essence
      */
@@ -638,8 +638,8 @@ class fx_data {
     }
 
     /**
-     * Получить название класса для essence
-     * @param array $data данные essence'а
+     * Get the name of the class to essence
+     * @param array $data data essence'and
      * @return string
      */
     protected function get_class_name($data = array()) {
@@ -689,4 +689,3 @@ class fx_data {
         return $set;
     }
 }
-?>

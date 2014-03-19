@@ -24,7 +24,7 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
     }
     
     /*
-     * Получить первый элемент коллекции
+     * Get the first element of the collection
      */
     public function first() {
         reset($this->data);
@@ -50,11 +50,8 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
     }
     
     /*
-     * Создает новую коллекцию с результатами
-     * $collection->find('price', '10', '>');
-     * $collection->find('visibility', 'on'); 
-     * $collection->find(function($item){});
-     * @return fx_collection
+     * Creates a new collection with the results
+     * $collection->find('price', '10', '>')
      */
     public function find($field, $prop = null, $compare_type = null) {
         if (count($this->data) == 0) {
@@ -170,16 +167,16 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
     const FILTER_NEQ = 5;
 
     /*
-     * Фильтрует текущую коллекцию по условию (удаляет не совпадающие записи)
+     * Filters the current collection by condition (removes not matching records)
      */
     public function filter() {
         return $this;
     }
     
     /*
-     * Сортирует текущую коллекцию
+     * Sorts the current collection
      * $c->sort('id')
-     * $c->sort(function($a,$b) {});
+     * $c->sort(function($a,$b) {})
      */
     public function sort($sorter) {
         uasort($this->data, $sorter);
@@ -189,32 +186,34 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
         return fx::collection(array_slice($this->data, $offset, $length));
     }
     
-    public function group($groupper) {
+    public function group($groupper, $force_property = false) {
         $res = new fx_collection();
-        if (is_numeric($groupper)) {
-            $c = 0;
-            $r = 0;
-            foreach ($this as $item) {
-                if ($c % $groupper == 0) {
-                    $r++;
+        if (!$force_property) {
+            if (is_numeric($groupper)) {
+                $c = 0;
+                $r = 0;
+                foreach ($this as $item) {
+                    if ($c % $groupper == 0) {
+                        $r++;
+                    }
+                    if (!isset($res[$r])) {
+                        $res[$r] = new fx_collection();
+                    }
+                    $res[$r] []= $item;
+                    $c++;
                 }
-                if (!isset($res[$r])) {
-                    $res[$r] = new fx_collection();
-                }
-                $res[$r] []= $item;
-                $c++;
+                return $res;
             }
-            return $res;
-        }
-        if (is_callable($groupper)) {
-            foreach ($this as $item) {
-                $key = call_user_func($groupper, $item);
-                if (!isset($res[$key])) {
-                    $res[$key] = new fx_collection();
+            if (is_callable($groupper)) {
+                foreach ($this as $item) {
+                    $key = call_user_func($groupper, $item);
+                    if (!isset($res[$key])) {
+                        $res[$key] = new fx_collection();
+                    }
+                    $res[$key] []= $item;
                 }
-                $res[$key] []= $item;
+                return $res;
             }
-            return $res;
         }
         if (is_string($groupper)) {
             $modifiers = array();
@@ -274,7 +273,7 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
     }
     
     /*
-     * Применить функцию ко всем элементам
+     * To apply a function to all elements
      */
     public function apply($callback) {
         foreach ($this->data as $di) {
@@ -478,4 +477,3 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
         return isset($this->data[$offset]) ? $this->data[$offset] : null;
     }
 }
-?>

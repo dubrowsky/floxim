@@ -12,7 +12,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
     
     
     /**
-     * Выбор контроллера-экшна
+     * Select a controller action
      */
     public function select_controller($input) {
         $fields = array(
@@ -29,7 +29,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         
         $area_meta = $input['area'];
         
-        /* Список контроллеров */
+        /* The list of controllers */
         $fields['controller'] = array(
             'type' => 'tree', 
             'name' => 'controller',
@@ -131,7 +131,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             return;
         }
         fx::log('page', $page);
-        $ids []= 0; // корень
+        $ids []= 0; // root
         $ids = $page->get_parent_ids();
         //$ids []= $page['id'];
         fx::log('page ids', $ids);
@@ -172,34 +172,34 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         return $ib_scope == $input_scope;
     }
     /**
-     * Выбор настроек для контроллера-экшна
-     * 
+     * The choice of settings for the controller-action games
+     *
      */
 
     
     public function select_settings($input) {
-        // Текущий (редактируемый) инфоблок
+        // The current, editable) InfoBlock
     	$infoblock = null;
         // special mode for layouts
         $is_layout = isset($input['mode']) && $input['mode'] == 'layout';
         
         if (isset($input['page_id'])) {
-            // устанавливаем в окружение текущую страницу
-            // из нее можно получить лейаут
+            // set into the environment of the current page
+            // it is possible to get the layout
             fx::env('page', $input['page_id']);
         }
         
         $area_meta = is_string($input['area']) ? unserialize($input['area']) : $input['area'];
     	
     	if (isset($input['id']) && is_numeric($input['id'])) {
-            // Редактируем существующий инфоблок
+            // Edit existing InfoBlock
             /* @var $infoblock fx_infoblock */
             $infoblock = fx::data('infoblock', $input['id']);
             $controller = $infoblock->get_prop_inherited('controller');
             $action = $infoblock->get_prop_inherited('action');
             $i2l = $infoblock->get_visual();
     	} else {
-            // Создаем новый, тип и ID контроллера получаем с предыдущего шага
+            // Create a new type and ID of the controller received from the previous step
             list($controller, $action) = explode(".", $input['controller']);
             $site_id = fx::data('content_page', $input['page_id'])->get('site_id');
             $infoblock = fx::data("infoblock")->create(array(
@@ -264,7 +264,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         
         $scope_tab = !$is_layout;
         if ($scope_tab) {
-            // выставляем в false и ищем хоть одно не-хидден поле
+            // put in false and are looking for one not-hidden field
             $scope_tab = false;
             foreach ($scope_fields as $scope_field) {
                 if ($scope_field['type'] != 'hidden') {
@@ -417,9 +417,9 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
     }
     
     /*
-     * Получение полей формы для вкладки "Где показывать"
-     * @param fx_infoblock $infoblock - инфоблок, для которого подыскиваем место
-     * @param fx_content_page $c_page - страница, на которой открыли окошко настроек
+     * Receipt of the form fields tab "Where show"
+     * @param fx_infoblock $infoblock - information block whose looking for a suitable place
+     * @param fx_content_page $c_page - page, where he opened the window settings
      */
     
     protected function _get_scope_fields(
@@ -584,7 +584,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
     }
     
     /*
-     * Получение полей формы для вкладки "Как показывать"
+     * Receipt of the form fields for the tab "How to show"
      */
     protected function _get_format_fields(fx_infoblock $infoblock, $area_meta = null) {
         $i2l = $infoblock->get_visual();
@@ -611,7 +611,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
 
         $action_name = $infoblock->get_prop_inherited('action');
 
-        // Собираем доступные wrappers
+        // Collect available wrappers
         if ( ($layout_tpl = fx::template('layout_'.$layout_name)) ) {
             foreach ( $layout_tpl->get_template_variants() as $tplv) {
                 $full_id = 'layout_'.$layout_name.'.'.$tplv['id'];
@@ -631,7 +631,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             }
         }
 
-        // Собираем доступные шаблоны
+        // Collect the available templates
         $controller = fx::controller($controller_name.'.'.$action_name);
         $tmps = $controller->get_available_templates($layout_name, $area_meta);
         //fx::log('found tmps', $tmps, $i2l['template']);
@@ -661,13 +661,13 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
     }
 	
     /*
-     * Сохранить несколько полей из front-end
+     * Save multiple fields from the front-end
      */
     public function save_var($input) {
         /* @var $ib fx_infoblock */
         
         $ib = fx::data('infoblock', $input['infoblock']['id']);
-        // для инфоблоков-лейаутов всегда сохраняем параметры в корневой инфоблок
+        // for InfoBlock-layouts always save the parameters in the root InfoBlock
         if ($ib->get_prop_inherited('controller') == 'layout') {
             $root_ib = $ib->get_root_infoblock();
             $ib_visual = $root_ib->get_visual();
@@ -812,9 +812,9 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             return;
         }
         
-        // переносим из области в область
-        // нужно пересортировать блоки из старой area
-        // пока очень тупо, по порядку
+        // move from region to region
+        // need to rearrange the blocks from the old area
+        // until very stupidly, in order
         if ($vis['area'] != $input['area']) {
             $source_vis = $this->_get_area_visual(
                 $vis['area'], $vis['layout_id'], $infoblock['site_id']
@@ -896,4 +896,3 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                     WHERE id = '.$content['id']);
     }
 }
-?>

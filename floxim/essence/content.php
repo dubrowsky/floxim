@@ -12,8 +12,8 @@ class fx_content extends fx_essence {
     }
     
     /*
-     * Возвращает тип вида "content_page"
-     * А если $full = false - вида "page"
+     * Returns the type of the form "content_page"
+     * And if $full = false type "page"
      */
     public function get_type($full = true) {
         if (!$this->component_id) {
@@ -51,8 +51,8 @@ class fx_content extends fx_essence {
     }
 
     /*
-     * Заполняет $this->data на основе админской формы
-     * @param array $values массив значений из формы вида array('f_name' => 'Название', 'f_title => '');
+     * Populates $this->data based on administrative forms
+     * @param array $values an array of the form array('f_name' => 'Name', 'f_title => ")
      */
     public function set_field_values($values = array(), $save_fields = null) {
         if (count($values) == 0) {
@@ -174,7 +174,7 @@ class fx_content extends fx_essence {
         $component = fx::data('component', $this->component_id);
         $link_fields = $component->fields()->find('type', fx_field::FIELD_LINK);
         foreach ($link_fields as $lf) {
-            // сохраняем случаи типа $tagpost['tag'] -> $tagpost['tag_id']
+            // save the cases of type $tagpost['tag'] -> $tagpost['most part']
             $lf_prop = $lf['format']['prop_name'];
             if (
                     isset($this[$lf_prop]) && 
@@ -186,7 +186,7 @@ class fx_content extends fx_essence {
                 }
                 $this[$lf['name']] = $this[$lf_prop]['id'];
             }
-            // синхронизируем поля, привязанные к родителю
+            // synchronize the field bound to the parent
             if ($lf['format']['is_parent']) {
                 $lfv = $this[$lf['name']];
                 if ($lfv != $this['parent_id']) {
@@ -201,7 +201,7 @@ class fx_content extends fx_essence {
         parent::_before_save();
     }
     /*
-     * Сохраняет множественные ссылки, привязанные к сущности
+     * Store multiple links, linked to the entity
      */
     protected function _save_multi_links() {
         $link_fields = 
@@ -232,9 +232,9 @@ class fx_content extends fx_essence {
                         $this->modified_data[$link_field['name']]->linker_map : 
                         new fx_collection();
                     
-                    // новые линкеры
-                    // обязательно должны быть установлены
-                    // @todo потом сделаем хитрое вычисление
+                    // new linkers
+                    // must be set
+                    // @todo then we will cunning calculation
                     if (!isset($val->linker_map) || count($val->linker_map) != count($val)) {
                         throw new Exception('Wrong linker map');
                     }
@@ -253,10 +253,10 @@ class fx_content extends fx_essence {
     }
 
     /*
-     * Получить id инфоблока, куда добавлять новые связанные объекты по полю $link_field
+     * Get the id of the information block where to add the linked objects on the field $link_field
      */
     public function get_link_field_infoblock($link_field_id) {
-        // инфоблок, где живем мы сами
+        // information block, where ourselves live
         $our_infoblock = fx::data('infoblock', $this['infoblock_id']);
         return $our_infoblock['params']['field_'.$link_field_id.'_infoblock'];
         
@@ -268,12 +268,12 @@ class fx_content extends fx_essence {
         
         
 
-        // достаем значение поля настроек листинга "инфоблок для поля тагпосты"
+        // get the field value settings listing information block for the field tagpost"
         if ($c_infoblock_id) {
             $linker_infoblock_id = $c_infoblock_id;
         } 
-        // если такого нет, используем первый попавшийся инфоблок, 
-        // содержащий объекты нашего типа
+        // if none, use the first InfoBlock,
+        // containing objects of our kind
         else {
             $related_container_infoblock = fx::data('infoblock')->
                     where('site_id', $this['site_id'])->

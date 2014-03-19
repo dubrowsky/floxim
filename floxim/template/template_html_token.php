@@ -5,8 +5,8 @@ class fx_template_html_token {
     public $source;
     
     /*
-     * Создать html-токен из исходника
-     * @param string $source - строка с html-тегом
+     * Create html-token from source
+     * @param string $source string with the html tag
      * @return fx_template_html_token
      */
     public static function create($source) {
@@ -29,8 +29,8 @@ class fx_template_html_token {
     }
     
     /*
-     * Создать html-токен и назначить ему тип "вне дерева"
-     * @param $source - строка с html-тегом
+     * Create html-token and assign a type to "out of tree"
+     * @param $source string with the html tag
      * @return fx_template_html_token
      */
     public static function create_standalone($source) {
@@ -94,7 +94,7 @@ class fx_template_html_token {
     
     public function serialize() {
         $res = '';
-        // свойство omit добавляется из transform_to_floxim
+        // omit property is added from transform_to_floxim
         $omit = false;
         $omit_conditional = false;
         if ( isset($this->omit) ) {
@@ -146,7 +146,7 @@ class fx_template_html_token {
             $res .= '<?}?>';
         }
         
-        // закончили собирать сам тег
+        // is finished collecting the tag
         if (isset($this->children)) {
             foreach ($this->children as $child) {
                 $res .= $child->serialize();
@@ -277,4 +277,3 @@ class fx_template_html_token {
         }
     }
 }
-?>

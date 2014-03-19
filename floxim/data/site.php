@@ -19,7 +19,7 @@ class fx_data_site extends fx_data {
         $expected = false;
         $first = false;
         $sites = $this->all();
-        // поиск по доменом и зеркалам
+        // search for the domain and the mirrors
         foreach ($sites as $site) {
             $domain = str_replace($replace, '', $site['domain']);
             $mirrors = str_replace($replace, '', $site['mirrors']);
@@ -50,4 +50,3 @@ class fx_data_site extends fx_data {
     }
 }
 
-?>

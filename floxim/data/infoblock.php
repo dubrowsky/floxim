@@ -15,27 +15,27 @@ class fx_data_infoblock extends fx_data {
         }
         $ids = $page->get_parent_ids();
         $ids []= $page['id'];
-        $ids []= 0; // корень
+        $ids []= 0; // root
         $infoblocks = $this->
             where('page_id', $ids)->
             where('site_id', $page['site_id'])->
             where('checked', 1)->
             all();
         foreach ($infoblocks as $ib) {
-            // если page_id=0 - тупо все страницы, игнорируем фильтр scope.pages
+            // if page_id=0 blunt - all pages, ignored by the filter scope.pages
             if ($ib['page_id'] != 0) {
-                // scope - "только эта страница"
+                // scope - "this page only"
                 if (fx::dig($ib, 'scope.pages') == 'this' && $ib['page_id'] != $page_id) {
                     $infoblocks->remove($ib);
                     continue;
                 }
-                // scope - "этот уровень", а мы смотрим родителя
+                // scope - "this level, and we look parent
                 if (fx::dig($ib, 'scope.pages') == 'children' && $ib['page_id'] == $page_id) {
                     $infoblocks->remove($ib);
                     continue;
                 }
             }
-            // проверяем на соответствие фильтра по типу страницы
+            // check for compliance with the filter type page
             $scope_page_type = fx::dig($ib, 'scope.page_type');
             if ( $scope_page_type && $scope_page_type != $page['type'] ) {
                 $infoblocks->remove($ib);

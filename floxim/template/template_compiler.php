@@ -1,14 +1,14 @@
 <?php
 /*
- * Класс превращает дерево токенов в готовый php-код
+ * Class makes the tree tokens in ready php code
  */
 class fx_template_compiler {
     protected $template_set_name = null;
     
     /**
-     * Преобразовать дерево токенов в php-код
-     * @param string $source исходник шаблона
-     * @return string php-код
+     * Convert the tree of tokens in the php code
+     * @param string $source source code of the template
+     * @return string of php code
      */
     public function compile($tree) {
         $code = $this->_make_code($tree);
@@ -74,10 +74,10 @@ class fx_template_compiler {
         $code .= '$tpl_to_call->set_parent($this)'.";\n";
         $call_children = $token->get_children();
         /*
-         * Преобразуем:
-         *  {call id="wrap"}<div>Something</div>{/call}
-         * вот в такое:
-         *  {call id="wrap"}{var id="content"}<div>Something</div>{/var}{/call}
+         * Converted:
+         * {call id="wrap"}<div>Something</div>{/call}
+         * like this:
+         * {call id="wrap"}{var id="content"}<div>Something</div>{/var}{/call}
          */
         $has_content_param = false;
         foreach ($call_children as $call_child) {
@@ -98,19 +98,19 @@ class fx_template_compiler {
             $token->add_child($var_token);
         }
         foreach ($token->get_children() as $param_var_token) {
-            // внутри call обрабатываем только var
+            // internal call only handle var
             if ($param_var_token->name != 'var') {
                 continue;
             }
             $value_to_set = 'null';
             if ($param_var_token->has_children()) {
-                // передаем вложенный html-код
+                // pass the inner html code
                 $code .= "ob_start();\n";
                 $code .= $this->_children_to_code($param_var_token);
                 $code .= "\n";
                 $value_to_set = 'ob_get_clean()';
             } elseif ( ($select_att = $param_var_token->get_prop('select') ) ) {
-                // передаем результат выполнения php-кода
+                // pass the result of executing the php code
                 $value_to_set = self::parse_expression($select_att);
             }
             $code .= "\$tpl_to_call->set_var(".
@@ -816,7 +816,7 @@ class fx_template_compiler {
     }
     
     /*
-     * Проходит по верхнему уровню, запуская сбор шаблонов вглубь
+     * Passes through the upper level, starting the collection of templates deep
      */
     protected function _collect_templates($root) {
         foreach ($root->get_children() as $template_file_token) {
@@ -828,7 +828,7 @@ class fx_template_compiler {
     }
     
     protected function  _make_code(fx_template_token $tree) {
-        // Название класса/группы шаблонов
+        // Name of the class/template group
         $this->_template_set_name = $tree->get_prop('name');
         if ( ($ct = $tree->get_prop('controller_type'))) {
             $this->_controller_type = $ct;

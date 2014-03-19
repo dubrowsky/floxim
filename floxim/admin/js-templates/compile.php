@@ -22,10 +22,10 @@ class JSTX {
 	public function compileTemplate($tpl) {
             $res = "var p=[],print=function(){p.push.apply(p,arguments);};";
 
-            // Сделать данные доступными локально при помощи with(){}
+            // Make the data available locally using the with(){}
             $res .= ($this->opt('use_with') ? "with(_c){" : "")." p.push('";
 
-            // Превратить шаблон в чистый JavaScript
+            // Turn the template in pure JavaScript
 
             $tpl = preg_replace("~[\r\t\n]~", " ", $tpl);
             $tpl = preg_replace("~\/\*.+?\*\/~", '', $tpl);
@@ -72,7 +72,7 @@ class JSTX {
 	public function parseFile($file) {
             $tpls = file_get_contents($file);
             $tpls = trim($tpls);
-            // удаляем однострочные комментарии
+            // remove a single-line comments
             $tpls = preg_replace_callback(
                     "~//.*?([\n\r])~", function($matches) {
                             return $matches[1];

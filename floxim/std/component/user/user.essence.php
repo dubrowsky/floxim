@@ -59,11 +59,11 @@ class fx_content_user extends fx_content {
         $db = fx::db();
         $user_id = $this['id'];
 
-        // сохранять авторизацию ( перенести проверку поста в вызывающий метод )
+        // save authorization to transfer a check post in the calling method )
         $LoginSave = ( ($login_save || isset($_POST['loginsave']) ) ? 1 : 0);
 
-        // авторизировать на поддоменах
-        // потом вынести в настройки
+        // to authorize on subdomains
+        // then make settings
         $cookies_with_subdomain = 1;
         
         $UserIP = sprintf("%u", ip2long($_SERVER['REMOTE_ADDR']));

@@ -245,7 +245,7 @@ class fx_template {
     }
     public static $count_replaces = 0;
     
-    // заполняется при компиляции
+    // is populated when compiling
     protected $_templates = array();
 
 

@@ -13,8 +13,8 @@ class fx_template_suitable {
         $layout = fx::data('layout', $layout_id);
         $layout_ib = null;
         $stub_ibs = new fx_collection();
-        // Собираем все инфоблоки без визуальной части
-        // И находим инфоблок-лейаут
+        // Collect all Infoblox without the visual part
+        // Find the InfoBlock-layout
         foreach ($infoblocks as $ib) {
             if ($ib->get_visual()->get('is_stub')) {
                 $stub_ibs[]= $ib;
@@ -158,9 +158,9 @@ class fx_template_suitable {
     }
     
     /*
-     * Сравнивает два набора областей
-     * Считает релевантность по размерам, названию и занятости
-     * Возвращает массив с ключами map и relevance
+     * Compares two sets of fields
+     * Considers the relevance of size, title and employment
+     * Returns an array with the keys in the map and relevance
      */
     protected function _map_areas($old_set, $new_set) {
         $total_relevance = 0;
@@ -172,46 +172,46 @@ class fx_template_suitable {
                 $new_size = $this->_get_size($new_area);
                 $area_match = 0;
                 
-                // если у одной из областей произвольная ширина - годится, +1
+                // if one of the areas arbitrary width - existent, 1
                 if ($new_size['width'] == 'any' || $old_size['width'] == 'any') {
                     $area_match += 1;
                 } 
-                // если ширина совпадает - годится, +2
+                // if the width is the same as - good, 2
                 elseif ($new_size['width'] == $old_size['width']) {
                     $area_match += 2;
                 } 
-                // если ширина не совпала - не годится
+                // if no width is matched, no good
                 else {
                     continue;
                 }
                 
-                // если у одной из областей произвольная высота - годится, +1
+                // if one of the areas of arbitrary height - existent, 1
                 if ($new_size['height'] == 'any' || $old_size['height'] == 'any') {
                     $area_match += 1;
                 } 
-                // если высота вовпала - годится, +2
+                // if the height voityla - good, 2
                 elseif ($new_size['height'] == $old_size['height']) {
                     $area_match += 2;
                 } 
-                // новая область - высокая, старая - низкая, можно заменить, +1
+                // new area - high, old - low, you can replace, 1
                 elseif ($new_size['height'] == 'high') {
                     $area_match += 1;
                 } 
-                // новая низкая, старая - высокая, не годится
+                // a new low, old - high, no good
                 else {
                     continue;
                 }
-                // если совпадают названия областей: +2
+                // if the names coincide areas: 2
                 if ($old_area['id'] == $new_area['id']) {
                     $area_match += 2;
                 }
                 
-                // если эта область уже соответствует другой: -2
+                // if the field is already another: -2
                 if ($new_area['used']) {
                     $area_match -= 2;
                 }
                 
-                // если текущий индекс больше предыдущего - запоминаем
+                // if the current index is larger than the previous - remember
                 if ($area_match > $c_match_index) {
                     $c_match = $new_area_id;
                     $c_match_index = $area_match;
@@ -225,7 +225,7 @@ class fx_template_suitable {
             $new_set[$c_match]['used'] = true;
             $total_relevance += $c_match_index;
         }
-        // за каждую неиспользованную область снижаем балл на 2
+        // for each unused lower the score 2
         foreach ($new_set as $new_area) {
             if (!isset($new_area['used'])) {
                 $total_relevance -= 2;
@@ -278,4 +278,3 @@ class fx_template_suitable {
         return $res;
     }
 }
-?>

@@ -126,7 +126,7 @@ class fx_controller_admin_widget extends fx_controller_admin_component {
     public function edit_save($input) {
         $widget = fx::data('widget')->get_by_id($input['id']);
         $result['status'] = 'ok';
-        // сохранение настроек
+        // save settings
         if ($input['phase'] == 'settings') {
             $params = array('name', 'group', 'description', 'embed');
             if (!trim($input['name'])) {
@@ -168,4 +168,3 @@ class fx_controller_admin_widget extends fx_controller_admin_component {
         return array('fields' => $fields, 'form_button' => array('save'));
     }
 }
-?>

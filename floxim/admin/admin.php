@@ -1,10 +1,10 @@
 <?php
 class fx_controller_admin extends fx_controller {
 
-    /** @var string стандартное действие для контроллера - вернуть html верстку  */
+    /** @var string the default action for the controller to return the html markup */
     protected $action = 'admin_office';
     
-    /** @var bool метод process() должен возвращать результат? */
+    /** @var bool the process() method should return the result? */
     protected $process_do_return = false;
     
     protected $essence_type;
@@ -337,4 +337,3 @@ class fx_controller_admin_module extends fx_controller_admin {
 
 }
 
-?>

@@ -21,7 +21,7 @@ class fx_field_vars_datetime {
             return '';
         }
         /**
-         * @todo подставлять формат даты в зависиомсти от локализации через константу 
+         * @todo substitute the date format in zavisimosti localization through constant
          */
         if ($format === false) {
             $format = 'd.m.Y H:i:s';
@@ -72,4 +72,3 @@ class fx_field_vars_datetime {
 
 }
 
-?>

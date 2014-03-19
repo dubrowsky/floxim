@@ -42,7 +42,7 @@ class fx_template_field  {
     }
     
     /**
-     * Постпроцессинг полей
+     * Postprocessing fields
      * @param string $html
      */
     public static function replace_fields($html) {

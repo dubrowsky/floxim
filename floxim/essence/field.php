@@ -86,7 +86,7 @@ class fx_field extends fx_essence {
                 $this->validate_errors[] = array('field' => 'name', 'text' => fx::alang('This field is reserved','system'));
                 $res = false;
             }
-            /// Правим тут
+            /// Edit here
             $component = fx::data('component')->where('id',$this['component_id'])->one();
             $chain = $component->get_chain();
             foreach ( $chain as $c_level ) {

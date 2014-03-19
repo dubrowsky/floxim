@@ -16,9 +16,9 @@ class fx_system_util {
     }
 
     /**
-     * Функция получения title и мета-данных страниц
+     * Retrieving title, and meta-data pages
      * @see http://php.net/manual/en/function.get-meta-tags.php
-     * @param string адрес страницы
+     * @param string the url of the page
      * @return array
      */
     public function get_meta_tags($url) {
@@ -84,7 +84,7 @@ class fx_system_util {
     }
 
     /**
-     * Генерирует uuid
+     * Generates UUIDs
      */
     public function gen_uuid() {
         return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
@@ -105,8 +105,8 @@ class fx_system_util {
     }
 
     /**
-     * Проверяет корректность e-mail
-     * @param string $email 
+     * Validates your e-mail
+     * @param string $email
      */
     public function validate_email($email) {
         $res = preg_match("#^[-a-z0-9!\\#\$%&'*+/=?^_`{|}~]+(?:\\.[-a-z0-9!\\#\$%&'*+/=?^_`{|}~]+)*@(?:[a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?\\.)*(?:aero|arpa|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|[a-z][a-z])\$#", $email);
@@ -114,9 +114,9 @@ class fx_system_util {
     }
 
     /**
-     * Метод распарсивает аттрибуты тега в массив
-     * @param string параметры в строчку, например, 'keyword="center" repeat="yes"'
-     * @return array массив с параметрами, например, array('keyword'=>'center', 'repeat'=>'yes')
+     * Method responsive attributes of the tag in the array
+     * @param string parameters in a line, for example, 'keyword="center" repeat="yes"'
+     * @return array an array with parameters, for example, array('keyword'=>'center', 'repeat'=>'yes')
      */
     public function parse_attr($attr = "") {
         if (!$attr) return array();
@@ -132,9 +132,9 @@ class fx_system_util {
     }
 
     /**
-     * Делаем превью длинного текста
-     * @param type $text длинный-длинный текст, превью которого и делаем
-     * @param type $max_length сколько максимум симовлов в превьюшке
+     * Do previews long text
+     * @param type $text, long text, previews and which do
+     * @param type $max_length how many maximum Simonov in the thumbnail
      */
     public function get_text_preview($text, $max_length = 150) {
         if (strlen($text) <= $max_length) return $text;

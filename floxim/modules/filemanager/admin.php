@@ -1,8 +1,8 @@
 <?php
 
 /**
- * @todo ссылка на скачку - '/floxim/?id=%id%&essence=module_filemanager&action=download';
- * еще есть action - upload - сейчас не используется
+ * @todo link to jump
+ * there is still action - upload - not currently used
  */
 class fx_controller_admin_module_filemanager extends fx_controller_admin_module {
 
@@ -10,11 +10,11 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
         $this->add_node('filemanager', fx::alang('File-manager','system'), 'module_filemanager.ls');
     }
 
-    protected $root_name = 'root'; // название корня для пути
-    protected $base_path = ''; // путь к корню, выше не вылезаем
-    protected $file_filters = array(); // фильтры, какие файлы показываем - отрицание так: "!~\.php$~i"
-    protected $base_url_template = '#admin.module_filemanager.#action#(#params#)'; // шаблон урл, подстановки - #action# и #params#
-    protected $path = false; // текущий каталог
+    protected $root_name = 'root'; // name of the root path
+    protected $base_path = ''; // the path to the root, above do not get out
+    protected $file_filters = array(); // the filters which files show - denial: "!~\.php$~i"
+    protected $base_url_template = '#admin.module_filemanager.#action#(#params#)'; // template for the url lookup - #action# and #params#
+    protected $path = false; // current directory
     protected $breadcrumb_target = false;
 
     public function process() {
@@ -47,7 +47,7 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
         return parent::process($input, $action, $do_return);
     }
 
-    // обрезать путь, используя $base_path
+    // trim the path using $base_path
     protected function _trim_path($path) {
     	$path = trim($path, "/\\");
     	$path = preg_replace("~^".preg_quote($this->base_path, "/\\")."~", '', $path);
@@ -55,7 +55,7 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
     	return $path;
     }
 
-    // Получить url для экшна
+    // Get the url for action
     protected function _get_url($action, $params = false) {
     	if ($params === false) {
     		$params = array();
@@ -82,18 +82,18 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
     }
 
     /**
-     * листинг директории
+     * listing directory
      */
     public function ls($input) {
 
-        // директория, которую просматриваем
+        // the directory that is being viewed
         //$dir = $this->path;
         $dir = isset($input['params'][0]) ? $input['params'][0] : false;
-        // каталог без базового (с ограничением)
+        // catalogue without base (with restrictions)
         $rel_dir = $this->_trim_path($dir);
 
-        // хлебные крошки #2 (путь)
-        // если есть this->breadcrumb_target - вернет false, добавив хлебные крошки прямо туда
+        // bread crumbs #2 (path)
+        // if there's this->breadcrumb_target - will return false, adding bread crumbs right there
         if ( ($breadcrumb = $this->get_breadcrumb($rel_dir)) ) {
 			$fields[] = $this->ui->label($breadcrumb.'<br>');
 		}
@@ -153,7 +153,7 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
     }
 
     public function editor($input) {
-        // директория, которую просматриваем
+        // the directory that is being viewed
         $filename = isset($input['params'][0]) ? $input['params'][0] : false ;
         //$filename = $this->path;
 
@@ -163,7 +163,7 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
             return $result;
         }
 
-        // хлебные крошки #2 (путь)
+        // bread crumbs #2 (path)
         if ( ($breadcrumb = $this->get_breadcrumb($this->_trim_path($filename))) ) {
         	$fields []= $this->ui->label($breadcrumb."<br>");
         }
@@ -200,7 +200,7 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
     public function editor_save($input) {
         $result = array('status' => 'ok');
 
-        /* проверки */
+        /* checks */
         if (!isset($input['file_content']) || !isset($input['file_name'])) {
             $result['status'] = 'error';
             $result['text'] = fx::alang('Not all fields are transferred!','system');
@@ -236,7 +236,7 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
     public function add_save($input) {
         $result = array('status' => 'ok');
 
-        /* проверки */
+        /* checks */
         if (!$input['name']) {
             $result['status'] = 'error';
             $result['text'][] = fx::alang('Enter the name of the file/directory','system');
@@ -332,7 +332,7 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
         }
         $result = array('status' => 'ok');
 
-        /* проверки */
+        /* checks */
         if (!$input['name']) {
             $result['status'] = 'error';
             $result['text'][] = fx::alang('Enter the name','system');
@@ -344,7 +344,7 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
             $result['fields'][] = 'perm_user';
         }
 
-        if ($result['status'] == 'ok') {  // смена прав
+        if ($result['status'] == 'ok') {  // change the rights
             $perms = 0;
 
             if ($input['perm_user']) {
@@ -375,7 +375,7 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
             }
         }
 
-        if ($result['status'] == 'ok') {  // переименование
+        if ($result['status'] == 'ok') {  // rename
             $pos = strrpos($filename, '/');
             $old_name = ($pos !== false) ? substr($filename, $pos + 1) : $filename;
 
@@ -429,7 +429,7 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
         $dir = $input['dir'];
         $result = array('status' => 'ok');
 
-        /* проверки */
+        /* checks */
         if (!$input['file']) {
             $result['status'] = 'error';
             $result['text'][] = fx::alang('Enter the file','system');
@@ -469,7 +469,7 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
 
     private function get_breadcrumb_arr($url) {
         $breadcrumb = array();
-        // если есть хлебные крошки родителя - не копируем туда корень
+        // if there is bread crumbs parent - not copy the root
         if (!$this->breadcrumb_target) {
         	$breadcrumb []= array(
         		'name' => '<i>'.$this->root_name.'</i>',
@@ -486,7 +486,7 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
                 );
             }
         }
-        unset($breadcrumb[count($breadcrumb) - 1]['url']);  // последний - не ссылка
+        unset($breadcrumb[count($breadcrumb) - 1]['url']);  // last - not a link
         return $breadcrumb;
     }
 
@@ -520,4 +520,3 @@ class fx_controller_admin_module_filemanager extends fx_controller_admin_module 
     }
 
 }
-?>

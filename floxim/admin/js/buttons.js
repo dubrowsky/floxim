@@ -140,8 +140,8 @@ fx_buttons.prototype.hide_panel = function () {
 };
 
 /**
- * Первичная обработка нажатия, например, показ всплывающего меню
- * сама обработка нажатия - в другом месте
+ * Primary processing pressing, for example, the pop-up menu
+ * the very pressure processing - elsewhere
  */
 fx_buttons.prototype.handle = function ( button ) {
     if ( this.pulldown[button] ) {
@@ -233,7 +233,7 @@ fx_buttons.prototype.hide_pulldown = function () {
 }
 
 /*
- * Обработчик клика на кнопках в формах - списки, отдельный инпут
+ * Click handler for the button in the form lists, private input
  */
 fx_buttons.prototype.form_button_click = function() {
 	var data = $t.inline_data($(this));

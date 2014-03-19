@@ -160,20 +160,20 @@ var fx_front = function () {
         } else {
             closest_selectable = $fx.front.get_selectable_up(target);
         }
-        // нечего выбирать
+        // nothing to choose
         if (!closest_selectable) {
-            // случаи, когда target оказался вне основого дерева
-            // как с jqueryui-datepicker при перерисовке
+            // the cases when the target was beyond the primary tree
+            // as with jqueryui-datepicker at redrawing
             if (target.closest('html').length === 0) {
                 return;
             }
-            // снимаем выделение и заканчиваем обработку
+            // remove the selection and end processing
             $fx.front.deselect_item();
             return;
         }
         
-        // перемещение между страницами по ссылкам с зажатым контролом,
-        // и даже сохраняет текущий режим
+        // move between pages via links to squeezed control,
+        // and even saves the current mode
         var clicked_link = target.closest('a');
         if (clicked_link.length > 0 && e.ctrlKey && clicked_link.attr('href')) {
             document.location.href = clicked_link.attr('href')+document.location.hash;
@@ -181,7 +181,7 @@ var fx_front = function () {
         }
         
         
-        // отлавливаем только contenteditable
+        // catch only contenteditable
         if ($(closest_selectable).hasClass('fx_selected')) {
             e.preventDefault();
             return;
@@ -234,7 +234,7 @@ fx_front.prototype.enable_select = function(){
 fx_front.prototype.get_area_meta = function($area_node) {
     var meta = $area_node.data('fx_area') || {};
     if (typeof meta.size === 'undefined') {
-        // Хорошо бы вычислять
+        // It would be nice to calculate
         var full_size = 1000;
         if ($area_node.outerWidth() < full_size*0.5) {
             meta.size = 'narrow';
@@ -475,7 +475,7 @@ fx_front.prototype.select_item = function(node) {
     $fx.front.outline_block($node, 'selected');
     
     
-    // при удалении выбранного узла из дерева дергаем deselect_item()
+    // if you delete the selected node from the tree pull deselect_item()
     $(node).bind('remove.deselect_removed', function(e) {
         $fx.front.deselect_item();
     });
@@ -660,8 +660,8 @@ fx_front.prototype.hilight = function() {
             if (!i.css('float').match(/left|right/) && !i.css('display').match(/^inline/)) {
                 i.addClass('fx_clearfix');
             }
-            // зеленые выделения для полей внутри скрытых блоков
-            // пока лечим через i.is(':visible')
+            // green discharge for hidden fields within blocks
+            // until treat through i.is(':visible')
             if (i.is(':visible') && (i.width() === 0 || i.height() === 0) ) {
                 i.addClass('fx_hilight_empty');
                 if (i.css('display') === 'inline') {
@@ -1102,7 +1102,7 @@ fx_front.prototype.reload_layout = function(callback) {
 };
 
 fx_front.prototype.move_down_body =function () {
-    $("body").css('margin-top','34px'); //34 - высота панели
+    $("body").css('margin-top','34px'); //34 - panel height
 };
 
 fx_front.prototype.get_node_panel = function() {
@@ -1244,7 +1244,7 @@ fx_front.prototype.outline_block = function(n, style) {
             box.width = (doc_width - c_left);
         }
         var css = {};
-        // добавляем px для размеров
+        // add px size
         $.each(box, function(i, v) {
             css[i] = Math.round(v)+'px';
         });
@@ -1271,8 +1271,8 @@ fx_front.prototype.outline_block = function(n, style) {
         var m_before = $('<span style="display:inline-block;width:1px; height:1px;background:#F00;"></span>');
         m_before.insertBefore(n.get(0).firstChild);
         var mbo = m_before.offset();
-        // сравниваем высоту для случаев, когда тестовый пиксель оказывается на предыдущей строке один, 
-        // т.к. он влезает, а реальный текст - нет
+        // compare the height for cases where the test pixel is on the previous line one,
+        // because it breaks, and the actual text - no
         if (mbo.top > o.top && (mbo.left - parseInt(n.css('padding-left')) - o.left) > 10) {
             top_left_offset = (mbo.left - o.left);
             top_top_offset = mbo.top - o.top + size*2 + 1;
@@ -1293,7 +1293,7 @@ fx_front.prototype.outline_block = function(n, style) {
         var m_after = $('<span style="display:inline-block;width:1px; height:1px;vertical-align: top; background:#FFF;"></spans>');
         n.append(m_after);
         var mao = m_after.offset();
-        /// ловить правильно случаи, когда спан-тестер переносит строку
+        /// catch correctly cases where span-tester takes a string
         if (n.outerHeight() > nh) {
             mao.top = o.top;
             mao.left = o.left + nw;

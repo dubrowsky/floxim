@@ -177,7 +177,7 @@ class fx_data_content extends fx_data {
     }
     
     /**
-     * Возвращает essence с установленным component_id
+     * Returns the essence installed component_id
      * @param array $data
      * @return fx_content
      */
@@ -237,7 +237,7 @@ class fx_data_content extends fx_data {
         $q_done = fx::db()->query($q);
         $id = fx::db()->insert_id();
         if ($q_done) {
-            // запоминаем, в какую таблицу вставили
+            // remember, whatever table has inserted
             $tables_inserted []= 'content';
         } else {
             return false;
@@ -252,14 +252,14 @@ class fx_data_content extends fx_data {
             $q = "INSERT INTO `{{".$table."}}` SET ".join(", ", $table_set);
             $q_done = fx::db()->query($q);
             if ($q_done) {
-                // запоминаем, в какую таблицу вставили
+                // remember, whatever table has inserted
                 $tables_inserted []= $table;
             } else {
-                // не получилось - удаляем из всех предыдущих таблиц
+                // could not be deleted from all previous tables
                 foreach ($tables_inserted as $tbl) {
                     fx::db()->query("DELETE FROM {{".$tbl."}} WHERE id  = '".$id."'");
                 }
-                // и возвращаем false
+                // and return false
                 return false;
             }
         }
@@ -274,7 +274,7 @@ class fx_data_content extends fx_data {
             $table_res = array();
             $fields = $level_component->fields();
             $field_names = $fields->get_values('name');
-            // пока базовые поля контента выписываем вручную
+            // while the underlying field content manually prescription
             if ($level_component['keyword'] == 'content') {
                 $field_names = array_merge($field_names, array(
                     'priority', 
@@ -295,7 +295,7 @@ class fx_data_content extends fx_data {
                 if ($field && !$field->get_sql_type()) {
                     continue;
                 }
-                // вставляем только если sql-тип поля не "false" (e.g. multilink)
+                // put only if the sql type of the field is not false (e.g. multilink)
                 if (isset($data[$field_name]) ) {
                     $table_res[]= "`".fx::db()->escape($field_name)."` = '".fx::db()->escape($data[$field_name])."' ";
                 }

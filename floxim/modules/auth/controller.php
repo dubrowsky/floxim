@@ -6,7 +6,7 @@ class fx_controller_module_auth extends fx_controller_module {
         $AUTH_USER = $input['AUTH_USER'];
         $AUTH_PW = $input['AUTH_PW'];
 
-        // попытка авторизации
+        // attempt authorization
         $user = fx::data('content_user')
                 ->where(fx::config()->AUTHORIZE_BY, $AUTH_USER)
                 ->one();

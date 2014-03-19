@@ -3,11 +3,6 @@ fx_additional_menu = function ( ) {
 }
 
 fx_additional_menu.prototype.load = function () {
-    /*
-    var menu = this.container;
-    var logout = $('<a style="cursor:pointer;"/>').text(fx_lang('выход'));
-    logout.appendTo(menu);
-    */
     var logout = this.container.find('a.fx_logout');
     logout.click(function() {
        $(this).append(

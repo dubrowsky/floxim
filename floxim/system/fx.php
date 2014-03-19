@@ -27,7 +27,7 @@ class fx {
     }
     
     /**
-     * Получить объект базы данных
+     * Access a database object
      * @return fx_db
      */
     public static function db() {
@@ -40,10 +40,10 @@ class fx {
     }
     
     protected static $data_cache = array();
-    /* Получить дата-файндер для указанного типа content_id данных, либо объект(ы) по id
-     * @param string $datatype название типа данных - 'component', 'content_news'
-     * @param mixed [$id] id или массив ids
-    */
+    /* Get data finder for the specified type content_id data or the object(s) by id
+     * @param string $datatype name of a data type 'component', 'content_news'
+     * @param mixed [$id] IDs or ids array
+     */
     public static $data_stat = array();
     public static function  data($datatype, $id = null) {
     	
@@ -94,7 +94,7 @@ class fx {
                 $data_finder = new $classname();
                 $data_classes_cache[$datatype] = $classname;
             } catch (Exception $e) {
-                // Файндер для контента, класс не определен
+                // Finder for the content that the class is not defined
                 if ($component) {
                     $data_finder = new fx_data_content();
                     $data_classes_cache[$datatype] = 'fx_data_content';
@@ -129,7 +129,7 @@ class fx {
     
     protected static $router = null;
     /**
-     * Получить основной роутинг-менеджер, либо роутер $router_name
+     * Get a basic routing Manager or router $router_name
      * @param $router_name = null
      * @return fx_router_manager
      */
@@ -152,9 +152,9 @@ class fx {
     }
     
     /**
-     * Вызов без параметров - вернуть объект, с параметрами - получить/установить свойство
-     * @param string $prop_name свойство
-     * @param mixed $value установить значение
+     * Call without parameters to return the object with the parameters - get/set property
+     * @param string $property prop_name
+     * @param mixed $value set value
      */
     public static function env() {
         static $env = false;
@@ -186,11 +186,11 @@ class fx {
     }
     
     /**
-     * создать контроллер, установить параметры
-     * @param string $controller 'controller_name' или 'controller_name.action_name'
+     * to create a controller, install options
+     * @param string $controller 'controller_name' or 'controller_name.action_name'
      * @param array $input
      * @param string $action
-     * @return fx_controller инициализированный контроллер
+     * @return fx_controller initialized controller
      */
     public static function controller($controller, $input = null, $action = null) {
     	$c_parts = explode(".", $controller);
@@ -406,8 +406,8 @@ class fx {
     
     protected static $_cache = null;
     /*
-     * пока - очень тупой локальный кэш, 
-     * чтобы не доставать из бд одно и то же за одно выполнение
+     * until very blunt local cache,
+     * not to get from the database is the same for single execution
      */
     public static function cache($key = null, $value = null) {
         if (!self::$_cache) {

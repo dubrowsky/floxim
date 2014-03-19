@@ -36,8 +36,8 @@ class fx_controller_infoblock extends fx_controller {
         if (!is_array($params)) {
             $params = array();
         }
-        // override_infoblock - параметры для всего инфоблока, предпросмотр настроек
-        // override_params - параметры только контроллера
+        // override_infoblock - wide settings InfoBlock, preview settings
+        // override_params - only parameters of the controller
         $ib_overs = $this->get_param('override_infoblock');
         
         if ( ($override_params = $this->get_param('override_params'))) {
@@ -99,7 +99,7 @@ class fx_controller_infoblock extends fx_controller {
         }
         $tpl = null;
         $profiler->block('getting tpl data');
-        // берем шаблон для предпросмотра
+        // get the template to preview
         if (isset($ib_overs['visual']['template'])) {
             $tpl = fx::template($ib_overs['visual']['template']);
         } elseif ( ($tpl_name = $infoblock->get_prop_inherited('visual.template'))) {
@@ -158,7 +158,7 @@ class fx_controller_infoblock extends fx_controller {
     }
     
     /**
-     * "Подпись" инфоблока для отладки
+     * "Signature" of the InfoBlock for debugging
      * @param fx_infoblock $infoblock
      */
     protected static function _get_infoblock_sign($infoblock) {
@@ -180,7 +180,7 @@ class fx_controller_infoblock extends fx_controller {
             'class' => 'fx_infoblock fx_infoblock_'.$infoblock['id']
         );
         
-        // определяем scope/режим правки инфоблока
+        // determine scope/editing mode InfoBlock
         $meta['class'] .= ' fx_infoblock_'.$this->_get_infoblock_scope_name($infoblock);
         
         

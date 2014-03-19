@@ -38,12 +38,12 @@ function fx_edit_in_place( node ) {
     });
     
     
-    // редактировать нужно содержимое узла
+    // need to edit the contents of the site
     if (this.node.data('fx_var')) {
         this.meta = node.data('fx_var');
         this.start(node.data('fx_var'));
     }
-    // редактирование атрибутов узла
+    // edit the attributes of the node
     for( var i in this.node.data()) {
         if (!/^fx_template_var/.test(i)) {
             continue;
@@ -176,7 +176,7 @@ fx_edit_in_place.prototype.save = function() {
     }
     var node = this.node;
     var vars = [];
-    // редактируем текст узла
+    // edit the text node
     var is_content_editable = this.is_content_editable;
     if (is_content_editable) {
         if (this.is_wysiwyg && this.source_area.is(':visible')) {
@@ -211,7 +211,7 @@ fx_edit_in_place.prototype.save = function() {
             });
         }
     }
-    // ничего не поменялось
+    // nothing has changed
     if (vars.length === 0) {
         return this;
     }

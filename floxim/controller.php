@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Базовый класс для всех контроллеров
- * Конструктор принимает параметры и экшн
- * Отработка - через метод process()
+ * Base class for all controllers
+ * The constructor accepts parameters and action
+ * Development - through the process()method
  */
 class fx_controller {
     
@@ -11,9 +11,9 @@ class fx_controller {
     protected $action = null;
     
     /**
-     * Конструктор контроллеров. Лучше использовать fx::controller('controller.action', $params).
-     * @param array $input = 'array()' параметры контроллера
-     * @param string $action = 'null' название экшна
+     * Designer controllers. It is better to use fx::controller('controller.action', $params).
+     * @param array $input = 'array ('controller options
+     * @param string $action = 'null', the name of action
      */
     public function __construct($input = array(), $action = null) {
     	$this->set_input($input);
@@ -21,7 +21,7 @@ class fx_controller {
     }
     
     /**
-     * Получить один из параметров по имени
+     * Get one of the parameters by name
      * @param type $name
      */
     public function get_param($name) {
@@ -55,8 +55,8 @@ class fx_controller {
     }
 
     /**
-     * Возвращает результат выполнения действия контроллером
-     * @return array|string массив с результатами работы контроллера
+     * Returns the action controller
+     * @return array|string array with the results of a controller
      * $input = null, $action = null, $do_return = false
      */
     public function process() {
@@ -108,17 +108,17 @@ class fx_controller {
     }
     
     /*
-     * Возвращает массив с вариантами контроллера, которые можно использовать для поиска шаблона
-     * По умолчанию - только сам контроллер,
-     * Для компонентов переопределяется с добавлением цепочки наследования
+     * Returns an array with options controller that you can use to find the template
+     * Default - only controller itself,
+     * For components overridden by adding inheritance chain
      */
     protected function _get_controller_variants() {
         return array(str_replace('fx_controller_', '', get_class($this)));
     }
     
     /*
-     * Возвращает массив шаблонов, которые можно использовать для контроллер-экшна
-     * Вызывать после инициализации контроллера (с экшном)
+     * Returns an array of templates that can be used for controller-action games
+     * Call after the controller is initialized (action)
      */
     public function get_available_templates( $layout_name = null , $area_meta = null) {
         $area_size = fx_template_suitable::get_size($area_meta['size']);
@@ -132,10 +132,10 @@ class fx_controller {
             $layout_names = $layout_name;
         }
         
-        // получаем допустимые варианты контроллера
+        // get acceptable controller
         $controller_variants = $this->_get_controller_variants();
         $template_variants = array();
-        // сначала вытаскиваем все варианты шаблонов из лейаутов
+        // first we take out all the variants of layout templates
         foreach ($layout_names as $layout_name) {
             if (($layout_tpl = fx::template('layout_'.$layout_name)) ) {
                 $template_variants = array_merge(
@@ -144,7 +144,7 @@ class fx_controller {
                 );
             }
         }
-        // теперь - все варианты шаблонов из шаблона от контроллера
+        // now - all the variants of templates from template from the controller
         foreach ($controller_variants as $controller_variant) {
             if (($controller_template = fx::template($controller_variant))) {
                 $template_variants = array_merge(
@@ -153,7 +153,7 @@ class fx_controller {
                 );
             }
         }
-        // а теперь - фильтруем
+        // now - filtered
         $result = array();
         foreach ($template_variants as $k => $tplv) {
             foreach (explode(",", $tplv['of']) as $tpl_of) {
@@ -188,7 +188,7 @@ class fx_controller {
     }
 
     /*
-     * Пост-обработка, вызывается из fx_controller_infoblock->render()
+     * Post-processing is called from fx_controller_infoblock->render()
      */
     public function postprocess($html) {
         return $html;
@@ -200,7 +200,7 @@ class fx_controller {
             return;
         }
         $params = $cfg['actions'][$action];
-        // А точно нужно возвращать Null?
+        // We definitely want to return Null?
         if (!isset($params['settings'])) {
             return;
         }
@@ -239,7 +239,7 @@ class fx_controller {
                 $action_codes = preg_split("~\s*,\s*~", $k);
                 foreach ($action_codes as $ak) {
                     $inherit_vertical = preg_match("~^\*~", $ak);
-                    // родительские блоки без вертикального наследования не используем
+                    // parent blocks without vertical inheritance does not use
                     if (!$is_own && !$inherit_vertical) {
                         continue;
                     }
@@ -317,7 +317,7 @@ class fx_controller {
         ksort($actions);
         $key_stack = array();
         foreach ($actions as $key => $params) {
-            // не наследуем горизонтально флаг disabled 
+            // do not inherit flag horizontally disabled
             $no_disabled = !isset($params['disabled']);
             
             foreach ($key_stack as $prev_key_index => $prev_key) {

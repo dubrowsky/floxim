@@ -3,7 +3,7 @@
 class fx_controller_admin_layout extends fx_controller_admin {
 
     /**
-     * Вывод списка всех макетов дизайна "в разработке"
+     * List all of layout design in development
      */
     public function all() {
         $items = array();
@@ -14,7 +14,7 @@ class fx_controller_admin_layout extends fx_controller_admin {
             $items[$layout_id] = $layout;
         }
 
-        $layout_use = array(); // [номер макет][номер сайта] => 'Имя сайта'
+        $layout_use = array(); // [room layout][number of website] => 'website Name'
         foreach (fx::data('site')->all() as $site) {
             $layout_use[$site['layout_id']][$site['id']] = '<a href="#admin.site.map('.$site['id'].')">'.$site['name'].'</a>';
         }

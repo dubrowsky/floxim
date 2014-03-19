@@ -1,16 +1,16 @@
 <?php
 class fx_db extends PDO {
 
-    // информация о последней ошибке
+    // information about the last error
     protected $last_error;
-    // последний результат
+    // last result
     protected $last_result;
     protected $last_result_array;
-    // последний запрос
+    // the last query
     protected $last_query;
-    // тип запроса ( insert, select, etc)
+    // the request type ( insert, select, etc)
     protected $query_type;
-    // общее число запросов
+    // the total number of requests
     protected $num_queries;
 
     public function __construct() {
@@ -47,7 +47,7 @@ class fx_db extends PDO {
 
         $statement = $this->prepare_query($statement);
 
-        // определение типа запроса
+        // determine the type of request
         preg_match("/^([a-z]+)\s+/i", $statement, $match);
         $this->query_type = strtolower($match[1]);
 
@@ -182,7 +182,7 @@ class fx_db extends PDO {
     }
     
     /**
-     * получить sql-код последнего выполненного запроса
+     * get the sql code of the last executed query
      * @return string
      */
     public function get_last_query() {

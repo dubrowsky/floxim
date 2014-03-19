@@ -7,7 +7,7 @@ class fx_system_page {
     protected $_macroconst = array();
 
     /**
-     * Установить мета-тег для страницы
+     * To install the meta-tag for the page
      * @param string title, keywords, description
      * @param string value
      */
@@ -21,7 +21,7 @@ class fx_system_page {
     }
 
     /**
-     * Получить текущий мета-тег страницы
+     * Get current meta tag page
      * @param mixed title, keywords, description
      * @param mixed value or array
      */
@@ -151,6 +151,9 @@ class fx_system_page {
     protected $_all_js = array();
     
     public function add_js_file($file) {
+        if (!preg_match("~^https?://~", $file)) {
+            $file = fx::path()->to_http($file);
+        }
         if (!in_array($file, $this->_all_js)) {
             $this->_files_js[] = $file;
             $this->_all_js[]= $file;
@@ -235,11 +238,11 @@ class fx_system_page {
     }
 
     /**
-     * Создает или изменяет значение макроконстанты
-     * Можно вставить макроконстанту в любую часть страницы:
+     * Creates or modifies the value of macroconstants
+     * You can insert macroconstants in any part of the page:
      * <?=fx::page()->set_macroconst('foo')?>
-     * А потом поменять ее значение:
-     * fx::page()->set_macroconst('foo', 'bar');
+     * And change its value:
+     * fx::page()->set_macroconst('foo', 'bar')
      */
     public function set_macroconst($name, $value = '') {
         if ( isset($this->_macroconst[$name]) ) {

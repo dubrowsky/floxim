@@ -2,7 +2,7 @@
 class fx_controller_admin_component extends fx_controller_admin {
 
     /**
-     * Список всех компонентов
+     * A list of all components
      */
     public function all() {
         $essence = $this->essence_type;

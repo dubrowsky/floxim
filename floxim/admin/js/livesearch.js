@@ -1,37 +1,35 @@
 function fx_livesearch(node) {
-	this.n = $(node);
-	var n = this.n;
-	n.data('livesearch', this);
-	var data_params = n.data('params');
-	if (data_params) {
+    this.n = $(node);
+    var n = this.n;
+    n.data('livesearch', this);
+    var data_params = n.data('params');
+    if (data_params) {
             this.datatype = data_params.content_type;
             this.conditions = data_params.conditions;
-	} else {
+    } else {
             this.datatype = n.data('content_type');
-	}
-	this.inputNameTpl = n.data('prototype_name');
-	
-	this.inputContainer = n.find('.livesearch_input');
-	this.input = this.inputContainer.find('input');
-	this.isMultiple = n.data('is_multiple') === 'Y';
-	
-	this.inpNames = {};
-	var livesearch = this;
-	
-	this.getInputName = function(value) {
+    }
+    this.inputNameTpl = n.data('prototype_name');
+    
+    this.inputContainer = n.find('.livesearch_input');
+    this.input = this.inputContainer.find('input');
+    this.isMultiple = n.data('is_multiple') === 'Y';
+    
+    this.inpNames = {};
+    var livesearch = this;
+    
+    this.getInputName = function(value) {
             if (this.isMultiple) {
                 if (value && this.inpNames[value]) {
                     return this.inpNames[value];
                 }
-                //var index = this.n.find('.livesearch_item').length + 1;
-                //var name = this.inputNameTpl.replace(/prototype[0-9]?/, 'f_'+index);
                 var name = this.inputNameTpl.replace(/prototype[0-9]?/, '');
                 return name;
             }
             return this.inputName;
-	};
-	
-	this.getUrl = function() {
+    };
+    
+    this.getUrl = function() {
         var params = {
             url: '/floxim/index.php',
             data:{
@@ -50,9 +48,9 @@ function fx_livesearch(node) {
             params.data.skip_ids = vals;
         }
         return params;
-	};
-	
-	this.getValues = function() {
+    };
+    
+    this.getValues = function() {
             var vals = [];
             this.n.find('.livesearch_item input[type="hidden"]').each(function() {
                 var v = $(this).val();
@@ -61,9 +59,9 @@ function fx_livesearch(node) {
                 }
             });
             return vals;
-	};
-	
-	this.getValue = function() {
+    };
+    
+    this.getValue = function() {
             if (this.isMultiple) {
                 return null;
             }
@@ -72,9 +70,9 @@ function fx_livesearch(node) {
                 return vals[0];
             }
             return null;
-	};
-	
-	this.Select = function(n) {
+    };
+    
+    this.Select = function(n) {
             var id = n.data('id');
             var name = n.data('name');
             if (n.hasClass('add_item')){
@@ -84,10 +82,10 @@ function fx_livesearch(node) {
             if (livesearch.isMultiple) {
                 livesearch.input.val('').focus().trigger('keyup');
             }
-	};
+    };
         this.addSilent = false;
-	
-	this.loadValues = function(ids) {
+    
+    this.loadValues = function(ids) {
             if (ids.length === 0) {
                 return;
             }
@@ -114,15 +112,15 @@ function fx_livesearch(node) {
                     livesearch.addSilent = false;
                 }
             });
-	};
-	
-	this.addValues = function(values) {
+    };
+    
+    this.addValues = function(values) {
             $.each(values, function(index, val) {
                 this.addValue(val.id, val.name, val.input_name);
             });
-	};
-	
-	this.hasValue = function(val_id) {
+    };
+    
+    this.hasValue = function(val_id) {
             var vals = this.getValues();
             for (var i = 0; i < vals.length; i++) {
                 if (vals[i] === val_id) {
@@ -130,9 +128,9 @@ function fx_livesearch(node) {
                 }
             }
             return false;
-	};
-	
-	this.addValue = function(id, name, input_name) {
+    };
+    
+    this.addValue = function(id, name, input_name) {
             if ( (!id || id*1 === 0) && !name) {
                 return;
             }
@@ -177,36 +175,36 @@ function fx_livesearch(node) {
                 $('input', node).trigger('change');
             }
             this.Suggest.hideBox();
-	};
-	
-	this.addDisabled = false;
-	this.disableAdd = function() {
+    };
+    
+    this.addDisabled = false;
+    this.disableAdd = function() {
             this.addDisabled = true;
             this.inputContainer.css({width:'1px',position:'absolute',left:'-1000px'});
             this.Suggest.disabled = true;
             if (!this.isMultiple) {
                 this.n.addClass('livesearch_has_value');
             }
-	};
-	
-	this.enableAdd = function() {
+    };
+    
+    this.enableAdd = function() {
             this.addDisabled = false;
             this.inputContainer.attr('style', '');
             this.Suggest.disabled = false;
             this.n.removeClass('livesearch_has_value');
-	};
-	
-	this.lastRemovedValue = null;
-	
-	this.removeValue = function(n) {
+    };
+    
+    this.lastRemovedValue = null;
+    
+    this.removeValue = function(n) {
             this.lastRemovedValue = n.find('input').val();
             n.remove();
             this.enableAdd();
             this.Suggest.url = this.getUrl();
             this.n.trigger('change');
-	};
-	
-	this.getValueNode = function() {
+    };
+    
+    this.getValueNode = function() {
             if (this.isMultiple) {
                 return false;
             }
@@ -215,25 +213,25 @@ function fx_livesearch(node) {
                 return false;
             }
             return item_node;
-	};
-	
-	this.hideValue = function() {
+    };
+    
+    this.hideValue = function() {
             var item_node = this.getValueNode();
             if (item_node) {
                 item_node.hide();
                 this.enableAdd();
             }
-	};
-	
-	this.showValue = function() {
+    };
+    
+    this.showValue = function() {
             var item_node = this.getValueNode();
             if (item_node) {
                 item_node.show();
                 this.disableAdd();
             }
-	};
-	
-	this.Init = function() {
+    };
+    
+    this.Init = function() {
             this.Suggest = new fx_suggest({
                 input:n.find('input[name="livesearch_input"]'),
                 url:this.getUrl(),
@@ -298,19 +296,7 @@ function fx_livesearch(node) {
             });
 
             function edit_item(item_node) {
-        /*
-                    var id = item_node.find('input').val();
-                    if (!id) {
-                            return false;
-                    }
-                    show_adder_window({
-                                    url:'/module/admin.edit@item_id:'+id+',form_mode:iframe/',
-                                    success:function() {
-                                            livesearch.removeValue(item_node);
-                                            livesearch.loadValues(id);
-                                    }
-                    });
-        */
+                
             }
 
             this.n.on('focus', '.livesearch_input input', function() {
@@ -325,8 +311,6 @@ function fx_livesearch(node) {
                         var item_title = item_node.find('input[type="hidden"]').val();
                         livesearch.input.val(item_title);
                 }
-                //livesearch.removeValue(item_node);
-                //item_node.hide();
                 livesearch.hideValue();
                 $(this).select().trigger('keyup');
             });
@@ -360,118 +344,118 @@ function fx_livesearch(node) {
                 }
                 livesearch.addValue(false, c_val);
             });
-	};
-	
-	this.Init();
+    };
+    
+    this.Init();
 }
 
 function fx_suggest (params) {
-	this.input = params.input;
-	this.url = params.url;
-	this.onSelect = params.onSelect;
-	this.minTermLength = typeof params.minTermLength == 'undefined' ? 1 : params.minTermLength;
-	this.resultType = params.resultType || 'html';
-	this.offsetNode = params.offsetNode || this.input;
-	this.boxVisible = false;
-	if (!fx_suggest.cache) {
-		fx_suggest.cache = {};
-	}
-	
-	var Suggest = this;
-	
-	this.Init = function() {
-		if (!this.input) {
-			return;
-		}
-		this.input.attr('autocomplete', 'off');
-		this.input.keyup( function(e) {
-			switch (e.which) {
-				// up & down & enter
-				case 38: case 40: case 13:
-					return false;
-					break;
-				// anything
-				default:
-					var term = Suggest.getTerm();
-					if (term != '' || e.which == 8) {
-						Suggest.Search(term);
-					}
-					break;
-			}
-		});
-		this.input.keydown( function(e) {
-			switch (e.which) {
+    this.input = params.input;
+    this.url = params.url;
+    this.onSelect = params.onSelect;
+    this.minTermLength = typeof params.minTermLength == 'undefined' ? 1 : params.minTermLength;
+    this.resultType = params.resultType || 'html';
+    this.offsetNode = params.offsetNode || this.input;
+    this.boxVisible = false;
+    if (!fx_suggest.cache) {
+        fx_suggest.cache = {};
+    }
+    
+    var Suggest = this;
+    
+    this.Init = function() {
+        if (!this.input) {
+            return;
+        }
+        this.input.attr('autocomplete', 'off');
+        this.input.keyup( function(e) {
+            switch (e.which) {
+                // up & down & enter
+                case 38: case 40: case 13:
+                    return false;
+                    break;
+                // anything
+                default:
+                    var term = Suggest.getTerm();
+                    if (term != '' || e.which == 8) {
+                        Suggest.Search(term);
+                    }
+                    break;
+            }
+        });
+        this.input.keydown( function(e) {
+            switch (e.which) {
                 // escape
-				case 27:
+                case 27:
                     if (Suggest.boxVisible) {
                         Suggest.hideBox();
                         return false;
                     }
                     break;
-				// enter
-				case 13:
-					var csi = Suggest.box.find('.search_item_active');
-					if (csi.length == 1) {
-						Suggest.onSelect(csi);
-						Suggest.hideBox();
-						return false;
-					} else {
-						Suggest.triggerHide()
-						Suggest.hideBox();
-						return false;
-					}
-					break;
-				// up
-				case 38:
-					Suggest.moveSelection('up');
-					return false;
-					break
-				// down
-				case 40:
-					if (Suggest.getTerm() == '' && Suggest.minTermLength == 0 && !Suggest.boxVisible) {
-						Suggest.Search('');
-						return false;
-					}
-					Suggest.moveSelection('down');
-					return false;
-					break;
-			}
-		});
-		this.createBox();
-	}
-	
-	this.getTerm = function() {
-		return this.input.val().replace(/^\s|\s$/, '');
-	}
-	
-	this.lastTerm = null;
-	
-	this.disabled = false;
-	
-	this.Search = function(term) {
-		if (this.disabled) {
-			return;
-		}
-		if (term.length < this.minTermLength) {
-			this.hideBox();
-			this.lastTerm = term;
-			return;
-		}
-		if (term == this.lastTerm) {
-			return;
-		}
-		this.lastTerm = term;
-		// таймаут для быстрой печати
-		setTimeout( function() {
-			// запрос успел измениться
-			if (term != Suggest.getTerm()) {
-				return;
-			}
-			Suggest.getResults(term);
-		}, 200);
-	}
-	
-	this.getResults = function(term) {
+                // enter
+                case 13:
+                    var csi = Suggest.box.find('.search_item_active');
+                    if (csi.length == 1) {
+                        Suggest.onSelect(csi);
+                        Suggest.hideBox();
+                        return false;
+                    } else {
+                        Suggest.triggerHide()
+                        Suggest.hideBox();
+                        return false;
+                    }
+                    break;
+                // up
+                case 38:
+                    Suggest.moveSelection('up');
+                    return false;
+                    break
+                // down
+                case 40:
+                    if (Suggest.getTerm() == '' && Suggest.minTermLength == 0 && !Suggest.boxVisible) {
+                        Suggest.Search('');
+                        return false;
+                    }
+                    Suggest.moveSelection('down');
+                    return false;
+                    break;
+            }
+        });
+        this.createBox();
+    };
+    
+    this.getTerm = function() {
+        return this.input.val().replace(/^\s|\s$/, '');
+    };
+    
+    this.lastTerm = null;
+    
+    this.disabled = false;
+    
+    this.Search = function(term) {
+        if (this.disabled) {
+            return;
+        }
+        if (term.length < this.minTermLength) {
+            this.hideBox();
+            this.lastTerm = term;
+            return;
+        }
+        if (term == this.lastTerm) {
+            return;
+        }
+        this.lastTerm = term;
+        // the timeout for fast printing
+        setTimeout( function() {
+            // query time to change
+            if (term != Suggest.getTerm()) {
+                return;
+            }
+            Suggest.getResults(term);
+        }, 200);
+    }
+    
+    this.getResults = function(term) {
         var request_params = {
             dataType:Suggest.resultType
         };
@@ -495,7 +479,7 @@ function fx_suggest (params) {
             request_params.data = data;
         }
         
-		if (typeof fx_suggest.cache[url_cache_key] != 'undefined') {
+        if (typeof fx_suggest.cache[url_cache_key] != 'undefined') {
             var res = fx_suggest.cache[url_cache_key];
             if (res) {
                 Suggest.showBox();
@@ -503,12 +487,12 @@ function fx_suggest (params) {
             } else {
                 Suggest.hideBox(false);
             }
-			return;
-		}
+            return;
+        }
         
         
         request_params.success = function(res) {
-            // запрос успел измениться, пока грузили саджесты
+            // query has changed while they were loading Majesty
             if (term != Suggest.getTerm()) {
                 return;
             }
@@ -525,32 +509,21 @@ function fx_suggest (params) {
             fx_suggest.cache[url_cache_key] = res;
         }
         
-		$.ajax(request_params);
-	}
-	
-	this.renderResults = function(res) {
-		var html = '';
-		$.each(res.results, function(index, item) {
-			html += '<div class="search_item" data-id="'+item.id+'" data-name="'+item.name+'">'+item.name+'</div>';
-		});
+        $.ajax(request_params);
+    }
+    
+    this.renderResults = function(res) {
+        var html = '';
+        $.each(res.results, function(index, item) {
+            html += '<div class="search_item" data-id="'+item.id+'" data-name="'+item.name+'">'+item.name+'</div>';
+        });
         return html;
-        /*
-		var term = Suggest.getTerm();
-		$.each(res.meta.datatypes, function(index, item) {
-			if (item.adder_link) {
-				html += '<div class="search_item add_item" data-name="'+term+'" data-url="'+item.adder_link+'">'+
-					item.name+' &laquo;'+Suggest.getTerm()+'&raquo; &mdash; создать'+
-					'</div>';
-			}
-		});
-		return html;
-        */
-	}
-	
-	this.showBox = function() {
-		this.boxVisible = true;
-		var node = this.offsetNode;
-		this.box.show();
+    }
+    
+    this.showBox = function() {
+        this.boxVisible = true;
+        var node = this.offsetNode;
+        this.box.show();
         this.box.offset({
                 top:node.offset().top + node.height() + 4,
                 left:node.offset().left
@@ -563,123 +536,123 @@ function fx_suggest (params) {
                 });
             }
         , 1)
-		this.box.css({
-			width:node.width()-10+'px'
-		});
-		this.skipBlur = false;
-		$('html').on('mousedown.suggest_clickout', this.clickOut);
-	}
-	
-	
-	
-	this.hideBox = function(clear_input) {
+        this.box.css({
+            width:node.width()-10+'px'
+        });
+        this.skipBlur = false;
+        $('html').on('mousedown.suggest_clickout', this.clickOut);
+    }
+    
+    
+    
+    this.hideBox = function(clear_input) {
         if (typeof clear_input == 'undefined') {
             clear_input = true;
         }
         this.boxVisible = false;
-		this.box.hide();
-		this.lastTerm = null;
+        this.box.hide();
+        this.lastTerm = null;
         if (clear_input) {
             this.input.val('');
         }
-		$('html').off('mousedown.suggest_clickout');
-	}
-	
-	this.clickOut = function(e) {
-		var dom_box = Suggest.box.get(0);
-		var dom_inp = Suggest.input.get(0);
-		
-		var n = e.target;
-		while (n) {
-			if (n == dom_inp || n == dom_box) {
-				Suggest.skipBlur = true;
-				return;
-			}
-			n = n.parentNode;
-		}
-		Suggest.triggerHide();
-		Suggest.hideBox();
-	}
-	
-	this.triggerHide = function() {
-		var e = $.Event('suggest_blur');
-		this.input.trigger(e);
-	}
-	
-	this.createBox = function() {
-		this.box = $('<div class="fx_suggest_box fx_overlay"></div>');
-		$('body').append(this.box);
-		
-		this.box.on('click', '.search_item', function() {
-			Suggest.onSelect($(this));
-			Suggest.hideBox();
-			return false;
-		});
-		
-		this.input.blur(function(e) {
-			setTimeout(function() {
-				if(Suggest.skipBlur) {
-					Suggest.skipBlur = false;
-					return;
-				}
-				Suggest.triggerHide()
-				Suggest.hideBox();
-			},100);
-		});
-		
-		this.input.focus(function(){
-			$(this).trigger('keyup');	
-		});
-		
-		this.box.on('mouseover', '.search_item', function() {
-			Suggest.Select($(this));
-		});
-	}
-	
-	this.moveSelection = function(dir) {
-		var items = this.box.find('.search_item');
-		if (items.length == 0) {
-			return;
-		}
-		if (items.length == 1) {
-			this.Select(items.first());
-			return;
-		}
-		var csel = this.box.find('.search_item_active');
-		if(csel.length == 0) {
-			if (dir == 'up') {
-				csel = items.first();
-			} else {
-				csel = items.last();
-			}
-		}
-		
-		var rel_node = (dir == 'up' ? csel.prev() : csel.next());
-		if (rel_node.length == 0) {
-			rel_node = (dir == 'up' ? items.last() : items.first());
-		}
-		this.Select(rel_node);
-	}
-	
-	this.Select = function(n) {
-		this.box.find('.search_item_active').removeClass('search_item_active');
-		n.addClass('search_item_active');
-		var item_top = n.position().top;
-		var item_bottom = item_top + n.outerHeight();
-		var box_height = this.box.height();
-		var box_scroll = this.box.scrollTop();
-		
-		var visible_top = 0;
-		var visible_bottom = box_height;
-		
-		if (item_top < visible_top) {
-			var scroll_to_set = box_scroll - (visible_top - item_top);
-			this.box.scrollTop(scroll_to_set);
-		} else if (item_bottom > visible_bottom) {
-			var scroll_to_set = box_scroll + (item_bottom - visible_bottom);
-			this.box.scrollTop(scroll_to_set);
-		} 
-	}
-	
-	this.Init();
+        $('html').off('mousedown.suggest_clickout');
+    }
+    
+    this.clickOut = function(e) {
+        var dom_box = Suggest.box.get(0);
+        var dom_inp = Suggest.input.get(0);
+        
+        var n = e.target;
+        while (n) {
+            if (n == dom_inp || n == dom_box) {
+                Suggest.skipBlur = true;
+                return;
+            }
+            n = n.parentNode;
+        }
+        Suggest.triggerHide();
+        Suggest.hideBox();
+    }
+    
+    this.triggerHide = function() {
+        var e = $.Event('suggest_blur');
+        this.input.trigger(e);
+    }
+    
+    this.createBox = function() {
+        this.box = $('<div class="fx_suggest_box fx_overlay"></div>');
+        $('body').append(this.box);
+        
+        this.box.on('click', '.search_item', function() {
+            Suggest.onSelect($(this));
+            Suggest.hideBox();
+            return false;
+        });
+        
+        this.input.blur(function(e) {
+            setTimeout(function() {
+                if(Suggest.skipBlur) {
+                    Suggest.skipBlur = false;
+                    return;
+                }
+                Suggest.triggerHide()
+                Suggest.hideBox();
+            },100);
+        });
+        
+        this.input.focus(function(){
+            $(this).trigger('keyup');    
+        });
+        
+        this.box.on('mouseover', '.search_item', function() {
+            Suggest.Select($(this));
+        });
+    }
+    
+    this.moveSelection = function(dir) {
+        var items = this.box.find('.search_item');
+        if (items.length == 0) {
+            return;
+        }
+        if (items.length == 1) {
+            this.Select(items.first());
+            return;
+        }
+        var csel = this.box.find('.search_item_active');
+        if(csel.length == 0) {
+            if (dir == 'up') {
+                csel = items.first();
+            } else {
+                csel = items.last();
+            }
+        }
+        
+        var rel_node = (dir == 'up' ? csel.prev() : csel.next());
+        if (rel_node.length == 0) {
+            rel_node = (dir == 'up' ? items.last() : items.first());
+        }
+        this.Select(rel_node);
+    }
+    
+    this.Select = function(n) {
+        this.box.find('.search_item_active').removeClass('search_item_active');
+        n.addClass('search_item_active');
+        var item_top = n.position().top;
+        var item_bottom = item_top + n.outerHeight();
+        var box_height = this.box.height();
+        var box_scroll = this.box.scrollTop();
+        
+        var visible_top = 0;
+        var visible_bottom = box_height;
+        
+        if (item_top < visible_top) {
+            var scroll_to_set = box_scroll - (visible_top - item_top);
+            this.box.scrollTop(scroll_to_set);
+        } else if (item_bottom > visible_bottom) {
+            var scroll_to_set = box_scroll + (item_bottom - visible_bottom);
+            this.box.scrollTop(scroll_to_set);
+        } 
+    }
+    
+    this.Init();
 }

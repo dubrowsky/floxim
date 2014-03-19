@@ -1,4 +1,4 @@
-/* Меню "Еще" */
+/* Menu "More" */
 fx_more_menu = function ( data ) {
     this.container = $('#fx_admin_more_menu');
     this.data = data;

@@ -1,8 +1,8 @@
 <?php
 /*
- * Класс собирает исходники из разных источников
- * Умеет находить источники по имени шаблона
- * Сохраняет результат куда скажут
+ * Class collects the sources from different sources
+ * Able to find sources on the template name
+ * Stores the result will tell me where
  */
 class fx_template_loader {
     protected $_source_files = array();
@@ -33,7 +33,7 @@ class fx_template_loader {
             return;
         }
         foreach ($tpl_files as $tpl_file) {
-            // Не включаем файлы шаблонов, начинающиеся на "_"
+            // Do not include the template files that begin with "_"
             if (preg_match("~/_[^/]+$~", $tpl_file)) {
                 continue;
             }
@@ -106,8 +106,8 @@ class fx_template_loader {
 
 
     /*
-     * Автоматически загрузить шаблон по имени
-     * Стандартная схема
+     * Automatically load the template by name
+     * Standard scheme
      */
     public static function autoload($tpl_name) {
         $processor = new self();
@@ -166,7 +166,7 @@ class fx_template_loader {
         fx::files()->writefile($this->get_target_path(), $source);
     }
     /**
-     * Преобразовать файлы-исходники в один большой
+     * Convert files-source code in one big
      * @return string
      */
     public function build_source() {
@@ -190,7 +190,7 @@ class fx_template_loader {
     public function read_file($file) {
         $file_data = file_get_contents($file);
         
-        // преобразуем fx::атрибуты к каноническому смарти-синтаксису
+        // convert fx::attributes to the canonical Smarty-syntax
         $T = new fx_template_html($file_data);
         try {
             $file_data = $T->transform_to_floxim();
@@ -198,7 +198,7 @@ class fx_template_loader {
             fx::debug($e, $file);
         }
 
-        // удаляем fx-комментарии
+        // remove fx-comments
         $file_data = preg_replace("~\{\*.*?\*\}~s", '', $file_data);
         $file_data = trim($file_data);
         if (!preg_match("~^{template~", $file_data)) {

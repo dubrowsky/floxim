@@ -45,7 +45,7 @@ class fx_router_manager {
     }
 
     /**
-     * Выполнить все зарегистрированые роутеры, вернуть наиболее подходящий контроллер
+     * Perform all registered routers, to return most suitable controller
      * @param string $url
      * @param array $context
      * @return fx_controller
@@ -67,11 +67,10 @@ class fx_router_manager {
     }
     
     /**
-     * Получить вариант роутера по имени
-     * fx::router('front');
+     * Get the option router by name
+     * fx::router('front')
      */
     public function get_router($router_name) {
         return fx::dig($this->routers, $router_name.'.router');
     }
 }
-?>

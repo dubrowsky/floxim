@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Базовый класс для различных типов полей 
+ * Base class for the various field types
  */
 class fx_field_baze extends fx_field {
 

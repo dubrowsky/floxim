@@ -44,7 +44,7 @@ class fx_controller_admin_user extends fx_controller_admin {
     }
 
     /**
-     * Регистрация нового пользователя В АДМИНКЕ
+     * Register a new user IN the ADMIN panel
      * @param type $input
      * @return type
      */

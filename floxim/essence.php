@@ -2,11 +2,11 @@
 
 abstract class fx_essence implements ArrayAccess {
 
-    // ссылка на объект класса fx_data_
+    // reference to the class object fx_data_
     //protected $finder;
-    // значения полей
+    // field values
     protected $data;
-    // набор полей, которые изменились
+    // the set of fields that have changed
     protected $modified = array();
     protected $modified_data = array();
     
@@ -47,7 +47,7 @@ abstract class fx_essence implements ArrayAccess {
             if ($this->validate() === false) {
                 $this->throw_invalid();
             }
-            // обновляем только изменившиеся поля
+            // updated only fields that have changed
             $data = array();
             foreach ($this->modified as $v) {
                 $data[$v] = $this->data[$v];
@@ -80,7 +80,7 @@ abstract class fx_essence implements ArrayAccess {
 
 
     /*
-     * Сохраняет поля-ссылки, определяется в fx_data_content
+     * Saves the fields links is determined in fx_data_content
      */
     protected function _save_multi_links() {
         
@@ -95,7 +95,7 @@ abstract class fx_essence implements ArrayAccess {
     }
 
     /**
-     * Получить свойство данных или весь набор свойств
+     * Get a property data or an entire set of properties
      * @param strign $prop_name
      * @return mixed
      */
@@ -204,8 +204,8 @@ abstract class fx_essence implements ArrayAccess {
         }
         
         /**
-         * Например для $post['tags'], где tags - поле-мультисвязь
-         * Если связанные не загружены, просим файндер их загрузить
+         * For example, for $post['tags'], where tags - field-multiphase
+         * If connected not loaded, ask finder download
          */
          
         
@@ -222,8 +222,8 @@ abstract class fx_essence implements ArrayAccess {
     }
 
     public function offsetSet($offset, $value) {
-        // ставим modified | modified_data только если существовал ключик
-        // чтобы при первой догрузке полей-связей они не помечались как обновленные
+        // put modified | modified_data only if there was a key
+        // so when you first fill fields-ties they will not be marked as updated
         
         $offset_exists = array_key_exists($offset, $this->data);
         if ($offset_exists && $this->data[$offset] === $value) {
@@ -258,9 +258,9 @@ abstract class fx_essence implements ArrayAccess {
     }
     
     /*
-     * Добавить мета-данные для редактирования с фронта
-     * @param string $html html-код рекорда
-     * @return string строка с добавленными мета-данными
+     * Add meta-data to be edited from the front
+     * @param string $html the html code of record
+     * @return string string with added meta-data
      */
     public function add_template_record_meta($html) {
         return $html;

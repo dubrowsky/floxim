@@ -9,6 +9,7 @@ class fx_debug {
     protected $separator = "\n=============\n";
     protected $max_log_files = 30;
     protected $disabled = false;
+    protected $head_files_added = false;
     
     public function __construct() {
         $this->id = md5(microtime().rand(0, 10000));
@@ -243,12 +244,18 @@ class fx_debug {
     public function debug() {
         $e = call_user_func_array(array($this, '_entry'), func_get_args());
         $this->_print_entry($e);
+        if (!$this->head_files_added) {
+            fx::page()->add_css_file(fx::path('floxim', 'admin/skins/default/css/debug.less'));
+            fx::page()->add_js_file(FX_JQUERY_PATH);
+            fx::page()->add_js_file(fx::path('floxim', 'admin/js/debug.js'));
+        }
     }
     
     protected function _entry() {
         $c_time = microtime(true);
         $memory = memory_get_usage(true);
-        $backtrace = array_slice(debug_backtrace(), 2, 2);
+        
+        $backtrace = array_slice(debug_backtrace(), 4, 2);
         
         $meta = array(
             'time' => $c_time - $this->start_time, 
@@ -308,7 +315,11 @@ class fx_debug {
                 if (in_array($item[0], array('array', 'object'))) {
                     echo $this->_print_format($item[1]);
                 } else {
-                    echo $item[1];
+                    if (strstr($item[1], "\n")) {
+                        echo '<pre>'.htmlspecialchars($item[1]).'</pre>';
+                    } else {
+                        echo htmlspecialchars($item[1]);
+                    }
                 }
                 if ($n < count($e[1]) - 1) { ?>
                     <div class="fx_debug_separator"></div>

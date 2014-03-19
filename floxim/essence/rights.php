@@ -1,8 +1,8 @@
 <?php
 class fx_rights extends fx_essence {
     /**
-     * Типы пользователей:
-     * наследовать + все, зарегистрированные, уполномоченные
+     * Types of users:
+     * inherit all registered authorized
      */
     static public function get_user_types ( $with_inherit = false) {
         $res = array('all', 'reg', 'auth');
@@ -11,9 +11,9 @@ class fx_rights extends fx_essence {
     }
     
     /**
-     * Типы прав:
-     * просмотр, добавление, изменение, включение, удаление
-     * @return type 
+     * Types of rights:
+     * view, add, edit, enable, delete
+     * @return type
      */
     static public function get_rights_types () {
         return array('read', 'add', 'edit', 'checked', 'delete');

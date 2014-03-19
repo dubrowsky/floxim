@@ -13,7 +13,7 @@ class fx_template_html {
     }
     
     public function add_meta($meta = array(), $skip_parsing = false) {
-        // добавляем сразу обертку
+        // add immediately wrap
         if ($skip_parsing) {
             $wrapper = fx_template_html_token::create_standalone('<div class="fx_wrapper">');
             $wrapper->add_meta($meta);
@@ -50,21 +50,6 @@ class fx_template_html {
         
         $tree->apply( function(fx_template_html_token $n) use (&$unnamed_replaces) {
             if ($n->name == 'text') {
-                /*
-                // удаляем пробелы в начале строки, 
-                // если она начинается с {...}
-                $n->source = preg_replace(
-                    "~\s*?[\n\r]+\s*?(\{.+?\})~s", 
-                    '\1', 
-                    $n->source
-                );
-                // или заканчивается на {...}
-                $n->source = preg_replace(
-                    "~(\{.+?\}\s*?)[\n\r]+\s*~s",
-                    '\1',
-                    $n->source
-                );
-                */
                 return;
             }
             if (preg_match('~\{[\%|\$]~', $n->source)) {
@@ -323,7 +308,7 @@ class fx_template_html {
                     break;
             }
         }
-        // в стеке должен остаться только <root>
+        // in the stack should be kept only for the <root>
         if (count($stack) > 1) {
             fx::log("All closed, but stack not empty!", $stack);
             //die();
@@ -350,4 +335,3 @@ class fx_template_html {
         return $tag_html;
     }
 }
-?>

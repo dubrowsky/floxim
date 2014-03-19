@@ -1,14 +1,14 @@
 <?php
 /*
- * Класс разбивает шаблон на токены и строит дерево
+ * Class breaks the template into tokens and builds a tree
  */
 class fx_template_parser {
     
     /**
-     * Преобразовать шаблон в php-код
-     * @param string $source исходник шаблона
-     * @param string $code код для класса
-     * @return string php-код
+     * Convert the template in the php code
+     * @param string $source source code of the template
+     * @param string $code code for a class
+     * @return string of php code
      */
     public function parse($source) {
         $source = str_replace("{php}", '<?', $source);
@@ -34,9 +34,9 @@ class fx_template_parser {
     }
     
     /**
-     * Определить тип токена (открывающий/единичный) на основе следующих за ним токенов
-     * @param fx_template_token $token токен с неизвестным типом
-     * @param array $tokens следующие за ним токены
+     * To determine the type of the token (opening/unit) on the basis of the following tokens
+     * @param fx_template_token $token the token with an unknown type
+     * @param array $tokens following tokens
      * @return null
      */
     protected  function solve_unclosed($token, $tokens) {
@@ -162,117 +162,4 @@ class fx_template_parser {
         $token->clear_children();
         $token->add_child($with_each_token);
     }
-    
-    /*
-    protected function _template_to_each(fx_template_token $token) {
-        $children = $token->get_children();
-        $subtemplates = array();
-        $each_token = false;
-        $tpl_id = $token->get_prop('id');
-        $each_select = '.';
-        if (substr($tpl_id, 0, 1) == '$') {
-            $token->name = 'if';
-            $token->set_prop('test', $tpl_id);
-            $each_select = $tpl_id;
-        }
-        if (count($children) == 1 && $children[0]->name == 'if') {
-            $token = $children[0];
-            $children = $token->get_children();
-        }
-        $is_subroot = true;
-        foreach ($children as $child_num => $child) {
-            if (
-                    $child->name == 'template' && 
-                    in_array($child->get_prop('id'), array(
-                        'active', 
-                        'inactive',
-                        'active_link',
-                        'separator',
-                        'item'
-                    ))
-                ) {
-                $subtemplates[$child->get_prop('id')] = $child;
-                if (!$child->get_prop('subroot')) {
-                    $is_subroot = false;
-                }
-                if (!$each_token) {
-                    $each_token = new fx_template_token(
-                        'each', 
-                        'open', 
-                        array('select' => $each_select)
-                    );
-                    $token->set_child($each_token, $child_num);
-                } else {
-                    $token->set_child(NULL, $child_num);
-                }
-            }
-        }
-        if (count($subtemplates) == 0) {
-            return;
-        }
-        if ($is_subroot){
-            $each_token->set_prop('subroot', true);
-        }
-        
-        // выбираем дефолтный шаблон - либо inactive, либо item
-        $basic_tpl = null;
-        $basic_cond = null;
-        if (isset($subtemplates['inactive'])) {
-            $basic_tpl = $subtemplates['inactive'];
-        } elseif (isset($subtemplates['item'])) {
-            $basic_tpl = $subtemplates['item'];
-        }
-        
-        $conds = array();
-        if ($basic_tpl) {
-            
-            // собираем дефолтное условие
-            // если есть шаблоны для active | active_link, 
-            // дефолтный для таких не используем
-            if (isset($subtemplates['active'])) {
-                $conds['active']= '$item["active"]';
-            }
-            if (isset($subtemplates['active_link'])) {
-                $conds ['active_link']= '$item["active_link"]';
-            }
-            $basic_cond = count($conds) == 0 ? null : '!('.join(" && ", $conds).')';
-        }
-        
-        // есть варианты
-        if ($basic_cond) {
-            $basic_cond_token = new fx_template_token('if', 'open', array('test' => $basic_cond));
-            $basic_cond_token->add_children($basic_tpl->get_children());
-            $each_token->add_child($basic_cond_token);
-            if (isset($subtemplates['active_link'])) {
-                $active_link_cond = new fx_temlate_token(
-                    'if', 'open', array('test' => $conds['active_link'])
-                );
-                $active_link_cond->add_children($subtemplates['active_link']->get_children());
-                $each_token->add_child($active_link_cond);
-            }
-            if (isset($subtemplates['active'])) {
-                $active_cond_test = $conds['active'];
-                if (isset($conds['active_link'])) {
-                    $active_cond_test .= ' && !'.$conds['active_link'];
-                } else {
-                    $active_cond_test .= ' || $item["active_link"]';
-                }
-                $active_cond = new fx_template_token('if', 'open', 
-                        array('test' => $active_cond_test)
-                );
-                $active_cond->add_children($subtemplates['active']->get_children());
-                $each_token->add_child($active_cond);
-            }
-        }
-        // только один подшаблон
-        else {
-            $each_token->add_children($basic_tpl->get_children());
-        }
-        
-        if (isset($subtemplates['separator'])) {
-            $each_token->add_child($subtemplates['separator']);
-        }
-    }
-    */
-    
 }

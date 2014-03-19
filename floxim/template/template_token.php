@@ -1,6 +1,6 @@
 <?php
 /*
- * Класс для отдельного токена fx-шаблонизатора
+ * Class for a separate token fx-templating engine
  */
 class fx_template_token {
     public $name = null;
@@ -9,7 +9,7 @@ class fx_template_token {
     
     
     /**
-     * создать токен из исходника
+     * to create a token from source
      * @param string $source
      * @return fx_template_token
      */
@@ -73,8 +73,8 @@ class fx_template_token {
         } elseif ($name == 'with' && !preg_match("~select=~", $source)) {
             $props['select'] = trim($source);
         } else {
-            // добавляем отсутствующие кавычки атрибутов
-            // пока убрал, ломается случай {if test="$x == 1"}
+            // add the missing attribute quotes
+            // so far removed, it breaks case {if test="$x == 1}
             //$source = preg_replace("~([a-z0-9\:_-]+)\s*?=\s*?([^\'\\\"\s]+)~", ' $1="$2"', $source);
             $source = preg_replace_callback(
                 '~([a-z0-9\:_-]+)=(["\'])(.+?)(?<!\\\\)\2~',
@@ -191,10 +191,10 @@ class fx_template_token {
     }
     
     /**
-     * 
-     * @param type $name название токена, e.g. "template"
-     * @param type $type тип - open/close/single
-     * @param type $props атрибуты токена
+     *
+     * @param type $name name of the token, e.g. "template"
+     * @param type $type the type - open/close/single
+     * @param type $props attributes token
      */
     public function __construct($name, $type, $props) {
         $this->name = $name;

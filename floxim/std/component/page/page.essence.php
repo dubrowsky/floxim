@@ -1,7 +1,7 @@
 <?php
 class fx_content_page extends fx_content {
     /**
-     * Получить id страниц-родителей
+     * Get the id of the page-parents
      * @return array
      */
     public function get_parent_ids() {

@@ -30,7 +30,7 @@ class fx_thumb
         unset($info[3]);
         $this->info = $info;
         if (!isset(self::$_types[$info['imagetype']])) {
-            // неправильный/неизвестный тип картинки
+            // incorrect/unknown type pictures
             throw new Exception('Wrong image type');
         }
         $this->info += self::$_types[$info['imagetype']];
@@ -59,7 +59,7 @@ class fx_thumb
         $mih = $params['min-height'];
         $mah = $params['max-height'];
         
-        // для начала: width:200 => min-width:200, max-width:200
+        // begin: width:200 => min-width:200, max-width:200
         if ($w) {
             if (!$miw) {
                 $miw = $w;
@@ -69,7 +69,7 @@ class fx_thumb
             }
         }
         
-        // аналогично высота
+        // similar height
         if ($h) {
             if (!$mah) {
                 $mah = $h;
@@ -79,21 +79,21 @@ class fx_thumb
             }
         }
         
-        // задали только ширину
+        // set only the width
         if ($w && !$h) {
             $h = $w * 1 / $ratio;
         }
-        // задали только высоту
+        // was asked only height
         elseif ($h && !$w) {
             $w = $h * $ratio;
         }
-        // не задали ничего
+        // not asked anything
             elseif (!$h && !$w) {
             $h = $source['height'];
             $w = $source['width'];
         }
         
-        // добавляем мин/макс.
+        // add min/max
         
         if ($miw === false) {
             $miw = 0;
@@ -115,7 +115,7 @@ class fx_thumb
         echo "</table>";
         */
         
-        // а теперь считаем по табличке http://www.w3.org/TR/CSS21/visudet.html#min-max-widths
+        // now, believe on the name plate http://www.w3.org/TR/CSS21/visudet.html#min-max-widths
         
         /**
         
@@ -134,9 +134,9 @@ class fx_thumb
         
         */
         
-        // шире, чем надо
+        // is wider than it should
         if ($w > $maw) {
-            // и выше
+            // and above
             if ($h > $mah) {
                 if ($maw / $w <= $mah / $h) {
                     // #5
@@ -148,22 +148,22 @@ class fx_thumb
                     $h = $mah;
                 }
             }
-            // и ниже
+            // and below
             elseif ($h < $mih) {
                 // #10
                 $w = $maw;
                 $h = $mih;
             }
-            // и норм. ширины
+            // and norms. width
             else {
                 // #1
                 $h = max($maw * $h / $w, $mih);
                 $w = $maw;
             }
         }
-        // уже, чем надо
+        // already than I should
         elseif ($w < $miw) {
-            // и ниже
+            // and below
             if ($h < $mih) {
                 if ($miw / $w <= $mih / $h) {
                     // #7
@@ -175,28 +175,28 @@ class fx_thumb
                     $w = $miw;
                 }
             }
-            // и выше
+            // and above
             elseif ($h > $mah) {
                 // #9
                 $w = $miw;
                 $h = $mah;
             }
-            // и норм. высоты
+            // and norms. height
             else {
                 // #2
                 $h = min($miw * $h / $w, $mah);
                 $w = $miw;
             }
         }
-        // с шириной ок. проблемы только с высотой
+        // width OK. problems with height
             
-        // выше
+        // above
             elseif ($h > $mah) {
             // #3
             $w = max($mah * $w / $h, $miw);
             $h = $mah;
         }
-        // ниже
+        // below
             elseif ($h < $mih) {
             // #4
             $w = min($mih * $w / $h, $maw);
@@ -226,19 +226,19 @@ class fx_thumb
             'quality' => 90
         ), $params);
         
-        // вычисляем размеры исходя из min-max, размеров картинки и заданых w-h
+        // the calculated sizes based on min-max, the size of the picture and a set of w-h
         $st = array_merge($st, $this->_calculateSize($st));
         
         $width  = $this->info['width'];
         $height = $this->info['height'];
         $type   = $this->info['imagetype'];
         
-        // определяем коэф. масштабирования
+        // determine the price. zoom
         $scale       = 1;
-        // и отступы для обрезания
+        // and padding for circumcision
         $crop_x      = 0;
         $crop_y      = 0;
-        // и ширину-высоту вырезаемого куска
+        // width and the height of fragments
         $crop_width  = $width;
         $crop_height = $height;
         
@@ -257,7 +257,7 @@ class fx_thumb
                 $crop_offset = 'middle';
             }
             if ($scale == $scale_x) {
-                // обрезаем по высоте
+                // the cropped height
                 $crop_height = $st['height'] / $scale;
                 switch ($crop_offset) {
                     case 'top':
@@ -271,7 +271,7 @@ class fx_thumb
                         break;
                 }
             } else {
-                // обрезаем по ширине
+                // the trimmed width
                 $crop_width = $st['width'] / $scale;
                 switch ($crop_offset) {
                     case 'top':

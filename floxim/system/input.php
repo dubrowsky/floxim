@@ -231,9 +231,9 @@ class fx_system_input {
       $files = $this->fetch_files();
       $post = $this->fetch_get_post();
 
-      // массивы надо объединить, но ничего не потерять, array_merge не подходит
+      // arrays should unite, but nothing to lose, not suitable array_merge
       // ex, POST['foto']['link'] = 'x', FILES['foto']['name'] = 'y' => input['foto']['link']='x',input['foto']['name']='y'
-      /*@todo переделать по-нормальному*/
+      /*@todo rewritten by-normal*/
       $result = $post;
       if ( $files ) foreach ( $files as $k => $v ) {
           if ( isset($result[$k]) ) {

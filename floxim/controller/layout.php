@@ -78,7 +78,7 @@ class fx_controller_layout extends fx_controller {
         if (!fx::is_admin()) {
             return;
         }
-        // инициализация админ панели
+        // initialize the admin panel
         
         $p = fx::page();
         $js_config = new fx_admin_configjs();

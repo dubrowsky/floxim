@@ -171,7 +171,7 @@ class fx_template_fsm {
             }
             return;
         }
-        // не сработало ни одно из правил
+        // won't work no rule
         $this->default_callback($ch);
         return $callback_res;
     }

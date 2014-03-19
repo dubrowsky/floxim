@@ -3,7 +3,7 @@
 class fx_controller_admin_content extends fx_controller_admin {
 
     public function add_edit($input) {
-        // получаем редактируемый объект
+        // get the edited object
         if ($input['content_id']) {
             $content = fx::data('content', $input['content_id']);
             $content_type = $content['type'];
@@ -166,10 +166,10 @@ class fx_controller_admin_content extends fx_controller_admin {
     }
     
     /*
-     * Переместить контент-запись среди соседей внутри одного родителя и одного инфоблока
-     * В инпуте должны быть content_type и content_id
-     * Если есть next_id - ставит перед ним
-     * Если нет - ставит в конец
+     * Move content among neighbors inside one parent and one InfoBlock
+     * Input should be content_type and content_id
+     * If there next_id - sets before him
+     * If there are no raises in the end
      */
     public function move($input) {
         $content_type = 'content_'.$input['content_type'];

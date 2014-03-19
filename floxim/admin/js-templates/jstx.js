@@ -9,13 +9,13 @@ var $t = {
 			tpl._priority = priority;
 		}
 		
-		// например, form.fields.text
+		// for example, form.fields.text
 		name = name.split('.');
 		var name_prefix = name.slice(0, -1); // text
 		var func_name = name.slice(-1); // form.fields
 		var c = $t;
-		// после цикла c попадает текущий $t.form.fields
-		// если его нет, заполняется пустыми объектами
+		// after the loop c gets the current $t.form.fields
+		// if it is not filled in empty objects
 		for (var i = 0; i < name_prefix.length; i++) { 
 			var chunk = name[i];
 			if (typeof c[chunk] == 'undefined') {
@@ -28,23 +28,23 @@ var $t = {
 		
 		var c_type = typeof c[func_name];
 		
-		if (c_type == 'undefined') { // еще не задавали
+		if (c_type == 'undefined') { // have not set
 			c[func_name] = tpl;
 		} else {
 			
-			var old_func = c[func_name]; // то, что уже сидит в form.fields.text
+			var old_func = c[func_name]; // what is already sitting in form.fields.text
 			
-			if ( c_type != 'function' ) { // объект-заглушка
-                for (var i in old_func) { // переносим свойства в новую функцию
+			if ( c_type != 'function' ) { // object stub
+                for (var i in old_func) { // move the properties to the new function
 					tpl[i] = old_func[i];
 					delete old_func[i];
 				}
-				// и устанавливаем новую ф-цию на место заглушки
+				// and install a new f-tion in place stubs
 				c[func_name] = tpl;
-			} else if ( typeof old_func._variants != 'undefined') { // функция-с-вариантами, просто добавляем новую в качестве варианта
+			} else if ( typeof old_func._variants != 'undefined') { // function-with-options, simply add a new option
                 old_func._variants.push( tpl );
 				old_func._variants._is_sorted = false;
-			} else { // функция-без-вариантов, ее надо заменить	
+			} else { // function without options, it should be replaced
                 var var_func = function(obj, options) {
 					var res_func = $t.findVariant( arguments.callee._variants, obj, options );
 					return res_func (obj, options);

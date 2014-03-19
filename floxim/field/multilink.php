@@ -75,21 +75,21 @@ class fx_field_multilink extends fx_field_baze {
                         ->where('component_id', 0, '!=')
                         ->all();
         
-        // селект с доступными полями-ссылками
+        // select from the available fields-links
         $linking_field_values = array();
         
-        // массив селектов с уточнением типа данных
+        // array of InputB with specification of the data type
         $res_datatypes = array();
         
-        // массив селектов с уточнением поля для many-many
+        // array of InputB with specification of the field for many-many
         $res_many_many_fields = array();
         
-        // массив селектов с уточнением типа для many-many
+        // array of InputB with specification of the type for many-many
         $res_many_many_types = array();
         
         foreach ($link_fields as $lf) {
             if (in_array($lf['format']['target'], $chain_ids)) {
-                // компонент, которому принадлежит текущее поле-ссылка
+                // the component that owns the current box-link
                 $linking_field_owner_component = fx::data('component', $lf['component_id']);
                 
                 $linking_field_values[]= array(
@@ -97,7 +97,7 @@ class fx_field_multilink extends fx_field_baze {
                     $linking_field_owner_component['keyword'].'.'.$lf['name']
                 );
                 
-                // получаем список из ссылающегося компонента и всех его потомков
+                // get the list of references component and all of its descendants
                 $component_tree = fx::data('component')->get_select_values($lf['component_id']);
                 
                 $res_datatypes[$lf['id']] = array();
@@ -108,21 +108,21 @@ class fx_field_multilink extends fx_field_baze {
                         $com_variant[1]
                     );
                     
-                    // Для связей MANY_MANY
-                    // получаем поля-ссылки компонента, указывающие на другие компоненты
+                    // For links many_many relations
+                    // get the field-component links that point to other components
                     $linking_component_links = $linking_component->
                             all_fields()->
                             find('type', fx_field::FIELD_LINK)->
                             find('id', $lf['id'], '!=');
                     
-                    // исключаем поля, привязанные к родителю
+                    // exclude fields, connected to the parent
                     if ($lf['format']['is_parent']){
                         $linking_component_links = $linking_component_links->find('name', 'parent_id', '!=');
                     }
                     if (count($linking_component_links) === 0) {
                         continue;
                     }
-                    // ключ для many-many
+                    // key for many-many
                     $mmf_key = $lf['id'].'_'.$com_variant[0];
                     
                     $res_many_many_fields[$mmf_key] = array( array('', '--') );
@@ -145,12 +145,6 @@ class fx_field_multilink extends fx_field_baze {
                                $end_com[0],
                                $end_component['keyword']
                            );
-                           /*
-                           $linking_types[
-                               $c_opt_key.'/'.$linking_component_link['id'].'/'.$end_com[0]
-                           ]  = $c_opt_name.' :: '.$end_component['keyword'].'.'.$linking_component_link['name'];
-                            * 
-                            */
                         }
                     }
                 }
@@ -246,8 +240,8 @@ class fx_field_multilink extends fx_field_baze {
     
     
     /*
-     * Преобразует значение из формы в коллекцию
-     * Кажется, пока заточен только под MANY_MANY
+     * Converts a value from a form to the collection
+     * Seems, is confined only under many_many relations
      */
     public function get_savestring($content) {
         $rel = $this->get_relation();
@@ -263,27 +257,27 @@ class fx_field_multilink extends fx_field_baze {
      * such as post - tag_linker - tag
      */
     protected function _append_many_many($content) {
-        // дергаем предыдущее значение,
-        // чтобы заполнить его
+        // pull the previous value
+        // to fill it
         $existing_items = $content->get($this['name']);
         $rel = $this->get_relation();
-        // конечный тип (для полей много-много)
+        // end type (for fields lot)
         $linked_data_type = $this->get_end_data_type();
-        // связующий тип, который непосредственно ссылается
+        // binding type, which directly references
         $linker_data_type = $rel[1];
-        // название свойства линкера, куда попадает конечный объект
+        // the name of the property, the linker where to target
         $linker_prop_name = $rel[3];
         // value to be returned
         $new_value = new fx_collection();
         $new_value->linker_map = new fx_collection();
-        // Находим название для поля, например "tag_id"
-        // что-то страшненько...
+        // Find the name for the field, for example "most part"
+        // something strashnenko...
         $linker_com_name = preg_replace('~^content_~', '', $linker_data_type);
         $end_link_field_name = 
             fx::data('component', $linker_com_name)
             ->all_fields()
             ->find_one(function($i) use ($linker_prop_name) {
-                //!!! какая-то жесть
+                //!!! some tin
                 return isset($i['format']['prop_name']) && $i['format']['prop_name'] == $linker_prop_name;
             })
             ->get('name');
@@ -322,7 +316,7 @@ class fx_field_multilink extends fx_field_baze {
      * such as news - comment
      */
     protected function _append_has_many($content) {
-        // конечный тип (для полей много-много)
+        // end type (for fields lot)
         $linked_type = 'content_'.$this->get_related_component()->get('keyword');
         $new_value = fx::collection();
         foreach ($this->value as $item_id => $item_props) {
@@ -341,22 +335,15 @@ class fx_field_multilink extends fx_field_baze {
     }
     
     public function get_end_data_type() {
-        // связь, генерируемая этим полем
+        // the connection generated by the field
         $relation = $this->get_relation();
         if (isset($relation[4])) {
             return $relation[4];
         }
-        /*
-        // !!! старый вариант без явного хранения типа данных для many-many
-        $related_relation = fx::data($relation[1])->relations();
-        $end_data_type = $related_relation[$relation[3]][1];
-        return $end_data_type;
-         * 
-         */
     }
     
     /*
-     * Получить компонент, на который ссылается поле
+     * Get the referenced component field
      */
     public function get_related_component() {
         $rel = $this->get_relation();
@@ -378,12 +365,6 @@ class fx_field_multilink extends fx_field_baze {
         if (!$this['format']['linking_field']) {
             return false;
         }
-        /*
-        $target_fields = explode(".", $this['format']['target']);
-        $direct_target_field = fx::data('field', array_shift($target_fields));
-        $direct_target_component = fx::data('component', $direct_target_field['component_id']);
-         * 
-         */
         $direct_target_field = fx::data('field', $this['format']['linking_field']);
         $direct_target_component = fx::data('component', $this['format']['linking_datatype']);
 
@@ -407,4 +388,3 @@ class fx_field_multilink extends fx_field_baze {
         );
     }
 }
-?>

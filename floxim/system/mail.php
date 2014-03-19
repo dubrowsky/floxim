@@ -75,7 +75,7 @@ class fx_system_mail {
         $str = str_replace("\r", "", $str);
 
         // split into chunks
-        // Из-за разбиения строки по RFC (=CRLF) возникают "лишние" переносы строк на некоторых почтовых серверах
+        // Due to split the string on the RFC (=CRLF) any "excess" newlines on some servers
         $lines = explode("\n", $str);
         foreach ($lines as $num => $line) {
             if (strlen($line) > 76) {

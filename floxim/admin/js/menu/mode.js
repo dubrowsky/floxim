@@ -41,7 +41,7 @@ fx_mode_menu.prototype.set_active = function ( active ) {
         var item = $(this);
         if ( active ==  item.data('key') ) {
             item.addClass('fx_admin_page_modes_active').append(arrow).append(line);
-            arrow.css('left', 0.5*item.width()-3); // 3 - пол-ширины стрелки
+            arrow.css('left', 0.5*item.width()-3); // 3 - half-width of the arrow
             line.width(item.width() + parseInt(item.css('margin-left')) + parseInt(item.css('margin-right')) );
         }
     });

@@ -8,7 +8,7 @@ class fx_loader {
     protected static $classes_with_no_file = array();
     
     /**
-     * @todo привести в номральный вид
+     * @todo lead in nomrally view
      */
     static public function load_class($classname) {
         if (in_array($classname, self::$classes_with_no_file)) {
