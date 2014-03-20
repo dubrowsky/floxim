@@ -139,14 +139,15 @@ class fx_controller_admin extends fx_controller {
           })(); 
         ");
         fx::profiler()->stop()->block('add css');
-        $css_files = array(
+        $page->add_css_bundle(array(
             '/floxim/lib/editors/redactor/redactor.css',
             '/floxim/admin/skins/default/jquery-ui/main.css',
+        ));
+        $page->add_css_bundle(array(
             '/floxim/admin/skins/default/css/main.css',
             '/floxim/admin/skins/default/css/forms.less',
             '/floxim/admin/skins/default/css/debug.less',
-        );
-        $page->add_css_bundle($css_files);
+        ));
         fx::profiler()->stop();
     }
     

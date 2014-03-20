@@ -174,12 +174,7 @@ class fx_system_page {
             $params['name'] = md5(join($files));
         }
         $params['name'] .= '.jsgz';
-        /*
-        $doc_root = fx::config()->DOCUMENT_ROOT;
-        $http_path = fx::config()->HTTP_FILES_PATH.'asset_cache/'.$params['name'];
-        $full_path = $doc_root.$http_path;
-         * 
-         */
+        
         $http_path = fx::path()->http('files', 'asset_cache/'.$params['name']);
         $full_path = fx::path()->to_abs($http_path);
         
@@ -190,7 +185,7 @@ class fx_system_page {
             $bundle_content = '';
             foreach ($files as $i => $f) {
                 if (!preg_match("~^http://~i", $f)) {
-                    $f = $doc_root.$f;
+                    $f = fx::path()->to_abs($f);
                 }
                 $file_content = file_get_contents($f);
                 if (!preg_match("~\.min~", $f)) {
