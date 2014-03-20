@@ -643,51 +643,66 @@ function fx_get_cattables_for_lower_case() {
 }
 
 function fx_get_cattables() {
-    $cattables = array(
-		'fx_auth_external',
-		'fx_classificator',
-		'fx_classificator_cities',
-		'fx_classificator_country',
-		'fx_classificator_region',
-		'fx_component',
-		'fx_content',
-		'fx_content_blogpost',
-		'fx_content_gallery',
-		'fx_content_page',
-		'fx_content_photo',
-		'fx_content_section',
-		'fx_content_tag',
-		'fx_content_tagpost',
-		'fx_content_text',
-		'fx_content_travel_route',
-		'fx_content_user',
-		'fx_controller',
-		'fx_crontask',
-		'fx_ctpl',
-		'fx_datatype',
-		'fx_dictionary',
-		'fx_field',
-		'fx_filetable',
-		'fx_group',
-		'fx_history',
-		'fx_history_item',
-		'fx_infoblock',
-		'fx_infoblock_visual',
-		'fx_layout',
-		'fx_mail_template',
-		'fx_menu',
-		'fx_module',
-		'fx_multiselect',
-		'fx_patch',
-		'fx_redirect',
-		'fx_session',
-		'fx_settings',
-		'fx_site',
-		'fx_template',
-		'fx_user_group',
-		'fx_widget'
-	);
-
+    $cattables = array (
+        0 => 'fx_auth_external',
+        1 => 'fx_classificator',
+        2 => 'fx_classificator_cities',
+        3 => 'fx_classificator_country',
+        4 => 'fx_classificator_region',
+        5 => 'fx_component',
+        6 => 'fx_content',
+        7 => 'fx_content_award',
+        8 => 'fx_content_classifier',
+        9 => 'fx_content_classifier_linker',
+        10 => 'fx_content_comment',
+        11 => 'fx_content_company',
+        12 => 'fx_content_complex_photo',
+        13 => 'fx_content_complex_video',
+        14 => 'fx_content_contact',
+        15 => 'fx_content_faq',
+        16 => 'fx_content_gallery',
+        17 => 'fx_content_news',
+        18 => 'fx_content_page',
+        19 => 'fx_content_person',
+        20 => 'fx_content_photo',
+        21 => 'fx_content_product',
+        22 => 'fx_content_product_category',
+        23 => 'fx_content_project',
+        24 => 'fx_content_publication',
+        25 => 'fx_content_section',
+        26 => 'fx_content_select_linker',
+        27 => 'fx_content_social_icon',
+        28 => 'fx_content_tag',
+        29 => 'fx_content_text',
+        30 => 'fx_content_travel_route',
+        31 => 'fx_content_user',
+        32 => 'fx_content_vacancy',
+        33 => 'fx_content_video',
+        34 => 'fx_controller',
+        35 => 'fx_crontask',
+        36 => 'fx_datatype',
+        37 => 'fx_field',
+        38 => 'fx_filetable',
+        39 => 'fx_group',
+        40 => 'fx_history',
+        41 => 'fx_history_item',
+        42 => 'fx_infoblock',
+        43 => 'fx_infoblock_visual',
+        44 => 'fx_lang',
+        45 => 'fx_lang_string',
+        46 => 'fx_layout',
+        47 => 'fx_mail_template',
+        48 => 'fx_module',
+        49 => 'fx_multiselect',
+        50 => 'fx_patch',
+        51 => 'fx_redirect',
+        52 => 'fx_session',
+        53 => 'fx_settings',
+        54 => 'fx_site',
+        55 => 'fx_template',
+        56 => 'fx_user_group',
+        57 => 'fx_widget',
+      );
     return $cattables;
 }
 
@@ -795,16 +810,16 @@ function fx_exec_sql($file) {
 
 function fx_get_config($MYSQL_HOST, $MYSQL_USER, $MYSQL_PASSWORD, $MYSQL_DB_NAME) {
     ob_start();
-    if (function_exists("apc_clear_cache")) {
-        echo "ini_set('apc.cache_by_default', 0);\n";
-    }
     ?>
+ini_set('apc.cache_by_default', 0);
 define("FX_JQUERY_PATH", '/floxim/lib/js/jquery-1.9.1.min.js');
 $db_config = array(
     'default' =>  array(
         'DB_DSN' => 'mysql:dbname=<?=$MYSQL_DB_NAME?>;host=<?=$MYSQL_HOST?>',
         'DB_USER' => '<?=$MYSQL_USER?>',
         'DB_PASSWORD' => '<?=$MYSQL_PASSWORD?>'
+        'IS_DEV_MODE' => false,
+        'COMPILED_TEMPLATES_TTL' => 0
     )
 );
 
