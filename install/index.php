@@ -629,7 +629,11 @@ function fx_update_db() {
     $sql = array(
 		"UPDATE `fx_site` SET `domain` = '" . mysql_real_escape_string($_SERVER['HTTP_HOST']) . "' WHERE `id` = 18",
 		"UPDATE `fx_site` SET `domain` = '" . mysql_real_escape_string('alt.'.$_SERVER['HTTP_HOST']) . "' WHERE `id` = 1",
-		"UPDATE `fx_content_user` SET `password` = '" . md5($_SESSION['pwd']) . "', `email` = '" . mysql_real_escape_string( fx_post_get('email') ) . "' WHERE `email` = 'admin@floxim.loc'",
+		"UPDATE `fx_content_user` SET `password` = '" 
+                    //. md5($_SESSION['pwd']) 
+                    .crypt($_SESSION['pwd'],  uniqid(mt_rand(), true))
+                    . "', `email` = '" . mysql_real_escape_string( fx_post_get('email') ) 
+                    . "' WHERE `email` = 'admin@floxim.loc'",
 		"UPDATE `fx_settings` SET `value` = '" . mysql_real_escape_string( fx_post_get('email') ) . "' WHERE `key` = 'spam_from_email'"
 	);
 	
@@ -817,7 +821,7 @@ $db_config = array(
     'default' =>  array(
         'DB_DSN' => 'mysql:dbname=<?=$MYSQL_DB_NAME?>;host=<?=$MYSQL_HOST?>',
         'DB_USER' => '<?=$MYSQL_USER?>',
-        'DB_PASSWORD' => '<?=$MYSQL_PASSWORD?>'
+        'DB_PASSWORD' => '<?=$MYSQL_PASSWORD?>',
         'IS_DEV_MODE' => false,
         'COMPILED_TEMPLATES_TTL' => 0
     )
