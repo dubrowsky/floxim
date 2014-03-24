@@ -20,7 +20,7 @@ class fx_template_compiler {
             foreach ($lines as $ln => $l) {
                 $lined .= $ln."\t".$l."\n";
             }
-            fx::debug('Syntax error', $is_correct, $lined, $code);
+            fx::log('Syntax error', $is_correct, $lined, $code);
             throw new Exception('Syntax error');
         }
         
@@ -312,9 +312,16 @@ class fx_template_compiler {
             $token_props = $token->get_all_props();
             $code .= " array(";
             $tp_parts = array('"template" => $this->_get_template_sign()');
-            
             foreach ($token_props as $tp => $tpval) {
-                $tp_parts[]= "'".$tp."' => ". ($tp == 'id' ? $var_id : "'".addslashes($tpval)."'");
+                $token_prop_entry = "'".$tp."' => ";
+                if ($tp == 'id') {
+                    $token_prop_entry .= $var_id;
+                } elseif (preg_match("~^\`.+\`$~s", $tpval)) {
+                    $token_prop_entry .= trim($tpval, '`');
+                } else {
+                    $token_prop_entry .= "'".addslashes($tpval)."'";
+                }
+                $tp_parts[]= $token_prop_entry;
             }
             $code .= join(", ", $tp_parts);
             $code .= ")";
@@ -558,8 +565,73 @@ class fx_template_compiler {
         return $code;
     }
 
+    protected static function _get_area_local_templates($area_token) {
+        $templates = array();
+        $traverse = function(fx_template_token $node) use (&$templates, &$traverse) {
+            foreach ($node->get_children() as $child) {
+                if ($child->name === 'area') {
+                    continue;
+                }
+                if ($child->name === 'template') {
+                   $templates[]= $child->get_prop('id'); 
+                }
+                $traverse($child);
+            }
+        };
+        $traverse($area_token);
+        return $templates;
+    }
+    
     protected function _token_area_to_code($token) {
-        $token_props = var_export($token->get_all_props(),1);
+        //$token_props = var_export($token->get_all_props(),1);
+        $token_props_parts = array();
+        $local_templates = self::_get_area_local_templates($token);
+        foreach ($token->get_all_props() as $tp => $tpval) {
+            $c_part = "'".$tp."' => ";
+            if ($tp === 'suit') {
+                $suit = fx_template_suitable::parse_area_suit_prop($tpval);
+                foreach (array('force_block', 'force_template') as $force_prop) {
+                    if (!$suit[$force_prop]) {
+                        continue;
+                    }
+                    $local_key = array_keys($suit[$force_prop], 'local');
+                    if ($local_key) {
+                        $suit[$force_prop] = array_merge($suit[$force_prop], $local_templates);
+                        unset($suit[$local_key[0]]);
+                    }
+                    foreach ($suit[$force_prop] as $tpl_num => &$tpl_name) {
+                        $tpl_name = trim($tpl_name, '.');
+                        if (!strstr($tpl_name, '.')) {
+                            $tpl_name = $this->_template_set_name.'.'.$tpl_name;
+                        }
+                    }
+                }
+                $res_suit = '';
+                foreach ($suit as $p => $v) {
+                    if (is_bool($v) && !$v) {
+                        continue;
+                    }
+                    $res_suit .= $p;
+                    if (!is_bool($v)) {
+                        $res_suit .= ':';
+                        $res_suit .= is_array($v) ? join(',', $v) : $v;
+                    }
+                    $res_suit .= '; ';
+                }
+                
+                $c_part .= "'".$res_suit."'";
+            } else {
+                if (preg_match("~^`.+`$~s", $tpval)) {
+                    $c_part .= trim($tpval, '`');
+                } elseif (preg_match('~\$~', $tpval)) {
+                    $c_part .= $this->parse_expression($tpval);
+                } else {
+                    $c_part .= "'".addslashes($tpval)."'";
+                }
+            }
+            $token_props_parts []= $c_part;
+        }
+        $token_props = 'array('.join(", ", $token_props_parts).')';
         $res = '';
         $render_called = false;
         foreach ($token->get_children() as $child_num => $child) {
@@ -585,7 +657,7 @@ class fx_template_compiler {
             }
         }
         if (!$render_called) {
-            $res = $res .= '<?php echo $this->render_area('.$token_props.');?>'.$res;
+            $res = '<?php echo $this->render_area('.$token_props.');?>'.$res;
         }
         return $res;
     }
@@ -771,16 +843,18 @@ class fx_template_compiler {
         
         
         if (!$of) {
-            if ($this->_controller_type == 'layout') {
-                $of = 'layout.show';
-            } else {
+            if ($this->_controller_type != 'layout') {
                 $of = $this->_controller_type."_".$this->_controller_name.".".$token->get_prop('id');
+            } else {
+                $of = false;
             }
+        } elseif ($of === 'false') {
+            $of = false;
         } elseif (!$is_magic_of && !preg_match("~\.~", $of ) ) {
             $of = $this->_controller_type."_".$this->_controller_name.".".$of;
         }
         
-        if (!$is_magic_of && !preg_match("~^(layout|component|widget)_~", $of)) {
+        if ($of && !$is_magic_of && !preg_match("~^(layout|component_|widget_)~", $of)) {
             $of = 'component_'.$of;
         }
         
@@ -850,7 +924,7 @@ class fx_template_compiler {
             $tpl_var []= $tpl_props;
         }
         echo 'protected $_templates = '.var_export($tpl_var,1).";\n";
-        echo "}\n?>";
+        echo "}";
         $code = ob_get_clean();
         return $code;
     }

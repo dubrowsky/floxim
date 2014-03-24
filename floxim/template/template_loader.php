@@ -195,7 +195,7 @@ class fx_template_loader {
         try {
             $file_data = $T->transform_to_floxim();
         } catch (Exception $e) {
-            fx::debug($e, $file);
+            fx::debug('Floxim html parser error', $e->getMessage(), $file);
         }
 
         // remove fx-comments

@@ -11,7 +11,7 @@ register_shutdown_function(function() {
         for ($i = 0; $i < $ob_level; $i++) {
             $res .= ob_get_clean();
         }
-        echo $res;
+        echo fx::page()->post_process($res);
         fx::log('down', $res, debug_backtrace(), $_SERVER, $_POST); 
     }
     fx::profiler()->stop();

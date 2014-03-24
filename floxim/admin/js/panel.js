@@ -1,4 +1,4 @@
-(function() {
+(function($) {
     $fx.front_panel = {
         panel: null,
         second_row_height:37,
@@ -11,17 +11,19 @@
             // disable hilight & select, hide node panel
             $fx.front.disable_hilight();
             $fx.front.disable_select();
+            $fx.front.disable_node_panel();
+            /*
             var node_panel = $fx.front.get_node_panel();
             if (node_panel !== null) {
                 node_panel.hide();
             }
+            */
             
             this.prepare_form_data(data);
             this.panel = $('#fx_admin_extra_panel .fx_admin_panel_body');
             this.footer = $('#fx_admin_extra_panel .fx_admin_panel_footer');
             
             this.stop();
-            console.log('stopped and showng', data);
             this.footer
                     .html('')
                     .css({
@@ -106,29 +108,30 @@
             
             var height_delta = body_offset - parseInt($('body').css('margin-top'));
             this._is_moving = true;
-            p.animate({height: panel_height+'px'}, 300, function() {
-                $fx.front_panel._is_moving = false;
-            });
             var duration = 300;
+            p.animate(
+                {height: panel_height+'px'}, 
+                duration, 
+                function() {
+                    $fx.front_panel._is_moving = false;
+                }
+            );
+            
             $('body').animate(
                 {'margin-top':body_offset + 'px'},
                 duration
             );
-            $('.panel_overlay').animate({
+            $fx.front.get_front_overlay().animate({
                     top: (height_delta > 0 ? '+=' : '-=')+ Math.abs(height_delta)
                 }, {
                     duration:duration,
                     complete: callback
             });
-            /*
-            if (callback) {
-                setTimeout(callback, duration+10);
-            }*/
         },
         stop: function() {
             this.panel.parent().stop(true,false);
             $('body').stop(true,false);
-            $('.panel_overlay').stop(true,false);
+            $fx.front.get_front_overlay().stop(true,false);
         },
         load_form: function(form_options, params) {
             $fx.post(
@@ -146,11 +149,11 @@
                 p.hide();
                 footer.hide();
                 $fx.front.enable_select();
+                $fx.front.enable_node_panel();/*
                 var node_panel = $fx.front.get_node_panel();
                 if (node_panel !== null) {
                     node_panel.show();
-                }
-                $fx.front.recount_node_panel();
+                }*/
             });
         },
         prepare_form_data: function(data) {
@@ -162,4 +165,4 @@
             });
         }
     };
-})();
+})($fxj);

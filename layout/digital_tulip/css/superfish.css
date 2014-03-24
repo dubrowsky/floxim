@@ -1,0 +1,51 @@
+nav{ margin: 0px -15px 0 0; padding:2px 0 0 0; float:right;}
+.sf-menu ul {position:absolute;top:-999px; display:none;/* left offset of submenus need to match (see below) */}
+.sf-menu ul li {width:100%}
+.sf-menu li {float:left;position:relative}
+.sf-menu>li>a{position:relative;font-size: 13px; color:#12212f; text-transform:uppercase;}
+.sf-menu>li{ background:url(../images/nav_li.jpg) 0 7px no-repeat; padding:0 14px 0;}
+.sf-menu>li:first-child{ background:none;}
+.sf-menu>li>a:hover,.sf-menu>li.current>a,.sf-menu>li.sfHover>a{ color:#858138;}
+.sf-menu>li.sfHover>a>span.sf-sub-indicator{width:13px;height:12px; display:block; left:19px; top:27px; position:absolute; background:url(../images/nav_cut1.png) no-repeat;}
+.sf-menu li ul li.sfHover>a>span.sf-sub-indicator{width:12px;height:13px; display:block; right:-13px; bottom:7px; position:absolute; background:url(../images/nav_cut2.png) no-repeat;}
+/*================================>> 2 Level <<========================================*/
+.sf-menu>li>ul,.sf-menu>li.sfHover>ul{left:-24px;top:42px;width: 129px;padding:25px 0 23px 0;/* match top ul list item height */z-index:99; background:#12212f;}
+.sf-menu>li>ul>li{ text-align:center; background:url(../images/nav_sub_li.jpg) 50% 0 no-repeat; margin-top:-2px; padding-top:5px;}
+.sf-menu li ul li:first-child{ background:none;}
+.sf-menu li ul li a{font-size: 13px; line-height: 18px; color:#fff; text-align:center; text-transform:uppercase; font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;}
+
+/*================================>> 3 Level <<========================================*/
+.sf-menu li li ul{left:130px;top:-25px;width: 129px; background:#738195;	padding:25px 0 23px 0;/* match top ul list item height */z-index:99;}
+.sf-menu li li li{ text-align:center; background:url(../images/nav_sub_li2.png) 50% 0 no-repeat; margin-top:-2px; padding-top:5px;}
+.sf-menu li li a:hover, .sf-menu li li.sfHover>a{ color:#ebdf1b;}
+
+.sf-menu .menu-arrow{display:none;}
+@media only screen and (max-width: 995px) {
+	 .menu-arrow{display:none;}
+	 nav {	
+		margin:0 !important;}
+}
+
+@media only screen and (max-width: 767px) {
+	header h1, .sf-menu li, nav{float:none;clear: both;}
+	header h1{margin-bottom: 20px;}
+	.sf-menu{display:none !important; float: none;}
+
+	nav {
+		margin:0 !important;
+		float: none !important;
+		clear: both;}
+	#mm0{
+		font:12px/15px Arial, Helvetica, sans-serif;
+		color:#202020;
+		width:100%;
+		margin: 0 auto;
+		float: none;
+    	outline: none;
+		border:2px solid #fff;
+	}
+}
+
+@media only screen and (max-width: 479px) {
+	
+}

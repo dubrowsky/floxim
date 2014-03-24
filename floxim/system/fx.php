@@ -213,6 +213,9 @@ class fx {
                         case 'component':
                             $controller_instance->set_content_type($ctr_name);
                             break;
+                        case 'widget':
+                            $controller_instance->set_keyword($ctr_name);
+                            break;
                     }
                     return $controller_instance;
                 } catch (exception $e) {
@@ -236,6 +239,7 @@ class fx {
         try {
             return new $class_name($action, $data);
         } catch (Exception $e) {
+            fx::log($e);
             return new fx_template($action, $data);
         }
     }

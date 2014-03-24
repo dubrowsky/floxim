@@ -158,7 +158,7 @@ class fx_loader {
             if (file_exists($test_file.'.php')) {
                 return $test_file;
             } 
-            $std_file = $doc_root.'floxim/std/'.$ctr_type.'/'.$ctr_name.'/'.$ctr_name;
+            $std_file = fx::path('std', $ctr_type.'/'.$ctr_name.'/'.$ctr_name);
             if (file_exists($std_file.'.php')) {
                 return $std_file;
             }

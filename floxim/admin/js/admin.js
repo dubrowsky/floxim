@@ -1,3 +1,4 @@
+(function($) {
 fx_admin = function () {
     this.submenu = new fx_submenu();
     this.breadcrumb = new fx_breadcrumb();
@@ -82,3 +83,4 @@ fx_admin.prototype.set_action = function ( action ) {
 fx_admin.prototype.get_action = function () {
     return this.action;
 }
+})($fxj);

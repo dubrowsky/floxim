@@ -44,14 +44,13 @@ class fx_system_page {
     
     public function add_css_file($file) {
         if (preg_match("~\.less$~", $file)) {
-            //$doc_root = fx::config()->DOCUMENT_ROOT;
-            //$target_path = fx::config()->HTTP_FILES_PATH.'asset_cache/'.md5($file).'.css';
             
-            $target_path = fx::path()->http('files', 'asset_cache/'.md5($file).'.css');
+            $file_hash = trim(preg_replace("~[^a-z0-9_-]+~", '_', fx::path()->to_http($file)), '_');
+            
+            $target_path = fx::path()->http('files', 'asset_cache/'.$file_hash.'.css');
             $full_target_path = fx::path()->to_abs($target_path);
             $full_source_path = fx::path()->to_abs($file);
-            //$full_target_path = $doc_root.$target_path;
-            //$full_source_path = $doc_root.$file;
+            
 
             if (!file_exists($full_source_path)) {
                 return;

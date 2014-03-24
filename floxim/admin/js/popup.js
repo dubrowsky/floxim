@@ -1,4 +1,4 @@
-(function() {
+(function($) {
 $fx.popup = function(params) {
     var popup = this;
     this.params = params;
@@ -107,4 +107,4 @@ $fx.popup = function(params) {
     this.create();
     this.position();
 };
-})();
+})($fxj);

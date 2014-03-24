@@ -240,7 +240,7 @@ abstract class fx_essence implements ArrayAccess {
     }
 
     public function offsetExists($offset) {
-        if  (isset($this->data[$offset])) {
+        if  (array_key_exists($offset, $this->data)) {
             return true;
         }
         if (method_exists($this, 'get_'.$offset)) {

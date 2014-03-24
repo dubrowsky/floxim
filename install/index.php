@@ -817,6 +817,7 @@ function fx_get_config($MYSQL_HOST, $MYSQL_USER, $MYSQL_PASSWORD, $MYSQL_DB_NAME
     ?>
 ini_set('apc.cache_by_default', 0);
 define("FX_JQUERY_PATH", '/floxim/lib/js/jquery-1.9.1.min.js');
+define("FX_JQUERY_UI_PATH", '/floxim/lib/js/jquery-ui-1.10.3.custom.min.js');
 $db_config = array(
     'default' =>  array(
         'DB_DSN' => 'mysql:dbname=<?=$MYSQL_DB_NAME?>;host=<?=$MYSQL_HOST?>',

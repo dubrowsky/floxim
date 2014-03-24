@@ -1,15 +1,18 @@
 <?php
 class fx_template_suitable {
     
-    public function unsuit($layout_id) {
-        fx::data('infoblock_visual')->where('layout_id', $layout_id)->all()->apply(function($v) {
-            $v->delete();
-        });
+    public static function unsuit($site_id, $layout_id) {
+        fx::data('infoblock')
+            ->where('site_id', $site_id)
+            ->only_with('visuals')
+            ->where('visuals.layout_id', $layout_id)
+            ->all()
+            ->apply(function($ib) {
+                $ib['visuals'][0]->delete();
+            });
     }
     
     public function suit(fx_collection $infoblocks, $layout_id) {
-        //echo fen_debug('let it suit!', $infoblocks);
-        
         $layout = fx::data('layout', $layout_id);
         $layout_ib = null;
         $stub_ibs = new fx_collection();
@@ -25,7 +28,6 @@ class fx_template_suitable {
         }
         $layout_rate = array();
         $all_visual = fx::data('infoblock_visual')->get_for_infoblocks($stub_ibs, false);
-        //$infoblocks->attache_many($all_visual, 'infoblock_id', 'all_visual');
         foreach ($all_visual as $c_vis) {
             $c_layout_id = $c_vis['layout_id'];
             $infoblocks->
@@ -38,7 +40,7 @@ class fx_template_suitable {
         }
         
         $source_layout_id = $c_layout_id;
-        //fx::debug($layout_ib);
+        
         if ($layout_ib->get_visual()->get('is_stub')) {
             $this->_adjust_layout_visual($layout_ib, $layout_id, $source_layout_id);
         }
@@ -57,10 +59,6 @@ class fx_template_suitable {
             if ($old_area && isset($area_map[$old_area])) {
                 $ib_visual['area'] = $area_map[$old_area];
                 $ib_visual['priority'] = $ib->get_prop_inherited('visual.priority', $source_layout_id);
-                //$old_visual['priority'];
-            } else {
-                //fx::debug($c_areas);
-                //die();
             }
             $ib_controller = fx::controller(
                     $ib->get_prop_inherited('controller'),
@@ -97,8 +95,6 @@ class fx_template_suitable {
             }
             
             unset($ib_visual['is_stub']);
-            //fx::debug('ibv red', $ib_visual);
-            //die();
             $ib_visual->save();
         }
     }
@@ -117,16 +113,17 @@ class fx_template_suitable {
             $c_variant = null;
             foreach ($template_variants as $tplv) {
                 if ($tplv['of'] == 'layout.show') {
-                    $test_tpl_name = 'layout_'.$layout['keyword'].'.'.$tplv['id'];
-                    $test_layout_tpl = fx::template($test_tpl_name);
+                    //$test_tpl_name = 'layout_'.$layout['keyword'].'.'.$tplv['id'];
+                    $test_layout_tpl = fx::template($tplv['full_id']);
                     $tplv['real_areas'] = $test_layout_tpl->get_areas();
-                    if ( !($map = $this->_map_areas($old_areas, $tplv['real_areas'])) ) {
+                    $map = $this->_map_areas($old_areas, $tplv['real_areas']);
+                    if ( !$map ) {
                         continue;
                     }
                     if ($map['relevance'] > $c_relevance) {
                         $c_relevance = $map['relevance'];
                         $c_variant = $map + array(
-                            'full_template_id' => $test_tpl_name,
+                            'full_id' => $tplv['full_id'],
                             'areas' => $tplv['real_areas']
                         );
                     }
@@ -137,24 +134,31 @@ class fx_template_suitable {
         if (!$source_layout_id || !$c_variant) {
             foreach ($template_variants as $tplv) {
                 if ($tplv['of'] == 'layout.show') {
+                    /*
                     $layout_vis = $layout_ib->get_visual();
                     $layout_vis['template'] = $tplv['full_id'];
                     unset($layout_vis['is_stub']);
                     $layout_vis->save();
                     return;
+                     * 
+                     */
+                    $c_variant = $tplv;
+                    break;
                 }
             }
-            echo fx_debug($template_variants, $source_layout_id);
-            die();
+            if (!$c_variant) {
+                $c_variant = array('full_id' => 'layout_'.$layout['keyword'].'._layout_body');
+            }
         }
         
         $layout_vis = $layout_ib->get_visual();
-        $layout_vis['template'] = $c_variant['full_template_id'];
-        $layout_vis['areas'] = $c_variant['areas'];
-        $layout_vis['area_map'] = $c_variant['map'];
+        $layout_vis['template'] = $c_variant['full_id'];
+        if ($c_variant['areas']) {
+            $layout_vis['areas'] = $c_variant['areas'];
+            $layout_vis['area_map'] = $c_variant['map'];
+        }
         unset($layout_vis['is_stub']);
         $layout_vis->save();
-        //echo "<pre>" . htmlspecialchars(print_r($c_variant, 1)) . "</pre>";
     }
     
     /*
@@ -274,6 +278,41 @@ class fx_template_suitable {
         }
         if (preg_match('~high|low~', $block['size'], $height)) {
             $res['height'] = $height[0];
+        }
+        return $res;
+    }
+    
+    public static function parse_area_suit_prop($suit) {
+        $res = array();
+        $suit = explode(";", $suit);
+        foreach ($suit as $v) {
+            $v = trim($v);
+            if (empty($v)) {
+                continue;
+            }
+            $v = explode(':', $v);
+            if (count($v) == 1) {
+                $res[trim($v[0])] = true;
+            } else {
+                $p = trim($v[0]);
+                if (empty($p)) {
+                    continue;
+                }
+                $res[$p] = array();
+                foreach (explode(",", $v[1]) as $rv) {
+                    $res[$p][]= trim($rv);
+                }
+                if (count($res[$p]) == 1) {
+                    $res[$p] = $res[$p][0];
+                }
+            }
+        }
+        foreach (array('force_block', 'force_template') as $force_prop) {
+            if (!isset($res[$force_prop])) {
+                $res[$force_prop] = false;
+            } elseif (!is_array($res[$force_prop])) {
+                $res[$force_prop] = array($res[$force_prop]);
+            }
         }
         return $res;
     }

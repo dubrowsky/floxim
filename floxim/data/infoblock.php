@@ -1,6 +1,16 @@
 <?php
 
 class fx_data_infoblock extends fx_data {
+    
+    public function relations() {
+        return array(
+            'visuals' => array(
+                self::HAS_MANY,
+                'infoblock_visual',
+                'infoblock_id'
+            )
+        );
+    }
 
     public function __construct() {
         parent::__construct();

@@ -213,7 +213,12 @@ class fx_controller_component extends fx_controller {
             'type' => 'link',
             'content_type' => 'infoblock',
             'conditions' => array(
-                'controller' => 'component_'.$com['keyword'],
+                'controller' => array(
+                    $com->get_all_children()->get_values(function($ch) {
+                        return 'component_'.$ch['keyword'];
+                    }),
+                    'IN'
+                ),//'component_'.$com['keyword'],
                 'site_id' => fx::env('site_id'),
                 'action' => array( array('list_infoblock', 'list_selected'), 'IN')
             )

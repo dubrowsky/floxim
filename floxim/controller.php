@@ -131,7 +131,6 @@ class fx_controller {
         } elseif (is_array($layout_name)) {
             $layout_names = $layout_name;
         }
-        
         // get acceptable controller
         $controller_variants = $this->_get_controller_variants();
         $template_variants = array();
@@ -162,8 +161,7 @@ class fx_controller {
                     continue;
                 }
                 list($tpl_of_controller, $tpl_of_action) = $of_parts;
-                if (preg_match('~_layout$~', $tpl_of_controller))
-                    $tpl_of_controller = 'layout';
+                
                 if ( !in_array($tpl_of_controller, $controller_variants)) {
                     continue;
                 }

@@ -133,4 +133,12 @@ class fx_component extends fx_essence {
             $infoblock->delete();
         }
     }
+    
+    public function get_all_children() {
+        $res = fx::collection()->concat($this['children']);
+        foreach ($res as $child) {
+            $res->concat($child->get_all_children());
+        }
+        return $res;
+    }
 }

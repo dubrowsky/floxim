@@ -1,0 +1,269 @@
+@import "../css/reset.css";@import "../css/skeleton.css";@import "../css/superfish.css";@import "../css/superfish.css";@import "../css/flexslider.css";@import "../css/carousel.css";@import "../css/tabs.css";@import"ui.totop.css";@import url(http://fonts.googleapis.com/css?family=Bitter);
+
+.nav_area {
+    float:right;
+}
+
+article,aside,audio,canvas,command,datalist,details,embed,figcaption,figure,footer,header,hgroup,keygen,meter,nav,output,progress,section,source,video{display:block}mark,rp,rt,ruby,summary,time{display:inline}
+/* Global properties ======================================================== */
+html {width:100%}
+
+body {font-family:"Trebuchet MS", Arial, Helvetica, sans-serif; font-size:14px; line-height:24px; color:#62676d; min-width:960px; background:#12212f; -webkit-text-size-adjust: none;}
+
+/*********************************fonts*************************************/
+.reg {text-transform:uppercase}
+.f_left {float:left}
+.f_right {float:right}
+.align_right {text-align:right}
+.align_center {text-align:center}
+
+.it{font-style:italic}
+.let{letter-spacing:-1px}
+/*================================>> P <<========================================*/
+p {margin-bottom:24px}
+.p2{ margin-bottom:17px;}
+
+/*================================>> img <<========================================*/
+img{}
+/*********************************CLASSES**********************************/
+.m_bottom_zero{ margin-bottom:0 !important;}
+.m_left_zero{ margin-left:0 !important;}
+.p_bottom_zero{ padding-bottom:0 !important;}
+.p_left_zero{ padding-left:0 !important;}
+
+.clear {clear:both;width:100%;line-height:0;font-size:0;}
+.wrapper {width:100%;overflow:hidden}
+.extra_wrapper{ overfbackground-image:url('../images/1page_img2.jpg');
+low:hidden;}
+.container{width:100%}
+.extra_last, .last{ margin-bottom:0 !important; padding-bottom:0 !important;}
+.extra_last{ border:none !important; background:none !important;}
+.bg_none{ background:none !important;}
+.bgi_none{background-image:none !important;}
+
+/*==================================== Links ======================================================== */
+a {color:#62676d;outline:none; text-decoration:none; cursor:pointer;}
+a:hover{ color:#ebdf1b; text-decoration:none;}
+
+.button{ display:inline-block; padding:9px 16px 11px 19px; border-radius:10px; margin: 24px 0 0 0; font-size: 15px; line-height: 19px; color:#fff; background: url(../images/button.jpg) repeat-x #101e2b;}
+.button:hover{ background:#f5da39; color:#343434;}
+/*================================>> hovers <<========================================*/
+.ui-tabs-nav li, .downloads{-webkit-transition: all 0.3s ease;-moz-transition: all 0.3s ease;-o-transition: all 0.3s ease;transition: all 0.3s ease;}
+
+/*********************************Displays*************************************/
+.block{ display:block;}
+.inline-block{ display:inline-block;}
+
+/*********************************header*************************************/
+
+header { margin: 0 10px; padding:92px 0 0 0;}
+header h1{width:261px; float:left;}
+header h1 a {display:block;width:261px;height:47px;background:url(../images/logo.png) 0 0 no-repeat; text-decoration:none; text-indent:-9999px;}
+
+/*********************************content*************************************/
+#content {padding:68px 0px 70px 0px;}
+.cont_pad{padding:77px 0 70px 0 !important;}
+
+
+/*================================>> H <<========================================*/
+h2,h3,h4{ font-weight:normal;}
+
+h2{font-size: 17px; line-height: 20px; color:#12212f; text-transform:uppercase; text-align:center;position: relative;}
+h2 div{position: absolute;height:4px;top:8px;background:url(../images/h2_stripe.jpg) 0 0px repeat-x;}
+
+h2 div.stripe_before{left:0;}
+h2 div.stripe_after{left: auto; right:0;}
+
+h2 span{ display:inline-block}
+h2.ind{ margin-bottom:42px;}
+h2.ind1{ margin-bottom:39px;}
+h2.ind2{ margin-bottom:33px;}
+/*================================>> GOOGLE FONTS  <<========================================*/
+footer .title, .ui-tabs .ui-tabs-nav li a, h2, .bitter, .banner .title, .offer .title, .button{font-family: 'Bitter', serif;}
+
+/*================================>> Global Blocks <<========================================*/
+.block1{ background:url(../images/block1.jpg) 50% 0 no-repeat; max-height:606px; padding-bottom:30px;}
+.block2{ background:url(../images/block2.jpg) 50% 0 repeat-x #fff; min-height:500px;}
+.block3{}
+
+/*================================>> hovers <<========================================*/
+#content .button, footer a, .sf-menu a, .sf-menu li{-webkit-transition: all 500ms cubic-bezier(0.250, 0.460, 0.450, 0.940); 
+   -moz-transition: all 500ms cubic-bezier(0.250, 0.460, 0.450, 0.940); 
+    -ms-transition: all 500ms cubic-bezier(0.250, 0.460, 0.450, 0.940); 
+     -o-transition: all 500ms cubic-bezier(0.250, 0.460, 0.450, 0.940); 
+        transition: all 500ms cubic-bezier(0.250, 0.460, 0.450, 0.940); /* easeOutQuad */}
+/*********************************page_1*************************************/
+.extra_container{ overflow:hidden;}
+.extra_container>figure{ float:left;}
+.extra_container>div{ float:right;}
+
+.hello_box{font-size: 33px; line-height: 45px; color:#12212f; text-align:center; padding:0 20px 0; margin-bottom:58px}
+
+.offers_box{ margin-bottom:65px;}
+.offer{ text-align:center;}
+.offer img{ margin-bottom:31px;}
+.offer .title{font-size: 25px; line-height: 29px; color:#12212f; margin-bottom:16px; text-transform:uppercase;}
+
+.testimonial_box{ position:relative; position:relative; padding:34px 0px 35px; }
+.testimonial{ padding:0 0px 0; text-align:center;}
+
+
+.link1{ color:#12212f; font-weight:bold;}
+.link1:hover{ color:#285782;}
+
+#tabs{ margin-bottom:101px;}
+
+.newsletter{ background:url(../images/news_letter.png) 417px 14px no-repeat #f4f5f7; border-radius:10px;}
+.newsletter .f_left{width:320px; padding:26px 0 32px 38px; line-height:19px;}
+.newsletter .f_right{width:381px; padding:39px 0 0 0;}
+#newsletter{ overflow:hidden;}
+#newsletter a{ display:block; float:left; margin: 0 0 0 13px;}
+#newsletter input{border-radius:10px; float:left; padding:7px 15px 9px; width:211px; margin: 0 0 0 0; background:#fff; border: 1px solid #c1c6cd; color:#bbbfc7; font-family:"Trebuchet MS", Arial, Helvetica, sans-serif; font-size:15px;}
+
+/*********************************page_2*************************************/
+.project_box{padding:19px 20px 9px; background:#e1e3e7; margin: 0 1px 0 0;}
+.project_box img{ margin-bottom:14px;}
+.project_box a{ color:#000; text-decoration:underline}
+.project_box a:hover{ text-decoration:none;}
+
+.title1{font-size: 14px; color:#000000; font-weight:bold; letter-spacing:1px;}
+
+.m_bot1{ margin-bottom:20px;}
+/*********************************page_3*************************************/
+.offers_box1{padding:3px 0 66px 0;}
+
+.m_services li{ overflow:hidden; padding:17px 0 16px 15px; margin-bottom:5px; background:#e1e3e7; line-height:18px;}
+.m_services li figure{ float:left; margin: 0 10px 0 0; padding:6px 0 0 5px;}
+.m_services li div{ float:left;width:230px;}
+
+.black{ color:#000000; letter-spacing:1px;}
+
+.link2{ color:#000;}
+.link2:hover{ color:#FFFFFF;}
+
+.s_overview>div{width:180px; margin-right:13px;}
+.s_overview>figure{padding:10px 0 0 0;}
+
+.m_left1{ margin-left:15px;}
+
+.s_overview1>figure{ margin-left:17px}
+.s_overview1>div{ margin-right:0;width:177px;}
+/*********************************page_4*************************************/
+.top_downloads li{ padding-bottom:23px; margin-bottom:23px; border-bottom:1px solid #e8eaed;}
+.top_downloads li a.marker{ background:url(../images/down_marker.png) no-repeat;width:16px;height:16px; display:inline-block; margin: 6px 0 0 5px;}
+.top_downloads li a.marker:hover{ background-position: 0 bottom;}
+
+.downloads{ overflow:hidden; border-radius:10px; background:#f4f5f7; padding:9px 0 9px 20px; line-height:18px; margin-bottom:4px;}
+.downloads:hover{ background:#343434; color:#adadad;}
+.downloads>div{ float:left;}
+.downloads .text{padding:0 0 0 0;width:400px;}
+.downloads .text a.marker{width:16px;height:16px; background:url(../images/down_marker1.png) no-repeat; display:inline-block; margin: 2px 0 0 9px;}
+.downloads .text a.marker:hover{background-position:0 -16px;}
+.downloads .weight strong, .downloads .text strong{ color:#000000;}
+.downloads .weight{ padding:11px 0 0;width:80px; text-align:center; margin-right:18px;}
+.downloads:hover strong{ color:#FFFFFF;}
+.downloads .button{width:95px; text-align:center; padding-left:0; padding-right:0;margin: -1px 0 0 0;}
+/*********************************page_5*************************************/
+
+/* Contact form */
+#contact-form {padding:0px 0 0 0;}
+#contact-form .success {width:246px; margin-bottom:10px;}
+#contact-form textarea, #contact-form input {margin:0;font-size:14px; border:1px solid #e1e1e1; color:#62676d; border-radius:8px; padding:9px 15px;outline:none; position:relative; font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;background:none;}
+#contact-form input {width:338px; float:left;}
+#contact-form textarea {overflow:auto; width:588px; height:230px;resize:vertical; float:left; margin: 0 0 0 0;}	
+#contact-form label {display:block; min-height:45px; overflow:hidden;}
+#contact-form label.message { display:block; padding-bottom:0; }
+#contact-form .button {margin-left:17px;}	
+#contact-form .error, #contact-form .empty, #contact-form .success {display:none;}	
+#contact-form .error, #contact-form .empty {text-align:left; color:red; font-size:11px; float:left; padding-top:7px; line-height:14px;}
+#contact-form .buttons2 {overflow:hidden;text-align:right; position:relative; clear:both; padding-top:30px;}
+#contact-form .buttons2 a {
+	cursor:pointer;
+	margin-top:0;
+	text-align:center;
+}
+#contact-form span{ display:block; margin: 0px 0 0 5px;}
+
+.map_wrapper{overflow:hidden;margin-bottom:24px; display:block;}
+#map_canvas {
+    width:100%;
+	height:306px;
+}
+.adress{}
+.adress span{ display:inline-block; width:82px;}
+.adress dt{}
+.adress a, .demolink{ color:#000000;}
+.adress a:hover, .demolink{ text-decoration:underline;}
+.demolink:hover{ text-decoration:none; color:#000;}
+/****************************footer************************/
+footer{padding:57px 0px 60px 0;background:none;}
+footer , footer a{ color:#acb2b6;}
+footer .title{font-size: 24px; text-transform:uppercase; line-height: 29px; color:#fff; margin-bottom:22px;}
+
+footer .social{padding:7px 0 1px;}
+footer .social li{ overflow:hidden; margin-bottom:11px;}
+footer .social li a{ display:inline-block; margin-top:2px;}
+footer .social li a:hover{ color:#fff;}
+footer .social li figure{ float:left; margin: -2px 16px 0 0;}
+footer .social .cont_item figure{ padding-top:5px !important;}
+
+
+.privacy a, .privacy{ color:#FFFFFF;}
+.privacy a:hover{ color:#f5d12f;}
+.privacy span{ color:#f5d12f;}
+
+/*==================================RESPONSIVE LAYOUTS===============================================*/
+@media only screen and (max-width: 995px) {
+ body{min-width:768px;}
+ header{padding-top:30px;}
+ .flexslider{padding-top:20px;}
+ #toTop{display:none !important;}
+ .cont_pad{padding:37px 0 30px 0 !important;}
+.hello_box{font-size: 27px; line-height: 32px;margin-bottom:30px;}
+.offers_box, #tabs{margin-bottom:40px;}
+.newsletter{background-image:none !important;}
+footer .title{font-size: 22px; line-height: 26px;}
+footer{font-size:13px;padding: 35px 0 38px;}
+.block1{max-height: inherit;}
+.s_overview>div, .s_overview>figure{float: none;}
+.m_services li div{width:160px;padding-right:10px;float:right;}
+.downloads .text{width:340px;margin-right:10px;}
+.downloads .weight{padding-top:0px;}
+.downloads .button{margin-top:15px;}
+#content{padding: 40px 0 35px;}
+#contact-form textarea{width:460px;}
+#contact-form input{width:280px;}
+}
+
+@media only screen and (max-width: 767px) {
+ body{min-width:420px;}
+ #tabs{height: auto;}
+.newsletter{padding-bottom:26px;}
+.newsletter div{float: none;}
+.newsletter .f_left{width:320px; padding:26px 0 20px 38px; line-height:19px;}
+.newsletter .f_right{width:381px; padding:0px 0 0 38px;}
+.project_box img{width:100%;}
+.m_services li div{width:95%;float: none;}
+.offers_box1 {padding: 3px 0 35px;}
+.downloads .weight{padding-top:7px;}
+.downloads .button{margin-top:7px;}
+.downloads .text{width:275px;}
+#contact-form input, #contact-form textarea{width:385px;}
+header, nav, .flex_box{margin-left:0;margin-right:0;}
+}
+
+@media only screen and (max-width: 479px) {
+ body{min-width:300px;}
+ .ui-widget-content img{width:100%;}
+ #newsletter input, #newsletter a{float:none;}
+ #newsletter a{margin:12px 0 0;width:60px;}
+ .newsletter .f_right{padding: 0 0 0 30px;}
+ .newsletter .f_left{width: auto;padding:26px 20px 20px 30px; line-height:19px;}
+ .offers_box, #tabs{margin-bottom:30px;}
+ .s_overview>figure{float: left; margin-left:0;}
+ .s_overview>div{float: right;width:190px;margin-right:0;}
+ .downloads >div{float: none; width:100%;}
+ .downloads{margin-bottom:15px;}
+ .m_services li figure{margin-right:5px;}
+ #contact-form input, #contact-form textarea{width:265px;}
+}

@@ -16,4 +16,3 @@ class fx_data_infoblock_visual extends fx_data {
         return $this->all();
     }
 }
-?>

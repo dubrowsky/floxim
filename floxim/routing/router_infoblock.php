@@ -11,7 +11,15 @@ class fx_router_infoblock extends fx_router {
                 parse_str($c_url['query'], $_GET);
             }
         }
-        fx::env('page', $ib_info[2]);
+        $page_id = $ib_info[2];
+        fx::env('page', $page_id);
+        
+        $page_infoblocks = fx::router('front')->get_page_infoblocks(
+            $page_id, 
+            fx::env('layout')
+        );
+        fx::page()->set_infoblocks($page_infoblocks);
+        
         fx::http()->status('200');
         $infoblock_overs = null;
         if (fx::is_admin() && isset($_POST['override_infoblock'])) {

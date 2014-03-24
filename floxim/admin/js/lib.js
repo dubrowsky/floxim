@@ -1,9 +1,3 @@
-
-function fx_call_user_func (fn, options) {
-    var oFunction = new Function("options" , "return "+fn+"(options);");
-    return oFunction(options);  
-}
-
 (function($)
 {
     $.fn.generate_selector = function(parent) {
@@ -26,7 +20,7 @@ function fx_call_user_func (fn, options) {
     $.fn.descendant_or_self = function(selector) {
         return this.find(selector).add( this.filter(selector));
     };
-    jQuery.fn.putCursorAtEnd = function() {
+    $.fn.putCursorAtEnd = function() {
         return this.each(function() {
             $(this).focus()
             // If this function exists...
@@ -47,8 +41,12 @@ function fx_call_user_func (fn, options) {
             this.scrollTop = 999999;
         });
     };
-})(jQuery);
+})($fxj);
 
+function fx_call_user_func (fn, options) {
+    var oFunction = new Function("options" , "return "+fn+"(options);");
+    return oFunction(options);  
+}
 
 function fx_object_length ( obj ) {
 	if (obj instanceof Array) {
@@ -69,14 +67,6 @@ function fx_object_get_first_key ( obj ) {
     } 
     return key
 }
-/*
-Object.prototype.fx_length = function( obj ) { 
-    var count = 0; 
-    for(var k in obj)  { 
-        count++;
-    } 
-    return count; 
-};*/
 
 Array.prototype.unique = function( b ) {
     var a = [], i, l = this.length;
@@ -166,5 +156,3 @@ function array_intersect (arr1) {
 
     return retArr;
 }
-
-

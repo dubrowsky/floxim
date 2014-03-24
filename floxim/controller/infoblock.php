@@ -138,6 +138,9 @@ class fx_controller_infoblock extends fx_controller {
         if ($wrapper) {
             $tpl_wrap = fx::template($wrapper);
             $wrap_params = $infoblock->get_prop_inherited('visual.wrapper_visual');
+            if (isset($params['infoblock_area_position'])) {
+                $wrap_params['infoblock_area_position'] = $params['infoblock_area_position'];
+            }
             if (is_array($wrap_params)) {
                 foreach ( $wrap_params as $wrap_param_key => $wrap_param_val) {
                     $tpl_wrap->set_var($wrap_param_key, $wrap_param_val);
@@ -202,7 +205,7 @@ class fx_controller_infoblock extends fx_controller {
                 }, 
                 $html_result
             );
-        } elseif ($is_subroot) {
+        } elseif ($is_subroot && preg_match("~^(\s*?)(<[^>]+?>)~", $html_result)) {
             $html_result = preg_replace_callback(
                 "~^(\s*?)(<[^>]+?>)~", 
                 function($matches) use ($meta) {

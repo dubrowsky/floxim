@@ -157,6 +157,7 @@ class JSTX {
 	}
 	
 	public function parseDir($dir = '.', $regexp = false) {
+            echo " (function(\$) {\n";
             if (!$regexp) {
                 $regexp = $this->opt('tpl_file_regexp');
             }
@@ -171,6 +172,7 @@ class JSTX {
 
                 closedir($handle);
             }
+            echo "\n})(\$fxj);";
 	}
 }
 

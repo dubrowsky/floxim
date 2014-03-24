@@ -8,6 +8,11 @@ class fx_data_component extends fx_data {
                 self::HAS_MANY,
                 'field',
                 'component_id'
+            ),
+            'children' => array(
+                self::HAS_MANY,
+                'component',
+                'parent_id'
             )
         );
     }

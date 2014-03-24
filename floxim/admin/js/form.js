@@ -93,17 +93,14 @@ fx_form = {
         $form.trigger('fx_form_submit');
         
         $form.ajaxSubmit(function ( data ) {
-            console.log('ajs');
             try {
                 data = $.parseJSON( data );
             }
             catch(e) {
                 status_block.show();
                 status_block.writeError(data);
-                console.log('err');
                 return false;
             }
-            console.log('trig ffs');
             $form.trigger('fx_form_sent', data);
             
             if ( data.status === 'ok') {
@@ -118,7 +115,11 @@ fx_form = {
                     $('[name="'+data.fields[i]+'"]').addClass("ui-state-error");
                 }
             }
-            $(window).hashchange();
+            if (data.reload) {
+                $fx.reload(data.reload);
+            } else {
+                $(window).hashchange();
+            }
         });
         return false;
     },
@@ -391,4 +392,4 @@ window.fx_form = window.$fx_form = fx_form;
             }, 2000);
         });
     };
-})(jQuery);
+})($fxj);

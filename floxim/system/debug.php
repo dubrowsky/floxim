@@ -247,6 +247,7 @@ class fx_debug {
         if (!$this->head_files_added) {
             fx::page()->add_css_file(fx::path('floxim', 'admin/skins/default/css/debug.less'));
             fx::page()->add_js_file(FX_JQUERY_PATH);
+            fx::page()->add_js_file('/floxim/admin/js/fxj.js');
             fx::page()->add_js_file(fx::path('floxim', 'admin/js/debug.js'));
         }
     }
@@ -347,9 +348,10 @@ class fx_debug {
 	$level = 0;
 	foreach ($strings as $string_num => $s) {
             if (strlen($s) > 0) {
+                $init_line = $s;
                 $s = trim($s);
                 $is_index = preg_match("~^\s*\[.+\]~", $s);
-                $s = preg_replace("~^\s+~", '', $s);
+                
                 $s = preg_replace("~\sObject$~", '', $s);
                 $s = preg_replace("~^\[(.+?)\]\s=&gt;\s?~", '<b class="pn">$1</b><span class="vs">&nbsp;:&nbsp;</span>', $s);
                 $s = preg_replace('~>(.+?):(protected|private)</b>~', '><span class="$2">*</span> $1</b>', $s);
@@ -377,7 +379,9 @@ class fx_debug {
                         $last_string = preg_replace('~</span></div>$~', ' [RECURSION]</span></div>', $last_string);
                         $c_string = '';
                     } else {
-                        $c_string = '<div class="fx_debug_line"><span>'.$s.'</span></div>';
+                        $c_string = '<div class="fx_debug_line"><span>'
+                                    .($is_index || $string_num == 0 ? $s : $init_line)
+                                    .'</span></div>';
                         if (isset($collapsers[$level]) && $is_index) {
                             $collapsers[$level]['length']++;
                         }

@@ -83,9 +83,11 @@ class fx_controller_admin extends fx_controller {
         fx::profiler()->block('adding js');
         $js_files = array(
             FX_JQUERY_PATH,
+            '/floxim/admin/js/fxj.js',
+            '/floxim/admin/js/fx.js',
             '/floxim/lib/js/fx-lang.js',
             '/floxim_files/js_dictionaries/js-dictionary-'.fx::config()->ADMIN_LANG.'.js',
-            '/floxim/lib/js/jquery-ui-1.10.3.custom.min.js',
+            FX_JQUERY_UI_PATH,
             '/floxim/lib/js/jquery.nestedSortable.js',
             '/floxim/lib/js/jquery.ba-hashchange.min.js',
             '/floxim/lib/js/jquery.json-2.3.js',
@@ -93,7 +95,6 @@ class fx_controller_admin extends fx_controller {
             '/floxim/admin/js-templates/jstx.js',
             'http://'.getenv("HTTP_HOST").'/floxim/admin/js-templates/compile.php',
             '/floxim/admin/js/lib.js',
-            '/floxim/admin/js/adminpanel.js',
             '/floxim/admin/js/front.js',
             '/floxim/admin/js/buttons.js',                                     
             '/floxim/admin/js/form.js',
@@ -104,19 +105,22 @@ class fx_controller_admin extends fx_controller {
             '/floxim/admin/js/panel.js',
             '/floxim/admin/js/popup.js',
             '/floxim/admin/js/admin.js',
+            '/floxim/admin/js/nav.js',
+            /*
             '/floxim/admin/js/menu/main.js',
             '/floxim/admin/js/menu/mode.js',
             '/floxim/admin/js/menu/more.js',
             '/floxim/admin/js/menu/submenu.js',
             '/floxim/admin/js/menu/additional.js',
             '/floxim/admin/js/menu/breadcrumb.js',
+             */
             '/floxim/lib/editors/redactor/redactor.js',
             '/floxim/lib/editors/redactor/fontcolor.js',
             '/floxim/lib/js/jquery.form.js',
             '/floxim/lib/js/jquery.cookie.js',
             '/floxim/lib/js/jquery.ba-resize.min.js',
-            '/floxim/lib/js/jquery.scrollTo.js',
-            '/floxim/admin/js/infoblock.js' // infoblock form overrides
+            '/floxim/lib/js/jquery.scrollTo.js'//,
+            //'/floxim/admin/js/infoblock.js' // infoblock form overrides
         );
         $page = fx::page();
         
@@ -128,7 +132,7 @@ class fx_controller_admin extends fx_controller {
                   fx::config()->FLOXIM_SITE_HOST.
                   '/getfloxim/check_updates.js?v='.
                   fx::config()->FX_VERSION;
-        
+        /*
         $page->add_js_text("
            (function(){
             var fxupdate = document.createElement('script');
@@ -138,16 +142,18 @@ class fx_controller_admin extends fx_controller {
             (document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild(fxupdate);
           })(); 
         ");
+         * 
+         */
         fx::profiler()->stop()->block('add css');
         $page->add_css_bundle(array(
             '/floxim/lib/editors/redactor/redactor.css',
-            '/floxim/admin/skins/default/jquery-ui/main.css',
         ));
         $page->add_css_bundle(array(
-            '/floxim/admin/skins/default/css/main.css',
+            '/floxim/admin/skins/default/css/main.less',
             '/floxim/admin/skins/default/css/forms.less',
+            '/floxim/admin/skins/default/css/front.less',
             '/floxim/admin/skins/default/css/debug.less',
-        ));
+        ), array('name' => 'admin_less'));
         fx::profiler()->stop();
     }
     
@@ -211,7 +217,7 @@ class fx_controller_admin extends fx_controller {
 
         if (fx::is_admin()) {
             $js_config = new fx_admin_configjs();
-            $page->add_js_text("fx_adminpanel.init(".$js_config->get_config().");");
+            $page->add_js_text("\$fx.init(".$js_config->get_config().");");
         }
         
         $html = "<!DOCTYPE html>\n".'<html class="fx_overlay fx_admin_html"><head><title>Floxim</title></head><body> '.$auth_form.'</body></html>';

@@ -1,3 +1,4 @@
+(function(jQuery) {
 jQuery.extend({
 
     createUploadIframe: function(id, uri)
@@ -203,3 +204,5 @@ jQuery.extend({
         return data;
     }
 });
+
+})(jQuery);

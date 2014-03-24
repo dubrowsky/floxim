@@ -61,6 +61,9 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                 if (count($act_templates) == 0) {
                     continue;
                 }
+                if (!isset($action_info['name'])) {
+                    $action_info['name'] = $c['name'];
+                }
                 
                 $action_name = $action_info['name'];
                 switch ($controller_type) {
@@ -68,12 +71,12 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                         $action_type = 'widget';
                         break;
                     case 'component':
-                        if (!preg_match("~^listing~", $action_code)) {
-                            $action_type = 'widget';
-                        } elseif (preg_match('~mirror~', $action_code)) {
+                        if (preg_match('~^list_(selected|filter)~', $action_code)) {
                             $action_type = 'mirror';
-                        } else {
+                        } elseif (preg_match('~^list_infoblock~', $action_code)) {
                             $action_type = 'content';
+                        } else {
+                            $action_type = 'widget';
                         }
                         break;
                 }
@@ -596,8 +599,10 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                 'type' => 'hidden'
             )
         );
-
-        $force_block = preg_match("~force_block~i", $area_meta['suit']);
+        $area_suit = fx_template_suitable::parse_area_suit_prop($area_meta['suit']);
+        
+        $force_block = $area_suit['force_block'];
+        //preg_match("~force_block~i", $area_meta['suit']);
         
         $wrappers = array();
         $c_wrapper = '';
@@ -618,7 +623,8 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                 if ($tplv['suit'] == 'local' && $area_meta['id'] != $tplv['area']) {
                     continue;
                 }
-                if (preg_match("~local~", $area_meta['suit']) && $tplv['area'] != $area_meta['id']) {
+                //if (preg_match("~local~", $area_meta['suit']) && $tplv['area'] != $area_meta['id']) {
+                if ($force_block && !in_array($tplv['full_id'], $force_block)) {
                     continue;
                 }
                     
@@ -637,7 +643,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         //fx::log('found tmps', $tmps, $i2l['template']);
         if ( !empty($tmps) ) {
             foreach ( $tmps as $template ) {
-                $templates[$template['full_id']] = $template['name'];
+                $templates[] = array($template['full_id'], $template['name']);
             }
         }
 

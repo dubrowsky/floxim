@@ -1,3 +1,4 @@
+(function($) {
 fx_buttons = function ( source ) {
     this.source = source;
     this.container = $('#fx_admin_buttons');
@@ -290,3 +291,4 @@ fx_buttons.prototype.update_available_buttons = function () {
     console.log('sab', btn);
     $fx.buttons.set_active_buttons(btn);
 };
+})($fxj);

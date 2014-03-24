@@ -1,4 +1,6 @@
-function fx_livesearch(node) {
+(function($) {
+     
+window.fx_livesearch = function (node) {
     this.n = $(node);
     var n = this.n;
     n.data('livesearch', this);
@@ -347,9 +349,9 @@ function fx_livesearch(node) {
     };
     
     this.Init();
-}
+};
 
-function fx_suggest (params) {
+window.fx_suggest = function(params) {
     this.input = params.input;
     this.url = params.url;
     this.onSelect = params.onSelect;
@@ -652,7 +654,9 @@ function fx_suggest (params) {
             var scroll_to_set = box_scroll + (item_bottom - visible_bottom);
             this.box.scrollTop(scroll_to_set);
         } 
-    }
+    };
     
     this.Init();
-}
+};
+
+})($fxj);

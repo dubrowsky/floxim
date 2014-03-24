@@ -1,23 +1,22 @@
 (function($){
-    $.fn.edit_in_place = function(command) {
-        var eip = this.data('edit_in_place');
-        if (!eip) {
-            eip = new fx_edit_in_place(this);
-            this.data('edit_in_place', eip);
-            this.addClass('fx_edit_in_place');
-        }
-        if (!command) {
-            return eip;
-        }
-        switch(command) {
-            case 'destroy':
-                eip.stop();
-                this.data('edit_in_place', null);
-                this.removeClass('fx_edit_in_place');
-                break;
-        }
-    };
-})(jQuery);
+$.fn.edit_in_place = function(command) {
+    var eip = this.data('edit_in_place');
+    if (!eip) {
+        eip = new fx_edit_in_place(this);
+        this.data('edit_in_place', eip);
+        this.addClass('fx_edit_in_place');
+    }
+    if (!command) {
+        return eip;
+    }
+    switch(command) {
+        case 'destroy':
+            eip.stop();
+            this.data('edit_in_place', null);
+            this.removeClass('fx_edit_in_place');
+            break;
+    }
+};
 
 function fx_edit_in_place( node ) { 
     this.node = node;
@@ -71,7 +70,7 @@ fx_edit_in_place.prototype.handle_keydown = function(e) {
         $(this.node).closest('a').blur();
         return false;
     }
-}
+};
 
 fx_edit_in_place.prototype.start = function(meta) {
 	var edit_in_place = this;
@@ -98,6 +97,7 @@ fx_edit_in_place.prototype.start = function(meta) {
                 this.add_panel_field(meta);
                 break;
         case 'select':
+            console.log('add sel itm', meta);
             this.add_panel_field(meta);
             break;
         case 'bool':
@@ -122,9 +122,11 @@ fx_edit_in_place.prototype.start = function(meta) {
                 if (!((meta.type === 'text' && meta.html) || meta.type === 'html')) {
                     this.node.data('fx_saved_value', this.node.html());
                 }
-                this.node
-                    .attr('contenteditable', 'true')
-                    .focus();
+                setTimeout(function() {
+                    //console.log('ololco');
+                    edit_in_place.node.attr('contenteditable', 'true').focus();
+                }, 50);
+                
             }
             break;
 	}
@@ -317,3 +319,5 @@ fx_edit_in_place.prototype.destroy_wysiwyg = function() {
     $('#fx_admin_control .editor_panel').remove();
     this.node.get(0).normalize();
 };
+
+})($fxj);

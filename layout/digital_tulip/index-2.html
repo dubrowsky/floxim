@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Services</title>
+    <meta charset="utf-8">
+		  <meta name="viewport" content="width=device-width; initial-scale=1.0">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+	<link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css">
+    <link rel="stylesheet" href="css/ui.totop.css">
+    <script type="text/javascript" src="js/jquery-1.7.min.js"></script>
+	 <script src="js/script.js"></script>
+    <script type="text/javascript" src="js/superfish.js"></script>
+    <script src="js/jquery.mobilemenu.js"></script>
+    <script type="text/javascript" src="js/jquery.easing.1.3.js"></script>
+    <script src="js/jquery.ui.totop.js"></script>
+    <script>
+    	$(window).load(function(){
+			$().UItoTop({ easingType: 'easeOutQuart' });
+			$("h2").prepend("<div class='stripe_before'></div>");
+				$("h2").append("<div class='stripe_after'></div>");
+				$('h2 .stripe_after').each(function() {
+					 var thiswidth = ($(this).parent().width() - $(this).prev().width()) / 2 - 17;
+					 $(this).css({width:thiswidth})})
+					 $('h2 .stripe_before').each(function() {
+					 var thiswidth = ($(this).parent().width() - $(this).next().width()) / 2 - 17;
+					 $(this).css({width:thiswidth})})
+		});
+      $(window).resize(function() {
+        $('h2 .stripe_after').each(function() {
+					 var thiswidth = ($(this).parent().width() - $(this).prev().width()) / 2 - 17;
+					 $(this).css({width:thiswidth})})
+					 $('h2 .stripe_before').each(function() {
+					 var thiswidth = ($(this).parent().width() - $(this).next().width()) / 2 - 17;
+					 $(this).css({width:thiswidth})})
+      });
+    </script>
+	<!--[if lt IE 8]>
+   <div style=' clear: both; text-align:center; position: relative;'>
+     <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+       <img src="http://storage.ie6countdown.com/assets/100/images/banners/warning_bar_0000_us.jpg" border="0" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today." />
+    </a>
+  </div>
+<![endif]-->
+    <!--[if lt IE 9]>
+   		<script type="text/javascript" src="js/html5.js"></script>
+    	<link rel="stylesheet" type="text/css" media="screen" href="css/ie.css">
+	<![endif]-->
+</head>
+<body>
+<!--==============================Block1=================================-->
+<div class="block1">
+    <div class="container_12">
+    <!--==============================header=================================-->
+        <header>
+            <h1><a class="logo" href="index.html">SoftBox</a></h1>
+            <nav>
+                <ul class="sf-menu">
+                    <li><a href="index.html">about us</a></li>
+                    <li><a href="index-1.html">projects</a></li>
+                    <li class="current">
+                        <a href="index-2.html">services</a>
+                        <ul>
+                            <li><a href="#">development</a></li>
+                            <li><a href="#">support</a>
+                            	<ul>
+                                	<li><a href="#">Management </a></li>
+                                    <li><a href="#">Marketing </a></li>
+                                    <li><a href="#">Enhancements</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="#">Reengineering</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="index-3.html">downloads</a></li>
+                    <li><a href="index-4.html">contacts</a></li>
+                </ul>
+            </nav>
+            <div class="clear"></div>
+        </header>
+	</div>        
+</div>
+<div class="block2">
+	<div class="container_12">
+    <!--==============================content================================-->
+        <section id="content">
+            <div class="container_12">
+                <div class="wrapper offers_box1">
+                    <article class="grid_4">
+                    	<div class="offer">
+                   	    	<img src="images/offer1.png" width="141" height="141" alt="">
+                        	<div class="title">planning</div>
+                            Lorem ipsum dolor sit amet, consect etur adip scing elit. Vestibulum ut tortor urnati dunt dolor. Nunc vulputate ultrices con sect etur donec semper lacinia ultricies.<br>
+							<a href="#" class="button">Read More</a> 
+                        </div>
+                    </article>
+                    <article class="grid_4">
+                    	<div class="offer">
+                   	    	<img src="images/offer2.png" width="141" height="141" alt="">
+                        	<div class="title">support</div>
+                            Lorem ipsum dolor sit amet, consect etur adip scing elit. Vestibulum ut tortor urnati dunt dolor. Nunc vulputate ultrices con sect etur donec semper lacinia ultricies.<br>
+							<a href="#" class="button">Read More</a> 
+                        </div>
+                    </article>                    
+                    <article class="grid_4 last-col">
+                    	<div class="offer">
+                   	    	<img src="images/offer3.png" width="141" height="141" alt="">
+                        	<div class="title">development</div>
+                            Lorem ipsum dolor sit amet, consect etur adip scing elit. Vestibulum ut tortor urnati dunt dolor. Nunc vulputate ultrices con sect etur donec semper lacinia ultricies.<br>
+							<a href="#" class="button">Read More</a> 
+                        </div>
+                    </article>
+                </div>
+                <div class="wrapper">
+                    <article class="grid_4">
+                    	<h2 class="ind1"><span>main services</span></h2>
+                        <ul class="m_services">
+                        	<li>
+                            	<figure><img src="images/icon1.png" width="28" height="21" alt=""></figure>
+                                <div><strong class="black">Dolor pratsensme</strong> lorem  penat steres stre ster posrte sren. <a href="#" class="link2">[...]</a></div>
+                            </li>
+                            <li>
+                            	<figure><img src="images/icon2.png" width="28" height="25" alt=""></figure>
+                                <div><strong class="black">Lorem psum dolor</strong> penar tibus ser urient mo ster por sre naet. <a href="#" class="link2">[...]</a></div>
+                            </li>
+                            <li>
+                            	<figure><img src="images/icon3.png" width="28" height="19" alt=""></figure>
+                                <div><strong class="black">Dolor pratsensme</strong> lorem  penat steres stre ster posrte sren. <a href="#" class="link2">[...]</a></div>
+                            </li>
+                            <li>
+                            	<figure><img src="images/icon4.png" width="28" height="25" alt=""></figure>
+                               	<div><strong class="black">Lorem psum dolor</strong> penar tibus ser urient mo ster por sre naet. <a href="#" class="link2">[...]</a></div>
+                            </li>
+                        </ul>
+                    </article>
+                    <article class="grid_8 last-col">
+                   	  	<h2 class="ind2"><span>services overview</span></h2>
+                        <p class="p2"><strong class="black">Adicing eesque sed doloru tu Proin dictum elementum velit usce euismod cons.</strong><br>
+Mes cuml dia. Sed in lacus ut eni mscing aliiqt sit amet euismod ic usce euismod consequat ante. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Pellentesque.</p>
+                    	<div class="wrapper m_bot1">
+                       	  <div class="dgrid_4 alpha">
+                            	<div class="extra_container s_overview">
+                                    <figure><img src="images/3page_img1.png" width="92" height="71" alt=""></figure>
+                                    <div>
+                                    	<strong class="black">Adicing eesque sed dol.</strong>
+                                        Mes cuml dia. Sed in lacusui
+                                        ing aliiqt sit amet euis. odic
+                                        e euismod consequ.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="dgrid_4 omega last-col">
+                            	<div class="extra_container s_overview s_overview1">
+                                    <figure><img src="images/3page_img2.png" width="92" height="73" alt=""></figure>
+                                    <div>
+                                    	<strong class="black">Sersque sed dolerest.</strong>
+                                        Ceruml dia. Sed in lacusuire
+                                        ing aliiqt sit amet euis. odic
+                                        e euismod consequ.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="wrapper">
+                       	  <div class="dgrid_4 alpha">
+                            	<div class="extra_container s_overview">
+                                    <figure><img src="images/3page_img3.png" width="92" height="71" alt=""></figure>
+                                    <div>
+                                    	<strong class="black">Sere que sed dol sters.</strong>
+                                        Mes cuml dia. Sed in lacusui
+                                        ing aliiqt sit amet euis. odic
+                                        e euismod consequ.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="dgrid_4 omega last-col">
+                            	<div class="extra_container s_overview s_overview1">
+                                    <figure><img src="images/3page_img4.png" width="92" height="71" alt=""></figure>
+                                    <div>
+                                    	<strong class="black">Sersque sed dolerest.</strong>
+                                        Ceruml dia. Sed in lacusuire
+                                        ing aliiqt sit amet euis. odic
+                                        e euismod consequ.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+<div class="block3">
+	<!--==============================footer=================================-->
+    <div class="container_12">
+       	<footer>
+        	<div class="container_12">
+            	<div class="wrapper">
+                    <div class="grid_6">
+                        <div class="title">Shortly About Us</div>
+						Sit amet, consec tetuer adipiscin elit. Praesent ves tibul moles tiet 
+						lacus aenean nonummy hendrerit mauris phaselu porta. Fusce suset
+                        varius mi. Cum sociis natoque penatibus hasellus por taus suscipity
+                        mitte dolor sit amet, consec tetuer adipiscin elit.                        
+                    </div>
+                    <div class="grid_3">
+                   	  <div class="title">Our Contacts</div>
+                        <ul class="social">
+                        	<li>
+                            	<a href="#"><figure><img src="images/soc1.png" width="31" height="24" alt=""></figure>
+                       	    	Follow us on Twitter</a>
+                            </li>
+                            <li>
+                            	<a href="#"><figure><img src="images/soc2.png" width="31" height="26" alt=""></figure>
+                       	    	Join us on Facebook</a>
+                            </li>
+                            <li>
+                            	<a href="#"><figure><img src="images/soc3.png" width="31" height="26" alt=""></figure>
+                       	    	Subscribe to our blog</a>
+                            </li>
+                            <li class="cont_item m_bottom_zero">
+                            	<a href="index-4.html"><figure><img src="images/soc4.png" width="31" height="20" alt=""></figure>
+                       	    	Contact Us</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="grid_3 privacy last-col">
+                    	<div class="title">copyright</div>
+                        <span class="reg">softbox</span> © 2012 | <a href="index-5.html">Privacy Policy</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+</body>
+</html>

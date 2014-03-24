@@ -27,6 +27,10 @@ class fx_template {
         if ($meta && fx::is_admin() && isset($meta['var_type'])) {
             $tf = new fx_template_field($val, $meta);
         }
+        if ($tf instanceof fx_collection || $val instanceof fx_collection) {
+            fx::debug(debug_backtrace());
+            die();
+        }
         echo $tf ? $tf : $val;
     }
     
@@ -90,8 +94,9 @@ class fx_template {
         }
         
         for ($i = count($this->context_stack) - 1; $i >= 0; $i--) {
-            if (isset($this->context_stack[$i][$name])) {
-                return $this->context_stack[$i][$name];
+            $cc = $this->context_stack[$i];
+            if (isset($cc[$name])) {
+                return $cc[$name];
             }
         }
         if ($this->_parent) {
@@ -177,12 +182,18 @@ class fx_template {
             ob_start();
         }
         if ($mode != 'marker') {
+            $pos = 1;
             foreach ($area_blocks as $ib) {
+                /*
                 if (! $ib instanceof fx_infoblock) {
                     die();
                 }
+                 * 
+                 */
+                $ib['params'] = $ib['params'] + array('infoblock_area_position' => $pos);
                 $result = $ib->render();
                 echo $result;
+                $pos++;
             }
         }
         if ($is_admin) {
@@ -283,7 +294,7 @@ class fx_template {
                 $mode = $matches[3];
                 if ($mode == 'data') {
                     fx_template::$area_replacements[$matches[2]] = null;
-                    return $replacement[1];
+                    return $matches[1].$replacement[1];
                 }
                 
                 $tag = fx_template_html_token::create_standalone($matches[1]);

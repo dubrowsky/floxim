@@ -3,8 +3,12 @@
     <input type="hidden" <?=$t.field_id_name(_c)?> class="real_value" value="<?=_c.value?>" />
     <div class="preview">
         <img <?=(_c.value ? ' src="'+_c.value+'"' : ' style="display:none;"')?> />
-        <a class="uploader fx_admin_button_text"><span>upload</span></a>
-        <a class="killer fx_admin_button_text" style="display:<?=(_c.value ? 'block' : 'none')?>"><span>delete</span></a>
+        <a class="uploader fx_admin_button fx_admin_button_text">
+            <span>
+                <?= _c.value ? 'change' : 'upload' ?>
+            </span>
+        </a>
+        <a class="killer fx_admin_button fx_admin_button_text" style="display:<?=(_c.value ? 'block' : 'none')?>"><span>delete</span></a>
     </div>
     <div class="file_input" style="display:<?=(_c.path ? 'none' : 'block')?>">
     	<input type="file" name="file" id="image_file_<?=_c.name.replace(/[^a-z0-9]+/g, '_')?>" />

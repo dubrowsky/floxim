@@ -82,7 +82,7 @@ class fx_controller_layout extends fx_controller {
         
         $p = fx::page();
         $js_config = new fx_admin_configjs();
-        $p->add_js_text("fx_adminpanel.init(".$js_config->get_config().");");
+        $p->add_js_text("\$fx.init(".$js_config->get_config().");");
         $p->set_after_body(fx_controller_admin_adminpanel::panel_html());        
     }
 }

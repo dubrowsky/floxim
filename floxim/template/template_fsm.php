@@ -84,9 +84,6 @@ class fx_template_fsm {
     }
     
     public function parse($string) {
-        if (!is_string($string)) {
-            fx::debug('nostr', debug_backtrace());
-        }
         $this->state_stack = array();
         $this->prev_state = null;
         $this->position = 0;
@@ -95,13 +92,6 @@ class fx_template_fsm {
         if ($this->debug) {
             fx::debug($this->parts);
         }
-        /*
-        foreach ($this->parts as $ch) {
-            $this->position += mb_strlen($ch);
-            $this->step($ch);
-        }
-         * 
-         */
         while ( ($ch = current($this->parts)) !== false) {
             $this->position += mb_strlen($ch);
             $this->step($ch);
@@ -188,10 +178,6 @@ class fx_template_fsm {
     public $split_regexp = '~(.)~';
     public function get_split_regexp() {
         return $this->split_regexp;
-    }
-    
-    public function default_action($ch) {
-        
     }
     
     public function default_callback($ch) {

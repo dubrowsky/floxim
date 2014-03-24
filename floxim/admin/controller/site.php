@@ -9,6 +9,7 @@ class fx_controller_admin_site extends fx_controller_admin {
         $list['labels'] = array();
 
         $list['values'] = array();
+        $list['essence'] = 'site';
         foreach ($sites as $v) {
             $text = fx::alang('Language:','system') . ' ' . $v['language'];
             if ($v['domain']) {
@@ -46,8 +47,8 @@ class fx_controller_admin_site extends fx_controller_admin {
 
         $fields[] = $this->ui->hidden('action', 'add_save');
         $fields[] = $this->ui->hidden('essence', 'site');
-        $fields[] = $this->ui->input('name', fx::alang('Site name','system'), fx::alang('Add new site','system'));
-        $fields[] = $this->ui->input('domain', fx::alang('Domain','system'), fx::alang('Domain','system'));
+        $fields[] = $this->ui->input('name', fx::alang('Site name','system'));
+        $fields[] = $this->ui->input('domain', fx::alang('Domain','system'));
         
         //$fields[] = $this->ui->hidden('posting');
         $this->response->add_fields($fields);
@@ -128,6 +129,7 @@ class fx_controller_admin_site extends fx_controller_admin {
             )
         )->save();
         $site->save();
+        $result['reload'] = '#admin.site.all';
         return $result;
     }
 
@@ -294,15 +296,8 @@ class fx_controller_admin_site extends fx_controller_admin {
     
     public function design_save($input) {
         $site = fx::data('site', $input['site_id']);
-    	$old_template_id = $site['layout_id'];
-        $site['layout_id'] = $this->input['layout_id'];
+    	$site['layout_id'] = $this->input['layout_id'];
         $site->save();
-        /*
-        if ($old_template_id != $input['template_id']) {
-            $suitable = new fx_suitable();
-            $suitable->apply_design($site, $input['template_id']);
-            $site['template_id'] = $input['template_id'];
-        } */
     }
 
     public function download($input) {

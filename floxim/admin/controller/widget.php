@@ -72,6 +72,7 @@ class fx_controller_admin_widget extends fx_controller_admin_component {
 
         $fields[] = $this->ui->hidden('source', $input['source']);
         $fields[] = $this->ui->hidden('posting');
+        $fields[] = $this->ui->hidden('essence', 'widget');
         
         $this->response->breadcrumb->add_item(
             self::_essence_types('widget'), 
@@ -82,7 +83,7 @@ class fx_controller_admin_widget extends fx_controller_admin_component {
         );
         
         $this->response->submenu->set_menu('widget');
-
+        $this->response->add_form_button('save');
         return array('fields' => $fields);
     }
 
@@ -98,12 +99,14 @@ class fx_controller_admin_widget extends fx_controller_admin_component {
         }
 
         $widget = fx::data('widget')->create($data);
+        fx::log('widget to create', $widget);
 
         if (!$widget->validate()) {
             $result['status'] = 'error';
             $result['errors'] = $widget->get_validate_error();
             return $result;
         }
+        $widget->save();
         return $result;
         /*
         try {
