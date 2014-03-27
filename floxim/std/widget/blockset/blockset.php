@@ -5,7 +5,7 @@ class fx_controller_widget_blockset extends fx_controller_widget {
         $area_name = 'blockset_'.$this->input['infoblock_id'];
         $blocks = fx::page()->get_area_infoblocks($area_name);
         $res = parent::do_show();
-        $res += array('blocks' => $blocks, 'area' => $area_name);
+        $res += array('items' => $blocks, 'area' => $area_name);
         //fx::log($res);
         return $res;
     }

@@ -73,11 +73,11 @@
                                 <div class="banner">
                                     <div class="title">{$name}</div>
                                     <div class="text">
-                                        {%description_$id}
+                                        {$description}
                                         <p>Nunc vulputate ultrices consectetur. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ut tortor urna, ut tincidunt dolor. Donec semper lacinia ultricies. Suspendisse elit lectus, fringilla in sollicitudin nec
                                           amet quam. Donec aliquam accumsan condimentum. Nullam ut lacus
                                           adipiscing ipsum molestie euismod.</p>
-                                        {/%}
+                                        {/$}
                                     </div>
                                     <a href="{$url}" class="button">{%read_more}Read More{/%}</a>
                                 </div>
@@ -107,15 +107,15 @@
                       <div class="offer">
                               <img src="{%image_$id}<?=$template_dir?>images/offer1.png{/%}" alt="">
                               <div class="title">{$name}</div>
-                                {%description_$id}
+                                {$description}
                                 <p>Lorem ipsum dolor sit amet, consect etur adip scing elit. Vestibulum ut tortor urnati dunt dolor. Nunc vulputate ultrices con sect etur donec semper lacinia ultricies.</p>
-                                {/%}
+                                {/$}
                                 <a href="{$url}" class="button">{%read_more}Read More{/%}</a> 
                           </div>
                      </article>
                 </div>
                 <div class="wrapper" fx:template="block_titled" fx:of="block">
-                  <article class="grid_12 last-col">
+                  <article class="last-col">
                       <h2><span>{%header}Client testimonials{/%}</span></h2>
                       {$content}
                      </article>
@@ -143,11 +143,11 @@
               </div>
                 <div class="wrapper" id="tabs" fx:template="tabs_blockset" fx:of="widget_blockset.show">
                   <article class="grid_12">
-                              <article class="grid_3 alpha">
-                                    <ul fx:with-each="$blocks">
+                              <article class="grid_3 alpha" fx:with-each="$items">
+                                    <ul>
                                           <li 
                                               class="{%tab_icon_$id 
-                                                    type="select" 
+                                                    type="select"
                                                     values="`array(
                                                         '' => 'None', 
                                                         'project'=>'Project', 
@@ -177,9 +177,9 @@
                                                 </p>
                                                 <div class="title bitter">{$name}</div>
                                                 <div>
-                                                    {%description_$id}
+                                                    {$description}
                                                         <p>Lorem ipsum dolor sit ametconety sect etur adipiscing elit.</p>    
-                                                    {/%}
+                                                    {/$}
                                                 </div>
                                             </div>
                                           </div>
@@ -188,23 +188,23 @@
                                 </article>
                      </article>
                 </div>
-                <div class="wrapper">
-                    <article class="grid_12">
-                        <h2 class="ind"><span>sign-up for the newsletter</span></h2>
-                        <div class="newsletter extra_wrapper">
-                            <div class="f_left">
-                                Lorem ipsum dolor sit amet, consect etur adipi ing elit. Vestibulum ut tortor urnati dunt dolor. Nunc vulputate ultrices con sect etur donec.
-                            </div>
-                            <div class="f_right">
-                                <form id="newsletter">
-                                    <input type="text" value="Enter your email address" onBlur="if(this.value=='') this.value='Enter your email address'" onFocus="if(this.value =='Enter your email address' ) this.value=''"
-><a onclick="document.getElementById('newsletter').submit()" class="button">Submit</a>
-                                    
-                                </form>
-                            </div>
-                                     <div class="clear"></div>
-                        </div>
-                    </article>
+                
+                <div class="newsletter extra_wrapper" fx:template="subscribe_form" fx:of="widget_subscribe_form.show">
+                    <div class="f_left">
+                        {%description}<p>Lorem ipsum dolor sit amet, 
+                            consect etur adipi ing elit. Vestibulum ut tortor urnati dunt dolor. 
+                            Nunc vulputate ultrices con sect etur donec.</p>{/%}
+                    </div>
+                    <div class="f_right">
+                        <form id="newsletter">
+                            <input type="text" 
+                                    placeholder="{%placeholder}Enter your email address{/%}" />
+                            <a onclick="document.getElementById('newsletter').submit()" class="button">
+                                {%submit}Submit{/%}
+                            </a>
+                        </form>
+                    </div>
+                    <div class="clear"></div>
                 </div>
         </section>
     </div>
@@ -212,39 +212,27 @@
 <div class="block3">
     <!--==============================footer=================================-->
     <div class="container_12">
-           <footer>
+           <footer fx:area="footer" fx:suit="force_block:local">
                 <div class="wrapper">
-                      <div class="grid_6">
-                            <div class="title">Shortly About Us</div>
-                    Sit amet, consec tetuer adipiscin elit. Praesent ves tibul moles tiet 
-                    lacus aenean nonummy hendrerit mauris phaselu porta. Fusce suset
-                            varius mi. Cum sociis natoque penatibus hasellus por taus suscipity
-                            mitte dolor sit amet, consec tetuer adipiscin elit.                        
+                      <div fx:template="footer_block" fx:of="block" 
+                           class="grid_{%width 
+                                            type="select" 
+                                            label="Width" 
+                                            values="`array(3=>'narrow', 6=>'wide')`"}6{/%}" >
+                            <div class="title">{%header}Shortly About Us{/%}</div>
+                        {$content /}
                       </div>
-                      <div class="grid_3">
-                          <div class="title">Our Contacts</div>
-                            <ul class="social">
-                                <li>
-                                    <a href="#"><figure><img src="<?=$template_dir?>images/soc1.png" width="31" height="24" alt=""></figure>
-                                    Follow us on Twitter</a>
-                                 </li>
-                                 <li>
-                                    <a href="#"><figure><img src="<?=$template_dir?>images/soc2.png" width="31" height="26" alt=""></figure>
-                                    Join us on Facebook</a>
-                                 </li>
-                                 <li>
-                                    <a href="#"><figure><img src="<?=$template_dir?>images/soc3.png" width="31" height="26" alt=""></figure>
-                                    Subscribe to our blog</a>
-                                 </li>
-                                 <li class="cont_item m_bottom_zero">
-                                    <a href="index-4.html"><figure><img src="<?=$template_dir?>images/soc4.png" width="31" height="20" alt=""></figure>
-                                    Contact Us</a>
-                                 </li>
-                            </ul>
-                      </div>
+                      
+                        <ul class="social" fx:template="social_links" fx:of="page.list">
+                            <li fx:item>
+                                <a href="{$url}"><figure><img src="{%image_$id | 'width:31;height:24'}<?=$template_dir?>images/soc1.png{/%}" alt=""></figure>
+                                {$name}Follow us on Twitter{/$}</a>
+                            </li>
+                        </ul>
                       <div class="grid_3 privacy last-col">
-                        <div class="title">copyright</div>
-                            <span class="reg">softbox</span> © 2012 | <a href="index-5.html">Privacy Policy</a><br>
+                        <div class="title">{%copy}copyright{/%}</div>
+                            <span class="reg">{%logo_text}SoftBox{/%}</span> © <?=date('Y')?> | 
+                            <a href="{%privacy_link}/{/%}">{%privacy_text}Privacy Policy{/%}</a><br>
                         <!-- {%FOOTER_LINK} -->
                       </div>
                  </div>

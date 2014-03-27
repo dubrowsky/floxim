@@ -151,7 +151,9 @@ class fx_controller_component extends fx_controller {
             'operators_map' => array (
                 'string' => array(
                     'contains' => 'contains',
-                    '=' => '='
+                    '=' => '=',
+                    'not_contains' => 'not contains',
+                    '!=' => '!='
                 ),
                 'int' => array(
                     '=' => '=',
@@ -310,7 +312,21 @@ class fx_controller_component extends fx_controller {
         return $res;
     }
     
+    protected function _get_fake_items($count = 3) {
+        $finder = $this->get_finder();
+        $items = fx::collection();
+        foreach (range(1,$count) as $n) {
+            $items []= $finder->fake();
+        }
+        return $items;
+    }
+
+
     public function do_list_infoblock() {
+        // "fake mode" - preview of newly created infoblock
+        if ($this->get_param('is_fake')) {
+            return array('items' => $this->_get_fake_items(3));
+        }
         $this->listen('query_ready', function($q, $ctr) {
             if ( ($parent_id = $ctr->get_param('parent_id')) && !($ctr->get_param('skip_parent_filter')) ) {
                 $q->where('parent_id', $parent_id);
@@ -500,9 +516,9 @@ class fx_controller_component extends fx_controller {
                 $field = $fields->find_one('name', $condition['name']);
                 $error = false;
                 switch ($condition['operator']) {
-                    case 'contains':
+                    case 'contains': case 'not_contains':
                         $condition['value'] = '%'.$condition['value'].'%'; 
-                        $condition['operator'] = 'LIKE';
+                        $condition['operator'] = ($condition['operator']== 'not_contains' ? 'NOT ' : '').'LIKE';
                         break;
                     case 'next': 
                         if (isset($condition['value']) && !empty($condition['value'])) {

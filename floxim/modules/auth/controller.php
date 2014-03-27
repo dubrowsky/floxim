@@ -123,6 +123,7 @@ class fx_controller_module_auth extends fx_controller_module {
     	fx::input()->_COOKIE['fx_sid'] = $input['sid'];
     	$u = new fx_content_user();
     	$u->create_session('cross_authorize', 0, 1);
+        fx::env('complete_ok', true);
     	die();
     }
 

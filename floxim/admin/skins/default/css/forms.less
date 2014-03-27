@@ -166,12 +166,13 @@
 
     .fx_form_cols {
         table.fx_form_cols_table {
-            min-width:40%;
+            min-width:80%;
         }
         .fx_tab_data {
             vertical-align:top;
             padding:0 15px;
             border-right:1px solid #CCC;
+            width:200px;
             &.fx_tab_data_first {
                 padding-left:0;
             }
@@ -298,11 +299,15 @@
     float:left;
 }
 
-#fx_admin_fields .fx_input, #fx_admin_extra_panel .fx_input {
+#fx_admin_fields .fx_input, #fx_admin_extra_panel .fx_input, .fx_node_panel .fx_input {
     margin-top:6px;
     border:1px solid #e1e1e1;
     padding:5px 3px 4px 3px;
     font-size:11px;
+}
+
+.fx_node_panel .fx_input {
+    margin-top:3px;
 }
 
 #fx_admin_extra_panel input[type="text"].fx_input, #fx_admin_extra_panel select.fx_input {

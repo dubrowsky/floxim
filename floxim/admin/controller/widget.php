@@ -104,9 +104,12 @@ class fx_controller_admin_widget extends fx_controller_admin_component {
         if (!$widget->validate()) {
             $result['status'] = 'error';
             $result['errors'] = $widget->get_validate_error();
+            fx::log('invalid', $result);
             return $result;
         }
+        fx::log('saving wid', $widget);
         $widget->save();
+        $result['reload'] = '#admin.widget.all';
         return $result;
         /*
         try {

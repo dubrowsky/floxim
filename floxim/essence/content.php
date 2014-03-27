@@ -107,7 +107,7 @@ class fx_content extends fx_essence {
             'content_type_id' => $this->component_id,
             'id' => $cf['id'],
             'name' => $cf['name'],
-            'title' => $cf['description'],
+            'label' => $cf['description'],
             'type' => $cf->type
         );
         if ($cf->type == 'text') {

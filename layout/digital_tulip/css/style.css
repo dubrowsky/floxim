@@ -1,7 +1,28 @@
 @import "../css/reset.css";@import "../css/skeleton.css";@import "../css/superfish.css";@import "../css/superfish.css";@import "../css/flexslider.css";@import "../css/carousel.css";@import "../css/tabs.css";@import"ui.totop.css";@import url(http://fonts.googleapis.com/css?family=Bitter);
 
+/*
+*[contenteditable="true"] {background:#F00 !important;}
+*/
+
 .nav_area {
     float:right;
+}
+
+h1 {
+    margin-bottom:30px;
+    font-size:35px;
+}
+
+h2 {
+    margin-top:30px;
+    margin-bottom:15px;
+}
+
+
+
+.text_block ul, .text_block ol {
+    list-style:initial;
+    margin-left:20px;
 }
 
 article,aside,audio,canvas,command,datalist,details,embed,figcaption,figure,footer,header,hgroup,keygen,meter,nav,output,progress,section,source,video{display:block}mark,rp,rt,ruby,summary,time{display:inline}
@@ -100,7 +121,7 @@ footer .title, .ui-tabs .ui-tabs-nav li a, h2, .bitter, .banner .title, .offer .
 .hello_box{font-size: 33px; line-height: 45px; color:#12212f; text-align:center; padding:0 20px 0; margin-bottom:58px}
 
 .offers_box{ margin-bottom:65px;}
-.offer{ text-align:center;}
+.offer{ text-align:center; margin-bottom:30px;}
 .offer img{ margin-bottom:31px;}
 .offer .title{font-size: 25px; line-height: 29px; color:#12212f; margin-bottom:16px; text-transform:uppercase;}
 
@@ -111,9 +132,9 @@ footer .title, .ui-tabs .ui-tabs-nav li a, h2, .bitter, .banner .title, .offer .
 .link1{ color:#12212f; font-weight:bold;}
 .link1:hover{ color:#285782;}
 
-#tabs{ margin-bottom:101px;}
+#tabs{ margin:34px 0px 101px 0;}
 
-.newsletter{ background:url(../images/news_letter.png) 417px 14px no-repeat #f4f5f7; border-radius:10px;}
+.newsletter{ background:url(../images/news_letter.png) 417px 14px no-repeat #f4f5f7; border-radius:10px; margin:34px 0px 35px}
 .newsletter .f_left{width:320px; padding:26px 0 32px 38px; line-height:19px;}
 .newsletter .f_right{width:381px; padding:39px 0 0 0;}
 #newsletter{ overflow:hidden;}

@@ -133,11 +133,9 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         if (!$page) {
             return;
         }
-        fx::log('page', $page);
         $ids []= 0; // root
         $ids = $page->get_parent_ids();
         //$ids []= $page['id'];
-        fx::log('page ids', $ids);
         $layouts = array();
         foreach ($ids as $id) {
             $infoblocks = fx::data('infoblock')->get_for_page($id);
@@ -145,7 +143,6 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                 continue;
             foreach ($infoblocks as $ib) {
                 if ($ib->get_prop_inherited('controller') == 'layout') {
-                    fx::log('layout', $ib['scope'], $page['type']);
                     if ($ib['scope']['pages'] != 'this') {
                         if ($ib['scope']['page_type'] && $ib['scope']['page_type'] != $page['type']) 
                             continue;
@@ -155,7 +152,6 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                 }
             }
         }
-        fx::log('page ibs', $layouts);
         return $layouts;
     } 
 
@@ -285,7 +281,6 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                 if ($infoblock['id'] && $input['visual']['template'] != $i2l['template']) {
                     if (!$this->_compare_scope($input['scope']['complex_scope'], $infoblock)) {
                         if ($this->_compare_templates($input['visual']['template'], end($layouts)) && $infoblock['parent_infoblock_id'] != 0) {
-                            fx::log('deleted');
                             $infoblock->delete();
                             $this->response->set_status_ok();
                             return;
@@ -640,7 +635,6 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         // Collect the available templates
         $controller = fx::controller($controller_name.'.'.$action_name);
         $tmps = $controller->get_available_templates($layout_name, $area_meta);
-        //fx::log('found tmps', $tmps, $i2l['template']);
         if ( !empty($tmps) ) {
             foreach ( $tmps as $template ) {
                 $templates[] = array($template['full_id'], $template['name']);

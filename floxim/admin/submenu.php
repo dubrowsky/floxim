@@ -45,7 +45,6 @@ class fx_admin_submenu {
             $this->active = 'layout';
             $this->active_main_menu = 'develop';
         }
-        fx::log($match);
         if ($match[1] == 'template' && is_numeric($match[3])) {
             $this->init_menu_template($match[3]);
             $this->active_main_menu = 'develop';

@@ -230,6 +230,9 @@ class fx_data {
         if (count($this->group) > 0) {
             $q .= " GROUP BY ".join(", ", $this->group);
         }
+        if (is_string($this->order)) {
+            $this->order = array($this->order);
+        }
         if (is_array($this->order) && count($this->order) > 0) {
             $q .= " ORDER BY ".join(", ", $this->order);
         }

@@ -76,6 +76,42 @@ window.fx_front = function () {
     });
 };
 
+// this code should fix firefox problem with loosing focus on contenteditable links ("a" tag)
+// not used now
+fx_front.prototype.handle_link_keydown = function(e) {
+    var sel  = window.getSelection();
+    var link = this;
+    var KEY_PGUP = 33;
+    var KEY_PGDN = 34;
+    var KEY_END = 35;
+    var KEY_DOWN = 40;
+    var KEY_RIGHT = 39;
+    var KEY_HOME = 36;
+
+    if (e.which !== KEY_PGDN && e.which !== KEY_PGUP && e.which !== KEY_END && e.which !== KEY_DOWN && e.which !== KEY_RIGHT && e.which !== KEY_HOME) {
+            return;
+    }
+    var right_out = sel.anchorNode.length - sel.anchorOffset === 1
+                                            && !sel.anchorNode.nextSibling
+                                            && sel.anchorNode.parentNode === this;
+    console.log(right_out);
+    if (e.which !== KEY_RIGHT || right_out) {
+        console.log('end', sel.anchorNode.nextSibling);
+        var range = document.createRange();
+        if (e.which === KEY_HOME) {
+            range.setStart(link, 0);
+            range.collapse(true);
+        } else {
+            range.selectNodeContents(link);
+            range.collapse(false);
+        }
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+        return false;
+    }
+};
+
 fx_front.prototype.handle_mouseover = function(e) {
         if ($fx.front.mode === 'view') {
             return;
@@ -87,14 +123,20 @@ fx_front.prototype.handle_mouseover = function(e) {
             return;
         }
         var node = $(this);
+        if (node.attr('onclick')) {
+            console.log('remove clck on hover');
+            node.attr('onclick', null);
+        }
         if (node.hasClass('fx_selected')) {
             e.fx_hilight_done = true;
             return;
-        }
-        $fx.front.outline_block_off($($fx.front.c_hover));
+        } 
+       $fx.front.outline_block_off($($fx.front.c_hover));
         $fx.front.c_hover = this;
+        var $editable = $(e.target).closest('.fx_template_var');
         $target = $(e.target);
-        var fix_link_ce = $target.hasClass('fx_template_var') && $fx.front.mode === 'edit';
+        //var fix_link_ce = $target.hasClass('fx_template_var') && $fx.front.mode === 'edit';
+        var fix_link_ce = $editable.length > 0 && $fx.front.mode === 'edit' && !($editable.get(0).nodeName === 'A' && e.ctrlKey);
         setTimeout(
             function() {
                 if ($fx.front.c_hover !== node.get(0)) {
@@ -106,46 +148,15 @@ fx_front.prototype.handle_mouseover = function(e) {
                 $('.fx_hilight_hover').removeClass('fx_hilight_hover');
                 node.addClass('fx_hilight_hover');
                 $fx.front.outline_block(node);
-                
                 if (fix_link_ce) {
-                    $(e.target).addClass('fx_var_editable');
-                    e.target.setAttribute('contenteditable', 'true');
                     /*
-                    $(e.target).keydown(function(e) {
-                        var sel  = window.getSelection();
-                        var link = this;
-                        var KEY_PGUP = 33;
-                        var KEY_PGDN = 34;
-                        var KEY_END = 35;
-                        var KEY_DOWN = 40;
-                        var KEY_RIGHT = 39;
-                        var KEY_HOME = 36;
-
-                        if (e.which !== KEY_PGDN && e.which !== KEY_PGUP && e.which !== KEY_END && e.which !== KEY_DOWN && e.which !== KEY_RIGHT && e.which !== KEY_HOME) {
-                                return;
+                    $('html').on('keydown.fx_fix_ce', function (e) {
+                        if (e.ctrlKey) {
+                            $editable.attr('contenteditable', null);
                         }
-                        var right_out = sel.anchorNode.length - sel.anchorOffset === 1
-                                                                && !sel.anchorNode.nextSibling
-                                                                && sel.anchorNode.parentNode === this;
-                        console.log(right_out);
-                        if (e.which !== KEY_RIGHT || right_out) {
-                            console.log('end', sel.anchorNode.nextSibling);
-                            var range = document.createRange();
-                            if (e.which === KEY_HOME) {
-                                range.setStart(link, 0);
-                                range.collapse(true);
-                            } else {
-                                range.selectNodeContents(link);
-                                range.collapse(false);
-                            }
-                            var sel = window.getSelection();
-                            sel.removeAllRanges();
-                            sel.addRange(range);
-                            return false;
-                        }
-
                     });
                     */
+                    $editable.addClass('fx_var_editable').attr('contenteditable', 'true');
                 }
             }, 
             $fx.front.c_hover ? 100 : 10
@@ -160,10 +171,8 @@ fx_front.prototype.handle_mouseover = function(e) {
                     if ($fx.front.c_hover !== node.get(0)) {
                         node.removeClass('fx_hilight_hover');
                         $fx.front.outline_block_off(node);
-                        if (fix_link_ce) {
-                            e.target.setAttribute('contenteditable', 'false');
-                            $(e.target).removeClass('fx_var_editable').unbind('keydown');
-                        }
+                        $editable.removeClass('fx_var_editable').attr('contenteditable', null);
+                        $('html').off('.fx_fix_ce');
                     }
                 },
                 100
@@ -204,11 +213,19 @@ fx_front.prototype.handle_click = function(e) {
     // and even saves the current mode
     var clicked_link = target.closest('a');
     if (clicked_link.length > 0 && e.ctrlKey && clicked_link.attr('href')) {
+        clicked_link.add(clicked_link.parents()).attr('contenteditable', 'false');
         document.location.href = clicked_link.attr('href')+document.location.hash;
         return false;
     }
 
 
+    e.stopImmediatePropagation();
+    
+    if (target.attr('onclick')) {
+        console.log('has clcick atr');
+        target.attr('onclick', null);
+    }
+    
     // catch only contenteditable
     if ($(closest_selectable).hasClass('fx_selected')) {
         e.preventDefault();
@@ -216,6 +233,7 @@ fx_front.prototype.handle_click = function(e) {
         return false;
     }
     $fx.front.select_item(closest_selectable);
+    
     return false;
 
 };
@@ -373,9 +391,33 @@ fx_front.prototype.add_infoblock_select_settings = function(data) {
             // creating infoblock preview
             $fx.front.deselect_item();
             
+            var append_ib_node = function ($area_node, $ib_node) {
+                // try to find last infoblock inside area
+                // and add new after it
+                var $last_ib = null;
+                $('.fx_infoblock', $area_node).each(function () {
+                    if ($(this).closest('.fx_area').get(0) !== $area_node.get(0)) {
+                        console.log('wrong area', $(this).closest('.fx_area').get(0), $area_node.get(0));
+                        return;
+                    }
+                    $last_ib = $(this);
+                });
+                if ($last_ib) {
+                    $last_ib.after($ib_node);
+                    return;
+                }
+                var $marker = $('.fx_area_marker', $area_node);
+                if ($marker.length > 0) {
+                    $marker.after($ib_node);
+                    return;
+                }
+                $area_node.append($ib_node);
+            };
+            
             var add_fake_ib = function () {
                 $c_ib_node = $('<div class="fx_infoblock fx_infoblock_fake" />');
-                $area_node.append($c_ib_node);
+                append_ib_node($area_node, $c_ib_node);
+                //$area_node.append($c_ib_node);
                 $c_ib_node.data('fx_infoblock', {id:'fake'});
                 $form.data('ib_node', $c_ib_node);
                 $form.data('is_waiting', false);

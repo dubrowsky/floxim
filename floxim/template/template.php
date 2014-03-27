@@ -184,12 +184,6 @@ class fx_template {
         if ($mode != 'marker') {
             $pos = 1;
             foreach ($area_blocks as $ib) {
-                /*
-                if (! $ib instanceof fx_infoblock) {
-                    die();
-                }
-                 * 
-                 */
                 $ib['params'] = $ib['params'] + array('infoblock_area_position' => $pos);
                 $result = $ib->render();
                 echo $result;
@@ -294,7 +288,11 @@ class fx_template {
                 $mode = $matches[3];
                 if ($mode == 'data') {
                     fx_template::$area_replacements[$matches[2]] = null;
-                    return $matches[1].$replacement[1];
+                    $res = $matches[1].$replacement[1];
+                    if (!$replacement[1]) {
+                        $res .= '<span class="fx_area_marker"></span>';
+                    }
+                    return $res;
                 }
                 
                 $tag = fx_template_html_token::create_standalone($matches[1]);

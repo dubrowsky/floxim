@@ -36,11 +36,17 @@ class fx_template_field  {
             ) {
             return (string) $val;
         }
+        if (!$this->_meta['real_value'] && $this->_meta['var_type'] == 'visual' && $this->_meta['inatt']) {
+            $this->_meta['value'] = $val;
+        }
         //$this->_meta['value'] = $this->_value;
         self::$replacements []= array($this->_meta['id'], $this->_meta, $val);
         return '###fxf'.(self::$count_replacements++).'###';
     }
     
+    public static $fields_to_drop = array();
+
+
     /**
      * Postprocessing fields
      * @param string $html
@@ -52,6 +58,10 @@ class fx_template_field  {
         $html = self::_replace_fields_in_atts($html);
         $html = self::_replace_fields_wrapped_by_tag($html);
         $html = self::_replace_fields_in_text($html);
+        foreach (self::$fields_to_drop as $id) {
+            unset(self::$replacements[$id]);
+        }
+        self::$fields_to_drop = array();
         return $html;
     }
     
@@ -64,9 +74,9 @@ class fx_template_field  {
                     '~###fxf(\d+)###~', 
                     function($field_matches) use (&$att_fields) {
                         $replacement = fx_template_field::$replacements[$field_matches[1]];
-                        //$replacement[1]['value'] = $replacement[2];
                         $att_fields[$replacement[0]] = $replacement[1];
-                        fx_template_field::$replacements[$field_matches[1]] = null;
+                        //fx_template_field::$replacements[$field_matches[1]] = null;
+                        fx_template_field::$fields_to_drop[]= $field_matches[1];
                         return $replacement[2];
                     }, 
                     $tag_matches[0]
@@ -96,7 +106,8 @@ class fx_template_field  {
                     'data-fx_var' => $replacement[1]
                 ));
                 $tag = $tag->serialize();
-                fx_template_field::$replacements[$matches[3]] = null;
+                //fx_template_field::$replacements[$matches[3]] = null;
+                fx_template_field::$fields_to_drop[]= $matches[3];
                 return $tag.$matches[2].$replacement[2].$matches[4];
             },
             $html
@@ -123,7 +134,8 @@ class fx_template_field  {
                     'class' => 'fx_template_var',
                     'data-fx_var' => $replacement[1]
                 ));
-                fx_template_field::$replacements[$matches[1]] = null;
+                //fx_template_field::$replacements[$matches[1]] = null;
+                fx_template_field::$fields_to_drop []= $matches[1];
                 $res = $tag->serialize().$replacement[2].'</'.$tag_name.'>';
                 return $res;
             },

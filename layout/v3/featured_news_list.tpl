@@ -17,6 +17,6 @@
         </div>
     </div>
     <div style="clear:both;"></div>
-    <a fx:if="$show_more" href="{%more_news_url}#{/%}" class="more">{%more_news}more news{/%}</a>
+    <a fx:if="$show_more" href="{%more_news_url label="More link"}#{/%}" class="more">{%more_news}more news{/%}</a>
     <div style="clear:both;"></div>
 </div>

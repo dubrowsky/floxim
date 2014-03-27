@@ -226,7 +226,9 @@ class fx_controller {
         foreach ($sources as $src) {
             $src_name = null;
             $src_hash = md5($src);
-            preg_match("~/([^/]+?)/[^/]+$~", $src, $src_name);
+            $ds = preg_quote(DIRECTORY_SEPARATOR);
+            //preg_match("~/([^/]+?)/[^/]+$~", $src, $src_name);
+            preg_match("~".$ds."([^".$ds."]+?)".$ds."[^".$ds."]+$~", $src, $src_name);
             $is_own = $src_name && $my_name && $src_name[1] === $my_name;
             $src = include $src;
             if (!isset($src['actions'])) {

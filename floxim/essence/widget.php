@@ -14,7 +14,7 @@ class fx_widget extends fx_essence {
             $res = false;
         }
 
-        if ($this['keyword'] && !preg_match("/^[a-z][a-z0-9-]*$/i", $this['keyword'])) {
+        if ($this['keyword'] && !preg_match("/^[a-z][a-z0-9_-]*$/i", $this['keyword'])) {
             $this->validate_errors[] = array('field' => 'keyword', 'text' => fx::alang('Keyword can contain only letters and numbers','system'));
             $res = false;
         }
@@ -30,5 +30,27 @@ class fx_widget extends fx_essence {
         }
 
         return $res;
+    }
+    
+    protected function _after_insert() {
+        parent::_after_insert();
+        $this->scaffold();
+    }
+    
+    public function scaffold() {
+        $keyword = $this['keyword'];
+        $controller_file = fx::path('root', '/widget/'.$keyword.'/'.$keyword.'.php');
+        ob_start();
+        echo "<?php\n";?>
+class fx_controller_widget_<?=$keyword?> extends fx_controller_widget {
+    /* 
+    //uncomment this to create widget action logic
+    public function do_show() {
+    
+    }
+    */
+}<?
+        $code = ob_get_clean();
+        fx::files()->writefile($controller_file, $code);
     }
 }

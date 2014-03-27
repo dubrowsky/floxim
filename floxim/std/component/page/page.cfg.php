@@ -7,10 +7,10 @@ $page_config = array(
                 $res = $page['type'] === $component['keyword'];
                 return $res;
             }
-        ),
+        ),/*
         '.*' => array(
             'disabled' => true
-        ),
+        ),*/
         'list_infoblock' => array(
             'disabled' => false
         ),
