@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1
--- Время создания: Мар 18 2014 г., 13:53
+-- Время создания: Мар 27 2014 г., 12:43
 -- Версия сервера: 5.5.25
 -- Версия PHP: 5.3.13
 
@@ -171,7 +171,7 @@ CREATE TABLE IF NOT EXISTS `fx_content` (
   `site_id` int(11) DEFAULT NULL,
   `parent_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=47 AUTO_INCREMENT=2763 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=47 AUTO_INCREMENT=2807 ;
 
 --
 -- Дамп данных таблицы `fx_content`
@@ -330,17 +330,17 @@ INSERT INTO `fx_content` (`id`, `priority`, `checked`, `created`, `last_updated`
 (2634, 215, 1, '2014-01-20 17:57:00', '2014-01-20 13:57:01', 2367, 'classifier_linker', 303, 17, 2633),
 (2635, 216, 1, '2014-01-28 11:39:50', '2014-01-28 07:39:50', 2367, 'page', 0, 18, NULL),
 (2636, 217, 1, '2014-01-28 11:39:50', '2014-01-28 07:39:50', 2367, 'page', 0, 18, 2635),
-(2638, 1, 1, '2014-01-28 12:04:17', '2014-01-30 09:26:37', 2367, 'section', 346, 18, 2635),
-(2639, 2, 1, '2014-01-28 12:04:33', '2014-01-30 09:26:37', 2367, 'section', 346, 18, 2635),
-(2640, 4, 1, '2014-01-28 12:07:04', '2014-02-12 15:58:05', 2367, 'section', 346, 18, 2635),
-(2641, 3, 1, '2014-01-28 12:07:17', '2014-02-12 15:58:05', 2367, 'section', 346, 18, 2635),
+(2638, 2, 1, '2014-01-28 12:04:17', '2014-03-21 16:15:10', 2367, 'section', 346, 18, 2635),
+(2639, 1, 1, '2014-01-28 12:04:33', '2014-03-21 16:15:10', 2367, 'section', 346, 18, 2635),
+(2640, 3, 1, '2014-01-28 12:07:04', '2014-03-20 09:32:14', 2367, 'section', 346, 18, 2635),
+(2641, 4, 1, '2014-01-28 12:07:17', '2014-03-20 09:32:14', 2367, 'section', 346, 18, 2635),
 (2642, 223, 1, '2014-01-28 12:12:50', '2014-01-28 08:12:50', 2367, 'social_icon', 348, 18, 2635),
 (2652, 1, 1, '2014-01-30 13:34:21', '2014-01-30 10:29:05', 2367, 'section', 346, 18, 2638),
 (2654, 2, 1, '2014-01-30 13:34:34', '2014-03-03 08:20:17', 2367, 'section', 346, 18, 2638),
 (2655, 1, 1, '2014-01-30 13:38:14', '2014-02-13 09:37:55', 2367, 'section', 346, 18, 2640),
 (2656, 3, 1, '2014-01-30 13:38:26', '2014-02-13 09:37:55', 2367, 'section', 346, 18, 2640),
 (2657, 2, 1, '2014-01-30 13:38:46', '2014-02-13 09:37:55', 2367, 'section', 346, 18, 2640),
-(2658, 3, 1, '2014-01-30 14:00:50', '2014-03-03 10:06:02', 2367, 'section', 346, 18, 2638),
+(2658, 4, 1, '2014-01-30 14:00:50', '2014-03-20 09:32:21', 2367, 'section', 346, 18, 2638),
 (2659, 0, 1, '2014-01-30 14:07:10', '2014-01-30 10:07:10', 2367, 'select_linker', 362, 18, 2638),
 (2660, 230, 1, '2014-01-30 14:38:47', '2014-01-30 10:38:47', 2367, 'product', 364, 18, 2652),
 (2661, 231, 1, '2014-01-30 14:40:14', '2014-01-30 10:40:14', 2367, 'product', 364, 18, 2652),
@@ -395,7 +395,7 @@ INSERT INTO `fx_content` (`id`, `priority`, `checked`, `created`, `last_updated`
 (2741, 267, 1, '2014-03-11 21:50:58', '2014-03-11 17:50:58', 2367, 'product', 364, 18, 2654),
 (2742, 268, 1, '2014-03-11 21:56:32', '2014-03-11 17:56:32', 2367, 'product', 364, 18, 2658),
 (2743, 269, 1, '2014-03-11 21:58:20', '2014-03-11 17:58:20', 2367, 'product', 364, 18, 2658),
-(2744, 4, 1, '2014-03-11 21:59:51', '2014-03-15 07:11:41', 2367, 'section', 346, 18, 2638),
+(2744, 3, 1, '2014-03-11 21:59:51', '2014-03-20 09:32:21', 2367, 'section', 346, 18, 2638),
 (2745, 271, 1, '2014-03-11 22:01:34', '2014-03-11 18:01:34', 2367, 'product', 364, 18, 2744),
 (2746, 272, 1, '2014-03-11 22:02:45', '2014-03-11 18:02:45', 2367, 'product', 364, 18, 2744),
 (2747, 1, 1, '2014-03-12 05:01:05', '2014-03-12 01:01:05', 2367, 'select_linker', 370, 18, 2635),
@@ -409,7 +409,27 @@ INSERT INTO `fx_content` (`id`, `priority`, `checked`, `created`, `last_updated`
 (2755, 278, 1, '2014-03-14 18:31:09', '2014-03-14 14:31:09', 2367, 'photo', 389, 18, 2690),
 (2756, 279, 1, '2014-03-14 18:31:52', '2014-03-14 14:31:52', 2367, 'photo', 389, 18, 2690),
 (2757, 280, 1, '2014-03-14 18:34:09', '2014-03-14 14:34:09', 2367, 'project', 385, 18, 2639),
-(2762, 281, 1, '2014-03-15 11:34:46', '2014-03-15 07:34:46', 2367, 'project', 385, 18, 2639);
+(2762, 281, 1, '2014-03-15 11:34:46', '2014-03-15 07:34:46', 2367, 'project', 385, 18, 2639),
+(2777, 282, 1, '2014-03-21 17:08:52', '2014-03-21 13:08:52', 2367, 'page', 0, 23, NULL),
+(2778, 283, 1, '2014-03-21 17:08:52', '2014-03-21 13:08:52', 2367, 'page', 0, 23, 2777),
+(2779, 1, 1, '2014-03-21 17:09:53', '2014-03-27 06:32:38', 2367, 'section', 414, 23, 2777),
+(2780, 2, 1, '2014-03-21 17:10:01', '2014-03-27 06:32:38', 2367, 'section', 414, 23, 2777),
+(2783, 0, 1, '2014-03-22 06:28:16', '2014-03-22 02:28:16', 2367, 'select_linker', 417, 23, 2777),
+(2784, 1, 1, '2014-03-22 06:28:16', '2014-03-22 02:28:16', 2367, 'select_linker', 417, 23, 2777),
+(2785, 284, 1, '2014-03-22 08:12:38', '2014-03-22 04:12:38', 2367, 'text', 418, 23, 2777),
+(2786, 0, 1, '2014-03-22 09:17:48', '2014-03-22 05:17:48', 2367, 'select_linker', 420, 23, 2777),
+(2787, 1, 1, '2014-03-22 09:17:48', '2014-03-22 05:17:48', 2367, 'select_linker', 420, 23, 2777),
+(2791, 0, 1, '2014-03-24 08:04:26', '2014-03-24 04:04:26', 2367, 'select_linker', 424, 23, 2777),
+(2797, 286, 1, '2014-03-25 18:08:43', '2014-03-25 14:08:43', 2367, 'page', 429, 23, 2777),
+(2798, 287, 1, '2014-03-25 18:53:26', '2014-03-25 14:53:26', 2367, 'text', 430, 23, 2777),
+(2799, 288, 1, '2014-03-27 10:35:24', '2014-03-27 06:35:24', 2367, 'section', 414, 23, 2777),
+(2800, 289, 1, '2014-03-27 10:35:38', '2014-03-27 06:35:38', 2367, 'section', 414, 23, 2777),
+(2801, 290, 1, '2014-03-27 10:36:52', '2014-03-27 06:36:52', 2367, 'section', 414, 23, 2799),
+(2802, 291, 1, '2014-03-27 10:37:07', '2014-03-27 06:37:07', 2367, 'section', 414, 23, 2799),
+(2803, 292, 1, '2014-03-27 10:37:32', '2014-03-27 06:37:32', 2367, 'section', 414, 23, 2799),
+(2804, 293, 1, '2014-03-27 10:37:43', '2014-03-27 06:37:43', 2367, 'section', 414, 23, 2799),
+(2805, 294, 1, '2014-03-27 11:12:37', '2014-03-27 07:12:37', 2367, 'text', 432, 23, 2779),
+(2806, 295, 1, '2014-03-27 12:06:50', '2014-03-27 08:06:50', 2367, 'text', 432, 23, 2801);
 
 -- --------------------------------------------------------
 
@@ -420,7 +440,6 @@ INSERT INTO `fx_content` (`id`, `priority`, `checked`, `created`, `last_updated`
 CREATE TABLE IF NOT EXISTS `fx_content_award` (
   `id` int(11) NOT NULL,
   `image` varchar(255) DEFAULT NULL,
-  `description` text,
   `year` int(11) DEFAULT NULL,
   `short_description` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -430,10 +449,10 @@ CREATE TABLE IF NOT EXISTS `fx_content_award` (
 -- Дамп данных таблицы `fx_content_award`
 --
 
-INSERT INTO `fx_content_award` (`id`, `image`, `description`, `year`, `short_description`) VALUES
-(2243, '', 'Stet clita kasd gubergren, no sea takimata sanctus est.. Lorem ipsum dolor sit amet. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat.\r\n\r\nLorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.\r\n\r\nLorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua.\r\n\r\nLorem ipsum dolor sit amet. Sanctus sea sed takimata ut vero voluptua. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat.\r\n\r\nLorem ipsum dolor sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. At vero eos et accusam et justo duo dolores et ea rebum.', 2012, 'Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.'),
-(2244, '', 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\r\n\r\nLorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum.\r\n\r\nSanctus sea sed takimata ut vero voluptua. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.\r\n\r\nDuis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. At vero eos et accusam et justo duo dolores et ea rebum. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.\r\n\r\nLorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. At vero eos et accusam et justo duo dolores et ea rebum. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.', 2003, 'Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.'),
-(2599, '', 'Sanctus sea sed takimata ut vero voluptua. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.\r\n\r\nQuis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sanctus sea sed takimata ut vero voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.\r\n\r\nExcepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. Sanctus sea sed takimata ut vero voluptua. At vero eos et accusam et justo duo dolores et ea rebum.\r\n\r\nLorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Sanctus sea sed takimata ut vero voluptua.\r\n\r\nLorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.', 2000, 'At vero eos et');
+INSERT INTO `fx_content_award` (`id`, `image`, `year`, `short_description`) VALUES
+(2243, '', 2012, 'Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.'),
+(2244, '', 2003, 'Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.'),
+(2599, '', 2000, 'At vero eos et');
 
 -- --------------------------------------------------------
 
@@ -535,7 +554,6 @@ CREATE TABLE IF NOT EXISTS `fx_content_company` (
   `id` int(11) NOT NULL,
   `logo` varchar(255) DEFAULT NULL,
   `short_description` varchar(255) DEFAULT NULL,
-  `description` text,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -548,7 +566,6 @@ CREATE TABLE IF NOT EXISTS `fx_content_company` (
 CREATE TABLE IF NOT EXISTS `fx_content_complex_photo` (
   `id` int(11) NOT NULL,
   `image` varchar(255) DEFAULT NULL,
-  `description` text,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -556,8 +573,8 @@ CREATE TABLE IF NOT EXISTS `fx_content_complex_photo` (
 -- Дамп данных таблицы `fx_content_complex_photo`
 --
 
-INSERT INTO `fx_content_complex_photo` (`id`, `image`, `description`) VALUES
-(2182, '429', '<p>asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasddfasdfasdf</p>');
+INSERT INTO `fx_content_complex_photo` (`id`, `image`) VALUES
+(2182, '429');
 
 -- --------------------------------------------------------
 
@@ -568,7 +585,6 @@ INSERT INTO `fx_content_complex_photo` (`id`, `image`, `description`) VALUES
 CREATE TABLE IF NOT EXISTS `fx_content_complex_video` (
   `id` int(11) NOT NULL,
   `embed_html` text,
-  `description` text,
   `tags` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -577,9 +593,9 @@ CREATE TABLE IF NOT EXISTS `fx_content_complex_video` (
 -- Дамп данных таблицы `fx_content_complex_video`
 --
 
-INSERT INTO `fx_content_complex_video` (`id`, `embed_html`, `description`, `tags`) VALUES
-(2188, '<iframe width="560" height="315" src="//www.youtube.com/embed/aIbpt1aDFqM" frameborder="0" allowfullscreen></iframe>', 'asasdfasdfasdasdf', NULL),
-(2193, '<iframe width="420" height="315" src="//www.youtube.com/embed/hyvFBqlCiCw" frameborder="0" allowfullscreen></iframe>', 'asdgsdfgdfgdfgsdfg', NULL);
+INSERT INTO `fx_content_complex_video` (`id`, `embed_html`, `tags`) VALUES
+(2188, '<iframe width="560" height="315" src="//www.youtube.com/embed/aIbpt1aDFqM" frameborder="0" allowfullscreen></iframe>', NULL),
+(2193, '<iframe width="420" height="315" src="//www.youtube.com/embed/hyvFBqlCiCw" frameborder="0" allowfullscreen></iframe>', NULL);
 
 -- --------------------------------------------------------
 
@@ -686,6 +702,8 @@ CREATE TABLE IF NOT EXISTS `fx_content_page` (
   `name` varchar(255) NOT NULL,
   `title` varchar(255) DEFAULT NULL,
   `comments_counter` int(11) DEFAULT NULL,
+  `description` text,
+  `h1` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `url` (`url`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=62;
@@ -694,164 +712,175 @@ CREATE TABLE IF NOT EXISTS `fx_content_page` (
 -- Дамп данных таблицы `fx_content_page`
 --
 
-INSERT INTO `fx_content_page` (`id`, `url`, `name`, `title`, `comments_counter`) VALUES
-(2, '/', 'Main page', '', NULL),
-(3, '/404/', '404', NULL, NULL),
-(16, '/contacts/', 'Contacts', NULL, NULL),
-(1883, '/', 'Jeep Travels', 'Jeep Travels: super travels!', NULL),
-(1887, '/about', 'About', NULL, NULL),
-(1891, '/summer-rally', 'Mangyshlak: The Great Step', '', NULL),
-(1892, '/paris-dakar', 'Argentina – Chilix', '', NULL),
-(1898, 'http://facebook.com/', 'Facebook', NULL, NULL),
-(1899, 'http://plus.google.com/', 'Google+', NULL, NULL),
-(1900, 'http://instagram.com', 'Instagram', NULL, NULL),
-(1901, 'http://youtube.com', 'YouTube', NULL, NULL),
-(1902, '/test', 'Take part in our events', NULL, NULL),
-(1933, '/tag-ivan-kurochkin', 'John Kurochkin', 'News about John', NULL),
-(2028, '/lulz', '#lulz', NULL, NULL),
-(2033, '/funeral-2', 'aero funeral', NULL, NULL),
-(2039, '/dominikana-666', 'Dominikana', NULL, NULL),
-(2067, '/agro', 'agriculture', NULL, NULL),
-(2069, '/girlz', 'agirlz', NULL, NULL),
-(2072, '/Top-1', 'Top 1', '', NULL),
-(2073, '/Top-2', 'Top 2', '', NULL),
-(2074, '/Sub-1', 'Sub alt branch', '', NULL),
-(2075, '/Sub-sub-1', 'Sub sub 1', '', NULL),
-(2076, '/Sub-very-deep-1', 'Oops?', '', NULL),
-(2077, '/Sub-2', 'Sub 2', '', NULL),
-(2078, '/ALter-sub-1', 'Sub first branch', '', NULL),
-(2079, '/Level-5-1', '5 level wow!', '', NULL),
-(2081, '/ALter-sub-2', 'Alter menu item', '', NULL),
-(2082, '/Dooops', 'Dooops', '', NULL),
-(2149, '/news', 'Neaws', 'News', 0),
-(2150, '/Test-3', 'Test', 'Test', 0),
-(2151, '/test-4', 'test', NULL, 0),
-(2153, '/sdf', 'sdf', NULL, 0),
-(2155, '/asdfasdf', 'asdfasdf', NULL, 0),
-(2157, '/asdf', 'asdf', NULL, 0),
-(2159, '/asdfasdfasdf', 'asdfasdfasdf', NULL, 0),
-(2161, '/asdfasdfasdf-2', 'asdfasdfasdf', NULL, 0),
-(2163, '/asdfasdf-2', 'asdfasdf', NULL, 0),
-(2165, '/tyurtyu', 'tyurtyu', NULL, 0),
-(2167, '/asdfasdfasdf-3', 'asdfasdfasdf\\', NULL, 0),
-(2169, '/wer', 'wer', NULL, 0),
-(2171, '/gfgghf', 'gfgghf', NULL, 0),
-(2173, '/ghjghj', 'ghjghj', NULL, 0),
-(2175, '/ppp', 'ppp', NULL, 0),
-(2179, '/Persons', 'Persons', 'Persons', 0),
-(2181, '/Complex-Photos', 'Complex Photosa', 'Complex Photos', 0),
-(2182, '/test-5', 'test', 'Test', 0),
-(2187, '/Complex-Videos', 'Complex Videos', 'Complex Videos', 0),
-(2188, '/Test-7', 'Test', 'Test', 0),
-(2193, '/Testsdfsdgfdf', 'Testsdfsdgfdf', 'Test', 0),
-(2210, '/', 'Cover Page', NULL, 0),
-(2211, '/404', 'Page not found', NULL, 0),
-(2212, '/about', 'About Us', 'About Us', 0),
-(2233, '/Employees', 'Employees', 'Employees', 0),
-(2236, '/Faq1', 'Faq1', 'Faq1', 0),
-(2238, '/Ivan', 'Ivanov I.P.', 'Ivan', 0),
-(2239, '/Stet-clita-kasd-gubergren', 'Stet clita kasd gubergren', 'Stet clita kasd gubergren', 0),
-(2242, '/Awards', 'Awards', 'Awards', 0),
-(2243, '/Duis-autem-vel-eum', 'Duis autem vel eum', 'Duis autem vel eum', 0),
-(2244, '/Ut-wisi-enim-ad', 'Sanctus sea sed takimata', 'Ut wisi enim ad', 0),
-(2245, '/Contacts', 'Contacts', 'Contacts', 0),
-(2248, '/Vacancies', 'Vacancies', 'Vacancies', 0),
-(2249, '/At-vero-eos-et', 'At vero eos et', 'At vero eos et', 0),
-(2250, '/Quis-aute-iure', 'Quis aute iure', 'Quis aute iure', 0),
-(2251, '/Projects', 'Projects', 'Projects', 0),
-(2253, '/Lorem-ipsum-dolor-sit-3', 'Lorem ipsum dolor sit', 'Lorem ipsum dolor sit', 0),
-(2254, '/News', 'News', 'News', 0),
-(2256, '/Stet-clita-kasd-gubergren-2-main', '/b/', 'Ut wisi enim ad', 0),
-(2257, '/Catalog', 'Catalog', 'Catalog', 0),
-(2258, '/Ut-wisi-enim-ad-2', 'Ut wisi enim ad', 'Ut wisi enim ad', 0),
-(2259, '/Stet-clita-kasd-gubergren-3', 'Stet clita kasd ', 'Stet clita kasd gubergren', 0),
-(2260, '/At-vero-eos-et-2', 'At vero eos et', 'At vero eos et', 0),
-(2317, '/wool-gloves', 'wool gloves', NULL, 0),
-(2319, '/simple-gloves', 'simple gloves', NULL, 0),
-(2326, '/Ut-wisi-enim-ad-3', 'Ut wisi enim ad', 'Ut wisi enim ad', 0),
-(2328, '/Nam-liber-tempor-cum', 'Nam liber tempor cum', 'Nam liber tempor cum', 0),
-(2332, '/gloves', 'gloves', NULL, 0),
-(2338, '/ghfhg', 'ghfhg', NULL, 0),
-(2340, '/Consetetur-sadipscing-elitr-sed', 'Consetetur sadipscing elitr sed', 'Consetetur sadipscing elitr sed', 0),
-(2410, '/page-2410-html', 'Stet clita kasd', 'Stet clita kasd gubergren', 0),
-(2455, '/Stet-clita-kasd-gubergren-2', 'Stet clita kasd gubergren', 'Stet clita kasd gubergren', 0),
-(2499, '/Consetetur-sadipscing-elitr-sed-2', 'Consetetur sadipscing elitr sed', 'Consetetur sadipscing elitr sed', 0),
-(2500, '/At-vero-eos-et-3', 'At vero eos et', 'At vero eos et', 0),
-(2501, '/', 'At vero eos et 汉语 漢語', NULL, 0),
-(2502, '/404', 'Page not found', NULL, 0),
-(2510, '/Catalog', 'Catalog', 'Catalog', 0),
-(2534, '/tag', 'tag', NULL, 0),
-(2537, '/asd', 'asd', NULL, 0),
-(2551, '/Lorem-ipsum-dolor-sit', 'Lorem ipsum dolor ', 'Lorem ipsum dolor sit', 0),
-(2552, '/Duis-autem-vel-eum', 'Duis autem vel eum', 'Duis autem vel eum', 0),
-(2553, '/Consetetur-sadipscing-elitr-sed', 'Consetetur ', 'Consetetur sadipscing elitr sed', 0),
-(2562, '/About', 'About', 'About', 0),
-(2567, '/News', 'News', 'News', 0),
-(2568, '/At-vero-eos-et', 'At vero eos et', 'At vero eos et', 0),
-(2569, '/Lorem-ipsum-dolor-sit-3', 'Lorem ipsum dolor ', 'Lorem ipsum dolor sit', 0),
-(2570, '/Stet-clita-kasd-gubergren-3', 'Stet clita kasd', 'Stet clita kasd gubergren', 0),
-(2571, '/Duis-autem-vel-eum-3', 'Duis autem vel eum', 'Duis autem vel eum', 0),
-(2572, '/At-vero-eos-et-2', 'At vero eos et', 'At vero eos et', 0),
-(2573, '/Lorem-ipsum-dolor-sit-4', 'Lorem ipsum dolor sit', 'Lorem ipsum dolor sit', 0),
-(2574, '/Quis-aute-iure-reprehenderit', 'Quis aute iure reprehenderit', 'Quis aute iure reprehenderit', 0),
-(2591, '/Employees', 'Employees', 'Employees', 0),
-(2592, '/Lorem-ipsum-dolor-sit-2', 'Lorem ipsum dolor sit', 'Lorem ipsum dolor sit', 0),
-(2593, '/Vacancies', 'Vacancies', 'Vacancies', 0),
-(2594, '/Ut-wisi-enim-ad', 'Ut wisi enim ad', 'Ut wisi enim ad', 0),
-(2595, '/Nam-liber-tempor-cum', 'Nam liber tempor cum', 'Nam liber tempor cum', 0),
-(2596, '/Projects', 'Projects', 'Projects', 0),
-(2597, '/Quis-aute-iure-reprehenderit-2', 'Quis aute iure reprehenderit', 'Quis aute iure reprehenderit', 0),
-(2598, '/Awards', 'Awards', 'Awards', 0),
-(2599, '/Excepteur-sint-obcaecat-cupiditat', 'Excepteur sint obcaecat cupiditat', 'Excepteur sint obcaecat cupiditat', 0),
-(2601, '/last-week', 'last week', 'last week', 0),
-(2602, '/last-month', 'last month', 'last month', 0),
-(2624, '/Nam-liber-tempor-cum-2', 'Nam liber tempor cum', 'Nam liber tempor cum', 0),
-(2627, '/Consetetur-sadipscing-elitr-sed-2', 'Consetetur sadipscing elitr sed', 'Consetetur sadipscing elitr sed', 0),
-(2631, '/Duis-autem-vel-eum-2', 'Duis autem vel eum', 'Duis autem vel eum', 0),
-(2633, '/Lorem-ipsum-dolor-sit-5', 'Lorem ipsum dolor sit', 'Lorem ipsum dolor sit', 0),
-(2635, '/', 'Cover Page', NULL, 0),
-(2636, '/404', 'Page not found', NULL, 0),
-(2638, '/Catalog', 'Our services', 'Catalog', 0),
-(2639, '/Projects', 'Projects', 'Projects', 0),
-(2640, '/About', 'About', '', 0),
-(2641, '/Contacts', 'Contacts', '', 0),
-(2652, '/Sport-series', 'Sport', 'Sport series', 0),
-(2654, '/people-photo', 'People', '', 0),
-(2655, '/Team', 'The team', 'People', 0),
-(2656, '/Vacancies', 'Vacancies', 'Vacancies', 0),
-(2657, '/News', 'News', 'News', 0),
-(2658, '/Landscapes', 'Landscapes', '', 0),
-(2660, '/Football-photo-report', 'Football photo report', '', 0),
-(2661, '/Skiing', 'Skiing', '', 0),
-(2662, '/Swimming', 'Swimming', '', 0),
-(2671, '/Ken-Cold', 'Ken Cold', '', 0),
-(2673, '/Leila-Stoparsson', 'Leila Stoparsson', '', 0),
-(2675, '/Nika-Lightman', 'Nika Lightman', '', 0),
-(2677, '/Maker-up', 'Maker-up', '', 0),
-(2678, '/Duis-autem-vel-eum', 'Redecoration in our new studio', 'Duis autem vel eum', 0),
-(2679, '/Moscow-Streetshot-Contest', 'Moscow Streetshot Contest', '', 0),
-(2680, '/Stet-clita-kasd-gubergren', 'Free ride proof pics!', 'Stet clita kasd gubergren', 0),
-(2681, '/Moscow-Athletics-Championship', 'Moscow Athletics Championship', 'Moscow Athletics Championship', 0),
-(2688, '/Carnival-of-miners', 'Carnival of miners', '', 0),
-(2689, '/At-vero-eos-et', 'At vero eos et', 'At vero eos et', 0),
-(2690, '/Cockfights', 'Cockfights', '', 0),
-(2717, '/figag', 'figag', NULL, 0),
-(2728, '/studio', 'studio', NULL, 0),
-(2731, '/contest', 'contest', NULL, 0),
-(2733, '/sport', 'sport', NULL, 0),
-(2735, '/Sonya-Zoomer', 'Sonya Zoomer', '', 0),
-(2737, '/Delivery-person', 'Delivery person', '', 0),
-(2739, '/Athletics', 'Athletics', '', 0),
-(2740, '/Portrait', 'Portrait', '', 0),
-(2741, '/Passport-photos', 'Passport photos', '', 0),
-(2742, '/Cities', 'Cities', '', 0),
-(2743, '/Nature', 'Nature', '', 0),
-(2744, '/Events', 'Events', '', 0),
-(2745, '/Birthday-parties', 'Birthday parties', '', 0),
-(2746, '/Corporate-events', 'Corporate events', '', 0),
-(2751, '/Kupala-Night', 'Kupala Night', '', 0),
-(2757, '/Bull-Easter', 'Bull Easter', '', 0),
-(2762, '/Olo-proj', 'Olo proj', '', 0);
+INSERT INTO `fx_content_page` (`id`, `url`, `name`, `title`, `comments_counter`, `description`, `h1`) VALUES
+(2, '/', 'Main page', '', NULL, NULL, NULL),
+(3, '/404/', '404', NULL, NULL, NULL, NULL),
+(16, '/contacts/', 'Contacts', NULL, NULL, NULL, NULL),
+(1883, '/', 'Jeep Travels', 'Jeep Travels: super travels!', NULL, NULL, NULL),
+(1887, '/about', 'About', NULL, NULL, NULL, NULL),
+(1891, '/summer-rally', 'Mangyshlak: The Great Step', '', NULL, NULL, NULL),
+(1892, '/paris-dakar', 'Argentina – Chilix', '', NULL, NULL, NULL),
+(1898, 'http://facebook.com/', 'Facebook', NULL, NULL, NULL, NULL),
+(1899, 'http://plus.google.com/', 'Google+', NULL, NULL, NULL, NULL),
+(1900, 'http://instagram.com', 'Instagram', NULL, NULL, NULL, NULL),
+(1901, 'http://youtube.com', 'YouTube', NULL, NULL, NULL, NULL),
+(1902, '/test', 'Take part in our events', NULL, NULL, NULL, NULL),
+(1933, '/tag-ivan-kurochkin', 'John Kurochkin', 'News about John', NULL, NULL, NULL),
+(2028, '/lulz', '#lulz', NULL, NULL, NULL, NULL),
+(2033, '/funeral-2', 'aero funeral', NULL, NULL, NULL, NULL),
+(2039, '/dominikana-666', 'Dominikana', NULL, NULL, NULL, NULL),
+(2067, '/agro', 'agriculture', NULL, NULL, NULL, NULL),
+(2069, '/girlz', 'agirlz', NULL, NULL, NULL, NULL),
+(2072, '/Top-1', 'Top 1', '', NULL, NULL, NULL),
+(2073, '/Top-2', 'Top 2', '', NULL, NULL, NULL),
+(2074, '/Sub-1', 'Sub alt branch', '', NULL, NULL, NULL),
+(2075, '/Sub-sub-1', 'Sub sub 1', '', NULL, NULL, NULL),
+(2076, '/Sub-very-deep-1', 'Oops?', '', NULL, NULL, NULL),
+(2077, '/Sub-2', 'Sub 2', '', NULL, NULL, NULL),
+(2078, '/ALter-sub-1', 'Sub first branch', '', NULL, NULL, NULL),
+(2079, '/Level-5-1', '5 level wow!', '', NULL, NULL, NULL),
+(2081, '/ALter-sub-2', 'Alter menu item', '', NULL, NULL, NULL),
+(2082, '/Dooops', 'Dooops', '', NULL, NULL, NULL),
+(2149, '/news', 'Neaws', 'News', 0, NULL, NULL),
+(2150, '/Test-3', 'Test', 'Test', 0, NULL, NULL),
+(2151, '/test-4', 'test', NULL, 0, NULL, NULL),
+(2153, '/sdf', 'sdf', NULL, 0, NULL, NULL),
+(2155, '/asdfasdf', 'asdfasdf', NULL, 0, NULL, NULL),
+(2157, '/asdf', 'asdf', NULL, 0, NULL, NULL),
+(2159, '/asdfasdfasdf', 'asdfasdfasdf', NULL, 0, NULL, NULL),
+(2161, '/asdfasdfasdf-2', 'asdfasdfasdf', NULL, 0, NULL, NULL),
+(2163, '/asdfasdf-2', 'asdfasdf', NULL, 0, NULL, NULL),
+(2165, '/tyurtyu', 'tyurtyu', NULL, 0, NULL, NULL),
+(2167, '/asdfasdfasdf-3', 'asdfasdfasdf\\', NULL, 0, NULL, NULL),
+(2169, '/wer', 'wer', NULL, 0, NULL, NULL),
+(2171, '/gfgghf', 'gfgghf', NULL, 0, NULL, NULL),
+(2173, '/ghjghj', 'ghjghj', NULL, 0, NULL, NULL),
+(2175, '/ppp', 'ppp', NULL, 0, NULL, NULL),
+(2179, '/Persons', 'Persons', 'Persons', 0, NULL, NULL),
+(2181, '/Complex-Photos', 'Complex Photosa', 'Complex Photos', 0, NULL, NULL),
+(2182, '/test-5', 'test', 'Test', 0, NULL, NULL),
+(2187, '/Complex-Videos', 'Complex Videos', 'Complex Videos', 0, NULL, NULL),
+(2188, '/Test-7', 'Test', 'Test', 0, NULL, NULL),
+(2193, '/Testsdfsdgfdf', 'Testsdfsdgfdf', 'Test', 0, NULL, NULL),
+(2210, '/', 'Cover Page', NULL, 0, NULL, NULL),
+(2211, '/404', 'Page not found', NULL, 0, NULL, NULL),
+(2212, '/about', 'About Us', 'About Us', 0, NULL, NULL),
+(2233, '/Employees', 'Employees', 'Employees', 0, NULL, NULL),
+(2236, '/Faq1', 'Faq1', 'Faq1', 0, NULL, NULL),
+(2238, '/Ivan', 'Ivanov I.P.', 'Ivan', 0, NULL, NULL),
+(2239, '/Stet-clita-kasd-gubergren', 'Stet clita kasd gubergren', 'Stet clita kasd gubergren', 0, NULL, NULL),
+(2242, '/Awards', 'Awards', 'Awards', 0, NULL, NULL),
+(2243, '/Duis-autem-vel-eum', 'Duis autem vel eum', 'Duis autem vel eum', 0, NULL, NULL),
+(2244, '/Ut-wisi-enim-ad', 'Sanctus sea sed takimata', 'Ut wisi enim ad', 0, NULL, NULL),
+(2245, '/Contacts', 'Contacts', 'Contacts', 0, NULL, NULL),
+(2248, '/Vacancies', 'Vacancies', 'Vacancies', 0, NULL, NULL),
+(2249, '/At-vero-eos-et', 'At vero eos et', 'At vero eos et', 0, NULL, NULL),
+(2250, '/Quis-aute-iure', 'Quis aute iure', 'Quis aute iure', 0, NULL, NULL),
+(2251, '/Projects', 'Projects', 'Projects', 0, NULL, NULL),
+(2253, '/Lorem-ipsum-dolor-sit-3', 'Lorem ipsum dolor sit', 'Lorem ipsum dolor sit', 0, NULL, NULL),
+(2254, '/News', 'News', 'News', 0, NULL, NULL),
+(2256, '/Stet-clita-kasd-gubergren-2-main', '/b/', 'Ut wisi enim ad', 0, NULL, NULL),
+(2257, '/Catalog', 'Catalog', 'Catalog', 0, NULL, NULL),
+(2258, '/Ut-wisi-enim-ad-2', 'Ut wisi enim ad', 'Ut wisi enim ad', 0, NULL, NULL),
+(2259, '/Stet-clita-kasd-gubergren-3', 'Stet clita kasd ', 'Stet clita kasd gubergren', 0, NULL, NULL),
+(2260, '/At-vero-eos-et-2', 'At vero eos et', 'At vero eos et', 0, NULL, NULL),
+(2317, '/wool-gloves', 'wool gloves', NULL, 0, NULL, NULL),
+(2319, '/simple-gloves', 'simple gloves', NULL, 0, NULL, NULL),
+(2326, '/Ut-wisi-enim-ad-3', 'Ut wisi enim ad', 'Ut wisi enim ad', 0, NULL, NULL),
+(2328, '/Nam-liber-tempor-cum', 'Nam liber tempor cum', 'Nam liber tempor cum', 0, NULL, NULL),
+(2332, '/gloves', 'gloves', NULL, 0, NULL, NULL),
+(2338, '/ghfhg', 'ghfhg', NULL, 0, NULL, NULL),
+(2340, '/Consetetur-sadipscing-elitr-sed', 'Consetetur sadipscing elitr sed', 'Consetetur sadipscing elitr sed', 0, NULL, NULL),
+(2410, '/page-2410-html', 'Stet clita kasd', 'Stet clita kasd gubergren', 0, NULL, NULL),
+(2455, '/Stet-clita-kasd-gubergren-2', 'Stet clita kasd gubergren', 'Stet clita kasd gubergren', 0, NULL, NULL),
+(2499, '/Consetetur-sadipscing-elitr-sed-2', 'Consetetur sadipscing elitr sed', 'Consetetur sadipscing elitr sed', 0, NULL, NULL),
+(2500, '/At-vero-eos-et-3', 'At vero eos et', 'At vero eos et', 0, NULL, NULL),
+(2501, '/', 'At vero eos et 汉语 漢語', NULL, 0, NULL, NULL),
+(2502, '/404', 'Page not found', NULL, 0, NULL, NULL),
+(2510, '/Catalog', 'Catalog', 'Catalog', 0, NULL, NULL),
+(2534, '/tag', 'tag', NULL, 0, NULL, NULL),
+(2537, '/asd', 'asd', NULL, 0, NULL, NULL),
+(2551, '/Lorem-ipsum-dolor-sit', 'Lorem ipsum dolor ', 'Lorem ipsum dolor sit', 0, NULL, NULL),
+(2552, '/Duis-autem-vel-eum', 'Duis autem vel eum', 'Duis autem vel eum', 0, NULL, NULL),
+(2553, '/Consetetur-sadipscing-elitr-sed', 'Consetetur ', 'Consetetur sadipscing elitr sed', 0, NULL, NULL),
+(2562, '/About', 'About', 'About', 0, NULL, NULL),
+(2567, '/News', 'News', 'News', 0, NULL, NULL),
+(2568, '/At-vero-eos-et', 'At vero eos et', 'At vero eos et', 0, NULL, NULL),
+(2569, '/Lorem-ipsum-dolor-sit-3', 'Lorem ipsum dolor ', 'Lorem ipsum dolor sit', 0, NULL, NULL),
+(2570, '/Stet-clita-kasd-gubergren-3', 'Stet clita kasd', 'Stet clita kasd gubergren', 0, NULL, NULL),
+(2571, '/Duis-autem-vel-eum-3', 'Duis autem vel eum', 'Duis autem vel eum', 0, NULL, NULL),
+(2572, '/At-vero-eos-et-2', 'At vero eos et', 'At vero eos et', 0, NULL, NULL),
+(2573, '/Lorem-ipsum-dolor-sit-4', 'Lorem ipsum dolor sit', 'Lorem ipsum dolor sit', 0, NULL, NULL),
+(2574, '/Quis-aute-iure-reprehenderit', 'Quis aute iure reprehenderit', 'Quis aute iure reprehenderit', 0, NULL, NULL),
+(2591, '/Employees', 'Employees', 'Employees', 0, NULL, NULL),
+(2592, '/Lorem-ipsum-dolor-sit-2', 'Lorem ipsum dolor sit', 'Lorem ipsum dolor sit', 0, NULL, NULL),
+(2593, '/Vacancies', 'Vacancies', 'Vacancies', 0, NULL, NULL),
+(2594, '/Ut-wisi-enim-ad', 'Ut wisi enim ad', 'Ut wisi enim ad', 0, NULL, NULL),
+(2595, '/Nam-liber-tempor-cum', 'Nam liber tempor cum', 'Nam liber tempor cum', 0, NULL, NULL),
+(2596, '/Projects', 'Projects', 'Projects', 0, NULL, NULL),
+(2597, '/Quis-aute-iure-reprehenderit-2', 'Quis aute iure reprehenderit', 'Quis aute iure reprehenderit', 0, NULL, NULL),
+(2598, '/Awards', 'Awards', 'Awards', 0, NULL, NULL),
+(2599, '/Excepteur-sint-obcaecat-cupiditat', 'Excepteur sint obcaecat cupiditat', 'Excepteur sint obcaecat cupiditat', 0, NULL, NULL),
+(2601, '/last-week', 'last week', 'last week', 0, NULL, NULL),
+(2602, '/last-month', 'last month', 'last month', 0, NULL, NULL),
+(2624, '/Nam-liber-tempor-cum-2', 'Nam liber tempor cum', 'Nam liber tempor cum', 0, NULL, NULL),
+(2627, '/Consetetur-sadipscing-elitr-sed-2', 'Consetetur sadipscing elitr sed', 'Consetetur sadipscing elitr sed', 0, NULL, NULL),
+(2631, '/Duis-autem-vel-eum-2', 'Duis autem vel eum', 'Duis autem vel eum', 0, NULL, NULL),
+(2633, '/Lorem-ipsum-dolor-sit-5', 'Lorem ipsum dolor sit', 'Lorem ipsum dolor sit', 0, NULL, NULL),
+(2635, '/', 'Cover Page', NULL, 0, NULL, NULL),
+(2636, '/404', 'Page not found', NULL, 0, NULL, NULL),
+(2638, '/Catalog', 'Our services', 'Catalog', 0, NULL, NULL),
+(2639, '/Projects', 'Projects', 'Projects', 0, NULL, NULL),
+(2640, '/About', 'About', '', 0, NULL, NULL),
+(2641, '/Contacts', 'Contacts', '', 0, NULL, NULL),
+(2652, '/Sport-series', 'Sport', 'Sport series', 0, NULL, NULL),
+(2654, '/people-photo', 'People', '', 0, NULL, NULL),
+(2655, '/Team', 'The team', 'People', 0, NULL, NULL),
+(2656, '/Vacancies', 'Vacancies', 'Vacancies', 0, NULL, NULL),
+(2657, '/News', 'News', 'News', 0, NULL, NULL),
+(2658, '/Landscapes', 'Landscapes', '', 0, NULL, NULL),
+(2660, '/Football-photo-report', 'Football photo report', '', 0, NULL, NULL),
+(2661, '/Skiing', 'Skiing', '', 0, NULL, NULL),
+(2662, '/Swimming', 'Swimming', '', 0, NULL, NULL),
+(2671, '/Ken-Cold', 'Ken Cold', '', 0, NULL, NULL),
+(2673, '/Leila-Stoparsson', 'Leila Stoparsson', '', 0, NULL, NULL),
+(2675, '/Nika-Lightman', 'Nika Lightman', '', 0, NULL, NULL),
+(2677, '/Maker-up', 'Maker-up', '', 0, NULL, NULL),
+(2678, '/Duis-autem-vel-eum', 'Redecoration in our new studio', 'Duis autem vel eum', 0, NULL, NULL),
+(2679, '/Moscow-Streetshot-Contest', 'Moscow Streetshot Contest', '', 0, NULL, NULL),
+(2680, '/Stet-clita-kasd-gubergren', 'Free ride proof pics!', 'Stet clita kasd gubergren', 0, NULL, NULL),
+(2681, '/Moscow-Athletics-Championship', 'Moscow Athletics Championship', 'Moscow Athletics Championship', 0, NULL, NULL),
+(2688, '/Carnival-of-miners', 'Carnival of miners', '', 0, NULL, NULL),
+(2689, '/At-vero-eos-et', 'At vero eos et', 'At vero eos et', 0, NULL, NULL),
+(2690, '/Cockfights', 'Cockfights', '', 0, NULL, NULL),
+(2717, '/figag', 'figag', NULL, 0, NULL, NULL),
+(2728, '/studio', 'studio', NULL, 0, NULL, NULL),
+(2731, '/contest', 'contest', NULL, 0, NULL, NULL),
+(2733, '/sport', 'sport', NULL, 0, NULL, NULL),
+(2735, '/Sonya-Zoomer', 'Sonya Zoomer', '', 0, NULL, NULL),
+(2737, '/Delivery-person', 'Delivery person', '', 0, NULL, NULL),
+(2739, '/Athletics', 'Athletics', '', 0, NULL, NULL),
+(2740, '/Portrait', 'Portrait', '', 0, NULL, NULL),
+(2741, '/Passport-photos', 'Passport photos', '', 0, NULL, NULL),
+(2742, '/Cities', 'Cities', '', 0, NULL, NULL),
+(2743, '/Nature', 'Nature', '', 0, NULL, NULL),
+(2744, '/Events', 'Events', '', 0, NULL, NULL),
+(2745, '/Birthday-parties', 'Birthday parties', '', 0, NULL, NULL),
+(2746, '/Corporate-events', 'Corporate events', '', 0, NULL, NULL),
+(2751, '/Kupala-Night', 'Kupala Night', '', 0, NULL, NULL),
+(2757, '/Bull-Easter', 'Bull Easter', '', 0, NULL, NULL),
+(2762, '/Olo-proj', 'Olo proj', '', 0, NULL, NULL),
+(2777, '/', 'Cover Page', NULL, 0, NULL, NULL),
+(2778, '/404', 'Page not found', NULL, 0, NULL, NULL),
+(2779, '/About-us', 'About us', '', 0, '<p>\n	Узнайте кое-что о нашей команде. Проникнитесь нашим vision!\n</p>', NULL),
+(2780, '/Projects', 'Projects', '', 0, NULL, NULL),
+(2797, 'http://facebook.com/tulpan', 'On facebook', '', 0, NULL, NULL),
+(2799, '/Services', 'Services', '', 0, NULL, NULL),
+(2800, '/Contact-us', 'Contact us', '', 0, NULL, NULL),
+(2801, '/SEO', 'SEO', '', 0, '', 'SEARCH ENGINE OPTIMIZATION (SEO) '),
+(2802, '/PPC', 'PPC', '', 0, NULL, 'PPC Mamagement (Web and mobile)'),
+(2803, '/Display-ads', 'Display ads', '', 0, NULL, NULL),
+(2804, '/Website-development', 'Website development', '', 0, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -865,7 +894,6 @@ CREATE TABLE IF NOT EXISTS `fx_content_person` (
   `department` varchar(255) DEFAULT NULL,
   `photo` varchar(255) DEFAULT NULL,
   `short_description` varchar(255) DEFAULT NULL,
-  `description` text,
   `birthday` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -874,14 +902,14 @@ CREATE TABLE IF NOT EXISTS `fx_content_person` (
 -- Дамп данных таблицы `fx_content_person`
 --
 
-INSERT INTO `fx_content_person` (`id`, `full_name`, `department`, `photo`, `short_description`, `description`, `birthday`) VALUES
-(2238, 'Pertrovich Ivanov', 'Ecommerce', '', 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.sdasd', 'Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.\r\n\r\n Sanctus sea sed takimata ut vero voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. At vero eos et accusam et justo duo dolores et ea rebum.\r\n\r\nDuis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. At vero eos et accusam et justo duo dolores et ea rebum. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. At vero eos et accusam et justo duo dolores et ea rebum.\r\n\r\nStet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\r\n\r\nDuis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. At vero eos et accusam et justo duo dolores et ea rebum.', '2013-10-27 00:00:00'),
-(2239, 'Stet clita kasd gubergren', 'Stet clita kasd gubergren', '', 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu f', '<p>​At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p><p>Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum.</p><p>Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. At vero eos et accusam et justo duo dolores et ea rebum.</p><p>At vero eos et accusam et justo duo dolores et ea rebum. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum.</p><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.. Stet clita kasd gubergren, no sea takimata sanctus est. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Sanctus sea sed takimata ut vero voluptua.</p>', '1976-10-08 00:00:00'),
-(2592, 'Lorem ipsum dolor sit', 'Lorem ipsum dolor sit', '', 'Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id', 'Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.', '2013-12-11 00:00:00'),
-(2671, 'Ken Cold', '', '/floxim_files/content/person/photo/3b_3_0.jpg', 'Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Ut enim ad minim veniam, quis nostrud exercitation ullamco la', '<p>\r\n	  Ken is romantics’ ideal – serene, sensitive, and a bit shy. When led into the wild, he blends into the nature to capture it beautifully.\r\n</p>', '2014-01-23 00:00:00'),
-(2673, 'Leila Stoparsson', '', '/floxim_files/content/person/photo/3a_2_0.JPG', '', '<p>\r\n	 Leila is the best at shooting interiors. Her photographs always give you the sense of the place.\r\n</p>', '2014-01-17 00:00:00'),
-(2675, 'Nika Lightman', '', '/floxim_files/content/person/photo/2b_0.JPG', 'cool portraits', '<p>\r\n	  Nika Lightman has a gift to shoot portraits. We all have pictures of ourselves <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">made by Nika. Accurate yet flattering!</span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;"></span>\r\n</p>', '1986-02-13 00:00:00'),
-(2735, 'Sonya Zoomer', '', '/floxim_files/content/person/photo/3g_2_0.JPG', '', '<p>\r\n	 “She is a genius, a philosopher, an abstract thinker. She has a brain of the first order. She sits motionless, like a spider in the center of its web, but that web has a thousand radiations, and she knows well every quiver of each of them. She does little himself. She only plans…”\r\n</p>\r\n<p>\r\n	 Meet Sonya, our manager.\r\n</p>', '0000-00-00 00:00:00');
+INSERT INTO `fx_content_person` (`id`, `full_name`, `department`, `photo`, `short_description`, `birthday`) VALUES
+(2238, 'Pertrovich Ivanov', 'Ecommerce', '', 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.sdasd', '2013-10-27 00:00:00'),
+(2239, 'Stet clita kasd gubergren', 'Stet clita kasd gubergren', '', 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu f', '1976-10-08 00:00:00'),
+(2592, 'Lorem ipsum dolor sit', 'Lorem ipsum dolor sit', '', 'Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id', '2013-12-11 00:00:00'),
+(2671, 'Ken Cold', '', '/floxim_files/content/person/photo/3b_3_0.jpg', 'Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Ut enim ad minim veniam, quis nostrud exercitation ullamco la', '2014-01-23 00:00:00'),
+(2673, 'Leila Stoparsson', '', '/floxim_files/content/person/photo/3a_2_0.JPG', '', '2014-01-17 00:00:00'),
+(2675, 'Nika Lightman', '', '/floxim_files/content/person/photo/2b_0.JPG', 'cool portraits', '1986-02-13 00:00:00'),
+(2735, 'Sonya Zoomer', '', '/floxim_files/content/person/photo/3g_2_0.JPG', '', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -928,7 +956,6 @@ INSERT INTO `fx_content_photo` (`id`, `photo`, `description`, `copy`) VALUES
 
 CREATE TABLE IF NOT EXISTS `fx_content_product` (
   `id` int(11) NOT NULL,
-  `description` text,
   `short_description` text,
   `image` varchar(255) DEFAULT NULL,
   `price` int(11) DEFAULT NULL,
@@ -939,25 +966,25 @@ CREATE TABLE IF NOT EXISTS `fx_content_product` (
 -- Дамп данных таблицы `fx_content_product`
 --
 
-INSERT INTO `fx_content_product` (`id`, `description`, `short_description`, `image`, `price`) VALUES
-(2258, 'Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. At vero eos et accusam et justo duo dolores et ea rebum.', 'Lorem ipsum dolor sit', '', 334),
-(2259, 'Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet. Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.', 'At vero eos et', '', 34534),
-(2260, 'Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.', 'Lorem ipsum dolor sit', '', 234),
-(2328, 'Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Stet clita kasd gubergren, no sea takimata sanctus est. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.', 'At vero eos et', '', 452),
-(2410, '<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</p><p>Sanctus sea sed takimata ut vero voluptua. Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Sanctus sea sed takimata ut vero voluptua. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</p>', 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore ma', '', 234234),
-(2627, '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat.. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Ut wisi enim ad minim veniam, quis nostrud exerci tation</span><span style="font-size: 15px;">ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</span>\r\n</p>', '​Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat.. ', '', 2134),
-(2631, '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Stet clita kasd gubergren, no sea takimata sanctus est. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum.</span>\r\n</p>', '​Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Stet clita kasd gubergren, no sea takimata sanctus est. Nam liber tempor cum soluta nobis eleifend option con', '', 2345),
-(2633, '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Sanctus sea sed takimata ut vero voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est.</span>\r\n</p>', '​Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat', '', 124323),
-(2660, '<p>\r\n	  Our photographers have been shooting Champion League matches since 2008, <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">the finals of UEFA Euro 2008 and 2012. They are now getting ready for World </span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Cup 2014 in Brazil.</span>\r\n</p>\r\n<p>\r\n	  If you want the drama of football match captured by professionals, hire us. We’ve <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">got all the skills, experience, and equipment needed to shot high-quality photo </span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">set for you.</span>\r\n</p>', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">We capture the emotions of players and fans during the match like no one else.</span>\r\n</p>', '/floxim_files/content/product/image/5_football_4_0.jpg', 2000),
-(2661, '<p>\r\n	Ken’s speaking:\r\n</p>\r\n<blockquote>\r\n	I love to shoot winter sports, especially skiing competitions. It’s <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">dynamic, it’s graphic because skis and ski poles give the picture a great rhythm.</span>\r\n</blockquote>\r\n<blockquote>\r\n	The crowd of skiers looks fantastic on the snow. And scenery is always beautiful.\r\n</blockquote>\r\n<blockquote>\r\n	I love winter forest – perhaps that’s my Russian roots talking.\r\n</blockquote>\r\n<p>\r\n	Ken’s been shooting ski competitions around the world for several years. If you <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">need a winter sports series he is your guy.</span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;"></span>\r\n</p>', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">We are not scary of getting cold on the ski run as we usually run twice as much </span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">as the skiers to catch the most interesting moments.</span>\r\n</p>', '/floxim_files/content/product/image/5_ski_5_0.JPG', 1500),
-(2662, '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">After all the time she spent in pools and seas, our photographer Leila is basically </span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">half-human half-dolphin. She knows all the details about shooting in water, and </span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">even has a couple of inventions of her own for underwater shooting.</span>\r\n</p>\r\n<p>\r\n	Leila’s speaking:\r\n</p>\r\n<blockquote>\r\n	I love how water changes the light, shapes, and textures of <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">things. It can be very expressive. I’m currently getting ready for European </span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Aquatic Championship. </span>\r\n</blockquote>\r\n<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">A great photo report’s waiting to be made!</span>\r\n</p>', '<p>\r\n	We love to shoot water sports so much that we attend all the events we can –  <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">from Olympics to school competition in our local pool.</span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;"></span>\r\n</p>', '/floxim_files/content/product/image/5_birthday_2_0.JPG', 1500),
-(2739, '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Athletics was the first competitions our team’s shot. Since our first series in </span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">2007, we’ve become faster and stronger. Ken’s become bolder.</span>\r\n</p>\r\n<p>\r\n	We are so good at shooting athletics partly because competitive running, <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">jumping, and throwing things is something that happens in our studio daily.</span>\r\n</p>\r\n<p>\r\n	We are fascinated with the sight of passion and human endeavor you see at the <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">stadium during competitions. Sometimes, it’s pure heroism from the athletes. We </span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">always do our best to do them justice with our photo series.</span>\r\n</p>', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">“Faster - Higher – Stronger” – our shooting motto.</span>\r\n</p>', '/floxim_files/content/product/image/5_athlet_2_0.JPG', 2100),
-(2740, '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Nika, our portraitist, is super good at catching person’s mood and character.</span>\r\n</p>\r\n<p>\r\n	She’s inventive in studio photo shoot but is open to client’s suggestions.\r\n</p>', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">We shoot portraits with love to subject. Welcome, beautiful client!</span>\r\n</p>', '/floxim_files/content/product/image/3a_1_0.JPG', 800),
-(2741, '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">You know those passport pictures that are more suited for “Wanted” posters? </span>\r\n</p>\r\n<p>\r\n	None of that if you come to our studio.\r\n</p>\r\n<p>\r\n	We do all the necessary formats. We then can do all the necessary editing really  <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">quickly. You’ll look respectable and reliable individual – promise!</span>\r\n</p>', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">High-quality representation of you for docs and visas.</span>\r\n</p>', '/floxim_files/content/product/image/5_portrait_passport_5_0.JPG', 1000),
-(2742, '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Ken is a poet of city jungles. He loves city dynamics and lights and noises. He </span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">also loves to travel and will be excited to go and shoot the city you want. High-</span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">quality pictures and unique view guaranteed.</span>\r\n</p>\r\n<p>\r\n	We are also happy to take orders from city administrations to make a booklet <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">with local sights. Tourists will rush to your city and spend their money around </span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">all those attractions.</span>\r\n</p>', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">We all are in love with street photography. That’s handy if you need an urban </span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">photo series.</span>\r\n</p>', '/floxim_files/content/product/image/5_city_4_0.jpg', 900),
-(2743, '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Ken’s favorite book is Emerson’s Naturalistic Photography. Inspired by the </span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">book he later developed his own system of aesthetics that reflect nature in a </span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">beautiful and unique way.</span>\r\n</p>\r\n<p>\r\n	Ken is armed with all necessary gear and is not afraid of using it. He is very <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">patient – a must-have for a naturalistic artist – and can spend hour in the </span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">woods or on the beach waiting for the perfect sunset.</span>\r\n</p>', '<p>\n	 Our photographers teamed up with major naturalistic magazines.\n</p>\n<p>\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">We are so ready to start a new expedition.</span>\n</p>\n<p>\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;"></span>\n</p>', '/floxim_files/content/product/image/5_nature_2_0.JPG', 900),
-(2745, '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">We are ready to shoot the most exotic and extreme birthday parties. We have </span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">all the gear to shoot in the swimming pool or on the dance floor. Yes, you can </span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">put down your phone for once and enjoy celebrating.</span>\r\n</p>\r\n<p>\r\n	By the way, our team came up with a great device. It includes wide-angle <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">lens and some really technical stuff, like a stick, to make a massive selfie </span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">of you and all your party guests. Imagine the joy of tagging them all later on </span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Instagram!</span>\r\n</p>', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">We’ll do our best to abstain from drinks and capture you and your friends in </span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">the gorgeous way.</span>\r\n</p>', '/floxim_files/content/product/image/5_birthday_9_0.jpg', 200),
-(2746, '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">We have a long experience in shooting corporate sessions, conferences, </span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">parties, and awards ceremonies. Your business rivals will be envious of how </span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">great your corporate events look.</span>\r\n</p>\r\n<p>\r\n	With our digital team ready to work around the clock, all images are published <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">on a password protected website within 48 hours.</span>\r\n</p>', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Among our clients are the biggest companies in the country. Most of them </span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">keep re-booking our photographers year after year.</span>\r\n</p>', '/floxim_files/content/product/image/1_2_0.JPG', 2900);
+INSERT INTO `fx_content_product` (`id`, `short_description`, `image`, `price`) VALUES
+(2258, 'Lorem ipsum dolor sit', '', 334),
+(2259, 'At vero eos et', '', 34534),
+(2260, 'Lorem ipsum dolor sit', '', 234),
+(2328, 'At vero eos et', '', 452),
+(2410, 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore ma', '', 234234),
+(2627, '​Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat.. ', '', 2134),
+(2631, '​Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Stet clita kasd gubergren, no sea takimata sanctus est. Nam liber tempor cum soluta nobis eleifend option con', '', 2345),
+(2633, '​Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat', '', 124323),
+(2660, '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">We capture the emotions of players and fans during the match like no one else.</span>\r\n</p>', '/floxim_files/content/product/image/5_football_4_0.jpg', 2000),
+(2661, '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">We are not scary of getting cold on the ski run as we usually run twice as much </span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">as the skiers to catch the most interesting moments.</span>\r\n</p>', '/floxim_files/content/product/image/5_ski_5_0.JPG', 1500),
+(2662, '<p>\r\n	We love to shoot water sports so much that we attend all the events we can –  <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">from Olympics to school competition in our local pool.</span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;"></span>\r\n</p>', '/floxim_files/content/product/image/5_birthday_2_0.JPG', 1500),
+(2739, '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">“Faster - Higher – Stronger” – our shooting motto.</span>\r\n</p>', '/floxim_files/content/product/image/5_athlet_2_0.JPG', 2100),
+(2740, '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">We shoot portraits with love to subject. Welcome, beautiful client!</span>\r\n</p>', '/floxim_files/content/product/image/3a_1_0.JPG', 800),
+(2741, '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">High-quality representation of you for docs and visas.</span>\r\n</p>', '/floxim_files/content/product/image/5_portrait_passport_5_0.JPG', 1000),
+(2742, '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">We all are in love with street photography. That’s handy if you need an urban </span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">photo series.</span>\r\n</p>', '/floxim_files/content/product/image/5_city_4_0.jpg', 900),
+(2743, '<p>\n	 Our photographers teamed up with major naturalistic magazines.\n</p>\n<p>\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">We are so ready to start a new expedition.</span>\n</p>\n<p>\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;"></span>\n</p>', '/floxim_files/content/product/image/5_nature_2_0.JPG', 1900),
+(2745, '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">We’ll do our best to abstain from drinks and capture you and your friends in </span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">the gorgeous way.</span>\r\n</p>', '/floxim_files/content/product/image/5_birthday_9_0.jpg', 200),
+(2746, '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Among our clients are the biggest companies in the country. Most of them </span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">keep re-booking our photographers year after year.</span>\r\n</p>', '/floxim_files/content/product/image/1_2_0.JPG', 2900);
 
 -- --------------------------------------------------------
 
@@ -996,7 +1023,6 @@ CREATE TABLE IF NOT EXISTS `fx_content_project` (
   `image` varchar(255) DEFAULT NULL,
   `client` varchar(255) DEFAULT NULL,
   `short_description` varchar(255) DEFAULT NULL,
-  `description` text,
   `date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -1005,17 +1031,17 @@ CREATE TABLE IF NOT EXISTS `fx_content_project` (
 -- Дамп данных таблицы `fx_content_project`
 --
 
-INSERT INTO `fx_content_project` (`id`, `image`, `client`, `short_description`, `description`, `date`) VALUES
-(2253, '', 'Duis autem ', 'Stet clita kasd gubergren', 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Lorem ipsum dolor sit amet.', '2013-10-03 00:00:00'),
-(2326, '', 'At vero eos et', 'At vero eos et accusam et justo duo dolores et ea rebum', 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.\r\n\r\nStet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. At vero eos et accusam et justo duo dolores et ea rebum. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.\r\n\r\nAt vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum..\r\n\r\nLorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Sanctus sea sed takimata ut vero voluptua. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.\r\n\r\nDuis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Sanctus sea sed takimata ut vero voluptua.', '2011-10-02 00:00:00'),
-(2340, '', 'Ivano I.P.', 'Lorem ipsum dolor sitLorem ipsum dolor sitLorem ipsum dolor sitLorem ipsum dolor sitLorem ipsum dolor sitLorem ipsum dolor sitLorem ipsum dolor sitLorem ipsum dolor sit', 'Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. At vero eos et accusam et justo duo dolores et ea rebum. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis.', '2013-10-17 00:00:00'),
-(2597, '', 'At vero eos et', 'Lorem ipsum dolor sit', 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.', '2013-12-12 00:00:00'),
-(2688, '/floxim_files/content/project/image/6_Carnival_of_miners_7_0.jpg', '', '', '<p>\r\n	The carnival of Potosi in Bolivia is the traditional feast of miners who live and <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">work in one of the highest mines in the world. The patron of miners, the Devil, </span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">has combined both positive – Indian mythology – and negative – Catholic – </span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">roots. The miners attributed their good fortune directly with a grace of the </span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">devil, and thank him in their crazy carnival dances.</span>\r\n</p>\r\n<p>\r\n	Leila went to Bolivia after Young Pathfinder offered her to do a series about <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">miners’ life in Sought America. Leila came back with a beautiful photo report.</span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;"></span>\r\n</p>', '2014-01-09 00:00:00'),
-(2689, '', '', 'Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Lorem ipsum do', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">At vero eos et accusam et justo duo dolores et ea rebum. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat.</span>\r\n</p>\r\n<p>\r\n	At vero eos et accusam et justo duo dolores et ea rebum. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet.\r\n</p>\r\n<p>\r\n	Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat.\r\n</p>\r\n<p>\r\n	Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum..\r\n</p>\r\n<p style="margin-left: 40px;">\r\n	Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum.\r\n</p>', '0000-00-00 00:00:00'),
-(2690, '/floxim_files/content/project/image/6_cockfights_3_0.JPG', '', '', '<p>\r\n	 A cockfight is a blood sport between two gamecocks, held in a ring called a <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">cockpit. Cockfighting is a blood sport due in some part to the physical trauma </span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">the cocks inflict on each other. Advocates of the "age old sport" often list </span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">cultural and religious relevance as reasons for perpetuation of cockfighting as </span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">a sport.</span>\r\n</p>\r\n<p>\r\n	 Nika disapproves of the whole thing but she went to Cuba to document the <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">fights, the true professional she is.</span>\r\n</p>', '2014-01-16 00:00:00'),
-(2751, '/floxim_files/content/project/image/6_kupala_7_0.jpg', '', '', '<p>\r\n	Kupala Night, also known as Ivan Kupala Day (Feast of St. John the Baptist) <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">is celebrated in Ukraine, Belarus and Russia currently on the night of 6/7 July </span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">in the Gregorian calendar.</span>\r\n</p>\r\n<p>\r\n	The fest has pagan roots. According to an ancient pagan belief, on the eve <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">of Ivan Kupala is the only time of the year when ferns bloom. Prosperity, luck </span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">and power would befall whoever finds a fern flower. On that night village folks </span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">would roam through the forests in search of magical herbs and especially the </span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">elusive fern flower. Traditionally, unmarried women would be the first to enter </span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">the forest. They are followed by young men. In 2010, they were also followed </span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">by Ken who made fantastic photo series.</span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;"></span>\r\n</p>', '0000-00-00 00:00:00'),
-(2757, '/floxim_files/content/project/image/6_pascua_toro_3_0.jpg', '', '', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Pascua Toro (Bull Easter) is the traditional holiday of the inhabitants of the </span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Peruvian town of Ayacucho. Pascua Toro is celebrated during Holy Saturday. </span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">This holiday is famous for colorful running of the bulls through the streets of </span><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">the town.</span>\r\n</p>\r\n<p>\r\n	In 2011, our Ken took a huge risk and ran along with bulls. Fortunately, no <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">bulls were harmed.</span>\r\n</p>', '0000-00-00 00:00:00'),
-(2762, '/floxim_files/content/project/image/art_stub_3_0_0.jpg', '', '', '', '0000-00-00 00:00:00');
+INSERT INTO `fx_content_project` (`id`, `image`, `client`, `short_description`, `date`) VALUES
+(2253, '', 'Duis autem ', 'Stet clita kasd gubergren', '2013-10-03 00:00:00'),
+(2326, '', 'At vero eos et', 'At vero eos et accusam et justo duo dolores et ea rebum', '2011-10-02 00:00:00'),
+(2340, '', 'Ivano I.P.', 'Lorem ipsum dolor sitLorem ipsum dolor sitLorem ipsum dolor sitLorem ipsum dolor sitLorem ipsum dolor sitLorem ipsum dolor sitLorem ipsum dolor sitLorem ipsum dolor sit', '2013-10-17 00:00:00'),
+(2597, '', 'At vero eos et', 'Lorem ipsum dolor sit', '2013-12-12 00:00:00'),
+(2688, '/floxim_files/content/project/image/6_Carnival_of_miners_7_0.jpg', '', '', '2014-01-09 00:00:00'),
+(2689, '', '', 'Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Lorem ipsum do', '0000-00-00 00:00:00'),
+(2690, '/floxim_files/content/project/image/6_cockfights_3_0.JPG', '', '', '2014-01-16 00:00:00'),
+(2751, '/floxim_files/content/project/image/6_kupala_7_0.jpg', '', '', '0000-00-00 00:00:00'),
+(2757, '/floxim_files/content/project/image/6_pascua_toro_3_0.jpg', '', '', '0000-00-00 00:00:00'),
+(2762, '/floxim_files/content/project/image/art_stub_3_0_0.jpg', '', '', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -1118,7 +1144,15 @@ INSERT INTO `fx_content_section` (`id`) VALUES
 (2656),
 (2657),
 (2658),
-(2744);
+(2744),
+(2779),
+(2780),
+(2799),
+(2800),
+(2801),
+(2802),
+(2803),
+(2804);
 
 -- --------------------------------------------------------
 
@@ -1159,7 +1193,12 @@ INSERT INTO `fx_content_select_linker` (`id`, `linked_id`) VALUES
 (2694, 2656),
 (2747, 2746),
 (2748, 2743),
-(2749, 2740);
+(2749, 2740),
+(2783, 2780),
+(2784, 2779),
+(2786, 2779),
+(2787, 2780),
+(2791, 2780);
 
 -- --------------------------------------------------------
 
@@ -1242,7 +1281,11 @@ INSERT INTO `fx_content_text` (`id`, `text`) VALUES
 (2700, '<h4><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Ut wisi enim ad</span></h4>\r\n<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Ut wisi enim ad</span>\r\n</p>'),
 (2701, '<h4><span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Sanctus sea sed takimata</span></h4>\r\n<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Sanctus sea sed takimata</span>\r\n</p>'),
 (2703, '<p>\r\n	And it''s FREEE!!!\r\n</p>'),
-(2704, '<p>\r\n	it''s my favorite shipp\r\n</p>');
+(2704, '<p>\r\n	it''s my favorite shipp\r\n</p>'),
+(2785, '<p>\n	 Dear frendz, welkom!\n</p>'),
+(2798, '<p>\r\n	Digital tulip is a wery cool company\r\n</p>'),
+(2805, '<p>\n	  Digital Tulip is an Amsterdam based company, a fast-growing provider of digital <span style="font-size: 14px;">marketing solutions and a developer of web and mobile services for a widerange of customer segments. Since its foundation, Digital Tulip has focused not </span><span style="font-size: 14px;">only on digital marketing services, but also on bringing to life ideas about </span><span style="font-size: 14px;">innovative online platforms. Our experience varies from affiliate partnerships </span><span style="font-size: 14px;">with major e-commerce companies and online marketing solutions to </span><span style="font-size: 14px;">development of customized e-commerce platforms. We reinvent business </span><span style="font-size: 14px;">models to exploit emerging opportunities in the industries we serve. What brings </span><span style="font-size: 14px;">us ahead of the competition is our proven technology expertise and our </span><span style="font-size: 14px;">competency in such domains as IT outsourcing, business processes, search </span><span style="font-size: 14px;">engine optimization and platform-as-a-service solutions. And of course we </span><span style="font-size: 14px;">understand the utmost importance of providing the first-class service and </span><span style="font-size: 14px;">support to our customers.</span>\n</p>\n<p>\n	  At Digital Tulip, we are unafraid to challenge the status quo. We deliver <span style="font-size: 14px;">innovative business solutions that make our customers’ businesses more </span><span style="font-size: 14px;">competitive. Our strategic insights help us realize the promise and potential of </span><span style="font-size: 14px;">the emerging digital consumer segments and build breakthrough solutions for </span><span style="font-size: 14px;">them. We strive to create value for our customers by opening them completely </span><span style="font-size: 14px;">new opportunities that change their present and future. And in doing so, we </span><span style="font-size: 14px;">transform the way the world works and lives.</span>\n</p>\n<p>\n	  What We Do:\n</p>\n<ul>\n	<li><span style="font-size: 14px;"><a href="/SEO">Search Engine Optimization (SEO)</a><br>\n	</span></li>\n	<li><span style="font-size: 14px;"></span><span style="font-size: 14px;">PPC Management (Paid Search, Google Adwords)</span></li>\n	<li><span style="font-size: 14px;"></span><span style="font-size: 14px;">Display Advertising</span></li>\n	<li><span style="font-size: 14px;"></span><span style="font-size: 14px;">Website Development</span></li>\n	<li><span style="font-size: 14px;"></span><span style="font-size: 14px; font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">IT Solutions for Business Process Automation</span></li>\n</ul>'),
+(2806, '<h2> <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">SEO - Empirical Science</span></h2>\n<p>\n	 SEO is not an easy discipline to understand, let alone master – in fact, it is <span style="font-size: 14px;">probably one of the more challenging aspects of managing your online business </span><span style="font-size: 14px;">presence simply because there is, in fact, nothing black and white about the </span><span style="font-size: 14px;">process of optimizing a company’s assets for search. In SEO there are only </span><span style="font-size: 14px;">ongoing observations, analyses, and adjustments which lead to strategy, tactics, </span><span style="font-size: 14px;">and implementation. While this process might sound intimidating, it doesn’t </span><span style="font-size: 14px;">have to be.</span>\n</p>\n<p>\n	 Imagine searching for that phrase that you wish so desperately to be ranked well <span style="font-size: 14px;">to receive qualified search traffic. Then finding your site nestled comfortably in </span><span style="font-size: 14px;">the first search results page. Then receiving qualified leads and conversions from </span><span style="font-size: 14px;">your search visitors. Imagine feeling like you have learned, over time, what SEO </span><span style="font-size: 14px;">steps were taken, what inbound marketing tactics were utilized, and what </span><span style="font-size: 14px;">overall educational processes helped to make that happen. With enough time </span><span style="font-size: 14px;">and effort, this is possible, and we can help. We help you understand and use SEO </span><span style="font-size: 14px;">as a component of, and interdependent with, your inbound marketing.</span>\n</p>\n<h2> Why You Should Choose Our Consultancy</h2>\n<p>\n	 Higher rankings = more revenue. Google processes billions of search queries a <span style="font-size: 14px;">day and more than 60% of all clicks happen on the top 3 organic search results.</span>\n</p>\n<p>\n	 Studies show that more than 70% of searchers won’t even look past page 1 of the <span style="font-size: 14px;">search results. We help businesses get front and center of their target customers. </span><span style="font-size: 14px;">That’s just the beginning. We don’t stop at simply increasing the volume of </span><span style="font-size: 14px;">traffic, leads, and sales to your website, but also focus on generating qualified, </span><span style="font-size: 14px;">high-value leads and sales. As if increased volume isn’t enough, we’ll even guide </span><span style="font-size: 14px;">you on how to optimize landing pages and ad copy for improved CTR (clickthrough rate) and CVR (conversion rate) so you can generate more revenue with </span><span style="font-size: 14px;">minimal effort.</span>\n</p>\n<p>\n	 Your SEO needs determine how we can work with you. Every site that comes our <span style="font-size: 14px;">way has unique strengths and weaknesses, as does every business behind it. Our </span><span style="font-size: 14px;">goal is to help you leverage your assets and minimize your shortcomings with an </span><span style="font-size: 14px;">emphasis on long-term results. We can also provide short-term SEO consulting, </span><span style="font-size: 14px;">ongoing SEO management, and creative SEO support anywhere in between.</span>\n</p>\n<h2> What You Get</h2>\n<ul>\n	<li><span style="font-size: 14px;">Position of your site in TOP 10 of search results in Google, Yahoo and Bing</span></li>\n	<li><span style="font-size: 14px;"></span><span style="font-size: 14px;">Understanding of the process we have carried for you and understanding </span><span style="font-size: 14px;">of general principles of SEO</span></li>\n	<li><span style="font-size: 14px;"></span><span style="font-size: 14px;">Transparent procedure</span></li>\n	<li><span style="font-size: 14px;"></span><span style="font-size: 14px;">Strategic approach to your business, customers and competitors</span></li>\n	<li><span style="font-size: 14px;"></span><span style="font-size: 14px;">Realistic expectations and maximum possible result</span></li>\n	<li><span style="font-size: 14px;"></span><span style="font-size: 14px;">Emphasis on ROI </span></li>\n</ul>\n<h2><span style="font-size: 14px;">What We Do</span></h2>\n<ul>\n	<li><span style="font-size: 14px;">SEO Strategy and Competitive Research – How does your current online </span><span style="font-size: 14px;">presence stack up against your top competitors? Where are the holes in </span><span style="font-size: 14px;">their own SEO strategies that can become valuable opportunities for your </span><span style="font-size: 14px;">own brand? Digital Tulip will create a custom SEO strategy for your </span><span style="font-size: 14px;">website based on your unique challenges, needs and long term goals to </span><span style="font-size: 14px;">help you stand out in your niche.</span></li>\n	<li><span style="font-size: 14px;"></span><span style="font-size: 14px;">SEO Keyword Research – We will conduct keyword research with the goal </span><span style="font-size: 14px;">to get the most relevant, selling and appropriate keywords that target </span><span style="font-size: 14px;">your specific audience (including both private customers and business </span><span style="font-size: 14px;">decision makers) and appeal to them at various steps in the buying cycle.</span></li>\n	<li><span style="font-size: 14px;"></span><span style="font-size: 14px;">Website Optimization – Digital Tulip can work with your internal team to </span><span style="font-size: 14px;">optimize and update your current website using the newly targeted </span><span style="font-size: 14px;">keywords we found during the keyword research phase of your SEO  </span><span style="font-size: 14px;">services campaign. Using WordPress, Drupal or whatever other CMS your </span><span style="font-size: 14px;">team uses we can help with website optimization, the redesign process, </span><span style="font-size: 14px;">content consolidation and more.</span></li>\n	<li><span style="font-size: 14px;"></span><span style="font-size: 14px;">SEO Link Building – You have to build the right links from the right sites </span><span style="font-size: 14px;">to get the right kind of visitor over to your site. Digital Tulip takes </span><span style="font-size: 14px;">advantage of valuable link building resources and help integrate all your </span><span style="font-size: 14px;">other marketing efforts into your link building strategy.</span></li>\n	<li><span style="font-size: 14px;"></span><span style="font-size: 14px;">SEO Reporting – At the end of each month your dedicated SEO specialist w</span><span style="font-size: 14px;">ill run various SEO reports including organic traffic growth, completed </span><span style="font-size: 14px;">link building reports and more so you can see exactly what kind of impact </span><span style="font-size: 14px;">your SEO campaign is having on your site!</span></li>\n</ul>');
 
 -- --------------------------------------------------------
 
@@ -1444,7 +1487,7 @@ CREATE TABLE IF NOT EXISTS `fx_field` (
   KEY `TypeOfData_ID` (`type`),
   KEY `TypeOfEdit_ID` (`type_of_edit`),
   KEY `Widget_Class_ID` (`widget_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=95 AUTO_INCREMENT=306 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=95 AUTO_INCREMENT=308 ;
 
 --
 -- Дамп данных таблицы `fx_field`
@@ -1456,7 +1499,7 @@ INSERT INTO `fx_field` (`id`, `parent`, `component_id`, `ctpl_id`, `system_table
 (118, NULL, 19, 0, 0, 0, 'text', 'Text', 3, 'a:1:{s:4:"html";s:1:"1";}', 0, 0, 1, '', 0, 1, 1, 0),
 (153, NULL, 1, 0, 0, 0, 'email', 'E-mail', 1, '', 0, 142, 1, NULL, 0, 1, 1, 0),
 (165, NULL, 23, 0, 0, 0, 'url', 'URL', 1, '', 0, 2, 0, '', 0, 1, 1, 0),
-(190, NULL, 23, 0, 0, 0, 'name', 'Name', 1, '', 1, 0, 1, '', 0, 1, 1, 0),
+(190, NULL, 23, 0, 0, 0, 'name', 'Name', 1, '', 1, 1, 1, '', 0, 1, 1, 0),
 (191, NULL, 23, 0, 0, 0, 'title', 'Title', 1, '', 0, 158, 0, '', 0, 1, 1, 0),
 (196, NULL, 36, 0, 0, 0, 'parent_id', 'Parent', 13, 'a:4:{s:6:"target";s:2:"23";s:9:"prop_name";s:6:"parent";s:9:"is_parent";s:1:"0";s:11:"render_type";s:6:"select";}', 0, 161, 0, '', 0, 3, 1, 0),
 (199, NULL, 46, 0, 0, 0, 'start_date', 'Start date', 8, '', 0, 164, 0, '', 0, 1, 1, 0),
@@ -1481,15 +1524,12 @@ INSERT INTO `fx_field` (`id`, `parent`, `component_id`, `ctpl_id`, `system_table
 (230, NULL, 59, 0, 0, 0, 'embed_html', 'Embed code or link', 3, 'a:2:{s:4:"html";s:1:"0";s:5:"nl2br";s:1:"0";}', 0, 187, 0, '', 0, 1, 1, 0),
 (231, NULL, 59, 0, 0, 0, 'description', 'Description', 3, 'a:2:{s:4:"html";s:1:"1";s:5:"nl2br";s:1:"0";}', 0, 188, 0, '', 0, 1, 1, 0),
 (232, NULL, 60, 0, 0, 0, 'image', 'Image', 11, '', 0, 189, 0, '', 0, 1, 1, 0),
-(233, NULL, 60, 0, 0, 0, 'description', 'Description', 3, 'a:2:{s:4:"html";s:1:"1";s:5:"nl2br";s:1:"0";}', 0, 190, 0, '', 0, 1, 1, 0),
 (234, NULL, 60, 0, 0, 0, 'year', 'Year', 2, '', 0, 191, 0, '2000', 0, 1, 1, 0),
 (235, NULL, 61, 0, 0, 0, 'logo', 'Logo', 11, '', 0, 192, 0, '', 0, 1, 1, 0),
 (236, NULL, 61, 0, 0, 0, 'short_description', 'Short Description', 1, '', 0, 193, 0, '', 0, 1, 1, 0),
-(237, NULL, 61, 0, 0, 0, 'description', 'Description', 3, 'a:2:{s:4:"html";s:1:"0";s:5:"nl2br";s:1:"0";}', 0, 194, 0, '', 0, 1, 1, 0),
 (238, NULL, 62, 0, 0, 0, 'image', 'Image', 11, '', 0, 195, 0, '', 0, 1, 1, 0),
 (239, NULL, 62, 0, 0, 0, 'client', 'Client', 1, '', 0, 196, 0, '', 0, 1, 1, 0),
 (240, NULL, 62, 0, 0, 0, 'short_description', 'Short Description', 1, '', 0, 197, 0, '', 0, 1, 1, 0),
-(241, NULL, 62, 0, 0, 0, 'description', 'Description', 3, 'a:2:{s:4:"html";s:1:"1";s:5:"nl2br";s:1:"0";}', 0, 198, 0, '', 0, 1, 1, 0),
 (242, NULL, 62, 0, 0, 0, 'date', 'Date', 8, '', 0, 199, 0, '', 0, 1, 1, 0),
 (244, NULL, 63, 0, 0, 0, 'salary_from', 'Salary from', 2, '', 0, 201, 0, '', 0, 1, 1, 0),
 (245, NULL, 63, 0, 0, 0, 'salary_to', 'Salary To', 2, '', 0, 202, 0, '', 0, 1, 1, 0),
@@ -1503,16 +1543,12 @@ INSERT INTO `fx_field` (`id`, `parent`, `component_id`, `ctpl_id`, `system_table
 (259, NULL, 69, 0, 0, 0, 'department', 'Department', 1, '', 0, 216, 0, '', 0, 1, 1, 0),
 (260, NULL, 69, 0, 0, 0, 'photo', 'Photo', 11, '', 0, 217, 0, '', 0, 1, 1, 3),
 (261, NULL, 69, 0, 0, 0, 'short_description', 'Short Description', 1, '', 0, 218, 0, '', 0, 1, 1, 0),
-(262, NULL, 69, 0, 0, 0, 'description', 'Description', 3, 'a:2:{s:4:"html";s:1:"1";s:5:"nl2br";s:1:"0";}', 0, 219, 0, '', 0, 1, 1, 0),
 (263, NULL, 69, 0, 0, 0, 'birthday', 'Birthday', 8, '', 0, 220, 0, '', 0, 1, 1, 3),
 (264, NULL, 70, 0, 0, 0, 'value', 'Value', 1, '', 0, 222, 0, '', 0, 1, 1, 0),
 (265, NULL, 70, 0, 0, 0, 'contact_type', 'Type (e.g. ICQ, Skype, Jabber)', 1, '', 0, 221, 0, '', 0, 1, 1, 0),
 (269, NULL, 69, 0, 0, 0, 'contacts', 'Contacts', 14, 'a:3:{s:11:"render_type";s:5:"table";s:13:"linking_field";s:3:"196";s:16:"linking_datatype";s:2:"70";}', 0, 223, 0, '', 0, 1, 1, 3),
 (270, NULL, 71, 0, 0, 0, 'image', 'Image', 11, '', 0, 224, 0, '', 0, 1, 1, 0),
-(271, NULL, 71, 0, 0, 0, 'description', 'Description', 3, 'a:2:{s:4:"html";s:1:"0";s:5:"nl2br";s:1:"0";}', 0, 225, 0, '', 0, 1, 1, 0),
 (273, NULL, 73, 0, 0, 0, 'embed_html', 'Embed code or link', 3, 'a:2:{s:4:"html";s:1:"0";s:5:"nl2br";s:1:"0";}', 0, 227, 0, '', 0, 1, 1, 0),
-(274, NULL, 73, 0, 0, 0, 'description', 'Description', 3, 'a:2:{s:4:"html";s:1:"0";s:5:"nl2br";s:1:"0";}', 0, 228, 0, '', 0, 1, 1, 0),
-(277, NULL, 75, 0, 0, 0, 'description', 'Description', 3, 'a:2:{s:4:"html";s:1:"1";s:5:"nl2br";s:1:"0";}', 0, 231, 0, '', 0, 1, 1, 3),
 (278, NULL, 75, 0, 0, 0, 'short_description', 'Short Description', 3, 'a:2:{s:4:"html";s:1:"1";s:5:"nl2br";s:1:"0";}', 0, 232, 0, '', 0, 1, 1, 0),
 (279, NULL, 75, 0, 0, 0, 'image', 'Image', 11, '', 0, 233, 0, '', 0, 1, 1, 0),
 (280, NULL, 75, 0, 0, 0, 'price', 'Price', 2, '', 0, 234, 0, '', 0, 1, 1, 0),
@@ -1530,7 +1566,9 @@ INSERT INTO `fx_field` (`id`, `parent`, `component_id`, `ctpl_id`, `system_table
 (299, NULL, 79, 0, 0, 0, 'soc_type', 'Type (fb, vk, etc.)', 1, '', 0, 252, 0, '', 0, 3, 1, 0),
 (300, NULL, 63, 0, 0, 0, 'currency', 'Currency', 1, '', 0, 253, 0, '$', 0, 1, 1, 0),
 (304, NULL, 23, 0, 0, 0, 'children', 'Children', 14, 'a:3:{s:11:"render_type";s:10:"livesearch";s:13:"linking_field";s:3:"196";s:16:"linking_datatype";s:2:"36";}', 0, 257, 0, '', 0, 3, 1, 0),
-(305, NULL, 63, 0, 0, 0, 'image', 'Image', 11, '', 0, 258, 0, '', 0, 1, 1, 4);
+(305, NULL, 63, 0, 0, 0, 'image', 'Image', 11, '', 0, 258, 0, '', 0, 1, 1, 4),
+(306, NULL, 23, 0, 0, 0, 'description', 'Description', 3, 'a:2:{s:4:"html";s:1:"1";s:5:"nl2br";s:1:"0";}', 0, 259, 0, '', 0, 1, 1, 2),
+(307, NULL, 23, 0, 0, 0, 'h1', 'H1', 1, '', 0, 260, 0, '', 0, 1, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -1830,7 +1868,7 @@ CREATE TABLE IF NOT EXISTS `fx_infoblock` (
   `scope` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `page_id` (`page_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=210 AUTO_INCREMENT=406 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=210 AUTO_INCREMENT=434 ;
 
 --
 -- Дамп данных таблицы `fx_infoblock`
@@ -1993,7 +2031,22 @@ INSERT INTO `fx_infoblock` (`id`, `parent_infoblock_id`, `site_id`, `page_id`, `
 (402, 366, 18, 2638, 1, '', '', '', 'a:0:{}', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:7:"product";}'),
 (403, 378, 18, 2640, 1, '', '', '', 'a:0:{}', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:0:"";}'),
 (404, 0, 18, 2640, 1, 'Navigation / ', 'component_section', 'list_filtered', 'a:2:{s:10:"conditions";a:1:{s:5:"new_1";a:3:{s:4:"name";s:9:"parent_id";s:8:"operator";s:1:"=";s:5:"value";a:1:{i:0;s:4:"2640";}}}s:7:"submenu";s:4:"none";}', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:0:"";}'),
-(405, 403, 18, 2640, 1, '', '', '', 'a:0:{}', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:0:"";}');
+(405, 403, 18, 2640, 1, '', '', '', 'a:0:{}', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:0:"";}'),
+(406, 0, 18, 2640, 1, 'Persos in About', 'component_person', 'list_filtered', 'a:5:{s:5:"limit";s:0:"";s:10:"pagination";s:1:"0";s:7:"sorting";s:7:"created";s:11:"sorting_dir";s:3:"asc";s:10:"conditions";a:1:{s:5:"new_1";a:2:{s:4:"name";s:9:"parent_id";s:8:"operator";s:1:"=";}}}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
+(413, 0, 23, 0, 1, 'Layout', 'layout', 'show', '', ''),
+(414, 0, 23, 2777, 1, 'Main menu', 'component_section', 'list_infoblock', 'a:1:{s:7:"submenu";s:3:"all";}', 'a:2:{s:5:"pages";s:11:"descendants";s:9:"page_type";s:0:"";}'),
+(417, 0, 23, 2777, 1, 'Main index slider', 'component_page', 'list_selected', 'a:2:{s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
+(418, 0, 23, 2777, 1, 'Index hello text', 'component_text', 'list_infoblock', 'a:4:{s:5:"limit";s:0:"";s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";s:11:"parent_type";s:15:"current_page_id";}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
+(419, 0, 23, 2777, 1, 'Pages / ', 'component_page', 'list_filtered', 'a:5:{s:5:"limit";s:0:"";s:10:"pagination";s:1:"0";s:7:"sorting";s:7:"created";s:11:"sorting_dir";s:3:"asc";s:10:"conditions";a:3:{s:5:"new_1";a:3:{s:4:"name";s:12:"infoblock_id";s:8:"operator";s:1:"=";s:5:"value";a:1:{i:0;s:3:"414";}}s:5:"new_2";a:3:{s:4:"name";s:9:"parent_id";s:8:"operator";s:1:"=";s:5:"value";a:1:{i:0;s:4:"2777";}}s:5:"new_3";a:3:{s:4:"name";s:4:"name";s:8:"operator";s:12:"not_contains";s:5:"value";s:7:"contact";}}}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
+(420, 0, 23, 2777, 1, 'Pages / carousel', 'component_page', 'list_selected', 'a:2:{s:7:"sorting";s:7:"created";s:11:"sorting_dir";s:4:"desc";}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
+(423, 0, 23, 2777, 1, 'Block set / Widget', 'widget_blockset', 'show', 'a:0:{}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
+(424, 0, 23, 2777, 1, 'Pages / ', 'component_page', 'list_selected', 'a:2:{s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
+(428, 0, 23, 2777, 1, 'Subscribe form', 'widget_subscribe_form', 'show', 'a:0:{}', 'a:2:{s:5:"pages";s:11:"descendants";s:9:"page_type";s:0:"";}'),
+(429, 0, 23, 2777, 1, 'Social links', 'component_page', 'list_infoblock', 'a:4:{s:5:"limit";s:0:"";s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";s:11:"parent_type";s:13:"mount_page_id";}', 'a:2:{s:5:"pages";s:11:"descendants";s:9:"page_type";s:0:"";}'),
+(430, 0, 23, 2777, 1, 'Text to footer', 'component_text', 'list_infoblock', 'a:4:{s:5:"limit";s:0:"";s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";s:11:"parent_type";s:13:"mount_page_id";}', 'a:2:{s:5:"pages";s:11:"descendants";s:9:"page_type";s:0:"";}'),
+(431, 0, 23, 2777, 1, 'Navigation / breadcrumbs', 'component_section', 'breadcrumbs', 'a:2:{s:11:"header_only";s:1:"1";s:13:"hide_on_index";s:1:"0";}', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:0:"";}'),
+(432, 0, 23, 2777, 1, 'Text', 'component_text', 'list_infoblock', 'a:2:{s:5:"limit";s:0:"";s:11:"parent_type";s:15:"current_page_id";}', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:0:"";}'),
+(433, 0, 23, 2799, 1, 'Services', 'component_page', 'list_filtered', 'a:5:{s:5:"limit";s:0:"";s:10:"pagination";s:1:"0";s:7:"sorting";s:7:"created";s:11:"sorting_dir";s:3:"asc";s:10:"conditions";a:1:{s:5:"new_1";a:3:{s:4:"name";s:9:"parent_id";s:8:"operator";s:1:"=";s:5:"value";a:1:{i:0;s:4:"2799";}}}}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}');
 
 -- --------------------------------------------------------
 
@@ -2013,7 +2066,7 @@ CREATE TABLE IF NOT EXISTS `fx_infoblock_visual` (
   `priority` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `infoblock_id` (`infoblock_id`,`layout_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=138 AUTO_INCREMENT=478 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=138 AUTO_INCREMENT=522 ;
 
 --
 -- Дамп данных таблицы `fx_infoblock_visual`
@@ -2155,7 +2208,7 @@ INSERT INTO `fx_infoblock_visual` (`id`, `infoblock_id`, `layout_id`, `wrapper`,
 (431, 359, 12, '', '', 'layout_v3.one_column', '', '', 2),
 (432, 360, 12, '', '', 'layout_v3.breadcrumbs', '', 'breadcrumbs-area', 1),
 (433, 361, 12, '', '', 'layout_v3.featured_list', 'a:7:{s:5:"image";s:38:"/floxim_files/content/HansIsland_0.png";s:10:"image_2652";s:35:"/floxim_files/content/5_ski_4_0.JPG";s:10:"four_items";s:1:"1";s:8:"image_id";s:32:"/floxim_files/content/7394_0.jpg";s:10:"image_2654";s:31:"/floxim_files/content/5_3_0.jpg";s:10:"image_2658";s:38:"/floxim_files/content/5_nature_5_0.jpg";s:10:"image_2744";s:44:"/floxim_files/content/6_pascua_toro_10_0.jpg";}', 'main_column', 2),
-(434, 362, 12, '', '', 'layout_v3.banner', 'a:3:{s:18:"banner_header_2652";s:27:"<p>\n	Special condtions\n</p>";s:16:"banner_text_2652";s:26:"<p>\n	For sport series\n</p>";s:17:"banner_image_2652";s:34:"/floxim_files/content/5_swim_0.jpg";}', 'main_column', 1),
+(434, 362, 12, '', '', 'layout_v3.banner', 'a:3:{s:18:"banner_header_2652";s:29:"<p>\n	 Special conditions\n</p>";s:16:"banner_text_2652";s:26:"<p>\n	For sport series\n</p>";s:17:"banner_image_2652";s:34:"/floxim_files/content/5_swim_0.jpg";}', 'main_column', 1),
 (435, 363, 12, '', '', 'layout_v3.two_columns', '', '', 3),
 (436, 364, 12, '', '', 'layout_v3.featured_list', 'a:1:{s:10:"four_items";s:1:"0";}', 'main_column', 3),
 (438, 366, 12, '', '', 'layout_v3.two_columns', '', '', 4),
@@ -2178,7 +2231,7 @@ INSERT INTO `fx_infoblock_visual` (`id`, `infoblock_id`, `layout_id`, `wrapper`,
 (461, 389, 12, 'layout_v3.block_titled', 'a:1:{s:6:"header";s:6:"Images";}', 'layout_v3.slider', 'a:1:{s:10:"thumbnails";s:1:"1";}', 'full_screen', 4),
 (462, 390, 12, '', '', 'layout_v3.one_column', '', '', 10),
 (463, 391, 12, '', '', 'layout_v3.banner', 'a:3:{s:18:"banner_header_2656";s:19:"<p>\n	Need job?\n</p>";s:16:"banner_text_2656";s:31:"<p>\n	Look at our vacancies\n</p>";s:17:"banner_image_2656";s:40:"/floxim_files/content/5_open_air_2_0.jpg";}', 'main_column', 13),
-(464, 392, 12, 'layout_v3.right_block_titled', 'a:1:{s:6:"header";s:12:"Latest news:";}', 'layout_v3.featured_news_list', 'a:3:{s:13:"more_news_url";s:5:"/News";s:9:"show_more";s:1:"1";s:12:"show_anounce";s:1:"0";}', 'main_column', 14),
+(464, 392, 12, 'layout_v3.right_block_titled', 'a:1:{s:6:"header";s:11:"Latest news";}', 'layout_v3.featured_news_list', 'a:3:{s:13:"more_news_url";s:5:"/News";s:9:"show_more";s:1:"1";s:12:"show_anounce";s:1:"0";}', 'main_column', 14),
 (465, 393, 12, '', '', 'layout_v3.two_columns_inverted', '', '', 11),
 (468, 396, 12, 'layout_v3.right_block_titled', 'a:1:{s:6:"header";s:11:"Lorem ipsum";}', 'layout_v3.contact_block', '', 'right_column', 3),
 (469, 397, 12, '', '', 'layout_v3.addres_block', 'a:2:{s:9:"blue_2701";s:1:"1";s:9:"blue_2700";s:1:"0";}', 'main_column', 15),
@@ -2188,7 +2241,22 @@ INSERT INTO `fx_infoblock_visual` (`id`, `infoblock_id`, `layout_id`, `wrapper`,
 (474, 402, 12, '', '', 'layout_v3.two_columns', '', '', 13),
 (475, 403, 12, '', '', 'layout_v3.two_columns', '', '', 14),
 (476, 404, 12, '', '', 'layout_v3.side_menu', '', 'left_column', 10),
-(477, 405, 12, '', '', 'layout_v3.two_columns', '', '', 15);
+(477, 405, 12, '', '', 'layout_v3.two_columns', '', '', 15),
+(478, 406, 12, 'layout_v3.right_block_titled', 'a:1:{s:6:"header";s:14:"Our super team";}', 'layout_v3.featured_list', 'a:1:{s:10:"four_items";s:1:"1";}', 'main_column', 23),
+(483, 413, 13, '', '', 'layout_digital_tulip._layout_body', 'a:5:{s:13:"tab_title_422";s:10:"Second tab";s:13:"tab_title_421";s:9:"First tab";s:12:"tab_icon_421";s:0:"";s:12:"tab_icon_422";s:4:"blog";s:6:"to_top";s:12:"Topsdfdsfdsf";}', '', 1),
+(484, 414, 13, '', '', 'layout_digital_tulip.main_menu', '', 'nav_area', 1),
+(487, 417, 13, '', '', 'layout_digital_tulip.top_slider', 'a:2:{s:10:"image_2780";s:44:"/floxim_files/content/6_pascua_toro_19_0.JPG";s:16:"description_2780";s:65:"<p>\n	We are wvery cool at som\n</p>\n<p>\n	different projscs...\n</p>";}', 'top_blocks', 1),
+(488, 418, 13, '', '', 'layout_digital_tulip.hello_text', '', 'content', 1),
+(489, 419, 13, '', '', 'layout_digital_tulip.offers_box', '', 'content', 2),
+(490, 420, 13, 'layout_digital_tulip.block_titled', 'a:1:{s:6:"header";s:11:"We are cool";}', 'layout_digital_tulip.carousel', '', 'content', 3),
+(511, 423, 13, 'layout_digital_tulip.block_titled', 'a:1:{s:6:"header";s:10:"What''s new";}', 'layout_digital_tulip.tabs_blockset', 'a:1:{s:12:"tab_icon_424";s:4:"blog";}', 'content', 4),
+(512, 424, 13, 'layout_digital_tulip.tab_wrapper', '', 'layout_digital_tulip.pane_block_list', 'a:1:{s:16:"description_2780";s:53:"<p>\n	Look at our projects, aren''t they so cool?!\n</p>";}', 'blockset_423', 1),
+(516, 428, 13, 'layout_digital_tulip.block_titled', 'a:1:{s:6:"header";s:40:"Подпишись на рассылку";}', 'layout_digital_tulip.subscribe_form', 'a:3:{s:11:"placeholder";s:19:"Мыло введи";s:6:"submit";s:37:"\n            \n            Фигач!";s:11:"description";s:245:"<p>\n	  В нашей рассылке только самые интересные материалы про все на свете. <strong>Подписывайтесь</strong> и счастье будет вам и вашим детям!\n</p>";}', 'content', 8),
+(517, 429, 13, 'layout_digital_tulip.footer_block', 'a:2:{s:6:"header";s:9:"Follow us";s:5:"width";s:1:"3";}', 'layout_digital_tulip.social_links', 'a:1:{s:10:"image_2797";s:32:"/floxim_files/content/soc2_0.png";}', 'footer', 2),
+(518, 430, 13, 'layout_digital_tulip.footer_block', 'a:2:{s:6:"header";s:16:"Shortly About us";s:5:"width";s:1:"6";}', 'component_text.list', '', 'footer', 1),
+(519, 431, 13, '', '', 'component_page.breadcrumbs', '', 'content', 5),
+(520, 432, 13, '', '', 'component_text.list', '', 'content', 6),
+(521, 433, 13, 'layout_digital_tulip.block_titled', 'a:1:{s:6:"header";s:10:"What we do";}', 'layout_digital_tulip.offers_box', '', 'content', 7);
 
 -- --------------------------------------------------------
 
@@ -2972,7 +3040,7 @@ CREATE TABLE IF NOT EXISTS `fx_layout` (
   `keyword` varchar(255) NOT NULL,
   `name` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=64 AUTO_INCREMENT=13 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=64 AUTO_INCREMENT=14 ;
 
 --
 -- Дамп данных таблицы `fx_layout`
@@ -2983,7 +3051,8 @@ INSERT INTO `fx_layout` (`id`, `keyword`, `name`) VALUES
 (9, 'dummy', 'Dummy'),
 (10, 'jeeptravel', 'JeepTravel'),
 (11, 'demo', 'demo'),
-(12, 'v3', 'v3');
+(12, 'v3', 'v3'),
+(13, 'digital_tulip', 'Digital Tulip');
 
 -- --------------------------------------------------------
 
@@ -3109,8 +3178,9 @@ CREATE TABLE IF NOT EXISTS `fx_session` (
 --
 
 INSERT INTO `fx_session` (`id`, `user_id`, `session_start`, `session_time`, `ip`, `login_save`, `site_id`, `auth_type`) VALUES
-('746a01c73990999546b74d7520f32a41', 2367, 1395065349, 1395222068, 2130706433, 0, 0, 1),
-('d4020b281f4a0b68b7704ecf86beecef', 2367, 1395056493, 1395148511, 2130706433, 0, 0, 1);
+('589afc62933890b4edfc74cac4250e50', 2367, 1395901950, 1395989339, 2130706433, 0, 0, 1),
+('8eaea3aef20e72d53c3b4096a09b0d62', 2367, 1395903091, 1395991038, 2130706433, 0, 0, 1),
+('bb76039203cde40ac0ec3237cec7a9ed', 2367, 1395904743, 1395995709, 2130706433, 0, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -3201,7 +3271,7 @@ CREATE TABLE IF NOT EXISTS `fx_site` (
   `store_id` text,
   PRIMARY KEY (`id`),
   KEY `Checked` (`checked`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=292 AUTO_INCREMENT=19 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=292 AUTO_INCREMENT=24 ;
 
 --
 -- Дамп данных таблицы `fx_site`
@@ -3212,7 +3282,8 @@ INSERT INTO `fx_site` (`id`, `parent_id`, `name`, `domain`, `layout_id`, `color`
 (15, 0, 'JeepTravel', 'floxim.loc', 10, 0, '', 1, 1, 1883, 1884, '2013-06-08 17:03:02', '2013-09-09 13:02:57', NULL, 0, 'useful', 'en', NULL, NULL),
 (16, 0, 'Default', 'floxim.def', 9, 0, '', 2, 1, 2210, 2211, '2013-10-03 16:54:26', '2013-10-03 12:55:11', NULL, 0, 'useful', 'en', NULL, NULL),
 (17, 0, 'Demo', 'dem.floxim.loc', 11, 0, '', 3, 1, 2501, 2502, '2013-12-09 17:51:13', '2013-12-10 09:55:30', NULL, 0, 'useful', 'en', NULL, NULL),
-(18, 0, 'Floxim', 'v3.floxim.loc', 12, 0, '', 4, 1, 2635, 2636, '2014-01-28 11:39:50', '2014-01-28 07:43:47', NULL, 0, 'useful', 'en', NULL, NULL);
+(18, 0, 'Floxim', 'v3.floxim.loc', 12, 0, '', 4, 1, 2635, 2636, '2014-01-28 11:39:50', '2014-01-28 07:43:47', NULL, 0, 'useful', 'en', NULL, NULL),
+(23, 0, 'Digital Tulip', 'tulip.floxim.loc', 13, 0, '', 5, 1, 2777, 2778, '2014-03-21 17:08:52', '2014-03-22 06:31:39', NULL, 0, 'useful', 'en', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -3274,7 +3345,7 @@ CREATE TABLE IF NOT EXISTS `fx_widget` (
   `embed` enum('miniblock','narrow','wide','narrow-wide') NOT NULL DEFAULT 'narrow-wide',
   `store_id` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=111 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=111 AUTO_INCREMENT=8 ;
 
 --
 -- Дамп данных таблицы `fx_widget`
@@ -3283,7 +3354,9 @@ CREATE TABLE IF NOT EXISTS `fx_widget` (
 INSERT INTO `fx_widget` (`id`, `name`, `keyword`, `description`, `group`, `checked`, `icon`, `embed`, `store_id`) VALUES
 (1, 'Authorization form', 'authform', '', 'Profile', 1, 'auth', '', 'widget.auth'),
 (2, 'Password recover form', 'recoverpasswd', '', 'Profile', 1, 'auth', '', 'widget.recoverpasswd'),
-(3, 'Search Line', 'search', NULL, NULL, 1, '', 'narrow-wide', '');
+(3, 'Search Line', 'search', NULL, NULL, 1, '', 'narrow-wide', ''),
+(4, 'Block set', 'blockset', NULL, 'fx_new', 1, '', 'narrow-wide', ''),
+(7, 'Subscribe form', 'subscribe_form', NULL, 'Profile', 1, '', 'narrow-wide', '');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
