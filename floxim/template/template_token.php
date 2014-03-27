@@ -73,7 +73,7 @@ class fx_template_token {
         } elseif ($name == 'with' && !preg_match("~select=~", $source)) {
             $props['select'] = trim($source);
         } else {
-            $props = array_merge($props, fx_template_token_att_parser::get_atts(&$source));
+            $props = array_merge($props, fx_template_token_att_parser::get_atts($source));
             /*
             // add the missing attribute quotes
             // so far removed, it breaks case {if test="$x == 1}
@@ -275,7 +275,7 @@ class fx_template_token {
 }
 
 class fx_template_token_att_parser extends fx_template_fsm {
-    public static function get_atts($source) {
+    public static function get_atts(&$source) {
         $p = new self();
         $res = $p->parse($source);
         $source = !empty($p->modifiers) ? ' | '.$p->modifiers : '';
