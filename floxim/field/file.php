@@ -84,16 +84,27 @@ class fx_field_file extends fx_field_baze {
     }
 
     public function get_savestring(fx_essence $content = null) {
-        if ($content[$this['name']] != $this->value) {
-            $c_val = fx::path()->to_abs($this->value);
-            preg_match("~[^".preg_quote(DIRECTORY_SEPARATOR).']+$~', $c_val, $fn);
-            
-            $path = fx::path()->http(
-                'content_files', 
-                $content['type'].'/'.$this->name.'/'.$fn[0]
-            );
-            
-            fx::files()->move($c_val, $path);
+        $old_value = $content[$this['name']];
+        if ($old_value != $this->value) {
+            if (!empty($old_value)) {
+                $old_value = fx::path()->to_abs($old_value);
+                if (file_exists($old_value) && is_file($old_value)) {
+                    fx::files()->rm($old_value);
+                }
+            }
+            if (!empty($this->value)) {
+                $c_val = fx::path()->to_abs($this->value);
+                if (file_exists($c_val) && is_file($c_val)) {
+                    preg_match("~[^".preg_quote(DIRECTORY_SEPARATOR).']+$~', $c_val, $fn);
+
+                    $path = fx::path()->http(
+                        'content_files', 
+                        $content['type'].'/'.$this->name.'/'.$fn[0]
+                    );
+
+                    fx::files()->move($c_val, $path);
+                }
+            }
         }
 
         return isset($path) ? $path : $this->value;
