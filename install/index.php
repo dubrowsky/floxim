@@ -1,6 +1,4 @@
 <?php
-
-
 header('Content-Type: text/html; charset=utf-8'); 
 session_start();
 
@@ -12,6 +10,9 @@ $FLOXIM_FOLDER = fx_standardize_path_to_folder( realpath($INSTALL_FOLDER.'../') 
 $CUSTOM_FOLDER = str_replace( rtrim($_SERVER['DOCUMENT_ROOT'], '/').'/', '', $FLOXIM_FOLDER);
 // normalize path
 if ($CUSTOM_FOLDER) $CUSTOM_FOLDER = '/'.trim($CUSTOM_FOLDER, '/').'/';
+
+define('FX_FILES_DIR', $_SERVER['DOCUMENT_ROOT'].'/floxim_files/');
+define('FX_FILES_HTTP', '/floxim_files/');
 
 if (isset($_REQUEST['pwd'])) {
   $_SESSION['pwd'] = $_REQUEST['pwd'];
@@ -115,7 +116,7 @@ switch ($action) {
         }
 
         $dir = dirname($_SERVER['PHP_SELF']);
-        $test_dir = "testdirtestdir";
+        $test_dir = FX_FILES_DIR."testdirtestdir";
         if (!@mkdir($test_dir)) {
             $errors['mkdir'] = "The script has no permission to create directory.";
             fx_write_log("Error: " . $errors['mkdir']);
@@ -127,6 +128,10 @@ switch ($action) {
         if (!@rmdir($test_dir)) {
             $errors['rmdir'] = "The script has no permission to delete directories.";
             fx_write_log("Error: " . $errors['rmdir']);
+        }
+        if (!@is_writable($_SERVER['DOCUMENT_ROOT'].'/config.php')) {
+            $errors['config_not_writable'] = "The script has no permission to write into /config.php file.";
+            fx_write_log("Error: " . $errors['config_not_writable']);
         }
 
         if (empty($errors)) {
@@ -180,7 +185,8 @@ switch ($action) {
             $error = "No connection with the indicated database. MySQL error: " . mysql_error();
             fx_write_log($error);
             echo fx_html_status_bar(array("'color': 'green', 'opacity': 1", "it's going just fine!"), array("'color': 'red', 'opacity': 1", "There are some problems!"), false, array(1, 0));
-            echo "Can't connect to database. Check if all the access parameters are there and try again. Read more about error <a href='log.txt' target='_blank'>in log</a>.";
+            echo "Can't connect to database. Check if all the access parameters are there and try again. ".
+                    "Read more about error <a href='".FX_FILES_HTTP."install_log.txt' target='_blank'>in log</a>.";
             echo fx_html_form(1, "Go back and try again");
             break;
         }
@@ -770,8 +776,10 @@ function fx_write_log($message, $time = true) {
             $message = $message . '.';
     }
     $result_str = PHP_EOL . $message_time . $message;
-
-    file_put_contents("log.txt", $result_str, FILE_APPEND);
+    $log_file = FX_FILES_DIR."install_log.txt";
+    if (is_writable($log_file)) {
+        file_put_contents($log_file, $result_str, FILE_APPEND);
+    }
 }
 
 function fx_func_enabled($function) {
@@ -844,9 +852,8 @@ function fx_write_config($distr_dir, $custom_dir) {
     
     $cfg_file = fx_get_config( fx_post_get('host'), fx_post_get('user'), fx_post_get('pass'), fx_post_get('dbname') );
     
-    if ( is_writable($distr_dir) ) {
+    if ( is_writable($config_path) ) {
       file_put_contents($config_path, $cfg_file);
-      chmod($config_path, 0666);
     } else {
 		fx_write_log('Configuration file config.php unaccessible for recording. Add the required permissions on this file and repeat the installation. ');
 	}
