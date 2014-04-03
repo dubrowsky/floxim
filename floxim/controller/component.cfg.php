@@ -58,13 +58,13 @@ return array(
                     'values' => array( array('manual', 'Manual' ) ) + $sort_fields
                 ),
                 'parent_type' => array(
-                    'label' => fx::alang('Parent','controller_component'),
+                    'label' => fx::alang('Add items to','controller_component'),
                     'type' => 'select',
                     'values' => array(
                         'current_page_id' => fx::alang('Current page','controller_component'),
                         'mount_page_id' => fx::alang('Infoblock page','controller_component')
                     ),
-                    'parent' => array('scope[pages]' => '!=this')
+                    'parent' => array('scope[complex_scope]' => '!~this')
                 )
             ) + $this->get_target_config_fields(),
             'defaults' => array(
@@ -80,16 +80,15 @@ return array(
             'name' => $component['name'].' selected',
             'icon_extra' => 'sel',
             'settings' => array(
-                'selected' => array (
-                    'name' => 'selected', 
-                    'label' => fx::alang('Selected','controller_component'),
-                    'type' => 'livesearch',
-                    'is_multiple' => true,
-                    'ajax_preload' => true,
-                    'params' => array(
-                        'content_type' => 'content_'.$this->_content_type
+                'selected' => $this->_get_selected_field(),
+                'parent_type' => array(
+                    'label' => fx::alang('Bind items to','controller_component'),
+                    'type' => 'select',
+                    'values' => array(
+                        'current_page_id' => fx::alang('Current page','controller_component'),
+                        'mount_page_id' => fx::alang('Infoblock page','controller_component')
                     ),
-                    'value'=> $this->_get_selected_values(),
+                    'parent' => array('scope[complex_scope]' => '!~this')
                 ),
                 'sorting' => array(
                     'values' => array( array('manual', 'Manual' ) ) + $sort_fields
@@ -98,7 +97,15 @@ return array(
             'defaults' => array(
                 '!pagination' => false,
                 '!limit' => 0
-            )
+            ),
+            'save' => function($ib, $ctr, $params) {
+                // update linkers
+                $ctr->save_selected_linkers($params['params']['selected']);
+            },
+            'delete' => function($ib, $ctr, $params) {
+                // drop linkers
+                $ctr->drop_selected_linkers();
+            }
         ),
         '*list_filtered*, *list_selected*, *listing_by*' => array(
             'check_context' => function() use ($content_exists) {

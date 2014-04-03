@@ -182,13 +182,13 @@ abstract class fx_essence implements ArrayAccess {
 
     /* Array access */
     public function offsetGet($offset) {
+        
         if (isset($this->data[$offset])) {
             return $this->data[$offset];
         }
         if ($offset == 'id') {
             return null;
         }
-        
         if (method_exists($this, 'get_'.$offset)) {
             return call_user_func(array($this, 'get_'.$offset));
         }

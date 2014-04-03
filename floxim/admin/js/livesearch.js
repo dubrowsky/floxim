@@ -423,7 +423,9 @@ window.fx_suggest = function(params) {
                     break;
             }
         });
-        this.createBox();
+        setTimeout(function() {
+            Suggest.createBox();
+        }, 50);
     };
     
     this.getTerm = function() {
@@ -526,10 +528,14 @@ window.fx_suggest = function(params) {
         this.boxVisible = true;
         var node = this.offsetNode;
         this.box.show();
+        if (this.isFixed()) {
+            this.box.css('position', 'fixed');
+        }
         this.box.offset({
                 top:node.offset().top + node.height() + 4,
                 left:node.offset().left
         });
+        
         var tmp_box = this.box;
         setTimeout (
             function () {
@@ -579,9 +585,20 @@ window.fx_suggest = function(params) {
     this.triggerHide = function() {
         var e = $.Event('suggest_blur');
         this.input.trigger(e);
-    }
+    };
+    
+    this.isFixed = function() {
+        var $parents = this.offsetNode.parents();
+        for (var i = 0; i < $parents.length; i++) {
+            if ($parents.eq(i).css('position') === 'fixed') {
+                return true;
+            }
+        }
+        return false;
+    };
     
     this.createBox = function() {
+        
         this.box = $('<div class="fx_suggest_box fx_overlay"></div>');
         $('body').append(this.box);
         

@@ -58,6 +58,10 @@ class fx_system_env {
         if (isset($this->current['page']) && is_object($this->current['page'])) {
            return $this->current['page']->get('id');
         }
+        if (isset($this->current['page_id'])) {
+            $this->current['page'] = fx::data('content_page', $this->current['page_id']);
+            return $this->current['page_id'];
+        }
         return NULL;
     }
 

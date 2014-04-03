@@ -74,21 +74,6 @@ class fx_template_token {
             $props['select'] = trim($source);
         } else {
             $props = array_merge($props, fx_template_token_att_parser::get_atts($source));
-            /*
-            // add the missing attribute quotes
-            // so far removed, it breaks case {if test="$x == 1}
-            //$source = preg_replace("~([a-z0-9\:_-]+)\s*?=\s*?([^\'\\\"\s]+)~", ' $1="$2"', $source);
-            $source = preg_replace_callback(
-                '~([a-z0-9\:_-]+)=(["\'])(.+?)(?<!\\\\)\2~',
-                function ($matches) use (&$props) {
-                    $props[$matches[1]] = str_replace('\"', '"', $matches[3]);
-                    return '';
-                },
-                $source
-            );
-            
-             * 
-             */
             if ($name == 'var' && preg_match("~^\s*\|~", $source)) {
                 $props['modifiers'] = self::get_var_modifiers($source);
             }

@@ -96,4 +96,23 @@ class fx_infoblock extends fx_essence {
         }
         return $cib;
     }
+    
+    public function init_controller() {
+        $ctr = fx::controller(
+                $this->get_prop_inherited('controller').'.'.
+                $this->get_prop_inherited('action'),
+                $this->get_prop_inherited('params')
+        );
+        $ctr->set_param('infoblock_id', $this['id']);
+        return $ctr;
+    }
+    
+    public function add_params($params) {
+        $c_params = $this['params'];
+        if (!is_array($c_params)) {
+            $c_params = array();
+        }
+        $this['params'] = array_merge($c_params, $params);
+        return $this;
+    }
 }

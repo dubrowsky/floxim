@@ -133,12 +133,26 @@ class fx_component extends fx_essence {
             $infoblock->delete();
         }
     }
-    
+    /**
+     * Get collection of all component's descendants
+     * @return fx_collection
+     */
     public function get_all_children() {
         $res = fx::collection()->concat($this['children']);
         foreach ($res as $child) {
             $res->concat($child->get_all_children());
         }
+        return $res;
+    }
+    
+    /**
+     * Get collection of all component's descendants and the component itself
+     * @return fx_collection
+     */
+    public function get_all_variants() {
+        $res = fx::collection($this);
+        fx::log('src coll', $res);
+        $res->concat($this->get_all_children());
         return $res;
     }
 }

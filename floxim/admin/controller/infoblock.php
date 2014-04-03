@@ -202,7 +202,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             list($controller, $action) = explode(".", $input['controller']);
             $site_id = fx::data('content_page', $input['page_id'])->get('site_id');
             $infoblock = fx::data("infoblock")->create(array(
-                'name' => $this->_get_controller_name($input['controller']),
+                //'name' => $this->_get_controller_name($input['controller']),
                 'controller' => $controller,
                 'action' => $action,
                 'page_id' => $input['page_id'],
@@ -229,8 +229,15 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         
         if (!$is_layout) {
             $controller_name = $controller;
-            $controller = fx::controller($controller, array('infoblock_id' => $infoblock['id']));
+            $controller = fx::controller(
+                    $controller.'.'.$action, 
+                    array('infoblock_id' => $infoblock['id']) + $infoblock['params']
+            );
             $settings = $controller->get_action_settings($action);
+            if (!$infoblock['id']) {
+                $cfg = $controller->get_config();
+                $infoblock['name'] = $cfg['actions'][$action]['name'];
+            }
             foreach ($infoblock['params'] as $ib_param => $ib_param_value) {
                 if (isset($settings[$ib_param])) {
                     $settings[$ib_param]['value'] = $ib_param_value;
@@ -305,7 +312,11 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             $infoblock['name'] = $input['name'];
             $action_params = array();
             if (!$is_layout && $settings && is_array($settings)) {
-                foreach (array_keys($settings) as $setting_key) {
+                //foreach (array_keys($settings) as $setting_key) {
+                foreach ($settings as $setting_key => $setting) {
+                    if (isset($setting['stored']) && !$setting['stored']) {
+                        continue;
+                    }
                     if (isset($input['params'][$setting_key])) {
                         $action_params[$setting_key] = $input['params'][$setting_key];
                     } else {
@@ -313,7 +324,11 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                     }
                 }
             }
+            
             $infoblock['params'] = $action_params;
+            if (isset($controller)) {
+                $controller->set_input($action_params);
+            }
             if (!is_array($infoblock['scope'])) {
                 $infoblock['scope'] = array();
             }
@@ -330,9 +345,12 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             $infoblock->save();
             $i2l['infoblock_id'] = $infoblock['id'];
             $i2l->save();
-            if (!$is_layout) {
-                $controller->set_param('infoblock_id', $infoblock['id']);
-                $controller->after_save_infoblock($is_new_infoblock);
+            $controller->set_param('infoblock_id', $infoblock['id']);
+            if (isset($controller)) {
+                if ($is_new_infoblock) {
+                    $controller->handle_infoblock('install', $infoblock, $input);
+                }
+                $controller->handle_infoblock('save', $infoblock, $input);
             }
             $this->response->set_status_ok();
             $this->response->set_prop('infoblock_id', $infoblock['id']);
@@ -666,6 +684,10 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
     public function save_var($input) {
         /* @var $ib fx_infoblock */
         
+        if (isset($input['page_id'])) {
+            fx::env('page_id', $input['page_id']);
+        }
+        
         $ib = fx::data('infoblock', $input['infoblock']['id']);
         // for InfoBlock-layouts always save the parameters in the root InfoBlock
         if ($ib->get_prop_inherited('controller') == 'layout') {
@@ -684,6 +706,9 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         foreach ($input['vars'] as $c_var) {
             $var = $c_var['var'];
             $value = $c_var['value'];
+            if ($var['type'] == 'livesearch' && !$value) {
+                $value = array();
+            }
             if ($var['var_type'] == 'visual' && $ib_visual) {
 
 
@@ -722,6 +747,15 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                 } else {
                     $contents[$var['content_id']]['values'][$var['name']] = $value;
                 }
+            } elseif ($var['var_type'] == 'ib_param') {
+                $controller = $ib->init_controller();
+                $ib_params = $ib['params'];
+                $ib_params[$var['name']] = $value;
+                $ib['params'] = $ib_params;
+                if (!isset($var['stored']) || ($var['stored'] && $var['stored'] != 'false')) {
+                    $ib->save();
+                }
+                $controller->handle_infoblock('save', $ib, array('params' => array($var['name'] => $value)));
             }
         }
 
@@ -736,15 +770,19 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
 
     }
     
+    
     public function delete_infoblock($input) {
         /* @var $infoblock fx_infoblock */
         $infoblock = fx::data('infoblock', $input['id']);
         $controller_name = $infoblock->get_prop_inherited('controller');
         $action = $infoblock->get_prop_inherited('action');
-        $controller = fx::controller($controller_name);
+        /*$controller = fx::controller($controller_name);
         $controller->set_action($action);
         $controller->set_input($input);
         $controller->set_param('infoblock_id', $infoblock['id']);
+         * 
+         */
+        $controller = $infoblock->init_controller();
         $fields = array(
             array(
                 'label' => fx::alang('I am REALLY sure','system'),
@@ -779,7 +817,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                     $ci->delete();
                 }
             }
-            $controller->before_delete_infoblock();
+            $controller->handle_infoblock('delete', $infoblock, $input);
             $infoblock->delete();
         }
     }

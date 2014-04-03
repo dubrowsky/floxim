@@ -4,14 +4,18 @@ class fx_template {
     //protected $data = array();
     public $action = null;
     protected $_parent = null;
+    protected $_inherit_context = false;
     
     public function __construct($action, $data = array()) {
-        $this->context_stack []= $data;
+        if (count($data) > 0) {
+            $this->context_stack []= $data;
+        }
         $this->action = $action;
     }
     
-    public function set_parent($parent_template) {
+    public function set_parent($parent_template, $inherit = false) {
         $this->_parent = $parent_template;
+        $this->_inherit_context = $inherit;
         return $this;
     }
 
@@ -47,7 +51,7 @@ class fx_template {
                 return $meta;
             }
         }
-        if ($this->_parent) {
+        if ($this->_parent && $this->_inherit_context) {
             return $this->_parent->get_var_meta($var_name);
         }
         return array();
@@ -99,9 +103,10 @@ class fx_template {
                 return $cc[$name];
             }
         }
-        if ($this->_parent) {
+        if ($this->_parent && $this->_inherit_context) {
             return $this->_parent->v($name);
         }
+        return null;
     }
     
     public static function beautify_html($html) {
@@ -184,7 +189,7 @@ class fx_template {
         if ($mode != 'marker') {
             $pos = 1;
             foreach ($area_blocks as $ib) {
-                $ib['params'] = $ib['params'] + array('infoblock_area_position' => $pos);
+                $ib->add_params(array('infoblock_area_position' => $pos));
                 $result = $ib->render();
                 echo $result;
                 $pos++;
@@ -321,6 +326,9 @@ class fx_template {
                 $mode = $matches[2];
                 $replacement = fx_template::$area_replacements[$matches[1]];
                 if ($mode == 'data') {
+                    if (!$replacement[1]) {
+                        return '<span class="fx_area_marker"></span>';
+                    }
                     return $replacement[1];
                 }
                 $tag_name = 'div';

@@ -7,6 +7,7 @@ class fx_template_attr_parser extends fx_template_html_tokenizer {
         if (!$s || !preg_match("~\s~", $s)) {
             return;
         }
+        $s = preg_replace("~/>$~", ' />', $s);
         $this->token = $token;
         $this->c_att = array('name' => null, 'value' => null);
         $this->parse($s);
@@ -21,9 +22,10 @@ class fx_template_attr_parser extends fx_template_html_tokenizer {
             // skip trailing backslash
             if ($att_name && $att_name != '/') {
                 $att_val = $this->c_att['value'];
+                /*
                 if ($att_val) {
                     $att_val = trim($att_val);
-                }
+                }*/
                 $this->token->attributes[$att_name] = $att_val;
                 if ($this->c_quote) {
                     $this->token->att_quotes[$att_name] = $this->c_quote;
@@ -50,6 +52,9 @@ class fx_template_attr_parser extends fx_template_html_tokenizer {
         $this->c_quote = $this->att_quote;
         $c_val = $this->stack;
         $res = parent::att_value_end($ch);
+        if ($this->debug) {
+            fx::debug($res === false, $c_val);
+        }
         if ($res !== false) {
             $this->c_att['value'] = $c_val;
             $this->_add_att();

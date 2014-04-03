@@ -180,7 +180,7 @@ class fx_template_expression_parser extends fx_template_fsm {
         return new fx_template_expression_node($type);
     }
     
-    public $local_vars = array('this');
+    public $local_vars = array('this', 'template_dir');
     
     public function build($expr) {
         $tree = $this->parse($expr);

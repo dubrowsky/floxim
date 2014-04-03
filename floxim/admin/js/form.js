@@ -239,6 +239,9 @@ fx_form = {
                 } else if (/^\~/.test(pval)) {
                     pval = pval.replace(/^\~/, '');
                     pexp = 'regexp';
+                } else if (/^\!\~/.test(pval)) {
+                    pval = pval.replace(/^\!\~/, '');
+                    pexp = 'not_regexp';
                 }
                 var par_inp = $(':input[name="'+pkey+'"]');
                 if (par_inp.length === 0) {
@@ -271,6 +274,10 @@ fx_form = {
                     case 'regexp':
                         var prex = new RegExp(pval);
                         do_show = prex.test(par_val);
+                        break;
+                    case 'not_regexp':
+                        var prex = new RegExp(pval);
+                        do_show = !prex.test(par_val);
                         break;
                 }
             });

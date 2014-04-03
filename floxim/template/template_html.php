@@ -15,9 +15,7 @@ class fx_template_html {
     public function add_meta($meta = array(), $skip_parsing = false) {
         // add immediately wrap
         if ($skip_parsing) {
-            $wrapper = fx_template_html_token::create_standalone('<div class="fx_wrapper">');
-            $wrapper->add_meta($meta);
-            return $wrapper->serialize().$this->_string."</div>";
+            return $this->add_meta_wrapper($meta);
         }
         $tree = $this->make_tree($this->tokenize());
         $children = $tree->get_children();
@@ -29,17 +27,31 @@ class fx_template_html {
             $not_empty_children []= $child;
         }
         if (count($not_empty_children) == 1 && $not_empty_children[0]->name != 'text') {
-            //$root = $children[0];
-            //$root->add_meta($meta);
             $not_empty_children[0]->add_meta($meta);
             return $tree->serialize();
         }
-        $wrapper = fx_template_html_token::create('<div>');
+        return $this->add_meta_wrapper($meta);
+        /*
+        $wrapper = fx_template_html_token::create('<'.self::get_wrapper_tag($this->_string).'>');
         $wrapper->add_meta($meta);
         foreach ($children as $child) {
             $wrapper->add_child($child);
         }
         return $wrapper->serialize();
+         * 
+         */
+    }
+    
+    public function add_meta_wrapper($meta) {
+        $tag = self::get_wrapper_tag($this->_string);
+        $wrapper = fx_template_html_token::create_standalone('<'.$tag.' class="fx_wrapper">');
+        $wrapper->add_meta($meta);
+        return $wrapper->serialize().$this->_string."</".$tag.">";
+    }
+
+
+    public static function get_wrapper_tag($html) {
+        return preg_match("~<(?:div|ul|li|table|p|h\d)~i", $html) ? 'div' : 'span';
     }
     
     public function transform_to_floxim() {
@@ -55,6 +67,7 @@ class fx_template_html {
             if (preg_match('~\{[\%|\$]~', $n->source)) {
                 $n->source = fx_template_html::parse_floxim_vars_in_atts($n->source);
             }
+            $subroot = $n->has_attribute('fx:omit') ? '' : ' subroot="true"';
             if ($n->name == 'meta' && ($layout_id = $n->get_attribute('fx:layout'))) {
                 $layout_name = $n->get_attribute('fx:name');
                 $tpl_tag = '{template id="'.$layout_id.'" name="'.$layout_name.'" of="layout.show"}';
@@ -126,9 +139,11 @@ class fx_template_html {
                 if ($macro_id) {
                     $tpl_macro_tag .= ' is_macro="true" ';
                 }
+                $tpl_macro_tag .= $subroot;
+                /*
                 if (!$n->get_attribute('fx:omit')) {
                     $tpl_macro_tag .= ' subroot="true" ';
-                }
+                }*/
                 if ( ($tpl_for = $n->get_attribute('fx:of')) ) {
                     $tpl_macro_tag .= ' of="'.$tpl_for.'"';
                     $n->remove_attribute('fx:of');
@@ -157,16 +172,18 @@ class fx_template_html {
                 $n->remove_attribute('fx:template');
                 $n->remove_attribute('fx:macro');
             }
-            if ( ($each_id = $n->get_attribute('fx:each')) ) {
+            if ( $n->has_attribute('fx:each') ) {
+                $each_id = $n->get_attribute('fx:each');
                 $each_id = trim($each_id, '{}');
                 $each_id = str_replace('"', '\\"', $each_id);
                 $each_macro_tag = '{each ';
+                $each_macro_tag .= $subroot;/*
                 if (!$n->get_attribute('fx:omit')) {
                     $each_macro_tag .= ' subroot="true" ';
-                }
-                if (!empty($each_id)) {
+                }*/
+                //if (!empty($each_id)) {
                     $each_macro_tag .= ' select="'.$each_id.'"';
-                }
+                //}
                 if ( ($each_as = $n->get_attribute('fx:as'))) {
                     $each_macro_tag .= ' as="'.$each_as.'"';
                     $n->remove_attribute('fx:as');
@@ -182,6 +199,10 @@ class fx_template_html {
                 if ( ($extract = $n->get_attribute('fx:extract'))) {
                     $each_macro_tag .= ' extract="'.$extract.'"';
                     $n->remove_attribute('fx:extract');
+                }
+                if ( ($separator = $n->get_attribute('fx:separator'))) {
+                    $each_macro_tag .= ' separator="'.$separator.'"';
+                    $n->remove_attribute('fx:separator');
                 }
                 $each_macro_tag .= '}';
                 $n->wrap($each_macro_tag, '{/each}');
@@ -219,7 +240,7 @@ class fx_template_html {
             if ( ($with = $n->get_attribute('fx:with'))) {
                 $n->remove_attribute('fx:with');
                 $n->wrap(
-                    '{with '.$with.'}',
+                    '{with select="'.$with.'" '.$subroot.'}',
                     '{/with}'
                 );
             }
@@ -227,7 +248,7 @@ class fx_template_html {
                 $item_att = $n->get_attribute('fx:item');
                 $n->remove_attribute('fx:item');
                 $n->wrap(
-                    '{item'.($item_att ? ' test="'.$item_att.'"' : '').'}',
+                    '{item'.($item_att ? ' test="'.$item_att.'"' : '').$subroot.'}',
                     '{/item}'
                 );
             }
@@ -246,9 +267,14 @@ class fx_template_html {
                 $n->remove_attribute('fx:else');
                 $n->wrap('{else}', '{/else}');
             }
-            if ( ($omit = $n->get_attribute('fx:omit'))) {
-                $ep = new fx_template_expression_parser();
-                $omit = $ep->compile($ep->parse($omit));
+            if ( $n->has_attribute('fx:omit')) {
+                $omit = $n->get_attribute('fx:omit');
+                if (empty($omit) || $omit == 'true') {
+                    $omit = true;
+                } else {
+                    $ep = new fx_template_expression_parser();
+                    $omit = $ep->compile($ep->parse($omit));
+                }
                 $n->omit = $omit;
                 $n->remove_attribute('fx:omit');
             }

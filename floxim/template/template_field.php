@@ -127,7 +127,7 @@ class fx_template_field  {
                 ) {
                     $tag_name = 'div';
                 } else {
-                    $tag_name = preg_match("~<(?:div|ul|li|table|br|p|h\d)~i", $replacement[2]) ? 'div' : 'span';
+                    $tag_name = fx_template_html::get_wrapper_tag($replacement[2]);
                 }
                 $tag = fx_template_html_token::create_standalone('<'.$tag_name.'>');
                 $tag->add_meta(array(

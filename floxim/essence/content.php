@@ -151,6 +151,9 @@ class fx_content extends fx_essence {
             'data-fx_essence' => $essence_meta, 
             'class' => 'fx_essence'. ($collection->is_sortable ? ' fx_sortable' : '')
         );
+        if (isset($this['_meta'])) {
+            $essence_atts ['data-fx_essence_meta'] = $this['_meta'];
+        }
         
         if ($is_subroot) {
             $html = preg_replace_callback(

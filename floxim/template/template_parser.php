@@ -140,7 +140,7 @@ class fx_template_parser {
         if (!$has_items) {
             return;
         }
-        $with_each_token = new fx_template_token('with_each', 'double', array('select' => '$items'));
+        $with_each_token = new fx_template_token('with_each', 'double', array('select' => '$.items'));
         $with_each_token->set_children($children);
         $token->clear_children();
         $token->add_child($with_each_token);

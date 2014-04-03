@@ -128,17 +128,7 @@ class fx_template_html_token {
                 $tag_start .= '>';
             } else {
                 $tag_start .= $this->source;
-            }/*
-            if ( isset($this->_injections) && count($this->_injections) > 0) {
-                $injections = $this->_injections;
-                $tag_start = preg_replace_callback(
-                    "~#inj(\d+)#~", 
-                    function($matches) use ($injections) {
-                        return $injections[$matches[1]];
-                    }, 
-                    $tag_start
-                );
-            }*/
+            }
         }
         
         $res .= $tag_start;
@@ -203,21 +193,6 @@ class fx_template_html_token {
         }
         $att = $this->attributes[$att_name];
         return $att;
-        /*
-        if (!$this->_injections) {
-            return $att;
-        }
-        $injections = $this->_injections;
-        $att = preg_replace_callback(
-            "~#inj(\d+)#~", 
-            function($matches) use ($injections) {
-                return $injections[$matches[1]];
-            }, 
-            $att
-        );
-        return $att;
-         * 
-         */
     }
     
     public function set_attribute($att_name, $att_value) {

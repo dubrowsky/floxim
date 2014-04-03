@@ -125,16 +125,16 @@ class fx_template_html_tokenizer extends fx_template_fsm {
                     return false;
                 }
                 break;
-            case ' ':
-                if ($this->att_quote) {
-                    return false;
-                }
-                break;
             case '>':
                 if ($this->att_quote) {
                     return false;
                 }
                 break;
+        }
+        if (preg_match("~^\s+$~s", $ch)) {
+            if ($this->att_quote) {
+                return false;
+            }
         }
         $this->att_quote = null;
         if ($ch == '>') {

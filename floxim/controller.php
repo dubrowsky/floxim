@@ -33,7 +33,10 @@ class fx_controller {
     }
 
     public function set_input($input) {
-        $this->input = $input;
+        if (!$input) {
+            $input = array();
+        }
+        $this->input = array_merge($this->input, $input);
         return $this;
     }
     
@@ -217,7 +220,11 @@ class fx_controller {
         return $settings;
     }
     
+    protected $_config_cache = null;
     public function get_config() {
+        if (!is_null($this->_config_cache)) {
+            return $this->_config_cache;
+        }
         $sources = $this->_get_config_sources();
         $actions = $this->_get_real_actions();
         $blocks = array();
@@ -245,12 +252,22 @@ class fx_controller {
                     }
                     $inherit_horizontal = preg_match("~\*$~", $ak);
                     $action_code = trim($ak, '*');
+                    foreach (array('install', 'delete', 'save') as $cb_name) {
+                        if (isset($props[$cb_name])) {
+                            if (!is_array($props[$cb_name]) || is_callable($props[$cb_name])) {
+                                $props[$cb_name] = array($src_hash => $props[$cb_name]);
+                            }
+                        }
+                    }
+                    /*
                     if (isset($props['install']) && !is_array($props['install'])) {
                         $props['install'] = array($src_hash => $props['install']);
                     }
                     if (isset($props['delete']) && !is_array($props['delete'])) {
                         $props['delete'] = array($src_hash => $props['delete']);
                     }
+                     * 
+                     */
                     $blocks []= $props;
                     $meta []= array($inherit_horizontal, $action_code);
                     if (!isset($actions[$action_code])) {
@@ -282,7 +299,8 @@ class fx_controller {
             }
         }
         unset($actions['.']);
-        return array('actions' => $actions);
+        $this->_config_cache = array('actions' => $actions);
+        return $this->_config_cache;
     }
 
     public function get_controller_name($with_type = false){
@@ -363,6 +381,14 @@ class fx_controller {
         $this->_bound[$event][]= $callback;
     }
     
+    public function __call($name, $arguments) {
+        if (!preg_match("~^on_(.+$)~", $name, $e)) {
+            return null;
+        }
+        $this->listen($e[1], $arguments[0]);
+    }
+
+
     public function trigger($event, $data = null) {
         if (isset($this->_bound[$event]) && is_array($this->_bound[$event])) {
             foreach ( $this->_bound[$event] as $cb) {
@@ -383,6 +409,23 @@ class fx_controller {
         return $res;
     }
     
+    public function handle_infoblock($callback, $infoblock, $params = array()) {
+        
+        $full_config = $this->get_config();
+        if (!isset($full_config['actions'][$this->action])) {
+            return;
+        }
+        $config = $full_config['actions'][$this->action];
+        if (!isset($config[$callback])) {
+            return;
+        }
+        foreach ($config[$callback] as $c_callback) {
+            if (is_callable($c_callback)) {
+                call_user_func($c_callback, $infoblock, $this, $params);
+            }
+        }
+    }
+    /*
     public function after_save_infoblock($is_new) {
         if (! ($ib_id = $this->get_param('infoblock_id')) ) {
             return;
@@ -398,6 +441,13 @@ class fx_controller {
             foreach ($config['install'] as $install_callback) {
                 if (is_callable($install_callback)) {
                     call_user_func($install_callback, $infoblock, $this);
+                }
+            }
+        }
+        if (isset($config['save'])) {
+            foreach ($config['save'] as $save_callback) {
+                if (is_callable($save_callback)) {
+                    call_user_func($save_callback, $infoblock, $this);
                 }
             }
         }
@@ -422,4 +472,6 @@ class fx_controller {
             }
         }
     }
+     * 
+     */
 }

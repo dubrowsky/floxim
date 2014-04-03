@@ -43,9 +43,13 @@ return array(
                 return count(fx::env('page')->get_parent_ids()) > 0;
             }
         ),
+        'list_infoblock' => array(
+            'name' => fx::alang('Menu', 'component_section')
+        ),
         'breadcrumbs' => array(
             'icon' => 'Nav',
             'icon_extra' => 'bre',
+            'name' => fx::alang('Breadcrumbs', 'component_section'),
             'settings' => array(
                 'header_only' => array(
                     'name' => 'header_only',

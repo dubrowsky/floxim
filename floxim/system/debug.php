@@ -204,10 +204,24 @@ class fx_debug {
     public function show_item($item_id) {
         ob_start();
         $file = $this->_get_dir().'/log_'.$item_id.'.html';
-        $entries = explode($this->separator, file_get_contents($file));
+        $fh = fopen($file, 'r');
+        $entry = '';
+        while (!feof($fh)) {
+            $s = fgets($fh);
+            if (trim($s) == trim($this->separator)) {
+                $this->_print_entry(unserialize($entry));
+                $entry = '';
+            }else {
+                $entry .= $s;
+            }
+        }
+        $this->_print_entry(unserialize($entry));
+        fclose($fh);
+        
+        /*$entries = explode($this->separator, file_get_contents($file));
         foreach ($entries as $entry) {
             $this->_print_entry(unserialize($entry));
-        }
+        }*/
         return ob_get_clean();
     }
 
@@ -319,7 +333,7 @@ class fx_debug {
                     if (strstr($item[1], "\n")) {
                         echo '<pre>'.htmlspecialchars($item[1]).'</pre>';
                     } else {
-                        echo htmlspecialchars($item[1]);
+                        echo '<pre class="fx_debug_one_line">'.htmlspecialchars($item[1]).'</pre>';
                     }
                 }
                 if ($n < count($e[1]) - 1) { ?>

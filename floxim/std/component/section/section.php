@@ -2,27 +2,31 @@
 class fx_controller_component_section extends fx_controller_component_page {
 
    public function do_list_infoblock() {
-        $this->set_param('parent_id', false);
         $c_page_id  = fx::env('page')->get('id');
         $path = fx::env('page')->get_parent_ids();
         $path []= $c_page_id;
         $submenu_type = $this->get_param('submenu');
-        if ($submenu_type == 'none') {
-            $this->set_param('parent_type', 'mount_page_id');
+        switch ($submenu_type) {
+            case 'none':
+                break;
+            case 'active':
+                $this->set_param('parent_id', $path);
+                break;
+            case 'all': default:
+                $this->set_param('parent_id', false);
+                break;
         }
-        $this->listen('items_ready', function($items, $ctr) use ($path) {
-            foreach ($items as $item) {
-                if (in_array($item['id'], $path)) {
-                    if ($ctr->get_param('submenu') !== 'none') {
-                        $ctr->accept_content(array(
-                            'title' => fx::alang('Add subsection to','component_section')
-                                        . ' &quot;' . $item['name'].'&quot;',
-                            'parent_id' => $item['id']
-                        ));
-                    }
+        if ($submenu_type !== 'none') {
+            $this->on_items_ready(function($items, $ctr) {
+                foreach ($items as $item) {
+                    $ctr->accept_content(array(
+                        'title' => fx::alang('Add subsection to','component_section')
+                                    . ' &quot;' . $item['name'].'&quot;',
+                        'parent_id' => $item['id']
+                    ), $item);
                 }
-            }
-        });
+            });
+        }
         $res = parent::do_list_infoblock();
         return $res;
     }
@@ -33,35 +37,6 @@ class fx_controller_component_section extends fx_controller_component_page {
         });
         return parent::do_list();
     }
-
-    /*
-    public function do_list_filtered () {
-        $c_page_id  = fx::env('page')->get('id');
-        $path = fx::env('page')->get_parent_ids();
-        $path []= $c_page_id;
-        $submenu_type = $this->get_param('submenu');
-        $this->listen('query_ready', function($q) use ($path, $submenu_type) {
-            switch ($submenu_type) {
-                case 'all':
-                    $q->clear_where('parent_id');
-                    break;
-                case 'active':
-                    $q->clear_where('parent_id')->where('parent_id', $path);
-                    break;
-            }
-        });
-        $this->listen('items_ready', function($items) use ($path, $submenu_type) {
-            $items->make_tree();
-            if ($submenu_type == 'none')
-                $items->apply(function($item){
-                    //unset($item['children']);
-                    $item['children'] = array();
-                });
-        });
-        return parent::do_list_filtered();
-    }
-     * 
-     */
 
     public function do_list_selected () {
         $c_page_id  = fx::env('page')->get('id');

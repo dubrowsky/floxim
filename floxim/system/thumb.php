@@ -215,6 +215,7 @@ class fx_thumb
         } else {
             $params = $this->config;
         }
+        fx::log($params);
         $st = array_merge(array(
             'width' => false,
             'height' => false,
@@ -432,7 +433,25 @@ class fx_thumb
     }
     
     protected function _read_config($config) {
+        $prop_map = array(
+            'w' => 'width',
+            'h' => 'height',
+            'minw' => 'min-width',
+            'maxw' => 'max-width',
+            'minh' => 'min-height',
+            'maxh' => 'max-height'
+        );
         $config = trim($config);
+        
+        $config = preg_replace_callback(
+            '~(\d+)[\*x](\d+)~', 
+            function($matches) {
+                return 'width:'.$matches[1].',height:'.$matches[2];
+            }, 
+            $config
+        );
+        
+        $config = str_replace(";", ',', $config);
         if (empty($config)) {
             return array();
         }
@@ -440,7 +459,10 @@ class fx_thumb
         $params = array();
         foreach ($config as $props) {
             list($prop, $value) = explode(":", $props);
-            //$this->config[$prop] = $value;
+            $prop = trim($prop);
+            if (isset($prop_map[$prop])) {
+                $prop = $prop_map[$prop];
+            }
             $params[$prop] = $value;
         }
         return $params;

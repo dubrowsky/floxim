@@ -99,4 +99,13 @@ class fx_content_page extends fx_content {
         fx::data('content')->where('parent_id', $this['id'])->all()->apply($killer);
         fx::data('infoblock')->where('page_id', $this['id'])->all()->apply($killer);
     }
+    
+    public function get_external_host() {
+        $url = $this['url'];
+        if (!preg_match('~^https?~', $url)) {
+            return '';
+        }
+        $url = parse_url($url);
+        return isset($url['host']) ? $url['host'] : '';
+    }
 }

@@ -6,6 +6,8 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
     public function __construct($data = array()) {
         if (is_array($data)){
             $this->data = $data;
+        } else {
+            $this->data = array($data);
         }
     }
     
@@ -294,6 +296,12 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
         }
     }
     
+    public function reverse($preserve_keys = true) {
+        $this->data = array_reverse($this->data, $preserve_keys);
+        return $this;
+    }
+
+
     /*
      * Find elemenets and remove them from the collection
      */
@@ -303,6 +311,11 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
             $this->remove($i);
         }
         return $this;
+    }
+    
+    // alias for get_values()
+    public function column($field, $key_field = null, $as_collection = false) {
+        return $this->get_values($field, $key_field, $as_collection);
     }
     
     public function get_values($field, $key_field = null, $as_collection = false) {

@@ -84,7 +84,10 @@ class fx_controller_admin_site extends fx_controller_admin {
     }
 
     public function add_save($input) {
-        $result = array('status' => 'ok');
+        $result = array(
+            'status' => 'ok',
+            'reload' => '#admin.site.all'
+        );
 
         $site = fx::data('site')->create(array('name' => $input['name'], 'domain' => $input['domain']));
 
@@ -129,7 +132,6 @@ class fx_controller_admin_site extends fx_controller_admin {
             )
         )->save();
         $site->save();
-        $result['reload'] = '#admin.site.all';
         return $result;
     }
 
@@ -243,7 +245,10 @@ class fx_controller_admin_site extends fx_controller_admin {
     public function settings_save($input) {
         
         $site = fx::data('site')->get_by_id($input['id']);
-        $result = array('status' => 'ok');
+        $result = array(
+            'status' => 'ok',
+            'reload' => '#admin.site.all'
+        );
         $params = array('name', 'domain', 'mirrors', 'language', 'robots', 'language', 'robots', 'index_page_id', 'error_page_id', 'offline_text');
 
         foreach ($params as $v) {
@@ -251,13 +256,6 @@ class fx_controller_admin_site extends fx_controller_admin {
                 $site[$v] = $input[$v];
             }
         }
-        /*
-        $params = array('checked', 'disallow_indexing');
-        foreach ($params as $v) {
-            $site[$v] = intval($input[$v]);
-        }
-         * 
-         */
         
         $site->save();
         return $result;

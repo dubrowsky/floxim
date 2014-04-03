@@ -71,7 +71,8 @@ class fx_template_compiler {
             $code .= ', '.self::parse_expression($with_expr);
         }
         $code .= ');'."\n";
-        $code .= '$tpl_to_call->set_parent($this)'.";\n";
+        $inherit = $token->get_prop('apply') ? 'true' : 'false';
+        $code .= '$tpl_to_call->set_parent($this, '.$inherit.')'.";\n";
         $call_children = $token->get_children();
         /*
          * Converted:
@@ -172,6 +173,7 @@ class fx_template_compiler {
             } elseif ($mod['is_template']) {
                 $code .= "ob_start();\n?>";
                 $call_token->set_prop('with', '`'.$display_var.'`');
+                $call_token->set_prop('apply', true);
                 $code .= $this->_token_call_to_code($call_token);
                 $code .= "<?php\n".$display_var_item. " = ob_get_clean();\n";
             } else {
@@ -381,9 +383,14 @@ class fx_template_compiler {
             return $tb - $ta;
         });
         
+        $all_subroot = true;
         $target_token = $each_token;
         foreach ($items as $num => $item) {
             $test = $item->get_prop('test');
+            $item_subroot = $item->get_prop('subroot');
+            if (!$item_subroot || $item_subroot == 'false') {
+                $all_subroot = false;
+            }
             if (!$test) {
                 $test = 'true';
             }
@@ -397,6 +404,9 @@ class fx_template_compiler {
             }
             $target_token->add_child($cond_token);
             $target_token = $cond_token;
+        }
+        if ($all_subroot) {
+            $each_token->set_prop('subroot', 'true');
         }
         
         $in_items = false;
@@ -429,6 +439,12 @@ class fx_template_compiler {
      */
     protected function _find_separator(fx_template_token $token) {
         $separator = null;
+        if ( ($separator_text = $token->get_prop('separator')) ) {
+            $separator = new fx_template_token('separator', 'double', array());
+            $separator_text = new fx_template_token('code', 'single', array('value' => $separator_text));
+            $separator->add_child($separator_text);
+            return $separator;
+        }
         foreach ($token->get_children() as $each_child_num => $each_child) {
             if (
                 $each_child->name == 'separator' || 
@@ -478,7 +494,11 @@ class fx_template_compiler {
 
     protected function _token_each_to_code(fx_template_token $token) {
         $code = "<?php\n";
-        $arr_id = self::parse_expression($token->get_prop('select'));
+        $select = $token->get_prop('select');
+        if (empty($select)) {
+            $select = '$.items';
+        }
+        $arr_id = self::parse_expression($select);
         
         $loop_alias = 'null';
         $item_alias = $token->get_prop('as');
@@ -536,17 +556,6 @@ class fx_template_compiler {
         $code .= '$'.$item_name.' = '.$expr.";\n";
         $code .= "if ($".$item_name.") {\n";
         $code .= $this->_get_item_code($token, $item_name);
-        /*
-        $item_is_complex = $item_name .'_is_complex';
-        $code .=  $item_is_complex.' = is_array('.$item_name.') || '.$item_name." instanceof ArrayAccess;\n";
-        $code .= "if (".$item_is_complex.") {\n";
-        $code .= '$this->context_stack[]= '.$item_name.";\n";
-        $code .= "}\n";
-        
-        $code .= "if (".$item_is_complex.") {\n";
-        $code .= 'array_pop($this->context_stack)'.";\n";
-         * 
-         */
         $code .= "}\n";
         $code .= "?>";
         return $code;
