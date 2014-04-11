@@ -15,10 +15,10 @@
         <header class="header"
                 fx:area="top" 
                 fx:size="wide,low" 
-                fx:suit="force_block,local">
+                fx:suit="force_wrapper:local">
                 <div 
                     fx:template="header_block_left" 
-                    fx:of="block"
+                    fx:of="wrapper"
                     fx:suit="local" 
                     class="header_block_left">
                     {$content}
@@ -26,7 +26,7 @@
                 <div 
                     fx:template="header_block_right" 
                     fx:suit="local" 
-                    fx:of="block"
+                    fx:of="wrapper"
                     class="header_block_right">
                     {$content}
                 </div>
@@ -87,8 +87,7 @@
         }
         ?>
         <section 
-            style="background:
-                {%page_bg_color_$page_id}<?=$bg_color?>{/%} 
+            style="background:{%page_bg_color_$page_id}<?=$bg_color?>{/%} 
                 url('{%page_bg_image_$page_id}<?=$bg_image?>{/%}') no-repeat 50% 0;"
                 class="section_inner{if !$sidebar} section_inner_full{/if}">
             <div class="wrapper">
@@ -142,7 +141,7 @@
                     </div>
                     <div class="center">
                         {area id="index_center" /}
-                        <div fx:template="block_titled" fx:of="block" class="block_titled">
+                        <div fx:template="block_titled" fx:of="wrapper" class="block_titled">
                             <h2>{%header}Header{/%}</h2>
                             {$content}
                         </div>
@@ -165,7 +164,7 @@
                     </span>
                     <a href="mailto:{%email editable="false"}info@jt.ru{/%}">{%email}</a>
                 </div>
-                <div fx:template="footer_block" fx:of="block">
+                <div fx:template="footer_block" fx:of="wrapper">
                 </div>
                 <div class="copy">
                     {%copy}&copy; JT, <?=date('Y')?><br />

@@ -1,10 +1,14 @@
 <?php
 class fx_content_page extends fx_content {
+    protected $parent_ids = null;
     /**
      * Get the id of the page-parents
      * @return array
      */
     public function get_parent_ids() {
+        if (!is_null($this->parent_ids)) {
+            return $this->parent_ids;
+        }
         $c_pid = $this->get('parent_id');
         // if page has null parent, hold it as if it was nested to index
         if ($c_pid === null && ($site = fx::env('site')) && ($index_id = $site['index_page_id'])) {
@@ -13,8 +17,9 @@ class fx_content_page extends fx_content {
         $ids = array();
         while ($c_pid != 0) {
             array_unshift($ids, $c_pid);
-            $c_pid = fx::data('content_page')->get_by_id($ids[0])->get('parent_id');
+            $c_pid = fx::data('content_page', $ids[0])->get('parent_id');
         }
+        $this->parent_ids = $ids;
         return $ids;
     }
     

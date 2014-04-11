@@ -55,12 +55,10 @@ class fx_controller_component extends fx_controller {
     }
     
     public function save_selected_linkers($ids) {
-        fx::log('saving sel', $ids, $this);
         if (!is_array($ids)) {
             return;
         }
         $linkers = $this->_get_selected_linkers();
-        fx::log('c linkrs', $linkers);
         $last_priority = 0;
         foreach ($linkers as $linker) {
             $linker_pos = array_search($linker['linked_id'], $ids);
@@ -90,60 +88,6 @@ class fx_controller_component extends fx_controller {
                 $linker->save();
             }
         }
-        
-        
-        //fx::log($ids, fx::env('page'), $linkers);
-        
-        //fx::log('saving sel', func_get_args());
-        /*
-        fx::log('saving sel', $this);
-        //return;
-        $ib = fx::data('infoblock', $this->get_param('infoblock_id'));
-        if (!$ib) {
-            return;
-        }
-        if (!isset($ib['params']['selected']) || !is_array($ib['params']['selected'])) {
-            return;
-        }
-            foreach ($ib['params']['selected'] as  $value) {
-                $saving[$value] = true;
-            }
-            $linkers = fx::data('content_select_linker')
-                        ->where('infoblock_id', $ib['id'])
-                        ->where('parent_id', $ib['page_id'])
-                        ->all();
-            foreach ($linkers as $linker) {
-                if (!in_array($linker['linked_id'], array_keys($saving))) {
-                    $linker->delete();
-                    $linkers->find_remove('id', $linker['id']);
-                } else {
-                    $linker['priority'] = array_search($linker['linked_id'], $ib['params']['selected']);
-                    $linker->save();
-                    unset($saving[$linker['linked_id']]);
-                }
-            }
-            foreach (array_keys($saving) as $save) {
-                $linker = fx::data('content_select_linker')->create();
-                $linker['parent_id'] = $ib['page_id'];
-                $linker['infoblock_id'] = $ib['id'];
-                $linker['linked_id'] = $save;
-                $linker['priority'] = array_search($save, $ib['params']['selected']);
-                $linker->save();
-            }
-        } else {
-            $linkers = fx::data('content_select_linker')
-                        ->where('infoblock_id', $ib['id'])
-                        ->all();
-            foreach ($linkers as $linker) {
-                $linker->delete();
-            }
-        }
-        $params = $ib['params'];
-        unset($params['selected']);
-        $ib['params'] = $params;
-        $ib->save();
-         * 
-         */
     }
     
     public function drop_selected_linkers() {
@@ -156,6 +100,9 @@ class fx_controller_component extends fx_controller {
         });
     }
 
+    /*
+     * @return fx_collection
+     */
     protected function _get_selected_linkers () {
         $q = fx::data('content_select_linker')
             ->where('infoblock_id', $this->get_param('infoblock_id'))
@@ -164,15 +111,11 @@ class fx_controller_component extends fx_controller {
            $q->where('parent_id', fx::env('page_id')); 
         }
         return $q->all();
-        /*
-            ->get_data()->get_values('linked_id');
-        return $linkers;
-         * 
-         */
     }
     
     protected function _get_selected_values() {
-        return $this->_get_selected_linkers()->column('linked_id');
+        $res = $this->_get_selected_linkers()->column('linked_id');
+        return $res;
     }
     
     protected function _get_selected_field() {
@@ -185,7 +128,7 @@ class fx_controller_component extends fx_controller {
             'params' => array(
                 'content_type' => 'content_'.$this->_content_type
             ),
-            'value'=> $this->_get_selected_values(),
+            'value'=> $this->_get_selected_values()->get_data(),
             'stored' => false
         );
     }
@@ -286,7 +229,6 @@ class fx_controller_component extends fx_controller {
             }
             $fields['conditions']['tpl'][0]['values'][$field['name']] = $res;
         }
-        fx::log('vars', $com->get_all_variants());
         $ib_field_params = array(
             'description' => 'Infoblock',
             'type' => 'link',
@@ -410,7 +352,7 @@ class fx_controller_component extends fx_controller {
                 $q->where('infoblock_id', $infoblock_id);
             }
         });
-        $items = $this->do_list();
+        $res = $this->do_list();
         if (!$this->get_param('is_fake') && fx::is_admin()) {
             $infoblock = fx::data('infoblock', $this->get_param('infoblock_id'));
             $real_ib_name = $infoblock->get_prop_inherited('name');
@@ -425,12 +367,12 @@ class fx_controller_component extends fx_controller {
                 'infoblock_id' => $this->get_param('infoblock_id')
             ));
             
-            if (count($items) == 0) {
+            if (count($res['items']) == 0) {
                 $this->_meta['hidden_placeholder'] = 'Infoblock "'.$ib_name.'" is empty. '.
                                                 'You can add '.$component['item_name'].' here';
             }
         }
-        return $items;
+        return $res;
     }
     
     public function accept_content($params,$essence = null) {
@@ -541,12 +483,6 @@ class fx_controller_component extends fx_controller {
             $linkers = null;
         } else {
             // normal
-            /*$linkers = fx::data('content_select_linker')
-                        ->where('infoblock_id', $this->input['infoblock_id'])
-                        ->where('parent_id', $parent_id)
-                        ->all();
-             * 
-             */
             $linkers = $this->_get_selected_linkers();
             $content_ids = $linkers->get_values('linked_id');
         }
@@ -585,11 +521,17 @@ class fx_controller_component extends fx_controller {
         }
         if (fx::is_admin()) {
             $selected_field = $this->_get_selected_field();
-            //$selected_field['name'] = 'params['.$selected_field['name'].']';
             $selected_field['var_type'] = 'ib_param';
             $this->_meta['fields'][]= $selected_field;
         }
-        return $this->do_list();
+        $res =  $this->do_list();
+        if (count($res['items']) === 0 && fx::is_admin()) {
+            $component = $this->get_component();
+            $ib = fx::data('infoblock', $this->get_param('infoblock_id'));
+            $this->_meta['hidden_placeholder'] = 'Infoblock "'.$ib['name'].'" is empty. '.
+                                                'Select '.$component['item_name'].' to show here';
+        }
+        return $res;
     }
     
     public function do_list_filtered() {

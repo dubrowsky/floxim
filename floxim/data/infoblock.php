@@ -18,7 +18,11 @@ class fx_data_infoblock extends fx_data {
         $this->serialized = array('params', 'scope');
     }
     
-    public function get_for_page($page_id) {
+    public function is_layout() {
+        return $this->where('controller', 'layout')->where('action', 'show');
+    }
+    
+    public function get_for_page($page_id, $drop_doubles = true) {
         $page = fx::data('content_page', $page_id);
         if (!$page) {
             return;
@@ -32,34 +36,58 @@ class fx_data_infoblock extends fx_data {
             where('checked', 1)->
             all();
         foreach ($infoblocks as $ib) {
-            // if page_id=0 blunt - all pages, ignored by the filter scope.pages
-            if ($ib['page_id'] != 0) {
-                // scope - "this page only"
-                if (fx::dig($ib, 'scope.pages') == 'this' && $ib['page_id'] != $page_id) {
-                    $infoblocks->remove($ib);
-                    continue;
-                }
-                // scope - "this level, and we look parent
-                if (fx::dig($ib, 'scope.pages') == 'children' && $ib['page_id'] == $page_id) {
-                    $infoblocks->remove($ib);
-                    continue;
-                }
-            }
-            // check for compliance with the filter type page
-            $scope_page_type = fx::dig($ib, 'scope.page_type');
-            if ( $scope_page_type && $scope_page_type != $page['type'] ) {
+            if (!$ib->is_available_on_page($page)) {
                 $infoblocks->remove($ib);
-                continue;
             }
         }
-        $inherited_infoblocks = $infoblocks->find(
-                'id', 
-                $infoblocks->find('parent_infoblock_id', 0, '!=')->get_values('parent_infoblock_id'),
-                fx_collection::FILTER_IN
-        );
-        foreach ($inherited_infoblocks as $inherited) {
-            $infoblocks->remove($inherited);
+        if ($drop_doubles) {
+            $inherited_infoblocks = $infoblocks->find(
+                    'id', 
+                    $infoblocks->find('parent_infoblock_id', 0, '!=')->get_values('parent_infoblock_id'),
+                    fx_collection::FILTER_IN
+            );
+            foreach ($inherited_infoblocks as $inherited) {
+                $infoblocks->remove($inherited);
+            }
         }
+        if ($drop_doubles) {
+            //$infoblocks = fx::collection($this->sort_infoblocks($infoblocks)->first());
+        }
+        return $infoblocks;
+    }
+    
+    /**
+     * Sort collection of infoblocks by scope "strength":
+     * 1. "this page only" - the best
+     * 2. "children of type..."
+     * 3. "page and children of type"
+     * 4. "children"
+     * 5. "page and children"
+     * If blocks have same expression type, the strongest is one bound to the deeper page
+     * If mount page is the same, the newer is stronger
+     * @param fx_collection $infoblocks
+     */
+    public function sort_infoblocks($infoblocks) {
+        $infoblocks->sort(function($a, $b) {
+            $a_scope = $a->get_scope_weight();
+            $b_scope = $b->get_scope_weight();
+            if ($a_scope > $b_scope) {
+                return -1;
+            }
+            if ($a_scope < $b_scope) {
+                return 1;
+            }
+            $a_level = count(fx::content('page', $a['page_id'])->get_parent_ids());
+            $b_level = count(fx::content('page', $b['page_id'])->get_parent_ids());
+            if ($a_level > $b_level) {
+                return -1;
+            }
+            if ($a_level < $b_level) {
+                //echo $b['id'].' winzzz';
+                return 1;
+            }
+            return $a['id'] < $b['id'] ? 1 : -1;
+        });
         return $infoblocks;
     }
 

@@ -88,7 +88,7 @@ window.fx_livesearch = function (node) {
         this.addSilent = false;
     
     this.loadValues = function(ids) {
-            if (ids.length === 0) {
+            if (!(ids instanceof Array) || ids.length === 0) {
                 return;
             }
             var url = this.getUrl();
@@ -112,6 +112,7 @@ window.fx_livesearch = function (node) {
                         livesearch.addValue(item.id, item.name, livesearch.inpNames[item.id]);
                     });
                     livesearch.addSilent = false;
+                    livesearch.n.trigger('livesearch_value_loaded');
                 }
             });
     };

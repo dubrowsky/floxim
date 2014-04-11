@@ -1,41 +1,41 @@
 (function($){
 $.fn.edit_in_place = function(command) {
-    var eip = this.data('edit_in_place');
-    if (!eip) {
-        eip = new fx_edit_in_place(this);
-        this.data('edit_in_place', eip);
-        this.addClass('fx_edit_in_place');
-    }
-    if (!command) {
-        return eip;
-    }
-    switch(command) {
-        case 'destroy':
-            eip.stop();
-            this.data('edit_in_place', null);
-            this.removeClass('fx_edit_in_place');
-            break;
-    }
+    //var $nodes = this.first();
+    var $nodes = this;
+    //console.log($nodes);
+    $nodes.each(function() {
+        var $node = $(this);
+        var eip = $node.data('edit_in_place');
+        if (!eip) {
+            eip = new fx_edit_in_place($node);
+        }
+        if (!command) {
+            return eip;
+        }
+        switch(command) {
+            case 'destroy':
+                eip.stop();
+                break;
+        }
+    });
 };
 
 function fx_edit_in_place( node ) { 
     this.node = node;
+    
+    node.data('edit_in_place', this);
+    node.addClass('fx_edit_in_place');
+    
     this.panel_fields = [];
     this.is_content_editable = false;
     
     this.ib_meta = node.closest('.fx_infoblock').data('fx_infoblock');
     
     var eip = this;
-    /*
-    this.node.on('keydown.edit_in_place', function(e) {
-        eip.handle_keydown(e);
-    });
-    */
-   
+    
     $('html').on('keydown.edit_in_place', function(e) {
        eip.handle_keydown(e);
     });
-    
     
     // need to edit the contents of the site
     if (this.node.data('fx_var')) {
@@ -53,10 +53,8 @@ function fx_edit_in_place( node ) {
     }
     // edit fields from fx_controller_meta['field']
     var c_meta = this.node.data('fx_controller_meta');
-    var fields = []
     if (c_meta && c_meta.fields) {
         $.each(c_meta.fields, function(index, field) {
-            //fields.push($fx.front.add_panel_field(field));
             eip.start(field);
         });
     }
@@ -73,7 +71,6 @@ fx_edit_in_place.prototype.handle_keydown = function(e) {
         return false;
     }
     if (e.which === 13 && (!this.is_wysiwyg || e.ctrlKey)) {
-        $fx.front.deselect_item();
         this.save().stop();
         e.which = 666;
         $(this.node).closest('a').blur();
@@ -92,13 +89,11 @@ fx_edit_in_place.prototype.start = function(meta) {
                 );
                 break;
             case 'image': case 'file': 
-                var field = this.add_panel_field(
+                this.add_panel_field(
                     $.extend({}, meta, {
-                        value:meta.real_value || ''//,
-                        //path:meta.value && meta.value != '0' ? meta.value : false
+                        value:meta.real_value || ''
                     })
-                );
-                field.on('fx_change_file', function() {
+                ).on('fx_change_file', function() {
                     edit_in_place.save().stop();
                 });
                 break;
@@ -115,6 +110,11 @@ fx_edit_in_place.prototype.start = function(meta) {
                             $fx.front.stop_essences_sortable();
                         }, 50);
                     }
+                    if (this.node.hasClass('fx_hidden_placeholded')) {
+                        this.was_placeholded_by = this.node.html();
+                        this.node.removeClass('fx_hidden_placeholded');
+                        this.node.html('');
+                    }
                     this.node.addClass('fx_var_editable');
                     if ( (meta.type === 'text' && meta.html) || meta.type === 'html') {
                         this.is_wysiwyg = true;
@@ -124,11 +124,25 @@ fx_edit_in_place.prototype.start = function(meta) {
                     if (!((meta.type === 'text' && meta.html) || meta.type === 'html')) {
                         this.node.data('fx_saved_value', this.node.html());
                     }
+                    var $n = this.node;
                     setTimeout(function() {
-                        //console.log('ololco');
-                        edit_in_place.node.attr('contenteditable', 'true').focus();
+                        $n.attr('contenteditable', 'true').focus();
+                        if (edit_in_place.is_wysiwyg) {
+                            return;
+                        }
+                        $n.on('keydown.edit_in_place', function() {
+                            //$n.removeClass('fx_editable_empty');
+                        });
+                        $n.on(
+                            'keyup.edit_in_place click.edit_in_place change.edit_in_place', 
+                            function () {
+                                $n.toggleClass(
+                                    'fx_editable_empty', 
+                                    $n.text().length < 2
+                                );
+                            }
+                        );
                     }, 50);
-
                 }
                 break;
 	}
@@ -155,6 +169,8 @@ fx_edit_in_place.prototype.add_panel_field = function(meta) {
 };
 
 fx_edit_in_place.prototype.stop = function() {
+    this.node.data('edit_in_place', null);
+    this.node.removeClass('fx_edit_in_place').removeClass('fx_editable_empty');
     if (this.stopped) {
         return this;
     }
@@ -171,13 +187,13 @@ fx_edit_in_place.prototype.stop = function() {
     $('*').off('.edit_in_place');
     this.node.blur();
     this.stopped = true;
+    if (this.was_placeholded_by && this.node.text().match(/^\s*$/)) {
+        this.node.addClass('fx_hidden_placeholded').html(this.was_placeholded_by);
+    }
     return this;
 };
 
-fx_edit_in_place.prototype.save = function() {
-    if (this.stopped) {
-        return this;
-    }
+fx_edit_in_place.prototype.get_vars = function() {
     var node = this.node;
     var vars = [];
     // edit the text node
@@ -207,7 +223,6 @@ fx_edit_in_place.prototype.save = function() {
         } else if (pf_meta.type === 'livesearch') {
             var livesearch = $('.livesearch', pf).data('livesearch');
             var new_value = livesearch.getValues();
-            //console.log(old_value, new_value, livesearch);
         } else {
             var new_value = $(':input[name="'+pf_meta['name']+'"]', pf).val();
         }
@@ -227,11 +242,31 @@ fx_edit_in_place.prototype.save = function() {
             });
         }
     }
+    return vars;
+};
+
+fx_edit_in_place.prototype.save = function() {
+    if (this.stopped) {
+        return this;
+    }
+    var vars = [];
+    var $edited = $('.fx_edit_in_place');
+    $edited.each(function() {
+        var c_eip = $(this).data('edit_in_place');
+        if (c_eip){
+            $.each(c_eip.get_vars(), function(index, item) {
+                vars.push(item);
+            });
+        }
+    });
+    
+    //var vars = this.get_vars();
+    
     // nothing has changed
     if (vars.length === 0) {
         return this;
     }
-    console.log('posting', vars);
+    var node = this.node;
     $fx.front.disable_infoblock(node.closest('.fx_infoblock'));
     $fx.post(
         {
@@ -250,7 +285,7 @@ fx_edit_in_place.prototype.save = function() {
 };
 
 fx_edit_in_place.prototype.restore = function() {
-    if (!this.is_content_editable) {
+    if (!this.is_content_editable || this.was_placeholded_by) {
         return this;
     }
     var saved = this.node.data('fx_saved_value');
@@ -277,7 +312,9 @@ fx_edit_in_place.prototype.make_wysiwyg = function () {
         this.node.attr('id', 'stub'+Math.round(Math.random()*1000));
     }
     //    $('#fx_admin_control').append('<div class="editor_panel" />');
-    this.node.data('fx_node_panel').append('<div class="editor_panel" />').show();
+    //this.node.data('fx_node_panel').append('<div class="editor_panel" />').show();
+    var $panel = $fx.front.get_node_panel();
+    $panel.append('<div class="editor_panel" />').show();
     var linebreaks = this.meta.var_type === 'visual';
     if (this.meta.linebreaks !== undefined) {
         linebreaks = this.meta.linebreaks;

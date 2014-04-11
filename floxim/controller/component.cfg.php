@@ -22,10 +22,11 @@ return array(
         '*list*' => array(
             'settings' => array(
                 'limit' => array(
-                    'label' => fx::alang('Count entries','controller_component')
+                    'label' => fx::alang('Count entries','controller_component'),
+                    'class_name' => 'fx_field_limit'
                 ),
                 'pagination' => array(
-                    'label' => fx::alang('Show pagination?','controller_component'),
+                    'label' => fx::alang('Paginate?','controller_component'),
                     'type' => 'checkbox',
                     'parent' => array('limit' => '!=0')
                 ),

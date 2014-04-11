@@ -1,6 +1,7 @@
 <?php
 class fx_controller_widget extends fx_controller {
     protected $_action_prefix = 'do_';
+    protected $_meta = array();
     protected function _get_config_sources() {
         $sources = array();
         $c_name = $this->get_controller_name();
@@ -15,7 +16,16 @@ class fx_controller_widget extends fx_controller {
         return $sources;
     }
     
-    public function do_show() {
+    public function process() {
+        $result = parent::process();
+        if (!isset($result['_meta'])) {
+            $result['_meta'] = array();
+        }
+        $result['_meta'] = array_merge_recursive($result['_meta'], $this->_meta);
+        return $result;
+    }
+
+        public function do_show() {
         return $this->input;
     }
     

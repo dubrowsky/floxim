@@ -21,15 +21,37 @@ class fx_template_token {
             return new fx_template_token($name, $type, $props);
         }
         $props = array();
-        $source = preg_replace("~^\{|\}$~", '', $source);
+        $source = trim($source, '{}'); //preg_replace("~^\{|\}$~", '', $source);
         $is_close = preg_match('~^\/~', $source);
-        preg_match("~^\/?([^\s\/\\|}]+)~", $source, $name);
-        $source = substr($source, strlen($name[0]));
-        $name = $name[1];
+        $source = ltrim($source, '/');
+        $first_char = substr($source, 0, 1);
+        $is_var = in_array($first_char, array('$', '%'));
+        if ($is_var && !$is_close) {
+            $ep = new fx_template_expression_parser();
+            $name = $ep->find_var_name(trim($source, '/ '));
+        } else {
+            preg_match("~^[^\s\/\\|}]+~", $source, $name);
+            $name = $name[0];
+        }
+        //preg_match("~^\/?([^\s\/\\|}]+)~", $source, $name);
+        
+        //$source = substr($source, strlen($name[0]));
+        $source = substr($source, strlen($name));
+        
+        if ($name == 'apply') {
+            $name = 'call';
+            $props['apply'] = true;
+        } elseif ($name == 'default') {
+            $name = 'set';
+            $props['default'] = 'true';
+        }
+        
+        
         $type_info = self::get_token_info($name);
-        if (preg_match("~^[\\\$%]~", $name, $var_marker)) {
+        //if (preg_match("~^[\\\$%]~", $name, $var_marker)) {
+        if ($is_var) {
             $props['id'] = preg_replace("~^[\\\$%]~", '', $name);
-            $props['var_type'] = $var_marker[0] == '%' ? 'visual' : 'data';
+            $props['var_type'] = $first_char == '%' ? 'visual' : 'data';
             $name = 'var';
         }
         if ($name == 'with-each') {
@@ -47,15 +69,11 @@ class fx_template_token {
         } else {
             $type = 'unknown';
         }
-        if ($name == 'apply') {
-            $name = 'call';
-            $props['apply'] = true;
-        }
         if ( ($name == 'if' || $name == 'elseif') && $type == 'open' && !preg_match('~test=~', $source)) {
             $props['test'] = $source;
         } elseif ($name == 'call' && $type != 'close' && !preg_match('~id=~', $source)) {
             $source = trim($source);
-            $parts = preg_split("~\s+(with|each|as)\s+~", $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+            $parts = preg_split("~\s+(with|each)\s+~", $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
             $props['id'] = array_shift($parts);
             foreach ($parts as $prop_num => $prop){
                 if ($prop_num % 2 == 0 && isset($parts[$prop_num + 1])) {
@@ -214,6 +232,17 @@ class fx_template_token {
         return isset($this->children) ? $this->children : array();
     }
     
+    public function get_non_empty_children() {
+        $res = array();
+        $children = $this->get_children();
+        foreach ($children as $i => $ch) {
+            if (!$ch->is_empty()) {
+                $res []= $ch;
+            }
+        }
+        return $res;
+    }
+    
     public function has_children() {
         return isset($this->children) && count($this->children) > 0;
     }
@@ -263,8 +292,7 @@ class fx_template_token_att_parser extends fx_template_fsm {
     public static function get_atts(&$source) {
         $p = new self();
         $res = $p->parse($source);
-        $source = !empty($p->modifiers) ? ' | '.$p->modifiers : '';
-        ///fx::debug($res);
+        $source = !empty($p->modifiers) ? ' |'.$p->modifiers : '';
         return $res;
     }
     
@@ -284,7 +312,6 @@ class fx_template_token_att_parser extends fx_template_fsm {
         $this->add_rule(self::ATT_NAME, array('"', "'"), self::ATT_VAL, 'start_att_val');
         $this->add_rule(self::ATT_VAL, array('"', "'"), self::INIT, 'end_att_val');
         $this->add_rule(self::INIT, '|', self::MODIFIERS);
-        //$this->add_rule($first_state, $char, $new_state);
     }
     
     public function read_att_name($ch) {
@@ -321,9 +348,4 @@ class fx_template_token_att_parser extends fx_template_fsm {
                 break;
         }
     }
-    /*
-    public function parse($s) {
-        $res = parent::parse($s);
-        fx::debug($res);
-    }*/
 }

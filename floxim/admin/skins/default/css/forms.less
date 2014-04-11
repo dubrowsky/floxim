@@ -93,7 +93,7 @@
 
 .fx_admin_form .form_header {
     font-size:20px;
-    margin-bottom: 17px;
+    //margin-bottom: 17px;
 }
 
 .fx_admin_form .form_header a {
@@ -154,7 +154,7 @@
     .fx_form_horizontal, .fx_form_cols {
         label, input, select, textarea {
             display: inline;
-            font-size: 11px;
+            font-size: 12px;
             width: auto;
             margin: 0;
         }
@@ -166,6 +166,7 @@
 
     .fx_form_cols {
         table.fx_form_cols_table {
+            margin-top:17px;
             min-width:80%;
         }
         .fx_tab_data {
@@ -185,7 +186,7 @@
             margin-top:0;
         }
         .input_container {
-            margin-bottom:20px;
+            margin-bottom:10px;
             overflow:auto;
         }
         .field_last .input_container {
@@ -256,7 +257,7 @@
 }
 
 .fx_admin_form .form_label {
-    margin-bottom: 7px;
+    margin-bottom: 5px;
     margin-top: 14px;
 }
 
@@ -425,3 +426,18 @@
     }   
 }
 
+#fx_admin_extra_panel {
+    .fx_admin_panel_footer {
+        padding:4px 10px;
+        position:absolute;
+        bottom:-31px;
+        background:#f5f5f5;
+    }
+    .fx_admin_panel_footer, .fx_admin_panel_body {
+        box-shadow:3px 3px 3px #AAA;
+        display:none;
+    }
+    .fx_admin_panel_body {
+        overflow:auto;
+    }
+}

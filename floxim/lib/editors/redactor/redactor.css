@@ -64,7 +64,7 @@
 .fx_overlay .redactor_editor dl,
 .fx_overlay .redactor_editor blockquote,
 .fx_overlay .redactor_editor pre {
-	font-size: 15px !important;
+	font-size: 13px !important;
 	line-height: 1.45em;
 }
 
@@ -73,7 +73,7 @@
 	position: relative;
 	overflow: auto;
 	margin: 0 !important;
-	padding: 10px;
+	padding: 5px;
 	padding-bottom: 5px;
 	outline: none;
 	background: none;

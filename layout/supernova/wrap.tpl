@@ -66,12 +66,12 @@
     <div id="center">
         <div id="content">
             {area id="content"}
-            {template id="wrap_simple" name="Simple block" of="block"}
+            {template id="wrap_simple" name="Simple block" of="wrapper"}
                 <div class="block">
                     {$content}
                 </div>
             {/template}
-            {template id="wrap_titled" name="Block with a header" of="block"}
+            {template id="wrap_titled" name="Block with a header" of="wrapper"}
                 <div class="block">
                     <div class="title">
                         <h1 style="color:{%color}#000{/%}">{%title}Header{/%}</h1>

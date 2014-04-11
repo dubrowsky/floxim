@@ -1,0 +1,26 @@
+/******************carousel**********************/
+#carousel{position:relative;}
+	#carousel .es-carousel{width:100%; overflow:hidden;}
+		#carousel li{float:left; position:relative;padding: 0 195px;text-align:center;}
+#carousel .es-nav-prev, #carousel .es-nav-next{
+	display:block !important; position:absolute; top:40px;width:11px;height:18px;z-index:999;cursor:pointer;
+}
+#carousel .es-nav-prev{left:8%; background:url(../images/test_prev.png) no-repeat;}
+#carousel .es-nav-next{right:8%; background:url(../images/test_next.png) no-repeat;}
+	#carousel .es-nav-prev:hover, #carousel .es-nav-next:hover{background-position:0 bottom;}
+
+/*-------------------------------------------------------------------*/
+
+@media only screen and (max-width: 995px) {
+	#carousel li{float:left; position:relative;padding: 0 100px;width:548px !important;}
+}
+
+@media only screen and (max-width: 767px) {
+#carousel li{width:320px !important;padding:0 50px;}
+}
+
+@media only screen and (max-width: 479px) {
+	#carousel li{width:260px !important;padding:0 20px;}
+	#carousel .es-nav-next{right:0;}
+	#carousel .es-nav-prev{left:0;}
+}

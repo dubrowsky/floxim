@@ -78,7 +78,7 @@
                 </div>
                 <div fx:if="$index_areas" class="row three-blocks">
                     <div fx:area="left_block" fx:size="narrow,high" class="col-xs-4">
-                        <div fx:template="block_titled" fx:of="block" class="thumbnail">
+                        <div fx:template="block_titled" fx:of="wrapper" class="thumbnail">
                             <h2>{%header}Header{/%}</h2>
                             {$content}
                         </div>
@@ -91,7 +91,7 @@
                 <div fx:if="$index_areas" class="row">
                     <div fx:area="bottom_wide_block" fx:size="wide,low" class="col-xs-12">   
                         
-                        <div fx:template="block_titled_bottom" fx:of="block" >
+                        <div fx:template="block_titled_bottom" fx:of="wrapper" >
                             <h2>{%header}Header{/%}</h2>
                             {$content}
                         </div>     
@@ -101,7 +101,7 @@
                     <div fx:area="bottom_left_block" fx:size="narrow,low" class="col-xs-6">
                         
                         <div fx:template="block_titled_bottom_left"
-                             fx:of="block" 
+                             fx:of="wrapper" 
                              class="panel panel-default" >
                             <div class="panel-heading">
                                 <h3 class="panel-title">{%header}Header{/%}</h3>
@@ -116,7 +116,7 @@
                 </div>
                 <div fx:if="$two_columns" class="row">
                     <div fx:template="block_page"
-                             fx:of="block"
+                             fx:of="wrapper"
                              fx:omit="true" >
                              <h1 class="no-top-margin">{%header}Header{/%}</h1>
                              <div>
@@ -132,7 +132,7 @@
                     <div fx:area="columns_left_block" fx:size="narrow,high" class="col-xs-3">
                         <div 
                             fx:template="block_primary_block"
-                            fx:of="block"
+                            fx:of="wrapper"
                             class="panel panel-primary" >
                                 <div class="panel-heading">
                                     <h3 class="panel-title">{%header}Header{/%}</h3>
@@ -143,7 +143,7 @@
                         </div>
                         <div 
                             fx:template="block_info_block"
-                            fx:of="block"
+                            fx:of="wrapper"
                             class="panel panel-info" >
                                 <div class="panel-heading">
                                     <h3 class="panel-title">{%header}Header{/%}</h3>
@@ -154,7 +154,7 @@
                         </div>
                         <div 
                             fx:template="block_success_block"
-                            fx:of="block"
+                            fx:of="wrapper"
                             class="panel panel-success" >
                                 <div class="panel-heading">
                                     <h3 class="panel-title">{%header}Header{/%}</h3>

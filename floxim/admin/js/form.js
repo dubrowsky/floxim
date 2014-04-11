@@ -1,16 +1,46 @@
 (function($){
 fx_form = {
-    get_settings_from: function () {
-        return {
-            id:'fx_dialog_form', 
-            action:$fx.settings.action_link,
-            target:'nc_upload_target'
+    
+    create:function(options, $target) {
+        var settings = {
+            form: {
+                id:'fx_dialog_form', 
+                action:$fx.settings.action_link, 
+                target:'fx_form_target'
+            }
         };
+        if (options) {
+            $.extend(true, settings, options);
+        }
+        var $form = $(
+                '<form '+
+                    'class="fx_admin_form" '+
+                    'id="'+settings.form.id+'" '+
+                    'action="'+settings.form.action+'" '+
+                    'enctype="multipart/form-data" '+
+                    'method="post" '+
+                    'target="'+settings.form.target+'" />');
+        if (settings.class_name) {
+            $form.addClass(settings.class_name);
+        }
+        $form.append('<iframe id="'+settings.form.target+'" name="'+settings.form.target+'" style="display:none;"></iframe>');
+        $target.html('').append($form);
+        if (settings.header) {
+            var $form_header = $('<div class="form_header">'+settings.header+'</div>');
+            $form.append($form_header);
+        }
+        $fx_form.draw_fields(settings, $form);
+
+        if (options.buttons_essence) {
+            $fx.admin.set_essence(options.buttons_essence);
+        }
+
+        return $form;
     },
-            
     draw_fields: function(settings, $form_node) {
         if (settings.fields === undefined) {
-            return;
+            //return;
+            settings.fields = [];
         }
 
         if (settings.tabs) {
@@ -305,44 +335,11 @@ fx_form = {
 };
 })(jQuery);
 
-window.fx_form = window.$fx_form = fx_form;
+$fx.form = window.fx_form = window.$fx_form = fx_form;
 
 (function($) {
     $.fn.fx_create_form = function(options) {
-        var settings = {
-            form: {
-                id:'fx_dialog_form', 
-                action:$fx.settings.action_link, 
-                target:'nc_upload_target'
-            }
-        };
-        if (options) {
-            $.extend(true, settings, options);
-        }
-        var _form = $(
-                '<form '+
-                    'class="fx_admin_form" '+
-                    'id="'+settings.form.id+'" '+
-                    'action="'+settings.form.action+'" '+
-                    'enctype="multipart/form-data" '+
-                    'method="post" '+
-                    'target="'+settings.form.target+'" />');
-        if (settings.class_name) {
-            _form.addClass(settings.class_name);
-        }
-        $(_form).append('<iframe id="'+settings.form.target+'" name="'+settings.form.target+'" style="display:none;"></iframe><div id="nc_warn_text"></div>');
-        this.html('<div id="nc_dialog_error"/>');
-        this.append(_form);
-        if (settings.header) {
-            var $form_header = $('<div class="form_header">'+settings.header+'</div>');
-            _form.append($form_header);
-        }
-        $fx_form.draw_fields(settings, _form);
-
-        if (options.buttons_essence) {
-            $fx.admin.set_essence(options.buttons_essence);
-        }
-
+        $fx_form.create(options, this);
         return this;
     };
 

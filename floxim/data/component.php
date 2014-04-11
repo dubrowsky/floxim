@@ -61,23 +61,6 @@ class fx_data_component extends fx_data {
     	return $this->get('keyword', $keyword);
     }
     
-    /*public function get_hierarchy($id = null) {
-        $items = $this->all();
-        if ($id) {
-            $root = $items->find('id', $id);
-        } else {
-            $root = $items->find('parent_id', 0);
-        }
-        $recursive_get = function($components) use (&$recursive_get, $items) {
-            foreach ($components as $component) {
-                $comp['child_components'] = $items->find('parent_id', $component['id']);
-                $recursive_get($comp['child_components']);
-            }
-        };
-        echo fx_debug($root);
-        die();
-    }*/
-    
     public function get_select_values($com_id = null) {
         $items = $this->all();
         $recursive_get = function($comp_coll, $result = array(), $level = 0) 
@@ -106,7 +89,6 @@ class fx_data_component extends fx_data {
     
     public function get_tree() {
         $items = $this->all();
-        return $items->make_tree();
+        return $items->make_tree('parent_id', 'children');
     }
 }
-?>

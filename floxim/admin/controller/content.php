@@ -60,6 +60,7 @@ class fx_controller_admin_content extends fx_controller_admin {
         } else {
             $res['header'] = fx::alang('Adding new ', 'system'). ' '.$com_item_name;
         }
+        $res['view'] = 'cols';
         return $res;
     }
 

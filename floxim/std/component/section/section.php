@@ -97,10 +97,6 @@ class fx_controller_component_section extends fx_controller_component_page {
         }
         $essence_page = fx::data('content_page',$page_id);
         $parents = $essence_page->get_parent_ids();
-        if (count($parents) == 0 && $this->get_param('hide_on_index')) {
-            $this->_meta['disabled'] = true;
-            return array();
-        }
         $essence_page['active'] = true;
         if ($this->get_param('header_only')) {
             $pages = new fx_collection(array($essence_page));

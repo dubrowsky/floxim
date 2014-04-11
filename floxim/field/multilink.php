@@ -368,22 +368,33 @@ class fx_field_multilink extends fx_field_baze {
         $direct_target_field = fx::data('field', $this['format']['linking_field']);
         $direct_target_component = fx::data('component', $this['format']['linking_datatype']);
 
+        $first_type = $direct_target_component['keyword'];
+        if ($first_type !== 'content') {
+            $first_type = 'content_'.$first_type;
+        }
+        
         if (!$this['format']['mm_field']) {
             return array(
                 fx_data::HAS_MANY,
-                'content_'.$direct_target_component['keyword'],
+                $first_type,
                 $direct_target_field['name']
             );
         }
         
         $end_target_field = fx::data('field', $this['format']['mm_field']);
         $end_datatype = fx::data('component', $this['format']['mm_datatype']);
+        
+        $end_type = $end_datatype['keyword'];
+        if ($end_type !== 'content') {
+            $end_type = 'content_'.$end_type;
+        }
+        
         return array(
             fx_data::MANY_MANY,
-            'content_'.$direct_target_component['keyword'],
+            $first_type,
             $direct_target_field['name'],
             $end_target_field->get_prop_name(),
-            'content_'.$end_datatype['keyword'],
+            $end_type,
             $end_target_field['name']
         );
     }

@@ -114,7 +114,7 @@
                           </div>
                      </article>
                 </div>
-                <div class="wrapper" fx:template="block_titled" fx:of="block">
+                <div class="wrapper" fx:template="block_titled" fx:of="wrapper">
                   <article class="last-col">
                       <h2><span>{%header}Client testimonials{/%}</span></h2>
                       {$content}
@@ -161,11 +161,11 @@
                                 <article 
                                     class="grid_9 omega last-col" 
                                     fx:area="$area" 
-                                    fx:suit="force_block:local">
+                                    fx:suit="force_wrapper:local">
                                      <div 
                                          id="tabs-{$infoblock_area_position}" 
                                          fx:template="tab_wrapper" 
-                                         fx:of="block">
+                                         fx:of="wrapper">
                                         <div class="wrapper">
                                           {$content /}
                                           <div class="block_list" fx:template="pane_block_list" fx:of="page.list">
@@ -212,9 +212,9 @@
 <div class="block3">
     <!--==============================footer=================================-->
     <div class="container_12">
-           <footer fx:area="footer" fx:suit="force_block:local">
+           <footer fx:area="footer" fx:suit="force_wrapper:local">
                 <div class="wrapper">
-                      <div fx:template="footer_block" fx:of="block" 
+                      <div fx:template="footer_block" fx:of="wrapper" 
                            class="grid_{%width 
                                             type="select" 
                                             label="Width" 

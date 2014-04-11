@@ -1,4 +1,4 @@
-<?
+<?php
 $page_config = array(
     'actions' => array(
         '*record' => array(

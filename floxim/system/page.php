@@ -75,6 +75,13 @@ class fx_system_page {
         }
         $this->_files_css[] = $file;
     }
+    
+    public function clear_files() {
+        //fx::log('clerng', $this->_files_css, $this->files_js, _all_js);
+        $this->_files_css = array();
+        $this->_files_js = array();
+        $this->_all_js = array();
+    }
 
     public function add_css_bundle ($files, $params = array()) {
 
@@ -345,8 +352,22 @@ class fx_system_page {
     public function set_infoblocks($areas) {
         $this->areas = $areas;
     }
+    protected $areas_cache = array();
     
     public function get_area_infoblocks($area_id) {
-        return isset($this->areas[$area_id]) ? $this->areas[$area_id] : null;
+        if (isset($this->areas_cache[$area_id])) {
+            return $this->areas_cache[$area_id];
+        }
+        $area_blocks = isset($this->areas[$area_id]) ? $this->areas[$area_id] : array();
+        if (!$area_blocks || !is_array($area_blocks)) {
+            $area_blocks = array();
+        }
+        $area_blocks = fx::collection($area_blocks)->sort(function($a, $b) {
+            $a_pos = $a->get_prop_inherited('visual.priority');
+            $b_pos = $b->get_prop_inherited('visual.priority');
+            return $a_pos - $b_pos;
+        });
+        $this->areas_cache[$area_id] = $area_blocks;
+        return $area_blocks;
     }
 }

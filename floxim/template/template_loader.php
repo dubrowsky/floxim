@@ -55,7 +55,7 @@ class fx_template_loader {
     
     public function set_name($tpl_name) {
         $tpl_name_parts = null;
-        if (preg_match("~^(layout|component|widget|helper)_([a-z0-9_]+)$~", $tpl_name, $tpl_name_parts)) {
+        if (preg_match("~^(layout|component|widget|helper|virtual)_([a-z0-9_]+)$~", $tpl_name, $tpl_name_parts)) {
             $this->_controller_type = $tpl_name_parts[1];
             $this->_controller_name = $tpl_name_parts[2];
         } else {
@@ -148,12 +148,47 @@ class fx_template_loader {
             require_once ($target_path);
             return;
         }
-        $this->save();
-        require_once ($target_path);
+        $source = $this->compile();
+        if ($this->save($source)) {
+            require_once ($target_path);
+        } else {
+            $this->run_eval($source);
+        }
     }
     
-    public function compile() {
-        $source = $this->build_source();
+    public function virtual($source = null, $action = null)  {
+        static $count_virtual = 0;
+        if ($source === false) {
+            $source = ob_get_clean();
+        } elseif (preg_match('~\.tpl$~', $source)) {
+            $source = fx::files()->readfile($source);
+        }
+        $count_virtual++;
+        $this->set_name('virtual_'.$count_virtual);
+        $src = $this->build_source(array('/dev/null/virtual.tpl' => $source));
+        $php = $this->compile($src);
+        $this->run_eval($php);
+        $classname = 'fx_template_virtual_'.$count_virtual;
+        $tpl = new $classname(is_null($action) ? 'virtual' : $action);
+        $tpl->source = $src;
+        $tpl->compiled = $php;
+        return $tpl;
+    }
+    
+    public function run_eval($source) {
+        $php_e = preg_replace("~^<\?(php)?~", '', $source);
+        try {
+            return eval($php_e);
+        } catch (Exception $e) {
+            // ignore
+        }
+    }
+
+
+    public function compile($source = null) {
+        if (is_null($source)) {
+            $source = $this->build_source();
+        }
         $parser = new fx_template_parser();
         $tree = $parser->parse($source);
         $compiler = new fx_template_compiler();
@@ -161,15 +196,31 @@ class fx_template_loader {
         return $res;
     }
     
-    public function save() {
-        $source = $this->compile();
-        fx::files()->writefile($this->get_target_path(), $source);
+    public function save($source) {
+        try {
+            fx::files()->writefile($this->get_target_path(), $source);
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
     }
+    
+    protected function _load_sources() {
+        $sources = array();
+        foreach ($this->_source_files as $sf) {
+            $sources[$sf] = file_get_contents($sf);
+        }
+        return $sources;
+    }
+    
     /**
      * Convert files-source code in one big
      * @return string
      */
-    public function build_source() {
+    public function build_source($sources = null) {
+        if (is_null($sources)) {
+            $sources = $this->_load_sources();
+        }
         $res = '{templates name="'.$this->_template_name.'"';
         if (!empty($this->_controller_type)) {
             $res .= ' controller_type="'.$this->_controller_type.'"';
@@ -178,9 +229,10 @@ class fx_template_loader {
             $res .= ' controller_name="'.$this->_controller_name.'"';
         }
         $res .= "}";
-        foreach ($this->_source_files as $file) {
+        //foreach ($this->_source_files as $file) {
+        foreach ($sources as $file => $source) {
             $res .= '{templates source="'.$file.'"}';
-            $res .= $this->read_file($file);
+            $res .= $this->_prepare_file_data($source, $file);
             $res .= '{/templates}';
         }
         $res .= '{/templates}';
@@ -189,7 +241,10 @@ class fx_template_loader {
     
     public function read_file($file) {
         $file_data = file_get_contents($file);
-        
+        return $this->_prepare_file_data($file_data, $file);
+    }
+    
+    protected function _prepare_file_data($file_data, $file) {
         // convert fx::attributes to the canonical Smarty-syntax
         $T = new fx_template_html($file_data);
         try {
@@ -206,7 +261,8 @@ class fx_template_loader {
         }
         return $file_data;
     }
-    
+
+
     public function wrap_file($file, $file_data) {
         $is_layout = $this->_controller_type == 'layout';
         $tpl_of = 'false';

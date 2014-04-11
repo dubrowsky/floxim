@@ -31,12 +31,6 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
     public function first() {
         reset($this->data);
         return current($this->data);
-        /*
-        foreach ($this->data as $di) {
-            return $di;
-        }
-         * 
-         */
     }
     
     public function next() {
@@ -175,6 +169,24 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
         return $this;
     }
     
+    public function unique($field = null) {
+        $res = array();
+        if (is_null($field) && $this->first() instanceof fx_essence) {
+            $field = 'id';
+        }
+        if (!is_null($field)) {
+            foreach ($this->data as $item) {
+                $res[$item[$field]] = $item;
+            }
+            $this->data = $res;
+            return $this;
+        }
+        
+        $this->data = array_unique($this->data);
+        return $this;
+    }
+
+
     /*
      * Sorts the current collection
      * $c->sort('id')
@@ -182,6 +194,7 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
      */
     public function sort($sorter) {
         uasort($this->data, $sorter);
+        return $this;
     }
     
     public function slice($offset, $length = null) {
@@ -314,7 +327,7 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
     }
     
     // alias for get_values()
-    public function column($field, $key_field = null, $as_collection = false) {
+    public function column($field, $key_field = null, $as_collection = true) {
         return $this->get_values($field, $key_field, $as_collection);
     }
     
@@ -438,7 +451,12 @@ class fx_collection implements ArrayAccess, IteratorAggregate, Countable {
         return $this;
     }
     
-    public function make_tree($parent_field = 'parent_id', $children_field = 'children', $id_field = 'id') {
+    public function add() {
+        $this->concat(func_get_args());
+        return $this;
+    }
+    
+    public function make_tree($parent_field = 'parent_id', $children_field = 'nested', $id_field = 'id') {
         $index_by_parent = array();
         
         foreach ($this as $item) {

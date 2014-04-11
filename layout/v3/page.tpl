@@ -138,7 +138,7 @@
                     fx:size="wide,high"
                     class="main-column">
 
-                    <div fx:template="block_titled" fx:of="block" class="left-titled-block">
+                    <div fx:template="block_titled" fx:of="wrapper" class="left-titled-block">
                         <h2>{%header}Header{/%}</h2>
                         <div class="content">
                             {$content}
@@ -207,7 +207,7 @@
                     fx:size="narrow,high"
                     class="right-column">
 
-                    <div fx:template="right_block_titled" fx:of="block" fx:omit="true"">
+                    <div fx:template="right_block_titled" fx:of="wrapper" fx:omit="true">
                         <h3>{%header}Header{/%}</h3>
                         {$content}
                     </div>

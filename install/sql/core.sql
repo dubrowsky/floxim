@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1
--- Время создания: Мар 27 2014 г., 12:43
+-- Время создания: Апр 11 2014 г., 17:51
 -- Версия сервера: 5.5.25
 -- Версия PHP: 5.3.13
 
@@ -171,7 +171,7 @@ CREATE TABLE IF NOT EXISTS `fx_content` (
   `site_id` int(11) DEFAULT NULL,
   `parent_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=47 AUTO_INCREMENT=2807 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=47 AUTO_INCREMENT=2938 ;
 
 --
 -- Дамп данных таблицы `fx_content`
@@ -429,7 +429,40 @@ INSERT INTO `fx_content` (`id`, `priority`, `checked`, `created`, `last_updated`
 (2803, 292, 1, '2014-03-27 10:37:32', '2014-03-27 06:37:32', 2367, 'section', 414, 23, 2799),
 (2804, 293, 1, '2014-03-27 10:37:43', '2014-03-27 06:37:43', 2367, 'section', 414, 23, 2799),
 (2805, 294, 1, '2014-03-27 11:12:37', '2014-03-27 07:12:37', 2367, 'text', 432, 23, 2779),
-(2806, 295, 1, '2014-03-27 12:06:50', '2014-03-27 08:06:50', 2367, 'text', 432, 23, 2801);
+(2806, 295, 1, '2014-03-27 12:06:50', '2014-03-27 08:06:50', 2367, 'text', 432, 23, 2801),
+(2807, 296, 1, '2014-03-28 16:10:45', '2014-03-28 12:10:45', 2367, 'page', 0, 24, NULL),
+(2808, 297, 1, '2014-03-28 16:10:45', '2014-03-28 12:10:45', 2367, 'page', 0, 24, 2807),
+(2809, 1, 1, '2014-03-30 02:28:09', '2014-04-03 22:09:40', 2367, 'section', 435, 24, 2807),
+(2810, 2, 1, '2014-03-30 02:35:07', '2014-04-03 22:09:40', 2367, 'section', 435, 24, 2807),
+(2811, 2, 1, '2014-03-30 07:09:50', '2014-03-31 10:30:03', 2367, 'section', 436, 24, 2807),
+(2812, 299, 1, '2014-03-30 07:10:17', '2014-03-30 03:10:17', 2367, 'section', 436, 24, 2811),
+(2813, 1, 1, '2014-03-30 07:12:30', '2014-03-31 10:30:03', 2367, 'section', 436, 24, 2807),
+(2877, 1, 1, '2014-04-03 12:39:42', '2014-04-03 08:39:42', 2367, 'select_linker', 449, 24, 2807),
+(2878, 303, 1, '2014-04-03 13:01:17', '2014-04-03 09:01:17', 2367, 'section', 436, 24, 2807),
+(2879, 1, 1, '2014-04-03 13:01:30', '2014-04-03 22:13:22', 2367, 'section', 436, 24, 2878),
+(2880, 2, 1, '2014-04-03 13:01:43', '2014-04-08 09:47:46', 2367, 'section', 436, 24, 2878),
+(2881, 306, 1, '2014-04-03 13:24:09', '2014-04-03 09:24:09', 2367, 'news', 450, 24, 2879),
+(2882, 306, 1, '2014-04-03 13:24:09', '2014-04-03 09:24:09', 2367, 'tag', 0, 24, NULL),
+(2883, 306, 1, '2014-04-03 13:24:09', '2014-04-03 09:24:09', 2367, 'classifier_linker', 0, 24, 2881),
+(2884, 306, 1, '2014-04-03 13:24:09', '2014-04-03 09:24:09', 2367, 'tag', 0, 24, NULL),
+(2885, 306, 1, '2014-04-03 13:24:09', '2014-04-03 09:24:09', 2367, 'classifier_linker', 0, 24, 2881),
+(2886, 307, 1, '2014-04-03 13:25:13', '2014-04-03 09:25:14', 2367, 'news', 450, 24, 2879),
+(2887, 308, 1, '2014-04-03 13:29:24', '2014-04-03 09:29:24', 2367, 'news', 450, 24, 2880),
+(2888, 309, 1, '2014-04-03 13:30:15', '2014-04-03 09:30:15', 2367, 'news', 450, 24, 2880),
+(2891, 1, 1, '2014-04-03 15:06:49', '2014-04-05 15:57:27', 2367, 'section', 456, 24, 2807),
+(2893, 3, 1, '2014-04-04 02:00:35', '2014-04-08 09:47:46', 2367, 'section', 436, 24, 2878),
+(2900, 2, 1, '2014-04-04 02:21:31', '2014-04-05 15:57:27', 2367, 'section', 456, 24, 2807),
+(2910, 310, 1, '2014-04-07 21:14:33', '2014-04-07 17:14:33', 2367, 'section', 456, 24, 2807),
+(2914, 1, 1, '2014-04-08 13:48:40', '2014-04-08 09:48:40', 2367, 'select_linker', 448, 24, 2878),
+(2915, 2, 1, '2014-04-08 13:48:40', '2014-04-08 09:48:40', 2367, 'select_linker', 448, 24, 2878),
+(2916, 311, 1, '2014-04-11 02:42:43', '2014-04-10 22:42:43', 2367, 'section', 436, 24, 2811),
+(2917, 312, 1, '2014-04-11 02:43:00', '2014-04-10 22:43:00', 2367, 'section', 436, 24, 2811),
+(2918, 313, 1, '2014-04-11 02:43:17', '2014-04-10 22:43:17', 2367, 'section', 436, 24, 2916),
+(2919, 314, 1, '2014-04-11 02:43:25', '2014-04-10 22:43:25', 2367, 'section', 436, 24, 2916),
+(2920, 315, 1, '2014-04-11 02:43:33', '2014-04-10 22:43:33', 2367, 'section', 436, 24, 2916),
+(2935, 1, 1, '2014-04-11 04:24:47', '2014-04-11 00:24:47', 2367, 'select_linker', 448, 24, 2807),
+(2936, 2, 1, '2014-04-11 04:24:47', '2014-04-11 00:24:47', 2367, 'select_linker', 448, 24, 2807),
+(2937, 3, 1, '2014-04-11 04:24:47', '2014-04-11 00:24:47', 2367, 'select_linker', 448, 24, 2807);
 
 -- --------------------------------------------------------
 
@@ -485,7 +518,9 @@ INSERT INTO `fx_content_classifier` (`id`) VALUES
 (2717),
 (2728),
 (2731),
-(2733);
+(2733),
+(2882),
+(2884);
 
 -- --------------------------------------------------------
 
@@ -520,7 +555,9 @@ INSERT INTO `fx_content_classifier_linker` (`id`, `classifier_id`, `content_id`)
 (2729, 2728, 2678),
 (2730, 2728, 2679),
 (2732, 2731, 2679),
-(2734, 2733, 2681);
+(2734, 2733, 2681),
+(2883, 2882, 2881),
+(2885, 2884, 2881);
 
 -- --------------------------------------------------------
 
@@ -688,7 +725,11 @@ INSERT INTO `fx_content_news` (`id`) VALUES
 (2678),
 (2679),
 (2680),
-(2681);
+(2681),
+(2881),
+(2886),
+(2887),
+(2888);
 
 -- --------------------------------------------------------
 
@@ -880,7 +921,32 @@ INSERT INTO `fx_content_page` (`id`, `url`, `name`, `title`, `comments_counter`,
 (2801, '/SEO', 'SEO', '', 0, '', 'SEARCH ENGINE OPTIMIZATION (SEO) '),
 (2802, '/PPC', 'PPC', '', 0, NULL, 'PPC Mamagement (Web and mobile)'),
 (2803, '/Display-ads', 'Display ads', '', 0, NULL, NULL),
-(2804, '/Website-development', 'Website development', '', 0, NULL, NULL);
+(2804, '/Website-development', 'Website development', '', 0, NULL, NULL),
+(2807, '/', 'Home', '', 0, '', ''),
+(2808, '/404', 'Page not found', NULL, 0, NULL, NULL),
+(2809, '/Contact-Info', 'Contact Us', 'Some ways to contact us', 0, '', ''),
+(2810, '/Ask-a-question', 'Ask some question', '', 0, '', ''),
+(2811, '/Pool-building', 'Pool building', '', 0, '<p>\n	Know everything about pool building, bro!\n</p>', ''),
+(2812, '/Raschet-stoimosti', 'Expensive project', '', 0, '', ''),
+(2813, '/Plastikovye-basseyny', 'Plastic pools', '', 0, '', ''),
+(2878, '/Newz-and-articles', 'Newz and articles', '', 0, '', ''),
+(2879, '/Novozti', 'Novozti', '', 0, '<p>\r\n	Very interesting novozti!\r\n</p>', 'Our super News'),
+(2880, '/Articles', 'Articles!', '', 0, '', ''),
+(2881, '/Test-news-one', 'Test news one', '', 0, '<p>\r\n	I am just a test news\r\n</p>', ''),
+(2882, '/test', 'test', NULL, 0, NULL, NULL),
+(2884, '/news-2', 'news', NULL, 0, NULL, NULL),
+(2886, '/Test-news-old', 'Test news old', '', 0, '<p>\n	      I am an old news!\n</p>', ''),
+(2887, '/Test-article-one', 'Test article one', '', 0, '', ''),
+(2888, '/Another-test-article', 'Another test article', '', 0, '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">I am also test article, read me please!</span>\r\n</p>', ''),
+(2891, 'http://vk.com/mospools', 'VKOO', '', 0, '', ''),
+(2893, '/Figarticls', 'Interview', '', 0, '', ''),
+(2900, 'http://odnoklasniki.ru/ololo', 'ОДнокласники', '', 0, '', ''),
+(2910, 'http://linkedin.com/mp', 'LinkdIn', '', 0, '', ''),
+(2916, '/Olo-sub-2', 'Olo sub 221', '', 0, '', ''),
+(2917, '/Olo-sub-3', 'Olo sub 3', '', 0, '', ''),
+(2918, '/Dolphin-1', 'Dolphin 1', '', 0, '', ''),
+(2919, '/Dolphin-2222', 'Dolphin 21', '', 0, '', ''),
+(2920, '/Figolfin', 'Figolfin', '', 0, '', '');
 
 -- --------------------------------------------------------
 
@@ -1076,7 +1142,11 @@ INSERT INTO `fx_content_publication` (`id`, `publish_date`, `anounce`, `image`, 
 (2678, '2014-02-19 00:00:00', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Last touches, and we are ready to move in!</span>\r\n</p>', '/floxim_files/content/news/image/2a_0.jpg', ''),
 (2679, '2014-03-13 15:37:34', '<p>\r\n	  Nika’s and Ken’s street series were shortlisted for Moscow Streetshot Contest.\r\n</p>', '/floxim_files/content/news/image/5_city_6_0.jpg', '<p>\r\n	  Guys didn’t win this time but we’ll be back next year.\r\n</p>\r\n<p>\r\n	  For now, have Nika and her crazy hair having fun in Russia.\r\n</p>'),
 (2680, '2014-02-05 15:19:29', '<p>\n	The whole team went for free ride. Proof pics!\n</p>', '/floxim_files/content/news/image/2v_10_0.jpg', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</span>\r\n</p>\r\n<p>\r\n	Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. At vero eos et accusam et justo duo dolores et ea rebum..\r\n</p>\r\n<p>\r\n	At vero eos et accusam et justo duo dolores et ea rebum. At vero eos et accusam et justo duo dolores et ea rebum. At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\r\n</p>\r\n<p>\r\n	Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis. Sanctus sea sed takimata ut vero voluptua. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.\r\n</p>\r\n<p>\r\n	Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Sanctus sea sed takimata ut vero voluptua. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. At vero eos et accusam et justo duo dolores et ea rebum.\r\n</p>'),
-(2681, '2013-06-07 15:39:50', '<p>\n	 <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">We made some great photo series during Moscow Athletics </span>Championship.\n</p>\n<p>\n	 Check them out.\n</p>', '/floxim_files/content/news/image/5_athlet_5_0.jpg', '');
+(2681, '2013-06-07 15:39:50', '<p>\n	 <span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">We made some great photo series during Moscow Athletics </span>Championship.\n</p>\n<p>\n	 Check them out.\n</p>', '/floxim_files/content/news/image/5_athlet_5_0.jpg', ''),
+(2881, '2014-04-03 13:23:02', '<p>\n	  Test news - anounce is here\n</p>', '', '<p>\r\n	This is my text\r\n</p>'),
+(2886, '2013-08-15 13:24:24', '<p>\r\n	<span style="font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;">I am old news anounce</span>\r\n</p>', '/floxim_files/content/news/image/6_pascua_toro_19_0.JPG', ''),
+(2887, '2014-04-01 13:28:39', '<p>\r\n	I am an article just for test\r\n</p>', '/floxim_files/content/news/image/5_swim_0.jpg', ''),
+(2888, '2014-02-13 13:29:27', '<p>\n	 Hololo  anons\n</p>', '/floxim_files/content/news/image/6_pascua_toro_10_0.jpg', '');
 
 -- --------------------------------------------------------
 
@@ -1152,7 +1222,24 @@ INSERT INTO `fx_content_section` (`id`) VALUES
 (2801),
 (2802),
 (2803),
-(2804);
+(2804),
+(2809),
+(2810),
+(2811),
+(2812),
+(2813),
+(2878),
+(2879),
+(2880),
+(2891),
+(2893),
+(2900),
+(2910),
+(2916),
+(2917),
+(2918),
+(2919),
+(2920);
 
 -- --------------------------------------------------------
 
@@ -1198,7 +1285,13 @@ INSERT INTO `fx_content_select_linker` (`id`, `linked_id`) VALUES
 (2784, 2779),
 (2786, 2779),
 (2787, 2780),
-(2791, 2780);
+(2791, 2780),
+(2877, 2809),
+(2914, 2809),
+(2915, 2881),
+(2935, 2809),
+(2936, 2813),
+(2937, 2811);
 
 -- --------------------------------------------------------
 
@@ -1247,7 +1340,9 @@ INSERT INTO `fx_content_tag` (`id`) VALUES
 (2717),
 (2728),
 (2731),
-(2733);
+(2733),
+(2882),
+(2884);
 
 -- --------------------------------------------------------
 
@@ -1868,7 +1963,7 @@ CREATE TABLE IF NOT EXISTS `fx_infoblock` (
   `scope` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `page_id` (`page_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=210 AUTO_INCREMENT=434 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=210 AUTO_INCREMENT=508 ;
 
 --
 -- Дамп данных таблицы `fx_infoblock`
@@ -2046,7 +2141,26 @@ INSERT INTO `fx_infoblock` (`id`, `parent_infoblock_id`, `site_id`, `page_id`, `
 (430, 0, 23, 2777, 1, 'Text to footer', 'component_text', 'list_infoblock', 'a:4:{s:5:"limit";s:0:"";s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";s:11:"parent_type";s:13:"mount_page_id";}', 'a:2:{s:5:"pages";s:11:"descendants";s:9:"page_type";s:0:"";}'),
 (431, 0, 23, 2777, 1, 'Navigation / breadcrumbs', 'component_section', 'breadcrumbs', 'a:2:{s:11:"header_only";s:1:"1";s:13:"hide_on_index";s:1:"0";}', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:0:"";}'),
 (432, 0, 23, 2777, 1, 'Text', 'component_text', 'list_infoblock', 'a:2:{s:5:"limit";s:0:"";s:11:"parent_type";s:15:"current_page_id";}', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:0:"";}'),
-(433, 0, 23, 2799, 1, 'Services', 'component_page', 'list_filtered', 'a:5:{s:5:"limit";s:0:"";s:10:"pagination";s:1:"0";s:7:"sorting";s:7:"created";s:11:"sorting_dir";s:3:"asc";s:10:"conditions";a:1:{s:5:"new_1";a:3:{s:4:"name";s:9:"parent_id";s:8:"operator";s:1:"=";s:5:"value";a:1:{i:0;s:4:"2799";}}}}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}');
+(433, 0, 23, 2799, 1, 'Services', 'component_page', 'list_filtered', 'a:5:{s:5:"limit";s:0:"";s:10:"pagination";s:1:"0";s:7:"sorting";s:7:"created";s:11:"sorting_dir";s:3:"asc";s:10:"conditions";a:1:{s:5:"new_1";a:3:{s:4:"name";s:9:"parent_id";s:8:"operator";s:1:"=";s:5:"value";a:1:{i:0;s:4:"2799";}}}}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
+(435, 0, 24, 2807, 1, 'Top menu', 'component_section', 'list_infoblock', 'a:1:{s:7:"submenu";s:4:"none";}', 'a:2:{s:5:"pages";s:11:"descendants";s:9:"page_type";s:0:"";}'),
+(436, 0, 24, 2807, 1, 'Main Menu', 'component_section', 'list_infoblock', 'a:1:{s:7:"submenu";s:3:"all";}', 'a:2:{s:5:"pages";s:11:"descendants";s:9:"page_type";s:0:"";}'),
+(448, 0, 24, 2807, 1, 'Main slider', 'component_page', 'list_selected', 'a:3:{s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";s:11:"parent_type";s:15:"current_page_id";}', 'a:2:{s:5:"pages";s:11:"descendants";s:9:"page_type";s:0:"";}'),
+(449, 0, 24, 2807, 1, 'Pages selected - Tiles', 'component_page', 'list_selected', 'a:3:{s:7:"sorting";s:6:"manual";s:11:"sorting_dir";s:3:"asc";s:11:"parent_type";s:15:"current_page_id";}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
+(450, 0, 24, 2878, 1, 'News', 'component_news', 'list_infoblock', 'a:4:{s:5:"limit";s:2:"20";s:7:"sorting";s:12:"publish_date";s:11:"sorting_dir";s:4:"desc";s:11:"parent_type";s:15:"current_page_id";}', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:7:"section";}'),
+(451, 0, 24, 2878, 1, 'news record', 'component_news', 'record', '', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:4:"news";}'),
+(452, 0, 24, 2878, 1, 'News by filter', 'component_news', 'list_filtered', 'a:5:{s:5:"limit";s:2:"20";s:10:"pagination";s:1:"1";s:7:"sorting";s:12:"publish_date";s:11:"sorting_dir";s:4:"desc";s:10:"conditions";a:1:{s:5:"new_1";a:3:{s:4:"name";s:9:"parent_id";s:8:"operator";s:1:"=";s:5:"value";a:2:{i:0;s:4:"2879";i:1;s:4:"2880";}}}}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
+(453, 0, 24, 2807, 1, 'Tabs on main page', 'widget_blockset', 'show', 'a:0:{}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
+(456, 0, 24, 2807, 1, 'Social links', 'component_section', 'list_infoblock', 'a:1:{s:7:"submenu";s:4:"none";}', 'a:2:{s:5:"pages";s:11:"descendants";s:9:"page_type";s:0:"";}'),
+(464, 0, 24, 2807, 1, 'Third tab area', 'widget_blockset', 'show', 'a:0:{}', 'a:2:{s:5:"pages";s:11:"descendants";s:9:"page_type";s:0:"";}'),
+(479, 0, 24, 2807, 1, 'Tabs on main', 'widget_blockset', 'show', 'a:0:{}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
+(482, 0, 24, 2807, 1, 'Last news', 'component_news', 'list_filtered', 'a:5:{s:5:"limit";s:1:"3";s:10:"pagination";s:1:"0";s:7:"sorting";s:12:"publish_date";s:11:"sorting_dir";s:4:"desc";s:10:"conditions";a:1:{s:5:"new_1";a:3:{s:4:"name";s:9:"parent_id";s:8:"operator";s:1:"=";s:5:"value";a:1:{i:0;s:4:"2879";}}}}', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
+(483, 0, 24, 2807, 1, 'Breadcrumbs', 'component_section', 'breadcrumbs', 'a:2:{s:11:"header_only";s:1:"0";s:13:"hide_on_index";s:1:"1";}', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:0:"";}'),
+(498, 0, 24, 2807, 1, '', 'layout', 'show', '', 'a:2:{s:5:"pages";s:11:"descendants";s:9:"page_type";s:0:"";}'),
+(503, 498, 24, 2878, 1, '', 'layout', 'show', '', 'a:2:{s:5:"pages";s:11:"descendants";s:9:"page_type";s:0:"";}'),
+(504, 503, 24, 2878, 1, '', 'layout', 'show', '', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:4:"news";}'),
+(505, 503, 24, 2878, 1, '', 'layout', 'show', '', 'a:2:{s:5:"pages";s:8:"children";s:9:"page_type";s:7:"section";}'),
+(506, 505, 24, 2879, 1, '', 'layout', 'show', '', 'a:2:{s:5:"pages";s:4:"this";s:9:"page_type";s:0:"";}'),
+(507, 506, 24, 2879, 1, '', 'layout', 'show', '', 'a:2:{s:5:"pages";s:11:"descendants";s:9:"page_type";s:0:"";}');
 
 -- --------------------------------------------------------
 
@@ -2066,7 +2180,7 @@ CREATE TABLE IF NOT EXISTS `fx_infoblock_visual` (
   `priority` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `infoblock_id` (`infoblock_id`,`layout_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=138 AUTO_INCREMENT=522 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=138 AUTO_INCREMENT=598 ;
 
 --
 -- Дамп данных таблицы `fx_infoblock_visual`
@@ -2200,7 +2314,7 @@ INSERT INTO `fx_infoblock_visual` (`id`, `infoblock_id`, `layout_id`, `wrapper`,
 (414, 342, 11, '', '', 'layout_demo.index_slider', 'a:6:{s:13:"bg_photo_2582";s:69:"/floxim_files/content/1280px-Sortie_de_l_op_ra_en_l_an_2000-2_1_3.jpg";s:11:"header_2582";s:21:"Lorem ipsum dolor sit";s:9:"text_2582";s:24:"Nam liber tempor cum<br>";s:13:"bg_photo_2584";s:33:"/floxim_files/content/slide_5.jpg";s:11:"header_2584";s:12:"sdfgsdfgsdfg";s:9:"text_2584";s:17:"sadfgsdfgsdfgsdfg";}', 'index_main_column', 1),
 (415, 343, 11, '', '', 'layout_demo.featured_products_list', '', 'index_main_column', 2),
 (416, 344, 11, '', '', 'layout_demo.featured_products_list_with_categories', '', 'main_column', 22),
-(417, 345, 12, '', '', 'layout_v3.two_columns_inverted', 'a:5:{s:5:"phone";s:17:"8 (800) 123 12 42";s:4:"logo";s:0:"";s:17:"two_column_header";s:29:"\n                Yes, we can!";s:17:"one_column_header";s:25:"\n                Our news";s:9:"logo_name";s:10:"Photo Team";}', '', 1),
+(417, 345, 12, '', '', 'layout_v3.two_columns_inverted', 'a:5:{s:5:"phone";s:17:"8 (890) 123 12 45";s:4:"logo";s:0:"";s:17:"two_column_header";s:29:"\n                Yes, we can!";s:17:"one_column_header";s:25:"\n                Our news";s:9:"logo_name";s:10:"Photo Team";}', '', 1),
 (418, 346, 12, '', '', 'layout_v3.main_menu', '', 'top_nav', 2),
 (419, 347, 12, '', '', 'layout_v3.footer_menu', '', 'footer_menu', 1),
 (420, 348, 12, '', '', 'layout_v3.social_icons', '', 'footer_social_icons', 1),
@@ -2226,7 +2340,7 @@ INSERT INTO `fx_infoblock_visual` (`id`, `infoblock_id`, `layout_id`, `wrapper`,
 (454, 382, 12, '', '', 'layout_v3.full_width', '', '', 9),
 (457, 385, 12, '', '', 'layout_v3.full_screen_menu', 'a:13:{s:7:"bg_2688";s:38:"/floxim_files/content/HansIsland_8.png";s:3:"bg_";s:0:"";s:7:"bg_2690";s:69:"/floxim_files/content/1280px-Sortie_de_l_op_ra_en_l_an_2000-2_1_0.jpg";s:11:"header_2688";s:0:"";s:12:"caption_2688";s:71:"<p>\n	 The carnival of Potosi\n</p>\n<p>\n	<strong>in Bolivia</strong>\n</p>";s:11:"header_2690";s:0:"";s:11:"header_2639";s:42:"<p>\n	 Our projects\n</p>\n<p>\n	are cool\n</p>";s:12:"caption_2639";s:11:"Ain''t they?";s:12:"caption_2690";s:27:"<p>\n	The age old sport\n</p>";s:7:"bg_2639";s:32:"/floxim_files/content/2a_2_0.JPG";s:12:"caption_2751";s:20:"<p>\n	Pagan fest\n</p>";s:12:"caption_2757";s:28:"<p>\n	a.k.a. Pascua Toro\n</p>";s:7:"bg_2761";s:0:"";}', 'full_screen', 1),
 (458, 386, 12, 'layout_v3.block_titled', 'a:1:{s:6:"header";s:13:"About Project";}', 'layout_v3.project_record', '', 'full_screen', 2),
-(459, 387, 12, '', '', 'layout_v3.full_screen_menu', 'a:4:{s:7:"header_";s:15:"Hans Island<br>";s:11:"header_2635";s:45:"<p>\n	 Team of professional photographers\n</p>";s:12:"caption_2635";s:77:"<p>\n	We come in all sizes and shapes ready to\n</p>\nshoot any series you like.";s:7:"bg_2635";s:44:"/floxim_files/content/6_pascua_toro_19_0.JPG";}', 'full_screen', 3),
+(459, 387, 12, '', '', 'layout_v3.full_screen_menu', 'a:4:{s:7:"header_";s:15:"Hans Island<br>";s:11:"header_2635";s:52:"<p>\n	  Team of super professional photographers\n</p>";s:12:"caption_2635";s:77:"<p>\n	We come in all sizes and shapes ready to\n</p>\nshoot any series you like.";s:7:"bg_2635";s:44:"/floxim_files/content/6_pascua_toro_19_0.JPG";}', 'full_screen', 3),
 (460, 388, 12, '', '', 'layout_v3.side_menu', 'a:1:{s:10:"unstylized";s:1:"0";}', 'left_column', 8),
 (461, 389, 12, 'layout_v3.block_titled', 'a:1:{s:6:"header";s:6:"Images";}', 'layout_v3.slider', 'a:1:{s:10:"thumbnails";s:1:"1";}', 'full_screen', 4),
 (462, 390, 12, '', '', 'layout_v3.one_column', '', '', 10),
@@ -2256,7 +2370,27 @@ INSERT INTO `fx_infoblock_visual` (`id`, `infoblock_id`, `layout_id`, `wrapper`,
 (518, 430, 13, 'layout_digital_tulip.footer_block', 'a:2:{s:6:"header";s:16:"Shortly About us";s:5:"width";s:1:"6";}', 'component_text.list', '', 'footer', 1),
 (519, 431, 13, '', '', 'component_page.breadcrumbs', '', 'content', 5),
 (520, 432, 13, '', '', 'component_text.list', '', 'content', 6),
-(521, 433, 13, 'layout_digital_tulip.block_titled', 'a:1:{s:6:"header";s:10:"What we do";}', 'layout_digital_tulip.offers_box', '', 'content', 7);
+(521, 433, 13, 'layout_digital_tulip.block_titled', 'a:1:{s:6:"header";s:10:"What we do";}', 'layout_digital_tulip.offers_box', '', 'content', 7),
+(524, 435, 14, '', '', 'layout_moscowpools.top_links', '', 'main_header', 1),
+(525, 436, 14, '', '', 'layout_moscowpools.main_menu', '', 'main_menu_area', 1),
+(537, 448, 14, '', '', 'layout_moscowpools.slider', 'a:8:{s:16:"button_text_2810";s:4:"Ask!";s:10:"image_2810";s:44:"/floxim_files/content/6_pascua_toro_19_0.JPG";s:15:"image_2807_2810";s:44:"/floxim_files/content/6_pascua_toro_19_0.JPG";s:15:"image_2813_2810";s:44:"/floxim_files/content/6_pascua_toro_10_0.jpg";s:15:"image_2807_2817";s:32:"/floxim_files/content/3b_6_0.jpg";s:16:"button_text_2817";s:20:"Купить его!";s:15:"image_2807_2809";s:31:"/floxim_files/content/5_3_0.jpg";s:16:"button_text_2886";s:5:"Older";}', 'main_menu_area', 2),
+(538, 449, 14, 'layout_moscowpools.content_section_titled', 'a:1:{s:6:"header";s:13:"Fool building";}', 'layout_moscowpools.tiles', 'a:1:{s:14:"more_info_2809";s:12:"Dude buy me!";}', 'content', 1),
+(539, 450, 14, 'layout_moscowpools.content_padded', '', 'component_news.list', '', 'content', 2),
+(540, 452, 14, 'layout_moscowpools.content_padded', '', 'component_news.list', 'a:1:{s:10:"tags_label";s:5:"Tags:";}', 'content', 5),
+(541, 453, 14, '', 'a:1:{s:6:"header";s:17:"News and articles";}', 'layout_moscowpools.tabs', 'a:4:{s:12:"tab_name_455";s:0:"";s:12:"tab_name_457";s:20:"Хреновости";s:12:"tab_name_458";s:40:"Спецпредложения и Юля";s:12:"tab_name_454";s:18:"Last industry news";}', 'blockset_453', 1),
+(544, 456, 14, '', '', 'layout_moscowpools.social_menu', 'a:2:{s:10:"image_2900";s:0:"";s:10:"image_2891";s:0:"";}', 'footer_extra', 1),
+(545, 451, 14, '', '', 'component_news.record', '', 'content', 3),
+(553, 464, 14, '', '', 'widget_blockset.blockset', '', 'blockset_464', 2),
+(568, 479, 14, 'layout_moscowpools.content_section_titled', 'a:1:{s:6:"header";s:17:"News and articles";}', 'layout_moscowpools.tabs', '', 'content', 4),
+(571, 482, 14, '', '', 'layout_moscowpools.news_tiles', '', 'blockset_479', 1),
+(572, 483, 14, '', '', 'component_page.breadcrumbs', 'a:1:{s:9:"separator";s:4:" > ";}', 'main_menu_area', 3),
+(573, 0, 14, '', '', 'layout_moscowpools.one_col', '', '', 1),
+(588, 498, 14, '', '', 'layout_moscowpools.one_col', 'a:1:{s:10:"start_year";s:4:"2009";}', '', 2),
+(593, 503, 14, '', '', 'layout_moscowpools.left_col', '', '', 3),
+(594, 504, 14, '', '', 'layout_moscowpools.three_cols', '', '', 4),
+(595, 505, 14, '', '', 'layout_moscowpools.one_col', '', '', 5),
+(596, 506, 14, '', '', 'layout_moscowpools.one_col', '', '', 6),
+(597, 507, 14, '', '', 'layout_moscowpools.two_cols', '', '', 7);
 
 -- --------------------------------------------------------
 
@@ -2295,7 +2429,7 @@ CREATE TABLE IF NOT EXISTS `fx_lang_string` (
   `lang_ru` text,
   `lang_rus` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=760 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=996 ;
 
 --
 -- Дамп данных таблицы `fx_lang_string`
@@ -3027,7 +3161,243 @@ INSERT INTO `fx_lang_string` (`id`, `dict`, `string`, `lang_en`, `lang_ru`, `lan
 (756, 'system', 'Time', 'Time', NULL, NULL),
 (757, 'system', 'Entries', 'Entries', NULL, NULL),
 (758, 'system', 'Delte', 'Delte', NULL, NULL),
-(759, 'system', 'Delete all', 'Delete all', NULL, NULL);
+(759, 'system', 'Delete all', 'Delete all', NULL, NULL),
+(760, 'component_section', 'Menu', 'Menu', NULL, NULL),
+(761, 'component_section', 'Breadcrumbs', 'Breadcrumbs', NULL, NULL),
+(762, 'controller_component', 'Add items to', 'Add items to', NULL, NULL),
+(763, 'controller_component', 'Bind items to', 'Bind items to', NULL, NULL),
+(764, 'widget_blockset', 'Block set', 'Block set', NULL, NULL),
+(765, 'controller_component', 'Paginate?', 'Paginate?', NULL, NULL),
+(766, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(767, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(768, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(769, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(770, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(771, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(772, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(773, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(774, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(775, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(776, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(777, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(778, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(779, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(780, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(781, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(782, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(783, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(784, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(785, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(786, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(787, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(788, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(789, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(790, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(791, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(792, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(793, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(794, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(795, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(796, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(797, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(798, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(799, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(800, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(801, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(802, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(803, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(804, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(805, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(806, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(807, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(808, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(809, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(810, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(811, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(812, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(813, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(814, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(815, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(816, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(817, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(818, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(819, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(820, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(821, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(822, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(823, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(824, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(825, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(826, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(827, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(828, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(829, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(830, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(831, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(832, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(833, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(834, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(835, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(836, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(837, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(838, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(839, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(840, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(841, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(842, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(843, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(844, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(845, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(846, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(847, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(848, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(849, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(850, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(851, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(852, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(853, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(854, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(855, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(856, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(857, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(858, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(859, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(860, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(861, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(862, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(863, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(864, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(865, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(866, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(867, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(868, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(869, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(870, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(871, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(872, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(873, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(874, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(875, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(876, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(877, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(878, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(879, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(880, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(881, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(882, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(883, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(884, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(885, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(886, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(887, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(888, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(889, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(890, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(891, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(892, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(893, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(894, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(895, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(896, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(897, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(898, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(899, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(900, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(901, 'system', 'Fake infoblock data', 'Fake infoblock data', NULL, NULL),
+(902, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(903, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(904, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(905, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(906, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(907, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(908, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(909, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(910, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(911, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(912, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(913, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(914, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(915, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(916, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(917, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(918, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(919, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(920, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(921, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(922, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(923, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(924, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(925, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(926, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(927, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(928, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(929, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(930, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(931, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(932, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(933, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(934, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(935, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(936, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(937, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(938, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(939, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(940, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(941, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(942, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(943, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(944, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(945, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(946, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(947, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(948, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(949, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(950, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(951, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(952, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(953, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(954, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(955, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(956, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(957, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(958, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(959, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(960, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(961, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(962, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(963, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(964, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(965, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(966, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(967, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(968, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(969, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(970, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(971, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(972, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(973, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(974, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(975, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(976, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(977, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(978, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(979, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(980, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(981, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(982, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(983, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(984, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(985, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(986, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(987, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(988, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(989, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(990, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(991, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(992, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(993, '', 'New infoblock', 'New infoblock', NULL, NULL),
+(994, 'system', 'Layout settings', 'Layout settings', NULL, NULL),
+(995, 'system', 'Edit current page', 'Edit current page', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -3040,7 +3410,7 @@ CREATE TABLE IF NOT EXISTS `fx_layout` (
   `keyword` varchar(255) NOT NULL,
   `name` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=64 AUTO_INCREMENT=14 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=64 AUTO_INCREMENT=15 ;
 
 --
 -- Дамп данных таблицы `fx_layout`
@@ -3052,7 +3422,8 @@ INSERT INTO `fx_layout` (`id`, `keyword`, `name`) VALUES
 (10, 'jeeptravel', 'JeepTravel'),
 (11, 'demo', 'demo'),
 (12, 'v3', 'v3'),
-(13, 'digital_tulip', 'Digital Tulip');
+(13, 'digital_tulip', 'Digital Tulip'),
+(14, 'moscowpools', 'Moscow Pools');
 
 -- --------------------------------------------------------
 
@@ -3178,9 +3549,7 @@ CREATE TABLE IF NOT EXISTS `fx_session` (
 --
 
 INSERT INTO `fx_session` (`id`, `user_id`, `session_start`, `session_time`, `ip`, `login_save`, `site_id`, `auth_type`) VALUES
-('589afc62933890b4edfc74cac4250e50', 2367, 1395901950, 1395989339, 2130706433, 0, 0, 1),
-('8eaea3aef20e72d53c3b4096a09b0d62', 2367, 1395903091, 1395991038, 2130706433, 0, 0, 1),
-('bb76039203cde40ac0ec3237cec7a9ed', 2367, 1395904743, 1395995709, 2130706433, 0, 0, 1);
+('f22d89aa1fb1b690d720910230fda991', 2367, 1397178393, 1397310571, 2130706433, 0, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -3271,7 +3640,7 @@ CREATE TABLE IF NOT EXISTS `fx_site` (
   `store_id` text,
   PRIMARY KEY (`id`),
   KEY `Checked` (`checked`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=292 AUTO_INCREMENT=24 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=292 AUTO_INCREMENT=25 ;
 
 --
 -- Дамп данных таблицы `fx_site`
@@ -3282,8 +3651,9 @@ INSERT INTO `fx_site` (`id`, `parent_id`, `name`, `domain`, `layout_id`, `color`
 (15, 0, 'JeepTravel', 'floxim.loc', 10, 0, '', 1, 1, 1883, 1884, '2013-06-08 17:03:02', '2013-09-09 13:02:57', NULL, 0, 'useful', 'en', NULL, NULL),
 (16, 0, 'Default', 'floxim.def', 9, 0, '', 2, 1, 2210, 2211, '2013-10-03 16:54:26', '2013-10-03 12:55:11', NULL, 0, 'useful', 'en', NULL, NULL),
 (17, 0, 'Demo', 'dem.floxim.loc', 11, 0, '', 3, 1, 2501, 2502, '2013-12-09 17:51:13', '2013-12-10 09:55:30', NULL, 0, 'useful', 'en', NULL, NULL),
-(18, 0, 'Floxim', 'v3.floxim.loc', 12, 0, '', 4, 1, 2635, 2636, '2014-01-28 11:39:50', '2014-01-28 07:43:47', NULL, 0, 'useful', 'en', NULL, NULL),
-(23, 0, 'Digital Tulip', 'tulip.floxim.loc', 13, 0, '', 5, 1, 2777, 2778, '2014-03-21 17:08:52', '2014-03-22 06:31:39', NULL, 0, 'useful', 'en', NULL, NULL);
+(18, 0, 'The Photo Team', 'v3.floxim.loc', 12, 0, '', 4, 1, 2635, 2636, '2014-01-28 11:39:50', '2014-03-28 11:37:24', NULL, 0, 'useful', 'en', NULL, NULL),
+(23, 0, 'Digital Tulip', 'tulip.floxim.loc', 13, 0, '', 5, 1, 2777, 2778, '2014-03-21 17:08:52', '2014-03-22 06:31:39', NULL, 0, 'useful', 'en', NULL, NULL),
+(24, 0, 'Moscow Pools', 'moscowpools.floxim.loc', 14, 0, '', 6, 1, 2807, 2808, '2014-03-28 16:10:45', '2014-03-28 12:11:36', NULL, 0, 'useful', 'en', NULL, NULL);
 
 -- --------------------------------------------------------
 

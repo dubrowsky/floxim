@@ -66,6 +66,11 @@ class fx_template_modifier_parser extends fx_template_fsm {
         } elseif (preg_match("~\.~", $m['name'])) {
             $m['name'] = preg_replace("~^\.~", '', $m['name']);
             $m['is_template']  = true;
+            $parts = explode(' with ', $m['name'], 2);
+            if (count($parts) == 2) {
+                $m['name'] = trim($parts[0]);
+                $m['with'] = trim($parts[1]);
+            }
         }
         
         $this->res []= $m;

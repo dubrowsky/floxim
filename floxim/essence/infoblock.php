@@ -40,6 +40,10 @@ class fx_infoblock extends fx_essence {
         return fx::controller('infoblock.render', array('infoblock' => $this))->process();
     }
     
+    public function is_layout() {
+        return $this->get_prop_inherited('controller') == 'layout' && $this->get_prop_inherited('action') == 'show';
+    }
+    
     protected function _after_delete() {
         $killer = function($cv) {
             $cv->delete();
@@ -114,5 +118,100 @@ class fx_infoblock extends fx_essence {
         }
         $this['params'] = array_merge($c_params, $params);
         return $this;
+    }
+    
+    public function is_available_on_page($page) {
+        if ($this['site_id'] != $page['site_id']) {
+            return;
+        }
+        
+        $ids = $page->get_parent_ids();
+        $ids []= $page['id'];
+        $ids []= 0; // root
+        
+        if (!in_array($this['page_id'], $ids)) {
+            return false;
+        }
+        
+        // if page_id=0 blunt - all pages, ignored by the filter scope.pages
+        if ($this['page_id'] != 0) {
+            // scope - "this page only"
+            if (fx::dig($this, 'scope.pages') == 'this' && $this['page_id'] != $page['id']) {
+                return false;
+            }
+            // scope - "this level, and we look parent
+            if (fx::dig($this, 'scope.pages') == 'children' && $this['page_id'] == $page['id']) {
+                return false;
+            }
+        }
+        // check for compliance with the filter type page
+        $scope_page_type = fx::dig($this, 'scope.page_type');
+        if ( $scope_page_type && $scope_page_type != $page['type'] ) {
+            return false;
+        }
+        return true;
+    }
+    
+    public function get_scope_string() {
+        list($cib_page_id, $cib_pages, $cib_page_type) = array(
+            $this['page_id'], 
+            $this['scope']['pages'],
+            $this['scope']['page_type']
+        );
+        
+        if ($cib_page_id == 0) {
+            $cib_page_id = fx::data('site', $this['site_id'])->get('index_page_id'); //$path[0]['id'];
+        }
+        if ($cib_pages == 'this') {
+            $cib_page_type = '';
+        } 
+        if ($cib_pages == 'all' || empty($cib_pages)) {
+            $cib_pages = 'descendants';
+        }
+        
+        return $cib_page_id.'-'.$cib_pages.'-'.$cib_page_type;
+    }
+    
+    public function read_scope_string($str) {
+        list($scope_page_id, $scope_pages, $scope_page_type) = explode("-", $str);
+        return array(
+            'pages' => $scope_pages,
+            'page_type' => $scope_page_type,
+            'page_id' => $scope_page_id
+        );
+    }
+
+
+    public function set_scope_string($str) {
+        $ss = $this->read_scope_string($str);
+        $new_scope = array(
+            'pages' => $ss['pages'],
+            'page_type' => $ss['page_type']
+        );
+        $this['scope'] = $new_scope;
+        $this['page_id'] = $ss['page_id'];
+    }
+    
+    /**
+     * Returns number meaning "strength" (exactness) of infoblock's scope
+     */
+    public function get_scope_weight() {
+        $s = $this['scope'];
+        $pages = isset($s['pages']) ? $s['pages'] : 'all';
+        $page_type = isset($s['page_type']) ? $s['page_type'] : '';
+        if ($pages == 'this') {
+            return 4;
+        }
+        if ($page_type) {
+            if ($pages == 'children') {
+                return 3;
+            } else {
+                return 2;
+            }
+        }
+        if ($pages == 'children') {
+            return 1;
+        }
+        return 0;
     }
 }

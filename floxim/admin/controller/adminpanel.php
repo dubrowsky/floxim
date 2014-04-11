@@ -29,11 +29,21 @@ class fx_controller_admin_adminpanel extends fx_controller_admin {
     public static function get_more_menu() {
         $more_menu = array();
         $more_menu[] = array(
-            'name' => fx::alang('Page design','system'),
+            'name' => fx::alang('Layout settings','system'),
             'button' => array(
                 'essence' => 'infoblock',
                 'action' => 'layout_settings',
                 'page_id' => fx::env('page_id')
+            )
+        );
+        $c_page = fx::env('page');
+        $more_menu[] = array(
+            'name' => fx::alang('Edit current page', 'system'),
+            'button' => array(
+                'essence' => 'content',
+                'action' => 'add_edit',
+                'content_type' => $c_page['type'],
+                'content_id' => $c_page['id']
             )
         );
         return $more_menu;

@@ -7,7 +7,7 @@ $config = array(
         'DB_USER' => 'root',
         'DB_PASSWORD' => '',
         'IS_DEV_MODE' => true,
-        'COMPILED_TEMPLATES_TTL' => 10
+        'COMPILED_TEMPLATES_TTL' => 0
     )
 );
 

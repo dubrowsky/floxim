@@ -1,0 +1,91 @@
+ 
+/* Browser Resets */
+.flex-container a:active,
+.flexslider a:active,
+.flex-container a:focus,
+.flexslider a:focus  {outline: none;}
+.slides,
+.flex-control-nav,
+.flex-direction-nav {margin: 0; padding: 0; list-style: none;} 
+
+/* FlexSlider Necessary Styles
+*********************************/ 
+.flexslider {margin: 0; padding: 51px 0px 0;}
+.flexslider .slides > li {display: none; -webkit-backface-visibility: hidden;position: relative;} /* Hide the slides before the JS is loaded. Avoids image jumping */
+.flexslider .slides img { 
+    display: block;
+    float:right;
+    position:relative;
+    left:-50px;
+}
+.flex-pauseplay span {text-transform: capitalize;}
+
+/* Clearfix for the .slides element */
+.slides:after {content: "."; display: block; clear: both; visibility: hidden; line-height: 0; height: 0;} 
+html[xmlns] .slides {display: block;} 
+* html .slides {height: 1%;}
+
+/* No JavaScript Fallback */
+/* If you are not using another script, such as Modernizr, make sure you
+ * include js that eliminates this class on page load */
+.no-js .slides > li:first-child {display: block;}
+
+
+/* FlexSlider Default Theme
+*********************************/
+.flex_box{height:500px;overflow:hidden;}
+
+.flexslider {margin: 0 0 0px; position: relative; }
+.flex-viewport {}
+.loading .flex-viewport {max-height: 300px;}
+.flexslider .slides {zoom: 1;}
+
+/* Direction Nav */
+.flex-direction-nav{display:none;}
+
+
+/* Control Nav */
+.flex-control-nav {width: 400px;height:20px; position: absolute; left:29%; bottom: -53px; text-align: center;z-index:999;}
+.flex-control-nav li {margin: 0 5px; display: inline-block; zoom: 1; *display: inline;}
+.flex-control-paging li a {width: 16px; height: 16px; margin: 0px 0 0; display: block; background: url(../images/pags.png) no-repeat 0 -16px;cursor: pointer; text-indent: -9999px;}
+.flex-control-paging li a:hover, .flex-control-paging li a.flex-active{ background-position:0 0px;}
+
+.flexslider .banner{width:510px;min-height:250px;position:absolute;color:#12212f;font:15px "Trebuchet MS", Arial, Helvetica, sans-serif; line-height:24px;z-index:999; text-align:right; left:11px; top:34px;}
+
+.flexslider .banner .title{font-size: 45px; line-height: 54px; color:#12212f;margin: 0 0 7px 0;}
+.flexslider .banner .button{ margin-top:30px;text-align:center;}
+.flexslider .banner .button:hover{background:#2c5671;color:#FFFFFF;}
+
+.flex-control-thumbs {margin: 5px 0 0; position: static; overflow: hidden;}
+.flex-control-thumbs li {width: 25%; float: left; margin: 0;}
+.flex-control-thumbs img {width: 100%; display: block; cursor: pointer;}
+.flex-control-thumbs img:hover {opacity: 1;}
+.flex-control-thumbs .active {opacity: 1; cursor: default;}
+
+@media only screen and (max-width: 995px) {
+ body{min-width:768px;}
+ #toTop{display:none;}
+ .flexslider .banner{font-size: 13px; line-height: 20px; width:410px;}
+ .flex_box{height:410px;}
+ .flexslider .banner .button{margin-top:16px;}
+ .flex-control-nav{bottom:-73px;}
+}
+
+@media only screen and (max-width: 767px) {
+ body{min-width:420px;}
+ .flexslider .banner{font-size: 13px; line-height: 20px; top:20px; width:210px;min-height: inherit;}
+ .flexslider .banner .title{font-size: 40px; line-height: 48px;}
+ .flexslider .banner .text{display:none;}
+ .flexslider .banner .button{margin-top:10px;}
+ .flex-control-nav{left:0;bottom:-40px;}
+.flex_box{height:220px;}
+}
+
+@media only screen and (max-width: 479px) {
+ body{min-width:300px;}
+ .flexslider .banner .title{font-size: 24px; line-height: 29px;}
+ .flexslider .banner{width:130px;}
+ .flexslider .banner .button{padding: 5px 10px 6px;}
+ .flex_box{height:180px;}
+ .flex-control-nav{left:-50px;}
+}

@@ -71,7 +71,7 @@ class fx_template_html {
             if ($n->name == 'meta' && ($layout_id = $n->get_attribute('fx:layout'))) {
                 $layout_name = $n->get_attribute('fx:name');
                 $tpl_tag = '{template id="'.$layout_id.'" name="'.$layout_name.'" of="layout.show"}';
-                $tpl_tag .= '{call id="_layout_body" include="true"}';
+                $tpl_tag .= '{apply id="_layout_body"}';
                 $content = $n->get_attribute('content');
                 $vars = explode(",", $content);
                 foreach ($vars as $var) {
@@ -219,6 +219,14 @@ class fx_template_html {
                     $area .= 'suit="'.$area_suit.'" ';
                     $n->remove_attribute('fx:suit');
                 }
+                if ( ($area_render = $n->get_attribute('fx:area-render'))) {
+                    $area .= 'render="'.$area_render.'" ';
+                    $n->remove_attribute('fx:area-render');
+                }
+                if ( ($area_name = $n->get_attribute('fx:area-name'))) {
+                    $area .= 'name="'.$area_name.'" ';
+                    $n->remove_attribute('fx:area-name');
+                }
                 $area .= '}';
                 $n->add_child_first(fx_template_html_token::create($area));
                 $n->add_child(fx_template_html_token::create('{/area}'));
@@ -306,9 +314,16 @@ class fx_template_html {
                 case 'close':
                     $closed_tag = array_pop($stack);
                     if ($closed_tag->name != $token->name) {
+                        $start_offset = $closed_tag->offset[0] ;
+                        $end_offset = $token->offset[0];
+                        //$before = substr($this->_string, 0, $start_offset);
+                        $start_line = substr_count($this->_string, "\n", 0, $start_offset) + 1;
+                        $end_line = substr_count($this->_string, "\n", 0, $end_offset) + 1;
                         $msg = "HTML parser error: ".
-                                "start tag ".htmlspecialchars($closed_tag->source)." (".$closed_tag->offset[0]."-".$closed_tag->offset[1].")".
-                                "doesn't match end tag &lt;/".$token->name.'&gt; ('.$token->offset[0].')';
+                                "start tag ".$closed_tag->source.
+                                //$closed_tag->offset[0]."-".$closed_tag->offset[1].")".
+                                " (line ".$start_line.") ".
+                                "doesn't match end tag </".$token->name.'> (line '.$end_line.')';
                         
                         throw new Exception($msg);
                     }

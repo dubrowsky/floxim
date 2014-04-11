@@ -51,20 +51,16 @@ class fx {
         if (is_array($datatype)) {
             $datatype = join("_", $datatype);
         }
-        /*
-        if (!isset(self::$data_stat[$datatype])) {
-            self::$data_stat[$datatype] = array('total' => 0, 'cached' => 0);
+        // fx::data($page) instead of $page_id
+        if (is_object($id) && $id instanceof fx_essence) {
+            return $id;
         }
-        self::$data_stat[$datatype]['total']++;
-         * 
-         */
         if (
             !is_null($id) && 
             !is_array($id) && 
             isset(self::$data_cache[$datatype]) &&  
             isset(self::$data_cache[$datatype][$id])
         ) {
-                //self::$data_stat[$datatype]['cached']++;
                 return self::$data_cache[$datatype][$id];
         }
         
@@ -73,6 +69,9 @@ class fx {
         $component = null;
         
         if (preg_match("~^content~", $datatype)) {
+            if ($datatype == 'content_content') {
+                $datatype = 'content';
+            }
             if ($datatype == 'content') {
                 $component = fx::data('component', 'content');
             } else {
@@ -82,7 +81,7 @@ class fx {
         
         // look for data-* class in cache
         if (isset($data_classes_cache[$datatype])) {
-        	$finder_class = $data_classes_cache[$datatype];
+            $finder_class = $data_classes_cache[$datatype];
             if ($finder_class == 'fx_data') {
                 $data_finder = new fx_data($datatype);
             } else {
@@ -96,8 +95,27 @@ class fx {
             } catch (Exception $e) {
                 // Finder for the content that the class is not defined
                 if ($component) {
+                    $not_existing = array($datatype);
+                    foreach ($component->get_ancestors() as $parent_com) {
+                        try {
+                            $keyword = $parent_com['keyword'];
+                            $c_datatype = 'content'.($keyword == 'content' ? '' : '_'.$keyword);
+                            $classname = 'fx_data_'.$c_datatype;
+                            $data_finder = new $classname;
+                            foreach ($not_existing as $ne) {
+                                $data_classes_cache[$ne] = $classname;
+                            }
+                            break;
+                        } catch (Exception $ex) {
+                            $not_existing []= $c_datatype;
+                        }
+                    }
+                    /*
+                    fx::debug($component, fx::collection($component->get_ancestors())->get_values('keyword'));
                     $data_finder = new fx_data_content();
                     $data_classes_cache[$datatype] = 'fx_data_content';
+                     * 
+                     */
                 } elseif (preg_match("~^field_~", $datatype)) {
                     $data_finder = new fx_data_field();
                     $data_classes_cache[$datatype] = 'fx_data_field';
@@ -110,6 +128,9 @@ class fx {
         }
 		
         if ($component) {
+            if ($datatype === 'content_content') {
+                fx::debug(debug_backtrace());
+            }
             $data_finder->set_component($component['id']);
         }
 		
@@ -125,6 +146,16 @@ class fx {
             return null;
         }
     	return $data_finder;
+    }
+    
+    public static function content($type = null, $id = null) {
+        if (is_numeric($type)) {
+            return fx::data('content', $type);
+        }
+        $type = 'content'. (!$type ? '' : '_'.$type);
+        $args = func_get_args();
+        $args[0] = $type;
+        return call_user_func_array('fx::data', $args); 
     }
     
     protected static $router = null;
@@ -227,7 +258,10 @@ class fx {
     	}
     }
 
-    public static function template($template, $data = array()) {
+    public static function template($template = null, $data = array()) {
+        if (func_num_args() == 0) {
+            return new fx_template_loader();
+        }
         $parts= explode(".", $template);
         if (count($parts) == 2) {
             $template = $parts[0];
@@ -237,12 +271,7 @@ class fx {
         }
 
         $class_name = 'fx_template_'.$template;
-        try {
-            return new $class_name($action, $data);
-        } catch (Exception $e) {
-            fx::log($e);
-            return new fx_template($action, $data);
-        }
+        return new $class_name($action, $data);
     }
     
     protected static $page = null;
@@ -278,6 +307,11 @@ class fx {
                     return null;
                 }
                 $arr = $arr[$pp];
+            } elseif (is_object($arr) && isset($arr->$pp)) {
+                if (!isset($arr->$pp)) {
+                    return null;
+                }
+                $arr = $arr->$pp;
             } else {
                 return null;
             }

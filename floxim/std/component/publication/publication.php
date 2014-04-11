@@ -21,7 +21,12 @@ class fx_controller_component_publication extends fx_controller_component {
 
     protected function _get_publication_page() {
         $infoblock_id=$this->get_param('source_infoblock_id');
-        $infoblock = fx::data('infoblock', $infoblock_id);
+        if (!$infoblock_id) {
+            $infoblock = fx::data('infoblock')->get_content_infoblocks($this->get_content_type())->first();
+        } else {
+            $infoblock = fx::data('infoblock', $infoblock_id);
+        }
+        fx::log('pb', $infoblock);
         return fx::data(
             'content_page', 
             $infoblock->get('page_id')
@@ -50,7 +55,11 @@ class fx_controller_component_publication extends fx_controller_component {
             order('publish_date', 'DESC')->
             group('month')->group('year')->
             get_data();
-        $base_url = $this->_get_publication_page()->get('url');
+        $base_url = '';
+        $pub_page = $this->_get_publication_page();
+        if ($pub_page) {
+            $base_url = $pub_page->get('url');
+        }
         
         $years = new fx_collection();
         $c_full_month = isset($_GET['month']) ? $_GET['month'] : null;

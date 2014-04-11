@@ -6,6 +6,13 @@ class fx_data_site extends fx_data {
         parent::__construct();
         $this->order = 'priority';
     }
+    
+    public function get_by_id($id) {
+        if (is_numeric($id)) {
+            return parent::get_by_id($id);
+        }
+        return $this->get_by_host_name($id);
+    }
 
     public function get_by_host_name($host = '') {
         $replace = array('http:', 'https:', '/');

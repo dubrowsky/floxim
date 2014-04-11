@@ -288,7 +288,6 @@ fx_buttons.prototype.update_available_buttons = function () {
            }
         });
     }
-    console.log('sab', btn);
     $fx.buttons.set_active_buttons(btn);
 };
 })($fxj);

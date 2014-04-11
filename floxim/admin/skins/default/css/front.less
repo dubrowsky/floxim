@@ -238,13 +238,54 @@ img.fx_hilight {
     padding: 5px 8px;
 }
 
+/*
 .fx_infoblock_hidden {
     opacity: 0.4;
 }
+*/
 
 .fx_area_target {
     display: block !important;
     min-height: 100px;
     min-width: 100px;
     background: #DFD;
+}
+
+.fx_hidden_placeholded {
+    background: #FFFF5C;
+    color:#000;
+    &.fx_template_var {
+        outline: 1px dotted #000;
+    }
+    &.fx_infoblock, &.fx_area {
+        display: block;
+        padding: 15px !important;
+        box-sizing: border-box !important;
+        border: 2px dashed #000 !important;
+        &.fx_selected, &.fx_hilight_hover {
+            border:none !important;
+            padding:17px !important;
+        }
+    }
+}
+
+.fx_editable_empty:after {
+    content:'.';
+    height:auto !important;
+    visibility:hidden;
+    display:inline !important;
+}
+
+.fx_hilight_outline {
+    &.fx_hilight_hover {
+        outline: 2px dashed #888;
+    }
+    &.fx_selected {
+        outline: 2px dashed #000;
+    }
+}
+
+
+*[contenteditable="true"]{
+    //background:#F00 !important;
 }

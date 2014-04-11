@@ -58,6 +58,7 @@ class fx_template_expression_parser extends fx_template_fsm {
         $this->root = self::node(self::T_ROOT);
         $this->stack = array();
         $this->push_stack($this->root);
+        $this->string = $string;
         parent::parse($string);
         return $this->root;
     }
@@ -164,15 +165,109 @@ class fx_template_expression_parser extends fx_template_fsm {
     }
     
     public function read_code($ch) {
-        $node = $this->curr_node;
         
-        if ($node->last_child && $node->last_child->type == self::T_CODE) {
+        if ($ch == '.') {
+            $next = $this->get_next(2);
+            $back = $this->get_prev();
+            if ($next[1] === '(' && !preg_match("~\s~", $next[0]) && !preg_match("~\s~", $back[0])) {
+                $ch = '->';
+            }
+        }
+        $node = $this->curr_node;
+        $is_separator = in_array($ch, array(',', '(', ')', 'as')) || $this->state == self::ESC;
+        if (
+            !$is_separator && $node->last_child && !$node->last_child->is_separator 
+            && $node->last_child->type == self::T_CODE
+        ) {
             $node->last_child->data .= $ch;
         } else {
             $code = self::node(self::T_CODE);
+            $code->is_separator = $is_separator;
+            if ($this->state == self::ESC) {
+                $code->is_escaped = true;
+            }
             $code->data = $ch;
+            
             $node->add_child($code);
+            if ($ch == ')') {
+                $this->pop_stack();
+            } elseif ($ch == '(') {
+                $this->push_stack($code);
+            }
         }
+        if ($this->looking_for_var_name && count($this->stack) == 1) {
+            $cdata = $node->last_child->data;
+            $rex = "~(\||[a-z0-9_-]+\s?=)$~";
+            if (preg_match($rex, $cdata)) {
+                $str = substr($this->string, 0, $this->position);
+                $str = preg_replace($rex, '', $str);
+                throw new fx_template_var_finder_exception($str);
+            }
+        }
+    }
+    
+    /**
+     * Parse 'with' part of call, like:
+     * {call tpl with $news, strtoupper($name) as $title, $user as $author}
+     * makes:
+     * array('$' => '$news', '$title' => 'strtoupper($news)', '$author' => '$user');
+     */
+    public function parse_with($expr) {
+        $tree = $this->parse($expr);
+        $parts = array();
+        $stack = array();
+        foreach ($tree->children as $child) {
+            if ($child->type == self::T_CODE) {
+                if (preg_match("~^\s*,\s*$~", $child->data)) {
+                    $parts []= $stack;
+                    $stack = array();
+                    continue;
+                }
+            }
+            $stack []= $child;
+        }
+        if (count($stack) > 0) {
+            $parts []= $stack;
+        }
+        $res = array();
+        foreach ($parts as $p) {
+            $value = null;
+            $stack = '';
+            foreach ($p as $item) {
+                if ($item->type == self::T_CODE && preg_match('~\s*as\s*~', $item->data)) {
+                    $value = $stack;
+                    $stack = '';
+                    continue;
+                }
+                $stack .= $this->compile($item, true);
+            }
+            // no "as" separator met
+            if (is_null($value)) {
+                $value = $stack;
+                $stack = '$';
+            }
+            $res[$this->_trim_esc($stack)] = $this->_trim_esc($value);
+        }
+        return $res;
+    }
+    
+    protected function _trim_esc($s) {
+        return str_replace('``', '', trim($s));
+    }
+
+    
+    protected $looking_for_var_name = false;
+    public function find_var_name($str) {
+        $this->looking_for_var_name = true;
+        try {
+            $this->parse($str);
+            $res = $str;
+        } catch (fx_template_var_finder_exception $ex) {
+            $res = $ex->getMessage();
+        }
+        $res = trim($res);
+        //fx::debug($str, $res);
+        return $res;
     }
     
     
@@ -188,22 +283,26 @@ class fx_template_expression_parser extends fx_template_fsm {
         return $res;
     }
     
-    public function compile($node) {
+    public function compile($node, $rebuild = false) {
         $res = '';
         $proc = $this;
-        $add_children = function($n) use (&$res, $proc) {
+        $get_children = function($n, &$res = '') use ($proc, $rebuild) {
             if (isset($n->children)) {
                 foreach ($n->children as $child) {
-                    $res .= $proc->compile($child);
+                    $res .= $proc->compile($child, $rebuild);
                 }
             }
+            return $res;
+        };
+        $add_children = function($n) use ($get_children, &$res) {
+            $get_children($n, $res);
         };
         switch($node->type) {
             case self::T_ROOT:
                 $add_children($node);
                 break;
             case self::T_VAR:
-                $is_local = false;
+                $is_local = $rebuild;
                 $var_name = '';
                 $context_level = $node->get_context_level();
                 if (!is_null($context_level)) {
@@ -212,8 +311,8 @@ class fx_template_expression_parser extends fx_template_fsm {
                 // simple var
                 if (count($node->name) == 1 && is_string($node->name[0])) {
                     $var_name = $node->name[0];
-                    if (in_array($var_name, $this->local_vars)) {
-                        $is_local = true;
+                    $is_local = $is_local || in_array($var_name, $this->local_vars);
+                    if ($is_local) {
                         $var = '$'.$var_name;
                     } else {
                         if (!is_numeric($var_name)) {
@@ -257,12 +356,18 @@ class fx_template_expression_parser extends fx_template_fsm {
                 }
                 break;
             case self::T_CODE:
-                $res .= $node->data;
+                $code = $node->data;
+                $code .= $get_children($node);
+                if ($rebuild && $node->is_escaped) {
+                    $code = '`'.$code.'`';
+                }
+                $res .= $code;
                 break;
             case self::T_ARR:
                 $res .= $add_children($node);
                 break;
         }
+        $res = str_replace("``", '', $res); // empty escape
         return $res;
     }
 }
@@ -288,7 +393,7 @@ class fx_template_expression_node {
     }
     
     public $last_child = null;
-    //public $children = array();
+    
     public function add_child($n) {
         if (!$this->last_child) {
             $this->children = array();
@@ -309,4 +414,8 @@ class fx_template_expression_node {
         }
         return $child;
     }
+}
+
+class fx_template_var_finder_exception extends Exception {
+    
 }

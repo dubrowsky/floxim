@@ -10,7 +10,7 @@ class fx_controller_infoblock extends fx_controller {
             return $ib;
         }
         if (($infoblock_id = $this->get_param('infoblock_id'))) {
-            if ($infoblock_id === 'fake') {
+            if (preg_match("~^fake~", $infoblock_id)) {
                 $ib = fx::data('infoblock')->create();
                 $ib['id'] = 'fake';
                 return $ib;
@@ -23,9 +23,6 @@ class fx_controller_infoblock extends fx_controller {
 
     public function render() {
         $infoblock = $this->_get_infoblock();
-        $profiler = fx::profiler();
-        $profiler->block('render ib #'.$infoblock['id']);
-        $profiler->block('preparing');
         if (!$infoblock) {
             fx::debug('no ib to render', $this, debug_backtrace());
             die("IB NOT FOUND");
@@ -56,108 +53,107 @@ class fx_controller_infoblock extends fx_controller {
         }
         
         
-        if ($infoblock['id'] === 'fake'){
+        if (preg_match('~^fake~', $infoblock['id'])) {
             $params['is_fake'] = true;
-            
-            list(
-                    $infoblock['controller'], 
-                    $infoblock['action']
-                ) = explode(".", $ib_overs['controller']);
-            
-            $infoblock['scope'] = $ib_overs['scope'];
-            $infoblock['page_id'] = $ib_overs['page_id'];
+            if ($ib_overs) {
+                list(
+                        $infoblock['controller'], 
+                        $infoblock['action']
+                    ) = explode(".", $ib_overs['controller']);
+
+                $infoblock['scope'] = $ib_overs['scope'];
+                $infoblock['page_id'] = $ib_overs['page_id'];
+            }
         }
-        $profiler->stop();
         
         $controller_name = $infoblock->get_prop_inherited('controller');
         $controller_action = $infoblock->get_prop_inherited('action');
         
-        $profiler->block('processing '.$controller_name.'.'.$controller_action);
-        $controller = fx::controller(
-            $controller_name, 
-            $params, 
-            $controller_action
-        );
-        
-        
-        $result = $controller->process();
-        
-        $profiler->stop();
-        if (is_string($result)) {
-            if (fx::is_admin()) {
-                $result = $this->_add_infoblock_meta($result, $infoblock);
+        if ($controller_name && $controller_action) {
+            $controller = fx::controller(
+                $controller_name, 
+                $params, 
+                $controller_action
+            );
+
+
+            $result = $controller->process();
+
+            if (is_string($result)) {
+                if (fx::is_admin()) {
+                    $result = $this->_add_infoblock_meta($result, $infoblock);
+                }
+                $result = $controller->postprocess($result);
+                return $result;
             }
-            $result = $controller->postprocess($result);
-            fx::profiler()->stop();
-            return $result;
-        }
-        
-        $controller_meta = fx::dig($result, '_meta');
-        if (fx::dig($controller_meta, 'disabled')) { // !fx::is_admin()
-            fx::profiler()->stop();
-            return;
-        }
-        $tpl = null;
-        $profiler->block('getting tpl data');
-        // get the template to preview
-        if (isset($ib_overs['visual']['template'])) {
-            $tpl = fx::template($ib_overs['visual']['template']);
-        } elseif ( ($tpl_name = $infoblock->get_prop_inherited('visual.template'))) {
-            if ($tpl_name != 'auto.auto') {
+
+            $controller_meta = fx::dig($result, '_meta');
+            if (fx::dig($controller_meta, 'disabled')) { // !fx::is_admin()
+                return;
+            }
+            $tpl = null;
+            // get the template to preview
+            if (isset($ib_overs['visual']['template'])) {
+                $tpl = fx::template($ib_overs['visual']['template']);
+            } elseif ( ($tpl_name = $infoblock->get_prop_inherited('visual.template'))) {
                 $tpl = fx::template($tpl_name);
             }
-        }
-        
-        if (!$tpl) {
-            $tpl = $controller->find_template();
-        }
-        $tpl_params = $infoblock->get_prop_inherited('visual.template_visual');
-        
-        if (!is_array($tpl_params)) {
-            $tpl_params = array();
-        }
-        if (is_array($result)) {
-            $tpl_params = array_merge($tpl_params, $result);
-        }
 
-        $tpl_params['infoblock'] = $infoblock;
-        
-        $profiler->then('rendering tpl '.  get_class($tpl).'.'.$tpl->action);
-        
-        $output = $tpl->render($tpl_params);
-        $is_subroot = $tpl->is_subroot;
-        
-        $profiler->then('wrapping');
-        
-        if (isset($ib_overs['visual']['wrapper'])) {
-            $wrapper = $ib_overs['visual']['wrapper'];
-        } else {
-            $wrapper = $infoblock->get_prop_inherited('visual.wrapper');
-        }
-        
-        if ($wrapper) {
-            $tpl_wrap = fx::template($wrapper);
-            $wrap_params = $infoblock->get_prop_inherited('visual.wrapper_visual');
-            if (isset($params['infoblock_area_position'])) {
-                $wrap_params['infoblock_area_position'] = $params['infoblock_area_position'];
+            if (!$tpl) {
+                $tpl = $controller->find_template();
             }
-            if (is_array($wrap_params)) {
-                foreach ( $wrap_params as $wrap_param_key => $wrap_param_val) {
-                    $tpl_wrap->set_var($wrap_param_key, $wrap_param_val);
+            $tpl_params = $infoblock->get_prop_inherited('visual.template_visual');
+
+            if (!is_array($tpl_params)) {
+                $tpl_params = array();
+            }
+            if (is_array($result)) {
+                $tpl_params = array_merge($tpl_params, $result);
+            }
+
+            $tpl_params['infoblock'] = $infoblock;
+
+            
+            $output = $tpl->render($tpl_params);
+            $is_subroot = $tpl->is_subroot;
+
+            if (isset($ib_overs['visual']['wrapper'])) {
+                $wrapper = $ib_overs['visual']['wrapper'];
+            } else {
+                $wrapper = $infoblock->get_prop_inherited('visual.wrapper');
+            }
+
+            if ($wrapper) {
+                $tpl_wrap = fx::template($wrapper);
+                if ($tpl_wrap->has_action()) {
+                    $wrap_params = $infoblock->get_prop_inherited('visual.wrapper_visual');
+                    if (isset($params['infoblock_area_position'])) {
+                        $wrap_params['infoblock_area_position'] = $params['infoblock_area_position'];
+                    }
+                    if (is_array($wrap_params)) {
+                        foreach ( $wrap_params as $wrap_param_key => $wrap_param_val) {
+                            $tpl_wrap->set_var($wrap_param_key, $wrap_param_val);
+                        }
+                    }
+                    $tpl_wrap->set_var('content', $output);
+                    $tpl_wrap->set_var('infoblock', $infoblock);
+                    $output = $tpl_wrap->render();
+                    $is_subroot = $tpl_wrap->is_subroot;
                 }
             }
-            $tpl_wrap->set_var('content', $output);
-            $tpl_wrap->set_var('infoblock', $infoblock);
-            $output = $tpl_wrap->render();
-            $is_subroot = $tpl_wrap->is_subroot;
+        } else {
+            $output = '';
+            $controller_meta = array(
+                'hidden_placeholder' => fx::alang('Fake infoblock data', 'system')
+            );
         }
-        $profiler->then('adding meta');
         if (fx::is_admin()) {
             $output = $this->_add_infoblock_meta($output, $infoblock, $controller_meta, $is_subroot);
         }
-        $processed_output = $controller->postprocess($output);
-        $profiler->stop()->stop();
-        return $processed_output;
+        if ($controller) {
+            $output = $controller->postprocess($output);
+        }
+        return $output;
     }
     
     /**
@@ -183,10 +179,10 @@ class fx_controller_infoblock extends fx_controller {
             'class' => 'fx_infoblock fx_infoblock_'.$infoblock['id']
         );
         
-        // determine scope/editing mode InfoBlock
-        $meta['class'] .= ' fx_infoblock_'.$this->_get_infoblock_scope_name($infoblock);
-        
-        
+        if (preg_match("~^fake~", $infoblock['id'])) {
+            $meta['class'] .= ' fx_infoblock_fake';
+        }
+         
         if ($controller_meta) {
             if (fx::dig($controller_meta, 'hidden')) {
                 $meta['class'] .= ' fx_infoblock_hidden';
@@ -220,32 +216,5 @@ class fx_controller_infoblock extends fx_controller {
             $html_result = $html_proc->add_meta($meta, true);
         }
         return $html_result;
-    }
-    
-    protected function _get_infoblock_scope_name(fx_infoblock $infoblock) {
-        $ib_controller = $infoblock->get_prop_inherited('controller');
-        $ib_action = $infoblock->get_prop_inherited('action');
-        if ($ib_controller == 'layout' && $ib_action == 'show') {
-            return 'design';
-        }
-        $ib_page_id = $infoblock['page_id'];
-        $scope = $infoblock->get_prop_inherited('scope');
-        if (!$scope) {
-            if ($ib_page_id == 0) {
-                return 'design';
-            }
-            return 'edit';
-        }
-        
-        if ($ib_page_id == 0 && !$scope['page_type']) {
-            return 'design';
-        }
-        if ($scope['pages'] != 'descendants') {
-            return 'edit';
-        }
-        if (fx::data('content_page', $ib_page_id)->get('url') == '/' && !$scope['page_type']) {
-            return 'design';
-        }
-        return 'edit';
     }
 }

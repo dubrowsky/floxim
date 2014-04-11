@@ -224,7 +224,6 @@ abstract class fx_essence implements ArrayAccess {
     public function offsetSet($offset, $value) {
         // put modified | modified_data only if there was a key
         // so when you first fill fields-ties they will not be marked as updated
-        
         $offset_exists = array_key_exists($offset, $this->data);
         if ($offset_exists && $this->data[$offset] === $value) {
             return;

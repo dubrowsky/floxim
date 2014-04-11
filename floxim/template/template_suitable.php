@@ -282,6 +282,9 @@ class fx_template_suitable {
         return $res;
     }
     
+    // suit props that should contain templates
+    protected static $tpl_suit_props = array('force_wrapper', 'force_template','default_wrapper');
+    
     public static function parse_area_suit_prop($suit) {
         $res = array();
         $suit = explode(";", $suit);
@@ -307,13 +310,46 @@ class fx_template_suitable {
                 }
             }
         }
-        foreach (array('force_block', 'force_template') as $force_prop) {
-            if (!isset($res[$force_prop])) {
-                $res[$force_prop] = false;
-            } elseif (!is_array($res[$force_prop])) {
-                $res[$force_prop] = array($res[$force_prop]);
+        foreach (self::$tpl_suit_props as $prop) {
+            if (!isset($res[$prop])) {
+                $res[$prop] = false;
+            } elseif (!is_array($res[$prop])) {
+                $res[$prop] = array($res[$prop]);
             }
         }
         return $res;
+    }
+    
+    public static function compile_area_suit_prop($suit, $local_templates, $set_name) {
+        $suit = self::parse_area_suit_prop($suit);
+        foreach (self::$tpl_suit_props as $prop) {
+            if (!$suit[$prop]) {
+                continue;
+            }
+            $local_key = array_keys($suit[$prop], 'local');
+            if ($local_key) {
+                $suit[$prop] = array_merge($suit[$prop], $local_templates);
+                unset($suit[$local_key[0]]);
+            }
+            foreach ($suit[$prop] as &$tpl_name) {
+                $tpl_name = trim($tpl_name, '.');
+                if (!strstr($tpl_name, '.')) {
+                    $tpl_name = $set_name.'.'.$tpl_name;
+                }
+            }
+        }
+        $res_suit = '';
+        foreach ($suit as $p => $v) {
+            if (is_bool($v) && !$v) {
+                continue;
+            }
+            $res_suit .= $p;
+            if (!is_bool($v)) {
+                $res_suit .= ':';
+                $res_suit .= is_array($v) ? join(',', $v) : $v;
+            }
+            $res_suit .= '; ';
+        }
+        return $res_suit;
     }
 }

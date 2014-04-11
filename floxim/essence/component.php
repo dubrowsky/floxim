@@ -5,7 +5,7 @@ class fx_component extends fx_essence {
         return $this['keyword'] == 'content' ? $this['keyword'] : 'content_'.$this['keyword'];
     }
     
-    public function get_chain() {
+    public function get_chain($up_to_down = true) {
         $chain = array($this);
         $c_pid = $this->get('parent_id');
         while ($c_pid != 0) {
@@ -13,7 +13,12 @@ class fx_component extends fx_essence {
             $chain []= $c_parent;
             $c_pid = $c_parent['parent_id'];
         }
-        return array_reverse($chain);
+        
+        return $up_to_down ? array_reverse($chain) : $chain;
+    }
+    
+    public function get_ancestors() {
+        return array_slice($this->get_chain(false), 1);
     }
 
     protected $_class_id;
@@ -151,7 +156,6 @@ class fx_component extends fx_essence {
      */
     public function get_all_variants() {
         $res = fx::collection($this);
-        fx::log('src coll', $res);
         $res->concat($this->get_all_children());
         return $res;
     }

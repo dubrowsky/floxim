@@ -1,4 +1,5 @@
-(function($) {     
+(function($) {
+
 window.fx_front = function () {
     this.mode = '';
     $('html').on('mouseover', function(e) {
@@ -21,31 +22,49 @@ window.fx_front = function () {
     });
     
     $('html').on('keyup', '*', function(e) {
-        // F2
-        if (e.which === 113) {
-            if ($fx.front.get_selected_item() && !e.shiftKey) {
-                var $p = $fx.front.get_node_panel();
-                var $edit = $('.fx_admin_button_edit', $p);
-                if ($edit.length) {
-                    $edit.click();
-                    return false;
+        switch (e.which) {
+            // F2
+            case 113:
+                if ($fx.front.get_selected_item() && !e.shiftKey) {
+                    var $p = $fx.front.get_node_panel();
+                    var $edit = $('.fx_admin_button_edit', $p);
+                    if ($edit.length) {
+                        $edit.click();
+                        return false;
+                    }
+                    var $settings = $('.fx_admin_button_settings', $p);
+                    if ($settings.length) {
+                        $settings.click();
+                        return false;
+                    }
                 }
-                var $settings = $('.fx_admin_button_settings', $p);
-                if ($settings.length) {
-                    $settings.click();
-                    return false;
+                var mode_map = {
+                    view: 'edit',
+                    edit: 'design',
+                    design: 'view'
+                };
+                var target_mode = 
+                        !e.shiftKey 
+                        ? mode_map[$fx.front.mode]
+                        : mode_map[mode_map[$fx.front.mode]];
+                $fx.front.load(target_mode);
+                break;
+            // +
+            case 187:
+                var $panel = $fx.front.get_node_panel();
+                if (!$panel || $panel.length === 0) {
+                    break;
                 }
-            }
-            var mode_map = {
-                view: 'edit',
-                edit: 'design',
-                design: 'view'
-            };
-            var target_mode = 
-                    !e.shiftKey 
-                    ? mode_map[$fx.front.mode]
-                    : mode_map[mode_map[$fx.front.mode]];
-            $fx.front.load(target_mode);
+                $('.fx_add_button', $panel).first().trigger('click');
+                break;
+            // Del
+            case 46:
+                var $panel = $fx.front.get_node_panel();
+                if (!$panel || $panel.length === 0) {
+                    break;
+                }
+                $('.fx_admin_button_delete', $panel).first().trigger('click');
+                break;
         }
     });
     
@@ -56,14 +75,11 @@ window.fx_front = function () {
     
     $('html').on('fx_select', function(e) {
         var n = $(e.target);
+        //console.log(n);
         $fx.front.redraw_add_button(n);
         if ($fx.front.mode === 'edit') {
             if (n.is('.fx_essence')) {
                 $fx.front.select_content_essence(n);
-                var tvs = $('.fx_template_var, .fx_template_var_in_att', n);
-                if (tvs.length === 1) {
-                    tvs.edit_in_place();
-                }
             }
             if (n.is('.fx_template_var, .fx_template_var_in_att')) {
                 n.edit_in_place();
@@ -94,9 +110,7 @@ fx_front.prototype.handle_link_keydown = function(e) {
     var right_out = sel.anchorNode.length - sel.anchorOffset === 1
                                             && !sel.anchorNode.nextSibling
                                             && sel.anchorNode.parentNode === this;
-    console.log(right_out);
     if (e.which !== KEY_RIGHT || right_out) {
-        console.log('end', sel.anchorNode.nextSibling);
         var range = document.createRange();
         if (e.which === KEY_HOME) {
             range.setStart(link, 0);
@@ -112,6 +126,11 @@ fx_front.prototype.handle_link_keydown = function(e) {
     }
 };
 
+fx_front.prototype.unselectable_selectors = [];
+fx_front.prototype.make_unselectable = function (selector) {
+    this.unselectable_selectors.push(selector);
+};
+
 fx_front.prototype.handle_mouseover = function(e) {
         if ($fx.front.mode === 'view') {
             return;
@@ -123,20 +142,26 @@ fx_front.prototype.handle_mouseover = function(e) {
             return;
         }
         var node = $(this);
-        if (node.attr('onclick')) {
-            console.log('remove clck on hover');
-            node.attr('onclick', null);
-        }
         if (node.hasClass('fx_selected')) {
             e.fx_hilight_done = true;
             return;
         } 
-       $fx.front.outline_block_off($($fx.front.c_hover));
+        if (!$fx.front.is_selectable(this)) {
+            return;
+        }
+        for ( var sel_index = 0; sel_index < $fx.front.unselectable_selectors.length; i++) {
+            if (node.is($fx.front.unselectable_selectors[sel_index])) {
+                return;
+            }
+        }
+        $fx.front.outline_block_off($($fx.front.c_hover));
         $fx.front.c_hover = this;
         var $editable = $(e.target).closest('.fx_template_var');
         $target = $(e.target);
-        //var fix_link_ce = $target.hasClass('fx_template_var') && $fx.front.mode === 'edit';
-        var fix_link_ce = $editable.length > 0 && $fx.front.mode === 'edit' && !($editable.get(0).nodeName === 'A' && e.ctrlKey);
+        var make_content_editable = $editable.length > 0 
+                                    && $editable.data('fx_var').type !== 'datetime'
+                                    && $fx.front.mode === 'edit' 
+                                    && !($editable.get(0).nodeName === 'A' && e.ctrlKey);
         setTimeout(
             function() {
                 if ($fx.front.c_hover !== node.get(0)) {
@@ -145,17 +170,13 @@ fx_front.prototype.handle_mouseover = function(e) {
                 if (node.hasClass('fx_selected')) {
                     return;
                 }
+                if ($fx.front.hilight_disabled) {
+                    return false;
+                }
                 $('.fx_hilight_hover').removeClass('fx_hilight_hover');
                 node.addClass('fx_hilight_hover');
                 $fx.front.outline_block(node);
-                if (fix_link_ce) {
-                    /*
-                    $('html').on('keydown.fx_fix_ce', function (e) {
-                        if (e.ctrlKey) {
-                            $editable.attr('contenteditable', null);
-                        }
-                    });
-                    */
+                if (make_content_editable) {
                     $editable.addClass('fx_var_editable').attr('contenteditable', 'true');
                 }
             }, 
@@ -163,7 +184,7 @@ fx_front.prototype.handle_mouseover = function(e) {
         );
         node.one('mouseout', function() {
             $fx.front.c_hover = null;
-            if (node.hasClass('fx_selected')) {
+            if (node.closest('.fx_selected').length > 0) {
                 return false;
             }
             setTimeout(
@@ -172,7 +193,6 @@ fx_front.prototype.handle_mouseover = function(e) {
                         node.removeClass('fx_hilight_hover');
                         $fx.front.outline_block_off(node);
                         $editable.removeClass('fx_var_editable').attr('contenteditable', null);
-                        $('html').off('.fx_fix_ce');
                     }
                 },
                 100
@@ -222,7 +242,6 @@ fx_front.prototype.handle_click = function(e) {
     e.stopImmediatePropagation();
     
     if (target.attr('onclick')) {
-        console.log('has clcick atr');
         target.attr('onclick', null);
     }
     
@@ -312,20 +331,22 @@ fx_front.prototype.redraw_add_button = function(node) {
             var cb_closure = $fx.front.get_adder_closure(c_cnt);
             adders.push(cb_closure);
             if (mode === 'edit') {
-               buttons.push({
+                buttons.push({
+                    is_add:true,
                     name:c_cnt.title,
                     callback:cb_closure
-               });
+                });
             }
         }
     }
     ib.data('content_adders', adders);
     
     if (mode === 'design' && node.is('.fx_area')) {
-        var area_meta = $fx.front.get_area_meta(node.closest('.fx_area'));
+        var area_meta = $fx.front.get_area_meta(node);
         if (area_meta) {
             buttons.push({
-                name:'Add new infoblock to '+area_meta.id,
+                name:'Add block to '+(area_meta.name || area_meta.id),
+                is_add:true,
                 callback: function() {
                     $fx.front.add_infoblock_select_controller(node);
                 }
@@ -337,6 +358,10 @@ fx_front.prototype.redraw_add_button = function(node) {
     }
 };
 
+fx_front.prototype.get_area_node = function($ib_node) {
+    return $ib_node.parent().closest('.fx_area');
+};
+
 fx_front.prototype.get_page_id = function() {
     return $('body').data('fx_page_id');
 };
@@ -346,7 +371,6 @@ fx_front.prototype.get_page_id = function() {
  */
 
 fx_front.prototype.add_infoblock_select_controller = function($node) {
-    //var infoblock_back = arguments.callee;
     var $area_node = $node.closest('.fx_area');
     var area_meta = $fx.front.get_area_meta($area_node);
     
@@ -369,6 +393,9 @@ fx_front.prototype.add_infoblock_select_settings = function(data) {
     var infoblock_back = function () {
         $fx.front.add_infoblock_select_controller($area_node);
     };
+    var cancel_adding = function() {
+        $('.fx_infoblock_fake').remove();
+    };
     $fx.front_panel.show_form(data, {
         view:'horizontal',
         onfinish:function(res) {
@@ -381,13 +408,17 @@ fx_front.prototype.add_infoblock_select_settings = function(data) {
                     if (new_ib_node.length === 0) {
                         return;
                     }
-                    $fx.front.select_item(new_ib_node.get(0));
-                    $fx.front.scrollTo(new_ib_node);
+                    
                     var adders = new_ib_node.data('content_adders');
                     if (!adders || adders.length === 0 ){
+                        $fx.front.select_item(new_ib_node.get(0));
                         return;
                     }
+                    $fx.front.load('edit');
                     adders[0]();
+                    setTimeout(function() {
+                        $fx.front.select_item(new_ib_node.get(0));
+                    },100);
                 }
             );
         },
@@ -395,7 +426,7 @@ fx_front.prototype.add_infoblock_select_settings = function(data) {
            var back = $('.form_header a.back', $form);
             back.on('click', function() {
                 infoblock_back();
-                $('.fx_infoblock_fake').remove();
+                cancel_adding();
             });
 
             // creating infoblock preview
@@ -407,7 +438,6 @@ fx_front.prototype.add_infoblock_select_settings = function(data) {
                 var $last_ib = null;
                 $('.fx_infoblock', $area_node).each(function () {
                     if ($(this).closest('.fx_area').get(0) !== $area_node.get(0)) {
-                        console.log('wrong area', $(this).closest('.fx_area').get(0), $area_node.get(0));
                         return;
                     }
                     $last_ib = $(this);
@@ -421,45 +451,78 @@ fx_front.prototype.add_infoblock_select_settings = function(data) {
                     $marker.after($ib_node);
                     return;
                 }
+                
+                if ($area_node.hasClass('fx_hidden_placeholded')) {
+                    $area_node.removeClass('fx_hidden_placeholded').html('');
+                }
                 $area_node.append($ib_node);
             };
             
-            var add_fake_ib = function () {
-                $c_ib_node = $('<div class="fx_infoblock fx_infoblock_fake" />');
+            var add_fake_ib = function (callback) {
+                var $c_ib_node = $('<div class="fx_infoblock fx_infoblock_fake" />');
+                // if the closest infoblock is not layout,
+                // we will reload it with 'add_new' param
+                var $closest_ib = $area_node.closest('.fx_infoblock');
+                if ($closest_ib.length && $closest_ib[0].nodeName !== 'BODY') {
+                    $fx.front.reload_infoblock(
+                        $closest_ib, 
+                        function($new_ib_node) {
+                            cancel_adding = function(){
+                                $fx.front.reload_infoblock($new_ib_node);
+                            };
+                            callback($new_ib_node.find('.fx_infoblock_fake'));
+                        }, 
+                        {override_infoblock:{params:{add_new_infoblock:true}}}
+                    );
+                    return;
+                }
                 append_ib_node($area_node, $c_ib_node);
-                //$area_node.append($c_ib_node);
                 $c_ib_node.data('fx_infoblock', {id:'fake'});
                 $form.data('ib_node', $c_ib_node);
                 $form.data('is_waiting', false);
-                return $c_ib_node;
-            };
-            
-            $form.on('change', function(e) {
-                if ($form.data('is_waiting')) {
-                    return;
+                if (callback instanceof Function) {
+                    callback($c_ib_node);
                 }
-                $form.data('is_waiting', true);
+            };
+            var ib_loader = null, 
+                is_waiting = false;
+            $form.on('change', function(e) {
+                if (is_waiting) {
+                    if (ib_loader !== null) {
+                        ib_loader.abort();
+                    }
+                }
+                is_waiting = true;
                 
                 $c_ib_node = $form.data('ib_node');
-                $fx.front.reload_infoblock(
+                //var serial = $form.serialize();
+                //var arr = [];
+                //parse_str(serial, arr);
+                
+                ib_loader = $fx.front.reload_infoblock(
                     $c_ib_node, 
                     function($new_ib_node) {
+                        var add_ib_to_form = function($new_ib_node) {
+                            $form.data('ib_node', $new_ib_node);
+                            is_waiting = false;
+                            $fx.front.select_item($new_ib_node.get(0));
+                        };
                         if (!$new_ib_node || $new_ib_node.length === 0) {
-                            $new_ib_node = add_fake_ib();
+                            add_fake_ib(add_ib_to_form);
+                        } else {
+                            add_ib_to_form($new_ib_node);
                         }
-                        $form.data('ib_node', $new_ib_node);
-                        $form.data('is_waiting', false);
-                        $fx.front.select_item($new_ib_node.get(0));
-                        $fx.front.scrollTo($new_ib_node);
                     }, 
                     {override_infoblock:$form.serialize()}
                 );
             });
-            add_fake_ib();
-            $form.change();
+            add_fake_ib(function($ib_node) {
+                $form.data('ib_node', $ib_node);
+                $form.change();
+            });
         },
-        oncancel:function() {
-            $('.fx_infoblock_fake').remove();
+        oncancel:function($form) {
+            cancel_adding();
         }
     });
 };
@@ -485,14 +548,52 @@ fx_front.prototype.is_selectable = function(node) {
                 return true;
             }
             if ( n.hasClass('fx_template_var') || n.hasClass('fx_template_var_in_att') ) {
-                var ne = n.closest('.fx_essence');
-                if (ne && $('.fx_template_var, .fx_template_var_in_att', ne).length === 1) {
+                if ($fx.front.is_var_bound_to_essence(n)) {
                     return false;
                 }
                 return true;
             }
             return false;
     }
+};
+
+fx_front.prototype.is_var_bound_to_essence = function($node) {
+    if (!$node.is(':visible')) {
+        return false;
+    }
+    if ($node.hasClass('fx_var_bound_to_essence')) {
+        return true;
+    }
+    var $essence = $node.closest('.fx_essence');
+    
+    if ($essence.length === 0) {
+        return false;
+    }
+    
+    if ($('.fx_template_var, .fx_template_var_in_att', $essence).length === 1) {
+        $node.addClass('fx_var_bound_to_essence');
+        //console.log('b 1', $node.html());
+        return true;
+    }
+    
+    var distance = 20;
+    var eo = $essence.offset();
+    var no = $node.offset();
+    
+    if (Math.abs(eo.top - no.top) > distance) {
+        return false;
+    }
+    if (Math.abs(eo.left - no.left) > distance) {
+        return false;
+    }
+    if (Math.abs($node.outerWidth() - $essence.outerWidth()) > distance) {
+        return false;
+    }
+    if (Math.abs($node.outerHeight() - $essence.outerHeight()) > distance) {
+        return false;
+    }
+    $node.addClass('fx_var_bound_to_essence');
+    return true;
 };
 
 fx_front.prototype.get_selectable_up = function(rel_node) {
@@ -527,6 +628,7 @@ fx_front.prototype.select_item = function(node) {
     this.deselect_item();
     this.selected_item = node;
     var $node = $(node);
+    node = $node[0];
     if (!this.node_panel_disabled) {
         this.make_node_panel($node);
     }
@@ -547,6 +649,15 @@ fx_front.prototype.select_item = function(node) {
     $fx.front.outline_block_off($node);
     $fx.front.outline_block($node, 'selected');
     
+    var scrolling = false;
+    setTimeout(function() {
+        if (!scrolling) {
+            $fx.front.scrollTo($node, true, function() {
+                scrolling = false;
+            });
+            scrolling = true;
+        }
+    }, 50);
     
     // if you delete the selected node from the tree pull deselect_item()
     $(node).bind('remove.deselect_removed', function(e) {
@@ -554,17 +665,73 @@ fx_front.prototype.select_item = function(node) {
     });
     
     $fx.front.disable_hilight();
+    
     $('html').on('keydown.fx_selected', function(e) {
-       if (e.which === 27) {
-           if (e.isDefaultPrevented && e.isDefaultPrevented()) {
+        // Escape
+        if (e.which === 27) {
+            if (e.isDefaultPrevented && e.isDefaultPrevented()) {
                 return;
-           }
-           $fx.front.deselect_item();
-       }
-       if (selectable_up && e.which === 38 && e.ctrlKey) {
-           $fx.front.select_level_up();
-           return;
-       }
+            }
+            $fx.front.deselect_item();
+            return;
+        }
+        if (! (e.ctrlKey && (e.which === 38 || e.which === 40)) && e.which !== 9) {
+            return;
+        }
+        
+        var $selectable = $('.fx_hilight');
+        var c_index = $selectable.index(node);
+        var is_left = (e.which === 38 || (e.which === 9 && e.shiftKey));
+        var ii = is_left ? -1 : 1;
+        var ie = is_left ? 0 : $selectable.length;
+        for (var i = c_index + ii; i !== ie + ii; i+= ii ) {
+            var $ci = $selectable.eq(i);
+            if ($fx.front.is_selectable($ci)) {
+                $fx.front.select_item($ci);
+                return;
+            }
+        }
+        return;
+        /*
+        switch(e.which) {
+            // Up
+            case 38:
+                if (selectable_up) {
+                    $fx.front.select_level_up();
+                }
+                return;
+            // Down
+            case 40:
+                var $hi = $('.fx_hilight', node);
+                for (var i = 0; i < $hi.length; i++) {
+                    if ($fx.front.is_selectable($hi.eq(i))) {
+                        $fx.front.select_item($hi.eq(i));
+                        return;
+                    }
+                }
+                return;
+            // Right and Left
+            case 39: case 37:
+                return;
+                var sel_container = selectable_up ? selectable_up : $('body');
+                //if (selectable_up) {
+                    var $hi = $('.fx_hilight', sel_container);
+                    var c_index = $hi.index(node);
+                    var is_left = e.which === 37;
+                    var ii = is_left ? -1 : 1;
+                    var ie = is_left ? 0 : $hi.length;
+                    for (var i = c_index + ii; i !== ie + ii; i+= ii ) {
+                        var $ci = $hi.eq(i);
+                        var cin = $ci[0];
+                        if (!$.contains(node, cin) && $fx.front.is_selectable(cin)) {
+                            $fx.front.select_item($ci);
+                            return;
+                        }
+                    }
+                //}
+                break;
+        }
+        */
     });
 };
 
@@ -588,8 +755,8 @@ fx_front.prototype.make_node_panel = function($node) {
         $fx.front.recount_node_panel();
     }, 10);
     $(window).on('scroll', function() {$fx.front.recount_node_panel();});
-    $panel.on('resize change', function () {
-        console.log('resizd or chnd');
+    $panel.on('change keyup livesearch_value_loaded', function () {
+    //$panel.on('resize', function () {
         $fx.front.recount_node_panel();
     });
     
@@ -634,6 +801,7 @@ fx_front.prototype.recount_node_panel = function() {
     
     var $node = $($fx.front.get_selected_item());
     var no = $node.offset();
+    css.left = no.left - 4;
     var break_top = no.top - top_fix - p_height - 4;
     var break_bottom = break_top + $node.outerHeight() + p_height;
     var doc_scroll = $(document).scrollTop();
@@ -648,27 +816,22 @@ fx_front.prototype.recount_node_panel = function() {
         css.top = no.top - $p.outerHeight() - 4 + 'px';
         $p.removeClass('fx_node_panel_fixed');
     } else {
-        //if (!$p.hasClass('fx_node_panel_fixed')) {
-        // set panel fixed inside the node
-        //if (doc_scroll > break_top && doc_scroll < break_bottom) {
-            //if () {};
-            var bottom_edge_visible = doc_scroll + $(window).height() > no.top + $node.outerHeight() + p_height;
-            if (bottom_edge_visible) {
-                css.top = no.top + $node.outerHeight() + 4 + 'px';
-                css.position = 'absolute';
-                $p.removeClass('fx_node_panel_fixed');
-            } else {
-                css.position = 'fixed';
-                css.top = top_fix+'px';
-                css.opacity = 0.7;
-                $p.addClass('fx_node_panel_fixed');
-            }
-        //}
-        //}
+        var bottom_edge_visible = doc_scroll + $(window).height() > no.top + $node.outerHeight() + p_height;
+        if (bottom_edge_visible) {
+            css.top = no.top + $node.outerHeight() + 4 + 'px';
+            css.position = 'absolute';
+            $p.removeClass('fx_node_panel_fixed');
+        } else {
+            css.position = 'fixed';
+            css.top = top_fix+'px';
+            css.opacity = 0.7;
+            $p.addClass('fx_node_panel_fixed');
+        }
     }
-    var p_gone = (p_left + p_width) - $(window).outerWidth() + 10;
+    var p_gone = (css.left + p_width) - $(window).outerWidth() + 10;
+    console.log(p_gone, $(window).outerWidth(), p_left, p_width);
     if (p_gone > 0) {
-        css.left = p_left - p_gone;
+        css.left = css.left - p_gone;
     }
     $p.css(css);
     $p.css('opacity', parseFloat($p.css('opacity'))+0.05);
@@ -690,6 +853,7 @@ fx_front.prototype.deselect_item = function() {
         $fx.front.enable_hilight();
         $node.
                 removeClass('fx_selected').
+                removeClass('fx_hilight_hover').
                 trigger('fx_deselect').
                 unbind('remove.deselect_removed');
         $fx.front.outline_block_off($node);
@@ -701,7 +865,7 @@ fx_front.prototype.deselect_item = function() {
     this.selected_item = null;
     $fx.buttons.unbind('select_block');
     $('html').off('.fx_selected');
-    if (this.mouseover_node) {
+    if (this.mouseover_node && !this.hilight_disabled) {
         $(this.mouseover_node).trigger('mouseover');
     }
 };
@@ -720,6 +884,7 @@ fx_front.prototype.hilight = function() {
         removeClass('fx_hilight').
         removeClass('fx_hilight_empty').
         removeClass('fx_hilight_empty_inline').
+        removeClass('fx_var_bound_to_essence').
         removeClass('fx_no_hilight').
         removeClass('fx_clearfix');
     $('.fx_hilight_hover').removeClass('fx_hilight_hover');
@@ -727,6 +892,7 @@ fx_front.prototype.hilight = function() {
     if ($fx.front.mode === 'view') {
         return;
     }
+    items = $(items.get().reverse());
     items.each(function(index, item) {
         var i = $(item);
         var meta = i.data('fx_controller_meta') || {};
@@ -734,54 +900,55 @@ fx_front.prototype.hilight = function() {
         if (meta.accept_content) {
             i.addClass('fx_accept_content');
         }
-        if ($fx.front.is_selectable(item)) {
-            
-            
+        
+        var is_selectable = $fx.front.is_selectable(item);
+        
+        if (is_selectable || i.hasClass('fx_var_bound_to_essence')) {
             i.addClass('fx_hilight');
             if (!i.css('float').match(/left|right/) && !i.css('display').match(/^inline/)) {
                 i.addClass('fx_clearfix');
             }
-            // green discharge for hidden fields within blocks
-            // until treat through i.is(':visible')
-            
-            if (i.attr('class').match(/infoblock_hidden/)) {
-                console.log(
-                        i.attr('class'),
-                        i.is(':visible'),
-                        i.width(),
-                        i.height()
-                );
+            var hidden_placeholder = meta.hidden_placeholder;
+            if (i.hasClass('fx_template_var') && i.text().match(/^\s*$/)) {
+                hidden_placeholder = i.data('fx_var').label;
             }
             
             var is_hidden = false;
-            if (i.hasClass('fx_template_var') && i.text() === '') {
-                is_hidden = true;
-            } else if (!i.is(':visible')) {
-                is_hidden = true;
-                var $parents = i.parents();
-                for (var j = 0; j < $parents.length; j++ ) {
-                    if ($parents.eq(j).css('display') === 'none') {
-                        is_hidden = false;
-                        break;
+            if (hidden_placeholder) {
+                i.html(hidden_placeholder);
+                i.addClass('fx_hidden_placeholded');
+            } else if (i.width() === 0 || i.height() === 0) {
+                if (!i.is('img') && $('img', i).length === 0) {
+                    is_hidden = true;
+                    var $parents = i.parents();
+                    for (var j = 0; j < $parents.length; j++ ) {
+                        if ($parents.eq(j).css('display') === 'none') {
+                            is_hidden = false;
+                            break;
+                        }
                     }
                 }
             }
+
             if (is_hidden){
-                i.addClass('fx_hilight_empty');
-                //console.log(i.attr('class'), i.css('display'));
-                if (i.css('display') === 'inline') {
-                    i.addClass('fx_hilight_empty_inline');
+                if (i.hasClass('fx_area')) {
+                    var a_meta = i.data('fx_area');
+                    i.html('Area ' + (a_meta.name ? a_meta.name : a_meta.id)+ ' is empty, you can add some blocks here.');
+                    i.addClass('fx_hidden_placeholded');
+                } else {
+                    i.addClass('fx_hilight_empty');
+                    if (i.css('display') === 'inline') {
+                        i.addClass('fx_hilight_empty_inline');
+                    }
+                    i.parents().filter('.fx_hilight_empty').removeClass('fx_hilight_empty');
                 }
-            }
-            if (meta.hidden_placeholder) {
-                i.html(meta.hidden_placeholder);
-                i.addClass('fx_hidden_placeholded');
             }
         }
     });
     if ($fx.front.is_jquery_overriden()) {
         $('.fx_hilight').bind('click.fx_front', $fx.front.handle_click);
     }
+    $('.fx_hilight_outline .fx_hilight').addClass('fx_hilight_outline');
 };
 
 fx_front.prototype.is_jquery_overriden = function() {
@@ -843,11 +1010,12 @@ fx_front.prototype.load = function ( mode ) {
     $('html').trigger('fx_set_front_mode', this.mode);
 };
 
-fx_front.prototype.select_content_essence = function(n) {
-    var essence_meta = n.data('fx_essence');
-    var ib_node = n.closest('.fx_infoblock').get(0);
+fx_front.prototype.select_content_essence = function($essence) {
+    var essence_meta = $essence.data('fx_essence');
+    var ib_node = $essence.closest('.fx_infoblock').get(0);
+    var essence = $essence[0];
     $fx.front.add_panel_button('edit', function() {
-        $fx.front.select_item(n.get(0));
+        $fx.front.select_item(essence);
         $fx.front_panel.load_form(
             {
                 essence:'content',
@@ -869,9 +1037,12 @@ fx_front.prototype.select_content_essence = function(n) {
     
     $fx.front.add_panel_button('delete', function() {
        if (confirm(fx_lang("Вы уверены?"))) {
+           
            $fx.front.disable_infoblock(ib_node);
            var ce_type = essence_meta[3] || essence_meta[1];
            var ce_id = essence_meta[2] || essence_meta[0];
+           console.log('dropping', ce_type, ce_id);
+            //return;
            $fx.post({
                essence:'content',
                action:'delete_save',
@@ -884,16 +1055,24 @@ fx_front.prototype.select_content_essence = function(n) {
        }
     });
     
-    $fx.front.start_essences_sortable(n.parent());
-    var meta_extra = n.data('fx_essence_meta');
+    $fx.front.start_essences_sortable($essence.parent());
+    var meta_extra = $essence.data('fx_essence_meta');
     if (meta_extra && meta_extra.accept_content) {
         $.each(meta_extra.accept_content, function () {
             $fx.front.add_panel_button({
                 name: this.title,
+                is_add:true,
                 callback: $fx.front.get_adder_closure(meta_extra.accept_content[0])
             });
         });
     }
+    
+    $('.fx_var_bound_to_essence', $essence).each(function() {
+        var $bound = $(this);
+        if ($bound.closest('.fx_essence')[0] === essence) {
+            $bound.edit_in_place();
+        }
+    });
     $('html').one('fx_deselect', function(e) {
         $fx.front.stop_essences_sortable();
     });
@@ -903,15 +1082,6 @@ fx_front.prototype.select_infoblock = function(n) {
     
     if ($fx.front.mode === 'edit') {
         n.edit_in_place();
-        /*
-        var c_meta = n.data('fx_controller_meta');
-        var fields = []
-        if (c_meta && c_meta.fields) {
-            $.each(c_meta.fields, function(index, field) {
-                fields.push($fx.front.add_panel_field(field));
-            });
-        }
-        */
     }
     
     if ($fx.front.mode !== 'design') {
@@ -923,7 +1093,7 @@ fx_front.prototype.select_infoblock = function(n) {
         if (!ib) {
             return;
         }
-        var area_node = ib_node.closest('.fx_area');
+        var area_node = $fx.front.get_area_node(ib_node);//ib_node.closest('.fx_area');
         var area_meta = $fx.front.get_area_meta(area_node);
         
         $fx.front_panel.load_form({
@@ -1036,6 +1206,7 @@ fx_front.prototype.start_essences_sortable = function($cp) {
         items:sortable_items_selector,
         placeholder: placeholder_class,
         forcePlaceholderSize : true,
+        distance:10,
         start:function(e, ui) {
             var ph = ui.placeholder;
             var item = ui.item;
@@ -1121,6 +1292,7 @@ fx_front.prototype.start_areas_sortable = function() {
             items:'>.fx_infoblock',
             connectWith:'.fx_area_sortable',
             placeholder: "fx_infoblock_placeholder",
+            distance:35,
             start:function(e, ui) {
                 $('.fx_area_sortable').addClass('fx_area_target');
                 cp.sortable('refreshPositions');
@@ -1194,18 +1366,23 @@ fx_front.prototype.reload_infoblock = function(infoblock_node, callback, extra_d
     if (typeof extra_data !== 'undefined') {
         $.extend(post_data, extra_data);
     }
-    $.ajax({
+    if (!meta ) {
+        console.log('nometa', infoblock_node);
+        return;
+    }
+    var selected = $infoblock_node.descendant_or_self('.fx_selected');
+    var selected_selector = null;
+    if(selected.length > 0) {
+         selected_selector = selected.first().generate_selector(ib_parent);
+    }
+    var xhr = $.ajax({
         type:'post',
         data:post_data,
        url:'/~ib/'+meta.id+'@'+page_id,
        success:function(res) {
            $fx.front.c_hover = null;
            $infoblock_node.off('click.fx_fake_click').css({opacity:''});
-           var selected = $infoblock_node.descendant_or_self('.fx_selected');
-           var selected_selector = null;
-           if(selected.length > 0) {
-                selected_selector = selected.first().generate_selector(ib_parent);
-           }
+           
            $fx.front.outline_all_off();
            $fx.front.deselect_item();
 
@@ -1247,19 +1424,61 @@ fx_front.prototype.reload_infoblock = function(infoblock_node, callback, extra_d
            }
        }
     });
+    return xhr;
 };
 
-fx_front.prototype.scrollTo = function($node) {
+fx_front.prototype.scrollTo = function($node, if_invisible, callback) {
+    // if the whole node is invisible, do nothing
+    if (!$node.is(':visible')) {
+        if (callback instanceof Function) {
+            callback();
+        }
+        return;
+    }
+    // scroll only when part of the node is out of screen
+    if (if_invisible === undefined) {
+        if_invisible = false;
+    }
     $node = $($node);
     if ($node.length === 0) {
         return;
     }
     var body_offset = parseInt($('body').css('margin-top'));
-    var top_offset = $node.offset().top - body_offset - 15;
-    $('body').scrollTo(
-        top_offset,
-        800
-    );
+    var top_offset = $node.offset().top - body_offset - 40;
+    var move = true;
+    var st = $(document).scrollTop();
+    if (if_invisible){
+        move = false;
+        if (st > top_offset) {
+            if (!$node.hasClass('fx_area')) {
+                move = true;
+            }
+        } else {
+            var wh = $(window).height();
+            if (st + wh < top_offset) {
+                //console.log('2')
+                move = true;
+            } else {
+                var nh = $node.outerHeight();
+                if (st + wh < top_offset + nh) {
+                    //console.log('3')
+                    move = true;
+                }
+            }
+        }
+    }
+    if (move) {
+        var distance = Math.abs(st - top_offset);
+        var speed = distance*2;
+        $('body').scrollTo(
+            top_offset,
+            speed
+            //800
+        );
+        if (callback instanceof Function) {
+            setTimeout(callback, speed);
+        }
+    }
 };
 
 fx_front.prototype.reload_layout = function(callback) {
@@ -1318,6 +1537,10 @@ fx_front.prototype.add_panel_button = function(button, callback) {
         var $b = $('<div class="fx_admin_button_'+button_code+' fx_admin_button"></div>');
     }
     
+    if (button.is_add) {
+        $b.addClass('fx_add_button');
+    }
+    
     $b.click(callback);
     $p.append($b).show();
     return $b;
@@ -1350,18 +1573,25 @@ fx_front.prototype.outline_block = function(n, style) {
     if (!n || n.length === 0) {
         return;
     }
+    if (n.hasClass('fx_hilight_outline')) {
+        return;
+    }
     // already hilighted 
     if (n.data('fx_outline_panes') && n.data('fx_outline_style') === style) {
         return;
     }
+    
     if (style === 'selected') {
         var recount_outlines = function() {
             $fx.front.outline_block_off(n);
             $fx.front.outline_block(n, 'selected');
             $fx.front.recount_node_panel();
         };
-        n.on('resize.recount_outlines', recount_outlines);
-        $(window).on('resize.recount_outlines', recount_outlines);
+        n.off('.recount_outlines').on('resize.recount_outlines keydown.recount_outlines', recount_outlines);
+        //$(window).on('resize.recount_outlines', recount_outlines);
+        if (n.hasClass('fx_template_var') && n.text().match(/^\s*$/) && !n.hasClass('fx_editable_empty')) {
+            return;
+        }
     }
     var o = n.offset();
     var overlay_offset = parseInt(this.get_front_overlay().css('top'));
@@ -1519,6 +1749,9 @@ fx_front.prototype.outline_block = function(n, style) {
 };
 
 fx_front.prototype.outline_block_off = function(n) {
+    if (n.hasClass('fx_hilight_outline')) {
+        return;
+    }
     var panes = n.data('fx_outline_panes');
     if (!panes) {
         return;
@@ -1554,3 +1787,92 @@ fx_front.prototype.enable_node_panel = function() {
 };
 
 })($fxj);
+
+
+function parse_str(str, array) {
+  var strArr = String(str)
+    .replace(/^&/, '')
+    .replace(/&$/, '')
+    .split('&'),
+    sal = strArr.length,
+    i, j, ct, p, lastObj, obj, lastIter, undef, chr, tmp, key, value,
+    postLeftBracketPos, keys, keysLen,
+    fixStr = function (str) {
+      return decodeURIComponent(str.replace(/\+/g, '%20'));
+    };
+
+  if (!array) {
+    array = this.window;
+  }
+
+  for (i = 0; i < sal; i++) {
+    tmp = strArr[i].split('=');
+    key = fixStr(tmp[0]);
+    value = (tmp.length < 2) ? '' : fixStr(tmp[1]);
+
+    while (key.charAt(0) === ' ') {
+      key = key.slice(1);
+    }
+    if (key.indexOf('\x00') > -1) {
+      key = key.slice(0, key.indexOf('\x00'));
+    }
+    if (key && key.charAt(0) !== '[') {
+      keys = [];
+      postLeftBracketPos = 0;
+      for (j = 0; j < key.length; j++) {
+        if (key.charAt(j) === '[' && !postLeftBracketPos) {
+          postLeftBracketPos = j + 1;
+        } else if (key.charAt(j) === ']') {
+          if (postLeftBracketPos) {
+            if (!keys.length) {
+              keys.push(key.slice(0, postLeftBracketPos - 1));
+            }
+            keys.push(key.substr(postLeftBracketPos, j - postLeftBracketPos));
+            postLeftBracketPos = 0;
+            if (key.charAt(j + 1) !== '[') {
+              break;
+            }
+          }
+        }
+      }
+      if (!keys.length) {
+        keys = [key];
+      }
+      for (j = 0; j < keys[0].length; j++) {
+        chr = keys[0].charAt(j);
+        if (chr === ' ' || chr === '.' || chr === '[') {
+          keys[0] = keys[0].substr(0, j) + '_' + keys[0].substr(j + 1);
+        }
+        if (chr === '[') {
+          break;
+        }
+      }
+
+      obj = array;
+      for (j = 0, keysLen = keys.length; j < keysLen; j++) {
+        key = keys[j].replace(/^['"]/, '')
+          .replace(/['"]$/, '');
+        lastIter = j !== keys.length - 1;
+        lastObj = obj;
+        if ((key !== '' && key !== ' ') || j === 0) {
+          if (obj[key] === undef) {
+            obj[key] = {};
+          }
+          obj = obj[key];
+        } else {
+          // To insert new dimension
+          ct = -1;
+          for (p in obj) {
+            if (obj.hasOwnProperty(p)) {
+              if (+p > ct && p.match(/^\d+$/g)) {
+                ct = +p;
+              }
+            }
+          }
+          key = ct + 1;
+        }
+      }
+      lastObj[key] = value;
+    }
+  }
+}

@@ -327,6 +327,7 @@ class fx_debug {
                 ?>
             </div>
             <?php foreach ($e[1] as $n => $item) { 
+                ob_start();
                 if (in_array($item[0], array('array', 'object'))) {
                     echo $this->_print_format($item[1]);
                 } else {
@@ -336,6 +337,14 @@ class fx_debug {
                         echo '<pre class="fx_debug_one_line">'.htmlspecialchars($item[1]).'</pre>';
                     }
                 }
+                $printed = ob_get_clean();
+                echo preg_replace_callback(
+                    '~\[\[(good|bad)\s(.+?)\]\]~',
+                    function($matches) {
+                        return '<span class="fx_debug_'.$matches[1].'">'.$matches[2].'</span>';
+                    },
+                    $printed
+                );
                 if ($n < count($e[1]) - 1) { ?>
                     <div class="fx_debug_separator"></div>
                 <?php } ?>

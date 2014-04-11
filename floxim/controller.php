@@ -233,9 +233,8 @@ class fx_controller {
         foreach ($sources as $src) {
             $src_name = null;
             $src_hash = md5($src);
-            $ds = preg_quote(DIRECTORY_SEPARATOR);
-            //preg_match("~/([^/]+?)/[^/]+$~", $src, $src_name);
-            preg_match("~".$ds."([^".$ds."]+?)".$ds."[^".$ds."]+$~", $src, $src_name);
+            $src_abs = fx::path()->to_http($src);
+            preg_match("~/([^/]+?)/[^/]+$~", $src_abs, $src_name);
             $is_own = $src_name && $my_name && $src_name[1] === $my_name;
             $src = include $src;
             if (!isset($src['actions'])) {
@@ -259,15 +258,6 @@ class fx_controller {
                             }
                         }
                     }
-                    /*
-                    if (isset($props['install']) && !is_array($props['install'])) {
-                        $props['install'] = array($src_hash => $props['install']);
-                    }
-                    if (isset($props['delete']) && !is_array($props['delete'])) {
-                        $props['delete'] = array($src_hash => $props['delete']);
-                    }
-                     * 
-                     */
                     $blocks []= $props;
                     $meta []= array($inherit_horizontal, $action_code);
                     if (!isset($actions[$action_code])) {
@@ -276,7 +266,6 @@ class fx_controller {
                 }
             }
         }
-        
         foreach ($blocks as $bn => $block) {
             list($inherit, $bk) = $meta[$bn];
             foreach ($actions as $ak => &$action_props) {

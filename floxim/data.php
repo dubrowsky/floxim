@@ -181,6 +181,10 @@ class fx_data {
             $this->select = array();
         }
         foreach (func_get_args() as $arg) {
+            if ($arg === 'id') {
+                $tables = $this->get_tables();
+                $arg = '{{'.$tables[0].'}}.id';
+            }
             $this->select []= $arg;
         }
         return $this;
@@ -366,6 +370,11 @@ class fx_data {
             if (!preg_match("~[a-z0-9_-]\s*\(.*?\)~i", $field)) {
                 //$field = '`'.$field.'`';
             }
+        }
+        if ($value instanceof fx_collection) {
+            $value = $value->column(function($i) {
+                return $i instanceof fx_essence ? $i['id'] : (int) $i;
+            })->unique()->get_data();
         }
         if (is_array($value)) {
             if (count($value) == 0) {
