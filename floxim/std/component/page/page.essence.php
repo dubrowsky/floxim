@@ -113,4 +113,46 @@ class fx_content_page extends fx_content {
         $url = parse_url($url);
         return isset($url['host']) ? $url['host'] : '';
     }
+    
+    
+    public function get_page_infoblocks() {
+        // cache page ibs
+        if (!isset($this->data['page_infoblocks'])) {
+            $this->data['page_infoblocks'] = fx::data('infoblock')->get_for_page($this['id']);
+        }
+        return $this->data['page_infoblocks'];
+    }
+    
+    
+    public function get_layout_infoblock() {
+        if (isset($this->data['layout_infoblock'])) {
+            return $this->data['layout_infoblock'];
+        }
+        $layout_ibs = $this->get_page_infoblocks()->find(function($ib) {
+            return $ib->is_layout();
+        });
+        if (count($layout_ibs) == 0) {
+            // force root layout infoblock
+            $lay_ib = fx::data('infoblock')
+                        ->where('controller', 'layout')
+                        ->where('site_id', fx::env('site_id'))
+                        ->where('parent_infoblock_id', 0)
+                        ->one();
+            if (!$lay_ib) {
+                $lay_ib = fx::data('infoblock')->create(
+                        array(
+                            'site_id' => fx::env('site_id'),
+                            'controller' => 'layout',
+                            'action' => 'show',
+                            'page_id' => fx::env('site')->get('index_page_id')
+                        ));
+                $lay_ib->save();
+            }
+        } else {
+            $layout_ibs = fx::data('infoblock')->sort_infoblocks($layout_ibs);
+            $lay_ib = $layout_ibs->first();
+        }
+        $this->data['layout_infoblock'] = $lay_ib;
+        return $lay_ib;
+    }
 }

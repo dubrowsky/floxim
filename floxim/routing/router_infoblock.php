@@ -26,9 +26,9 @@ class fx_router_infoblock extends fx_router {
             // front end can try to reload the layout which is out of date
             // when updating from "layout settings" panel
             $infoblock = fx::data('infoblock', $ib_id);
-            if ($infoblock->is_layout()) {
-                $c_lay = $page_infoblocks['layout'][0];
-                if ($c_lay && $c_lay['id'] != $infoblock['id']) {
+            if ((!$infoblock && isset($_POST['infoblock_is_layout'])) || $infoblock->is_layout()) {
+                $c_lay = fx::data('content_page', $page_id)->get_layout_infoblock(); //$page_infoblocks['layout'][0];
+                if ($c_lay) {
                     $ib_id = $c_lay['id'];
                 }
             }

@@ -417,13 +417,14 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
     
     public function layout_settings($input) {
         $c_page = fx::data('content_page', $input['page_id']);
-        $infoblock = fx::data('infoblock')->
+        /*$infoblock = fx::data('infoblock')->
                 get_for_page($input['page_id'])->
                 find_one(
                     function ($item) {
                         return $item->get_prop_inherited('controller') == 'layout';
                     }
-                );
+                );*/
+        $infoblock = $c_page->get_layout_infoblock();
         
         $c_page = fx::data('content_page', $input['page_id']);
         $scope_fields = $this->_get_scope_fields($infoblock, $c_page);
@@ -444,6 +445,21 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             $this->ui->hidden('settings_sent', 'true'),
             $this->ui->hidden('page_id', $input['page_id'])
     	);
+        
+        $existing = fx::data('infoblock')->is_layout()->get_for_page($c_page['id'], false);
+        if (count($existing) > 1) {
+            $existing = fx::data('infoblock')->sort_infoblocks($existing);
+            $next = $existing->eq(1);
+            $fields []= array(
+                'type' => 'button',
+                'role' => 'preset',
+                'label' => fx::alang('Use wider rule', 'system'),
+                'data' => array(
+                    'scope[complex_scope]' => $next->get_scope_string(),
+                    'visual[template]' => $next->get_prop_inherited('visual.template')
+                )
+            );
+        }
     	
     	$this->response->add_fields($fields);
         $res = array(
@@ -460,6 +476,8 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
         
         $old_layout = $visual['template'];
         $new_layout = $input['visual']['template'];
+        
+        $c_page = fx::data('content_page', $input['page_id']);
         
         if ($old_layout == $new_layout && $old_scope == $new_scope) {
             return;
@@ -487,14 +505,24 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             else {
                 $update = true;
             }
-            $existing = fx::data('infoblock')->is_layout()->get_for_page($infoblock['page_id'], false);
-            fx::log('existng', $existing);
+            $existing = fx::data('infoblock')->is_layout()->get_for_page($c_page['id'], false);
+            if (count($existing) > 1) {
+                $existing = fx::data('infoblock')->sort_infoblocks($existing);
+                $next = $existing->eq(1);
+                if ($next->get_scope_string() == $new_scope && $next->get_prop_inherited('visual.template') == $new_layout) {
+                    $delete = true;
+                } 
+                //fx::log('existng srtd', $existing, $next);
+            }
         }
-        if ($create) {
+        if ($delete) {
+            $infoblock->delete();
+        } elseif ($create) {
             $params = $infoblock->get();
             unset($params['id']);
             $new_ib = fx::data('infoblock')->create($params);
-            $new_ib['parent_infoblock_id'] = $infoblock['id'];
+            $c_parent = $infoblock['parent_infoblock_id'];
+            $new_ib['parent_infoblock_id'] =  $c_parent ? $c_parent : $infoblock['id'];
             $new_ib->set_scope_string($new_scope);
             $new_vis = fx::data('infoblock_visual')->create(array(
                 'layout_id' => $visual['layout_id']
@@ -503,7 +531,6 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             $new_ib->save();
             $new_vis['infoblock_id'] = $new_ib['id'];
             $new_vis->save();
-            fx::log('creating', $new_ib, $new_vis);
         } elseif ($update) {
             $infoblock->set_scope_string($new_scope);
             $visual->set('template', $new_layout);

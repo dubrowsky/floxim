@@ -40,7 +40,7 @@ class fx_data_infoblock extends fx_data {
                 $infoblocks->remove($ib);
             }
         }
-        if ($drop_doubles) {
+        if (false && $drop_doubles) {
             $inherited_infoblocks = $infoblocks->find(
                     'id', 
                     $infoblocks->find('parent_infoblock_id', 0, '!=')->get_values('parent_infoblock_id'),

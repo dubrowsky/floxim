@@ -8,8 +8,9 @@ class fx_router_front extends fx_router {
         }
         fx::env('page', $page['id']);
         $layout_id = fx::env('layout');
-        $infoblocks = $this->get_page_infoblocks($page['id'], $layout_id);
-        $layout_ib = $infoblocks['layout'][0];
+        
+        //$infoblocks = $this->get_page_infoblocks($page['id'], $layout_id);
+        $layout_ib = $page->get_layout_infoblock(); //$infoblocks['layout'][0];
         fx::http()->status('200');
         return fx::controller(
             'infoblock.render',
@@ -38,43 +39,26 @@ class fx_router_front extends fx_router {
         if (isset($this->_ib_cache[$cache_key])) {
             return $this->_ib_cache[$cache_key];
         }
-        $infoblocks = fx::data('infoblock')->get_for_page($page_id);
-        $layout_ib = $infoblocks->find_one(function($ib) {
-            return $ib->get_prop_inherited('controller') == 'layout';
-        });
-        if (!$layout_ib) {
-            // force root layout infoblock
-            $lay_ib = fx::data('infoblock')
-                        ->where('controller', 'layout')
-                        ->where('site_id', fx::env('site_id'))
-                        ->where('parent_infoblock_id', 0)
-                        ->one();
-            if (!$lay_ib) {
-                $lay_ib = $this->_create_layout_infoblock();
-            }
-            $infoblocks[]= $lay_ib;
-            //$areas['layout'] = array($lay_ib);
-        }
-        //fx::debug($infoblocks);
+
+        $infoblocks = fx::data('content_page', $page_id)
+                        ->get_page_infoblocks()
+                        ->find(function($ib) {
+                            return !$ib->is_layout();
+                        });
         $areas = array();
         $visual = fx::data('infoblock_visual')->
                 where('infoblock_id', $infoblocks->get_values('id'))->
                 where('layout_id', $layout_id)->
                 all();
         foreach ($infoblocks as $ib) {
-            
             if (($c_visual = $visual->find_one('infoblock_id', $ib['id']))) {
                 $ib->set_visual($c_visual);
-            } else {
-                if ($ib->get_visual()->get('is_stub')) {
-                    $suitable = new fx_template_suitable();
-                    $suitable->suit($infoblocks, $layout_id);
-                }
+            } elseif ($ib->get_visual()->get('is_stub')) {
+                $suitable = new fx_template_suitable();
+                $suitable->suit($infoblocks, $layout_id);
             }
 
-            if ($ib->get_prop_inherited('controller') == 'layout') {
-                $c_area = 'layout';
-            } elseif ( ($visual_area = $ib->get_prop_inherited('visual.area')) ) {
+            if ( ($visual_area = $ib->get_prop_inherited('visual.area')) ) {
                 $c_area = $visual_area;
             } else {
                 $c_area = 'unknown';
@@ -83,17 +67,5 @@ class fx_router_front extends fx_router {
         }
         $this->_ib_cache[$cache_key] = $areas;
         return $areas;
-    }
-    
-    protected function _create_layout_infoblock(){
-        $ib = fx::data('infoblock')->create(
-                array(
-                    'site_id' => fx::env('site_id'),
-                    'controller' => 'layout',
-                    'action' => 'show',
-                    'page_id' => fx::env('site')->get('index_page_id')
-                ));
-        $ib->save();
-        return $ib;
     }
 }

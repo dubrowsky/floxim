@@ -1482,7 +1482,7 @@ fx_front.prototype.scrollTo = function($node, if_invisible, callback) {
 };
 
 fx_front.prototype.reload_layout = function(callback) {
-   $fx.front.reload_infoblock($('body').get(0), callback);
+   $fx.front.reload_infoblock($('body').get(0), callback, {infoblock_is_layout:true});
 };
 
 fx_front.prototype.move_down_body =function () {
