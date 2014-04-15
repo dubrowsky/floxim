@@ -9,8 +9,8 @@ class fx_router_front extends fx_router {
         fx::env('page', $page['id']);
         $layout_id = fx::env('layout');
         
-        //$infoblocks = $this->get_page_infoblocks($page['id'], $layout_id);
-        $layout_ib = $page->get_layout_infoblock(); //$infoblocks['layout'][0];
+        $layout_ib = $page->get_layout_infoblock();
+        $layout_ib->get_visual();
         fx::http()->status('200');
         return fx::controller(
             'infoblock.render',

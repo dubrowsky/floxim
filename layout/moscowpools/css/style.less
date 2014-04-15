@@ -199,6 +199,7 @@ nav.main_menu {
         line-height:100%;
         display:block;
     }
+    
     /* top level */
     &>ul>li {
         float:left;
@@ -208,6 +209,18 @@ nav.main_menu {
         }
         &.sfHover {
             .gradient(#4ac4eb, #08a7cc 100%);
+        }
+        &.has_submenu>a {
+            position:relative;
+            &:after {
+                display:inline-block !important;
+                position:absolute;
+                content:' ';
+                .triangle-down(5px, #FFF);
+                position:relative;
+                top:-2px;
+                left:8px;
+            }
         }
         /* second level */
         &>ul {
@@ -238,6 +251,18 @@ nav.main_menu {
                     background: #34bae1;
                     border-radius:5px;
                 }
+                &.has_submenu>a>span {
+                        position:relative;
+                        &:after {
+                            display:inline-block !important;
+                            position:absolute;
+                            content:' ';
+                            .triangle-down(4px, #FFF);
+                            position:relative;
+                            top:-2px;
+                            left:5px;
+                        }
+                    }
                 &>ul {
                     position:absolute;
                     left:10px;

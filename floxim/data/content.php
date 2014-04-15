@@ -281,7 +281,9 @@ class fx_data_content extends fx_data {
                     'checked',
                     'last_updated',
                     'type',
-                    'infoblock_id'
+                    'infoblock_id',
+                    'materialized_path',
+                    'level'
                 ));
             }
             $table_name = $level_component->get_content_table();

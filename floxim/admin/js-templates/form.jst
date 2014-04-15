@@ -247,7 +247,13 @@ html.find('select.extendable').change(function() {
 </div>
 
 <!--[form_cols]-->
-<table class="fx_form_cols_table">
+<?
+var count_cols = 0;
+for (var i in _c.tabs) {
+    count_cols++;
+}
+?>
+<table class="fx_form_cols_table fx_form_<?=count_cols?>_cols">
     <tr>
     <?
     $.each(_c.tabs, function(k,v) {

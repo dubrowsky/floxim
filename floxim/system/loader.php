@@ -135,11 +135,11 @@ class fx_loader {
             
         if (preg_match('~^content_~', $classname)) {
             $com_name = preg_replace("~^content_~", '', $classname);
-            $file = $doc_root.'component/'.$com_name.'/'.$com_name.'.essence';
+            $file = fx::path()->to_abs('/component/'.$com_name.'/'.$com_name.'.essence');
             if (file_exists($file.'.php')) {
                 return $file;
             } 
-            $std_file = $doc_root.'floxim/std/component/'.$com_name.'/'.$com_name.'.essence';
+            $std_file = fx::path()->to_abs('/floxim/std/component/'.$com_name.'/'.$com_name.'.essence');
             if(file_exists($std_file.'.php')) {
                 return $std_file;
             }

@@ -36,7 +36,9 @@
                             }
 				var $$ = $(this), menu = getMenu($$), o = sf.op;
 				clearTimeout(menu.sfTimer);
+                                clearTimeout(overTimeout);
 				menu.sfTimer=setTimeout(function(){
+                                    console.log('out trigg');
 					o.retainPath=($.inArray($$[0],o.$path)>-1);
 					$$.hideSuperfishUl();
 					if (o.$path.length && $$.parents(['li.',o.hoverClass].join('')).length<1){over.call(o.$path);}

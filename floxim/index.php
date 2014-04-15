@@ -5,6 +5,7 @@ require_once (dirname(__FILE__).'/../boot.php');
 
 fx::profiler()->block('page');
 register_shutdown_function(function() {
+    //echo "Shut down";
     if (!fx::env()->get('complete_ok')) {
     	$ob_level = ob_get_level();
         $res = '';
@@ -14,6 +15,7 @@ register_shutdown_function(function() {
         echo fx::page()->post_process($res);
         fx::log('down', $res, debug_backtrace(), $_SERVER, $_POST); 
     }
+    
     fx::profiler()->stop();
     //fx::log('profiled', fx::profiler()->show());
 });

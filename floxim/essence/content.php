@@ -124,12 +124,68 @@ class fx_content extends fx_essence {
             if ($field['type_of_edit'] == fx_field::EDIT_NONE) {
                 continue;
             }
-            $jsf = $field->get_js_field($this);
-            $coms [$field['component_id']] = 1;
-            $jsf['tab'] = $field['form_tab'] ? $field['form_tab'] : count($coms);
-            $form_fields[]= $jsf;
+            if (method_exists($this, 'get_form_field_'.$field['name'])) {
+                $jsf = call_user_func(array($this, 'get_form_field_'.$field['name']), $field);
+            } else {
+                $jsf = $field->get_js_field($this);
+            }
+            if ($jsf) {
+                $coms [$field['component_id']] = 1;
+                $jsf['tab'] = $field['form_tab'] ? $field['form_tab'] : count($coms);
+                $form_fields[]= $jsf;
+            }
         }
         return $form_fields;
+    }
+    
+    public function get_form_field_parent_id($field) {
+        if (!$this['id']) {
+            return;
+        }
+        
+        $finder = $this->get_avail_parents_finder();
+        $parents = $finder->get_tree('nested');
+        $values = array();
+        $c_id = $this['id'];
+        $get_values = function($level, $level_num = 0) use (&$values, &$get_values, $c_id) {
+            foreach ($level as $page) {
+                if ($page['id'] == $c_id) {
+                    continue;
+                }
+                $values []= array($page['id'], str_repeat('- ', $level_num*2).$page['name']);
+                if ($page['nested']) {
+                    $get_values($page['nested'], $level_num+1);
+                }
+            }
+        };
+        $get_values($parents);
+        $jsf = $field->get_js_field($this);
+        $jsf['values'] = $values;
+        return $jsf;
+        //fx::log($parents);
+    }
+    
+    /**
+     * Returns a finder to get "potential" parents for the object
+     */
+    public function get_avail_parents_finder() {
+        $ib = fx::data('infoblock', $this['infoblock_id']);
+        /*
+        if ($ib['params']['parent_type'] !== 'current_page_id') {
+            return;
+        }
+         */
+        $parent_type = $ib['scope']['page_type'];
+        if (!$parent_type) {
+            $parent_type = 'page';
+        }
+        $root_id = $ib['page_id'];
+        if (!$root_id) {
+            $root_id = fx::data('site', $ib['site_id'])->get('index_page_id');
+        }
+        $finder = fx::content($parent_type);
+        $finder->descendants_of($root_id, $ib['scope']['pages'] != 'children');
+        return $finder;
     }
     
     public function add_template_record_meta($html, $collection, $index, $is_subroot) {
@@ -173,6 +229,12 @@ class fx_content extends fx_essence {
     }
     
     protected function _before_save() {
+        if ($this->is_modified('parent_id')) {
+            $new_parent = fx::data('content', $this['parent_id']);
+            $this['level'] = $new_parent['level']+1;
+            //$this['materialized_path'] = trim($new_parent['materialized_path'].'.'.$new_parent['id'], '.');
+            $this['materialized_path'] = $new_parent['materialized_path'].$new_parent['id'].'.';
+        }
         
         $component = fx::data('component', $this->component_id);
         $link_fields = $component->fields()->find('type', fx_field::FIELD_LINK);
@@ -262,31 +324,6 @@ class fx_content extends fx_essence {
         // information block, where ourselves live
         $our_infoblock = fx::data('infoblock', $this['infoblock_id']);
         return $our_infoblock['params']['field_'.$link_field_id.'_infoblock'];
-        
-        $link_field = fx::data('field', $link_field_id);
-        
-        $com_keyword = $link_field->get_related_component()->get('keyword');
-        
-        //$related_component = $link_field->get_related_component();
-        
-        
-
-        // get the field value settings listing information block for the field tagpost"
-        if ($c_infoblock_id) {
-            $linker_infoblock_id = $c_infoblock_id;
-        } 
-        // if none, use the first InfoBlock,
-        // containing objects of our kind
-        else {
-            $related_container_infoblock = fx::data('infoblock')->
-                    where('site_id', $this['site_id'])->
-                    get_content_infoblocks($related_component['keyword'])->
-                    first();
-            if ($related_container_infoblock) {
-                $linker_infoblock_id = $related_container_infoblock['id'];
-            }
-        }
-        return $linker_infoblock_id;
     }
     
     public function get_fields() {
@@ -330,6 +367,29 @@ class fx_content extends fx_essence {
             $old_value = $this->modified_data[$img_field['name']];
             if (fx::path()->is_file($old_value)) {
                 fx::files()->rm($old_value);
+            }
+        }
+    }
+    
+    public function _after_save() {
+        /*
+         * Update level and mat.path for children if item moved somewhere
+         */
+        if ($this->is_modified('parent_id')) {
+            $old_path = $this->modified_data['materialized_path'].$this['id'].'.';
+            // new path for descendants
+            $new_path = $this['materialized_path'].$this['id'].'.';
+            $nested_items = fx::data('content')->where('materialized_path', $old_path.'%', 'LIKE')->all();
+            $level_diff = 0;
+            if ($this->is_modified('level')) {
+                $level_diff = $this['level'] - $this->modified_data['level'];
+            }
+            foreach ($nested_items as $child) {
+                $child['materialized_path'] = str_replace($child['materialized_path'], $old_path, $new_path);
+                if ($level_diff !== 0) {
+                    $child['level'] = $child['level'] + $level_diff;
+                }
+                $child->save();
             }
         }
     }

@@ -46,7 +46,7 @@
                     {$items | .main_menu_level}
                     <ul fx:template="main_menu_level" fx:with-each='$'>
                         {default $level = 1}
-                        <li fx:item>
+                        <li fx:item {if $submenu}class="has_submenu"{/if}>
                             <a href="{$url}"><span fx:omit="$level != 2">{$name}</span></a>
                             {$submenu | .main_menu_level with $level+1 as $level}
                         </li>

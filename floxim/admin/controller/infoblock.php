@@ -453,7 +453,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             $fields []= array(
                 'type' => 'button',
                 'role' => 'preset',
-                'label' => fx::alang('Use wider rule', 'system'),
+                'label' => fx::alang('Drop current rule and use the wider one', 'system'),
                 'data' => array(
                     'scope[complex_scope]' => $next->get_scope_string(),
                     'visual[template]' => $next->get_prop_inherited('visual.template')
@@ -511,8 +511,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
                 $next = $existing->eq(1);
                 if ($next->get_scope_string() == $new_scope && $next->get_prop_inherited('visual.template') == $new_layout) {
                     $delete = true;
-                } 
-                //fx::log('existng srtd', $existing, $next);
+                }
             }
         }
         if ($delete) {
@@ -536,9 +535,7 @@ class fx_controller_admin_infoblock extends fx_controller_admin {
             $visual->set('template', $new_layout);
             $infoblock->save();
             $visual->save();
-            fx::log('updating', $infoblock, $visual);
         }
-        //fx::log($infoblock, $old_scope.' vs '.$new_scope, $old_layout.' vs '.$new_layout);
     }
     
     /*

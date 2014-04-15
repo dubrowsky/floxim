@@ -558,6 +558,9 @@ window.fx_suggest = function(params) {
         if (typeof clear_input == 'undefined') {
             clear_input = true;
         }
+        if (!this.box) {
+            return;
+        }
         this.boxVisible = false;
         this.box.hide();
         this.lastTerm = null;

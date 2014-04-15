@@ -80,7 +80,13 @@ class fx_data {
         return $this;
     }
     
-    public function where($field, $value, $type = '=') {
+    protected function _prepare_condition($field, $value, $type) {
+        if (is_array($field)) {
+            foreach ($field as $n => $c_cond) {
+                $field[$n] = $this->_prepare_condition($c_cond[0], $c_cond[1], $c_cond[2]);
+            }
+            return array($field, $value, $type);
+        }
         if (strstr($field, '.')) {
             list($rel, $field_name) = explode('.', $field, 2);
             if (!isset($this->with[$rel])) {
@@ -104,7 +110,12 @@ class fx_data {
             $table = $this->get_col_table($field);
             $field = '{{'.$table.'}}.'.$field;
         }
-        $this->where []= array($field, $value, $type);
+        return array($field, $value, $type);
+    }
+    
+    public function where($field, $value, $type = '=') {
+        $cond = $this->_prepare_condition($field, $value, $type);
+        $this->where []= $cond; //array($field, $value, $type);
         return $this;
     }
     

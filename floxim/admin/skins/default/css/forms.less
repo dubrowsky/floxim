@@ -110,6 +110,7 @@
 /* HORIZONTAL FORM */
 #fx_admin_control, .fx_node_panel {
     .redactor_box {
+        min-width:285px;
         max-width:600px;
     }
 
@@ -168,7 +169,13 @@
     .fx_form_cols {
         table.fx_form_cols_table {
             margin-top:17px;
-            min-width:80%;
+            min-width:50%;
+            &.fx_form_2_cols {
+                min-width:80%;
+            }
+            &.fx_form_3_cols {
+                width:100%;
+            }
         }
         .fx_tab_data {
             vertical-align:top;
@@ -252,10 +259,12 @@
 }
 
 .fx_button_preset {
-    display: inline-block;
+    //display: inline-block;
     margin-top: 6px;
     color: #E33;
-    border-bottom: 1px dashed #E33;
+    max-width:130px;
+    //border-bottom: 1px dashed #E33;
+    font-size:11px;
     cursor: pointer;
 }
 

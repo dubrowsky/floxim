@@ -5,7 +5,7 @@ function init_scripts($node) {
     
     find('.main_menu').find('>ul').superfish({
         speed:1,
-        delay:300
+        delay:500
     });
     var $tabs = find('.tabs');
     $tabs.tabs();

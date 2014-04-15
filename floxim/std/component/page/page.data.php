@@ -1,10 +1,31 @@
 <?php
 class fx_data_content_page extends fx_data_content {
     
-    public function get_tree() {
+    public function get_tree($children_key = 'children') {
         $data = $this->all();
-        $tree = $this->make_tree($data);
+        $tree = $this->make_tree($data, $children_key);
         return $tree;
+    }
+    
+    /**
+     * Add filter to get subtree for one ore more parents
+     * @param mixed $parent_ids
+     * @param boolean $add_parents - include parents to subtree
+     * @return fx_data_content_page 
+     */
+    public function descendants_of($parent_ids, $include_parents = false) {
+        if (is_numeric($parent_ids)) {
+            $parent_ids = array($parent_ids);
+        }
+        $parents = fx::data('content_page', $parent_ids);
+        $conds = array();
+        foreach ($parents as $p) {
+            $conds []= array('materialized_path', $p['materialized_path'].$p['id'].'.%', 'like');
+        }
+        if ($include_parents) {
+            $conds []= array('id', $parent_ids, 'IN');
+        }
+        $this->where($conds, null, 'OR');
     }
     
     public function get_by_url($url, $site_id = null) {

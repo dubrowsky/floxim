@@ -225,6 +225,7 @@ class fx_template {
             (!isset($area['render']) || $area['render'] != 'manual')
         ) {
             $area_blocks = fx::page()->get_area_infoblocks($area['id']);
+            
             $pos = 1;
             foreach ($area_blocks as $ib) {
                 $ib->add_params(array('infoblock_area_position' => $pos));
